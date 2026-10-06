@@ -311,6 +311,11 @@ msgstr ""
 
 #: src/SOURCE/COMMAND.cpp
 #, c-format
+msgid "combat.surrender.computer_offer"
+msgstr ""
+
+#: src/SOURCE/COMMAND.cpp
+#, c-format
 msgid "combat.surrender.offer"
 msgstr ""
 
@@ -4305,6 +4310,10 @@ msgstr ""
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gLuckInfoText.10"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gLuckInfoText.11"
 msgstr ""
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp

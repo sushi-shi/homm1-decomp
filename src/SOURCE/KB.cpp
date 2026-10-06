@@ -1345,7 +1345,7 @@ void PlayerDead(i32 player) {
         gGame->GetHero(currentPlayer->m_heroIds[i])->Deallocate();
     for (i = 0; i < HERO_AVAILABLE_SLOT_COUNT; ++i) {
         if (gGame->m_availableHeroes[currentPlayer->m_availableHeroIds[i]]
-            == HERO_AVAILABILITY_RETREATED)
+            == HERO_AVAILABILITY_IN_TAVERN)
             gGame->m_availableHeroes[currentPlayer->m_availableHeroIds[i]] =
                 HERO_AVAILABILITY_UNAVAILABLE;
     }
@@ -1893,8 +1893,6 @@ void game::ShowMoraleInfo(hero* heroPointer, i32 dialogType) {
         strcat(gText, gMoraleInfoText[MORALE_INFO_MEDAL_OF_HONOR]);
     if (heroPointer->HasArtifact(ARTIFACT_MEDAL_OF_DISTINCTION))
         strcat(gText, gMoraleInfoText[MORALE_INFO_MEDAL_OF_DISTINCTION]);
-    if (heroPointer->HasArtifact(ARTIFACT_FIZBIN_OF_MISFORTUNE))
-        strcat(gText, gMoraleInfoText[MORALE_INFO_FIZBIN]);
     if (heroPointer->m_eventFlags & HERO_EVENT_BUOY)
         strcat(gText, gMoraleInfoText[MORALE_INFO_BUOY]);
     if (heroPointer->m_eventFlags & HERO_EVENT_OASIS)
@@ -1927,6 +1925,8 @@ void game::ShowLuckInfo(hero* heroPointer, i32 dialogType) {
         sprintf(buffer, gLuckInfoText[LUCK_INFO_BAD]);
     sprintf(gText, gLuckInfoText[LUCK_INFO_HEADER], buffer);
     size = strlen(gText);
+    if (heroPointer->HasArtifact(ARTIFACT_FIZBIN_OF_MISFORTUNE))
+        strcat(gText, gLuckInfoText[LUCK_INFO_FIZBIN]);
     if (heroPointer->HasArtifact(ARTIFACT_LUCKY_RABBITS_FOOT))
         strcat(gText, gLuckInfoText[LUCK_INFO_RABBITS_FOOT]);
     if (heroPointer->HasArtifact(ARTIFACT_GOLDEN_HORSESHOE))
@@ -3765,6 +3765,7 @@ char* gLuckInfoText[LUCK_INFO_COUNT] = {
     localization::Tr("table.gLuckInfoText.8"),
     localization::Tr("table.gLuckInfoText.9"),
     localization::Tr("table.gLuckInfoText.10"),
+    localization::Tr("table.gLuckInfoText.11"),
 };
 char* gMemoryErrorTitle = localization::Tr("table.gMemoryErrorTitle.0");
 char* gMemoryRequirements = localization::Tr("table.gMemoryRequirements.0");

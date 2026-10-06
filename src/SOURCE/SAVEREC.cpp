@@ -127,7 +127,7 @@ void WriteHero(RecordWriter& out, const hero& record) {
     out.Put(record.m_morale);
     out.Put(record.m_luck);
     out.Put(record.m_cowardice);
-    out.Put(record.m_unused38);
+    out.Put(record.m_fledState);
     out.Put(record.m_visitedSites);
     out.Put(record.m_randomSeed);
     out.Put(record.m_unused3f, sizeof(record.m_unused3f));
@@ -162,7 +162,7 @@ void ReadHero(RecordReader& in, hero& record) {
     in.Get(record.m_morale);
     in.Get(record.m_luck);
     in.Get(record.m_cowardice);
-    in.Get(record.m_unused38);
+    in.Get(record.m_fledState);
     record.m_visitedSites = in.GetI32();
     record.m_randomSeed = in.GetI16();
     in.Get(record.m_unused3f, sizeof(record.m_unused3f));

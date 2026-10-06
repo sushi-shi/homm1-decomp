@@ -2620,6 +2620,7 @@ i32 advManager::DoNetCombat(RemoteMessage* packet) {
     if (attackingHro)
         free(attackingHro);
     gRetreatWin = false;
+    gCombatSurrender = false;
     return 1;
 }
 
@@ -2819,8 +2820,10 @@ combatFinished:
         SetNoDialogMenus(1);
     }
     MobilizeCurrHero(false);
-    if (processLosses)
+    if (processLosses) {
         gRetreatWin = false;
+        gCombatSurrender = false;
+    }
     gInCombat = false;
     return gCombatManager->m_combatResult;
 }

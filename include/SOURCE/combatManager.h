@@ -96,7 +96,10 @@ enum CombatAIConstant {
     COMBAT_AI_EXPERIENCE_DIVISOR = 200000,
     COMBAT_AI_CASTLE_BASE_ARCHERS = 5,
     COMBAT_AI_CASTLE_ARCHERS_PER_DWELLING = 4,
-    COMBAT_AI_CASTLE_ARCHER_STRENGTH = 100
+    COMBAT_AI_CASTLE_ARCHER_STRENGTH = 100,
+    // A fleeing computer hero surrenders instead of retreating when its
+    // owner keeps at least this much gold after paying the surrender cost.
+    COMBAT_AI_SURRENDER_GOLD_RESERVE = 2500
 };
 
 enum CombatNearbyObjectConstant {
@@ -234,6 +237,8 @@ public:
     void DoVictory(i8 winningSide);
     void DoLoseWindow(void);
     i16 DoSurrender(void);
+    i32 SurrenderCost(void);
+    b32 CastSurrenderRefusedSpell(i8 side);
     void CheckChangeSelector(void);
     void CheckCastleAttack(void);
     void CheckGetAIMove(void);

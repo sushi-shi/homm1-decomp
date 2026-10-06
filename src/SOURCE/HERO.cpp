@@ -501,6 +501,8 @@ void hero::Deallocate(void) {
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++)
             m_army.Dismiss(i);
     }
+    if (!gRetreatWin)
+        ResetToStartingState();
     heroNum = -1;
     for (i = 0; i < playerPtr->m_heroCount; i++) {
         if (playerPtr->m_heroIds[i] == m_id)
@@ -524,17 +526,65 @@ void hero::Deallocate(void) {
     if (gRetreatWin) {
         availSlot = Random(0, HERO_AVAILABLE_SLOT_COUNT - 1);
         if (gGame->m_availableHeroes[gGame->m_players[m_owner].m_availableHeroIds[availSlot]]
-            == HERO_AVAILABILITY_RETREATED)
+            == HERO_AVAILABILITY_IN_TAVERN)
             gGame->m_availableHeroes[gGame->m_players[m_owner].m_availableHeroIds[availSlot]] =
                 HERO_AVAILABILITY_UNAVAILABLE;
         gGame->m_players[m_owner].m_availableHeroIds[availSlot] = m_id;
-        gGame->m_availableHeroes[m_id] = HERO_AVAILABILITY_RETREATED;
+        gGame->m_availableHeroes[m_id] = HERO_AVAILABILITY_IN_TAVERN;
     }
     m_owner = GAME_PLAYER_NONE;
     m_destinationX = m_destinationY = HERO_DESTINATION_NONE;
     if (!gCombatSurrender)
         gGame->SetRandomHeroArmies(m_id, RANDOM_HERO_NORMAL_ARMY);
     CheckEndGame(false);
+}
+
+// A hero hired from a tavern starts with a full day's movement, unless he
+// retreated or surrendered today: then he has no movement left, or with the
+// SoftRetreatSurrender option keeps what he had left.
+void hero::SetRecruitedMobility(void) {
+    if (m_fledState != HERO_FLED_NONE) {
+        m_fledState = HERO_FLED_NONE;
+        if (gConfig.softRetreatSurrender) {
+            m_mobility = m_remainingMobility > 1 ? m_remainingMobility : 1;
+        } else {
+            m_remainingMobility = 0;
+            m_mobility = CalcMobility();
+        }
+    } else {
+        m_remainingMobility = CalcMobility();
+        m_mobility = m_remainingMobility;
+    }
+}
+
+// A hero who was killed or dismissed returns to the pool as he started the
+// game: first level, the class's starting skills, no artifacts besides a
+// spellcaster's spell book, no spells, and no morale, luck or cowardice.
+static i8 gHeroStartingStats[HERO_CLASS_COUNT][HERO_STARTING_STAT_COUNT] = {
+    {1, 2, 1, 1, 1},
+    {2, 1, 1, 1, 1},
+    {0, 0, 2, 3, 1},
+    {0, 0, 3, 2, 1},
+};
+
+void hero::ResetToStartingState(void) {
+    i32 i;
+
+    m_experience = 0;
+    m_level = 1;
+    for (i = 0; i < HERO_STARTING_STAT_COUNT; i++)
+        m_primaryStats[i] = gHeroStartingStats[m_heroClass][i];
+    m_morale = 0;
+    m_luck = 0;
+    m_cowardice = 0;
+    for (i = 0; i < HERO_ARTIFACT_SLOT_COUNT; i++)
+        m_artifacts[i] = ARTIFACT_NONE;
+    if (m_heroClass >= HERO_CLASS_FIRST_SPELLCASTER)
+        m_artifacts[0] = ARTIFACT_MAGIC_BOOK;
+    for (i = 0; i < HERO_SPELL_SLOT_COUNT; i++) {
+        m_spells[i] = SPELL_NONE;
+        m_spellCharges[i] = 0;
+    }
 }
 
 i32 hero::GetExperience(i32 level) {
@@ -580,6 +630,12 @@ i32 hero::GetLevel(i32 experienceValue) {
 }
 
 void hero::ApplyBattleWinTemps(void) {
+    if (m_cowardice < 0)
+        m_cowardice++;
+    ClearBattleTemps();
+}
+
+void hero::ClearBattleTemps(void) {
     if (m_eventFlags & HERO_EVENT_GRAVEYARD) {
         m_morale++;
         m_eventFlags -= HERO_EVENT_GRAVEYARD;
@@ -611,7 +667,9 @@ void hero::ApplyBattleWinTemps(void) {
 }
 
 void hero::ApplyBattleLossTemps(void) {
-    ApplyBattleWinTemps();
+    if (!gCombatSurrender && m_cowardice > HERO_COWARDICE_MIN)
+        m_cowardice--;
+    ClearBattleTemps();
 }
 
 void hero::CheckLevel(void) {

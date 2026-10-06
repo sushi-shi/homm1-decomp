@@ -310,6 +310,11 @@ msgstr "Teleport Here"
 
 #: src/SOURCE/COMMAND.cpp
 #, c-format
+msgid "combat.surrender.computer_offer"
+msgstr "%s states:\n\n\"Let my troops and me leave in peace, and I will pay you %d gold.\""
+
+#: src/SOURCE/COMMAND.cpp
+#, c-format
 msgid "combat.surrender.offer"
 msgstr "%s states:\n\n\"I will accept your surrender and grant you and your troops safe passage for the price of %d gold."
 
@@ -2455,7 +2460,7 @@ msgstr "Medal\n\nThe Medal of Distinction increases your morale."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.12"
-msgstr "Fizbin\n\nThe Fizbin of Misfortune greatly decreases your morale."
+msgstr "Fizbin\n\nThe Fizbin of Misfortune greatly decreases your luck."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.13"
@@ -2591,7 +2596,7 @@ msgstr "Ridding the countryside of the hideous minotaur who made a sport of eati
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactEvent.12"
-msgstr "You stumble upon a medal lying alongside the empty road.  Adding the medal to your inventory, you become aware that you have acquired the undesirable Fizbin of Misfortune, greatly decreasing your army's morale."
+msgstr "You stumble upon a medal lying alongside the empty road.  Adding the medal to your inventory, you become aware that you have acquired the undesirable Fizbin of Misfortune, greatly decreasing your army's luck."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactEvent.13"
@@ -4307,6 +4312,10 @@ msgid "table.gLuckInfoText.10"
 msgstr "\nnone"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gLuckInfoText.11"
+msgstr "\nFizbin of Misfortune -3"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gLuckText.0"
 msgstr "Cursed"
 
@@ -4494,7 +4503,7 @@ msgstr "\nMedal of Distinction +1"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gMoraleInfoText.12"
-msgstr "\nFizbin of Misfortune -2"
+msgstr "\nFizbin of Misfortune -3"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gMoraleInfoText.13"
