@@ -114,7 +114,11 @@ void font::DrawBoundedString(
         }
         if (widthUsed > width) {
             position--;
-            while (textCopy[position] != ' ' && position >= lineStart) {
+            // A word wider than the line has no space to break at: the walk
+            // back ends before the line (at -1 on the first line, where the
+            // original read and wrote the byte before the copy). The line
+            // is then drawn whole, as before.
+            while (position >= lineStart && textCopy[position] != ' ') {
                 baseGlyph = static_cast<u8>(textCopy[position]);
                 if (baseGlyph < ' '
                     || (baseGlyph > FONT_CODE_ASCII_LAST && baseGlyph < CYRILLIC_CAPITAL_A
@@ -128,12 +132,13 @@ void font::DrawBoundedString(
                     + FONT_GLYPH_ADVANCE_SPACING;
                 position--;
             }
-            if (textCopy[position] == ' ')
+            if (position >= lineStart && textCopy[position] == ' ')
                 widthUsed -= frameDirectory[FONT_GLYPH_WIDTH_WORD] + FONT_GLYPH_ADVANCE_SPACING;
         }
         lineEnd = position;
-        breakChar = textCopy[lineEnd];
-        textCopy[lineEnd] = '\0';
+        breakChar = lineEnd >= 0 ? textCopy[lineEnd] : '\0';
+        if (lineEnd >= 0)
+            textCopy[lineEnd] = '\0';
         switch (align) {
             case FONT_ALIGN_LEFT:
                 alignIndent = 0;
@@ -146,7 +151,8 @@ void font::DrawBoundedString(
                 break;
         }
         DrawString(textCopy + lineStart, alignIndent + x, lineTop + y, drawColor);
-        textCopy[lineEnd] = breakChar;
+        if (lineEnd >= 0)
+            textCopy[lineEnd] = breakChar;
         lineTop += m_height;
         lineStart = lineEnd + 1;
         position = lineStart;
@@ -156,6 +162,7 @@ void font::DrawBoundedString(
 }
 
 i32 font::LineLength(char* text, i16 maxWidth) {
+    i16 overflow;
     i16 widthUsed;
     i16 position;
     i16 textLen = strlen(text);
@@ -190,7 +197,8 @@ i32 font::LineLength(char* text, i16 maxWidth) {
         }
         if (widthUsed > maxWidth) {
             position--;
-            while (chars[position] != ' ' && position >= lineStart) {
+            overflow = position;
+            while (position >= lineStart && chars[position] != ' ') {
                 baseGlyph = static_cast<u8>(chars[position]);
                 if (baseGlyph < ' '
                     || (baseGlyph > FONT_CODE_ASCII_LAST && baseGlyph < CYRILLIC_CAPITAL_A
@@ -203,8 +211,16 @@ i32 font::LineLength(char* text, i16 maxWidth) {
                              + FONT_GLYPH_ADVANCE_SPACING;
                 position--;
             }
-            if (chars[position] == ' ')
+            if (position >= lineStart && chars[position] == ' ')
                 widthUsed -= widths[FONT_GLYPH_WIDTH_WORD] + FONT_GLYPH_ADVANCE_SPACING;
+            // A word wider than the line has no space to break at. The
+            // original then started the next line where this one started
+            // and counted lines without end (typing a long word into a
+            // multi-line field hung the program), reading the byte before
+            // the text on the first line. The word is broken where it
+            // overflows instead, at least one character per line.
+            if (position < lineStart)
+                position = overflow > lineStart ? overflow - 1 : lineStart;
         }
         lineEnd = position;
         lines++;

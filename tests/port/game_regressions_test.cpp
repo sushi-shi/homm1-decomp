@@ -11,6 +11,7 @@
 
 #include <BASE/Misc.h>
 #include <BASE/executive.h>
+#include <BASE/font.h>
 #include <BASE/heroWindowManager.h>
 #include <BASE/miscwin.h>
 #include <BASE/mouseManager.h>
@@ -156,6 +157,23 @@ void CampaignCrests() {
     Expect(distinct, "campaign crests are distinct");
 }
 
+// A word wider than a multi-line field: LineLength counted lines without
+// end (the editor hung while typing a long word into the map description),
+// and both it and DrawBoundedString read before the text on the first line.
+void LongWords() {
+    font* small = gResourceManager->GetFont(const_cast<char*>("smalfont.fnt"));
+    char word[64];
+    memset(word, 'W', sizeof(word) - 1);
+    word[sizeof(word) - 1] = 0;
+    i32 lines = small->LineLength(word, 40);
+    Expect(lines > 1 && lines < 64, "a long word is counted over several lines");
+    char sentence[] = "short WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW end";
+    Expect(small->LineLength(sentence, 40) >= 3, "a long word inside a sentence is broken");
+    small->DrawBoundedString(word, 10, 10, 40, 60, 0, 0);
+    Expect(true, "a long word is drawn in a bounded box");
+    gResourceManager->Dispose(small);
+}
+
 }  // namespace
 
 int main() {
@@ -184,6 +202,7 @@ int main() {
     MapChecks();
     WeekWithAbsentPlayers();
     CampaignCrests();
+    LongWords();
     std::string cleanup = "rm -r '" + config + "'";
     if (std::system(cleanup.c_str()) != 0)
         std::fprintf(stderr, "could not remove %s\n", config.c_str());
