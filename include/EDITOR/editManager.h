@@ -233,18 +233,24 @@ struct editMap {
     editMapCellPair cellPairs[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 };
 
-// A town's map-extra record as the editor keeps it: the game's mapTownExtra
-// and a tail no recovered code reads.
+// The editor's town and hero map-extra records end in a reserved block:
+// PlaceOverlay zero-fills the new record, the town and hero dialogs copy it
+// whole and SaveMap writes m_extraSizes bytes, but no code of either program
+// reads it (the game's readers stop at mapTownExtra/mapHeroExtra).
+H1_ENUM_CONST_BEGIN(EditExtraConstant)
+    EDIT_EXTRA_RESERVED_SIZE = 50
+H1_ENUM_CONST_END(EditExtraConstant)
+
+// A town's map-extra record as the editor keeps it.
 struct editTownExtra {
     mapTownExtra record;
-    u8 unknown14[0x32];
+    u8 reserved[EDIT_EXTRA_RESERVED_SIZE];
 };
 
-// A placed hero's map-extra record: the game's mapHeroExtra and a tail no
-// recovered code reads.
+// A placed hero's map-extra record as the editor keeps it.
 struct editHeroExtra {
     mapHeroExtra record;
-    u8 unknown19[0x32];
+    u8 reserved[EDIT_EXTRA_RESERVED_SIZE];
 };
 
 class editManager : public baseManager {
