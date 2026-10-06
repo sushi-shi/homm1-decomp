@@ -20,6 +20,9 @@ source-win95-1.0                                             |                  
                                                     |                 |
                                                     v                 v
                                                   port            source-te
+                                                    |
+                                                    v
+                                                 port-te
 ```
 
 | Branch | Purpose |
@@ -31,8 +34,9 @@ source-win95-1.0                                             |                  
 | [source-win95-1.0](https://github.com/sushi-shi/homm1-decomp/tree/source-win95-1.0) | Generated clean source for Win95 1.0 |
 | [source-buka-2003](https://github.com/sushi-shi/homm1-decomp/tree/source-buka-2003) | Generated clean source for Buka 2003: the primary C++ tree, with its Russian and English text catalog |
 | [classic-buka-2003](https://github.com/sushi-shi/homm1-decomp/tree/classic-buka-2003) | The same generated tree as a reading view, its text spelled out as UTF-8 Russian |
-| port | Cross-platform port based on `source-buka-2003` (planned) |
-| source-te | Branch based on `source-buka-2003` (planned) |
+| [port](https://github.com/sushi-shi/homm1-decomp/tree/port) | Native port of the game and editor on `source-buka-2003`: SDL3 on Linux, Windows and the browser, multiplayer over TCP, the help book |
+| [source-te](https://github.com/sushi-shi/homm1-decomp/tree/source-te) | The Tournament Edition (TE 1.05 f3) as source changes on `source-buka-2003` |
+| [port-te](https://github.com/sushi-shi/homm1-decomp/tree/port-te) | The Tournament Edition on the native port |
 
 This branch is `classic-buka-2003`.
 

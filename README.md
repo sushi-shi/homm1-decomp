@@ -1,7 +1,9 @@
 # homm1-decomp-buka
 
-C++ reconstruction of **Heroes of Might and Magic — Buka 2003**, using VC6 SP5.
-Original English is preserved alongside the Russian translation catalog.
+C++ reconstruction of **Heroes of Might and Magic — Buka 2003** (`HEROES.EXE`
+and the scenario editor `EDITOR.EXE`), built with VC6 SP5. Both programs link
+byte-identical to the retail executables. Text lives in per-language catalogs
+(Russian and English).
 
 See [Buka 2003 changes](docs/versions/buka-2003.md) and the [version lineage](docs/versions/README.md)
 (Win95 1.0 → 1.1 → 1.2 → Buka 2003). Supply your own executable
@@ -56,6 +58,9 @@ source-win95-1.0                                             |                  
                                                     |                 |
                                                     v                 v
                                                   port            source-te
+                                                    |
+                                                    v
+                                                 port-te
 ```
 
 | Branch | Purpose |
@@ -63,18 +68,19 @@ source-win95-1.0                                             |                  
 | [decomp-win95-1.0](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.0) | Reconstruction of the February 1996 Win95 1.0 `HEROES.EXE` |
 | [decomp-win95-1.1](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.1) | Reconstruction of the May 1996 Win95 1.1 `HEROES.EXE` |
 | [decomp-win95-1.2](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.2) | Maintained reconstruction of the August 1997 Win95 1.2 `HEROESW.EXE`, using VC4.1 |
-| [decomp-buka-2003](https://github.com/sushi-shi/homm1-decomp/tree/decomp-buka-2003) | Buka port; implementation and target migration in progress |
+| [decomp-buka-2003](https://github.com/sushi-shi/homm1-decomp/tree/decomp-buka-2003) | Reconstruction of the Buka 2003 `HEROES.EXE` and `EDITOR.EXE`; both link byte-identical to retail |
 | [source-win95-1.0](https://github.com/sushi-shi/homm1-decomp/tree/source-win95-1.0) | Generated clean source for Win95 1.0 |
 | [source-buka-2003](https://github.com/sushi-shi/homm1-decomp/tree/source-buka-2003) | Generated clean source for Buka 2003: the primary C++ tree, with its Russian and English text catalog |
 | [classic-buka-2003](https://github.com/sushi-shi/homm1-decomp/tree/classic-buka-2003) | The same generated tree as a reading view, its text spelled out as UTF-8 Russian |
-| port | Cross-platform port based on `source-buka-2003` (planned) |
-| source-te | Branch based on `source-buka-2003` (planned) |
+| [port](https://github.com/sushi-shi/homm1-decomp/tree/port) | Native port of the game and editor on `source-buka-2003`: SDL3 on Linux, Windows and the browser, multiplayer over TCP, the help book |
+| [source-te](https://github.com/sushi-shi/homm1-decomp/tree/source-te) | The Tournament Edition (TE 1.05 f3) as source changes on `source-buka-2003` |
+| [port-te](https://github.com/sushi-shi/homm1-decomp/tree/port-te) | The Tournament Edition on the native port |
 
 ## Quickstart
 
-With Nix flakes enabled, run from the repository root. The build currently
-compiles the sources, then stops at unprovided Buka data identities during
-strict delinking. Inherited source/data claims still need migration:
+With Nix flakes enabled, run from the repository root. `homm1 build` compiles
+and links both programs; `homm1 build verify` checks every gate, including the
+byte-for-byte comparison of both linked executables with retail:
 
 ```sh
 nix develop .#build
@@ -82,6 +88,7 @@ homm1 init --exe /path/to/HEROES.EXE
 homm1 toolchain install
 homm1 tool wine --init
 homm1 build
+homm1 build verify
 homm1 match BASE/MOUSEMGR
 homm1 verify status
 homm1 play --game /path/to/game-or-cd.iso   # optional: run the build
