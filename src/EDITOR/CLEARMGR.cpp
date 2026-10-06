@@ -175,7 +175,10 @@ i16 clearManager::Main(tag_message& message) {
                     break;
                 case WIDGET_NOTIFY_RIGHT_CLICK:
                     if (message.id == EDITOR_TOOL_OPTIONS_BUTTON)
-                        NormalDialog(gClearToolHelp, NORMAL_DIALOG_TYPE_QUICK_VIEW);
+                        NormalDialog(
+                            gClearToolHelp[CLEAR_TOOL_HELP_OPTIONS],
+                            NORMAL_DIALOG_TYPE_QUICK_VIEW
+                        );
                     break;
                 case WIDGET_COMMAND_HOVER:
                     if (message.id != EDITOR_MAP_WIDGET

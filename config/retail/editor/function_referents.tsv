@@ -8,6 +8,9 @@ rva	name	provenance
 0x00002c83	?DrawMap@editManager@@QAEXXZ	callee of a body compiled for this image from shared source
 0x00002f2e	?DrawRadar@editManager@@QAEXH@Z	callee of a body compiled for this image from shared source
 0x00003546	?SelectTool@editManager@@QAEXF@Z	callee of a body compiled for this image from shared source
+0x000039f0	?PaintGround@editManager@@QAEXFFFFF@Z	callee of a body compiled for this image from shared source
+0x00003bd0	?FillGround@editManager@@QAEXFFFFF@Z	callee of a body compiled for this image from shared source
+0x00003d38	?BlendTerrain@editManager@@QAEXFEEEE@Z	callee of a body compiled for this image from shared source
 0x000078e5	?ClearArea@editManager@@QAEXHHHHGH@Z	callee of a body compiled for this image from shared source
 0x000084a5	_PollSound	callee of placed SOURCE/kbwin body at site 0xd46a; game callee 0x3c7b0
 0x000084aa	?oldmain@@YAHXZ	callee of a body compiled for this image from shared source
@@ -32,6 +35,8 @@ rva	name	provenance
 0x00009278	?EarlyResizeWindow@@YAXHHHH@Z	callee of a body compiled for this image from shared source
 0x0000927d	?UpdateSystemOptionsMenu@@YAXXZ	callee of a body compiled for this image from shared source
 0x0000b329	?ClearOptionsDialog@@YAHXZ	callee of a body compiled for this image from shared source
+0x000192b4	?RandomizeTiles@terrainManager@@QAEXXZ	callee of a body compiled for this image from shared source
+0x00019404	?SelectTerrain@terrainManager@@QAEXF@Z	callee of a body compiled for this image from shared source
 0x0001b320	_CloseHandle@4	FF25 thunk of KERNEL32.DLL!CloseHandle; name of game thunk 0x68616
 0x0001b326	_GetDriveTypeA@4	FF25 thunk of KERNEL32.DLL!GetDriveTypeA; name of game thunk 0x68646
 0x0001b32c	_GetLastError@0	FF25 thunk of KERNEL32.DLL!GetLastError; name of game thunk 0x685ec

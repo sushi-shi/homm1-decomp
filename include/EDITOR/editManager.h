@@ -61,8 +61,10 @@ public:
     i8 m_unknown102;
     // clearManager sets it after changing the map.
     i16 m_mapChanged;
-    i16 m_unknown105;
-    i16 m_unknown107;
+    // The map cell of the last placed object (-1: none); the tools reset it
+    // when they open.
+    i16 m_placedX;
+    i16 m_placedY;
     i16 m_unknown109;
     // The widget id of the last tool command (-1 none).
     i16 m_lastCommandId;
@@ -101,6 +103,13 @@ public:
     // Erases the object classes in mask from the width x height cells at
     // (x, y): each cell's first layer, and its second when secondLayer is set.
     void ClearArea(i32 x, i32 y, i32 width, i32 height, u16 mask, i32 secondLayer);
+    // Sets the ground of the width x height view cells at (x, y) to the
+    // terrain's plain tile and redraws them.
+    void PaintGround(i16 x, i16 y, i16 width, i16 height, i16 terrain);
+    // The same for map cells, filling the rectangle.
+    void FillGround(i16 x, i16 y, i16 width, i16 height, i16 terrain);
+    // Fits the terrain's edge tiles to their neighbours over the whole map.
+    void BlendTerrain(i16 terrain, u8, u8 restoreOthers, u8 secondPass, u8 skipFirstPass);
     virtual i16 Open(i16 priority) OVERRIDE;
     virtual void Close(void) OVERRIDE;
     virtual i16 Main(tag_message& message) OVERRIDE;

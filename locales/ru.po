@@ -3912,6 +3912,34 @@ msgctxt "editor.clear.options.help"
 msgid "Provides finer control over which objects are removed."
 msgstr "Обеспечивает более детальное управление процессом удаления объектов."
 
+msgctxt "editor.terrain.help.water"
+msgid "Water\n\nOnly ships can travel here."
+msgstr "Вода\n\nЗдесь можно путешествовать только на корабле."
+
+msgctxt "editor.terrain.help.grass"
+msgid "Grass\n\nNo restrictions."
+msgstr "Трава\n\nНет ограничений."
+
+msgctxt "editor.terrain.help.snow"
+msgid "Snow\n\nEvery hero except a barbarian spends 1.5 movement points per step."
+msgstr "Снег\n\nВсе герои, кроме варвара, за 1 шаг тратят 1,5 единицы движения."
+
+msgctxt "editor.terrain.help.swamp"
+msgid "Swamp\n\n Every hero except a barbarian spends 1.5 movement points per step."
+msgstr "Болото\n\n Все герои, кроме варвара, за 1 шаг тратят 1,5 единицы движения."
+
+msgctxt "editor.terrain.help.lava"
+msgid "Lava\n\nNo restrictions."
+msgstr "Лава\n\nНет ограничений."
+
+msgctxt "editor.terrain.help.desert"
+msgid "Desert\n\n Every hero except a barbarian spends 2 movement points per step."
+msgstr "Пустыня\n\n Все герои, кроме варвара, за 1 шаг тратят 2 единицы движения."
+
+msgctxt "editor.terrain.help.dirt"
+msgid "Dirt\n\nNo restrictions."
+msgstr "Земля\n\nНет ограничений."
+
 msgctxt "startup.instance.already_running"
 msgid "Only one copy of %s may run at a time"
 msgstr "Только одна копия %s может быть запущена одновременно"

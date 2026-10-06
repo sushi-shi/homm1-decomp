@@ -37,8 +37,29 @@ extern i32 gSelectionWidth;
 extern i32 gSelectionHeight;
 // The object classes the eraser removes (one bit per clearwin.bin toggle).
 extern i32 gClearFlags;
-// The eraser options button's right-click help.
-extern char* gClearToolHelp;
+// The tool panels' right-click help, indexed by the help ids below (0: none).
+H1_ENUM_BEGIN(TerrainToolHelp)
+    TERRAIN_TOOL_HELP_NONE = -1,
+    TERRAIN_TOOL_HELP_WATER = 1,
+    TERRAIN_TOOL_HELP_GRASS = 2,
+    TERRAIN_TOOL_HELP_SNOW = 3,
+    TERRAIN_TOOL_HELP_SWAMP = 4,
+    TERRAIN_TOOL_HELP_LAVA = 5,
+    TERRAIN_TOOL_HELP_DESERT = 6,
+    TERRAIN_TOOL_HELP_DIRT = 7
+H1_ENUM_END(TerrainToolHelp)
+
+H1_ENUM_BEGIN(ClearToolHelp)
+    CLEAR_TOOL_HELP_OPTIONS = 1
+H1_ENUM_END(ClearToolHelp)
+
+H1_ENUM_CONST_BEGIN(EditorToolHelpConstant)
+    EDITOR_TERRAIN_TOOL_HELP_COUNT = 8,
+    EDITOR_CLEAR_TOOL_HELP_COUNT = 2
+H1_ENUM_CONST_END(EditorToolHelpConstant)
+
+extern char* gTerrainToolHelp[];
+extern char* gClearToolHelp[];
 
 void ShowStatusText(char* text);
 void ClearStatusText(void);

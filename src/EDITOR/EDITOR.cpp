@@ -289,8 +289,22 @@ DATA(0x0043f39c)
 i32 gClearFlags = EDITOR_CLEAR_FLAGS_DEFAULT;
 DATA(0x0043f3a0)
 i32 gSelectionX = -1;
-DATA(0x0043f738)
-char* gClearToolHelp = localization::Tr("editor.clear.options.help");
+DATA(0x0043f714)
+char* gTerrainToolHelp[EDITOR_TERRAIN_TOOL_HELP_COUNT] = {
+    "",
+    localization::Tr("editor.terrain.help.water"),
+    localization::Tr("editor.terrain.help.grass"),
+    localization::Tr("editor.terrain.help.snow"),
+    localization::Tr("editor.terrain.help.swamp"),
+    localization::Tr("editor.terrain.help.lava"),
+    localization::Tr("editor.terrain.help.desert"),
+    localization::Tr("editor.terrain.help.dirt")
+};
+DATA(0x0043f734)
+char* gClearToolHelp[EDITOR_CLEAR_TOOL_HELP_COUNT] = {
+    "",
+    localization::Tr("editor.clear.options.help")
+};
 DATA(0x00451e9c)
 i32 gSelectionWidth;
 DATA(0x00451f70)
