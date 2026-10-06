@@ -1,9 +1,10 @@
-# Heroes of Might and Magic — native port
+# Heroes of Might and Magic — Tournament Edition, native port
 
-A Linux, Windows and browser port of the 2003 Buka edition of Heroes of Might
-and Magic and its scenario editor, built from the reconstructed C++ source.
-Supply your own copy of the game (its CD image, the CD or an installed game
-folder); game data is not bundled.
+The Tournament Edition (TE 1.05 f3) of the 2003 Buka Heroes of Might and
+Magic and its scenario editor, as source changes on the reconstructed C++
+tree, ported to Linux, Windows and the browser. Supply your own copy of the
+Buka game (its CD image, the CD or an installed game folder); game data is
+not bundled.
 
 ## Branches
 
@@ -18,10 +19,10 @@ source-win95-1.0                                             |                  
                                                     +--------+--------+
                                                     |                 |
                                                     v                 v
-                                       port (you are here)        source-te
+                                                  port            source-te
                                                     |
                                                     v
-                                                 port-te
+                                       port-te (you are here)
 ```
 
 | Branch | Purpose |
@@ -42,8 +43,8 @@ source-win95-1.0                                             |                  
 On x86_64 Linux with Nix flakes enabled:
 
 ```sh
-HOMM1_GAME=/path/to/heroes.iso nix run github:sushi-shi/homm1-decomp/port
-nix run github:sushi-shi/homm1-decomp/port#heroes-editor     # the scenario editor
+HOMM1_GAME=/path/to/heroes.iso nix run github:sushi-shi/homm1-decomp/port-te
+nix run github:sushi-shi/homm1-decomp/port-te#heroes-editor     # the scenario editor
 ```
 
 Supply your own copy of the Buka 2003 edition: its CD image, the CD's files
@@ -56,18 +57,22 @@ cd9f410094783e40c537bbca20990c0e9128e6fe71fecff5fd54ccc8bdd99c72
 
 The first launch checks the copy (the resource archive by SHA-256, the other
 files by name and size) and imports its data into
-`~/.local/share/homm1/data`; later launches need no `HOMM1_GAME`. Saved games,
-the editor's maps and the high scores are written to
-`~/.local/share/homm1/game`; settings and the converted help are kept in
-`~/.config/homm1`.
+`~/.local/share/homm1-te/data`; later launches need no `HOMM1_GAME`. Saved
+games (with the edition's `H1TE` header), the editor's maps and the high
+scores are written to `~/.local/share/homm1-te/game`, apart from the Buka
+port's `homm1` folder. The settings of both programs are kept in
+`~/.config/homm1/heroes-te-ru.cfg` (or `heroes-te-en.cfg`), with the edition's
+options (`HMM1 ShowEnemyMobility`, `SoftRetreatSurrender`, `SlightlyHarderAI`,
+`CheatMode`, `OriginalCheatKeys`, `LosslessAudio`, `PlayVideos`,
+`BattleMessageFormat`; [docs/te](docs/te/catalogue.md)). The game starts in a
+window; the intro movies play only with `PlayVideos=1`.
 
 Pass the game's options after `--`, for example
-`nix run github:sushi-shi/homm1-decomp/port -- --window /I0`:
+`nix run github:sushi-shi/homm1-decomp/port-te -- --fullscreen`:
 
 | Option | Purpose |
 | --- | --- |
 | `--window`, `--fullscreen` | Start in a window or at full screen (F4 switches while playing) |
-| `/I0` | Skip the intro movies |
 | `/C1` | Colour pointers instead of the monochrome ones |
 | `--port N`, `--join ADDRESS[:PORT]` | Network, modem and direct-connection games over TCP ([multiplayer](docs/port/README.md#multiplayer)) |
 | `--data DIR` | Run on an existing game folder as it is |
@@ -82,7 +87,7 @@ Add the port and a local folder holding your copy of the game to your flake
 inputs:
 
 ```nix
-inputs.homm1.url = "github:sushi-shi/homm1-decomp/port";
+inputs.homm1.url = "github:sushi-shi/homm1-decomp/port-te";
 inputs.homm1-game = {
   url = "path:/path/to/folder-with-the-iso";
   flake = false;
@@ -100,6 +105,7 @@ outputs = { nixpkgs, homm1, homm1-game, ... }: {
       {
         programs.homm1 = {
           enable = true;
+          edition = "te";                      # the default on this branch
           game = "${homm1-game}/heroes.iso";   # your image's file name
         };
       }
@@ -130,9 +136,11 @@ homeConfigurations."<user>" = home-manager.lib.homeManagerConfiguration {
 };
 ```
 
-`programs.homm1.locale = "en"` builds the programs with English text and
-menus, and `programs.homm1.editor.enable = false` leaves the editor out;
-[more about the install](docs/port/README.md#installing-with-nix).
+`programs.homm1.edition` is `"te"` on this branch; `"buka"` is the port
+branch's flake, which builds the Buka edition. `programs.homm1.locale = "en"`
+builds the programs with English text and menus, and
+`programs.homm1.editor.enable = false` leaves the editor out;
+[more about the install](docs/te/README.md#installing-it-with-the-flake).
 
 ## Controls
 
@@ -149,6 +157,7 @@ original's shortcuts.
 | Cast a spell / dig / view the world / puzzle map | C / D / V / P |
 | Scenario information | I |
 | Save / load / new game / quit | S / L / N / Q |
+| Quick save / quick load | F5 / F9 |
 | Network chat | F2 |
 | Full screen on or off | F4 |
 | Combat: skip the stack's turn, cast, view the hero, view the stack | Space, C, H, T |
@@ -156,7 +165,7 @@ original's shortcuts.
 
 ## Build from source
 
-From the `port` branch:
+From the `port-te` branch:
 
 ```sh
 nix develop
@@ -167,13 +176,13 @@ build/linux/heroes-editor --data /path/to/game    # the editor
 ```
 
 The game folder is the one holding `DATA`, `MAPS`, `GAMES`, `SOUND` and
-`ANIM` (in any case): an installed game, or `~/.local/share/homm1/data/game`
+`ANIM` (in any case): an installed game, or `~/.local/share/homm1-te/data/game`
 after a first `nix run`. Without `--data` the programs also look beside
 themselves and in the current folder. `-DHOMM1_LOCALE=en` builds the English
 text. Without Nix: CMake 3.25, Ninja, a C++20 compiler (GCC 12+ or Clang
 15+) and Python 3; CMake downloads and builds SDL 3 when it is not installed.
-Details, tests and the original's Visual C++ 6 build:
-[docs/port](docs/port/README.md).
+Details, tests and the Visual C++ 6 build: [docs/port](docs/port/README.md);
+the edition's changes and how each is implemented: [docs/te](docs/te/README.md).
 
 ## Browser
 
@@ -192,7 +201,7 @@ python3 -m http.server --directory build/wasm
 The browser version can be built directly on Windows. Install
 [Git](https://git-scm.com/downloads/win), [Python 3](https://www.python.org/downloads/windows/),
 [CMake 3.25+](https://cmake.org/download/) and [Ninja](https://ninja-build.org/),
-with their commands available on `PATH`. In PowerShell, from your `port`
+with their commands available on `PATH`. In PowerShell, from your `port-te`
 checkout:
 
 ```powershell
@@ -224,10 +233,12 @@ With Nix, on Linux:
 nix build .#windows
 ```
 
-`result/bin` holds `heroes.exe`, `heroes-editor.exe` and every DLL they need
+`result/bin` holds the edition's `heroes.exe`, `heroes-editor.exe` and every
+DLL they need
 (`SDL3.dll`, `libmcfgthread-2.dll`). Copy these files into your installed
 game folder (the one with `DATA`, `MAPS`, `GAMES`, `SOUND` and `ANIM`) and
-start `heroes.exe` or `heroes-editor.exe` there. Elsewhere, start them with
+start `heroes.exe` or `heroes-editor.exe` there; the edition's lossless music
+goes in an `Audio` folder there (`Track NN.flac`). Elsewhere, start them with
 `--data C:\Games\Heroes` or set `HOMM1_DATA` to that folder (the quotes cmd's
 `set HOMM1_DATA="C:\Games\Heroes"` keeps are fine).
 
@@ -250,9 +261,12 @@ are kept in `%APPDATA%\homm1`.
   retail program: [multiplayer](docs/port/README.md#multiplayer).
 - **Help** opens the game's own help book (`HELP\HEROES.HLP`), converted to a
   page in your browser: [help](docs/port/README.md#help).
+- Network games need the same version on both sides: the edition's
+  protocol refuses the Buka game's.
 - Where the port behaves differently from the original, and why:
-  [docs/port/divergences.md](docs/port/divergences.md); what porting this
-  code takes: [docs/port/lessons.md](docs/port/lessons.md).
+  [docs/port/divergences.md](docs/port/divergences.md); the edition on the
+  native port: [docs/te](docs/te/README.md#the-edition-on-the-native-port-port-te);
+  what porting this code takes: [docs/port/lessons.md](docs/port/lessons.md).
 
 ## License
 
