@@ -6,7 +6,7 @@
 # (tab-separated; every field is an fnmatch glob, `*` matches anything; the
 # first matching row wins): file owner spelling group detail reason.
 # group/detail are the census' review_group/review_context columns.
-#floor	1537
+#floor	1246
 *	*	0	trivial-function-literal	0 for-init	a for loop's counter starts at zero
 *	*	0	trivial-function-literal	0 initializer*	an accumulator or counter declared at zero
 *	*	1	trivial-function-literal	1 arithmetic*	a one-step offset: the next index, element or count
@@ -1006,6 +1006,162 @@ src/SOURCE/kbwin.cpp	ResizeWindow	1	call-argument	MoveWindow(HWND, int, int, int
 src/SOURCE/kbwin.cpp	SetMenus	-1	trivial-function-literal	-1 cxx_static_cast_expr	GetMenuItemID's (UINT)-1 for a submenu entry (no Win32 macro in the VC4 headers)
 src/SOURCE/PHILAI.cpp	philAI::QuickCombat	-1	call-argument	ProbableOutcomeOfBattle(*	no defending player in the m_owner ternary: retail's int literal (an enumerator narrows VC4's ?: result to char)
 src/SOURCE/PHILAI.cpp	philAI::ChooseEvaluateBattle	-1	call-argument	ProbableOutcomeOfBattle(*	no defending player in the m_owner ternary: retail's int literal (an enumerator narrows VC4's ?: result to char)
+src/SOURCE/PHILAI.cpp	*	[01]	trivial-function-literal	[01] store bShowIt	gShowIt, the adventure code's shared integer show-the-move flag (stored 0/1 and tested against 0 by CURSOR/EVENTS/ADVMGR)
+src/SOURCE/PHILAI.cpp	*	0	trivial-function-literal	0 equality bShowIt	gShowIt, the adventure code's shared integer show-the-move flag (stored 0/1 and tested against 0 by CURSOR/EVENTS/ADVMGR)
+src/SOURCE/PHILAI.cpp	*	0	trivial-function-literal	0 equality blackoutComputer	gConfig.blackoutComputer, the saved integer option: 0 shows the computer's moves
+src/SOURCE/PHILAI.cpp	*	0	call-argument	UpdateScreen(i8, b8) argument 1	advManager::UpdateScreen's integer cursor-update argument: 0 leaves the cursor
+src/SOURCE/PHILAI.cpp	*	0	call-argument	CheckDoMain(i32, b32) argument 1	CheckDoMain's first argument, which it never reads
+src/SOURCE/PHILAI.cpp	*	0	trivial-function-literal	0 store m_remainingMobility	the hero's remaining movement points spent: its move ends this turn
+src/SOURCE/PHILAI.cpp	*	1	trivial-function-literal	1 bitwise	a one-bit shift: halving a fight value or mobility (>> 1), or a visited-site bit (1 << n)
+src/SOURCE/PHILAI.cpp	*	0	trivial-function-literal	0 store visited	the search's own start cell unmarked (searchArray's visited bit field)
+src/SOURCE/PHILAI.cpp	*	0	call-argument	QuickCombat(* argument [56]	QuickCombat's town-battle flag and town id: not a town battle (the id is unused)
+src/SOURCE/PHILAI.cpp	*	1	call-argument	QuickCombat(* argument 5	QuickCombat's town-battle flag: the town is the defender
+src/SOURCE/PHILAI.cpp	*	0	call-argument	ChooseEvaluateBattle(* argument [56]	ChooseEvaluateBattle's castle flag and castle id: not a castle battle (the id is unused)
+src/SOURCE/PHILAI.cpp	*	[01]	call-argument	ProbableOutcomeOfBattle(* argument [67]	ProbableOutcomeOfBattle's use-town flag and town id: 0 for an open-field battle (the id is unused), 1 for the defended town
+src/SOURCE/PHILAI.cpp	philAI::philAI	0	trivial-function-literal	0 store giBuildBoatStuffTurn[[][]]	no boat plan made yet: the plan's turn starts at 0
+src/SOURCE/PHILAI.cpp	philAI::CheckBuyStuff	1	call-argument	CreateBoat(i8, i8) argument [12]	the shipyard's dock cell, one column left of and one row below the town
+src/SOURCE/PHILAI.cpp	philAI::GoodAdjacent	100	store	store to bestEventValue	an AI tuning threshold: the least event value worth a one-step detour
+src/SOURCE/PHILAI.cpp	philAI::CheckReload	0.0f	store	store to friendlySupportSum	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/PHILAI.cpp	philAI::CheckReload	2	call-argument	SeedPosition(* argument 4	an AI tuning factor: the reload search reaches four times the hero's mobility (<< 2)
+src/SOURCE/PHILAI.cpp	philAI::CheckBerserk	-1	trivial-function-literal	-1 initializer	below every fight value: the strongest enemy found so far starts at -1
+src/SOURCE/PHILAI.cpp	philAI::DoDimensionDoor	-1	trivial-function-literal	-1 [se]* bestX	no landing cell found yet (bestX -1)
+src/SOURCE/PHILAI.cpp	philAI::DoDimensionDoor	1	trivial-function-literal	1 bound pathIndex	the path's steps after the first one (index 0 is the destination)
+src/SOURCE/PHILAI.cpp	philAI::DoDimensionDoor	4	comparison-or-bound	operator <= skippedCount	an AI tuning threshold: the fewest path steps a dimension door must skip
+src/SOURCE/PHILAI.cpp	philAI::DoAI	4	store	initializer of tempArrayData	the extent of an unused four-entry local array that holds its retail frame slot
+src/SOURCE/PHILAI.cpp	philAI::DoAI	0	trivial-function-literal	0 store iCurPlaceToVisit	the visit log emptied for the next hero
+src/SOURCE/PHILAI.cpp	philAI::DoAI	0	call-argument	ResetHeroRVs(b32, i32, i32) argument [23]	no position: a full reset (resetAll false) ignores x and y
+src/SOURCE/PHILAI.cpp	philAI::DoAI	*	store	store to stepQuota	an AI tuning weight: the steps a hero moves between re-evaluations, at sea and on land
+src/SOURCE/PHILAI.cpp	philAI::DoAI	0	trivial-function-literal	0 store exhaustedMobility	MoveHero's integer out flag cleared before the walk
+src/SOURCE/PHILAI.cpp	philAI::DoAI	0	trivial-function-literal	0 store nearMonster	MoveHero's byte out flag cleared before the walk
+src/SOURCE/PHILAI.cpp	philAI::DoAI	0	trivial-function-literal	0 equality pathIndex	the path's last step (index 0 is the destination)
+src/SOURCE/PHILAI.cpp	philAI::GetTurnAIVars	0	trivial-function-literal	0 store gSandAnim	the AI-turn sand animation back at its first frame
+src/SOURCE/PHILAI.cpp	philAI::GetTurnAIVars	0	trivial-function-literal	0 store unusedFightValue	an unused local's retail store
+src/SOURCE/PHILAI.cpp	philAI::GetTurnAIVars	0.0f	store	store to fightVal	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/PHILAI.cpp	philAI::GetTurnAIVars	0	trivial-function-literal	0 store fightTotalSum	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/PHILAI.cpp	philAI::GetTurnAIVars	0	trivial-function-literal	0 store artifactValueSum	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/PHILAI.cpp	philAI::GetTurnAIVars	4e-05	arithmetic	operator * fightVal	an AI tuning weight: a hero's fight value scales its AI fight factor
+src/SOURCE/PHILAI.cpp	philAI::GetTurnAIVars	1000	arithmetic	operator + fightTotalSum	an AI tuning weight: the gold-to-strength upgrade ratio's offset
+src/SOURCE/PHILAI.cpp	philAI::GetTurnAIVars	10	arithmetic	operator [-+] *	an AI tuning radius: cells around an enemy hero whose mine value it threatens
+src/SOURCE/PHILAI.cpp	philAI::GetTurnAIVars	4	call-argument	abs(int) argument 1	an AI tuning offset: an enemy hero's reach before a mine counts as threatened
+src/SOURCE/PHILAI.cpp	philAI::GetBestBHC	*.*f	store	initializer of *	a floating-point AI score start: 1.0 scale and the -99 'no purchase yet' floor
+src/SOURCE/PHILAI.cpp	philAI::GetBestBHC	1	trivial-function-literal	1 * totalWeights	a divisor kept at least one
+src/SOURCE/PHILAI.cpp	philAI::GetBestBHC	*	arithmetic	operator [*] avgStrength	an AI tuning weight: a castle town's share of the garrison strength (10 against 7)
+src/SOURCE/PHILAI.cpp	philAI::GetBestBHC	1	trivial-function-literal	1 bound m_heroCount	a player with at most one hero
+src/SOURCE/PHILAI.cpp	philAI::GetBestBHC	0	trivial-function-literal	0 equality m_heroCount	a player without heroes
+src/SOURCE/PHILAI.cpp	philAI::DetermineHeroToMove	0	trivial-function-literal	0 store bestMobility	no hero with movement found yet
+src/SOURCE/PHILAI.cpp	philAI::DetermineHeroToMove	-1	trivial-function-literal	-1 store bestHero	no hero chosen yet (an index into the player's hero list)
+src/SOURCE/PHILAI.cpp	philAI::DetermineTargetPosition	-1	trivial-function-literal	-1 store best[XY]	no target cell found yet
+src/SOURCE/PHILAI.cpp	philAI::DetermineTargetPosition	*	store	store to maxRV	an AI tuning value: the -999999 'nothing yet' floor and the value given a planned shipyard trip
+src/SOURCE/PHILAI.cpp	philAI::DetermineTargetPosition	*	store	store to posValue	an AI tuning value: the penalties for a cell another hero targets (-2000) and an unreachable cell (-100)
+src/SOURCE/PHILAI.cpp	philAI::DetermineTargetPosition	100	arithmetic	compound assignment to posValue	a percentage: the random 76-125% scaling divided back
+src/SOURCE/PHILAI.cpp	philAI::DetermineTargetPosition	*	*	* gridStep	an AI tuning value: the sampling grid's step adjustment for slow terrain and its minimum
+src/SOURCE/PHILAI.cpp	philAI::DetermineTargetPosition	3	call-argument	SeedPosition(* argument 4	an AI tuning factor: the target search reaches three times the hero's mobility
+src/SOURCE/PHILAI.cpp	philAI::DetermineTargetPosition	-1	trivial-function-literal	-1 store [cr]*Counter	one before the first column or row: the counter is stepped before use
+src/SOURCE/PHILAI.cpp	philAI::DetermineTargetPosition	0	trivial-function-literal	0 store [cr]*Counter	the grid-step counter wrapped to the first column or row
+src/SOURCE/PHILAI.cpp	philAI::DetermineTargetPosition	0	trivial-function-literal	0 equality	a cell on the sampling grid (remainder zero)
+src/SOURCE/PHILAI.cpp	philAI::DetermineTargetPosition	0	trivial-function-literal	0 equality posValue	a tie at zero value, broken by distance
+src/SOURCE/PHILAI.cpp	philAI::DetermineTargetPosition	75	comparison-or-bound	operator < maxRV	an AI tuning threshold: the best target value below which a boat trip is planned
+src/SOURCE/PHILAI.cpp	philAI::DetermineTargetPosition	0	trivial-function-literal	0 conditional	no shipyard wood to reserve once a shipyard exists
+src/SOURCE/PHILAI.cpp	philAI::ProbableOutcomeOfBattle	0	trivial-function-literal	0 store [ad]*Arts	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/PHILAI.cpp	philAI::ProbableOutcomeOfBattle	1.0f	store	store to *	a strength floor of one before the power curve
+src/SOURCE/PHILAI.cpp	philAI::ValueOfBuyingBuilding	0	trivial-function-literal	0 store dwellingsOwned	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/PHILAI.cpp	philAI::ValueOfBuyingBuilding	-1	trivial-function-literal	-1 store lastDwellingIndex	no dwelling owned yet
+src/SOURCE/PHILAI.cpp	philAI::ValueOfBuyingBuilding	0	call-argument	*(* argument [34]	the mage guild level or build state, unused for a building other than the guild
+src/SOURCE/PHILAI.cpp	philAI::ValueOfBuyingBuilding	1	call-argument	GetBuildingBaseResourceValue(* argument 3	the guild level below the current one
+src/SOURCE/PHILAI.cpp	philAI::ValueOfBuyingBuilding	0	trivial-function-literal	0 store score	a building worth nothing to the AI
+src/SOURCE/PHILAI.cpp	philAI::GetBest*	-99.0f	store	store to *	the AI's 'no candidate yet' score floor
+src/SOURCE/PHILAI.cpp	philAI::ValueOfBuyingCreature	0	trivial-function-literal	0 store breathStacks	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/PHILAI.cpp	philAI::GetBestCreature	-1	trivial-function-literal	-1 store bestDwelling	no dwelling chosen yet
+src/SOURCE/PHILAI.cpp	philAI::GetBestCreature	0	trivial-function-literal	0 store bestNumber	no creatures chosen yet
+src/SOURCE/PHILAI.cpp	philAI::GetBestHero	-1	trivial-function-literal	-1 store bestHero	no available hero chosen yet
+src/SOURCE/PHILAI.cpp	philAI::CreaturesToBuy	1	trivial-function-literal	1 bound purchaseCount	more than one creature: the AI halves the purchase and never buys a single creature
+src/SOURCE/PHILAI.cpp	philAI::CreaturesToBuy	0	trivial-function-literal	0 return	nothing to buy
+src/SOURCE/PHILAI.cpp	philAI::MaxBuyableCreatures	0	trivial-function-literal	0 equality cost[[][]]	a resource the creature does not cost
+src/SOURCE/PHILAI.cpp	philAI::MaxBuyableCreatures	9999	store	store to affordable	an unlimited count for a resource the creature does not cost
+src/SOURCE/PHILAI.cpp	philAI::MaxBuyableCreatures	0	trivial-function-literal	0 store affordable	none affordable without the resource
+src/SOURCE/PHILAI.cpp	philAI::ValueOfBuyingHero	0	trivial-function-literal	0 store heroCost[[][]]	a hero costs no resource but gold
+src/SOURCE/PHILAI.cpp	philAI::MeanRVOfUnexploredTerritory	0	trivial-function-literal	0 return	the unexplored territory is valued at nothing (the function is a stub)
+src/SOURCE/PHILAI.cpp	philAI::GetTurnAttentionValue	*.*f	store	store to scale	an AI tuning weight: the attention scale by turn
+src/SOURCE/PHILAI.cpp	philAI::RVOfPosition	0	trivial-function-literal	0 store *	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/PHILAI.cpp	philAI::RVOfPosition	2	arithmetic	operator [*] positionStrategicValue	an AI tuning weight: the strategic value's weight against travel time
+src/SOURCE/PHILAI.cpp	philAI::StrategicValueOfPosition	0	trivial-function-literal	0 store strategicWorth	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/PHILAI.cpp	philAI::StrategicValueOfPosition	0	trivial-function-literal	0 store wasInBoat	the hero searched as on land: the target is the coast it lands on
+src/SOURCE/PHILAI.cpp	philAI::StrategicValueOfPosition	20	arithmetic	operator + reach	an AI tuning weight: a computer hero's threat fades over its reach plus 20 cells
+src/SOURCE/PHILAI.cpp	philAI::TurnCostResource	0	trivial-function-literal	0 store totalRV	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/PHILAI.cpp	philAI::TurnValueOfObelisk	32	call-argument	abs(int) argument 1	an AI tuning weight: the puzzle progress at which an obelisk is worth most
+src/SOURCE/PHILAI.cpp	philAI::FutureDeflator	0	trivial-function-literal	0 store value	a deflator floored at zero
+src/SOURCE/PHILAI.cpp	philAI::FightValueOfStack	0	trivial-function-literal	0 store *	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/PHILAI.cpp	philAI::FightValueOfStack	*	*	operator [*] *	an AI tuning weight: a keep archer's value, the army-value ratio tiers
+src/SOURCE/PHILAI.cpp	philAI::FightValueOfStack	16	arithmetic	operator + heroLuck	an AI tuning weight: luck scales the army by (luck + 16) / 16
+src/SOURCE/PHILAI.cpp	philAI::FightValueOfStack	*.*f	store	store to spellMultiplier	an AI tuning weight: the spell value scale for spell power one, two and more
+src/SOURCE/PHILAI.cpp	philAI::FightValueOfStack	-1	trivial-function-literal	-1 store bestScore	below every spell score: the best one found so far starts at -1
+src/SOURCE/PHILAI.cpp	philAI::EvaluateOneTimeCreaturePurchase	0	trivial-function-literal	0 store purchaseValue	a purchase worth nothing
+src/SOURCE/PHILAI.cpp	philAI::EvaluateOneTimeCreaturePurchase	-1	trivial-function-literal	-1 * replacementSlot	no army slot to replace
+src/SOURCE/PHILAI.cpp	philAI::EvaluateOneTimeCreaturePurchase	0	trivial-function-literal	0 equality purchaseCount	nothing to buy
+src/SOURCE/PHILAI.cpp	philAI::EvaluateOneTimeCreaturePurchase	0	trivial-function-literal	0 equality CanJoin()	armyGroup::CanJoin's i8 result: the creature has no slot to join
+src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	0	trivial-function-literal	0 store value	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	0	trivial-function-literal	0 store statSum	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	0	trivial-function-literal	0 store transferRating	a troop transfer worth nothing
+src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	0	trivial-function-literal	0 store heroTroops	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	1	trivial-function-literal	1 bound heroTroops	the single creature a hero must keep
+src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	1	trivial-function-literal	1 conditional	a spell whose value does not scale with power: a factor of one
+src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	*.*f	store	store to transferFactor	an AI tuning weight: the transfer rating's scale toward the weaker side
+src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	-1	trivial-function-literal	-1 * choice	no stack chosen to transfer
+src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	-9999	store	store to bestFV	below every stack's fight value: the best one found so far
+src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	0	trivial-function-literal	0 equality m_creatureCounts[[][]]	a stack emptied by the transfer
+src/SOURCE/PHILAI.cpp	philAI::ChooseEvaluateBattle	0	trivial-function-literal	0 store rating	a battle worth nothing
+src/SOURCE/PHILAI.cpp	philAI::ChooseEvaluateBattle	[01]	trivial-function-literal	[01] store canWin	ChooseEvaluateBattle's i32& verdict, shared with EVENTS' integer locals
+src/SOURCE/PHILAI.cpp	philAI::CombatMonsterEvent	0	trivial-function-literal	0 store remaining	a count reset to zero
+src/SOURCE/PHILAI.cpp	philAI::CombatMonsterEvent	0	trivial-function-literal	0 equality result	QuickCombat's integer victory result: the hero lost
+src/SOURCE/PHILAI.cpp	philAI::CombatMonsterEvent	[01]	trivial-function-literal	[01] return	CombatMonsterEvent's i8 victory result for advManager (1 won, 0 lost)
+src/SOURCE/PHILAI.cpp	philAI::DamageGroup	[01]	trivial-function-literal	[01] return	DamageGroup's integer result: 1 when the group was destroyed
+src/SOURCE/PHILAI.cpp	philAI::TownEvent	0	trivial-function-literal	0 equality gbHumanPlayer[[][]]	gHumanPlayer's integer entry: a computer player
+src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	0	trivial-function-literal	0 store gVisitResult	the event is worth nothing to this hero
+src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	0	trivial-function-literal	0 store g*	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	0	trivial-function-literal	0 store liveChance	no chance to survive the event
+src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	0	call-argument	ChooseEvaluateBattle(* argument 7	no artifact on top of the gold reward
+src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	1.0	call-argument	ChooseEvaluateBattle(* argument 7	a floating-point AI weight: the owner's artifact share plus one
+src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	1	trivial-function-literal	1 conditional	the least distance to another stone lith (whirlpools need more than three cells)
+src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	200	arithmetic	operator + stayWorth	an AI tuning threshold: the gain a travel gate must beat
+src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	-9999	store	store to bestExitValue	below every exit's value: the best one found so far
+src/SOURCE/ARMY.cpp	army::LoadResources	0	trivial-function-literal	0 store repeat	SamplePlaybackData::repeat off: the army sample plays once
+src/SOURCE/ARMY.cpp	army::DoAttack	0	trivial-function-literal	0 store damageDone	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/ARMY.cpp	army::DoAttack	0	*	*Cyrillic*argument 1	the first character of the text, case-converted
+src/SOURCE/ARMY.cpp	army::DoAttack	0	trivial-function-literal	0 array-index gTargetName	the first character of the text, case-converted
+src/SOURCE/ARMY.cpp	army::DoAttack	1	call-argument	sprintf(* argument 10	a single creature takes the singular name
+src/SOURCE/ARMY.cpp	army::WalkTo	-1	trivial-function-literal	-1 store pathIndex	past the path's first step: ends the walk
+src/SOURCE/ARMY.cpp	army::AttackTo	0	trivial-function-literal	0 store pathIndex	the path index cleared before the loop sets it
+src/SOURCE/ARMY.cpp	army::AttackTo	1	trivial-function-literal	1 equality pathIndex	the last step before the target hex
+src/SOURCE/ARMY.cpp	army::Damage	1	trivial-function-literal	1 store quantityFifth	at least one creature
+src/SOURCE/ARMY.cpp	army::GoBerserk	[01]	trivial-function-literal	[01] store targetFound	GoBerserk's found count (an i8 also stepped with ++)
+src/SOURCE/ARMY.cpp	army::GoBerserk	0	trivial-function-literal	0 store tryNumber	a count reset to zero
+src/SOURCE/ARMYGRP.cpp	armyGroup::IsHomogeneous	*	*	* raceUsed*	the five race counters zeroed in one chained store (ARMY_GROUP_RACE_COUNT entries)
+src/SOURCE/ARMYGRP.cpp	armyGroup::IsHomogeneous	1	trivial-function-literal	1 bound numTypeRuns	a group of a single creature type
+src/SOURCE/CMBTMGR.cpp	combatManager::SetupCombat	[01]	trivial-function-literal	[01] conditional	m_castleSide's flag from retail's int ?: (a bool ?: compiles differently)
+src/SOURCE/CMBTMGR.cpp	combatManager::CatAttack	0	trivial-function-literal	0 store frameIndex	the boulder animation's first frame
+src/SOURCE/CMBTMGR.cpp	combatManager::CatAttack	25	store	store to topPosY	the boulder arc's top in pixels for the upper wall row
+src/SOURCE/CMBTMGR.cpp	combatManager::KeepAttack	-1	trivial-function-literal	-1 store bestClass	below every target priority: the best one found so far
+src/SOURCE/CMBTMGR.cpp	combatManager::KeepAttack	0	trivial-function-literal	0 store bestStrength	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/CMBTMGR.cpp	combatManager::KeepAttack	0	trivial-function-literal	0 store originalRow	the keep shoots from the top grid row
+src/SOURCE/CMBTMGR.cpp	combatManager::KeepAttack	*1	trivial-function-literal	*1 conditional	a wide target's second hex, one column left or right
+src/SOURCE/CMBTMGR.cpp	combatManager::KeepAttack	0	trivial-function-literal	0 store maxX	the redraw extent reset to the origin
+src/SOURCE/CMBTMGR.cpp	combatManager::KeepAttack	0	trivial-function-literal	0 store arrowDamage	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/CMBTMGR.cpp	combatManager::KeepAttack	1	trivial-function-literal	1 store arrowDamage	at least one point of damage
+src/SOURCE/CMBTMGR.cpp	combatManager::ExperienceValueOfStack	0	trivial-function-literal	0 store sideExperience	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/COMMAND.cpp	combatManager::SetCombatDirections	0	trivial-function-literal	0 store remainingSectors	a count reset to zero
+src/SOURCE/COMMAND.cpp	combatManager::CheckSetMouseDirection	0	trivial-function-literal	0 store slot	the first pointer sector
+src/SOURCE/COMMAND.cpp	combatManager::DoSurrender	1	trivial-function-literal	1 store unusedTypeValue	an unused local's retail store
+src/SOURCE/COMMAND.cpp	combatManager::ResetMouse	0x1ca	comparison-or-bound	operator <= y	the battlefield's last pointer row in pixels; below it lies the text bar
+src/SOURCE/DRAWING.cpp	combatManager::ResetLimitCreature	0	trivial-function-literal	0 conditional	a live stack's redraw count starts at zero
+src/SOURCE/DRAWING.cpp	combatManager::UpdateCombatArea	0	trivial-function-literal	0 store baseY	the top screen row: the first grid row also redraws the margin above it
+src/SOURCE/DRAWING.cpp	combatManager::DrawFrame	*1	trivial-function-literal	*1 conditional	a wide stack's rear hex, one column left or right by side
+src/SOURCE/SPELLAI.cpp	combatManager::DoSpellAI	0	trivial-function-literal	0 store bestValue	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/SPELLAI.cpp	combatManager::EffectSpellCure	0	trivial-function-literal	0 store negTotal	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/SPELLAI.cpp	combatManager::EffectSpellDamage	0	trivial-function-literal	0 store hex	the hex scan starts at the first hex
+src/SOURCE/SPELLAI.cpp	combatManager::EffectSpellDamage	0	trivial-function-literal	0 store killedValue[[][]]	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/SPELLAI.cpp	combatManager::EffectSpellDamage	0	trivial-function-literal	0 store leftDamage	no damage left over once the stack dies
+src/SOURCE/AI.cpp	combatManager::GetFlyerMask	0	trivial-function-literal	0 store bits	an empty stack mask
+include/SOURCE/philAI.h	philAI::FightValueOfStack	0	trivial-function-literal	0 parm_decl	FightValueOfStack's defaults: no town (useTown 0; townId is then unused)
 src/SOURCE/EVENTS.cpp	*	-1	trivial-function-literal	-1 conditional	retail's int-literal arm of `owner ? m_owner : -1`; an enumerator arm narrows the conditional to signed char (VC4)
 src/EDITOR/*	*	*	call-argument	ClearArea(* argument [1-4]	the erased rectangle's map x and y and its width and height in cells
 src/EDITOR/*	*	*	call-argument	ResetArea(* argument [1-4]	the reset rectangle's map x and y and its width and height in cells
