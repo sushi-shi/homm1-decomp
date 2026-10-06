@@ -10,6 +10,7 @@
 #include <BASE/baseManager.h>
 #include <Domains.h>
 #include <H1/Macros.h>
+#include <SOURCE/game.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/mapCell.h>
 
@@ -37,14 +38,13 @@ H1_ENUM_CONST_BEGIN(EditManagerConstant)
     EDIT_MAP_ARTIFACT_SLOTS = 37,
     // The save check allows at most this many obelisks.
     EDIT_MAP_OBELISK_LIMIT = 48,
-    // NewMap fills this many of the header's names and descriptions.
-    EDIT_MAP_DEFAULT_TEXTS = 8,
     // The version word the editor writes after the header (hexadecimal 1112;
     // the game reads map extras from version MAP_EXTRA_VERSION on).
     EDIT_MAP_VERSION = 0x1112
 H1_ENUM_CONST_END(EditManagerConstant)
 
-// m_zoom: 32-pixel cells (14 visible per side) or 16-pixel cells (28).
+// m_zoomedOut: 32-pixel cells (14 visible per side) or 16-pixel cells (28);
+// it indexes the zoom-level tables.
 H1_ENUM_BEGIN(EditZoom)
     EDIT_ZOOM_NORMAL = 0,
     EDIT_ZOOM_OUT = 1
@@ -98,6 +98,8 @@ H1_ENUM_BEGIN(EditWindowControlId)
     EDIT_CONTROL_QUIT = 109,
     EDIT_CONTROL_MAP_INFO = 110,
     EDIT_CONTROL_NEW = 111,
+    // A tool panel's options button (the tool managers handle it).
+    EDIT_CONTROL_TOOL_OPTIONS = 112,
     EDIT_CONTROL_RANDOM_MAP = 113
 H1_ENUM_END(EditWindowControlId)
 
@@ -110,6 +112,12 @@ H1_ENUM_BEGIN(EditTool)
     EDIT_TOOL_ERASER = 3,
     EDIT_TOOL_COUNT = 4
 H1_ENUM_END(EditTool)
+
+H1_ENUM_CONST_BEGIN(EditToolButtonConstant)
+    // buttons.icn: the terrain tool button's frame pair; each tool's pair
+    // follows (normal, selected).
+    EDIT_TOOL_BUTTON_FRAME = 26
+H1_ENUM_CONST_END(EditToolButtonConstant)
 
 // IsCleared's mask: a bit per terrain (TerrainType) for the objects standing
 // on it, then the object classes the eraser lists after the terrains.
@@ -209,18 +217,34 @@ H1_ENUM_BEGIN(EditDrawLayer)
 H1_ENUM_END(EditDrawLayer)
 
 #pragma pack(push, 1)
-// Each cell's object and overlay belong to a placed object, numbered from
-// gNextCellOwner; ClearArea erases every cell of the object it hits (0: none).
-struct editCellOwner {
-    u16 object;
-    u16 overlay;
+// The per-cell ids of the placed objects whose frames the cell shows on its
+// object and overlay layers: PlaceOverlay numbers each placed object from
+// gNextObjectId, and ClearArea erases every cell of the object it hits
+// (0: none).
+struct editMapCellPair {
+    u16 objectId;
+    u16 overlayId;
 };
 
-// The edited map: the cells and their owners, copied whole to and from the
-// undo map.
+// The edited map: the cells and their object ids, copied whole to and from
+// the undo map.
 struct editMap {
     mapCell cells[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
-    editCellOwner owners[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+    editMapCellPair cellPairs[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+};
+
+// A town's map-extra record as the editor keeps it: the game's mapTownExtra
+// and a tail no recovered code reads.
+struct editTownExtra {
+    mapTownExtra record;
+    u8 unknown14[0x32];
+};
+
+// A placed hero's map-extra record: the game's mapHeroExtra and a tail no
+// recovered code reads.
+struct editHeroExtra {
+    mapHeroExtra record;
+    u8 unknown19[0x32];
 };
 
 class editManager : public baseManager {
@@ -238,13 +262,13 @@ public:
     iconWidget* m_verticalTrack;
     iconWidget* m_horizontalKnob;
     iconWidget* m_verticalKnob;
-    H1_ENUM_STORAGE(EditZoom, u8) m_zoom;
+    H1_ENUM_STORAGE(EditZoom, u8) m_zoomedOut;
     // Set when the map changes; saving, a new map and loading clear it.
     i16 m_mapChanged;
     // The map cell of the object the object tool placed last (-1 none);
-    // saving and loading forget it.
-    i16 m_lastPlacedX;
-    i16 m_lastPlacedY;
+    // saving, loading and the tools' Open forget it.
+    i16 m_placedX;
+    i16 m_placedY;
     // The object tool clears it when it places an object (-1 at start).
     i16 m_placedState;
     // The widget id of the last tool command (-1 none).
@@ -256,11 +280,12 @@ public:
     heroWindow* m_window;
     editMap m_map;
     editMap m_undoMap;
-    // m_mapExtras[1..m_mapExtraCount-1] with their sizes, as the map file
-    // stores them (record 0 is never allocated).
-    i32 m_mapExtraCount;
-    i32 m_mapExtraSizes[MAP_EXTRA_RECORD_CAPACITY];
-    void* m_mapExtras[MAP_EXTRA_RECORD_CAPACITY];
+    // The map-extra records (towns, heroes, events) cells name by
+    // m_objectMetadata: m_extras[1..m_extraCount-1] with their sizes, as the
+    // map file stores them (record 0 is never allocated).
+    i32 m_extraCount;
+    i32 m_extraSizes[MAP_EXTRA_RECORD_CAPACITY];
+    void* m_extras[MAP_EXTRA_RECORD_CAPACITY];
     i8 m_mapSounds[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
     // The map cell shown at the view's top-left corner.
     i16 m_viewX;
@@ -268,6 +293,8 @@ public:
     // The map cell under the cursor.
     i16 m_cursorX;
     i16 m_cursorY;
+    // The map's file name ("<code>1234.MAP"); the map-details dialog edits
+    // its code.
     char m_mapFileName[EDIT_MAP_FILE_NAME_SIZE];
     H1_ENUM_STORAGE(BaseManagerMessageMask, i16) m_dispatchMask;
 
@@ -295,9 +322,13 @@ public:
     void SelectTool(i16 tool);
     void Scroll(i16 dx, i16 dy);
     void UpdateKnobs(i16 update);
-    void PaintTerrain(i16 column, i16 row, i16 width, i16 height, i16 terrain);
-    void FillTerrain(i16 x, i16 y, i16 width, i16 height, i16 terrain);
-    void SmoothTerrain(i16 terrain, i16 unused, u8 fromUndo, u8 skipBorders, u8 skipFill);
+    // Sets the ground of the width x height view cells at (column, row) to
+    // the terrain's plain tile and redraws them.
+    void PaintGround(i16 column, i16 row, i16 width, i16 height, i16 terrain);
+    // The same for map cells, filling the rectangle with random variants.
+    void FillGround(i16 x, i16 y, i16 width, i16 height, i16 terrain);
+    // Fits the terrain's edge tiles to their neighbours over the whole map.
+    void BlendTerrain(i16 terrain, u8 unused, u8 fromUndo, u8 skipBorders, u8 skipFill);
     void DoRadar(void);
     void DoHorizontalKnob(void);
     void DoVerticalKnob(void);
@@ -306,7 +337,8 @@ public:
     void CheckObjects(void);
     void UpdateTriggers(void);
     u8 Confirm(char* question);
-    i32 HasTrigger(i32 trigger);
+    // 1 when a cell's trigger byte equals trigger.
+    i32 HasObject(i32 trigger);
     i32 CountArtifacts(void);
     i32 CountTowns(void);
     i32 CountMines(void);
@@ -345,9 +377,8 @@ extern char gPickMapNameDummy[];
 
 void SetTileVariant(mapCell* cell, i32 tile);
 char* MakeMapCode(i32 serial);
-void ShowStatusAlert(char* text);
+// Shows text in the status bar with a beep and clears it after 1.5 seconds.
+void ShowStatusWarning(char* text);
 void ScatterDetails(void);
-// The map-details dialog (EVENTMGR).
-i32 EditMapDetails(i32 randomMap);
 
 #endif // HOMM1_EDITOR_EDITMANAGER_H

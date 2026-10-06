@@ -101,6 +101,9 @@ rva	size	symbol	provenance
 0x0003f410	490	?gMenuEnableStatus@@3PAUSMenuEnableStatus@@A	game 0x921a0 (SOURCE/KB): 3 code reference(s) from placed bodies
 0x0003f5fc	272	?gWinSetup@@3PAUWindowTextEntry@@A	game 0x91bc8 (SOURCE/KB): fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x0003f7d4	272	?gWinSetupText@@3PAPADA	game 0x93318 (SOURCE/KB): fields of this image's own compile of the shared source (VA_AT body, masked-identical)
+0x0003f8ec	152	?gArtifactNames@@3PAPADA	game 0x9238c (SOURCE/KB): fields of this image's own compile of the shared source (VA_AT body, masked-identical)
+0x0003faec	112	?gArmyNames@@3PAPADA	game 0x9258c (SOURCE/KB): fields of this image's own compile of the shared source (VA_AT body, masked-identical)
+0x000404b0	288	?gHeroNames@@3PAY01PADA	game 0x92f50 (SOURCE/KB): fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x00051b88	4	?giDebugLevel@@3HA	game 0xa6c48 (SOURCE/KB): fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x00051b8c	4	?gpMouseManager@@3PAVmouseManager@@A	game 0xa7164 (SOURCE/KB): 28 code reference(s) from placed bodies
 0x00051e94	4	?DEFAULT_AGGREGATE_NAME@@3PADA	game 0xa7498 (SOURCE/KB): 1 code reference(s) from placed bodies

@@ -60,7 +60,9 @@ H1_ENUM_CONST_BEGIN(MapHeaderConstant)
     MAP_EXTRA_VERSION = 1112,
     MAP_HEADER_NAME_COUNT = 10,
     MAP_HEADER_NAME_SIZE = 15,
-    MAP_HEADER_DESCRIPTION_COUNT = 8,
+    // The map's name and description in each of eight languages (the
+    // requester shows the first).
+    MAP_HEADER_LANGUAGE_COUNT = 8,
     MAP_HEADER_DESCRIPTION_SIZE = 121
 H1_ENUM_CONST_END(MapHeaderConstant)
 
@@ -126,17 +128,18 @@ struct FileRequesterMapInfo {
     char description[FILE_REQUESTER_MAP_DESCRIPTION_SIZE];
 };
 
-// .MAP header: 0x554 bytes, id 1000 marks a valid map. The requester shows
-// the first name and description; the editor's NewMap fills eight of each
-// (fifteen and 121 bytes apart), and its maps end the header with the format
-// word (1000 for the editor's own format; maps without it are two bytes
-// shorter). No code reads the bytes between the descriptions and the format.
+// .MAP header: 0x554 bytes, id 1000 marks a valid map. A name and a
+// description per language (the requester shows the first; the editor fills
+// eight of each), and the editor's maps end the header with the format word
+// (1000 for the editor's own format; maps without it are two bytes shorter).
+// No code reads the two name slots after the languages' or the bytes between
+// the descriptions and the format.
 struct SMapHeader {
     i16 id;
     i8 difficulty;
     i8 size;
     char name[MAP_HEADER_NAME_COUNT][MAP_HEADER_NAME_SIZE];
-    char description[MAP_HEADER_DESCRIPTION_COUNT][MAP_HEADER_DESCRIPTION_SIZE];
+    char description[MAP_HEADER_LANGUAGE_COUNT][MAP_HEADER_DESCRIPTION_SIZE];
     u8 unknown462[0xf0];
     i16 format;
 };

@@ -1,3 +1,7 @@
 # Reviewed relocation referents requiring more than containment.
 function_rva	target_rva	site_rva	owner	addend	occurrences	provenance
 0x00007667	0x000519e8	0x0000768f	?gEditErrors@@3PAPADA	0xFFFFFFFC	1	EDITOR.EXE editManager::ClearErrors frees gEditErrors[gEditErrorCount - 1]; the indexed load biases the table base by -4; complete instruction and addend proof
+0x0000a459	0x000525f6	0x0000a5aa	?gTownEdit@@3UeditTownExtra@@A	0xFFFFFBF6	1	TownWindowHandler: gTownEdit.record.troopCounts[id - 0x20a]; the word index biases the record by 0xa - 0x414; full operand proof
+0x0000a459	0x00052805	0x0000a620	?gTownEdit@@3UeditTownExtra@@A	0xFFFFFE05	1	TownWindowHandler: gTownEdit.record.troopTypes[id - 0x200]; the byte index biases the record by 5 - 0x200; full operand proof
+0x0000afda	0x0005254a	0x0000b101	?gHeroEdit@@3UeditHeroExtra@@A	0xFFFFFBF2	1	HeroWindowHandler: gHeroEdit.record.troopCounts[id - 0x20a]; the word index biases the record by 6 - 0x414; full operand proof
+0x0000afda	0x00052759	0x0000b177	?gHeroEdit@@3UeditHeroExtra@@A	0xFFFFFE01	1	HeroWindowHandler: gHeroEdit.record.troopTypes[id - 0x200]; the byte index biases the record by 1 - 0x200; full operand proof

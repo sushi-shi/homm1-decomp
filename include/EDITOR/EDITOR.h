@@ -6,8 +6,6 @@
 
 #include <Domains.h>
 
-struct SMapHeader;
-
 // The status bar: the bottom 16-pixel row of the 640x480 screen.
 H1_ENUM_CONST_BEGIN(EditorStatusBarConstant)
     EDITOR_STATUS_BAR_X = 0,
@@ -26,20 +24,82 @@ extern i32 gStatusTextClearTime;
 extern i32 gStatusTextHoldTime;
 extern char gStatusText[];
 
-// The map header the editor edits (EDITMGR's gEditMapHeader).
-extern SMapHeader* gMapHeader;
-// Cleared while a map without the editor's format word is loaded: such maps
-// keep no object owners, so the eraser clears whole cells.
-extern i32 gNewMapFormat;
-// The eraser's and terrain tool's drag rectangle in map cells (x -1: none).
+// gClearFlags' initial value: the first fourteen object classes.
+H1_ENUM_CONST_BEGIN(EditorClearConstant)
+    EDITOR_CLEAR_FLAGS_DEFAULT = 0x3fff
+H1_ENUM_CONST_END(EditorClearConstant)
+
+// The map rectangle a drag selects (gSelectionX < 0: none); the map view
+// outlines it.
 extern i32 gSelectionX;
 extern i32 gSelectionY;
 extern i32 gSelectionWidth;
 extern i32 gSelectionHeight;
-// Set while the random-map generator runs: the map view draws clouds only.
+// The object classes the eraser removes (one bit per clearwin.bin toggle).
+extern i32 gClearFlags;
+// The tool panels' right-click help, indexed by the help ids below (0: none).
+H1_ENUM_BEGIN(TerrainToolHelp)
+    TERRAIN_TOOL_HELP_NONE = -1,
+    TERRAIN_TOOL_HELP_WATER = 1,
+    TERRAIN_TOOL_HELP_GRASS = 2,
+    TERRAIN_TOOL_HELP_SNOW = 3,
+    TERRAIN_TOOL_HELP_SWAMP = 4,
+    TERRAIN_TOOL_HELP_LAVA = 5,
+    TERRAIN_TOOL_HELP_DESERT = 6,
+    TERRAIN_TOOL_HELP_DIRT = 7
+H1_ENUM_END(TerrainToolHelp)
+
+H1_ENUM_BEGIN(ClearToolHelp)
+    CLEAR_TOOL_HELP_OPTIONS = 1
+H1_ENUM_END(ClearToolHelp)
+
+H1_ENUM_BEGIN(OverlayToolHelp)
+    OVERLAY_TOOL_HELP_NONE = -1,
+    OVERLAY_TOOL_HELP_SELECTED = 1
+H1_ENUM_END(OverlayToolHelp)
+
+H1_ENUM_CONST_BEGIN(EditorToolHelpConstant)
+    EDITOR_TERRAIN_TOOL_HELP_COUNT = 8,
+    EDITOR_CLEAR_TOOL_HELP_COUNT = 2,
+    EDITOR_OVERLAY_TOOL_HELP_COUNT = 2
+H1_ENUM_CONST_END(EditorToolHelpConstant)
+
+extern char* gTerrainToolHelp[];
+extern char* gClearToolHelp[];
+
+// The object tool's preview-border help and category names.
+extern char* gOverlayToolHelp[];
+extern char* gOverlayCategoryNames[];
+// The category the object tool places from and the one its panel shows.
+extern i32 gOverlayCategory;
+extern i32 gOverlayShownCategory;
+// The id of the last placed object (editManager::m_cellPairs).
+extern i16 gNextObjectId;
+
+// The random map generator's slider rows.
+H1_ENUM_CONST_BEGIN(EditorGeneratorConstant)
+    EDITOR_GENERATOR_TERRAIN_COUNT = 7,
+    EDITOR_GENERATOR_DENSITY_COUNT = 5
+H1_ENUM_CONST_END(EditorGeneratorConstant)
+
+// The cell an eventsManager dialog edits, and the dialog's window.
+extern class mapCell* gEditCell;
+extern class heroWindow* gEditDialog;
+// The edited map's header (difficulty, size, name and description).
+extern struct SMapHeader* gMapHeader;
+// The random map generator's settings (editnew.bin): the share of each
+// terrain and the density of each object class, in percent; whether towns are
+// scattered rather than centred; whether the map is saved unseen.
+extern double gTerrainPercent[EDITOR_GENERATOR_TERRAIN_COUNT];
+extern double gDensityPercent[EDITOR_GENERATOR_DENSITY_COUNT];
+extern i32 gScatterTowns;
+extern i32 gSaveUnseen;
+// Set while the generator works unseen (gSaveUnseen): the map view draws
+// clouds only and the radar black.
 extern i32 gGeneratingMaps;
-// The last object number given to placed cells (editCellOwner).
-extern i16 gNextCellOwner;
+// Cleared while a map without the editor's format word is loaded: such maps
+// keep no object ids, so the eraser clears whole cells.
+extern i32 gNewMapFormat;
 // The right-click help of editwind.bin's buttons and areas.
 extern char* gEditButtonHelp[];
 extern char* gEditAreaHelp[];

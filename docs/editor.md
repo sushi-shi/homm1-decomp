@@ -66,6 +66,9 @@ retail images:
 - Import thunks pair by their IAT import.
 - Data referenced only by a `VA_AT` body is named from the editor's own compile
   of that body, where it equals the retail body with relocations masked.
+- The vtable of a class only the editor defines is named where the editor's own
+  constructor, relocations masked, equals retail and stores it, and every slot
+  of the compiled vtable holds the address of the method the editor claims.
 
 `--check` fails when the committed tables differ from a fresh derivation (for
 example after a game rename).

@@ -4,7 +4,7 @@
 // reader and writer.
 // Descriptive names: every editManager member and method other than
 // SelectTool, Open, Close and Main; SetTileVariant, MakeMapCode,
-// ShowStatusAlert, ScatterDetails, gMapCodeLetters, gEditMapHeader,
+// ShowStatusWarning, ScatterDetails, gMapCodeLetters, gEditMapHeader,
 // gSelectionColor, gEditErrors, gEditErrorCount, gVaryTiles,
 // gPickMapNameDummy.
 
@@ -28,8 +28,12 @@
 #include <BASE/resourceManager.h>
 #include <BASE/TILE.h>
 #include <BASE/tileset.h>
+#include <EDITOR/clearManager.h>
 #include <EDITOR/editManager.h>
 #include <EDITOR/EDITOR.h>
+#include <EDITOR/eventsManager.h>
+#include <EDITOR/overlayManager.h>
+#include <EDITOR/terrainManager.h>
 #include <SOURCE/dialogTypes.h>
 #include <SOURCE/EVENTS.h>
 #include <SOURCE/fileRequester.h>
@@ -74,8 +78,8 @@ editManager::editManager(void) {
     m_cursorY = 0;
     m_lastCommandId = -1;
     m_dispatchMask = EDIT_MANAGER_DISPATCH_MASK;
-    gNextCellOwner = 1;
-    m_zoom = EDIT_ZOOM_OUT;
+    gNextObjectId = 1;
+    m_zoomedOut = EDIT_ZOOM_OUT;
     ResetArea(0, 0, MAP_CELL_GRID_SIZE, MAP_CELL_GRID_SIZE);
     SaveUndo();
     gMapHeader = &gEditMapHeader;
@@ -83,8 +87,8 @@ editManager::editManager(void) {
     m_tool = EDIT_MANAGER_NO_TOOL;
     m_toolManager = NULL;
     m_mapChanged = 0;
-    m_lastPlacedX = m_lastPlacedY = -1;
-    m_mapExtraCount = MAP_EXTRA_FIRST_RECORD;
+    m_placedX = m_placedY = -1;
+    m_extraCount = MAP_EXTRA_FIRST_RECORD;
     m_placedState = -1;
 }
 
@@ -257,7 +261,7 @@ i16 editManager::Main(tag_message& message) {
                                 break;
                             if (!LoadMap(m_mapFileName)) {
                                 m_mapChanged = 0;
-                                m_lastPlacedX = m_lastPlacedY = -1;
+                                m_placedX = m_placedY = -1;
                             }
                             m_viewX = m_viewY = 0;
                             m_window->DrawWindow(0);
@@ -274,7 +278,7 @@ i16 editManager::Main(tag_message& message) {
                                 );
                                 NormalDialog(gText, NORMAL_DIALOG_TYPE_OK);
                                 m_mapChanged = 0;
-                                m_lastPlacedX = m_lastPlacedY = -1;
+                                m_placedX = m_placedY = -1;
                             }
                             break;
                         case EDIT_CONTROL_ZOOM:
@@ -287,7 +291,7 @@ i16 editManager::Main(tag_message& message) {
                                 return MESSAGE_DISPATCH_CONSUME;
                             break;
                         case EDIT_CONTROL_MAP_INFO:
-                            EditMapDetails(0);
+                            MapDetailsDialog(0);
                             break;
                         case EDIT_CONTROL_RANDOM_MAP:
                             GenerateRandomMap();
@@ -501,30 +505,30 @@ void editManager::DrawRulers(i16 viewX, i16 viewY, i16 cursorX, i16 cursorY) {
         cursorY = -1;
     }
     for (i = 0; i < EDIT_RULER_SLOTS; i++) {
-        if (!m_zoom && (i & 1))
+        if (!m_zoomedOut && (i & 1))
             continue;
-        if (!m_zoom)
+        if (!m_zoomedOut)
             m_buttons->DrawToBuffer(i * EDIT_RULER_SLOT_PIXELS + EDIT_VIEW_LEFT, 0, 24, 0, 0);
         else
             m_buttons->DrawToBuffer(i * EDIT_RULER_SLOT_PIXELS + EDIT_VIEW_LEFT, 0, 18, 0, 0);
-        sprintf(text, "%02d", viewX + i / (m_zoom ? 1 : 2));
-        if (i / (m_zoom ? 1 : 2) == cursorX)
+        sprintf(text, "%02d", viewX + i / (m_zoomedOut ? 1 : 2));
+        if (i / (m_zoomedOut ? 1 : 2) == cursorX)
             color = 1;
         else
             color = 192;
         m_statusFont
-            ->DrawString(text, i * EDIT_RULER_SLOT_PIXELS + (m_zoom ? 0 : 8) + 19, 2, color);
-        if (!m_zoom)
+            ->DrawString(text, i * EDIT_RULER_SLOT_PIXELS + (m_zoomedOut ? 0 : 8) + 19, 2, color);
+        if (!m_zoomedOut)
             m_buttons->DrawToBuffer(0, i * EDIT_RULER_SLOT_PIXELS + EDIT_VIEW_TOP, 25, 0, 0);
         else
             m_buttons->DrawToBuffer(0, i * EDIT_RULER_SLOT_PIXELS + EDIT_VIEW_TOP, 18, 0, 0);
-        sprintf(text, "%02d", viewY + i / (m_zoom ? 1 : 2));
-        if (i / (m_zoom ? 1 : 2) == cursorY)
+        sprintf(text, "%02d", viewY + i / (m_zoomedOut ? 1 : 2));
+        if (i / (m_zoomedOut ? 1 : 2) == cursorY)
             color = 1;
         else
             color = 192;
         m_statusFont
-            ->DrawString(text, 3, i * EDIT_RULER_SLOT_PIXELS + (m_zoom ? 0 : 8) + 18, color);
+            ->DrawString(text, 3, i * EDIT_RULER_SLOT_PIXELS + (m_zoomedOut ? 0 : 8) + 18, color);
     }
     gWindowManager->UpdateScreenRegion(EDIT_VIEW_LEFT, 0, EDIT_VIEW_PIXELS, EDIT_VIEW_TOP);
     gWindowManager->UpdateScreenRegion(0, EDIT_VIEW_TOP, EDIT_VIEW_LEFT, EDIT_VIEW_PIXELS);
@@ -534,7 +538,7 @@ VA(0x00402b4d, 0x136)
 void editManager::ScreenToCell(i16& x, i16& y) {
     x -= EDIT_VIEW_LEFT;
     y -= EDIT_VIEW_TOP;
-    switch (m_zoom) {
+    switch (m_zoomedOut) {
         case EDIT_ZOOM_NORMAL:
             x /= EDIT_VIEW_CELL_PIXELS;
             y /= EDIT_VIEW_CELL_PIXELS;
@@ -578,17 +582,17 @@ void editManager::DrawView(i16 viewX, i16 viewY) {
     i32 numCells;
     i32 savedZoom;
 
-    savedZoom = m_zoom;
+    savedZoom = m_zoomedOut;
     if (gGeneratingMaps)
-        m_zoom = EDIT_ZOOM_NORMAL;
-    numCells = m_zoom ? EDIT_VIEW_ZOOMED_CELLS : EDIT_VIEW_CELLS;
+        m_zoomedOut = EDIT_ZOOM_NORMAL;
+    numCells = m_zoomedOut ? EDIT_VIEW_ZOOMED_CELLS : EDIT_VIEW_CELLS;
     for (cy = 0; cy < numCells; cy++)
         for (cx = 0; cx < numCells; cx++)
             DrawCell(viewX + cx, viewY + cy, cx, cy, EDIT_DRAW_ALL);
     m_animationFrame++;
     m_animationFrame %= 6;
-    cellPixels = m_zoom ? EDIT_VIEW_ZOOMED_CELL_PIXELS : EDIT_VIEW_CELL_PIXELS;
-    lineWidth = m_zoom ? 1 : 2;
+    cellPixels = m_zoomedOut ? EDIT_VIEW_ZOOMED_CELL_PIXELS : EDIT_VIEW_CELL_PIXELS;
+    lineWidth = m_zoomedOut ? 1 : 2;
     if (gSelectionX >= 0) {
         gSelectionColor = gMonoColorMap[190];
         FillBitmapArea(
@@ -624,7 +628,7 @@ void editManager::DrawView(i16 viewX, i16 viewY) {
             gSelectionColor
         );
     }
-    m_zoom = savedZoom;
+    m_zoomedOut = savedZoom;
 }
 
 VA(0x00402f2e, 0x255)
@@ -675,7 +679,7 @@ void editManager::DrawRadar(i32) {
     buttonIcn->FillToBuffer(
         m_viewX * EDIT_RADAR_CELL_PIXELS + EDIT_RADAR_LEFT,
         m_viewY * EDIT_RADAR_CELL_PIXELS + EDIT_RADAR_TOP,
-        m_zoom ? 23 : 22,
+        m_zoomedOut ? 23 : 22,
         190,
         0,
         0
@@ -696,24 +700,24 @@ void editManager::DrawCell(i16 x, i16 y, i16 column, i16 row, u8 layers) {
     mapCell* cell;
 
     cell = &m_map.cells[x][y];
-    sx = column * (m_zoom ? EDIT_VIEW_ZOOMED_CELL_PIXELS : EDIT_VIEW_CELL_PIXELS) + EDIT_VIEW_LEFT;
-    sy = row * (m_zoom ? EDIT_VIEW_ZOOMED_CELL_PIXELS : EDIT_VIEW_CELL_PIXELS) + EDIT_VIEW_TOP;
+    sx = column * (m_zoomedOut ? EDIT_VIEW_ZOOMED_CELL_PIXELS : EDIT_VIEW_CELL_PIXELS) + EDIT_VIEW_LEFT;
+    sy = row * (m_zoomedOut ? EDIT_VIEW_ZOOMED_CELL_PIXELS : EDIT_VIEW_CELL_PIXELS) + EDIT_VIEW_TOP;
     if (gGeneratingMaps) {
         if (layers & EDIT_DRAW_OVERLAY)
-            TileToBitmap(m_cloudTiles[m_zoom], (x + y) & 3, gWindowManager->m_screen, sx, sy);
+            TileToBitmap(m_cloudTiles[m_zoomedOut], (x + y) & 3, gWindowManager->m_screen, sx, sy);
         return;
     }
     if (layers & EDIT_DRAW_GROUND) {
         groundFrame = cell->m_flags;
         groundFrame <<= MAP_CELL_GROUND_FLIP_SHIFT;
         groundFrame |= cell->m_tileIndex & 0xff;
-        TileToBitmap(m_groundTiles[m_zoom], groundFrame, gWindowManager->m_screen, sx, sy);
+        TileToBitmap(m_groundTiles[m_zoomedOut], groundFrame, gWindowManager->m_screen, sx, sy);
     }
     if (layers & EDIT_DRAW_OBJECT) {
         if (cell->m_objectIndex != MAP_CELL_NO_FRAME) {
             tileset = cell->m_objectTileset & MAP_CELL_TILESET_MASK;
             IconToBitmap(
-                m_objectIcons[tileset][m_zoom],
+                m_objectIcons[tileset][m_zoomedOut],
                 gWindowManager->m_screen,
                 sx,
                 sy,
@@ -722,7 +726,7 @@ void editManager::DrawCell(i16 x, i16 y, i16 column, i16 row, u8 layers) {
             );
             if (cell->m_flags & MAP_CELL_OBJECT_ANIMATED)
                 IconToBitmap(
-                    m_objectIcons[tileset][m_zoom],
+                    m_objectIcons[tileset][m_zoomedOut],
                     gWindowManager->m_screen,
                     sx,
                     sy,
@@ -732,7 +736,7 @@ void editManager::DrawCell(i16 x, i16 y, i16 column, i16 row, u8 layers) {
         }
         if (cell->m_flags & MAP_CELL_OBJECT_EXTRA)
             IconToBitmap(
-                m_objectIcons[TILESET_RSRC32][m_zoom],
+                m_objectIcons[TILESET_RSRC32][m_zoomedOut],
                 gWindowManager->m_screen,
                 sx,
                 sy,
@@ -744,7 +748,7 @@ void editManager::DrawCell(i16 x, i16 y, i16 column, i16 row, u8 layers) {
         if (cell->m_overlayIndex != MAP_CELL_NO_FRAME) {
             tileset = cell->m_overlayTileset & MAP_CELL_TILESET_MASK;
             IconToBitmap(
-                m_objectIcons[tileset][m_zoom],
+                m_objectIcons[tileset][m_zoomedOut],
                 gWindowManager->m_screen,
                 sx,
                 sy,
@@ -753,7 +757,7 @@ void editManager::DrawCell(i16 x, i16 y, i16 column, i16 row, u8 layers) {
             );
             if (cell->m_flags & MAP_CELL_OVERLAY_ANIMATED)
                 IconToBitmap(
-                    m_objectIcons[tileset][m_zoom],
+                    m_objectIcons[tileset][m_zoomedOut],
                     gWindowManager->m_screen,
                     sx,
                     sy,
@@ -768,11 +772,11 @@ void editManager::DrawCell(i16 x, i16 y, i16 column, i16 row, u8 layers) {
 // in moves it forward by ten.
 VA(0x004034ce, 0x78)
 void editManager::ToggleZoom(void) {
-    if (!m_zoom) {
-        m_zoom = EDIT_ZOOM_OUT;
+    if (!m_zoomedOut) {
+        m_zoomedOut = EDIT_ZOOM_OUT;
         Scroll(-10, -10);
     } else {
-        m_zoom = EDIT_ZOOM_NORMAL;
+        m_zoomedOut = EDIT_ZOOM_NORMAL;
         Scroll(10, 10);
     }
     DrawView(m_viewX, m_viewY);
@@ -780,18 +784,66 @@ void editManager::ToggleZoom(void) {
     UpdateMapView();
 }
 
+// The tool buttons show their frame pair from EDIT_TOOL_BUTTON_FRAME, the
+// second frame for the selected tool.
+VA(0x00403546, 0x29c)
+void editManager::SelectTool(i16 tool) {
+    i32 i;
+    tag_message msg;
+
+    if (m_tool == tool)
+        return;
+    if (m_toolManager) {
+        gExec->RemoveManager(m_toolManager);
+        delete m_toolManager;
+        m_toolManager = NULL;
+    }
+    for (i = 0; i < EDIT_TOOL_COUNT; i++) {
+        msg.type = MESSAGE_WIDGET;
+        msg.id = i + EDIT_CONTROL_TERRAIN;
+        msg.command = WIDGET_COMMAND_SET_FRAME;
+        msg.value = (i == tool) + i * 2 + EDIT_TOOL_BUTTON_FRAME;
+        m_window->BroadcastMessage(msg);
+    }
+    switch (tool) {
+        case EDIT_TOOL_TERRAIN:
+            m_toolManager = new terrainManager;
+            break;
+        case EDIT_TOOL_OBJECTS:
+            m_toolManager = new overlayManager;
+            break;
+        case EDIT_TOOL_DETAILS:
+            m_toolManager = new eventsManager;
+            break;
+        case EDIT_TOOL_ERASER:
+            m_toolManager = new clearManager;
+            break;
+    }
+    if (m_toolManager) {
+        if (!gExec->AddManager(m_toolManager, BASE_MANAGER_PRIORITY_UNASSIGNED)) {
+            m_tool = tool;
+        } else {
+            m_toolManager = NULL;
+            m_tool = EDIT_MANAGER_NO_TOOL;
+        }
+    } else {
+        m_tool = EDIT_MANAGER_NO_TOOL;
+    }
+    m_window->DrawWindow();
+}
+
 VA(0x004037e2, 0x141)
 void editManager::Scroll(i16 dx, i16 dy) {
     m_viewX += dx;
     if (m_viewX < 0)
         m_viewX = 0;
-    if (m_viewX > MAP_CELL_GRID_SIZE - (m_zoom ? EDIT_VIEW_ZOOMED_CELLS : EDIT_VIEW_CELLS))
-        m_viewX = MAP_CELL_GRID_SIZE - (m_zoom ? EDIT_VIEW_ZOOMED_CELLS : EDIT_VIEW_CELLS);
+    if (m_viewX > MAP_CELL_GRID_SIZE - (m_zoomedOut ? EDIT_VIEW_ZOOMED_CELLS : EDIT_VIEW_CELLS))
+        m_viewX = MAP_CELL_GRID_SIZE - (m_zoomedOut ? EDIT_VIEW_ZOOMED_CELLS : EDIT_VIEW_CELLS);
     m_viewY += dy;
     if (m_viewY < 0)
         m_viewY = 0;
-    if (m_viewY > MAP_CELL_GRID_SIZE - (m_zoom ? EDIT_VIEW_ZOOMED_CELLS : EDIT_VIEW_CELLS))
-        m_viewY = MAP_CELL_GRID_SIZE - (m_zoom ? EDIT_VIEW_ZOOMED_CELLS : EDIT_VIEW_CELLS);
+    if (m_viewY > MAP_CELL_GRID_SIZE - (m_zoomedOut ? EDIT_VIEW_ZOOMED_CELLS : EDIT_VIEW_CELLS))
+        m_viewY = MAP_CELL_GRID_SIZE - (m_zoomedOut ? EDIT_VIEW_ZOOMED_CELLS : EDIT_VIEW_CELLS);
     DrawView(m_viewX, m_viewY);
     UpdateMapView();
     DrawRadar(1);
@@ -804,8 +856,8 @@ void editManager::UpdateKnobs(i16 update) {
     i16 xPos;
     i16 yPos;
 
-    scaleX = 402.0 / (m_zoom ? 45 : 59);
-    scaleY = 402.0 / (m_zoom ? 45 : 59);
+    scaleX = 402.0 / (m_zoomedOut ? 45 : 59);
+    scaleY = 402.0 / (m_zoomedOut ? 45 : 59);
     xPos = m_viewX * scaleX;
     yPos = m_viewY * scaleY;
     m_horizontalKnob->m_x = xPos + EDIT_KNOB_FIRST;
@@ -816,7 +868,7 @@ void editManager::UpdateKnobs(i16 update) {
 // Paints the view cells' ground with the terrain's first tile (the cells are
 // redrawn at the brush's origin).
 VA(0x004039f0, 0x1e0)
-void editManager::PaintTerrain(i16 column, i16 row, i16 width, i16 height, i16 terrain) {
+void editManager::PaintGround(i16 column, i16 row, i16 width, i16 height, i16 terrain) {
     i16 startY;
     i16 startX;
     i32 redrawHeight;
@@ -829,13 +881,13 @@ void editManager::PaintTerrain(i16 column, i16 row, i16 width, i16 height, i16 t
 
     startX = m_viewX + column;
     startY = m_viewY + row;
-    spacing = m_zoom == EDIT_ZOOM_OUT ? EDIT_VIEW_ZOOMED_CELL_PIXELS : EDIT_VIEW_CELL_PIXELS;
+    spacing = m_zoomedOut == EDIT_ZOOM_OUT ? EDIT_VIEW_ZOOMED_CELL_PIXELS : EDIT_VIEW_CELL_PIXELS;
     gEditManager->ClearArea(startX, startY, width, height, EDIT_CLEAR_ALL, 0);
     for (i = 0; i < width; i++) {
         for (j = 0; j < height; j++) {
             m_map.cells[startX + i][startY + j].m_tileIndex = terrain * MAP_CELL_TILES_PER_TERRAIN;
-            if (column + i < (m_zoom == EDIT_ZOOM_OUT ? EDIT_VIEW_ZOOMED_CELLS : EDIT_VIEW_CELLS)
-                && row + j < (m_zoom == EDIT_ZOOM_OUT ? EDIT_VIEW_ZOOMED_CELLS : EDIT_VIEW_CELLS))
+            if (column + i < (m_zoomedOut == EDIT_ZOOM_OUT ? EDIT_VIEW_ZOOMED_CELLS : EDIT_VIEW_CELLS)
+                && row + j < (m_zoomedOut == EDIT_ZOOM_OUT ? EDIT_VIEW_ZOOMED_CELLS : EDIT_VIEW_CELLS))
                 DrawCell(startX, startY, column + i, row + j, EDIT_DRAW_ALL);
         }
     }
@@ -852,7 +904,7 @@ void editManager::PaintTerrain(i16 column, i16 row, i16 width, i16 height, i16 t
 }
 
 VA(0x00403bd0, 0xf7)
-void editManager::FillTerrain(i16 x, i16 y, i16 width, i16 height, i16 terrain) {
+void editManager::FillGround(i16 x, i16 y, i16 width, i16 height, i16 terrain) {
     i32 i;
     i32 j;
 
@@ -881,7 +933,7 @@ void SetTileVariant(mapCell* cell, i32 tile) {
 // not meet at a corner take the other terrain or, with fromUndo, their undo
 // terrain), then gives every other terrain cell its border tile and flips.
 VA(0x00403d38, 0xbdb)
-void editManager::SmoothTerrain(i16 terrain, i16, u8 fromUndo, u8 skipBorders, u8 skipFill) {
+void editManager::BlendTerrain(i16 terrain, u8, u8 fromUndo, u8 skipBorders, u8 skipFill) {
     u8 east;
     u8 ne;
     i32 terrainBase;
@@ -1060,7 +1112,7 @@ void editManager::DoRadar(void) {
         return;
     x = (x - EDIT_RADAR_LEFT) / EDIT_RADAR_CELL_PIXELS;
     y = (y - EDIT_RADAR_TOP) / EDIT_RADAR_CELL_PIXELS;
-    switch (m_zoom) {
+    switch (m_zoomedOut) {
         case EDIT_ZOOM_OUT:
             m_viewX = x - EDIT_VIEW_ZOOMED_CELLS / 2;
             if (m_viewX + EDIT_VIEW_ZOOMED_CELLS > MAP_CELL_GRID_SIZE)
@@ -1096,7 +1148,7 @@ void editManager::DoRadar(void) {
             gMouseManager->Main(mouseMove);
             x = (mouseMove.x - EDIT_RADAR_LEFT) / EDIT_RADAR_CELL_PIXELS;
             y = (mouseMove.y - EDIT_RADAR_TOP) / EDIT_RADAR_CELL_PIXELS;
-            switch (m_zoom) {
+            switch (m_zoomedOut) {
                 case EDIT_ZOOM_OUT:
                     m_viewX = x - EDIT_VIEW_ZOOMED_CELLS / 2;
                     if (m_viewX + EDIT_VIEW_ZOOMED_CELLS > MAP_CELL_GRID_SIZE)
@@ -1137,7 +1189,7 @@ void editManager::DoHorizontalKnob(void) {
     i16 newX;
 
     gMouseManager->SetCursorShape(2);
-    scale = 402.0 / (m_zoom ? 45 : 59);
+    scale = 402.0 / (m_zoomedOut ? 45 : 59);
     gMouseManager->MouseCoords(x, y);
     gInputManager->Flush();
     message.type = MESSAGE_MOUSE_MOVE;
@@ -1161,9 +1213,9 @@ void editManager::DoHorizontalKnob(void) {
             newX = (newX - EDIT_KNOB_FIRST) / scale;
             if (m_viewX != newX) {
                 if (newX
-                    > (m_zoom ? MAP_CELL_GRID_SIZE - EDIT_VIEW_ZOOMED_CELLS
+                    > (m_zoomedOut ? MAP_CELL_GRID_SIZE - EDIT_VIEW_ZOOMED_CELLS
                               : MAP_CELL_GRID_SIZE - EDIT_VIEW_CELLS))
-                    newX = m_zoom ? MAP_CELL_GRID_SIZE - EDIT_VIEW_ZOOMED_CELLS
+                    newX = m_zoomedOut ? MAP_CELL_GRID_SIZE - EDIT_VIEW_ZOOMED_CELLS
                                   : MAP_CELL_GRID_SIZE - EDIT_VIEW_CELLS;
                 if (newX < 0)
                     newX = 0;
@@ -1191,7 +1243,7 @@ void editManager::DoVerticalKnob(void) {
     i16 newY;
 
     gMouseManager->SetCursorShape(4);
-    scale = 402.0 / (m_zoom ? 45 : 59);
+    scale = 402.0 / (m_zoomedOut ? 45 : 59);
     gMouseManager->MouseCoords(x, y);
     gInputManager->Flush();
     message.type = MESSAGE_MOUSE_MOVE;
@@ -1216,9 +1268,9 @@ void editManager::DoVerticalKnob(void) {
             newY = (newY - EDIT_KNOB_FIRST) / scale;
             if (m_viewY != newY) {
                 if (newY
-                    > (m_zoom ? MAP_CELL_GRID_SIZE - EDIT_VIEW_ZOOMED_CELLS
+                    > (m_zoomedOut ? MAP_CELL_GRID_SIZE - EDIT_VIEW_ZOOMED_CELLS
                               : MAP_CELL_GRID_SIZE - EDIT_VIEW_CELLS))
-                    newY = m_zoom ? MAP_CELL_GRID_SIZE - EDIT_VIEW_ZOOMED_CELLS
+                    newY = m_zoomedOut ? MAP_CELL_GRID_SIZE - EDIT_VIEW_ZOOMED_CELLS
                                   : MAP_CELL_GRID_SIZE - EDIT_VIEW_CELLS;
                 if (newY < 0)
                     newY = 0;
@@ -1455,7 +1507,7 @@ void editManager::CheckObjects(void) {
                 ClearArea(x - 2, y - 2, 4, 1, EDIT_CLEAR_ALL, 0);
             if ((m_map.cells[x][y].m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_FILE_OBJECT_HERO) {
                 heroRecord =
-                    static_cast<mapHeroExtra*>(m_mapExtras[m_map.cells[x][y].m_objectMetadata]);
+                    static_cast<mapHeroExtra*>(m_extras[m_map.cells[x][y].m_objectMetadata]);
                 if (++placedHeroes > GAME_HERO_COUNT)
                     continue;
                 while (heroIdUsed[heroRecord->heroId])
@@ -1519,7 +1571,7 @@ u8 editManager::Confirm(char* question) {
 }
 
 VA(0x00406398, 0x70)
-i32 editManager::HasTrigger(i32 trigger) {
+i32 editManager::HasObject(i32 trigger) {
     i32 x;
     i32 y;
 
@@ -1621,7 +1673,7 @@ void editManager::WriteTowns(i32 file) {
                 count++;
                 if (spot->m_objectMetadata) {
                     townExtra =
-                        static_cast<char*>(gEditManager->m_mapExtras[spot->m_objectMetadata]);
+                        static_cast<char*>(gEditManager->m_extras[spot->m_objectMetadata]);
                     if (*townExtra)
                         setCastles++;
                 }
@@ -1643,7 +1695,7 @@ void editManager::WriteTowns(i32 file) {
                 count++;
                 if (spot->m_objectMetadata) {
                     townExtra =
-                        static_cast<char*>(gEditManager->m_mapExtras[spot->m_objectMetadata]);
+                        static_cast<char*>(gEditManager->m_extras[spot->m_objectMetadata]);
                     if (*townExtra)
                         setTowns++;
                 }
@@ -1849,14 +1901,14 @@ i16 editManager::SaveMap(char* name) {
     WriteArtifacts(handle);
     WriteObelisks(handle);
     write(handle, m_mapSounds, sizeof(m_mapSounds));
-    write(handle, &m_mapExtraCount, sizeof(m_mapExtraCount));
-    for (i = MAP_EXTRA_FIRST_RECORD; i < m_mapExtraCount; i++) {
-        write(handle, &m_mapExtraSizes[i], sizeof(m_mapExtraSizes[i]));
-        write(handle, m_mapExtras[i], m_mapExtraSizes[i]);
+    write(handle, &m_extraCount, sizeof(m_extraCount));
+    for (i = MAP_EXTRA_FIRST_RECORD; i < m_extraCount; i++) {
+        write(handle, &m_extraSizes[i], sizeof(m_extraSizes[i]));
+        write(handle, m_extras[i], m_extraSizes[i]);
     }
     if (gNewMapFormat) {
-        write(handle, m_map.owners, sizeof(m_map.owners));
-        write(handle, &gNextCellOwner, sizeof(gNextCellOwner));
+        write(handle, m_map.cellPairs, sizeof(m_map.cellPairs));
+        write(handle, &gNextObjectId, sizeof(gNextObjectId));
     }
     close(handle);
     gMouseManager->SetPointer(0);
@@ -1908,18 +1960,18 @@ i16 editManager::LoadMap(char* name) {
     read(handle, ignored, 1);
     read(handle, ignored, sizeof(m_mapSounds));
     if (headerId == EDIT_MAP_VERSION) {
-        read(handle, &m_mapExtraCount, sizeof(m_mapExtraCount));
-        for (i = MAP_EXTRA_FIRST_RECORD; i < m_mapExtraCount; i++) {
-            read(handle, &m_mapExtraSizes[i], sizeof(m_mapExtraSizes[i]));
-            m_mapExtras[i] = malloc(m_mapExtraSizes[i]);
-            read(handle, m_mapExtras[i], m_mapExtraSizes[i]);
+        read(handle, &m_extraCount, sizeof(m_extraCount));
+        for (i = MAP_EXTRA_FIRST_RECORD; i < m_extraCount; i++) {
+            read(handle, &m_extraSizes[i], sizeof(m_extraSizes[i]));
+            m_extras[i] = malloc(m_extraSizes[i]);
+            read(handle, m_extras[i], m_extraSizes[i]);
         }
     } else {
-        m_mapExtraCount = MAP_EXTRA_FIRST_RECORD;
+        m_extraCount = MAP_EXTRA_FIRST_RECORD;
     }
     if (gNewMapFormat) {
-        read(handle, m_map.owners, sizeof(m_map.owners));
-        read(handle, &gNextCellOwner, sizeof(gNextCellOwner));
+        read(handle, m_map.cellPairs, sizeof(m_map.cellPairs));
+        read(handle, &gNextObjectId, sizeof(gNextObjectId));
     }
     close(handle);
     gMouseManager->SetPointer(0);
@@ -2017,7 +2069,7 @@ i32 editManager::IsCleared(i32 tileset, i32 index, i32 mask, i32 x, i32 y) {
 VA(0x004078e5, 0x504)
 void editManager::ClearArea(i32 x, i32 y, i32 width, i32 height, u16 mask, i32 secondLayer) {
     i32 i;
-    editCellOwner* ownerRec;
+    editMapCellPair* ownerRec;
     u16 tag;
     i32 j;
     i32 ox;
@@ -2053,18 +2105,18 @@ void editManager::ClearArea(i32 x, i32 y, i32 width, i32 height, u16 mask, i32 s
                             j
                         ))) {
                     if (gNewMapFormat) {
-                        if ((pass == 0 && m_map.owners[i][j].object)
-                            || (pass == 1 && m_map.owners[i][j].overlay)) {
+                        if ((pass == 0 && m_map.cellPairs[i][j].objectId)
+                            || (pass == 1 && m_map.cellPairs[i][j].overlayId)) {
                             if (pass == 0)
-                                tag = m_map.owners[i][j].object;
+                                tag = m_map.cellPairs[i][j].objectId;
                             else
-                                tag = m_map.owners[i][j].overlay;
+                                tag = m_map.cellPairs[i][j].overlayId;
                             for (ox = 0; ox < MAP_CELL_GRID_SIZE; ox++) {
                                 for (oy = 0; oy < MAP_CELL_GRID_SIZE; oy++) {
                                     thatCell = &m_map.cells[ox][oy];
-                                    ownerRec = &m_map.owners[ox][oy];
-                                    if (ownerRec->object == tag) {
-                                        ownerRec->object = 0;
+                                    ownerRec = &m_map.cellPairs[ox][oy];
+                                    if (ownerRec->objectId == tag) {
+                                        ownerRec->objectId = 0;
                                         thatCell->m_objectTileset = 0;
                                         thatCell->m_objectIndex = MAP_CELL_NO_FRAME;
                                         thatCell->m_triggerType = MAP_OBJECT_NONE;
@@ -2080,8 +2132,8 @@ void editManager::ClearArea(i32 x, i32 y, i32 width, i32 height, u16 mask, i32 s
                                         thatCell->m_objectMetadata = 0;
                                         thatCell->m_extraFrame = 0;
                                     }
-                                    if (ownerRec->overlay == tag) {
-                                        ownerRec->overlay = 0;
+                                    if (ownerRec->overlayId == tag) {
+                                        ownerRec->overlayId = 0;
                                         thatCell->m_overlayTileset = 0;
                                         thatCell->m_overlayIndex = MAP_CELL_NO_FRAME;
                                         thatCell->m_flags &=
@@ -2119,8 +2171,8 @@ void editManager::ResetArea(i32 x, i32 y, i32 width, i32 height) {
 
     for (i = x; i < x + width; i++) {
         for (j = y; j < y + height; j++) {
-            m_map.owners[i][j].object = 0;
-            m_map.owners[i][j].overlay = 0;
+            m_map.cellPairs[i][j].objectId = 0;
+            m_map.cellPairs[i][j].overlayId = 0;
             m_map.cells[i][j].m_tileIndex = Random(0, 3);
             m_map.cells[i][j].m_objectTileset = 0;
             m_map.cells[i][j].m_objectIndex = MAP_CELL_NO_FRAME;
@@ -2162,9 +2214,9 @@ VA(0x004080aa, 0x52)
 void editManager::FreeMapExtras(void) {
     i32 i;
 
-    for (i = MAP_EXTRA_FIRST_RECORD; i < m_mapExtraCount; i++)
-        free(m_mapExtras[i]);
-    m_mapExtraCount = MAP_EXTRA_FIRST_RECORD;
+    for (i = MAP_EXTRA_FIRST_RECORD; i < m_extraCount; i++)
+        free(m_extras[i]);
+    m_extraCount = MAP_EXTRA_FIRST_RECORD;
 }
 
 // A new map is a normal-difficulty medium map with placeholder names and
@@ -2179,7 +2231,7 @@ void editManager::NewMap(i32 random) {
     gConfig.currentMapOffset++;
     if (gConfig.firstMapOffset + gConfig.currentMapOffset > 65000)
         gConfig.currentMapOffset = 0;
-    for (i = 0; i < EDIT_MAP_DEFAULT_TEXTS; i++) {
+    for (i = 0; i < MAP_HEADER_LANGUAGE_COUNT; i++) {
         if (random)
             sprintf(
                 gMapHeader->name[i],
@@ -2205,7 +2257,7 @@ void editManager::NewMap(i32 random) {
 
 // Shows text on the status bar with a beep for one and a half seconds.
 VA(0x0040822b, 0x28)
-void ShowStatusAlert(char* text) {
+void ShowStatusWarning(char* text) {
     ShowStatusText(text);
     MessageBeep(0);
     gStatusTextClearTime = KBTickCount() + 1500;
@@ -2214,7 +2266,7 @@ void ShowStatusAlert(char* text) {
 // Scatters small terrain details over 3% of the empty plain ground cells.
 VA(0x00408253, 0x209)
 void ScatterDetails(void) {
-    editCellOwner* cellOwner;
+    editMapCellPair* cellOwner;
     i32 x;
     i32 y;
     mapCell* cell;
@@ -2223,12 +2275,12 @@ void ScatterDetails(void) {
     for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
         for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
             cell = &gEditManager->m_map.cells[x][y];
-            cellOwner = &gEditManager->m_map.owners[x][y];
+            cellOwner = &gEditManager->m_map.cellPairs[x][y];
             if (cell->m_objectIndex == MAP_CELL_NO_FRAME
                 && cell->m_overlayIndex == MAP_CELL_NO_FRAME
                 && cell->m_tileIndex % MAP_CELL_TILES_PER_TERRAIN < 4 && Random(1, 100) <= 3) {
-                gNextCellOwner++;
-                cellOwner->object = gNextCellOwner;
+                gNextObjectId++;
+                cellOwner->objectId = gNextObjectId;
                 switch (cell->m_tileIndex / MAP_CELL_TILES_PER_TERRAIN) {
                     case TERRAIN_GRASS:
                         cell->m_objectTileset = TILESET_OBJ32_01;

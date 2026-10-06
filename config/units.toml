@@ -485,3 +485,38 @@ unit = "EDITOR/EDITOR"
 source = "src/EDITOR/EDITOR.cpp"
 flags = "cpp_editor_oi_g5"
 images = ["editor"]
+
+# The eraser tool (clearManager); descriptive unit name.
+[[unit]]
+unit = "EDITOR/CLEARMGR"
+source = "src/EDITOR/CLEARMGR.cpp"
+flags = "cpp_editor_oi_g5"
+images = ["editor"]
+
+# The map-information tool (eventsManager) and its dialogs; descriptive unit name.
+[[unit]]
+unit = "EDITOR/EVENTMGR"
+source = "src/EDITOR/EVENTMGR.cpp"
+flags = "cpp_editor_oi_g5"
+images = ["editor"]
+
+# The object-placement tool (Editor\OVERLAY.CPP).
+[[unit]]
+unit = "EDITOR/OVERLAY"
+source = "src/EDITOR/OVERLAY.cpp"
+flags = "cpp_editor_oi_g5"
+images = ["editor"]
+
+# The random map generator's editManager methods; descriptive unit name.
+[[unit]]
+unit = "EDITOR/MAPOBJ"
+source = "src/EDITOR/MAPOBJ.cpp"
+flags = "cpp_editor_oi_g5"
+images = ["editor"]
+
+# The terrain painting tool (terrainManager); descriptive unit name.
+[[unit]]
+unit = "EDITOR/TERRMGR"
+source = "src/EDITOR/TERRMGR.cpp"
+flags = "cpp_editor_oi_g5"
+images = ["editor"]

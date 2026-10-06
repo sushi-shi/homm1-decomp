@@ -4,10 +4,9 @@
 // the functions both programs define.
 // Descriptive names: ShowStatusText, ClearStatusText, gStatusTextShown,
 // gStatusTextClearTime, gStatusTextHoldTime, gStatusText,
-// gCommandLineInterpreted, gMapHeader, gNewMapFormat, gSelectionX,
-// gSelectionY, gSelectionWidth, gSelectionHeight, gGeneratingMaps,
-// gNextCellOwner, gEditButtonHelp, gEditAreaHelp, EditorStartupHook, EditorIdleHook,
-// IncrementArgumentA, IncrementArgumentB.
+// gCommandLineInterpreted, gNewMapFormat, gGeneratingMaps, gEditButtonHelp,
+// gEditAreaHelp, EditorStartupHook, EditorIdleHook, IncrementArgumentA,
+// IncrementArgumentB.
 
 #include <match.h>
 
@@ -28,6 +27,7 @@
 #include <BASE/resourceManager.h>
 #include <BASE/textWidget.h>
 #include <EDITOR/editManager.h>
+#include <EDITOR/overlayManager.h>
 #include <SOURCE/appMenu.h>
 #include <SOURCE/dialogTypes.h>
 #include <SOURCE/game.h>
@@ -56,22 +56,10 @@ DATA(0x00452174)
 i32 gStatusTextHoldTime;
 DATA(0x00451ea8)
 char gStatusText[EDITOR_STATUS_TEXT_CAPACITY];
-DATA(0x00451e98)
-SMapHeader* gMapHeader;
 DATA(0x0043f398)
 i32 gNewMapFormat = 1;
-DATA(0x0043f3a0)
-i32 gSelectionX = -1;
-DATA(0x00451f70)
-i32 gSelectionY;
-DATA(0x00451e9c)
-i32 gSelectionWidth;
-DATA(0x00451f80)
-i32 gSelectionHeight;
 DATA(0x004528e4)
 i32 gGeneratingMaps;
-DATA(0x0045245c)
-i16 gNextCellOwner;
 DATA(0x0043f744)
 char* gEditButtonHelp[10] = {
     "",
@@ -562,3 +550,73 @@ void EarlyResizeWindow(i32, i32, i32, i32) {}
 
 VA(0x0040927d, 0x5)
 void UpdateSystemOptionsMenu(void) {}
+
+// The tool units' shared state (CLEARMGR, OVERLAY, TERRMGR and EDITMGR read it).
+DATA(0x0043f39c)
+i32 gClearFlags = EDITOR_CLEAR_FLAGS_DEFAULT;
+DATA(0x0043f3a0)
+i32 gSelectionX = -1;
+DATA(0x0043f714)
+char* gTerrainToolHelp[EDITOR_TERRAIN_TOOL_HELP_COUNT] = {
+    "",
+    localization::Tr("editor.terrain.help.water"),
+    localization::Tr("editor.terrain.help.grass"),
+    localization::Tr("editor.terrain.help.snow"),
+    localization::Tr("editor.terrain.help.swamp"),
+    localization::Tr("editor.terrain.help.lava"),
+    localization::Tr("editor.terrain.help.desert"),
+    localization::Tr("editor.terrain.help.dirt")
+};
+DATA(0x0043f734)
+char* gClearToolHelp[EDITOR_CLEAR_TOOL_HELP_COUNT] = {
+    "",
+    localization::Tr("editor.clear.options.help")
+};
+DATA(0x0043f73c)
+char* gOverlayToolHelp[EDITOR_OVERLAY_TOOL_HELP_COUNT] = {
+    "",
+    localization::Tr("editor.overlay.selected.help")
+};
+DATA(0x0043f7a8)
+char* gOverlayCategoryNames[OVERLAY_CATEGORY_COUNT] = {
+    localization::Tr("editor.overlay.category.0"),
+    localization::Tr("editor.overlay.category.1"),
+    localization::Tr("editor.overlay.category.2"),
+    localization::Tr("editor.overlay.category.3"),
+    localization::Tr("editor.overlay.category.4"),
+    localization::Tr("editor.overlay.category.5"),
+    localization::Tr("editor.overlay.category.6"),
+    localization::Tr("editor.overlay.category.7"),
+    localization::Tr("editor.overlay.category.8"),
+    localization::Tr("editor.overlay.category.9"),
+    localization::Tr("editor.overlay.category.10")
+};
+DATA(0x00451e9c)
+i32 gSelectionWidth;
+DATA(0x00451f70)
+i32 gSelectionY;
+DATA(0x00451f80)
+i32 gSelectionHeight;
+DATA(0x0045245c)
+i16 gNextObjectId;
+DATA(0x004528c8)
+i32 gOverlayCategory;
+DATA(0x004528cc)
+i32 gOverlayShownCategory;
+
+// The random map generator's settings (EVENTMGR's editnew.bin and MAPOBJ).
+DATA(0x0043f3a8)
+double gTerrainPercent[EDITOR_GENERATOR_TERRAIN_COUNT] = {30.0, 30.0, 20.0, 0.0, 0.0, 0.0, 20.0};
+DATA(0x0043f3e0)
+double gDensityPercent[EDITOR_GENERATOR_DENSITY_COUNT] = {50.0, 50.0, 50.0, 50.0, 50.0};
+DATA(0x0043f408)
+i32 gScatterTowns = 1;
+DATA(0x004528e0)
+i32 gSaveUnseen;
+// The eventsManager dialogs' edited cell, map header and window.
+DATA(0x00451e98)
+SMapHeader* gMapHeader;
+DATA(0x00451f7c)
+heroWindow* gEditDialog;
+DATA(0x0045217c)
+mapCell* gEditCell;

@@ -376,6 +376,34 @@ msgstr "Only one set of stone liths on the map. Another set of stone liths must 
 msgid "editor.check.whirlpool.single"
 msgstr "Only 1 whirlpool on the map. Another whirlpool must be placed."
 
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.clear.options.help"
+msgstr "Provides finer control over which objects are removed."
+
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.cell.unavailable"
+msgstr "Information is available only for cells with heroes, monsters or town and castle gates."
+
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.hero.troop_type.range"
+msgstr "Must be between 0 and 27"
+
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.monster.count.range"
+msgstr "Must be between 0 and 127.  (0 lets the computer choose the number at random.)"
+
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.town.mage_guild.range"
+msgstr "Must be between 1 and 4"
+
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.town.old_editor"
+msgstr "A town placed by the old editor cannot be edited"
+
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.town.troop_type.range"
+msgstr "Must be between 0 and 27"
+
 #: src/SOURCE/kbwin.cpp
 msgid "editor.instance.event_name"
 msgstr "Heroes Editor"
@@ -411,6 +439,84 @@ msgstr "'%s' saved successfully"
 msgid "editor.map.unnamed"
 msgstr "No name %d"
 
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.0"
+msgstr "1 - Water"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.1"
+msgstr "2 - Grass"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.2"
+msgstr "3 - Snow"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.3"
+msgstr "4 - Swamp"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.4"
+msgstr "5 - Lava"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.5"
+msgstr "6 - Desert"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.6"
+msgstr "7 - Dirt"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.7"
+msgstr "8 - Towns"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.8"
+msgstr "9 - Monsters"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.9"
+msgstr "10 - Artifacts"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.10"
+msgstr "11 - Treasures"
+
+#: src/EDITOR/OVERLAY.cpp
+msgid "editor.overlay.limit.artifacts"
+msgstr "The maximum number of artifacts is placed."
+
+#: src/EDITOR/OVERLAY.cpp
+msgid "editor.overlay.limit.dragon_city"
+msgstr "The map already has a Dragon City."
+
+#: src/EDITOR/OVERLAY.cpp
+msgid "editor.overlay.limit.lighthouse"
+msgstr "The map already has a lighthouse."
+
+#: src/EDITOR/OVERLAY.cpp
+#, c-format
+msgid "editor.overlay.limit.mines"
+msgstr "Limit of mines, sawmills and alchemist's labs (%d) reached."
+
+#: src/EDITOR/OVERLAY.cpp
+#, c-format
+msgid "editor.overlay.limit.towns"
+msgstr "Town limit (%d) reached."
+
+#: src/EDITOR/OVERLAY.cpp
+msgid "editor.overlay.place.unsuitable"
+msgstr "Unsuitable location"
+
+#: src/EDITOR/OVERLAY.cpp
+msgid "editor.overlay.resource.unsuitable"
+msgstr "Unsuitable location"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.selected.help"
+msgstr "Selected object."
+
 #: src/EDITOR/EDITMGR.cpp
 msgid "editor.quit.confirm"
 msgstr "Do you really want to quit?\n"
@@ -422,6 +528,34 @@ msgstr "You must have the Heroes CD in the CD drive to use\nthe Heroes of Might 
 #: src/EDITOR/EDITOR.cpp
 msgid "editor.startup.initialize.failed"
 msgstr "Cannot initialize the system"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.help.desert"
+msgstr "Desert\n\n Every hero except a barbarian spends 2 movement points per step."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.help.dirt"
+msgstr "Dirt\n\nNo restrictions."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.help.grass"
+msgstr "Grass\n\nNo restrictions."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.help.lava"
+msgstr "Lava\n\nNo restrictions."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.help.snow"
+msgstr "Snow\n\nEvery hero except a barbarian spends 1.5 movement points per step."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.help.swamp"
+msgstr "Swamp\n\n Every hero except a barbarian spends 1.5 movement points per step."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.help.water"
+msgstr "Water\n\nOnly ships can travel here."
 
 #: src/SOURCE/kbwin.cpp
 msgid "editor.window.app_name"

@@ -377,6 +377,34 @@ msgstr ""
 msgid "editor.check.whirlpool.single"
 msgstr ""
 
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.clear.options.help"
+msgstr ""
+
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.cell.unavailable"
+msgstr ""
+
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.hero.troop_type.range"
+msgstr ""
+
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.monster.count.range"
+msgstr ""
+
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.town.mage_guild.range"
+msgstr ""
+
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.town.old_editor"
+msgstr ""
+
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.town.troop_type.range"
+msgstr ""
+
 #: src/SOURCE/kbwin.cpp
 msgid "editor.instance.event_name"
 msgstr ""
@@ -412,6 +440,84 @@ msgstr ""
 msgid "editor.map.unnamed"
 msgstr ""
 
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.0"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.1"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.2"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.3"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.4"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.5"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.6"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.7"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.8"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.9"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.10"
+msgstr ""
+
+#: src/EDITOR/OVERLAY.cpp
+msgid "editor.overlay.limit.artifacts"
+msgstr ""
+
+#: src/EDITOR/OVERLAY.cpp
+msgid "editor.overlay.limit.dragon_city"
+msgstr ""
+
+#: src/EDITOR/OVERLAY.cpp
+msgid "editor.overlay.limit.lighthouse"
+msgstr ""
+
+#: src/EDITOR/OVERLAY.cpp
+#, c-format
+msgid "editor.overlay.limit.mines"
+msgstr ""
+
+#: src/EDITOR/OVERLAY.cpp
+#, c-format
+msgid "editor.overlay.limit.towns"
+msgstr ""
+
+#: src/EDITOR/OVERLAY.cpp
+msgid "editor.overlay.place.unsuitable"
+msgstr ""
+
+#: src/EDITOR/OVERLAY.cpp
+msgid "editor.overlay.resource.unsuitable"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.selected.help"
+msgstr ""
+
 #: src/EDITOR/EDITMGR.cpp
 msgid "editor.quit.confirm"
 msgstr ""
@@ -422,6 +528,34 @@ msgstr ""
 
 #: src/EDITOR/EDITOR.cpp
 msgid "editor.startup.initialize.failed"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.help.desert"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.help.dirt"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.help.grass"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.help.lava"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.help.snow"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.help.swamp"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.help.water"
 msgstr ""
 
 #: src/SOURCE/kbwin.cpp
