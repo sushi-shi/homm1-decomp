@@ -76,9 +76,9 @@ i32 combatManager::DoSpellAI(i8 side) {
         }
     }
     if (bestValue > 0) {
-        giNextAction = ACTION_CAST_SPELL;
-        giNextActionExtra = chosenSpell;
-        giNextActionGridIndex = bestHexWork;
+        gNextAction = ACTION_CAST_SPELL;
+        gNextActionExtra = chosenSpell;
+        gNextActionGridIndex = bestHexWork;
         return 1;
     }
     return 0;

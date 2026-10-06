@@ -111,7 +111,7 @@ void combatManager::SetupCombat(
     m_combatX = combatX;
     m_combatY = combatY;
     if (mapX >= 0 && mapY >= 0)
-        m_battlefieldCell = gpAdvManager->GetCell(mapX, mapY);
+        m_battlefieldCell = gAdvManager->GetCell(mapX, mapY);
     else
         m_battlefieldCell = NULL;
     m_terrainType = CELL_TERRAIN(m_battlefieldCell);
@@ -132,7 +132,7 @@ void combatManager::SetupCombat(
     }
     for (i = 0; i < COMBAT_SIDE_COUNT; i++) {
         if (m_playerId[i] >= 0)
-            m_humanSide[i] = gbHumanPlayer[m_playerId[i]];
+            m_humanSide[i] = gHumanPlayer[m_playerId[i]];
         else
             m_humanSide[i] = 0;
         m_heroes[i] = i == COMBAT_ATTACKER_SIDE ? attackerHero : defenderHero;
@@ -192,30 +192,30 @@ i16 combatManager::Open(i16 priority) {
     m_backgroundBuffer = new bitmap(BITMAP_TYPE_NONE, LOGICAL_SCREEN_WIDTH, COMBAT_VIEW_HEIGHT);
     m_backgroundDrawn = 0;
     sample = LoadPlaySample("PREBATTL.82M");
-    giNextAction = ACTION_NONE;
-    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
+    gNextAction = ACTION_NONE;
+    gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
     m_sideRetreated[COMBAT_DEFENDER_SIDE] = 0;
     m_sideRetreated[COMBAT_ATTACKER_SIDE] = 0;
     m_combatResult = COMBAT_RESULT_PENDING;
-    gbIconClipOn = 0;
+    gIconClipOn = 0;
     m_computeExtent = 0;
     m_redrawExtent = 0;
     gCurLoadedSpellIcon = NULL;
     gCurLoadedSpellFileId = 0;
-    gpMouseManager->SetPointer("cmbtmous.mse", COMBAT_POINTER_DEFAULT);
+    gMouseManager->SetPointer("cmbtmous.mse", COMBAT_POINTER_DEFAULT);
     m_combatWindow = new heroWindow(0, 0, "cmbtwin.bin");
     if (!m_combatWindow)
         MemError();
-    gpWindowManager->AddWindow(m_combatWindow, WINDOW_Z_ORDER_APPEND, 1);
-    m_smallFont = gpResourceManager->GetFont("smalfont.fnt");
+    gWindowManager->AddWindow(m_combatWindow, WINDOW_Z_ORDER_APPEND, 1);
+    m_smallFont = gResourceManager->GetFont("smalfont.fnt");
     LoadIcons();
     LoadArmies();
     m_selectedHex = ARMY_HEX_INVALID;
     m_limitCreatureHex = ARMY_HEX_INVALID;
     m_previousCommand = COMBAT_INVALID_COMMAND;
     GenerateMap();
-    gbRetreatWin = 0;
-    gbCombatSurrender = 0;
+    gRetreatWin = 0;
+    gCombatSurrender = 0;
     m_sideDefeated[COMBAT_DEFENDER_SIDE] = 0;
     m_sideDefeated[COMBAT_ATTACKER_SIDE] = 0;
     m_limitCreature = 1;
@@ -223,18 +223,18 @@ i16 combatManager::Open(i16 priority) {
     m_gridUpdateRow = 0;
     m_combatWindowOpen = 1;
     DrawFrame(1);
-    glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
-    m_combatPalette = gpResourceManager->GetPalette("kb.pal");
-    KBChangeMenu(hmnuCmbt);
+    gTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
+    m_combatPalette = gResourceManager->GetPalette("kb.pal");
+    KBChangeMenu(gCombatMenu);
     CombatMessage("", 1);
-    gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, m_combatPalette);
+    gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, m_combatPalette);
     gLimitedCombatUpdatePalette = 1;
-    gpMouseManager->NewUpdate(1);
-    gpMouseManager->WarpPointer(
+    gMouseManager->NewUpdate(1);
+    gMouseManager->WarpPointer(
         m_hexCells[m_limitCreatureHex].m_x,
         m_hexCells[m_limitCreatureHex].m_y - 50
     );
-    gpMouseManager->ReallyShowPointer();
+    gMouseManager->ReallyShowPointer();
     m_gridSelectionDisabled = 0;
     WaitSample(sample);
     musicList[0] = MUSIC_TRACK_BATTLE_2;
@@ -243,7 +243,7 @@ i16 combatManager::Open(i16 priority) {
     musicList[3] = MUSIC_TRACK_BATTLE_4;
     song = musicList[SRandom(0, 3)];
     PlayMusic(song);
-    gpInputManager->Flush();
+    gInputManager->Flush();
     ResetMouse();
     m_messageMask = BASE_MANAGER_ACCEPT_WIDGET;
     m_priority = priority;
@@ -277,7 +277,7 @@ void combatManager::Close(void) {
     }
     DrawCombatBorder();
     gLimitedCombatUpdatePalette = 0;
-    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
+    gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
     delete m_backgroundBuffer;
     for (ii = 0; ii < COMBAT_SIDE_COUNT; ii++)
         UpdateArmyGroup(ii);
@@ -290,11 +290,11 @@ void combatManager::Close(void) {
                 m_battlefieldCell->m_objectMetadata += m_armyGroups[survivor]->m_creatureCounts[ii];
         }
     }
-    gpWindowManager->RemoveWindow(m_combatWindow);
+    gWindowManager->RemoveWindow(m_combatWindow);
     FreeArmies();
     FreeIcons();
-    gpResourceManager->Dispose(m_smallFont);
-    gpResourceManager->Dispose(m_combatPalette);
+    gResourceManager->Dispose(m_smallFont);
+    gResourceManager->Dispose(m_combatPalette);
     delete m_combatWindow;
     if (m_savedBorder)
         free(m_savedBorder);
@@ -482,7 +482,7 @@ char* combatManager::GetBackgroundName(void) {
     };
     if ((m_battlefieldCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_GRAVEYARD
         || ((m_battlefieldCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_HERO
-            && (gpGame->GetHero(m_battlefieldCell->m_objectMetadata)->m_locationType
+            && (gGame->GetHero(m_battlefieldCell->m_objectMetadata)->m_locationType
                 & MAP_TRIGGER_TYPE_MASK)
                    == MAP_OBJECT_GRAVEYARD)) {
         m_terrainType = TERRAIN_DIRT;
@@ -540,7 +540,7 @@ i8 combatManager::MoreTreesNear(void) {
             xPos = posX + normalDirTable[n].x * pass;
             yPos = homeY + normalDirTable[n].y * pass;
             if (xPos >= 0 && xPos < MAP_CELL_GRID_SIZE && yPos >= 0 && yPos < MAP_CELL_GRID_SIZE) {
-                tile = gpAdvManager->GetCell(xPos, yPos);
+                tile = gAdvManager->GetCell(xPos, yPos);
                 nearbyTileset = tile->m_objectTileset & MAP_CELL_TILESET_MASK;
                 if (nearbyTileset == TILESET_MTN32)
                     lastTypeTable[pass][n] = 0;
@@ -570,17 +570,17 @@ void combatManager::LoadIcons(void) {
 
     for (i = 0; i < COMBAT_ICON_COUNT; i++)
         m_combatIcons[i] = NULL;
-    m_combatIcons[COMBAT_ICON_SPELLS] = gpResourceManager->GetIcon("spells.icn");
-    m_backgroundBitmap = gpResourceManager->GetBitmap(GetBackgroundName());
+    m_combatIcons[COMBAT_ICON_SPELLS] = gResourceManager->GetIcon("spells.icn");
+    m_backgroundBitmap = gResourceManager->GetBitmap(GetBackgroundName());
     m_combatIcons[COMBAT_ICON_GROUND] =
-        gpResourceManager->GetIcon(gCombatGroundNames[m_terrainType]);
+        gResourceManager->GetIcon(gCombatGroundNames[m_terrainType]);
     m_combatIcons[COMBAT_ICON_OBSTACLES] =
-        gpResourceManager->GetIcon(gCombatObstacleNames[m_terrainType]);
-    m_combatIcons[COMBAT_ICON_TEXTBAR] = gpResourceManager->GetIcon("textbar.icn");
-    m_combatIcons[COMBAT_ICON_TENT] = gpResourceManager->GetIcon("tent.icn");
-    m_combatIcons[COMBAT_ICON_CLOUD] = gpResourceManager->GetIcon("cloud.icn");
+        gResourceManager->GetIcon(gCombatObstacleNames[m_terrainType]);
+    m_combatIcons[COMBAT_ICON_TEXTBAR] = gResourceManager->GetIcon("textbar.icn");
+    m_combatIcons[COMBAT_ICON_TENT] = gResourceManager->GetIcon("tent.icn");
+    m_combatIcons[COMBAT_ICON_CLOUD] = gResourceManager->GetIcon("cloud.icn");
     if (m_castleSide[COMBAT_ATTACKER_SIDE] || m_castleSide[COMBAT_DEFENDER_SIDE]) {
-        m_combatIcons[COMBAT_ICON_CATAPULT] = gpResourceManager->GetIcon("catapult.icn");
+        m_combatIcons[COMBAT_ICON_CATAPULT] = gResourceManager->GetIcon("catapult.icn");
         sprintf(
             gText,
             "castle%02d.icn",
@@ -589,9 +589,9 @@ void combatManager::LoadIcons(void) {
                                                          : static_cast<i8>(COMBAT_DEFENDER_SIDE)]
                     ->m_type
         );
-        m_combatIcons[COMBAT_ICON_CASTLE] = gpResourceManager->GetIcon(gText);
+        m_combatIcons[COMBAT_ICON_CASTLE] = gResourceManager->GetIcon(gText);
         sprintf(gText, "keep%02d.icn", m_combatTowns[COMBAT_DEFENDER_SIDE]->m_type);
-        m_combatIcons[COMBAT_ICON_KEEP] = gpResourceManager->GetIcon(gText);
+        m_combatIcons[COMBAT_ICON_KEEP] = gResourceManager->GetIcon(gText);
     }
 }
 
@@ -601,9 +601,9 @@ void combatManager::FreeIcons(void) {
 
     for (i = 0; i < COMBAT_ICON_COUNT; i++) {
         if (m_combatIcons[i])
-            gpResourceManager->Dispose(m_combatIcons[i]);
+            gResourceManager->Dispose(m_combatIcons[i]);
     }
-    gpResourceManager->Dispose(m_backgroundBitmap);
+    gResourceManager->Dispose(m_backgroundBitmap);
 }
 
 // LoadArmies places stacks itself after Init.
@@ -658,7 +658,7 @@ void combatManager::FreeArmies(void) {
     for (i = 0; i < m_numArmies[COMBAT_DEFENDER_SIDE]; i++)
         m_armies[COMBAT_DEFENDER_SIDE][i].FreeResources();
     if (gCurLoadedSpellIcon)
-        gpResourceManager->Dispose(gCurLoadedSpellIcon);
+        gResourceManager->Dispose(gCurLoadedSpellIcon);
     gCurLoadedSpellIcon = NULL;
     gCurLoadedSpellFileId = 0;
 }
@@ -882,14 +882,14 @@ void combatManager::CatAttack(i8 side) {
     }
     if (!theLeft)
         return;
-    gpMouseManager->ReallyHidePointer();
-    boulderRef = gpResourceManager->GetIcon("boulder.icn");
+    gMouseManager->ReallyHidePointer();
+    boulderRef = gResourceManager->GetIcon("boulder.icn");
     sprintf(gText, "catsnd%02d.82M", 0);
     sampleInfo = LoadPlaySample(gText);
-    giMinExtentX = 0;
-    giMaxExtentX = 200;
-    giMinExtentY = 190;
-    giMaxExtentY = 420;
+    gMinExtentX = 0;
+    gMaxExtentX = 200;
+    gMinExtentY = 190;
+    gMaxExtentY = 420;
     m_catapultFrame[side] = 0;
     while (m_catapultFrame[side] < 8) {
         m_redrawExtent = 1;
@@ -934,22 +934,22 @@ void combatManager::CatAttack(i8 side) {
         while (i < 12) {
             m_redrawExtent = 1;
             if (i) {
-                giMinExtentX = xPos - dxVal - 20;
-                giMaxExtentX = xPos + 75;
-                giMinExtentY = ourY - 75;
-                giMaxExtentY = ourY + 75;
-                if (giMinExtentX < 0)
-                    giMinExtentX = 0;
-                if (giMinExtentY < 0)
-                    giMinExtentY = 0;
-                if (giMaxExtentX > LOGICAL_SCREEN_WIDTH - 1)
-                    giMaxExtentX = LOGICAL_SCREEN_WIDTH - 1;
-                if (giMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
-                    giMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
+                gMinExtentX = xPos - dxVal - 20;
+                gMaxExtentX = xPos + 75;
+                gMinExtentY = ourY - 75;
+                gMaxExtentY = ourY + 75;
+                if (gMinExtentX < 0)
+                    gMinExtentX = 0;
+                if (gMinExtentY < 0)
+                    gMinExtentY = 0;
+                if (gMaxExtentX > LOGICAL_SCREEN_WIDTH - 1)
+                    gMaxExtentX = LOGICAL_SCREEN_WIDTH - 1;
+                if (gMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
+                    gMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
             }
             DrawFrame(0);
             boulderRef->DrawToBuffer(xPos, ourY, prevFrm, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
-            UPDATE_INCLUSIVE_REGION(giMinExtentX, giMinExtentY, giMaxExtentX, giMaxExtentY);
+            UPDATE_INCLUSIVE_REGION(gMinExtentX, gMinExtentY, gMaxExtentX, gMaxExtentY);
             xPos += dxVal;
             ourY += localDy;
             prevFrm++;
@@ -973,22 +973,22 @@ void combatManager::CatAttack(i8 side) {
         for (i = 0; i < 12; i++) {
             m_redrawExtent = 1;
             if (i) {
-                giMinExtentX = xPos - dxVal - 20;
-                giMaxExtentX = xPos + 75;
-                giMinExtentY = ourY - 75;
-                giMaxExtentY = ourY + 75;
-                if (giMinExtentX < 0)
-                    giMinExtentX = 0;
-                if (giMinExtentY < 0)
-                    giMinExtentY = 0;
-                if (giMaxExtentX > LOGICAL_SCREEN_WIDTH - 1)
-                    giMaxExtentX = LOGICAL_SCREEN_WIDTH - 1;
-                if (giMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
-                    giMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
+                gMinExtentX = xPos - dxVal - 20;
+                gMaxExtentX = xPos + 75;
+                gMinExtentY = ourY - 75;
+                gMaxExtentY = ourY + 75;
+                if (gMinExtentX < 0)
+                    gMinExtentX = 0;
+                if (gMinExtentY < 0)
+                    gMinExtentY = 0;
+                if (gMaxExtentX > LOGICAL_SCREEN_WIDTH - 1)
+                    gMaxExtentX = LOGICAL_SCREEN_WIDTH - 1;
+                if (gMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
+                    gMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
             }
             DrawFrame(0);
             boulderRef->DrawToBuffer(xPos, ourY, prevFrm, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
-            UPDATE_INCLUSIVE_REGION(giMinExtentX, giMinExtentY, giMaxExtentX, giMaxExtentY);
+            UPDATE_INCLUSIVE_REGION(gMinExtentX, gMinExtentY, gMaxExtentX, gMaxExtentY);
             xPos += dxVal;
             ourY += (12 - i) * localDy;
             prevFrm++;
@@ -1000,21 +1000,21 @@ void combatManager::CatAttack(i8 side) {
         localDy = (posY - ourY) / 36;
         for (i = 1; i <= 8; i++) {
             m_redrawExtent = 1;
-            giMinExtentX = xPos - dxVal - 20;
-            giMaxExtentX = xPos + 75;
-            giMinExtentY = ourY - 75;
-            giMaxExtentY = ourY + 75;
-            if (giMinExtentX < 0)
-                giMinExtentX = 0;
-            if (giMinExtentY < 0)
-                giMinExtentY = 0;
-            if (giMaxExtentX > LOGICAL_SCREEN_WIDTH - 1)
-                giMaxExtentX = LOGICAL_SCREEN_WIDTH - 1;
-            if (giMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
-                giMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
+            gMinExtentX = xPos - dxVal - 20;
+            gMaxExtentX = xPos + 75;
+            gMinExtentY = ourY - 75;
+            gMaxExtentY = ourY + 75;
+            if (gMinExtentX < 0)
+                gMinExtentX = 0;
+            if (gMinExtentY < 0)
+                gMinExtentY = 0;
+            if (gMaxExtentX > LOGICAL_SCREEN_WIDTH - 1)
+                gMaxExtentX = LOGICAL_SCREEN_WIDTH - 1;
+            if (gMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
+                gMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
             DrawFrame(0);
             boulderRef->DrawToBuffer(xPos, ourY, prevFrm, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
-            UPDATE_INCLUSIVE_REGION(giMinExtentX, giMinExtentY, giMaxExtentX, giMaxExtentY);
+            UPDATE_INCLUSIVE_REGION(gMinExtentX, gMinExtentY, gMaxExtentX, gMaxExtentY);
             xPos += dxVal;
             ourY += i * localDy;
             prevFrm++;
@@ -1032,21 +1032,21 @@ void combatManager::CatAttack(i8 side) {
         m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + nextCol].m_obstacleIndex =
             COMBAT_WALL_INTACT_HIT;
     activeForce = SRandom(0, 150);
-    if (!gbHumanPlayer[m_playerId[COMBAT_ATTACKER_SIDE]])
+    if (!gHumanPlayer[m_playerId[COMBAT_ATTACKER_SIDE]])
         activeForce -= 15;
     if (activeForce < 30
         || m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + nextCol].m_obstacleIndex
                == COMBAT_WALL_DAMAGED_HIT) {
         m_wallSurvives = 0;
         m_wallFrame = 0;
-        giMinExtentX = 300;
-        giMaxExtentX = 490;
-        giMinExtentY = m_catapultTarget * COMBAT_HEX_HEIGHT - 30;
-        giMaxExtentY = (m_catapultTarget + 2) * COMBAT_HEX_HEIGHT + 30;
-        if (giMinExtentY < 0)
-            giMinExtentY = 0;
-        if (giMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
-            giMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
+        gMinExtentX = 300;
+        gMaxExtentX = 490;
+        gMinExtentY = m_catapultTarget * COMBAT_HEX_HEIGHT - 30;
+        gMaxExtentY = (m_catapultTarget + 2) * COMBAT_HEX_HEIGHT + 30;
+        if (gMinExtentY < 0)
+            gMinExtentY = 0;
+        if (gMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
+            gMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
         while (m_wallFrame < 10) {
             m_wallDamage = m_wallFrame;
             if (m_wallFrame == COMBAT_WALL_COLLAPSE_FRAME)
@@ -1065,14 +1065,14 @@ void combatManager::CatAttack(i8 side) {
     } else {
         m_wallSurvives = 1;
         m_wallFrame = 0;
-        giMinExtentX = 300;
-        giMaxExtentX = 490;
-        giMinExtentY = m_catapultTarget * COMBAT_HEX_HEIGHT - 30;
-        giMaxExtentY = (m_catapultTarget + 2) * COMBAT_HEX_HEIGHT + 30;
-        if (giMinExtentY < 0)
-            giMinExtentY = 0;
-        if (giMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
-            giMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
+        gMinExtentX = 300;
+        gMaxExtentX = 490;
+        gMinExtentY = m_catapultTarget * COMBAT_HEX_HEIGHT - 30;
+        gMaxExtentY = (m_catapultTarget + 2) * COMBAT_HEX_HEIGHT + 30;
+        if (gMinExtentY < 0)
+            gMinExtentY = 0;
+        if (gMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
+            gMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
         while (m_wallFrame < 10) {
             if (m_wallFrame == COMBAT_WALL_COLLAPSE_FRAME)
                 m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + nextCol].m_obstacleIndex =
@@ -1087,10 +1087,10 @@ void combatManager::CatAttack(i8 side) {
     }
     m_redrawExtent = 1;
     DrawFrame(1);
-    giMinExtentX = 0;
-    giMaxExtentX = 200;
-    giMinExtentY = 220;
-    giMaxExtentY = 420;
+    gMinExtentX = 0;
+    gMaxExtentX = 200;
+    gMinExtentY = 220;
+    gMaxExtentY = 420;
     while (m_catapultFrame[side] < 14) {
         m_redrawExtent = 1;
         DrawFrame(1);
@@ -1099,8 +1099,8 @@ void combatManager::CatAttack(i8 side) {
     m_catapultFrame[side] = 0;
     m_redrawExtent = 1;
     DrawFrame(1);
-    gpResourceManager->Dispose(boulderRef);
-    gpMouseManager->ReallyShowPointer();
+    gResourceManager->Dispose(boulderRef);
+    gMouseManager->ReallyShowPointer();
     WaitSample(sampleInfo);
 }
 
@@ -1185,13 +1185,13 @@ void combatManager::KeepAttack(void) {
     }
     if (pickIndex == COMBAT_ARMY_INDEX_NONE)
         return;
-    gpMouseManager->ReallyHidePointer();
-    hisStack = &gpCombatManager->m_armies[COMBAT_ATTACKER_SIDE][pickIndex];
+    gMouseManager->ReallyHidePointer();
+    hisStack = &gCombatManager->m_armies[COMBAT_ATTACKER_SIDE][pickIndex];
     hisCol = hisStack->m_hex % COMBAT_GRID_COLUMNS;
     hisRow = hisStack->m_hex / COMBAT_GRID_COLUMNS;
     originalColumn = COMBAT_GRID_LAST_COLUMN;
     originalRow = 0;
-    gpCombatManager->SetGridMode(0);
+    gCombatManager->SetGridMode(0);
     if (m_combatTowns[COMBAT_DEFENDER_SIDE]->m_type == TOWN_TYPE_WARLOCK
         || m_combatTowns[COMBAT_DEFENDER_SIDE]->m_type == TOWN_TYPE_SORCERESS)
         sprintf(gText, "shoot15.82M");
@@ -1207,8 +1207,8 @@ void combatManager::KeepAttack(void) {
     arrowFrame = shotTable[hisStack->m_hex];
     startX = 0x24d;
     startY = 0x19;
-    landX = gpCombatManager->m_hexCells[hisRow * COMBAT_GRID_COLUMNS + aimColumn].m_x;
-    landY = gpCombatManager->m_hexCells[hisRow * COMBAT_GRID_COLUMNS + aimColumn].m_y - 75;
+    landX = gCombatManager->m_hexCells[hisRow * COMBAT_GRID_COLUMNS + aimColumn].m_x;
+    landY = gCombatManager->m_hexCells[hisRow * COMBAT_GRID_COLUMNS + aimColumn].m_y - 75;
     gainX = static_cast<float>(landX - startX) / static_cast<float>(flightSteps * 3);
     gainY = static_cast<float>(landY - startY) / static_cast<float>(flightSteps * 3);
     inFlightX = startX;
@@ -1228,7 +1228,7 @@ void combatManager::KeepAttack(void) {
         projectileSizeY = 0x43;
     }
     backing = new bitmap(BITMAP_TYPE_MEMORY, projectileSizeX, projectileSizeY);
-    backing->GrabBitmap(gpWindowManager->m_screen, inFlightX, inFlightY);
+    backing->GrabBitmap(gWindowManager->m_screen, inFlightX, inFlightY);
     lastX = inFlightX;
     lastY = inFlightY;
     for (k = 0; k < flightSteps * 3; k++) {
@@ -1237,7 +1237,7 @@ void combatManager::KeepAttack(void) {
         maxX = lastX + projectileSizeX;
         maxY = projectileSizeY + inFlightY;
         backing->DrawToBuffer(lastX, lastY);
-        backing->GrabBitmap(gpWindowManager->m_screen, inFlightX, inFlightY);
+        backing->GrabBitmap(gWindowManager->m_screen, inFlightX, inFlightY);
         m_combatIcons[COMBAT_ICON_KEEP]->DrawToBuffer(
             inFlightX,
             inFlightY,
@@ -1245,16 +1245,16 @@ void combatManager::KeepAttack(void) {
             ICON_DRAW_NORMAL,
             ICON_DRAW_OFFSET_FULL
         );
-        DelayTil(&glTimers[COMBAT_FRAME_TIMER_SLOT]);
+        DelayTil(&gTimers[COMBAT_FRAME_TIMER_SLOT]);
         UPDATE_INCLUSIVE_REGION(clipLeft, clipTop, maxX, maxY);
-        glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 10;
+        gTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 10;
         lastX = inFlightX;
         lastY = inFlightY;
         inFlightX += gainX;
         inFlightY += gainY;
     }
     backing->DrawToBuffer(lastX, lastY);
-    gpWindowManager->UpdateScreenRegion(lastX, lastY, projectileSizeX, projectileSizeY);
+    gWindowManager->UpdateScreenRegion(lastX, lastY, projectileSizeX, projectileSizeY);
     delete backing;
     mod = 2;
     if (m_heroes[COMBAT_DEFENDER_SIDE])
@@ -1302,14 +1302,14 @@ void combatManager::KeepAttack(void) {
             arrowDamage,
             localization::Tr("combat.fragment.damage_points")
         );
-    gpCombatManager->CombatMessage(gText, 1);
+    gCombatManager->CombatMessage(gText, 1);
     hisStack->PowEffect(hisStack->m_stats.powEffect);
     if (!(hisStack->m_stats.attributes & MONSTER_FLAGS_DEAD))
         hisStack->Stand(0);
     WaitSample(sample);
     if (hisStack->m_quantity > 0)
         hisStack->Stand(1);
-    gpMouseManager->ReallyShowPointer();
+    gMouseManager->ReallyShowPointer();
 }
 
 // ExperienceValueOfStack: fight value of the side's losses, plus 500 for a
@@ -1356,7 +1356,7 @@ void combatManager::SaveCombatBorder(void) {
         );
     memcpy(
         m_savedBorder,
-        gpWindowManager->m_screen->m_pixels + LOGICAL_SCREEN_WIDTH * COMBAT_VIEW_HEIGHT,
+        gWindowManager->m_screen->m_pixels + LOGICAL_SCREEN_WIDTH * COMBAT_VIEW_HEIGHT,
         LOGICAL_SCREEN_WIDTH * (LOGICAL_SCREEN_HEIGHT - COMBAT_VIEW_HEIGHT)
     );
 }
@@ -1367,7 +1367,7 @@ void combatManager::DrawCombatBorder(void) {
     if (!m_savedBorder)
         return;
     memcpy(
-        gpWindowManager->m_screen->m_pixels + LOGICAL_SCREEN_WIDTH * COMBAT_VIEW_HEIGHT,
+        gWindowManager->m_screen->m_pixels + LOGICAL_SCREEN_WIDTH * COMBAT_VIEW_HEIGHT,
         m_savedBorder,
         LOGICAL_SCREEN_WIDTH * (LOGICAL_SCREEN_HEIGHT - COMBAT_VIEW_HEIGHT)
     );

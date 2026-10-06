@@ -116,14 +116,21 @@ H1_ENUM_CONST_END(MouseManagerConstant)
 extern i32 gMouseCursorType;
 extern i32 gMouseOffset[3];
 extern u8 gHotSpot[MOUSE_CURSOR_COUNT][MOUSE_CURSOR_AXIS_COUNT];
-extern HCURSOR hMouseCursor[MOUSE_CURSOR_COUNT];
+#define gMouseCursors hMouseCursor // spelling fixes .bss order
+extern HCURSOR gMouseCursors[MOUSE_CURSOR_COUNT];
+#define gColorBits cColorBits // spelling fixes .bss order
 extern u8* gColorBits[MOUSE_CURSOR_COUNT];
-extern u8* cAndBits[MOUSE_CURSOR_COUNT];
-extern BITMAP bmpAndMask[MOUSE_CURSOR_COUNT];
-extern BITMAP bmpColor[MOUSE_CURSOR_COUNT];
-extern HBITMAP hbmpAndMask[MOUSE_CURSOR_COUNT];
-extern HBITMAP hbmpColor[MOUSE_CURSOR_COUNT];
-extern ICONINFO mouseIconInfo[MOUSE_CURSOR_COUNT];
+#define gAndBits cAndBits // spelling fixes .bss order
+extern u8* gAndBits[MOUSE_CURSOR_COUNT];
+extern BITMAP gAndMaskBitmapInfo[MOUSE_CURSOR_COUNT];
+#define gColorBitmapInfo bmpColor // spelling fixes .bss order
+extern BITMAP gColorBitmapInfo[MOUSE_CURSOR_COUNT];
+#define gAndMaskBitmaps hbmpAndMask // spelling fixes .bss order
+extern HBITMAP gAndMaskBitmaps[MOUSE_CURSOR_COUNT];
+#define gColorBitmaps hbmpColor // spelling fixes .bss order
+extern HBITMAP gColorBitmaps[MOUSE_CURSOR_COUNT];
+#define gMouseIconInfo cursorIconInfo // spelling fixes .bss order
+extern ICONINFO gMouseIconInfo[MOUSE_CURSOR_COUNT];
 
 // Moved from MOUSEMGR.cpp.
 H1_ENUM_CONST_BEGIN(MouseManagerStateConstant)

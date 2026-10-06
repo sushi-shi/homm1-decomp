@@ -32,7 +32,7 @@ hexcell* hexcell::TakeOccupant(hexcell* from) {
 
 VA(0x0043b781, 0x40)
 void hexcell::DrawGround(void) {
-    gpCombatManager->m_combatIcons[m_groundIcon]
+    gCombatManager->m_combatIcons[m_groundIcon]
         ->DrawToBuffer(m_x, m_y, m_groundFrame, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
 }
 
@@ -42,7 +42,7 @@ void hexcell::DrawOccupant(void) {
     army* occupant;
 
     if (m_occupantSide != COMBAT_SIDE_NONE) {
-        occupant = &gpCombatManager->m_armies[m_occupantSide][m_occupantIndex];
+        occupant = &gCombatManager->m_armies[m_occupantSide][m_occupantIndex];
         occupantFacing = occupant->m_facing;
         if (m_occupantFootprintHalf != occupantFacing)
             occupant->DrawToBuffer(m_x, m_y);
@@ -54,8 +54,8 @@ void hexcell::DrawTower(i8 frame) {
     i8 level;
     i16 row;
 
-    level = gpCombatManager->m_castleSide[COMBAT_ATTACKER_SIDE] == 1;
-    gpCombatManager->m_combatIcons[COMBAT_ICON_CASTLE]->DrawToBuffer(
+    level = gCombatManager->m_castleSide[COMBAT_ATTACKER_SIDE] == 1;
+    gCombatManager->m_combatIcons[COMBAT_ICON_CASTLE]->DrawToBuffer(
         level ? m_x : m_x + 28,
         m_y,
         frame,
@@ -66,7 +66,7 @@ void hexcell::DrawTower(i8 frame) {
     if (row == COMBAT_GRID_LAST_ROW)
         return;
     if (row & 1)
-        gpCombatManager->m_combatIcons[COMBAT_ICON_CASTLE]->DrawToBuffer(
+        gCombatManager->m_combatIcons[COMBAT_ICON_CASTLE]->DrawToBuffer(
             level ? m_x : m_x + 28,
             m_y,
             9,
@@ -74,7 +74,7 @@ void hexcell::DrawTower(i8 frame) {
             ICON_DRAW_OFFSET_FULL
         );
     else
-        gpCombatManager->m_combatIcons[COMBAT_ICON_CASTLE]
+        gCombatManager->m_combatIcons[COMBAT_ICON_CASTLE]
             ->DrawToBuffer(level ? m_x - 28 : m_x, m_y, 9, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
 }
 
@@ -84,19 +84,19 @@ void hexcell::DrawWall(void) {
     i16 row;
     i16 rubbleFrame;
 
-    level = gpCombatManager->m_castleSide[COMBAT_ATTACKER_SIDE] == 1;
+    level = gCombatManager->m_castleSide[COMBAT_ATTACKER_SIDE] == 1;
     row = (m_y - COMBAT_HEX_ORIGIN_Y) / COMBAT_HEX_HEIGHT;
-    rubbleFrame = gpCombatManager->m_wallDamage;
-    gpCombatManager->m_combatIcons[COMBAT_ICON_CLOUD]->DrawToBuffer(
+    rubbleFrame = gCombatManager->m_wallDamage;
+    gCombatManager->m_combatIcons[COMBAT_ICON_CLOUD]->DrawToBuffer(
         level ? m_x - 15 : m_x + 15,
         row == 0 ? m_y - 20 : m_y - 36,
-        gpCombatManager->m_wallFrame,
+        gCombatManager->m_wallFrame,
         ICON_DRAW_NORMAL,
         ICON_DRAW_OFFSET_FULL
     );
     if (rubbleFrame != COMBAT_WALL_DAMAGE_NONE) {
         if (row == COMBAT_GRID_LAST_ROW) {
-            gpCombatManager->m_combatIcons[COMBAT_ICON_CLOUD]->DrawToBuffer(
+            gCombatManager->m_combatIcons[COMBAT_ICON_CLOUD]->DrawToBuffer(
                 level ? m_x : m_x + 15,
                 m_y + 8,
                 rubbleFrame,
@@ -106,7 +106,7 @@ void hexcell::DrawWall(void) {
             return;
         }
         if (row & 1) {
-            gpCombatManager->m_combatIcons[COMBAT_ICON_CLOUD]->DrawToBuffer(
+            gCombatManager->m_combatIcons[COMBAT_ICON_CLOUD]->DrawToBuffer(
                 level ? m_x : m_x + 8,
                 m_y + 40,
                 rubbleFrame,
@@ -114,7 +114,7 @@ void hexcell::DrawWall(void) {
                 ICON_DRAW_OFFSET_FULL
             );
             if (rubbleFrame > 0)
-                gpCombatManager->m_combatIcons[COMBAT_ICON_CLOUD]->DrawToBuffer(
+                gCombatManager->m_combatIcons[COMBAT_ICON_CLOUD]->DrawToBuffer(
                     level ? m_x - 40 : m_x - 32,
                     m_y + 60,
                     rubbleFrame - 1,
@@ -122,7 +122,7 @@ void hexcell::DrawWall(void) {
                     ICON_DRAW_OFFSET_FULL
                 );
         } else {
-            gpCombatManager->m_combatIcons[COMBAT_ICON_CLOUD]->DrawToBuffer(
+            gCombatManager->m_combatIcons[COMBAT_ICON_CLOUD]->DrawToBuffer(
                 level ? m_x - 28 : m_x - 8,
                 m_y + 40,
                 rubbleFrame,
@@ -130,7 +130,7 @@ void hexcell::DrawWall(void) {
                 ICON_DRAW_OFFSET_FULL
             );
             if (rubbleFrame > 0)
-                gpCombatManager->m_combatIcons[COMBAT_ICON_CLOUD]->DrawToBuffer(
+                gCombatManager->m_combatIcons[COMBAT_ICON_CLOUD]->DrawToBuffer(
                     level ? m_x + 20 : m_x + 40,
                     m_y + 60,
                     rubbleFrame - 1,
@@ -150,12 +150,12 @@ void hexcell::DrawObstacle(void) {
                 DrawTower(m_obstacleIndex);
                 break;
             case COMBAT_WALL_INTACT_HIT:
-                if (gpCombatManager->m_wallFrame < 4 || gpCombatManager->m_wallSurvives == 1)
+                if (gCombatManager->m_wallFrame < 4 || gCombatManager->m_wallSurvives == 1)
                     DrawTower(COMBAT_WALL_INTACT);
                 DrawWall();
                 break;
             case COMBAT_WALL_DAMAGED_HIT:
-                if (gpCombatManager->m_wallFrame < 4 || gpCombatManager->m_wallSurvives == 1)
+                if (gCombatManager->m_wallFrame < 4 || gCombatManager->m_wallSurvives == 1)
                     DrawTower(COMBAT_WALL_DAMAGED);
                 DrawWall();
                 break;
@@ -164,7 +164,7 @@ void hexcell::DrawObstacle(void) {
                 break;
         }
     } else {
-        gpCombatManager->m_combatIcons[COMBAT_ICON_OBSTACLES]
+        gCombatManager->m_combatIcons[COMBAT_ICON_OBSTACLES]
             ->DrawToBuffer(m_x, m_y, m_obstacleIndex, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
     }
 }

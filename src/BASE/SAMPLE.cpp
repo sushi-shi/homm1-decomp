@@ -14,7 +14,7 @@ VA(0x00475050, 0x232)
 sample::sample(char* name)
     : resource(
           RESOURCE_CATEGORY_SAMPLE,
-          gpResourceManager->MakeId(name),
+          gResourceManager->MakeId(name),
           RESOURCE_REFERENCE_INITIAL,
           NULL
       ) {
@@ -50,11 +50,11 @@ sample::sample(char* name)
                 break;
         }
     }
-    u32 size = gpResourceManager->GetFileSize(m_id);
+    u32 size = gResourceManager->GetFileSize(m_id);
     m_playbackData.data = new i8[size];
     m_playbackData.size = size;
-    gpResourceManager->PointToFile(m_id);
-    gpResourceManager->ReadBlock(m_playbackData.data, size);
+    gResourceManager->PointToFile(m_id);
+    gResourceManager->ReadBlock(m_playbackData.data, size);
     for (i = 0; i < size; ++i)
         m_playbackData.data[i] += 0x80;
 }

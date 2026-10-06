@@ -36,7 +36,7 @@ H1_ENUM_BEGIN(CombatMessageCommand)
     COMBAT_MESSAGE_COMMAND_OPPOSING_OPTIONS = 13
 H1_ENUM_END(CombatMessageCommand)
 
-// The queued giNextAction that the combat loop
+// The queued gNextAction that the combat loop
 // executes; DoCommand, the spell book and the skip button set it.
 H1_ENUM_BEGIN(CombatAction)
     ACTION_NONE = 0,
@@ -185,7 +185,7 @@ struct CombatRemotePacket {
 #pragma pack(pop)
 
 // Combat manager, 0x7d3 bytes (InitMainClasses; constructor 0x0044b440).
-// GameUnsaved reads the baseManager m_active word through gpCombatManager.
+// GameUnsaved reads the baseManager m_active word through gCombatManager.
 #pragma pack(push, 1)
 class combatManager : public baseManager {
 public:
@@ -230,7 +230,7 @@ public:
     class armyGroup* m_armyGroups[2];
     // Set by a surrender (ProcessNextAction).
     i8 m_sideDefeated[2];
-    // SetupCombat copies gbHumanPlayer per side; a bad-morale roll may spare
+    // SetupCombat copies gHumanPlayer per side; a bad-morale roll may spare
     // a computer side.
     char m_humanSide[2];
     i8 m_playerId[2];
@@ -439,20 +439,26 @@ i16 HandleCastSpell(struct tag_message& message);
 // teleport second-click state (0x00490690).
 extern i8 gInTeleportGetDest;
 // Frame of the mass-spell glow drawn by DrawFrame (0x004c78b4).
-extern i16 giCombatFxFrame;
+extern i16 gCombatFxFrame;
 // Captured artifacts shown page by page on the victory window.
-extern i8 iMaxTransferArtifacts;
-extern i32 iCurTransferArtifact;
+#define gMaxTransferArtifacts iMaxTransferArtifacts // spelling fixes .bss order
+extern i8 gMaxTransferArtifacts;
+#define gCurTransferArtifact iCurTransferArtifact // spelling fixes .bss order
+extern i32 gCurTransferArtifact;
 // DoSurrender: gold the enemy hero asks for (0x004a4bac).
-extern i32 giSurrenderCost;
+#define gSurrenderCost giSurrenderCost // spelling fixes .bss order
+extern i32 gSurrenderCost;
 // The queued combat action and its grid/extra arguments (0x004a4bc0..).
-extern H1_ENUM_STORAGE(CombatAction, i32) giNextAction;
-extern i32 giNextActionGridIndex;
-extern i32 giNextActionExtra;
-extern i32 giNextActionGridIndex2;
+extern H1_ENUM_STORAGE(CombatAction, i32) gNextAction;
+#define gNextActionGridIndex giNextActionGridIndex // spelling fixes .bss order
+extern i32 gNextActionGridIndex;
+#define gNextActionExtra giNextActionExtra // spelling fixes .bss order
+extern i32 gNextActionExtra;
+#define gNextActionGridIndex2 giNextActionGridIndex2 // spelling fixes .bss order
+extern i32 gNextActionGridIndex2;
 // Queue a move (or attack) toward a hex: the action is stored before the
 // hex expression is evaluated; other action fields stay with the caller.
-#define SET_NEXT_COMBAT_MOVE(hex) (giNextAction = ACTION_MOVE, giNextActionGridIndex = (hex))
+#define SET_NEXT_COMBAT_MOVE(hex) (gNextAction = ACTION_MOVE, gNextActionGridIndex = (hex))
 // gCombatMessage indices, the command help lines CombatMessage(short)
 // prints: "", "Move %s here.", "Fly %s here.", "Attack %s", "Shoot %s(%d
 // shot%s left)", "General's Options", "View Opposing General", "View %s
@@ -470,10 +476,12 @@ H1_ENUM_BEGIN(CombatMessageText)
     COMBAT_TEXT_COUNT = 9
 H1_ENUM_END(CombatMessageText)
 // Fallback net player for a combat action broadcast (0x004c6710).
-extern i32 giRemoteDefaultPlayer;
-extern i8 iTransferArtifacts[];
+extern i32 gRemoteDefaultPlayer;
+#define gTransferArtifacts iTransferArtifacts // spelling fixes .bss order
+extern i8 gTransferArtifacts[];
 // Network combat: this machine controls the current side (0x004a4b98).
-extern i8 gbThisNetHasControl;
+#define gThisNetHasControl gbThisNetHasControl // spelling fixes .bss order
+extern i8 gThisNetHasControl;
 // gCombatHelp rows ProcessCombatMsg shows when the pointer is off the grid:
 // over the auto-combat strip (left), the skip strip (right), or neither.
 H1_ENUM_BEGIN(CombatHelpText)

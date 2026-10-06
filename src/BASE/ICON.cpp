@@ -15,11 +15,11 @@
 
 VA(0x00470ea0, 0xbf)
 icon::icon(i16 id) : resource(RESOURCE_CATEGORY_ICON, id, RESOURCE_REFERENCE_INITIAL, NULL) {
-    gpResourceManager->PointToFile(id);
-    m_frameCount = gpResourceManager->ReadWord();
-    u32 length = gpResourceManager->ReadLong();
+    gResourceManager->PointToFile(id);
+    m_frameCount = gResourceManager->ReadWord();
+    u32 length = gResourceManager->ReadLong();
     m_data = static_cast<u8*>(malloc(length));
-    gpResourceManager->ReadBlock(m_data, length);
+    gResourceManager->ReadBlock(m_data, length);
     PostprocessIcon(this);
 }
 
@@ -56,30 +56,30 @@ void icon::DrawToBuffer(
             m_drawBottom = m_drawTop + m_frames[frame].h;
         }
         if (gSaveBiggestExtent != 0) {
-            if (m_drawLeft < giMinExtentX)
-                giMinExtentX = m_drawLeft;
-            if (m_drawTop < giMinExtentY)
-                giMinExtentY = m_drawTop;
-            if (m_drawRight > giMaxExtentX)
-                giMaxExtentX = m_drawRight;
-            if (m_drawBottom > giMaxExtentY)
-                giMaxExtentY = m_drawBottom;
+            if (m_drawLeft < gMinExtentX)
+                gMinExtentX = m_drawLeft;
+            if (m_drawTop < gMinExtentY)
+                gMinExtentY = m_drawTop;
+            if (m_drawRight > gMaxExtentX)
+                gMaxExtentX = m_drawRight;
+            if (m_drawBottom > gMaxExtentY)
+                gMaxExtentY = m_drawBottom;
         }
     }
     if (gLimitToExtent != 0
-        && (gCurrArmyDrawn == 0 || m_drawLeft > giMaxExtentX || m_drawRight < giMinExtentX
-            || m_drawTop > giMaxExtentY || m_drawBottom < giMinExtentY))
+        && (gCurrArmyDrawn == 0 || m_drawLeft > gMaxExtentX || m_drawRight < gMinExtentX
+            || m_drawTop > gMaxExtentY || m_drawBottom < gMinExtentY))
         return;
-    if (gbIconClipOn != 0) {
+    if (gIconClipOn != 0) {
         if (orientation == ICON_DRAW_NORMAL)
-            ClippedIconToBitmap(this, gpWindowManager->m_screen, x, y, frame, mode);
+            ClippedIconToBitmap(this, gWindowManager->m_screen, x, y, frame, mode);
         else
-            FlipClippedIconToBitmap(this, gpWindowManager->m_screen, x, y, frame, mode);
+            FlipClippedIconToBitmap(this, gWindowManager->m_screen, x, y, frame, mode);
     } else {
         if (orientation == ICON_DRAW_NORMAL)
-            IconToBitmap(this, gpWindowManager->m_screen, x, y, frame, mode);
+            IconToBitmap(this, gWindowManager->m_screen, x, y, frame, mode);
         else
-            FlipIconToBitmap(this, gpWindowManager->m_screen, x, y, frame, mode);
+            FlipIconToBitmap(this, gWindowManager->m_screen, x, y, frame, mode);
     }
 }
 
@@ -98,7 +98,7 @@ void icon::ClipFillToBuffer(
 ) {
     ClippedMonoIconToBitmap(
         this,
-        gpWindowManager->m_screen,
+        gWindowManager->m_screen,
         x,
         y,
         frame,
@@ -126,15 +126,15 @@ void icon::FillToBuffer(
             m_drawRight = m_drawLeft + m_frames[frame].w;
             m_drawTop = y + m_frames[frame].y;
             m_drawBottom = m_drawTop + m_frames[frame].h;
-            if (!gCurrArmyDrawn || m_drawLeft > giMaxExtentX || m_drawRight < giMinExtentX
-                || m_drawTop > giMaxExtentY || m_drawBottom < giMinExtentY)
+            if (!gCurrArmyDrawn || m_drawLeft > gMaxExtentX || m_drawRight < gMinExtentX
+                || m_drawTop > gMaxExtentY || m_drawBottom < gMinExtentY)
                 return;
         }
-        MonoIconToBitmap(this, gpWindowManager->m_screen, x, y, frame, gMonoColorMap[color], mode);
+        MonoIconToBitmap(this, gWindowManager->m_screen, x, y, frame, gMonoColorMap[color], mode);
     } else {
         FlipMonoIconToBitmap(
             this,
-            gpWindowManager->m_screen,
+            gWindowManager->m_screen,
             x,
             y,
             frame,
@@ -171,24 +171,24 @@ void icon::DimToBuffer(
             m_drawBottom = m_drawTop + m_frames[frame].h;
         }
         if (gSaveBiggestExtent != 0) {
-            if (m_drawLeft < giMinExtentX)
-                giMinExtentX = m_drawLeft;
-            if (m_drawTop < giMinExtentY)
-                giMinExtentY = m_drawTop;
-            if (m_drawRight > giMaxExtentX)
-                giMaxExtentX = m_drawRight;
-            if (m_drawBottom > giMaxExtentY)
-                giMaxExtentY = m_drawBottom;
+            if (m_drawLeft < gMinExtentX)
+                gMinExtentX = m_drawLeft;
+            if (m_drawTop < gMinExtentY)
+                gMinExtentY = m_drawTop;
+            if (m_drawRight > gMaxExtentX)
+                gMaxExtentX = m_drawRight;
+            if (m_drawBottom > gMaxExtentY)
+                gMaxExtentY = m_drawBottom;
         }
     }
     if (gLimitToExtent != 0
-        && (gCurrArmyDrawn == 0 || m_drawLeft > giMaxExtentX || m_drawRight < giMinExtentX
-            || m_drawTop > giMaxExtentY || m_drawBottom < giMinExtentY))
+        && (gCurrArmyDrawn == 0 || m_drawLeft > gMaxExtentX || m_drawRight < gMinExtentX
+            || m_drawTop > gMaxExtentY || m_drawBottom < gMinExtentY))
         return;
     if (orientation == ICON_DRAW_NORMAL)
-        DimIconToBitmap(this, gpWindowManager->m_screen, x, y, frame, mode);
+        DimIconToBitmap(this, gWindowManager->m_screen, x, y, frame, mode);
     else
-        FlipDimIconToBitmap(this, gpWindowManager->m_screen, x, y, frame, mode);
+        FlipDimIconToBitmap(this, gWindowManager->m_screen, x, y, frame, mode);
 }
 
 VA_COMPGEN(0x00471740, 0x2e, "??_Gicon@@UAEPAXI@Z", 0x00470ea0)

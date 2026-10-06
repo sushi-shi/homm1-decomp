@@ -30,7 +30,7 @@ H1_ENUM_BEGIN(GameDifficulty)
     DIFFICULTY_COUNT = 4
 H1_ENUM_END(GameDifficulty)
 
-// giWeekType / giMonthType: a named week or month
+// gWeekType / gMonthType: a named week or month
 // (gWeekNames / gMonthNames[special]), a creature week or month
 // (gArmyNames[special] grows), or the month of the plague. NONE suppresses
 // the new-week announcement.
@@ -550,13 +550,16 @@ i32 GetBaseScore(i32 days);
 extern i32 gGameOver;
 extern i32 gEndSequence;
 // SaveGame files the current player through this byte.
-extern i8 gSaveCurPlayer;
+extern i8 gSavedCurPlayer;
 // NewGame remembers the last new-game settings for the next setup screen.
+#define gSavedDifficulty gOldGameDifficulty // spelling fixes .bss order
 extern i8 gSavedDifficulty;
-extern i8 gSavedPlayerTypes[];
+extern i8 gSavedDifficulties[];
 extern i8 gSavedKingOfTheHill;
+#define gSavedCrest gKeptColor // spelling fixes .bss order
 extern i8 gSavedCrest;
 extern i8 gRandomTownTypes[4];
+#define gMineTypeCount gMineTypeNums // spelling fixes .bss order
 extern i16 gMineTypeCount[];
 extern i32 gLastSeed;
 i32 SGenRand(void);
@@ -568,7 +571,8 @@ void SRand(i32 seed);
 extern i8 gShowMapInfo;
 extern heroWindow* gReqExtraWindow;
 extern char gCurMapName[];
-extern i8 gbDismissArmy;
+#define gDismissArmy gbDismissArmy // spelling fixes .bss order
+extern i8 gDismissArmy;
 
 // Moved from GAME.cpp.
 // newgame.bin widget ids. The opponent toggles are players 1..3 (id - 1);

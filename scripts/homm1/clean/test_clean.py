@@ -1,7 +1,7 @@
 """The clean generator's variants, classic rendering and verification helpers."""
 import unittest
 
-from homm1.clean import classic, verify
+from homm1.clean import classic, source, verify
 from homm1.graph.catalog import Catalog, literal, resource_literal
 
 REGISTRY = ('HOMM1_MESSAGE("ui.gold", "Gold")\n'
@@ -90,6 +90,68 @@ class CanonicalNameTests(unittest.TestCase):
                                   [("$L4", 1), ("$SG9", 2), ("$normalEvent$12", 1)])
         self.assertEqual(left, right)
         self.assertEqual(left[0]["relocations"][1][2], "_f")
+
+
+class LayoutAliasTests(unittest.TestCase):
+    HEADER = ("#define gGame gpGame // spelling fixes .bss order\n"
+              "extern class game* gGame;\n")
+
+    def test_the_source_tree_drops_the_define_and_keeps_the_readable_name(self):
+        cleaned = source.clean_cpp(self.HEADER)
+        self.assertNotIn("define", cleaned)
+        self.assertIn("extern class game* gGame;", cleaned)
+
+    def test_the_control_tree_keeps_the_define(self):
+        self.assertIn("#define gGame gpGame", source.clean_cpp(self.HEADER, keep_lines=True))
+
+    def test_assembly_references_take_the_readable_name(self):
+        self.assertEqual(source.aliases([self.HEADER]), {"gpGame": "gGame"})
+        cleaned = source.clean_asm("EXTERN gpGame:DWORD ; gpGame\n",
+                                   renames={"gpGame": "gGame"})
+        self.assertEqual(cleaned.strip(), "EXTERN gGame:DWORD")
+
+    def test_matching_symbols_compare_under_the_readable_name(self):
+        sections = [{"relocations": [(0, 6, "?gpGame@@3PAVgame@@A")],
+                     "defines": ["_?s_x_4@?1??f@@YAXXZ@4HA"]}]
+        renamed, symbols = verify._renamed(sections, [("?gpGame@@3PAVgame@@A", 3)],
+                                           {"gpGame": "gGame", "s_x_4": "s_x"})
+        self.assertEqual(renamed[0]["relocations"][0][2], "?gGame@@3PAVgame@@A")
+        self.assertEqual(renamed[0]["defines"], ["_?s_x@?1??f@@YAXXZ@4HA"])
+        self.assertEqual(symbols, [("?gGame@@3PAVgame@@A", 3)])
+
+    def test_c_linkage_symbols_take_the_readable_name(self):
+        sections = [{"relocations": [(8, 6, "_decodeSkip")], "defines": ["_decodeSkip"]}]
+        renamed, _ = verify._renamed(sections, [], {"decodeSkip": "textsize"})
+        self.assertEqual(renamed[0]["relocations"][0][2], "_textsize")
+        self.assertEqual(renamed[0]["defines"], ["_textsize"])
+
+    @staticmethod
+    def _bss(size, defines):
+        return {"name": ".bss", "flags": 0xC0300080, "data": size,
+                "relocations": [], "defines": defines}
+
+    def test_relaid_bss_differs_by_padding_alone(self):
+        readable = {"putbuf"}
+        theirs = self._bss(33683, ["_putlen", "_putbuf", "_text_buf"])
+        self.assertTrue(verify._relaid_bss(
+            self._bss(33680, ["_putbuf", "_putlen", "_text_buf"]), theirs, readable))
+        self.assertFalse(verify._relaid_bss(
+            self._bss(33680, ["_putbuf", "_text_buf"]), theirs, readable))
+        self.assertFalse(verify._relaid_bss(
+            self._bss(33580, ["_putbuf", "_putlen", "_text_buf"]), theirs, readable))
+        self.assertFalse(verify._relaid_bss(
+            self._bss(33680, ["_putbuf", "_putlen", "_text_buf"]), theirs, {"other"}))
+
+
+class DomainArrayTests(unittest.TestCase):
+    def test_domain_arrays_become_plain_arrays(self):
+        cleaned = source.clean_cpp(
+            "extern H1_ENUM_ARRAY(i32, gTimers, TimerSlot, GLOBAL_TIMER_COUNT);\n"
+            "H1_ENUM_ARRAY2(short, gGrid, Slot, SLOT_COUNT, Row, ROW_COUNT);\n"
+            "H1_ENUM_STEPPED(Slot)\n")
+        self.assertIn("extern i32 gTimers[GLOBAL_TIMER_COUNT];", cleaned)
+        self.assertIn("short gGrid[SLOT_COUNT][ROW_COUNT];", cleaned)
+        self.assertNotIn("H1_ENUM", cleaned)
 
 
 if __name__ == '__main__':
