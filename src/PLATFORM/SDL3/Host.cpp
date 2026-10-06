@@ -1,5 +1,6 @@
 #include "Internal.h"
 
+#include <algorithm>
 #include <cstdarg>
 #include <cstdio>
 #include <cstdlib>
@@ -11,6 +12,10 @@ namespace {
 
 bool gStarted = false;
 Uint64 gTickBase = 0;
+// Test controls (docs/port/README.md, unattended runs): the clock can run
+// faster than real time and start at another count.
+u32 gTickStart = 1000000u;
+u32 gTimeScale = 1u;
 
 }  // namespace
 
@@ -23,6 +28,12 @@ bool Startup(const StartupOptions& options) {
         return false;
     }
     gTickBase = SDL_GetTicks();
+    std::string tickStart = Environment("HOMM1_TICK_START");
+    if (!tickStart.empty())
+        gTickStart = static_cast<u32>(std::strtoul(tickStart.c_str(), nullptr, 0));
+    std::string timeScale = Environment("HOMM1_TIME_SCALE");
+    if (!timeScale.empty())
+        gTimeScale = static_cast<u32>(std::max(1ul, std::strtoul(timeScale.c_str(), nullptr, 0)));
     gStarted = true;
     std::string replay = Environment("HOMM1_INPUT_REPLAY");
     if (!replay.empty())
@@ -69,12 +80,12 @@ std::string Environment(const char* name) {
 }
 
 u32 Ticks() {
-    Uint64 elapsed = SDL_GetTicks() - gTickBase;
-    return static_cast<u32>(1000000u + elapsed);
+    Uint64 elapsed = (SDL_GetTicks() - gTickBase) * gTimeScale;
+    return static_cast<u32>(gTickStart + elapsed);
 }
 
 void Sleep(u32 milliseconds) {
-    SDL_Delay(milliseconds);
+    SDL_Delay(milliseconds / gTimeScale);
 }
 
 void ShowMessage(const char* title, const char* text) {
