@@ -861,6 +861,18 @@ msgstr "There is no room in the garrison for this army."
 msgid "recruitment.title.prefix"
 msgstr "Recruit"
 
+#: src/EDITOR/Editor.rc
+msgid "resource.EDITOR.ok"
+msgstr "OK"
+
+#: src/EDITOR/Editor.rc
+msgid "resource.EDITOR.title"
+msgstr "Heroes Editor"
+
+#: src/EDITOR/Editor.rc
+msgid "resource.EDITOR.version"
+msgstr "Version 1.1"
+
 #: src/SOURCE/Heroes.rc
 msgid "resource.HEROES.ok"
 msgstr "OK"
@@ -1273,31 +1285,31 @@ msgstr "&Display"
 msgid "resource.MNUCMBT.popup.2"
 msgstr "&Help"
 
-#: src/SOURCE/Heroes.rc
+#: src/EDITOR/Editor.rc src/SOURCE/Heroes.rc
 msgid "resource.MNUDFLT.command40005"
 msgstr "&640 x 480"
 
-#: src/SOURCE/Heroes.rc
+#: src/EDITOR/Editor.rc src/SOURCE/Heroes.rc
 msgid "resource.MNUDFLT.command40006"
 msgstr "&800 x 600"
 
-#: src/SOURCE/Heroes.rc
+#: src/EDITOR/Editor.rc src/SOURCE/Heroes.rc
 msgid "resource.MNUDFLT.command40007"
 msgstr "&1024 x 768"
 
-#: src/SOURCE/Heroes.rc
+#: src/EDITOR/Editor.rc src/SOURCE/Heroes.rc
 msgid "resource.MNUDFLT.command40008"
 msgstr "1&280 x 1024"
 
-#: src/SOURCE/Heroes.rc
+#: src/EDITOR/Editor.rc src/SOURCE/Heroes.rc
 msgid "resource.MNUDFLT.command40009"
 msgstr "&Full Screen (F4)"
 
-#: src/SOURCE/Heroes.rc
+#: src/EDITOR/Editor.rc src/SOURCE/Heroes.rc
 msgid "resource.MNUDFLT.command40052"
 msgstr "&Help Topics"
 
-#: src/SOURCE/Heroes.rc
+#: src/EDITOR/Editor.rc src/SOURCE/Heroes.rc
 msgid "resource.MNUDFLT.command40053"
 msgstr "&About Heroes of Might and Magic"
 
@@ -1405,19 +1417,19 @@ msgstr "&Guest"
 msgid "resource.MNUDFLT.command40139"
 msgstr "&Save Game"
 
-#: src/SOURCE/Heroes.rc
+#: src/EDITOR/Editor.rc src/SOURCE/Heroes.rc
 msgid "resource.MNUDFLT.command40140"
 msgstr "&Quit"
 
-#: src/SOURCE/Heroes.rc
+#: src/EDITOR/Editor.rc src/SOURCE/Heroes.rc
 msgid "resource.MNUDFLT.popup.0"
 msgstr "&File"
 
-#: src/SOURCE/Heroes.rc
+#: src/EDITOR/Editor.rc src/SOURCE/Heroes.rc
 msgid "resource.MNUDFLT.popup.1"
 msgstr "&Display"
 
-#: src/SOURCE/Heroes.rc
+#: src/EDITOR/Editor.rc src/SOURCE/Heroes.rc
 msgid "resource.MNUDFLT.popup.2"
 msgstr "&Help"
 

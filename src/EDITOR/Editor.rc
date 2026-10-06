@@ -1,0 +1,46 @@
+// Editor.rc - the retail EDITOR.EXE resources as source, all five payloads.
+//
+// Compiled by the pinned target resource compiler and gated
+// payload-for-payload against the retail editor by homm1.tool.rc, like
+// Heroes.rc. Statement order is retail payload order. The editor's menu is
+// the game's MNUDFLT reduced to Exit, the screen modes and help, so its text
+// shares the game's menu entries. editor.ico is the one retail binary, rebuilt
+// from the user's EDITOR.EXE (a 32x32 and a 16x16 image).
+
+// The renderer supplies the selected language; authored text stays in catalogs.
+LANGUAGE HOMM1_RESOURCE_LANGUAGE, HOMM1_RESOURCE_SUBLANGUAGE
+
+109 ICON "editor.ico"
+
+EDITOR DIALOG 22, 17, 144, 75
+STYLE 0x800000C0 // WS_POPUP | DS_MODALFRAME | DS_SETFONT
+FONT 8, "System"
+BEGIN
+    ICON            "EDITOR", -1, 9, 23, 18, 20
+    CTEXT           localization::Tr("resource.EDITOR.title"), -1, 22, 5, 101, 8
+    CTEXT           localization::Tr("resource.EDITOR.version"), -1, 51, 32, 42, 8
+    CTEXT           "Copyright 1995-6, New World Computing", -1, 7, 47, 132, 8
+    DEFPUSHBUTTON   localization::Tr("resource.EDITOR.ok"), 1, 53, 59, 32, 14, 0x20000 // + WS_GROUP
+END
+
+MNUDFLT MENU
+BEGIN
+    POPUP localization::Tr("resource.MNUDFLT.popup.0")
+    BEGIN
+        MENUITEM localization::Tr("resource.MNUDFLT.command40140"), 40140
+    END
+    POPUP localization::Tr("resource.MNUDFLT.popup.1")
+    BEGIN
+        MENUITEM localization::Tr("resource.MNUDFLT.command40005"), 40005
+        MENUITEM localization::Tr("resource.MNUDFLT.command40006"), 40006
+        MENUITEM localization::Tr("resource.MNUDFLT.command40007"), 40007
+        MENUITEM localization::Tr("resource.MNUDFLT.command40008"), 40008
+        MENUITEM localization::Tr("resource.MNUDFLT.command40009"), 40009
+    END
+    POPUP localization::Tr("resource.MNUDFLT.popup.2")
+    BEGIN
+        MENUITEM localization::Tr("resource.MNUDFLT.command40052"), 40052
+        MENUITEM SEPARATOR
+        MENUITEM localization::Tr("resource.MNUDFLT.command40053"), 40053
+    END
+END

@@ -862,6 +862,18 @@ msgstr ""
 msgid "recruitment.title.prefix"
 msgstr ""
 
+#: src/EDITOR/Editor.rc
+msgid "resource.EDITOR.ok"
+msgstr ""
+
+#: src/EDITOR/Editor.rc
+msgid "resource.EDITOR.title"
+msgstr ""
+
+#: src/EDITOR/Editor.rc
+msgid "resource.EDITOR.version"
+msgstr ""
+
 #: src/SOURCE/Heroes.rc
 msgid "resource.HEROES.ok"
 msgstr ""
@@ -1274,31 +1286,31 @@ msgstr ""
 msgid "resource.MNUCMBT.popup.2"
 msgstr ""
 
-#: src/SOURCE/Heroes.rc
+#: src/EDITOR/Editor.rc src/SOURCE/Heroes.rc
 msgid "resource.MNUDFLT.command40005"
 msgstr ""
 
-#: src/SOURCE/Heroes.rc
+#: src/EDITOR/Editor.rc src/SOURCE/Heroes.rc
 msgid "resource.MNUDFLT.command40006"
 msgstr ""
 
-#: src/SOURCE/Heroes.rc
+#: src/EDITOR/Editor.rc src/SOURCE/Heroes.rc
 msgid "resource.MNUDFLT.command40007"
 msgstr ""
 
-#: src/SOURCE/Heroes.rc
+#: src/EDITOR/Editor.rc src/SOURCE/Heroes.rc
 msgid "resource.MNUDFLT.command40008"
 msgstr ""
 
-#: src/SOURCE/Heroes.rc
+#: src/EDITOR/Editor.rc src/SOURCE/Heroes.rc
 msgid "resource.MNUDFLT.command40009"
 msgstr ""
 
-#: src/SOURCE/Heroes.rc
+#: src/EDITOR/Editor.rc src/SOURCE/Heroes.rc
 msgid "resource.MNUDFLT.command40052"
 msgstr ""
 
-#: src/SOURCE/Heroes.rc
+#: src/EDITOR/Editor.rc src/SOURCE/Heroes.rc
 msgid "resource.MNUDFLT.command40053"
 msgstr ""
 
@@ -1406,19 +1418,19 @@ msgstr ""
 msgid "resource.MNUDFLT.command40139"
 msgstr ""
 
-#: src/SOURCE/Heroes.rc
+#: src/EDITOR/Editor.rc src/SOURCE/Heroes.rc
 msgid "resource.MNUDFLT.command40140"
 msgstr ""
 
-#: src/SOURCE/Heroes.rc
+#: src/EDITOR/Editor.rc src/SOURCE/Heroes.rc
 msgid "resource.MNUDFLT.popup.0"
 msgstr ""
 
-#: src/SOURCE/Heroes.rc
+#: src/EDITOR/Editor.rc src/SOURCE/Heroes.rc
 msgid "resource.MNUDFLT.popup.1"
 msgstr ""
 
-#: src/SOURCE/Heroes.rc
+#: src/EDITOR/Editor.rc src/SOURCE/Heroes.rc
 msgid "resource.MNUDFLT.popup.2"
 msgstr ""
 

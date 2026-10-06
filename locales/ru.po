@@ -861,6 +861,18 @@ msgstr "Нет места в гарнизоне для этой армии."
 msgid "recruitment.title.prefix"
 msgstr "Нанять "
 
+#: src/EDITOR/Editor.rc
+msgid "resource.EDITOR.ok"
+msgstr "ОК"
+
+#: src/EDITOR/Editor.rc
+msgid "resource.EDITOR.title"
+msgstr "Редактор Героев"
+
+#: src/EDITOR/Editor.rc
+msgid "resource.EDITOR.version"
+msgstr "Версия 1.1"
+
 #: src/SOURCE/Heroes.rc
 msgid "resource.HEROES.ok"
 msgstr "ОК"
@@ -1273,31 +1285,31 @@ msgstr "&Экран"
 msgid "resource.MNUCMBT.popup.2"
 msgstr "&Помощь"
 
-#: src/SOURCE/Heroes.rc
+#: src/EDITOR/Editor.rc src/SOURCE/Heroes.rc
 msgid "resource.MNUDFLT.command40005"
 msgstr "&640 x 480"
 
-#: src/SOURCE/Heroes.rc
+#: src/EDITOR/Editor.rc src/SOURCE/Heroes.rc
 msgid "resource.MNUDFLT.command40006"
 msgstr "&800 x 600"
 
-#: src/SOURCE/Heroes.rc
+#: src/EDITOR/Editor.rc src/SOURCE/Heroes.rc
 msgid "resource.MNUDFLT.command40007"
 msgstr "&1024 x 768"
 
-#: src/SOURCE/Heroes.rc
+#: src/EDITOR/Editor.rc src/SOURCE/Heroes.rc
 msgid "resource.MNUDFLT.command40008"
 msgstr "1&280 x 1024"
 
-#: src/SOURCE/Heroes.rc
+#: src/EDITOR/Editor.rc src/SOURCE/Heroes.rc
 msgid "resource.MNUDFLT.command40009"
 msgstr "&Полный экран (F4)"
 
-#: src/SOURCE/Heroes.rc
+#: src/EDITOR/Editor.rc src/SOURCE/Heroes.rc
 msgid "resource.MNUDFLT.command40052"
 msgstr "&Темы помощи"
 
-#: src/SOURCE/Heroes.rc
+#: src/EDITOR/Editor.rc src/SOURCE/Heroes.rc
 msgid "resource.MNUDFLT.command40053"
 msgstr "&О Героях Меча и Магии"
 
@@ -1405,19 +1417,19 @@ msgstr "&Гость"
 msgid "resource.MNUDFLT.command40139"
 msgstr "&Сохранить игру"
 
-#: src/SOURCE/Heroes.rc
+#: src/EDITOR/Editor.rc src/SOURCE/Heroes.rc
 msgid "resource.MNUDFLT.command40140"
 msgstr "&Выйти"
 
-#: src/SOURCE/Heroes.rc
+#: src/EDITOR/Editor.rc src/SOURCE/Heroes.rc
 msgid "resource.MNUDFLT.popup.0"
 msgstr "&Файл"
 
-#: src/SOURCE/Heroes.rc
+#: src/EDITOR/Editor.rc src/SOURCE/Heroes.rc
 msgid "resource.MNUDFLT.popup.1"
 msgstr "&Экран"
 
-#: src/SOURCE/Heroes.rc
+#: src/EDITOR/Editor.rc src/SOURCE/Heroes.rc
 msgid "resource.MNUDFLT.popup.2"
 msgstr "&Помощь"
 
