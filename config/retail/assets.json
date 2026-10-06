@@ -1,12 +1,6 @@
 {
-  "source": "https://archive.org/details/***REMOVED***",
-  "archive": {
-    "name": "***REMOVED***",
-    "size": 1058695850,
-    "sha1": "95051a705656438c474fe649ecf95fa96f463d6a"
-  },
   "installer": "autorun/launch/Setup1/data1.cab",
-  "extraction": "unrar ISO; 7z Setup1 and Tracks; unshield InstallShield 6 cabinets",
+  "extraction": "7z Setup1 and Tracks from the ISO; unshield InstallShield 6 cabinets",
   "files": [
     {
       "path": "Data/Anim/NWCLOGO.SMK",
