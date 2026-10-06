@@ -71,7 +71,7 @@ src/SOURCE/CMBTMGR.cpp	0x1ac0e	combatManager::GetNextArmy	read	monster-flag-test
 src/SOURCE/CMBTMGR.cpp	0x1ade7	combatManager::IsWinner	read	opposite-combat-side	1 - side and side ^= 1 stay explicit.		kept-existing-source	100	100
 src/SOURCE/CMBTMGR.cpp	0x1ae9c	combatManager::CatAttack	read	inclusive-region;extent-clamp;hex-index	Three screen updates are UPDATE_INCLUSIVE_REGION; clamps stay.	UPDATE_INCLUSIVE_REGION	retained-exact	100	100
 src/SOURCE/CMBTMGR.cpp	0x1bb8e	combatManager::RegenerateField	read	none	Rebuild sequence.		kept-existing-source	100	100
-src/SOURCE/CMBTMGR.cpp	0x1bbd1	combatManager::KeepAttack	read	town-building-bit;rear-hex-offset;stack-fight-value	Uses CREATURE_DISPLAY_NAME/UPDATE_INCLUSIVE_REGION already; building bits are town domain.		kept-existing-source	100	100
+src/SOURCE/CMBTMGR.cpp	0x1bbd1	combatManager::KeepAttack	read	town-building-bit;rear-hex-offset;stack-fight-value	Uses CREATURE_DISPLAY_NAME/UPDATE_INCLUSIVE_REGION already. Building tests use H1_ENUM_BIT(BuildingSlotType, ...): the mage guild (was & 1) and both slot loops, whose index is shared with the roll loop (H1_ENUM_DECODE).	H1_ENUM_BIT	retained-exact	100	100
 src/SOURCE/CMBTMGR.cpp	0x1c6b4	combatManager::ExperienceValueOfStack	read	none	Loss value sum.		kept-existing-source	100	100
 src/SOURCE/CMBTMGR.cpp	0x1c7a0	combatManager::ResetHitByCreature	read	none	Flag clear loop.		kept-existing-source	100	100
 src/SOURCE/CMBTMGR.cpp	0x1c7ff	ValidHex	read	none	Range test function.		kept-existing-source	100	100

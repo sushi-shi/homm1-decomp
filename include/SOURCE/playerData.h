@@ -104,7 +104,9 @@ public:
 #pragma pack(push, 1)
 class playerData {
 public:
-    char m_unknown00[0x11];
+    // Write and Read copy these bytes raw; no code of any build (Windows or
+    // DOS) reads or sets them otherwise.
+    char m_unused00[0x11];
     // SetupThievesGuild adds it to the town-window flag frame base.
     H1_ENUM_STORAGE(PlayerColor, i8) m_color;
     // Computer-player difficulty: GetTurnAIVars scales the attack bonuses by
@@ -132,7 +134,10 @@ public:
     i8 m_townLocatorPage;
     i8 m_townIds[GAME_TOWN_COUNT];
     H1_ENUM_ARRAY(i32, m_resources, ResourceType, RESOURCE_COUNT);
-    char m_unknown99[2];
+    // No code touches the first byte. Write and Read save the second one
+    // twice; nothing else reads or sets it.
+    i8 m_unused99;
+    i8 m_unused9a;
     u8 m_puzzlePiecesRemoved[PLAYER_PUZZLE_PIECE_STORAGE_SIZE];
     playerAIData m_aiData;
     // --- methods ---

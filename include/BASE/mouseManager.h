@@ -41,8 +41,16 @@ public:
     // The mouse code never updates them after the constructor clears them.
     i32 m_savedLeft;
     i32 m_savedTop;
-    i8 m_unknown51;
-    char m_unused52[9];
+    // The DOS build draws the cursor into the screen bitmap while the
+    // adventure view is copied out in two bands: advManager::UpdateScreen
+    // sets the flag around the copy, the band flag and split line, and the
+    // cursor drawing reads them with the frame's size. The Windows build
+    // only clears the flag in the constructor and never touches the rest.
+    i8 m_drawIntoScreen;
+    i8 m_bandFlushed;
+    i32 m_bandSplitY;
+    i16 m_cursorWidth;
+    i16 m_cursorHeight;
     i16 m_drawnX;
     i16 m_drawnY;
 

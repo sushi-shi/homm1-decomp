@@ -35,7 +35,7 @@ mouseManager::mouseManager(void) {
     strcpy(m_name, "mouseManager");
     m_savedLeft = 0;
     m_savedTop = 0;
-    m_unknown51 = 0;
+    m_drawIntoScreen = 0;
     m_savedUnderlying = NULL;
     m_cursorFrame = 0;
     for (i32 cursorIndex = 0; cursorIndex < MOUSE_CURSOR_COUNT; cursorIndex++) {

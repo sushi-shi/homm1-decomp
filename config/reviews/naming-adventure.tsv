@@ -79,3 +79,6 @@ global	advManager.h	EveryOther	gEveryOther	walk alternate-frame/footstep toggle;
 global	advManager.h	S1cursorDirection/BaseFrame/FrameCount/Cycle/Turning	gSavedCursorDirection/BaseFrame/FrameCount/Cycle/Turning	cursor state DrawCursor saves and restores around gDrawSavedCursor; aliases keep the storage spelling
 global	advManager.h	startVals	gStepScrollStart	the scroll offset (16, 0, -16) MoveHero starts the second half-step from; alias keeps the storage spelling
 aliased	advManager::UpdateRadar	ourFirstX/realFirstY/curEndX/ourLastY	minX/minY/maxX/maxY	the clamped map-cell bounds the radar redraws (whole map or the view plus one cell); readable name aliased over the frame-slot spelling
+member	town	m_unknown19	m_unused19	constructor clears it and saved games carry it; no reader in the Windows or DOS images
+member	playerData	m_unknown00	m_unused00	Write and Read copy the 17 bytes raw; no other access in the Windows or DOS images
+member	playerData	m_unknown99	m_unused99/m_unused9a	no access to 0x99; Write and Read save 0x9a twice (DOS too) and nothing else touches it

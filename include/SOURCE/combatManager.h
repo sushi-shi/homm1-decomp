@@ -225,8 +225,10 @@ public:
     // SetupCombat copies each hero's class (-1 without a hero); DrawFrame
     // draws it as the tent frame.
     H1_ENUM_ARRAY(i16, m_heroClass, CombatSide, COMBAT_SIDE_COUNT);
-    i16 m_unknown6d9;
-    i16 m_unknown6db;
+    // The constructor clears these and the two below (6f9 to -1); no code
+    // of any build (Windows or DOS) reads them.
+    i16 m_unused6d9;
+    i16 m_unused6db;
     // Per side: the side fights from a castle. hexcell::DrawTower/DrawWall
     // mirror the castle art from side 1's flag.
     H1_ENUM_ARRAY(i8, m_castleSide, CombatSide, COMBAT_SIDE_COUNT);
@@ -239,7 +241,7 @@ public:
     b8 m_wallSurvives;
     i16 m_wallFrame;
     i16 m_wallDamage;
-    i8 m_unknown6e8;
+    i8 m_unused6e8;
     // Per side: creatures the attacking ghosts (CREATURE_GHOST) killed; the
     // ghost stack grows by it after the strike. army::DoAttack stores and
     // reloads it with word moves indexed by side.
@@ -251,7 +253,7 @@ public:
     // text widget (0xc).
     class heroWindow* m_combatWindow;
     char m_unused6f5[4];
-    i16 m_unknown6f9;
+    i16 m_unused6f9;
     // ProcessCombatMsg ignores message types outside this mask.
     i16 m_messageTypeMask;
     H1_ENUM_ARRAY(i8, m_sideRetreated, CombatSide, COMBAT_SIDE_COUNT);

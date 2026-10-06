@@ -184,7 +184,7 @@ src/SOURCE/ARMY.cpp	army::PowEffect	*	*	*	PowEffect's ten effect frames (five sh
 src/SOURCE/ARMY.cpp	army::SpellEffect	10	store	*	SpellEffect's ten effect frames
 src/SOURCE/ARMY.cpp	army::DoHydraAttack	*	*	*	DoHydraAttack's five attack frames (3..7)
 src/SOURCE/ARMY.cpp	army::Damage	5	arithmetic	*	Damage's one-fifth minimum kill
-src/SOURCE/ARMY.cpp	army::Init	6	store	*	m_unknown29's initial 6 (Buka ArmyInitialStateConstant INITIAL_UNKNOWN_D4)
+src/SOURCE/ARMY.cpp	army::Init	6	store	*	m_unused29's initial 6 (Buka ArmyInitialStateConstant INITIAL_UNKNOWN_D4)
 src/SOURCE/ARMY.cpp	army::LoadResources	16	store	*	the creature sprite-name buffer size
 src/SOURCE/FLY.cpp	army::FlyTo	*	*	*	FlyTo's straight pixel line: six frames per hex, walk frames 0..5, midpoint halving
 src/SOURCE/DRAWING.cpp	combatManager::DrawFrame	*	arithmetic	*	DrawFrame's redraw-box sprite margins around a stack (pixels)
@@ -252,11 +252,11 @@ src/SOURCE/ARMY.cpp	*	*	*	* store gMonoIconSkip	gMonoIconSkip writes; retail nev
 src/SOURCE/SWAPMGR.cpp	*	*	*	store to gMonoIconSkip	gMonoIconSkip writes; retail never reads the variable
 src/SOURCE/SWAPMGR.cpp	*	*	*	* store gMonoIconSkip	gMonoIconSkip writes; retail never reads the variable
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_drawRightToLeft	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/CMBTMGR.cpp	*	-1	trivial-function-literal	-1 store m_unknown6f9	an index, position or timer local/field reset to -1 (none yet)
+src/SOURCE/CMBTMGR.cpp	*	-1	trivial-function-literal	-1 store m_unused6f9	an index, position or timer local/field reset to -1 (none yet)
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_limitCreatureHex	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_gridUpdateRow	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_unknown6e8	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_unknown6db	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_unused6e8	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_unused6db	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_castleSide[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_humanPlayerSide[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store m_catapultAttacksRemaining[[][]]	a flag, counter or index local/field set to 0 or 1
@@ -635,7 +635,7 @@ src/SOURCE/TOWN.cpp	*	0	trivial-function-literal	0 store m_id	a counter, accumul
 src/SOURCE/TOWN.cpp	*	0	trivial-function-literal	0 store m_owner	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/TOWN.cpp	*	0	trivial-function-literal	0 store m_nameIndex	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/TOWN.cpp	*	0	trivial-function-literal	0 store m_townLocatorPage	a counter, accumulator, coordinate or field reset to zero
-src/SOURCE/TOWN.cpp	*	0	trivial-function-literal	0 store m_unknown19	a counter, accumulator, coordinate or field reset to zero
+src/SOURCE/TOWN.cpp	*	0	trivial-function-literal	0 store m_unused19	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/TOWNMGR.cpp	*	0	trivial-function-literal	0 store firstPlayer	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/TOWNMGR.cpp	*	0	trivial-function-literal	0 store id	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/TOWNMGR.cpp	*	0	trivial-function-literal	0 store m_animationFrame	a counter, accumulator, coordinate or field reset to zero

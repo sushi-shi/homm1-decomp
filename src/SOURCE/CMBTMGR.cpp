@@ -48,20 +48,20 @@ i32 gSavedSeed = 1;
 VA(0x00418b30, 0x18b)
 combatManager::combatManager(void) {
     m_drawRightToLeft = 0;
-    m_unknown6f9 = -1;
+    m_unused6f9 = -1;
     m_currentSide = COMBAT_DEFENDER_SIDE;
     m_limitCreatureHex = 0;
     m_limitCreature = false;
     m_showArmyQuantities = true;
     m_gridUpdateRow = 0;
     m_currentCommand = COMBAT_MESSAGE_COMMAND_DEFAULT;
-    m_unknown6e8 = 0;
+    m_unused6e8 = 0;
     m_currentSpeed = CREATURE_SPEED_BLAZING;
     m_savedBorder = NULL;
     m_heroClass[COMBAT_DEFENDER_SIDE] = m_heroClass[COMBAT_ATTACKER_SIDE] =
         m_catapultFrame[COMBAT_DEFENDER_SIDE] = m_catapultFrame[COMBAT_ATTACKER_SIDE] =
             m_wallFrame = m_wallDamage = COMBAT_WALL_DAMAGE_NONE;
-    m_unknown6d9 = m_unknown6db = 0;
+    m_unused6d9 = m_unused6db = 0;
     m_castleSide[COMBAT_DEFENDER_SIDE] = m_castleSide[COMBAT_ATTACKER_SIDE] = 0;
     m_combatWindowOpen = false;
 }
@@ -1300,7 +1300,8 @@ void combatManager::KeepAttack(void) {
     mod = 2;
     if (m_heroes[COMBAT_DEFENDER_SIDE])
         mod += m_heroes[COMBAT_DEFENDER_SIDE]->m_primaryStats[HERO_PRIMARY_ATTACK];
-    if (m_combatTowns[COMBAT_DEFENDER_SIDE]->m_buildings & 1)
+    if (m_combatTowns[COMBAT_DEFENDER_SIDE]->m_buildings
+        & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_MAGE_GUILD))
         mod += m_combatTowns[COMBAT_DEFENDER_SIDE]->m_buildState + 1;
     mod -= hisStack->m_stats.defense;
     if (mod > 20)
@@ -1309,11 +1310,13 @@ void combatManager::KeepAttack(void) {
         mod = -20;
     numRolls = 5;
     for (k = 7; k <= 12; k++) {
-        if (m_combatTowns[COMBAT_DEFENDER_SIDE]->m_buildings & (1 << k))
+        if (m_combatTowns[COMBAT_DEFENDER_SIDE]->m_buildings
+            & H1_ENUM_BIT(BuildingSlotType, H1_ENUM_DECODE(BuildingSlotType, k)))
             numRolls += 4;
     }
     for (k = 0; k <= 4; k++) {
-        if (m_combatTowns[COMBAT_DEFENDER_SIDE]->m_buildings & (1 << k))
+        if (m_combatTowns[COMBAT_DEFENDER_SIDE]->m_buildings
+            & H1_ENUM_BIT(BuildingSlotType, H1_ENUM_DECODE(BuildingSlotType, k)))
             numRolls++;
     }
     arrowDamage = 0;

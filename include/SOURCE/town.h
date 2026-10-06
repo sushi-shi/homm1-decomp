@@ -99,7 +99,9 @@ public:
     i8 m_occupyingHeroId;
     i16 m_buildings;
     i8 m_buildState;
-    i8 m_unknown19;
+    // Cleared by the constructor and carried by saved games; no code of any
+    // build reads it.
+    i8 m_unused19;
     // Creatures waiting in each dwelling for recruitment (recruitUnit's
     // m_available); grows weekly.
     i16 m_dwellingAvailable[6];

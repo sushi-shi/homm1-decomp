@@ -107,7 +107,9 @@ public:
     i8 m_targetIndex;
     // ValidRange records the chosen attack direction.
     H1_ENUM_STORAGE(CombatHexDirection, i16) m_attackDirection;
-    i8 m_unknown04;
+    // Cleared by the constructor; nothing reads it, and the DOS army has no
+    // target block.
+    i8 m_unused04;
     // ValidPath records the reachable target hex here.
     i8 m_moveTargetHex;
     H1_ENUM_STORAGE(CreatureType, i8) m_creatureType;
@@ -132,7 +134,8 @@ public:
     // Init adds the hero's two primary skills to attack and defense.
     // Attribute bit 0 is a two-hex creature, bit 1 a flyer.
     tag_monsterStats m_stats;
-    i16 m_unknown29;
+    // Init stores 6 after the stats in every build (DOS too); nothing reads it.
+    i16 m_unused29;
     // PowEffect frames left on the stack: 4 hit, 5 killed, -1 none.
     i16 m_powFrames;
     H1_ENUM_STORAGE(CombatSide, i8) m_side;

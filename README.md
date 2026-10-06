@@ -41,23 +41,10 @@ Open cleanup work; the [debt notes](docs/reconstruction-debt.md) hold the
 measuring commands and the record of resolved categories. Counts cover `src`
 and `include`. Preserve banked matches and the linked-image identity.
 
-- [ ] Recover unknown members: **19** `m_unknown*`/`m_field_0x*` placeholders
-  remain; each is only ever cleared, initialized or saved, so no code user
-  names it, and neither the game nor the editor image reads one. The mouse's
-  saved area and the player's unused save span are named from their code
-  users, and 20 spans with no user at all are `m_unused*`/`m_padding*`.
 - [ ] Name bare constants: **1,407** open literals (`homm1 verify constants`
   floor, both programs); about 2,000 0/1 flag literals became `true`/`false`
   on `b8`/`b32` storage, and compiler-proven NULL/bool/enum replacements are
   at 0.
-- [ ] Common-code review (helpers, accessors, macros): every source unit is
-  read. Combat and AI (**233 functions**, [ledger](docs/common-code-combat.tsv)):
-  **15 families** retained at **81 sites** (22 of them calls shortened by
-  declared defaults), 4 rejected by measurement, 25 kept explicit, 4 deferred.
-  Adventure, town, hero, network, Windows and BASE (**764 functions**, [ledger](docs/common-code-adventure.tsv)): **19 families**
-  retained at **317 sites** (65 of them calls shortened by declared defaults),
-  1 rejected by measurement, 77 kept explicit, 5 deferred to typed enum domains
-  or another unit's owner.
 
 ## Branches
 

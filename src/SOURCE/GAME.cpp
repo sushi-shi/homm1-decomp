@@ -51,7 +51,7 @@ VA(0x0042b400, 0x1f2)
 void playerData::Write(i32 file) {
     char unused[52];
 
-    write(file, m_unknown00, sizeof(m_unknown00));
+    write(file, m_unused00, sizeof(m_unused00));
     WRITE_FILE_VALUE(file, m_color);
     WRITE_FILE_VALUE(file, m_difficulty);
     WRITE_FILE_VALUE(file, m_heroCount);
@@ -71,8 +71,8 @@ void playerData::Write(i32 file) {
     write(file, m_townIds, sizeof(m_townIds));
     write(file, m_resources, sizeof(m_resources));
     write(file, m_aiData.m_income, sizeof(m_aiData.m_income));
-    WRITE_FILE_VALUE(file, m_unknown99[1]);
-    WRITE_FILE_VALUE(file, m_unknown99[1]);
+    WRITE_FILE_VALUE(file, m_unused9a);
+    WRITE_FILE_VALUE(file, m_unused9a);
     write(file, m_puzzlePiecesRemoved, sizeof(m_puzzlePiecesRemoved));
 }
 
@@ -80,7 +80,7 @@ VA(0x0042b5f2, 0x1e1)
 void playerData::Read(i32 file) {
     char unused[52];
 
-    read(file, m_unknown00, sizeof(m_unknown00));
+    read(file, m_unused00, sizeof(m_unused00));
     READ_FILE_VALUE(file, m_color);
     READ_FILE_VALUE(file, m_difficulty);
     READ_FILE_VALUE(file, m_heroCount);
@@ -99,8 +99,8 @@ void playerData::Read(i32 file) {
     read(file, m_townIds, sizeof(m_townIds));
     read(file, m_resources, sizeof(m_resources));
     read(file, m_aiData.m_income, sizeof(m_aiData.m_income));
-    READ_FILE_VALUE(file, m_unknown99[1]);
-    READ_FILE_VALUE(file, m_unknown99[1]);
+    READ_FILE_VALUE(file, m_unused9a);
+    READ_FILE_VALUE(file, m_unused9a);
     read(file, m_puzzlePiecesRemoved, sizeof(m_puzzlePiecesRemoved));
 }
 
@@ -1685,8 +1685,8 @@ void game::RandomizeEvents(void) {
                     for (j = 0; j < MINE_FOOTPRINT_HEIGHT; j++) {
                         for (i = 0; i < MINE_FOOTPRINT_WIDTH; i++) {
                             if (!m_map[x + i][y - j].m_objectMetadata
-                                || (m_map[x + i][y - j].m_triggerType & MAP_TRIGGER_TYPE_MASK)
-                                       == (myCell->m_triggerType & MAP_TRIGGER_TYPE_MASK))
+                                || MAP_TRIGGER_OBJECT(m_map[x + i][y - j].m_triggerType)
+                                       == MAP_TRIGGER_OBJECT(myCell->m_triggerType))
                                 m_map[x + i][y - j].m_objectMetadata = id;
                         }
                     }

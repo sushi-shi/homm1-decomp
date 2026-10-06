@@ -97,8 +97,8 @@ heroWindowManager::heroWindowManager(void) : baseManager() {
     m_focusWindow = NULL;
     m_windowListTail = NULL;
     m_windowListHead = NULL;
-    m_unknown40 = 0;
-    m_unknown41 = 0;
+    m_unused40 = 0;
+    m_unused41 = 0;
     m_screen = NULL;
     m_screenshotIndex = 0;
     m_updateFlags = 0;
