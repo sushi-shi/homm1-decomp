@@ -36,14 +36,14 @@ bitmap::bitmap(i16 type, i16 width, i16 height)
 // Retail's ID constructor reads the packed bitmap and postprocesses its pixels.
 VA(0x00473230, 0x106)
 bitmap::bitmap(i16 id) : resource(RESOURCE_CATEGORY_BITMAP, id, RESOURCE_REFERENCE_INITIAL, NULL) {
-    gpResourceManager->PointToFile(id);
-    m_bitmapType = gpResourceManager->ReadWord();
-    m_width = gpResourceManager->ReadWord();
-    m_height = gpResourceManager->ReadWord();
+    gResourceManager->PointToFile(id);
+    m_bitmapType = gResourceManager->ReadWord();
+    m_width = gResourceManager->ReadWord();
+    m_height = gResourceManager->ReadWord();
     i32 size = m_width * m_height;
     m_pixels = static_cast<u8*>(malloc(size));
     PollSound();
-    gpResourceManager->ReadBlock(m_pixels, size);
+    gResourceManager->ReadBlock(m_pixels, size);
     PostprocessBitmap(m_pixels, m_width, m_height);
     PollSound();
 }
@@ -58,7 +58,7 @@ bitmap::~bitmap(void) {
 VA(0x00473374, 0x4b)
 void bitmap::DrawToBuffer(i16 x, i16 y) {
     PollSound();
-    BlitBitmap(this, 0, 0, m_width, m_height, gpWindowManager->m_screen, x, y);
+    BlitBitmap(this, 0, 0, m_width, m_height, gWindowManager->m_screen, x, y);
     PollSound();
 }
 
@@ -90,12 +90,12 @@ void bitmap::Write(char* filename) {
     i32 file = open(filename, O_WRONLY | O_CREAT | O_BINARY, S_IWRITE);
     if (file == -1)
         return;
-    combatPaletteData = gpResourceManager->GetPalette("combat.pal");
+    combatPaletteData = gResourceManager->GetPalette("combat.pal");
     i8* paletteData = combatPaletteData->Data();
     write(file, paletteData, PALETTE_DATA_SIZE);
     write(file, m_pixels, m_width * m_height);
     close(file);
-    gpResourceManager->Dispose(combatPaletteData);
+    gResourceManager->Dispose(combatPaletteData);
 }
 
 VA(0x00473501, 0xa6)

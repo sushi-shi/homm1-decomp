@@ -1,7 +1,8 @@
 """homm1.verify.tiers - the tier registry `homm1 verify check --tier` runs.
 
   fast    source cleanliness (board, bans, casts, enum domains, label style,
-          #line/__LINE__ placement, include order) - seconds, no build artifacts.
+          #line/__LINE__ placement, include order, localization catalogs) -
+          seconds, no build artifacts.
   normal  code/model joins (unique names, library overlap, TU order, dead
           code, undefined closure) - needs bindings + base/target objs.
   full    slower code-evidence audits (assert relocs and caller/callee).
@@ -55,6 +56,11 @@ def _label_style():
 def _line_directives():
     from homm1.verify import line_directives
     return line_directives.gate_findings()
+
+
+def _localization():
+    from homm1.verify import localization
+    return localization.gate_findings()
 
 
 def _include_order():
@@ -165,6 +171,7 @@ TIERS: dict[str, list[tuple[str, object]]] = {
         ("label-style", _label_style),
         ("line-directives", _line_directives),
         ("include-order", _include_order),
+        ("localization", _localization),
     ],
     "normal": [
         ("unique-names", _unique_names),

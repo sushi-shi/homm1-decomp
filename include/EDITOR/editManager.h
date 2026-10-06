@@ -116,6 +116,6 @@ public:
 };
 #pragma pack(pop)
 
-extern editManager* gpEditManager;
+extern editManager* gEditManager;
 
 #endif // HOMM1_EDITOR_EDITMANAGER_H

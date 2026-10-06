@@ -44,14 +44,12 @@ def compile(src: Path | str, out: Path | str, flags: list[str], *,
     /Gi compiles go through homm1.tool.fixedroot: VC4's incremental code depends
     on the path strings of the opened files, so they see one fixed, retail-shaped
     tree (D:\\Heroes\\Source\\X.CPP) whatever the checkout path."""
-    from homm1.core.paths import REPO, BUILD
-    from homm1.graph.localization import matching_locale
-    target_locale = matching_locale(REPO)
-    locale = locale or target_locale
-    if locale not in ("ru", "en"):
-        raise ToolError(f"unsupported locale: {locale}")
-    if locale != target_locale and not Path(out).resolve().is_relative_to(BUILD / "ordinary" / locale):
-        raise ToolError(f"Nonmatching {locale} objects must live under build/ordinary/{locale}")
+    from homm1.core.paths import REPO
+    from homm1.graph.localization import check_locale, matching_locale
+    locale = locale or matching_locale(REPO)
+    problem = check_locale(REPO, locale, out, "objects")
+    if problem:
+        raise ToolError(problem)
     if "/Gi" in flags and not extra_includes:
         from homm1.tool import fixedroot
         return fixedroot.compile(src, out, flags, retail_name=retail_name, unit=unit,
@@ -102,7 +100,7 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--out", required=True)
     ap.add_argument("--src", required=True)
-    ap.add_argument("--locale", choices=("ru", "en"))
+    ap.add_argument("--locale", help="a locales/<code>.json language (default: the matching one)")
     ap.add_argument("flags", nargs=argparse.REMAINDER)
     a = ap.parse_args()
     flags = a.flags[1:] if a.flags and a.flags[0] == "--" else a.flags

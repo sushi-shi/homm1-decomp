@@ -48,7 +48,7 @@ i16 terrainManager::Open(i16 priority) {
         ICON_WIDGET_DRAW,
         1
     );
-    gpEditManager->m_window->AddWidget(m_panel, -1);
+    gEditManager->m_window->AddWidget(m_panel, -1);
     m_terrainButtons[TERRAIN_WATER] = new iconWidget(
         TERRAIN_BUTTON_X,
         TERRAIN_BUTTON_FIRST_Y,
@@ -134,7 +134,7 @@ i16 terrainManager::Open(i16 priority) {
         1
     );
     for (i = 0; i < TERRAIN_MANAGER_TERRAIN_COUNT; i++)
-        gpEditManager->m_window->AddWidget(m_terrainButtons[i], -1);
+        gEditManager->m_window->AddWidget(m_terrainButtons[i], -1);
     m_highlight = new iconWidget(
         TERRAIN_BUTTON_X,
         TERRAIN_BUTTON_FIRST_Y + m_terrain * TERRAIN_BUTTON_HEIGHT,
@@ -147,7 +147,7 @@ i16 terrainManager::Open(i16 priority) {
         ICON_WIDGET_FILL,
         TERRAIN_HIGHLIGHT_FILL_COLOR
     );
-    gpEditManager->m_window->AddWidget(m_highlight, -1);
+    gEditManager->m_window->AddWidget(m_highlight, -1);
     m_backdrop = new backdropWidget(
         TERRAIN_PANEL_X,
         TERRAIN_BACKDROP_Y,
@@ -156,9 +156,9 @@ i16 terrainManager::Open(i16 priority) {
         WIDGET_ID_NONE,
         TERRAIN_BACKDROP_KIND
     );
-    gpEditManager->m_window->AddWidget(m_backdrop, -1);
-    gpEditManager->m_placedY = -1;
-    gpEditManager->m_placedX = -1;
+    gEditManager->m_window->AddWidget(m_backdrop, -1);
+    gEditManager->m_placedY = -1;
+    gEditManager->m_placedX = -1;
     m_messageMask = BASE_MANAGER_ACCEPT_EXECUTIVE;
     m_priority = priority;
     m_active = 1;
@@ -172,15 +172,15 @@ void terrainManager::Close(void) {
     i16 i;
 
     for (i = 0; i < TERRAIN_MANAGER_TERRAIN_COUNT; i++) {
-        gpEditManager->m_window->RemoveWidget(m_terrainButtons[i]);
+        gEditManager->m_window->RemoveWidget(m_terrainButtons[i]);
         delete m_terrainButtons[i];
     }
-    gpEditManager->m_window->RemoveWidget(m_highlight);
+    gEditManager->m_window->RemoveWidget(m_highlight);
     delete m_highlight;
-    gpEditManager->m_window->DrawWindow();
-    gpEditManager->m_window->RemoveWidget(m_panel);
+    gEditManager->m_window->DrawWindow();
+    gEditManager->m_window->RemoveWidget(m_panel);
     delete m_panel;
-    gpEditManager->m_window->RemoveWidget(m_backdrop);
+    gEditManager->m_window->RemoveWidget(m_backdrop);
     delete m_backdrop;
     m_active = 0;
 }
@@ -273,29 +273,29 @@ i16 terrainManager::Main(tag_message& message) {
                                 dragMode = TERRAIN_DRAG_BRUSH;
                             else
                                 dragMode = TERRAIN_DRAG_RECTANGLE;
-                            gpMouseManager->MouseCoords(anchorX, anchorY);
-                            gpEditManager->ScreenToCell(anchorX, anchorY);
-                            anchorX += gpEditManager->m_viewX;
-                            anchorY += gpEditManager->m_viewY;
-                            gpEditManager->SaveUndo();
-                            event = gpInputManager->GetEvent();
+                            gMouseManager->MouseCoords(anchorX, anchorY);
+                            gEditManager->ScreenToCell(anchorX, anchorY);
+                            anchorX += gEditManager->m_viewX;
+                            anchorY += gEditManager->m_viewY;
+                            gEditManager->SaveUndo();
+                            event = gInputManager->GetEvent();
                             while (event.type != MESSAGE_LEFT_BUTTON_UP
                                    && event.type != MESSAGE_RIGHT_BUTTON_UP) {
                                 Process1WindowsMessage();
-                                gpMouseManager->Main(event);
+                                gMouseManager->Main(event);
                                 if (event.type == MESSAGE_MOUSE_MOVE) {
-                                    gpMouseManager->MouseCoords(x, y);
-                                    gpEditManager->ScreenToCell(x, y);
-                                    x += gpEditManager->m_viewX;
-                                    y += gpEditManager->m_viewY;
+                                    gMouseManager->MouseCoords(x, y);
+                                    gEditManager->ScreenToCell(x, y);
+                                    x += gEditManager->m_viewX;
+                                    y += gEditManager->m_viewY;
                                     if (x != m_lastX || y != m_lastY) {
                                         m_lastX = x;
                                         m_lastY = y;
                                         switch (dragMode) {
                                             case TERRAIN_DRAG_CELLS:
-                                                gpEditManager->PaintGround(
-                                                    x - gpEditManager->m_viewX,
-                                                    y - gpEditManager->m_viewY,
+                                                gEditManager->PaintGround(
+                                                    x - gEditManager->m_viewX,
+                                                    y - gEditManager->m_viewY,
                                                     1,
                                                     1,
                                                     ground
@@ -304,9 +304,9 @@ i16 terrainManager::Main(tag_message& message) {
                                             case TERRAIN_DRAG_BRUSH:
                                                 tilesWide = x < EDIT_MANAGER_MAP_SIZE - 1 ? 2 : 1;
                                                 tilesHigh = y < EDIT_MANAGER_MAP_SIZE - 1 ? 2 : 1;
-                                                gpEditManager->PaintGround(
-                                                    x - gpEditManager->m_viewX,
-                                                    y - gpEditManager->m_viewY,
+                                                gEditManager->PaintGround(
+                                                    x - gEditManager->m_viewX,
+                                                    y - gEditManager->m_viewY,
                                                     tilesWide,
                                                     tilesHigh,
                                                     ground
@@ -317,17 +317,17 @@ i16 terrainManager::Main(tag_message& message) {
                                                 gSelectionY = y < anchorY ? y : anchorY;
                                                 gSelectionWidth = abs(x - anchorX) + 1;
                                                 gSelectionHeight = abs(y - anchorY) + 1;
-                                                gpEditManager->DrawMap();
-                                                gpEditManager->UpdateMapView();
-                                                gpEditManager->DrawRadar(1);
+                                                gEditManager->DrawMap();
+                                                gEditManager->UpdateMapView();
+                                                gEditManager->DrawRadar(1);
                                                 break;
                                         }
                                     }
                                 }
-                                event = gpInputManager->GetEvent();
+                                event = gInputManager->GetEvent();
                             }
                             if (dragMode == TERRAIN_DRAG_RECTANGLE && gSelectionX >= 0)
-                                gpEditManager->FillGround(
+                                gEditManager->FillGround(
                                     gSelectionX,
                                     gSelectionY,
                                     gSelectionWidth,
@@ -335,30 +335,30 @@ i16 terrainManager::Main(tag_message& message) {
                                     ground
                                 );
                             gSelectionX = gSelectionY = -1;
-                            gpEditManager->BlendTerrain(m_terrain, 0, 1, 0, 0);
-                            gpEditManager->DrawMap();
-                            gpEditManager->UpdateMapView();
-                            gpEditManager->DrawRadar(1);
+                            gEditManager->BlendTerrain(m_terrain, 0, 1, 0, 0);
+                            gEditManager->DrawMap();
+                            gEditManager->UpdateMapView();
+                            gEditManager->DrawRadar(1);
                             m_lastY = TERRAIN_MANAGER_NO_CELL;
                             m_lastX = TERRAIN_MANAGER_NO_CELL;
-                            gpEditManager->m_mapChanged = 1;
+                            gEditManager->m_mapChanged = 1;
                             break;
                     }
                     break;
                 case WIDGET_COMMAND_HOVER:
                     if (message.id != EDITOR_MAP_WIDGET
-                        && message.id == gpEditManager->m_lastCommandId)
+                        && message.id == gEditManager->m_lastCommandId)
                         return 1;
-                    gpEditManager->m_lastCommandId = message.id;
+                    gEditManager->m_lastCommandId = message.id;
                     switch (message.id) {
                         case EDITOR_MAP_WIDGET:
-                            gpMouseManager->MouseCoords(newX, newY);
-                            gpEditManager->ScreenToCell(newX, newY);
-                            if (gpEditManager->m_cursorX != newX
-                                || gpEditManager->m_cursorY != newY) {
-                                gpEditManager->m_cursorX = newX;
-                                gpEditManager->m_cursorY = newY;
-                                gpEditManager->UpdateCursor();
+                            gMouseManager->MouseCoords(newX, newY);
+                            gEditManager->ScreenToCell(newX, newY);
+                            if (gEditManager->m_cursorX != newX
+                                || gEditManager->m_cursorY != newY) {
+                                gEditManager->m_cursorX = newX;
+                                gEditManager->m_cursorY = newY;
+                                gEditManager->UpdateCursor();
                             }
                             break;
                     }
@@ -369,10 +369,10 @@ i16 terrainManager::Main(tag_message& message) {
             switch (message.keyCode) {
                 case INPUT_SCAN_R:
                     RandomizeTiles();
-                    gpEditManager->m_mapChanged = 1;
-                    gpEditManager->DrawMap();
-                    gpEditManager->UpdateMapView();
-                    gpEditManager->DrawRadar(1);
+                    gEditManager->m_mapChanged = 1;
+                    gEditManager->DrawMap();
+                    gEditManager->UpdateMapView();
+                    gEditManager->DrawRadar(1);
                     break;
             }
             break;
@@ -389,13 +389,13 @@ void terrainManager::RandomizeTiles(void) {
     u8 tile;
 
     for (i = 0; i < TERRAIN_MANAGER_TERRAIN_COUNT; i++)
-        gpEditManager->BlendTerrain(i, 1, 1, 0, 0);
+        gEditManager->BlendTerrain(i, 1, 1, 0, 0);
     for (y = 0; y < EDIT_MANAGER_MAP_SIZE; y++) {
         for (x = 0; x < EDIT_MANAGER_MAP_SIZE; x++) {
-            tileTerrain = gpEditManager->m_cells[x][y].ground / MAP_CELL_TILES_PER_TERRAIN;
-            tile = gpEditManager->m_cells[x][y].ground;
+            tileTerrain = gEditManager->m_cells[x][y].ground / MAP_CELL_TILES_PER_TERRAIN;
+            tile = gEditManager->m_cells[x][y].ground;
             if (tileTerrain * MAP_CELL_TILES_PER_TERRAIN == tile)
-                gpEditManager->m_cells[x][y].ground += Random(0, TERRAIN_TILE_VARIANT_COUNT - 1);
+                gEditManager->m_cells[x][y].ground += Random(0, TERRAIN_TILE_VARIANT_COUNT - 1);
         }
     }
 }
@@ -404,6 +404,6 @@ VA(0x00419404, 0x47)
 void terrainManager::SelectTerrain(H1_ENUM_PARAM(TerrainType, i16) terrain) {
     m_terrain = terrain;
     m_highlight->m_y = TERRAIN_BUTTON_FIRST_Y + terrain * TERRAIN_BUTTON_HEIGHT;
-    gpEditManager->m_window->DrawWindow();
+    gEditManager->m_window->DrawWindow();
     gLastTerrain = terrain;
 }

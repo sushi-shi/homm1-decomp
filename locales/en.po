@@ -1,0 +1,5643 @@
+msgid ""
+msgstr ""
+"Language: en\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.confirm_end_turn"
+msgstr "One or more Heroes may still move, are you sure you want to end your turn?"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.confirm_load"
+msgstr "Are you sure you want to load a new game?  (Your current game will be lost)"
+
+#: src/SOURCE/ADVMGR.cpp src/SOURCE/kbwin.cpp
+msgid "adventure.confirm_quit"
+msgstr "Are you sure you want to quit?"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.confirm_restart"
+msgstr "Are you sure you want to restart?  (Your current game will be lost)"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.dimension_door.failed"
+msgstr "Dimension Door failed!!!"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.quick.none"
+msgstr "None"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.quick.unknown"
+msgstr "Unknown"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.quick_info.artifact"
+msgstr "Artifact"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.quick_info.border"
+msgstr "Border"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.quick_info.uncharted"
+msgstr "Uncharted territory"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.save.success"
+msgstr "Game saved successfully."
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.search.clear_ground"
+msgstr "Try searching on clear ground."
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.search.eye_of_goros_enemy"
+msgstr "A great tragedy - the enemy has found the Eye of Goros!!!  The people abandon you, all is lost."
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.search.eye_of_goros_found"
+msgstr "After spending many hours digging here, you have uncovered the Eye of Goros!!!!"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.search.found_prefix"
+msgstr "Congratulations! After spending many hours digging here, you have uncovered the "
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.search.no_artifact_room"
+msgstr "You have no room to carry another artifact!"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.search.nothing_here"
+msgstr "Nothing here.\nWhere could it be?"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.search.on_land"
+msgstr "Try looking on land!!!"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.search.requires_full_day"
+msgstr "Digging for artifacts requires a whole day, try again tomorrow."
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.spell.identify_hero"
+msgstr "Enemy Heroes are now fully identifiable."
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.spell.too_tired"
+msgstr "Your hero is too tired to cast this spell today.  Try again tomorrow."
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.status_help"
+msgstr "Status Window\n\nThis window provides information on the status of your hero or kingdom, and shows the date.  Left click here to cycle through these windows."
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.summon_boat.failed"
+msgstr "Summon Boat failed!!!"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.town_gate.land_required"
+msgstr "Town Gate Failed!!!  You must be on land for this spell to work."
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.town_gate.no_town"
+msgstr "No available town.  Town Gate Failed!!!"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.town_gate.occupied"
+msgstr "Nearest town occupied.  Town Gate Failed!!!"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.world_map_help"
+msgstr "World Map (Left click to move viewing area)."
+
+#: src/SOURCE/GAME.cpp
+msgid "army.dismiss.confirm"
+msgstr "Are you sure you want to dismiss this army?"
+
+#: src/SOURCE/SWAPMGR.cpp
+#, c-format
+msgid "army.transfer.prompt"
+msgstr "Move how many %s troops from %s to %s?"
+
+#: src/SOURCE/SWAPMGR.cpp
+msgid "artifact.trade.forbidden"
+msgstr "This item can't be traded."
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "calendar.day.label"
+msgstr "Day"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "calendar.month.label"
+msgstr "Month"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "calendar.week.label"
+msgstr "Week"
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "campaign.next.confirm"
+msgstr "Your campaign has been saved as %s.  Would you like to start the next scenario?"
+
+#: src/SOURCE/KB.cpp
+msgid "campaign.replay.confirm"
+msgstr "Would you like to replay this scenario?"
+
+#: src/SOURCE/GAME.cpp
+msgid "campaign.restart.confirm"
+msgstr "Are you sure you want to restart this scenario?"
+
+#. fixed-width character field
+#: src/SOURCE/KB.cpp
+msgid "campaign.town_name.0"
+msgstr "    Gateway     "
+
+#. fixed-width character field
+#: src/SOURCE/KB.cpp
+msgid "campaign.town_name.4"
+msgstr "Castle Ironfist "
+
+#. fixed-width character field
+#: src/SOURCE/KB.cpp
+msgid "campaign.town_name.5"
+msgstr " Castle Slayer  "
+
+#. fixed-width character field
+#: src/SOURCE/KB.cpp
+msgid "campaign.town_name.6"
+msgstr "Castle Lamanda  "
+
+#. fixed-width character field
+#: src/SOURCE/KB.cpp
+msgid "campaign.town_name.7"
+msgstr " Castle Alamar  "
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "campaign.victory"
+msgstr "My heroes, our foes have been scattered, their castles broken and laid bare.  The great campaign is now complete, and I stand before you as the undisputed High King!\n\nOur victory was achieved in %d days!"
+
+#: src/SOURCE/SPELLS.cpp
+#, c-format
+msgid "combat.armageddon.damage"
+msgstr "The armaggedon does %d damage."
+
+#: src/SOURCE/COMMAND.cpp
+msgid "combat.artifact.captured"
+msgstr "You have captured an enemy artifact!"
+
+#: src/SOURCE/COMMAND.cpp
+msgid "combat.casualties.attacker"
+msgstr "Attacker"
+
+#: src/SOURCE/COMMAND.cpp
+msgid "combat.casualties.defender"
+msgstr "Defender"
+
+#: src/SOURCE/COMMAND.cpp
+msgid "combat.casualties.title"
+msgstr "Battlefield Casualties"
+
+#: src/SOURCE/COMMAND.cpp
+msgid "combat.confirm.retreat"
+msgstr "Are you sure you want to retreat?"
+
+#: src/SOURCE/ARMY.cpp
+msgid "combat.fragment.attack"
+msgstr "The"
+
+#: src/SOURCE/ARMY.cpp src/SOURCE/CMBTMGR.cpp
+msgid "combat.fragment.damage_points"
+msgstr "Damage"
+
+#: src/SOURCE/ARMY.cpp
+msgid "combat.fragment.destroy_plural"
+msgstr "destroy"
+
+#: src/SOURCE/ARMY.cpp
+msgid "combat.fragment.destroy_singular"
+msgstr "destroys"
+
+#: src/SOURCE/ARMY.cpp src/SOURCE/CMBTMGR.cpp
+msgid "combat.fragment.dies"
+msgstr "perishes"
+
+#: src/SOURCE/ARMY.cpp
+msgid "combat.fragment.does_damage"
+msgstr "do"
+
+#: src/SOURCE/ARMY.cpp src/SOURCE/CMBTMGR.cpp
+msgid "combat.fragment.killed"
+msgstr "perish"
+
+#: src/SOURCE/ARMY.cpp
+msgid "combat.fragment.troop"
+msgstr "creature"
+
+#: src/SOURCE/ARMY.cpp
+msgid "combat.fragment.troops"
+msgstr "creatures"
+
+#: src/SOURCE/ARMY.cpp
+#, c-format
+msgid "combat.genie.half_army.buka"
+msgstr "%s %s half the enemy troops!"
+
+#: src/SOURCE/ARMY.cpp
+#, c-format
+msgid "combat.luck.bad.buka"
+msgstr "Bad luck descends on the %s"
+
+#: src/SOURCE/ARMY.cpp
+#, c-format
+msgid "combat.luck.good.buka"
+msgstr "Good luck shines on the %s"
+
+#: src/SOURCE/CMBTMGR.cpp
+#, c-format
+msgid "combat.morale.bad"
+msgstr "Low morale causes the %s to freeze in panic."
+
+#: src/SOURCE/CMBTMGR.cpp
+#, c-format
+msgid "combat.morale.good"
+msgstr "High morale enables the %s to attack again."
+
+#: src/SOURCE/EVENTS.cpp
+#, c-format
+msgid "combat.network.attacked"
+msgstr "%s player's %s is under attack!"
+
+#: src/SOURCE/EVENTS.cpp
+msgid "combat.network.canceled"
+msgstr "Game canceled."
+
+#: src/SOURCE/EVENTS.cpp
+msgid "combat.network.hero"
+msgstr "Hero"
+
+#: src/SOURCE/EVENTS.cpp src/SOURCE/GAME.cpp
+msgid "combat.network.receive_error"
+msgstr "Error receiving data.  Keep trying??"
+
+#: src/SOURCE/EVENTS.cpp
+msgid "combat.network.town"
+msgstr "Town"
+
+#: src/SOURCE/COMMAND.cpp
+msgid "combat.spell.already_cast"
+msgstr "You have already cast a spell this round."
+
+#: src/SOURCE/SPELLS.cpp
+#, c-format
+msgid "combat.spell.cast"
+msgstr "Cast %s"
+
+#: src/SOURCE/SPELLS.cpp
+#, c-format
+msgid "combat.spell.cast_target"
+msgstr "Cast %s on %s"
+
+#: src/SOURCE/COMMAND.cpp
+msgid "combat.spell.no_hero"
+msgstr "You have no hero to cast a spell."
+
+#: src/SOURCE/SPELLS.cpp
+msgid "combat.spell.teleport_here"
+msgstr "Teleport Here"
+
+#: src/SOURCE/COMMAND.cpp
+#, c-format
+msgid "combat.surrender.offer"
+msgstr "%s states:\n\n\"I will accept your surrender and grant you and your troops safe passage for the price of %d gold."
+
+#: src/SOURCE/CMBTMGR.cpp
+msgid "combat.tower.garrison.damage.prefix"
+msgstr "Garrison does"
+
+#: src/SOURCE/COMMAND.cpp
+msgid "common.none"
+msgstr "None"
+
+#: src/SOURCE/KB.cpp
+msgid "congratulations.victory.title"
+msgstr "A Glorious Victory!"
+
+#: src/SOURCE/KB.cpp
+msgid "dialog.choice.or"
+msgstr "or"
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "dialog.income.per_day"
+msgstr "%d/day"
+
+#: src/SOURCE/wingraph.cpp
+msgid "display.color_mode.required"
+msgstr "Heroes requires 256 color mode or higher.\n\nTo change color mode, right click in an open area on the Windows 95 background, choose 'Properties', then the 'Settings' tab, then change the entry in the 'Color Palette Box'."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.clear.options.help"
+msgstr "Provides finer control over which objects are removed."
+
+#: src/SOURCE/kbwin.cpp
+msgid "editor.instance.event_name"
+msgstr "Heroes Editor"
+
+#: src/SOURCE/kbwin.cpp
+msgid "editor.instance.title"
+msgstr "Heroes Editor"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.startup.initialize.failed"
+msgstr "Cannot initialize the system"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.help.desert"
+msgstr "Desert\n\n Every hero except a barbarian spends 2 movement points per step."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.help.dirt"
+msgstr "Dirt\n\nNo restrictions."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.help.grass"
+msgstr "Grass\n\nNo restrictions."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.help.lava"
+msgstr "Lava\n\nNo restrictions."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.help.snow"
+msgstr "Snow\n\nEvery hero except a barbarian spends 1.5 movement points per step."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.help.swamp"
+msgstr "Swamp\n\n Every hero except a barbarian spends 1.5 movement points per step."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.help.water"
+msgstr "Water\n\nOnly ships can travel here."
+
+#: src/SOURCE/kbwin.cpp
+msgid "editor.window.app_name"
+msgstr "Heroes Editor"
+
+#: src/SOURCE/kbwin.cpp
+msgid "editor.window.title"
+msgstr "Heroes Editor"
+
+#: src/SOURCE/KB.cpp
+msgid "endgame.enemy.captured_artifact"
+msgstr "The enemy has captured the ultimate artifact!!"
+
+#: src/SOURCE/KB.cpp
+msgid "endgame.enemy.captured_dragon_city"
+msgstr "The enemy has captured the dragon city!!"
+
+#: src/SOURCE/KB.cpp
+msgid "endgame.enemy.captured_town"
+msgstr "The enemy has captured the town of XX!!"
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "endgame.heroes.abandon_player"
+msgstr "%s player's Heroes have abandoned him, and he is banished from this land."
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "endgame.heroes.abandon_you"
+msgstr "%s player, your heroes abandon you, and you are banished from this land."
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "endgame.last_town.lost"
+msgstr "%s player, you have lost your last town.  If you do not conquer another town in the next week, you will be eliminated."
+
+#: src/SOURCE/EVENTS.cpp
+#, c-format
+msgid "event.artifact.disappears"
+msgstr "As you reach for the %s, it mysteriously disappears."
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.artifact.full"
+msgstr "You cannot pick up this artifact, you already have a full load!"
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.shrine.no_spellbook"
+msgstr "  Unfortunately, you have no Magic Book to record the spell with."
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.shrine.rankings"
+msgstr "Shrine - Player Rankings"
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.skeleton.treasure"
+msgstr "Treasure"
+
+#: src/BASE/RESMGR.cpp
+#, c-format
+msgid "file.aggregate.open_failed"
+msgstr "Can't open file: %s"
+
+#: src/SOURCE/REQUEST.cpp
+#, c-format
+msgid "file.humans.computer"
+msgstr "The game you have chosen was being played with %d humans. Is it OK if the computer takes the place of the last %d human(s)?"
+
+#: src/SOURCE/REQUEST.cpp
+#, c-format
+msgid "file.humans.minimum"
+msgstr "The game you have chosen only has slots for %d human(s).  You need one with room for at least %d humans."
+
+#: src/SOURCE/REQUEST.cpp
+msgid "file.load.label"
+msgstr "File to Load:"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "file.open.failed"
+msgstr "Error opening file %s!"
+
+#: src/SOURCE/REQUEST.cpp
+msgid "file.players.label"
+msgstr "Players"
+
+#: src/SOURCE/REQUEST.cpp
+msgid "file.save.label"
+msgstr "File to Save:"
+
+#: src/SOURCE/REQUEST.cpp
+msgid "file.selection.required"
+msgstr "Please make a selection from the list, or press cancel."
+
+#: src/SOURCE/KB.cpp
+msgid "game.load.confirm"
+msgstr "Are you sure you want to load a new game?  (Your current game will be lost)"
+
+#: src/SOURCE/GAME.cpp
+msgid "game.opponent.required"
+msgstr "A game requires at least one opponent."
+
+#: src/SOURCE/KB.cpp
+msgid "game.restart.confirm"
+msgstr "Are you sure you want to restart?  (Your current game will be lost)"
+
+#: src/SOURCE/HERO.cpp
+msgid "hero.dismiss.confirm"
+msgstr "Are you sure you want to dismiss this Hero?"
+
+#: src/SOURCE/HERO.cpp
+#, c-format
+msgid "hero.experience.details"
+msgstr "Level %d\n\nCurrent experience %d\nNext level %d"
+
+#: src/SOURCE/SWAPMGR.cpp
+#, c-format
+msgid "hero.meeting.title"
+msgstr "%s meets %s"
+
+#: src/SOURCE/HERO.cpp src/SOURCE/VIEW.cpp
+#, c-format
+msgid "hero.title"
+msgstr "%s the %s"
+
+#: src/SOURCE/REMOTE.cpp
+msgid "modem.connecting"
+msgstr "Establishing connection..."
+
+#: src/SOURCE/REMOTE.cpp
+msgid "modem.dialing"
+msgstr "Dialing..."
+
+#: src/SOURCE/REMOTE.cpp
+msgid "modem.initializing"
+msgstr "Initializing modem..."
+
+#: src/SOURCE/REMOTE.cpp
+msgid "modem.ring.wait"
+msgstr "Waiting for ring..."
+
+#: src/SOURCE/SETUP.cpp
+msgid "modem.telephone.required"
+msgstr "Please enter the telephone number."
+
+#: src/SOURCE/REMOTE.cpp
+msgid "network.direct.wait"
+msgstr "Waiting for other computer to log in to direct connection.\n\nPress 'CANCEL' to abort."
+
+#: src/SOURCE/REMOTE.cpp
+msgid "network.guest.wait"
+msgstr "Waiting On Guest.\n\n  Press 'CANCEL' to abort."
+
+#: src/SOURCE/REMOTE.cpp
+msgid "network.host.wait"
+msgstr "Waiting On Host.\n\n  Press 'CANCEL' to abort."
+
+#: src/SOURCE/KB.cpp
+msgid "network.incoming.close"
+msgstr "[ Incoming data, must exit... ]"
+
+#: src/SOURCE/REMOTE.cpp
+msgid "network.initialize.failed"
+msgstr "Network initialization failed"
+
+#: src/SOURCE/REMOTE.cpp
+msgid "network.initialize.slots_full"
+msgstr "Network initialization failed, all game slots used!"
+
+#: src/SOURCE/REMOTE.cpp
+msgid "network.initialize.wait"
+msgstr "Initializing network.\n\n  Press 'CANCEL' to abort."
+
+#: src/SOURCE/REMOTE.cpp
+msgid "network.netbios.missing"
+msgstr "NETBIOS is not loaded."
+
+#: src/SOURCE/REMOTE.cpp
+msgid "network.peer.wait"
+msgstr "The other player's computer is not responding.  Do you wish to keep waiting for a response?"
+
+#: src/SOURCE/KB.cpp
+msgid "network.player.eliminated"
+msgstr "You have been eliminated from the game!!!"
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "network.player.exit.computer"
+msgstr "Player %d is exiting the game.  The current game has been saved as 'PLYREXIT'.  Do you wish to continue playing with a computer player filling in for player %d?"
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "network.player.timeout.computer"
+msgstr "Player %d has been logged out of the game.  The current game has been saved as 'PLYREXIT'.  Do you wish to continue playing with a computer player filling in for player %d?"
+
+#: src/SOURCE/GAME.cpp
+msgid "network.receive.title"
+msgstr "Receiving Data"
+
+#: src/SOURCE/REMOTE.cpp
+msgid "network.send.retry"
+msgstr "Error sending data.  Keep trying??"
+
+#: src/SOURCE/GAME.cpp
+msgid "network.send.title"
+msgstr "Sending Data"
+
+#: src/SOURCE/KB.cpp
+msgid "network.setup.wait"
+msgstr "Waiting for other remote player to set up game."
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "player.vanquished"
+msgstr "%s player has been vanquished!"
+
+#: src/SOURCE/RECRUIT.cpp
+msgid "recruitment.available.label"
+msgstr "Available: "
+
+#: src/SOURCE/RECRUIT.cpp
+msgid "recruitment.garrison.full"
+msgstr "There is no room in the garrison for this army."
+
+#: src/SOURCE/RECRUIT.cpp
+msgid "recruitment.title.prefix"
+msgstr "Recruit"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.HEROES.ok"
+msgstr "OK"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.HEROES.title"
+msgstr "Heroes of Might and Magic"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.HEROES.version"
+msgstr "Version 1.1"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40005"
+msgstr "&640 x 480"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40006"
+msgstr "&800 x 600"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40007"
+msgstr "&1024 x 768"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40008"
+msgstr "1&280 x 1024"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40009"
+msgstr "&Full Screen (F4)"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40012"
+msgstr "View &World"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40013"
+msgstr "View &Puzzle"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40014"
+msgstr "&Cast Spell"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40015"
+msgstr "&Dig"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40016"
+msgstr "Off"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40017"
+msgstr "On - 100%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40018"
+msgstr "On - 90%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40019"
+msgstr "On - 80%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40020"
+msgstr "On - 70%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40021"
+msgstr "On - 60%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40022"
+msgstr "On - 50%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40023"
+msgstr "On - 40%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40024"
+msgstr "On - 30%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40025"
+msgstr "On - 20%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40026"
+msgstr "On - 10%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40028"
+msgstr "Off"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40029"
+msgstr "On - 100%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40030"
+msgstr "On - 90%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40031"
+msgstr "On - 80%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40032"
+msgstr "On - 70%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40033"
+msgstr "On - 60%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40034"
+msgstr "On - 50%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40035"
+msgstr "On - 40%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40036"
+msgstr "On - 30%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40037"
+msgstr "On - 20%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40038"
+msgstr "On - 10%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40040"
+msgstr "&Jump"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40041"
+msgstr "&Gallop"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40042"
+msgstr "&Canter"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40043"
+msgstr "&Trot"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40044"
+msgstr "&Walk"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40045"
+msgstr "&CD Stereo"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40046"
+msgstr "Show &Path"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40047"
+msgstr "&View Enemy Moves"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40052"
+msgstr "&Help Topics"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40053"
+msgstr "&About Heroes of Might and Magic"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40102"
+msgstr "&Standard Game"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40104"
+msgstr "Play Lord &Ironfist"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40105"
+msgstr "Play Lord &Slayer"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40106"
+msgstr "Play Queen &Lamanda"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40107"
+msgstr "Play Lord &Alamar"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40110"
+msgstr "&2 Players"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40111"
+msgstr "&3 Players"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40112"
+msgstr "&4 Players"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40114"
+msgstr "&Host"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40115"
+msgstr "&Guest"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40117"
+msgstr "&Host (Dials)"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40118"
+msgstr "&Guest (Answers)"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40120"
+msgstr "&Host"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40121"
+msgstr "&Guest"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40123"
+msgstr "&Standard Game"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40124"
+msgstr "&Campaign Game"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40127"
+msgstr "&2 Players"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40128"
+msgstr "&3 Players"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40129"
+msgstr "&4 Players"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40131"
+msgstr "&Host"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40132"
+msgstr "&Guest"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40134"
+msgstr "&Host (Dials)"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40135"
+msgstr "&Guest (Answers)"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40137"
+msgstr "&Host"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40138"
+msgstr "&Guest"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40139"
+msgstr "&Save Game"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40140"
+msgstr "&Quit"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.0"
+msgstr "&File"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.1"
+msgstr "&Control Panel"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.2"
+msgstr "&Adventure"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.3"
+msgstr "&Display"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.4"
+msgstr "&Help"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.0_0"
+msgstr "&New Game"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.0_0_1"
+msgstr "&Campaign Game"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.0_0_2"
+msgstr "&Multi-Player Game"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.0_0_2_0"
+msgstr "&Hot Seat"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.0_0_2_1"
+msgstr "&Network"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.0_0_2_2"
+msgstr "&Modem"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.0_0_2_3"
+msgstr "&Direct-Connect"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.0_1"
+msgstr "&Load Game"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.0_1_2"
+msgstr "&Multi-Player Game"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.0_1_2_0"
+msgstr "&Hot Seat"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.0_1_2_1"
+msgstr "&Network"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.0_1_2_2"
+msgstr "&Modem"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.0_1_2_3"
+msgstr "&Direct-Connect"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.1_0"
+msgstr "&Music"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.1_1"
+msgstr "&Sound"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.1_2"
+msgstr "Speed"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUCMBT.command40005"
+msgstr "&640 x 480"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUCMBT.command40006"
+msgstr "&800 x 600"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUCMBT.command40007"
+msgstr "&1024 x 768"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUCMBT.command40008"
+msgstr "1&280 x 1024"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUCMBT.command40009"
+msgstr "&Full Screen (F4)"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUCMBT.command40052"
+msgstr "&Help Topics"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUCMBT.command40053"
+msgstr "&About Heroes of Might and Magic"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUCMBT.command40140"
+msgstr "&Quit"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUCMBT.popup.0"
+msgstr "&File"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUCMBT.popup.1"
+msgstr "&Display"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUCMBT.popup.2"
+msgstr "&Help"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40005"
+msgstr "&640 x 480"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40006"
+msgstr "&800 x 600"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40007"
+msgstr "&1024 x 768"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40008"
+msgstr "1&280 x 1024"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40009"
+msgstr "&Full Screen (F4)"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40052"
+msgstr "&Help Topics"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40053"
+msgstr "&About Heroes of Might and Magic"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40102"
+msgstr "&Standard Game"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40104"
+msgstr "Play Lord &Ironfist"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40105"
+msgstr "Play Lord &Slayer"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40106"
+msgstr "Play Queen &Lamanda"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40107"
+msgstr "Play Lord &Alamar"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40110"
+msgstr "&2 Players"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40111"
+msgstr "&3 Players"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40112"
+msgstr "&4 Players"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40114"
+msgstr "&Host"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40115"
+msgstr "&Guest"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40117"
+msgstr "&Host (Dials)"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40118"
+msgstr "&Guest (Answers)"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40120"
+msgstr "&Host"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40121"
+msgstr "&Guest"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40123"
+msgstr "&Standard Game"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40124"
+msgstr "&Campaign Game"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40127"
+msgstr "&2 Players"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40128"
+msgstr "&3 Players"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40129"
+msgstr "&4 Players"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40131"
+msgstr "&Host"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40132"
+msgstr "&Guest"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40134"
+msgstr "&Host (Dials)"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40135"
+msgstr "&Guest (Answers)"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40137"
+msgstr "&Host"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40138"
+msgstr "&Guest"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40139"
+msgstr "&Save Game"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40140"
+msgstr "&Quit"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.popup.0"
+msgstr "&File"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.popup.1"
+msgstr "&Display"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.popup.2"
+msgstr "&Help"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.popup.0_0"
+msgstr "&New Game"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.popup.0_0_1"
+msgstr "&Campaign Game"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.popup.0_0_2"
+msgstr "&Multi-Player Game"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.popup.0_0_2_0"
+msgstr "&Hot Seat"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.popup.0_0_2_1"
+msgstr "&Network"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.popup.0_0_2_2"
+msgstr "&Modem"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.popup.0_0_2_3"
+msgstr "&Direct-Connect"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.popup.0_1"
+msgstr "&Load Game"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.popup.0_1_2"
+msgstr "&Multi-Player Game"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.popup.0_1_2_0"
+msgstr "&Hot Seat"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.popup.0_1_2_1"
+msgstr "&Network"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.popup.0_1_2_2"
+msgstr "&Modem"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.popup.0_1_2_3"
+msgstr "&Direct-Connect"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUTOWN.command40005"
+msgstr "&640 x 480"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUTOWN.command40006"
+msgstr "&800 x 600"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUTOWN.command40007"
+msgstr "&1024 x 768"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUTOWN.command40008"
+msgstr "1&280 x 1024"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUTOWN.command40009"
+msgstr "&Full Screen (F4)"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUTOWN.command40052"
+msgstr "&Help Topics"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUTOWN.command40053"
+msgstr "&About Heroes of Might and Magic"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUTOWN.command40140"
+msgstr "&Quit"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUTOWN.popup.0"
+msgstr "&File"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUTOWN.popup.1"
+msgstr "&Display"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUTOWN.popup.2"
+msgstr "&Help"
+
+#: src/SOURCE/COMMAND.cpp
+msgid "resource.gold.insufficient"
+msgstr "You don't have enough gold!"
+
+#: src/SOURCE/GAME.cpp
+msgid "save.name.autosave"
+msgstr "AUTOSAVE"
+
+#: src/SOURCE/KB.cpp
+msgid "save.name.campaign"
+msgstr "SCENWN"
+
+#: src/SOURCE/GAME.cpp
+msgid "save.name.new_game"
+msgstr "NEWGAME"
+
+#: src/SOURCE/GAME.cpp src/SOURCE/KB.cpp
+msgid "save.name.player_exit"
+msgstr "PLYREXIT"
+
+#: src/SOURCE/GAME.cpp
+msgid "scenario.bay.description"
+msgstr "A large island of tight passes with a circular feel."
+
+#: src/SOURCE/GAME.cpp
+msgid "scenario.bay.name"
+msgstr "Around the Bay"
+
+#: src/SOURCE/GAME.cpp src/SOURCE/KB.cpp
+msgid "scenario.claw.description"
+msgstr "The Griffons will protect you until you are ready to make your move."
+
+#: src/SOURCE/GAME.cpp src/SOURCE/KB.cpp
+msgid "scenario.claw.name"
+msgstr "Claw ( Easy )"
+
+#: src/SOURCE/GAME.cpp
+msgid "scenario.info.no"
+msgstr "No"
+
+#: src/SOURCE/GAME.cpp
+msgid "scenario.info.yes"
+msgstr "Yes"
+
+#: src/SOURCE/KB.cpp
+msgid "score.name.prompt"
+msgstr "Please enter your name for the high score list."
+
+#: src/SOURCE/SETUP.cpp
+msgid "setup.modem.initialization_prompt"
+msgstr "Please enter any special initialization string required by your modem, or hit 'ENTER' to accept the default."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "shutdown.unexpected.title"
+msgstr "Unexpected Program Termination"
+
+#: src/SOURCE/SPELLS.cpp
+msgid "spell.dragon.immune"
+msgstr "Dragons are not affected by magic!"
+
+#: src/SOURCE/SPELLS.cpp
+msgid "spell.dwarf.resisted"
+msgstr "The Dwarves' magic resistance canceled the spell!"
+
+#: src/SOURCE/SPELLS.cpp
+#, c-format
+msgid "spell.fireball.damage"
+msgstr "The fireball does %d damage."
+
+#: src/SOURCE/SPELLS.cpp
+#, c-format
+msgid "spell.lightning.damage"
+msgstr "The lightning bolt does %d damage to the %s."
+
+#: src/SOURCE/SPELLS.cpp
+#, c-format
+msgid "spell.meteor.damage"
+msgstr "The meteor shower does %d damage."
+
+#: src/SOURCE/GAME.cpp
+msgid "spell.none.available"
+msgstr "No spells to cast."
+
+#: src/SOURCE/SPELLS.cpp
+#, c-format
+msgid "spell.resurrect.plural"
+msgstr "%d %s rise from the dead!"
+
+#: src/SOURCE/SPELLS.cpp
+#, c-format
+msgid "spell.resurrect.singular"
+msgstr "%d %s rises from the dead!"
+
+#: src/SOURCE/SPELLS.cpp
+#, c-format
+msgid "spell.storm.damage"
+msgstr "The elemental storm does %d damage."
+
+#: src/SOURCE/SPELLS.cpp
+msgid "spell.target.select"
+msgstr "Select Spell Target"
+
+#: src/SOURCE/SPELLS.cpp
+msgid "spell.teleport.invalid"
+msgstr "Invalid Teleport Destination"
+
+#: src/SOURCE/SPELLS.cpp
+msgid "spell.teleport.select"
+msgstr "Select teleport destination."
+
+#: src/SOURCE/KB.cpp
+msgid "startup.cd.inaccessible"
+msgstr "Unable to access CD Drive."
+
+#: src/SOURCE/KB.cpp
+msgid "startup.cd.required"
+msgstr "You must have the Heroes Win95 CD in the CD-ROM drive to play \nHeroes of Might and Magic.  \n\nPlease insert the CD and try again."
+
+#: src/SOURCE/KB.cpp
+msgid "startup.data.missing"
+msgstr "Unable to find the Heroes data files.  Please run the installation program."
+
+#: src/SOURCE/KB.cpp
+msgid "startup.directory.invalid"
+msgstr "Unable to change to the Heroes directory.  Please run the installation program."
+
+#: src/SOURCE/KB.cpp src/SOURCE/kbwin.cpp
+msgid "startup.error.title"
+msgstr "Startup Error"
+
+#: src/SOURCE/KB.cpp
+msgid "startup.initialize.failed"
+msgstr "Initialization failed!"
+
+#: src/BASE/EXEC.cpp
+msgid "startup.input.failed"
+msgstr "Unable to initialize input devices - possible problem with mouse or keyboard."
+
+#: src/SOURCE/kbwin.cpp
+#, c-format
+msgid "startup.instance.already_running"
+msgstr "Only one copy of %s may run at a time"
+
+#: src/SOURCE/kbwin.cpp
+msgid "startup.instance.event_name"
+msgstr "Heroes"
+
+#: src/SOURCE/kbwin.cpp
+msgid "startup.instance.game_title"
+msgstr "Heroes of Might and Magic"
+
+#: src/SOURCE/KB.cpp
+msgid "startup.loading.game"
+msgstr "Loading Heroes of Might and Magic for Windows 95 (version 1.2)"
+
+#: src/BASE/EXEC.cpp src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "startup.manager.failed"
+msgstr "Can't add manager!"
+
+#: src/BASE/EXEC.cpp
+msgid "startup.mouse.failed"
+msgstr "Unable to initialize mouse."
+
+#: src/BASE/EXEC.cpp
+msgid "startup.resources.failed"
+msgstr "Unable to initialize resources - possible disk problem."
+
+#: src/BASE/EXEC.cpp
+msgid "startup.sound.failed"
+msgstr "Unable to initialize sound."
+
+#: src/BASE/EXEC.cpp
+msgid "startup.windows.failed"
+msgstr "Unable to initialize windows - possible memory or disk error."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gAPanelHelp.0"
+msgstr "View the entire world."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gAPanelHelp.1"
+msgstr "View the obelisk puzzle."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gAPanelHelp.2"
+msgstr "Cast an adventure spell."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gAPanelHelp.3"
+msgstr "Dig for the Ultimate Artifact."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gAPanelHelp.4"
+msgstr "Exit this menu without doing anything."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gAdvMenuHelp.0"
+msgstr "Next Hero\n\nSelect the next Hero."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gAdvMenuHelp.1"
+msgstr "Continue Movement\n\nContinue the Hero's movement along his current path."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gAdvMenuHelp.2"
+msgstr "Kingdom Summary\n\nView a summary of your kingdom."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gAdvMenuHelp.3"
+msgstr "End Turn\n\nEnd your turn and let the computer take its turn."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gAdvMenuHelp.4"
+msgstr "Adventure Options\n\nBring up the adventure options menu."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gAdvMenuHelp.5"
+msgstr "Game Options\n\nBring up the game options menu."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gAlignmentNames.0"
+msgstr "human"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gAlignmentNames.1"
+msgstr "plains"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gAlignmentNames.2"
+msgstr "forest"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gAlignmentNames.3"
+msgstr "mountain"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gAlignmentNames.4"
+msgstr "neutral"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNames.0"
+msgstr "peasant"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNames.1"
+msgstr "archer"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNames.2"
+msgstr "pikeman"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNames.3"
+msgstr "swordsman"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNames.4"
+msgstr "cavalry"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNames.5"
+msgstr "paladin"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNames.6"
+msgstr "goblin"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNames.7"
+msgstr "orc"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNames.8"
+msgstr "wolf"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNames.9"
+msgstr "ogre"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNames.10"
+msgstr "troll"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNames.11"
+msgstr "cyclops"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNames.12"
+msgstr "sprite"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNames.13"
+msgstr "dwarf"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNames.14"
+msgstr "elf"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNames.15"
+msgstr "druid"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNames.16"
+msgstr "unicorn"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNames.17"
+msgstr "phoenix"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNames.18"
+msgstr "centaur"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNames.19"
+msgstr "gargoyle"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNames.20"
+msgstr "griffin"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNames.21"
+msgstr "minotaur"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNames.22"
+msgstr "hydra"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNames.23"
+msgstr "dragon"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNames.24"
+msgstr "rogue"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNames.25"
+msgstr "nomad"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNames.26"
+msgstr "ghost"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNames.27"
+msgstr "genie"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.0"
+msgstr "peasants"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.1"
+msgstr "archers"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.2"
+msgstr "pikemen"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.3"
+msgstr "swordsmen"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.4"
+msgstr "cavalries"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.5"
+msgstr "paladins"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.6"
+msgstr "goblins"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.7"
+msgstr "orcs"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.8"
+msgstr "wolves"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.9"
+msgstr "ogres"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.10"
+msgstr "trolls"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.11"
+msgstr "cyclopes"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.12"
+msgstr "sprites"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.13"
+msgstr "dwarves"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.14"
+msgstr "elves"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.15"
+msgstr "druids"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.16"
+msgstr "unicorns"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.17"
+msgstr "phoenix"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.18"
+msgstr "centaurs"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.19"
+msgstr "gargoyles"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.20"
+msgstr "griffins"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.21"
+msgstr "minotaurs"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.22"
+msgstr "hydras"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.23"
+msgstr "dragons"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.24"
+msgstr "rogues"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.25"
+msgstr "nomads"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.26"
+msgstr "ghosts"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.27"
+msgstr "genies"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmySizeNames.0"
+msgstr "Few"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmySizeNames.1"
+msgstr "A few"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmySizeNames.2"
+msgstr "Several"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmySizeNames.3"
+msgstr "Several"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmySizeNames.4"
+msgstr "Pack"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmySizeNames.5"
+msgstr "A pack of"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmySizeNames.6"
+msgstr "Lots"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmySizeNames.7"
+msgstr "Lots of"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmySizeNames.8"
+msgstr "Horde"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmySizeNames.9"
+msgstr "A Horde of"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmySizeNames.10"
+msgstr "Zounds!"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmySizeNames.11"
+msgstr "Zounds..."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyStatText.0"
+msgstr "Attack Skill: "
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyStatText.1"
+msgstr "Defense Skill: "
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyStatText.2"
+msgstr "Shots left: "
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyStatText.3"
+msgstr "Damage: "
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyStatText.4"
+msgstr "Hit Points: "
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyStatText.5"
+msgstr "Speed: "
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyStatText.6"
+msgstr "Morale: "
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyStatText.7"
+msgstr "Luck: "
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyStatText.8"
+msgstr "Shots: "
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.0"
+msgstr "Ultimate Book\n(+12 Knowledge)\n\nThe Ultimate Book of Knowledge increases your knowledge by 12."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.1"
+msgstr "Ultimate Sword\n(+12 Attack)\n\nThe Ultimate Sword of Dominion increases your attack skill by 12."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.2"
+msgstr "Ultimate Cloak\n(+12 Defense)\n\nThe Ultimate Cloak of Protection increases your defense skill by 12."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.3"
+msgstr "Ultimate Wand\n(+12 Spell Power)\n\nThe Ultimate Wand of Magic increases your spell power by 12."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.4"
+msgstr "Arcane Necklace\n(+4 Spell Power)\n\nThe Arcane Necklace of Magic increases your spell power by 4."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.5"
+msgstr "Caster's Bracelet\n(+2 Spell Power)\n\nThe Caster's Bracelet of Magic increases your spell power by 2."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.6"
+msgstr "Mage's Ring\n(+2 Spell Power)\n\nThe Mage's Ring of Power increases your spell power by 2."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.7"
+msgstr "Witches Broach\n(+3 Spell Power)\n\nThe Witch's Broach of Magic increases your spell power by 3."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.8"
+msgstr "Medal\n\nThe Medal of Valor increases your morale."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.9"
+msgstr "Medal\n\nThe Medal of Courage increases your morale."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.10"
+msgstr "Medal\n\nThe Medal of Honor increases your morale."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.11"
+msgstr "Medal\n\nThe Medal of Distinction increases your morale."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.12"
+msgstr "Fizbin\n\nThe Fizbin of Misfortune greatly decreases your morale."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.13"
+msgstr "Thunder Mace\n(+1 Attack)\n\nThe Thunder Mace of Dominion increases your attack skill by 1."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.14"
+msgstr "Armored Gauntlets\n(+1 Defense)\n\nThe Armored Gauntlets of Protection increase your defense skill by 1."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.15"
+msgstr "Defender Helm\n(+1 Defense)\n\nThe Defender Helm of Protection increases your defense skill by 1."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.16"
+msgstr "Giant Flail\n(+1 Attack)\n\nThe Giant Flail of Dominion increases your attack skill by 1."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.17"
+msgstr "Ballista\n\nThe Ballista of Quickness lets your catapult fire twice per combat round."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.18"
+msgstr "Stealth Shield\n(+2 Defense)\n\nThe Stealth Shield of Protection increases your defense skill by 2."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.19"
+msgstr "Dragon Sword\n(+3 Attack)\n\nThe Dragon Sword of Dominion increases your attack skill by 3."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.20"
+msgstr "Power Axe\n(+2 Attack)\n\nThe Power Axe of Dominion increases your attack skill by 2."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.21"
+msgstr "Divine Breastplate\n(+3 Defense)\n\nThe Divine Breastplate of Protection increases your defense skill by 3."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.22"
+msgstr "Minor Scroll\n(+2 Knowledge)\n\nThe Minor Scroll of Knowledge increases your knowledge by 2."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.23"
+msgstr "Major Scroll\n(+3 Knowledge)\n\nThe Major Scroll of Knowledge increases your knowledge by 3."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.24"
+msgstr "Superior Scroll\n(+4 Knowledge)\n\nThe Superior Scroll of Knowledge increases your knowledge by 4."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.25"
+msgstr "Foremost Scroll\n(+5 Knowledge)\n\nThe Foremost Scroll of Knowledge increases your knowledge by 5."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.26"
+msgstr "Endless Sack\n\nThe Endless Sack of Gold provides you with 1000 gold per day."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.27"
+msgstr "Endless Bag\n\nThe Endless Bag of Gold provides you with 750 gold per day."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.28"
+msgstr "Endless Purse\n\nThe Endless Purse of Gold provides you with 500 gold per day."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.29"
+msgstr "Nomad Boots\n\nThe Nomad Boots of Mobility increase your movement on land."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.30"
+msgstr "Traveler's Boots\n\nThe Traveler's Boots of Mobility increase your movement on land."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.31"
+msgstr "Rabbit's Foot\n\nThe Lucky Rabbit's Foot increases your luck in combat."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.32"
+msgstr "Horseshoe\n\nThe Golden Horseshoe increases your luck in combat."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.33"
+msgstr "Coin\n\nThe Gambler's Lucky Coin increases your luck in combat."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.34"
+msgstr "Clover\n\nThe Four-Leaf Clover increases your luck in combat."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.35"
+msgstr "Compass\n\nThe True Compass of Mobility increases your movement on land and sea."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.36"
+msgstr "Astrolabe\n\nThe Sailors' Astrolabe of Mobility increases your movement on sea."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.37"
+msgstr "Magic Book\n\nThe Magic Book enables you to cast spells."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.4"
+msgstr "After rescuing a sorceress from a cursed tomb, she rewards your heroism with an exquisite jeweled necklace."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.5"
+msgstr "While searching through the rubble of a caved in mine, you free a group of trapped dwarves.  Grateful, the leader gives you a golden bracelet."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.6"
+msgstr "A cry of pain leads you to a centaur, caught in a trap.  Upon setting the creature free, he hands you a small pouch.  Emptying the contents, you find a dazzling jeweled ring."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.7"
+msgstr "Alongside the remains of a burnt witch lies a beautiful broach, intricately designed.  Approaching the corpse with caution, you add the broach to your inventory."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.8"
+msgstr "Freeing a virtuous maiden from the clutches of an evil overlord, you are granted a Medal of Valor by the King's herald."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.9"
+msgstr "After saving a young boy from a vicious pack of wolves, you return him to his father's manor.  The grateful nobleman awards you with a Medal of Courage."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.10"
+msgstr "After freeing a princess of a neighboring kingdom from the evil clutches of despicable slavers, she awards you with a Medal of Honor."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.11"
+msgstr "Ridding the countryside of the hideous minotaur who made a sport of eating noblemen's knights, you are honored with the Medal of Distinction."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.12"
+msgstr "You stumble upon a medal lying alongside the empty road.  Adding the medal to your inventory, you become aware that you have acquired the undesirable Fizbin of Misfortune, greatly decreasing your army's morale."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.13"
+msgstr "During a sudden storm, a bolt of lightning strikes a tree, splitting it.  Inside the tree you find a mysterious mace."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.14"
+msgstr "You encounter the infamous Black Knight!  After a grueling duel ending in a draw, the knight, out of respect, offers you a pair of armored gauntlets."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.15"
+msgstr "A glint of golden light catches your eye.  Upon further investigation, you find a golden helm hidden under a bush."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.16"
+msgstr "A clumsy Giant has killed himself with his own flail.  Knowing your superior skill with this weapon, you confidently remove the spectacular flail from the fallen giant."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.17"
+msgstr "Walking through the ruins of an ancient walled city, you find the instrument of the city's destruction, an elaborately crafted ballista."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.18"
+msgstr "A stone statue of a warrior holds a silver shield.  As you remove the shield, the statue crumbles into dust."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.19"
+msgstr "As you are walking along a narrow path, a nearby bush suddenly bursts into flames.  Before your eyes the flames become the image of a beautiful woman.  She holds out a magnificent sword to you."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.20"
+msgstr "You see a silver axe embedded deeply in the ground.  After several unsuccessful attempts by your army to remove the axe, you tightly grip the handle of the axe and effortlessly pull it free."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.21"
+msgstr "A gang of rogues is sifting through the possessions of dead warriors.  Scaring off the scavengers, you note the rogues had overlooked a beautiful breastplate."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.22"
+msgstr "Before you appears a levitating glass case with a scroll, perched upon a bed of crimson velvet.  At your touch, the lid opens and the scroll floats into your awaiting hands."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.23"
+msgstr "Visiting a local wiseman, you explain the intent of your journey.  He reaches into a sack and withdraws a yellowed scroll and hands it to you."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.24"
+msgstr "You come across the remains of an ancient Druid.  Bones, yellowed with age, peer from the ragged folds of her robe.  Searching the robe, you discover a scroll hidden in the folds."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.25"
+msgstr "Mangled bones, yellowed with age, peer from the ragged folds of a dead Druid's robe.  Searching the robe, you discover a scroll hidden within."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.26"
+msgstr "A little leprechaun dances gleefully around a magic sack.  Seeing you approach, he stops in mid-stride.  The little man screams and stamps his foot ferociously, vanishing into thin air.  Remembering the old leprechaun saying 'Finders Keepers', you grab the sack and leave."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.27"
+msgstr "A noblewoman, separated from her traveling companions, asks for your help.  After escorting her home, she rewards you with a bag filled with gold."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.28"
+msgstr "In your travels, you find a leather purse filled with gold that once belonged to a great warrior king who had the ability to transform any inanimate object into gold."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.29"
+msgstr "A nomad trader seeks protection from a tribe of goblins.  For your assistance, he gives you a finely crafted pair of boots made from the softest leather.  Looking closely, you see fascinating ancient carvings engraved on the leather."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.30"
+msgstr "Discovering a pair of beautifully beaded boots made from the finest and softest leather, you thank the anonymous donor and add the boots to your inventory."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.31"
+msgstr "A traveling merchant offers you a rabbit's foot, made of gleaming silver fur, for safe passage.  The merchant explains the charm will increase your luck in combat."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.32"
+msgstr "An ensnared unicorn whinnies in fright.  Murmuring soothing words, you set her free.  Snorting and stamping her front hoof once, she gallops off.  Looking down you see a golden horseshoe."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.33"
+msgstr "You have captured a mischievous imp who has been terrorizing the region.  In exchange for his release, he rewards you with a magical coin."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.34"
+msgstr "In the middle of a patch of dead and dry vegetation, to your surprise you find a healthy green four-leaf clover."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.35"
+msgstr "An old man claiming to be an inventor asks you to try his latest invention.  He then hands you a compass."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.36"
+msgstr "An old sea captain is being tortured by ogres.  You save him, and in return he rewards you with a wondrous instrument to measure the distance of a star."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.37"
+msgstr "The Magic Book  ??????"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.0"
+msgstr "Ultimate Book of Knowledge"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.1"
+msgstr "Ultimate Sword of Dominion"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.2"
+msgstr "Ultimate Cloak of Protection"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.3"
+msgstr "Ultimate Wand of Magic"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.4"
+msgstr "Arcane Necklace of Magic"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.5"
+msgstr "Caster's Bracelet of Magic"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.6"
+msgstr "Mage's Ring of Power"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.7"
+msgstr "Witch's Broach of Magic"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.8"
+msgstr "Medal of Valor"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.9"
+msgstr "Medal of Courage"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.10"
+msgstr "Medal of Honor"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.11"
+msgstr "Medal of Distinction"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.12"
+msgstr "Fizbin of Misfortune"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.13"
+msgstr "Thunder Mace of Dominion"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.14"
+msgstr "Armored Gauntlets of Protection"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.15"
+msgstr "Defender Helm of Protection"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.16"
+msgstr "Giant Flail of Dominion"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.17"
+msgstr "Ballista of Quickness"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.18"
+msgstr "Stealth Shield of Protection"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.19"
+msgstr "Dragon Sword of Dominion"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.20"
+msgstr "Power Axe of Dominion"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.21"
+msgstr "Divine Breastplate of Protection"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.22"
+msgstr "Minor Scroll of Knowledge"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.23"
+msgstr "Major Scroll of Knowledge"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.24"
+msgstr "Superior Scroll of Knowledge"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.25"
+msgstr "Foremost Scroll of Knowledge"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.26"
+msgstr "Endless Sack of Gold"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.27"
+msgstr "Endless Bag of Gold"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.28"
+msgstr "Endless Purse of Gold"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.29"
+msgstr "Nomad Boots of Mobility"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.30"
+msgstr "Traveler's Boots of Mobility"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.31"
+msgstr "Lucky Rabbit's Foot"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.32"
+msgstr "Golden Horseshoe"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.33"
+msgstr "Gambler's Lucky Coin"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.34"
+msgstr "Four-Leaf Clover"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.35"
+msgstr "True Compass of Mobility"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.36"
+msgstr "Sailor's Astrolabe of Mobility"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.37"
+msgstr "Magic Book"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gBattleResults.0"
+msgstr "The enemy has surrendered!"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gBattleResults.1"
+msgstr "The enemy has fled!"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gBattleResults.2"
+msgstr "A glorious victory!"
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gBattleResults.3"
+msgstr "\n\nFor valor in combat, %s receives %d experience"
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gBattleResults.4"
+msgstr "%s surrenders to the enemy, and departs in shame."
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gBattleResults.5"
+msgstr "The cowardly %s flees from battle."
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gBattleResults.6"
+msgstr "Your forces suffer a bitter defeat, and %s abandons your cause."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gBattleResults.7"
+msgstr "Your forces surrender to the enemy, and depart in shame."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gBattleResults.8"
+msgstr "Your cowardly forces flee from battle."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gBattleResults.9"
+msgstr "Your forces suffer a bitter defeat."
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gBattleResults.10"
+msgstr "\n\nFor valor in combat, %s receives %d experience, and gains %d level(s)."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCPanelHelp.0"
+msgstr "Start a single or multi-player game."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCPanelHelp.1"
+msgstr "Load a previously saved game."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCPanelHelp.2"
+msgstr "Quit Heroes of Might and Magic and return to the DOS prompt."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCPanelHelp.3"
+msgstr "Exit this menu without doing anything."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCPanelHelp.4"
+msgstr "Save the current game."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCPanelHelp.5"
+msgstr "Toggle ambient music on/off"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCPanelHelp.6"
+msgstr "Toggle foreground sounds on/off"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCPanelHelp.7"
+msgstr "Change the speed at which Heroes move on the main screen."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCPanelHelp.8"
+msgstr "Change the quality level of the sound.  CD stereo sounds the best, and usually is less of a drag on system performance, because no processing is required.  However, some systems may not be set up to handle CD stereo, so 8 bit sound is the fallback."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCPanelHelp.9"
+msgstr "Toggle 'Show Path' on/off.  If 'Show Path' is on, your first click on a map location will show the path to get there, your second will start you moving. If this option is off, one click starts you moving immediately."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCPanelHelp.10"
+msgstr "Toggle 'Show Enemy Moves' on/off.  If on, all enemies moving within your visible area will be shown.  If off, no computer movement will be shown.  Note that this option is automatically set to off during network and modem play."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCPanelHelp.11"
+msgstr "View information on the scenario you are currently playing."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCampaignScenarioNames.0"
+msgstr "You have established a foothold in the new land.  This small island is fiercely contested by three other factions, all vying to capture the strategic town - Gateway.  The town is located in the center of the island, and so dominates its surroundings that the other factions will surrender to the lord that captures it.  Beware the dragon guardian of Gateway!"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCampaignScenarioNames.1"
+msgstr "Your way to the mainland is blocked by the Archipelago of the Ancients, a series of four large islands, each held by a different lord.  The opposition must all be subdued, and they are better led this time.  Boats are a necessity - use them wisely!"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCampaignScenarioNames.2"
+msgstr "Chaos.  A maelstrom of combat plagues the land.  The people suffer, but will rally behind the wielder of the Eye of Goros, an artifact that can heal the wounded land.  It was buried and lost eons ago.  The first lord to uncover the Eye will unite the people and conquer the land - but it lies in a vast territory with only pieces of a puzzle to guide the way."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCampaignScenarioNames.3"
+msgstr "With the founding of a homeland, the other lords now take you seriously.  All seek to dominate the central continent, and each is suspicious of the others.  The territory is huge, the opposition distant.  Resources are scarce and should be fiercely defended.  You must be the last lord left to claim victory."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCampaignScenarioNames.4"
+msgstr "The land of the knights, led by Lord Ironfist, is divided by the twisting Floodwater River.  Ironfist is counting on the river to protect him.  The only town suitable to boat-building lies upon the river far to the east.  To defeat Ironfist, you must capture his home castle in the far northwest."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCampaignScenarioNames.5"
+msgstr "Far to the north, beyond the Trackless Desert, lies the Frozen Wastes.  It is the homeland of Lord Slayer and his barbarian followers.  Once the mountain pass has been breached by either side, barbarian raiders will stream south.  The desert may harbor unknown allies who can aid you.  Slayer's castle lies just northeast of the pass."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCampaignScenarioNames.6"
+msgstr "Warned of your approach, the sorceress Queen Lamanda worked on a dreadful magic and sank the approach to the only port.  You must find the teleport gate to assault the southwestern land and capture the port.  The only landfall is far to the northeast.  From there you must struggle through the forest maze to locate her castle in the extreme northwest."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCampaignScenarioNames.7"
+msgstr "The warlocks' castle lies shrouded in the smokey volcanic rift.  To reach Lord Alamar's home castle in the extreme southeast, you must wander through the Minotaur Maze.  The warlocks are overconfident and not expecting an attack, so sure are they that none can navigate the maze.  Gargoyles have been set to dissuade invaders from the true path."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCampaignScenarioNames.8"
+msgstr "Final victory lies within your grasp - but the defeated warlords have pooled their last resources and have banded together against you.  If you can bend the dragons to your will and force them to side with you, all the other warlords will submit and the land will be yours to rule.  Capture the Dragon Citadel on the central island and victory is yours!"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCampaignScenarioText.0"
+msgstr "Gateway"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCampaignScenarioText.1"
+msgstr "The Archipelago"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCampaignScenarioText.2"
+msgstr "The Wounded Land"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCampaignScenarioText.3"
+msgstr "Free-for-All"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCampaignScenarioText.4"
+msgstr "Castle Ironfist"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCampaignScenarioText.5"
+msgstr "Castle Slayer"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCampaignScenarioText.6"
+msgstr "Castle Lamanda"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCampaignScenarioText.7"
+msgstr "Castle Alamar"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCampaignScenarioText.8"
+msgstr "King-of-the-Hill"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCampaignSideNames.0"
+msgstr "Lord Ironfist"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCampaignSideNames.1"
+msgstr "Lord Slayer"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCampaignSideNames.2"
+msgstr "Queen Lamanda"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCampaignSideNames.3"
+msgstr "Lord Alamar"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCampaignWinTexts.0"
+msgstr "Gateway has fallen!  The other lords have abandoned their castles and fled.  They have alerted their homelands and now gather their forces.  Speed is of the essence."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCampaignWinTexts.1"
+msgstr "The Archipelago of the Ancients has been subdued and added to your domain.  On the horizon lies a vast, unexplored - and hostile - continent."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCampaignWinTexts.2"
+msgstr "The healing power of the Eye of Goros spreads throughout the land.  The population unites behind you and the other lords retreat.  The war for domination begins."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCampaignWinTexts.3"
+msgstr "With your victory, the other lords have made their final retreat.  They must each in turn be fought one-on-one in their homelands, and their personal castles must be captured."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCampaignWinTexts.4"
+msgstr "The knights are broken in battle!  You have conquered their homeland."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCampaignWinTexts.5"
+msgstr "The barbarian castle has been overthrown and their army scattered!"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCampaignWinTexts.6"
+msgstr "You have burst through the forest maze and destroyed Lamanda's castle."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCampaignWinTexts.7"
+msgstr "You have followed the gargoyles to the castle of Lord Alamar and have shattered the might of the warlocks."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCampaignWinTexts.8"
+msgstr "The dragons join your cause and the competing warlords capitulate.  You now rule a vast and united land as the one true King!"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCastleInfo.0"
+msgstr "Build Mage Guild"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCastleInfo.1"
+msgstr "Mage Guild is at highest level."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCastleInfo.2"
+msgstr "Cannot afford next level."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCastleInfo.3"
+msgstr "Add another level to Mage Guild"
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gCastleInfo.4"
+msgstr "%s is already built"
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gCastleInfo.5"
+msgstr "Cannot build %s"
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gCastleInfo.6"
+msgstr "Cannot afford %s"
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gCastleInfo.7"
+msgstr "Build %s"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCastleInfo.8"
+msgstr "Cannot afford a Hero."
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gCastleInfo.9"
+msgstr "Cannot recruit - you already have %d Heroes."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCastleInfo.10"
+msgstr "Cannot recruit - you already have a Hero in this town."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCastleInfo.11"
+msgstr "Recruit a new Hero"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCastleInfo.12"
+msgstr "Exit Castle"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCastleInfo.13"
+msgstr "Castle Options"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gClassNames.0"
+msgstr "Knight"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gClassNames.1"
+msgstr "Barbarian"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gClassNames.2"
+msgstr "Sorceress"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gClassNames.3"
+msgstr "Warlock"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gColorNames.0"
+msgstr "blue"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gColorNames.1"
+msgstr "green"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gColorNames.2"
+msgstr "red"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gColorNames.3"
+msgstr "yellow"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCombatHelp.0"
+msgstr "Auto Combat"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCombatHelp.1"
+msgstr "Skip This Unit"
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gCombatMessage.1"
+msgstr "Move %s here."
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gCombatMessage.2"
+msgstr "Fly %s here."
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gCombatMessage.3"
+msgstr "Attack %s"
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gCombatMessage.4"
+msgstr "Shoot %s (shots left: %d)"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCombatMessage.5"
+msgstr "General's Options"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCombatMessage.6"
+msgstr "View Opposing General"
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gCombatMessage.7"
+msgstr "View %s info."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gCombatMessage.8"
+msgstr "No shots left!"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gConventionalMemoryUnits.0"
+msgstr "K conventional memory"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDifficultyNames.0"
+msgstr "Easy"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDifficultyNames.1"
+msgstr "Normal"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDifficultyNames.2"
+msgstr "Hard"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDifficultyNames.3"
+msgstr "Expert"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.0"
+msgstr "The Thatched Hut produces Peasants."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.1"
+msgstr "The Archery Range produces Archers."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.2"
+msgstr "The Blacksmith produces Pikemen."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.3"
+msgstr "The Armory produces Swordsmen."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.4"
+msgstr "The Jousting Arena produces Cavalries."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.5"
+msgstr "The Cathedral produces Paladins."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.6"
+msgstr "The Treehouse produces Sprites."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.7"
+msgstr "The Cottage produces Dwarves."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.8"
+msgstr "The Archery Range produces Elves."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.9"
+msgstr "Stonehenge produces Druids."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.10"
+msgstr "The Fenced Meadow produces Unicorns."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.11"
+msgstr "The Red Tower produces Phoenix."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.12"
+msgstr "The Hut produces Goblins."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.13"
+msgstr "The Stick Hut produces Orcs."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.14"
+msgstr "The Den produces Wolves."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.15"
+msgstr "The Adobe produces Ogres."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.16"
+msgstr "The Bridge produces Trolls."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.17"
+msgstr "The Pyramid produces Cyclopes."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.18"
+msgstr "The Cave produces Centaurs."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.19"
+msgstr "The Crypt produces Gargoyles."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.20"
+msgstr "The Nest produces Griffins."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.21"
+msgstr "The Maze produces Minotaurs."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.22"
+msgstr "The Swamp produces Hydras."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.23"
+msgstr "The Black Tower produces Dragons."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.0"
+msgstr "Thatched Hut"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.1"
+msgstr "Archery Range"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.2"
+msgstr "Blacksmith"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.3"
+msgstr "Armory"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.4"
+msgstr "Jousting Arena"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.5"
+msgstr "Cathedral"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.6"
+msgstr "Treehouse"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.7"
+msgstr "Cottage"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.8"
+msgstr "Archery Range"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.9"
+msgstr "Stonehenge"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.10"
+msgstr "Fenced Meadow"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.11"
+msgstr "Red Tower"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.12"
+msgstr "Hut"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.13"
+msgstr "Stick Hut"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.14"
+msgstr "Den"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.15"
+msgstr "Adobe"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.16"
+msgstr "Bridge"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.17"
+msgstr "Pyramid"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.18"
+msgstr "Cave"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.19"
+msgstr "Crypt"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.20"
+msgstr "Nest"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.21"
+msgstr "Maze"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.22"
+msgstr "Swamp"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.23"
+msgstr "Black Tower"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.0"
+msgstr "Alchemist\n\nYou have taken control of the local Alchemist shop. It will provide you with one unit of Mercury per day."
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gEventText.1"
+msgstr "Signpost\n\nA signpost reads:\n\n%s is near."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.2"
+msgstr "Buoy\n\nYour men spot a navigational buoy, confirming that you are on course."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.3"
+msgstr "Buoy\n\nYour men spot a navigational buoy, confirming that you are on course and increasing their morale."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.4"
+msgstr "Moisture congeals on the walls and trickles slowly down to the ground.  Except for the evidence of a battle, the cave is empty."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.5"
+msgstr "A large daemon emerges from the shadows and you attack. After an exhausting battle, you emerge victorious and receive 1000 experience points."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.6"
+msgstr "A large daemon emerges from the shadows and you attack. After an exhausting battle, you emerge victorious and receive 1000 experience points and an artifact."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.7"
+msgstr "A large daemon emerges from the shadows and you attack. After an exhausting battle, you emerge victorious and receive 1000 experience points and 2500 gold."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.8"
+msgstr "You are captured by a large daemon.  He offers to let you free for 2500 gold, otherwise he will devour you.  Do you pay?"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.9"
+msgstr "Seeing that you do not have 2500 gold, the daemon slashes you with its claws, and the last thing you see is a red haze."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.10"
+msgstr "Daemon Cave\n\nThe cave is dank and musty.  Two large red eyes glow eerily within the blackness.  Do you wish to enter?"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.11"
+msgstr "Chest\n\nAfter scouring the area, you fall upon a hidden treasure cache.  You may take the gold or distribute the gold to the peasants for experience.  Do you wish to keep the gold?"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.12"
+msgstr "Faerie Ring\n\nYou enter the faerie ring, but nothing happens."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.13"
+msgstr "Faerie Ring\n\nUpon entering the mystical faerie ring, your army gains luck for its next battle."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.14"
+msgstr "Campfire\n\nRansacking an enemy camp, you discover a hidden cache of treasures."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.15"
+msgstr "Fountain\n\nYou drink from the enchanted fountain, but nothing happens."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.16"
+msgstr "Fountain\n\nAs you drink the sweet water, you gain luck for your next battle."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.17"
+msgstr "Gazebo\n\nAn old knight appears on the steps of the gazebo. \"I am sorry, my liege, I have taught you all I can.\""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.18"
+msgstr "Gazebo\n\nAn old knight appears on the steps of the gazebo. \"My liege, I will teach you all that I know to aid you in your travels.\""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.19"
+msgstr "Genie Lamp\n\nYou stumble upon a dented and tarnished lamp lodged deep in the earth. Do you wish to rub the lamp?"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.20"
+msgstr "Graveyard\n\nYou tentatively approach the burial ground of ancient warriors.  Do you want to search the graves?"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.21"
+msgstr "Upon defeating the ghosts you spend several hours searching the graves and find nothing.  Such a despicable act reduces your army's morale."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.22"
+msgstr "Upon defeating the ghosts you search the graves and find something!"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.23"
+msgstr "Hut\n\nA group of goblins with a desire for greater glory wish to join you. Do you accept?"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.24"
+msgstr "You are unable to recruit at this time, your ranks are full."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.25"
+msgstr "Hut\n\nAs you approach the goblin dwelling, you notice that there is no one here."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.26"
+msgstr "Thatched Hut\n\nA group of peasants with a desire for greater glory wish to join you. Do you accept? "
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.27"
+msgstr "You are unable to recruit at this time, your ranks are full."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.28"
+msgstr "Thatched Hut\n\nAs you approach the peasant dwelling, you notice that there is no one here."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.29"
+msgstr "Cottage\n\nA group of archers with a desire for greater glory wish to join you. Do you accept? "
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.30"
+msgstr "You are unable to recruit at this time, your ranks are full."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.31"
+msgstr "Cottage\n\nAs you approach the archer dwelling, you notice that there is no one here."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.32"
+msgstr "Cottage\n\nA group of dwarves with a desire for greater glory wish to join you. Do you accept? "
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.33"
+msgstr "You are unable to recruit at this time, your ranks are full."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.34"
+msgstr "Cottage\n\nAs you approach the dwarves' dwelling, you notice that there is no one here."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.35"
+msgstr "Thatched Hut\n\nA group of peasants with a desire for greater glory wish to join you. Do you accept? "
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.36"
+msgstr "You are unable to recruit at this time, your ranks are full."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.37"
+msgstr "Thatched Hut\n\nAs you approach the peasant dwelling you notice that there is no one here."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.38"
+msgstr "Dragon City\n\nYou have reached Dragon City, famous for its wealth and danger. Do you wish to attack?"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.39"
+msgstr "You have conquered the mighty dragons. In homage to you, they offer 1000 gold a day to your cause, and will defend the city for you in case of attack."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.40"
+msgstr "Lighthouse\n\nThe lighthouse is now under your control, and all of your ships will now move further each turn."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.41"
+msgstr "Mill\n\nThe keeper of the mill announces: \"Milord, I am sorry, there is no gold currently available.  Please try again next week.\""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.42"
+msgstr "Mill\n\nThe keeper of the mill announces: \"Milord, I have been working very hard to provide you with this gold, come back next week for more.\""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.43"
+msgstr "Ore Mine\n\nYou gain control of an ore mine. It will provide you with two units of ore per day."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.44"
+msgstr "Sulfur Mine\n\nYou gain control of a sulfur mine. It will provide you with one unit of sulfur per day."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.45"
+msgstr "Crystal Mine\n\nYou gain control of a crystal mine. It will provide you with one unit of crystal per day."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.46"
+msgstr "Gem Mine\n\nYou gain control of a gem mine. It will provide you with one unit of gems per day."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.47"
+msgstr "Gold Mine\n\nYou gain control of a gold mine. It will provide you with 1000 gold per day."
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gEventText.48"
+msgstr "Followers\n\nA group of %s with a desire for greater glory wish to join you. Do you accept? "
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.49"
+msgstr "Insulted by your refusal of their offer, the monsters attack!"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.50"
+msgstr "Obelisk\n\nYou come upon an obelisk made from a type of stone you have never seen before.  Staring at it intensely, the smooth surface suddenly changes to an inscription.  The inscription is a piece of a lost ancient map.  Quickly you copy down the piece and the inscription vanishes as abruptly as it had appeared."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.51"
+msgstr "Obelisk\n\nYou have already been to this obelisk."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.52"
+msgstr "Oasis\n\nYou spot an oasis, but the well is dry and you depart empty-handed."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.53"
+msgstr "Oasis\n\nA nomad merchant, traveling on foot, hails you and says his horse had spooked and left him stranded. For safe passage he takes your army to an oasis, raising your morale for one battle."
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gEventText.54"
+msgstr "You find a small quantity of %s."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.55"
+msgstr "Sawmill\n\nYou gain control of a sawmill. It will provide you with two units of wood per day."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.56"
+msgstr "Shrine\n\nWithin the ornate shrine sits a blind seer. After explaining the intent of your journey, the seer activates his crystal ball, allowing you to see the strengths and weaknesses of your opponents."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.57"
+msgstr "Shrine\n\nNestled in a small hidden shrine is an ancient wooden altar.  Upon the altar, a golden plaque bears an inscription with the secret to the ancient magical spell "
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.58"
+msgstr "Shipwreck\n\nThe rotting hulk of a great pirate ship creaks eerily as it is pushed against the rocks.  Do you wish to search the shipwreck? "
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.59"
+msgstr "Upon defeating the ghosts you spend several hours sifting through the debris and find nothing.  Such a despicable act reduces your army's morale."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.60"
+msgstr "Upon defeating the ghosts you sift through the debris and find something!"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.61"
+msgstr "Statue\n\nA large statue of an angel towers above you. Abruptly, the angel's eyes open and your troops celebrate a great increase in their morale."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.62"
+msgstr "Statue\n\nA large statue of an angel towers above you. Your army encircles the statue, but there appears to be nothing special about it."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.63"
+msgstr "Tents\n\nA group of tattered tents, billowing in the sandy wind, beckons you.  The tents are unoccupied.  Perhaps more nomads will be here later."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.64"
+msgstr "Tents\n\nA group of tattered tents, billowing in the sandy wind, beckons you.  Do you wish to have any nomads join you during your travels?"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.65"
+msgstr "Wagon\n\nA colorful rogues' wagon stands empty here.  Perhaps more rogues will be here later."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.66"
+msgstr "Wagon\n\nDistant sounds of music and laughter draw you to a colorful wagon housing rogues.  Do you wish to have any rogues join your army?"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.67"
+msgstr "Whirlpool\n\nA whirlpool engulfs your ship.  Some of your army has fallen overboard."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.68"
+msgstr "Windmill\n\nThe keeper of the mill announces: \"Milord, I am sorry, there are no resources currently available. Please try again next week.\""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.69"
+msgstr "Windmill\n\nThe keeper of the mill announces: \"Milord, I have been working very hard to provide you with these resources, come back next week for more.\""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.70"
+msgstr "Artifact\n\nYou come upon an ancient artifact.  As you reach for it, a pack of Rogues leap out of the brush to guard their stolen loot."
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gEventText.71"
+msgstr "Artifact\n\nA leprechaun offers you the %s for the small price of 2000 gold.  Do you wish to buy this artifact?"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.72"
+msgstr "Insulted by your refusal of his generous offer, the leprechaun stamps his foot ferociously and vanishes."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.73"
+msgstr "You try to pay the leprechaun, but realize that you don't have 2000 gold.  The leprechaun stamps his foot and ignores you."
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gEventText.74"
+msgstr "Upon defeating the Rogues, you search their corpses and discover the %s."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.75"
+msgstr "Skeleton\n\nYou come upon the remains of an unfortunate adventurer.  Searching through the tattered clothing, you find nothing."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gEventText.76"
+msgstr "Skeleton\n\nYou come upon the remains of an unfortunate adventurer.  Searching through the tattered clothing, you find"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gExtendedMemoryUnits.0"
+msgstr "K extended or expanded memory (XMS or EMS) and"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gGameTypeHelp.0"
+msgstr "Play a single, standard game against computer opponents."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gGameTypeHelp.1"
+msgstr "Play the campaign game - a series of linked single games."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gGameTypeHelp.2"
+msgstr "Play against other human players, either sitting at the same computer, or linked through a network or modem."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gGameTypeHelp.3"
+msgstr "Play a practice game."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gGameTypeHelp.4"
+msgstr "Cancel out of this menu back to the main menu."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHandicapNames.0"
+msgstr "Human-"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHandicapNames.1"
+msgstr "Human-Easy"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHandicapNames.2"
+msgstr "Human-Normal"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHandicapNames.3"
+msgstr "Human-Hard"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHandicapNames.4"
+msgstr "Human-Expert"
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gHeroLevel.0"
+msgstr "%s has gained"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroLevel.1"
+msgstr " a level.\n"
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gHeroLevel.2"
+msgstr " %d levels.\n"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.0.0"
+msgstr "Lord Kilburn"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.0.1"
+msgstr "Kilburn"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.1.0"
+msgstr "Lord Haart"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.1.1"
+msgstr "Haart"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.2.0"
+msgstr "Sir Gallant"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.2.1"
+msgstr "Gallant"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.3.0"
+msgstr "Arturius"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.3.1"
+msgstr "Arturius"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.4.0"
+msgstr "Tyro"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.4.1"
+msgstr "Tyro"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.5.0"
+msgstr "Maximus"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.5.1"
+msgstr "Maximus"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.6.0"
+msgstr "Ector"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.6.1"
+msgstr "Ector"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.7.0"
+msgstr "Dimitri"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.7.1"
+msgstr "Dimitri"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.8.0"
+msgstr "Ambrose"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.8.1"
+msgstr "Ambrose"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.9.0"
+msgstr "Thundax"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.9.1"
+msgstr "Thundax"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.10.0"
+msgstr "Ergon"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.10.1"
+msgstr "Ergon"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.11.0"
+msgstr "Kelzen"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.11.1"
+msgstr "Kelzen"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.12.0"
+msgstr "Tsabu"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.12.1"
+msgstr "Tsabu"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.13.0"
+msgstr "Crag Hack"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.13.1"
+msgstr "Crag"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.14.0"
+msgstr "Jojosh"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.14.1"
+msgstr "Jojosh"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.15.0"
+msgstr "Atlas"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.15.1"
+msgstr "Atlas"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.16.0"
+msgstr "Yog"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.16.1"
+msgstr "Yog"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.17.0"
+msgstr "Antoine"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.17.1"
+msgstr "Antoine"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.18.0"
+msgstr "Ariel"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.18.1"
+msgstr "Ariel"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.19.0"
+msgstr "Vatawna"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.19.1"
+msgstr "Vatawna"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.20.0"
+msgstr "Carlawn"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.20.1"
+msgstr "Carlawn"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.21.0"
+msgstr "Rebecca"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.21.1"
+msgstr "Rebecca"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.22.0"
+msgstr "Luna"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.22.1"
+msgstr "Luna"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.23.0"
+msgstr "Astra"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.23.1"
+msgstr "Astra"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.24.0"
+msgstr "Natasha"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.24.1"
+msgstr "Natasha"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.25.0"
+msgstr "Gem"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.25.1"
+msgstr "Gem"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.26.0"
+msgstr "Troyan"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.26.1"
+msgstr "Troyan"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.27.0"
+msgstr "Agar"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.27.1"
+msgstr "Agar"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.28.0"
+msgstr "Crodo"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.28.1"
+msgstr "Crodo"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.29.0"
+msgstr "Falagar"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.29.1"
+msgstr "Falagar"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.30.0"
+msgstr "Barok"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.30.1"
+msgstr "Barok"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.31.0"
+msgstr "Arie"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.31.1"
+msgstr "Arie"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.32.0"
+msgstr "Kastore"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.32.1"
+msgstr "Kastore"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.33.0"
+msgstr "Sandro"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.33.1"
+msgstr "Sandro"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.34.0"
+msgstr "Wrathmont"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.34.1"
+msgstr "Wrath"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.35.0"
+msgstr "Vesper"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNames.35.1"
+msgstr "Vesper"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroScreen.0"
+msgstr "Kingdom Overview"
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gHeroScreen.1"
+msgstr "View %s Info"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroScreen.2"
+msgstr "Additional hero characteristics"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroScreen.3"
+msgstr "View Good Morale Info"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroScreen.4"
+msgstr "View Neutral Morale Info"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroScreen.5"
+msgstr "View Bad Morale Info"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroScreen.6"
+msgstr "View Good Luck Info"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroScreen.7"
+msgstr "View Neutral Luck Info"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroScreen.8"
+msgstr "View Bad Luck Info"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroScreen.9"
+msgstr "View Experience Info"
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gHeroScreen.10"
+msgstr "Select %s"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroScreen.11"
+msgstr "Empty"
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gHeroScreen.12"
+msgstr "Move %s"
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gHeroScreen.13"
+msgstr "Exchange %s with %s"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroScreen.14"
+msgstr "View Spells"
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gHeroScreen.15"
+msgstr "View %s Info"
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gHeroScreen.16"
+msgstr "Dismiss %s the %s"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroScreen.17"
+msgstr "Exit Hero Screen"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroScreen.18"
+msgstr "Hero Screen"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHumanPlayerTypeNames.0"
+msgstr "Human\n"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHumanPlayerTypeNames.1"
+msgstr "Human\nEasy"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHumanPlayerTypeNames.2"
+msgstr "Human\nNormal"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHumanPlayerTypeNames.3"
+msgstr "Human\nHard"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHumanPlayerTypeNames.4"
+msgstr "Human\nExpert"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gInitMenuHelp.0"
+msgstr "Start a single or multi-player game."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gInitMenuHelp.1"
+msgstr "Load a previously saved game."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gInitMenuHelp.2"
+msgstr "View the high score screen."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gInitMenuHelp.3"
+msgstr "View the credits screen."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gInitMenuHelp.4"
+msgstr "Quit Heroes of Might and Magic and return to the DOS prompt."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gLuckInfoText.0"
+msgstr "Good Luck\n\nGood luck sometimes lets your armies get lucky attacks (double strength) in combat."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gLuckInfoText.1"
+msgstr "Neutral Luck\n\nNeutral luck means your armies will never get lucky or unlucky attacks on the enemy."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gLuckInfoText.2"
+msgstr "Bad Luck\n\nBad luck sometimes falls on your armies in combat, causing their attacks to only do half damage."
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gLuckInfoText.3"
+msgstr "%s\n\n\nCurrent Luck Modifiers:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gLuckInfoText.4"
+msgstr "\nLucky Rabbit's Foot +1"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gLuckInfoText.5"
+msgstr "\nGolden Horseshoe +1"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gLuckInfoText.6"
+msgstr "\nGambler's Lucky Coin +1"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gLuckInfoText.7"
+msgstr "\nFour-Leaf Clover +1"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gLuckInfoText.8"
+msgstr "\nFaerie ring visited +1"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gLuckInfoText.9"
+msgstr "\nFountain visited +1"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gLuckInfoText.10"
+msgstr "\nnone"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gLuckText.0"
+msgstr "Cursed"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gLuckText.1"
+msgstr "Awful"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gLuckText.2"
+msgstr "Bad"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gLuckText.3"
+msgstr "Normal"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gLuckText.4"
+msgstr "Good"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gLuckText.5"
+msgstr "Great"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gLuckText.6"
+msgstr "Irish"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMapDifficultyNames.0"
+msgstr "Easy"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMapDifficultyNames.1"
+msgstr "Normal"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMapDifficultyNames.2"
+msgstr "Tough"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMapDifficultyNames.3"
+msgstr "Impossible"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMapDifficultyNames.4"
+msgstr "Forget It"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMapSizeNames.0"
+msgstr "Small"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMapSizeNames.1"
+msgstr "Medium"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMapSizeNames.2"
+msgstr "Large"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMemoryErrorTitle.0"
+msgstr "Out of Memory"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMemoryRequirements.0"
+msgstr "Heroes of Might and Magic requires approximately:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMineNames.0"
+msgstr "Wood Mine"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMineNames.1"
+msgstr "Mercury Mine"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMineNames.2"
+msgstr "Ore Mine"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMineNames.3"
+msgstr "Sulfur Mine"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMineNames.4"
+msgstr "Crystal Mine"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMineNames.5"
+msgstr "Gems Mine"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMineNames.6"
+msgstr "Gold Mine"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMonthNames.0"
+msgstr "Grasshopper"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMonthNames.1"
+msgstr "Ant"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMonthNames.2"
+msgstr "Dragonfly"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMonthNames.3"
+msgstr "Spider"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMonthNames.4"
+msgstr "Butterfly"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMonthNames.5"
+msgstr "Bumblebee"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMonthNames.6"
+msgstr "Locust"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMonthNames.7"
+msgstr "Earthworm"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMonthNames.8"
+msgstr "Hornet"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMonthNames.9"
+msgstr "Beetle"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMoraleInfoText.0"
+msgstr "Good Morale\n\nGood morale may give your armies extra attacks in combat."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMoraleInfoText.1"
+msgstr "Neutral Morale\n\nNeutral morale means your armies will never be blessed with extra attacks or freeze in combat."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMoraleInfoText.2"
+msgstr "Bad Morale\n\nBad morale may cause your armies to freeze in combat."
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gMoraleInfoText.3"
+msgstr "%s\n\n\nCurrent Morale Modifiers:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMoraleInfoText.4"
+msgstr "\nKnight bonus +1"
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gMoraleInfoText.5"
+msgstr "\nAll %s troops +1"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMoraleInfoText.6"
+msgstr "\nTroops of 3 alignments -1"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMoraleInfoText.7"
+msgstr "\nTroops of 4 alignments -2"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMoraleInfoText.8"
+msgstr "\nMedal of Valor +1"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMoraleInfoText.9"
+msgstr "\nMedal of Courage +1"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMoraleInfoText.10"
+msgstr "\nMedal of Honor +1"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMoraleInfoText.11"
+msgstr "\nMedal of Distinction +1"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMoraleInfoText.12"
+msgstr "\nFizbin of Misfortune -2"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMoraleInfoText.13"
+msgstr "\nBuoy visited +1"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMoraleInfoText.14"
+msgstr "\nOasis visited +1"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMoraleInfoText.15"
+msgstr "\nStatue visited +2"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMoraleInfoText.16"
+msgstr "\nGraveyard robber -1"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMoraleInfoText.17"
+msgstr "\nShipwreck robber -1"
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gMoraleInfoText.18"
+msgstr "\nBattle cowardice %d"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMoraleInfoText.19"
+msgstr "\nnone"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMoraleInfoText.20"
+msgstr "\nTroops of 5 alignments -3"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMoraleText.0"
+msgstr "Treason"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMoraleText.1"
+msgstr "Awful"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMoraleText.2"
+msgstr "Poor"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMoraleText.3"
+msgstr "Normal"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMoraleText.4"
+msgstr "Good"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMoraleText.5"
+msgstr "Great"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gMoraleText.6"
+msgstr "Blood!"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gNeutralBuildingDescriptions.0"
+msgstr "The Mage Guild allows heroes to learn and replenish spells."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gNeutralBuildingDescriptions.1"
+msgstr "The Thieves' Guild provides information on enemy players.  Thieves' Guilds can also provide scouting information on enemy towns.  Additional Guilds provide more information."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gNeutralBuildingDescriptions.2"
+msgstr "The Tavern increases morale for troops defending the castle."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gNeutralBuildingDescriptions.3"
+msgstr "The Shipyard allows ships to be built."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gNeutralBuildingDescriptions.4"
+msgstr "The Well increases the growth rate of all dwellings by 2 creatures per week."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gNeutralBuildingDescriptions.5"
+msgstr "The Tent provides workers to build a castle."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gNeutralBuildingDescriptions.6"
+msgstr "The Castle improves town defense and income."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gNeutralBuildingNames.0"
+msgstr "Mage Guild"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gNeutralBuildingNames.1"
+msgstr "Thieves' Guild"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gNeutralBuildingNames.2"
+msgstr "Tavern"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gNeutralBuildingNames.3"
+msgstr "Shipyard"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gNeutralBuildingNames.4"
+msgstr "Well"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gNeutralBuildingNames.5"
+msgstr "Tent"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gNeutralBuildingNames.6"
+msgstr "Castle"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gNewGameHelp.0"
+msgstr "Accept these settings and start a new game."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gNewGameHelp.1"
+msgstr "Return to the main menu."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gNewGameHelp.2"
+msgstr "Challenge all computer players as 'King of the Hill'.  Computer players will be offended by your boastfulness, and lay off each other in an attempt to beat you to a pulp."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gNewGameHelp.3"
+msgstr "Select which scenario to play."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gNewGameHelp.4"
+msgstr "Change the starting difficulty at which you will play.  Higher difficulty levels start you off with fewer resources."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gNewGameHelp.5"
+msgstr "Change the difficulty of this opponent.  Smarter computer players are more aggressive and think longer for each turn."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gNewGameHelp.6"
+msgstr "Change your banner color."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gNewGameHelp.7"
+msgstr "The difficulty rating reflects a combination of various settings for your game.  This number will be applied to your final score."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gNewGameHelp.8"
+msgstr "Change the starting difficulty of another human player.  Higher difficulty levels start you off with fewer resources."
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gNewTurnText.0"
+msgstr "%s player, you only have %d days left to capture a town, or you will be banished from this land."
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gNewTurnText.1"
+msgstr "%s player, this is your last day to capture a town, or you will be banished from this land."
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gNewTurnText.2"
+msgstr "Astrologers proclaim month of the %s.\n\nAll dwellings increase population."
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gNewTurnText.3"
+msgstr "Astrologers proclaim month of the %s.\n\n%s population doubles!\n\nAll dwellings increase population."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gNewTurnText.4"
+msgstr "Astrologers proclaim month of the PLAGUE!\n\nAll populations are halved."
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gNewTurnText.5"
+msgstr "Astrologers proclaim week of the %s.\n\nAll dwellings increase population."
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gNewTurnText.6"
+msgstr "Astrologers proclaim week of the %s.\n\n%s growth +5.\n\nAll dwellings increase population."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.1"
+msgstr "Alchemist Lab"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.2"
+msgstr "Signpost"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.3"
+msgstr "Buoy"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.4"
+msgstr "Skeleton"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.5"
+msgstr "Daemon Cave"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.6"
+msgstr "Treasure Chest"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.7"
+msgstr "Faerie Ring"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.8"
+msgstr "Campfire"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.9"
+msgstr "Fountain"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.10"
+msgstr "Gazebo"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.11"
+msgstr "Ancient Lamp"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.12"
+msgstr "Graveyard"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.13"
+msgstr "Straw Hut"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.14"
+msgstr "House"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.15"
+msgstr "Cabin"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.16"
+msgstr "Log Cabin"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.17"
+msgstr "Log Cabin"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.18"
+msgstr "Inn 1"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.19"
+msgstr "Inn 2"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.20"
+msgstr "Inn 3"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.21"
+msgstr "Inn 4"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.22"
+msgstr "Dragon City"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.23"
+msgstr "Lighthouse"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.24"
+msgstr "Waterwheel"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.25"
+msgstr "Mine"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.26"
+msgstr "Army Camp"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.27"
+msgstr "Obelisk"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.28"
+msgstr "Oasis"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.29"
+msgstr "Resource"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.30"
+msgstr "Rosebush"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.31"
+msgstr "Sandpit"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.32"
+msgstr "Sawmill"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.33"
+msgstr "Shrine"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.34"
+msgstr "Shrine"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.35"
+msgstr "Shipwreck"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.36"
+msgstr "Statue"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.37"
+msgstr "Tree Stump"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.38"
+msgstr "Swan Pond"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.39"
+msgstr "Desert Tent"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.40"
+msgstr "Town"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.41"
+msgstr "Stone Liths"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.42"
+msgstr "Wagon Camp"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.43"
+msgstr "Well"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.44"
+msgstr "Whirlpool"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.45"
+msgstr "Windmill"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.46"
+msgstr "Oak Tree"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.47"
+msgstr "Megalith"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.48"
+msgstr "Artifact"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.49"
+msgstr "Nothing here"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.52"
+msgstr "Mountains"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.53"
+msgstr "Mountains"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.54"
+msgstr "Mountains"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.55"
+msgstr "Mountains"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.56"
+msgstr "Trees"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.57"
+msgstr "Trees"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.58"
+msgstr "Trees"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.59"
+msgstr "Trees"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.60"
+msgstr "Trees"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gObjectNames.62"
+msgstr "Ship"
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gOverviewText.0"
+msgstr "Kingdom Overview     Month %d, Week %d, Day %d"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gOverviewText.1"
+msgstr "You own Dragon City."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gOverviewText.2"
+msgstr "You own the Lighthouse."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gPlayerTypeNames.0"
+msgstr "None"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gPlayerTypeNames.1"
+msgstr "Dumb"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gPlayerTypeNames.2"
+msgstr "Average"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gPlayerTypeNames.3"
+msgstr "Smart"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gPlayerTypeNames.4"
+msgstr "Genius"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gResourceNames.0"
+msgstr "Wood"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gResourceNames.1"
+msgstr "Mercury"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gResourceNames.2"
+msgstr "Ore"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gResourceNames.3"
+msgstr "Sulfur"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gResourceNames.4"
+msgstr "Crystal"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gResourceNames.5"
+msgstr "Gems"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gResourceNames.6"
+msgstr "Gold"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gScoreLabels.0"
+msgstr "Days Spent:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gScoreLabels.1"
+msgstr "Base Score:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gScoreLabels.2"
+msgstr "Difficulty Rating:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gScoreLabels.3"
+msgstr "Final Score:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gScoreLabels.4"
+msgstr "Ranking:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupBaudHelp.0"
+msgstr "Use a 2400 baud connection speed. \n\nNote: For a 14400 baud modem, use the 19200 baud speed.  For a 28800 baud modem, use the 38400 baud speed."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupBaudHelp.1"
+msgstr "Use a 9600 baud connection speed. \n\nNote: For a 14400 baud modem, use the 19200 baud speed.  For a 28800 baud modem, use the 38400 baud speed."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupBaudHelp.2"
+msgstr "Use a 19200 baud connection speed.\n\nNote: For a 14400 baud modem, use the 19200 baud speed.  For a 28800 baud modem, use the 38400 baud speed."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupBaudHelp.3"
+msgstr "Use a 38400 baud connection speed.\n\nNote: For a 14400 baud modem, use the 19200 baud speed.  For a 28800 baud modem, use the 38400 baud speed."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupBaudHelp.4"
+msgstr "Cancel back to the main menu."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupCampaignGameHelp.0"
+msgstr "Play the role of Lord Ironfist."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupCampaignGameHelp.1"
+msgstr "Play the role of Lord Slayer."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupCampaignGameHelp.2"
+msgstr "Play the role of Queen Lamanda."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupCampaignGameHelp.3"
+msgstr "Play the role of Lord Alamar."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupCampaignGameHelp.4"
+msgstr "Cancel back to the main menu."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupComPortHelp.0"
+msgstr "Use COM Port 1 for the modem connection."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupComPortHelp.1"
+msgstr "Use COM Port 2 for the modem connection."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupComPortHelp.2"
+msgstr "Use COM Port 3 for the modem connection."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupComPortHelp.3"
+msgstr "Use COM Port 4 for the modem connection."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupComPortHelp.4"
+msgstr "Cancel back to the main menu."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupDCBaudHelp.0"
+msgstr "Use a 2400 baud connection speed. \n\nNote: In general, computers with the older UART 8250 chip should use 19200 baud, and computers with the newer UART 16550 chip should use 38400 baud.  When in doubt, try slower speeds first, and if they work, then try faster speeds.  Most computers made in 1994 or later have a UART 16550 chip."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupDCBaudHelp.1"
+msgstr "Use a 9600 baud connection speed. \n\nNote: In general, computers with the older UART 8250 chip should use 19200 baud, and computers with the newer UART 16550 chip should use 38400 baud.  When in doubt, try slower speeds first, and if they work, then try faster speeds.  Most computers made in 1994 or later have a UART 16550 chip."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupDCBaudHelp.2"
+msgstr "Use a 19200 baud connection speed.\n\nNote: In general, computers with the older UART 8250 chip should use 19200 baud, and computers with the newer UART 16550 chip should use 38400 baud.  When in doubt, try slower speeds first, and if they work, then try faster speeds.  Most computers made in 1994 or later have a UART 16550 chip."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupDCBaudHelp.3"
+msgstr "Use a 38400 baud connection speed.\n\nNote: In general, computers with the older UART 8250 chip should use 19200 baud, and computers with the newer UART 16550 chip should use 38400 baud.  When in doubt, try slower speeds first, and if they work, then try faster speeds.  Most computers made in 1994 or later have a UART 16550 chip."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupDCBaudHelp.4"
+msgstr "Cancel back to the main menu."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupDCComPortHelp.0"
+msgstr "Use COM Port 1 for the direct connection."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupDCComPortHelp.1"
+msgstr "Use COM Port 2 for the direct connection."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupDCComPortHelp.2"
+msgstr "Use COM Port 3 for the direct connection."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupDCComPortHelp.3"
+msgstr "Use COM Port 4 for the direct connection."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupDCComPortHelp.4"
+msgstr "Cancel back to the main menu."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupDCGameHelp.0"
+msgstr "The host sets up the game options."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupDCGameHelp.1"
+msgstr "The guest waits for the host to set up the game."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupDCGameHelp.2"
+msgstr "Change your direct connect port configuration."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupDCGameHelp.3"
+msgstr "Cancel back to the main menu."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupGameHelp.0"
+msgstr "A single player game playing out a single map."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupGameHelp.1"
+msgstr "A single player game playing through a series of maps."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupGameHelp.2"
+msgstr "A multi-player game, with several human players competing against each other on a single map."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupGameHelp.3"
+msgstr "Cancel back to the main menu."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupHotSeatGameHelp.0"
+msgstr "Play with 2 human players, and optionally, up to 2 additional computer players."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupHotSeatGameHelp.1"
+msgstr "Play with 3 human players, and optionally 1 computer player."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupHotSeatGameHelp.2"
+msgstr "Play with 4 human players."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupHotSeatGameHelp.3"
+msgstr "Cancel back to the main menu."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupModemGameHelp.0"
+msgstr "The host sets up the game options, chooses the number to dial, and places the call."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupModemGameHelp.1"
+msgstr "The guest waits for the host to call and set up the game."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupModemGameHelp.2"
+msgstr "Change your modem configuration."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupModemGameHelp.3"
+msgstr "Cancel back to the main menu."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupMultiPlayerGameHelp.0"
+msgstr "Play a Hot Seat game, where 2 to 4 players play around the same computer, switching into the 'Hot Seat' when it is their turn."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupMultiPlayerGameHelp.1"
+msgstr "Play a network game, where 2 players use their own computers connected through a LAN (Local Area Network)."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupMultiPlayerGameHelp.2"
+msgstr "Play a modem game, where 2 players use ther own computers connected over the phone lines using modems."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupMultiPlayerGameHelp.3"
+msgstr "Play a direct connect game, where 2 players use ther own computers directly connected through their serial port by a null modem."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupMultiPlayerGameHelp.4"
+msgstr "Cancel back to the main menu."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupNetworkGameHelp.0"
+msgstr "The host sets up the game options.  There can only be one host per network game."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupNetworkGameHelp.1"
+msgstr "The guest waits for the host to set up the game, then is automatically added in.  There can only be one guest per network game."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSetupNetworkGameHelp.2"
+msgstr "Cancel back to the main menu."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpeedText.1"
+msgstr "Slow"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpeedText.2"
+msgstr "Medium"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpeedText.3"
+msgstr "Fast"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpeedText.4"
+msgstr "Blazing"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.0"
+msgstr "Fireball\n\nCauses a giant fireball to strike the selected area, damaging all nearby creatures."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.1"
+msgstr "Lightning Bolt\n\nCauses a bolt of electrical energy to strike the selected creature."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.2"
+msgstr "Teleport\n\nTeleports the creature you select to any open position on the battlefield."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.3"
+msgstr "Cure\n\nRemoves all negative spells cast upon your forces."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.4"
+msgstr "Resurrect\n\nResurrects creatures from a damaged monster group."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.5"
+msgstr "Haste\n\nIncreases the speed of any creature to 'very fast'."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.6"
+msgstr "Slow\n\nSlows down even the fastest enemy creature."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.7"
+msgstr "Blind\n\nClouds the affected creatures' eyes, preventing them from moving."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.8"
+msgstr "Bless\n\nCauses the selected creatures to inflict maximum damage."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.9"
+msgstr "Protection\n\nMagically increases the defense skill of the selected creatures."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.10"
+msgstr "Curse\n\nCauses the selected creatures to inflict minimum damage."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.11"
+msgstr "Turn Undead\n\nInstantly sends a group of ghosts back to the grave."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.12"
+msgstr "Anti-Magic\n\nPrevents harmful magic against the selected creatures."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.13"
+msgstr "Dispel Magic\n\nRemoves all magic spells from all parties in the battle."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.14"
+msgstr "Berserk\n\nCauses a creature to attack its nearest neighbor."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.15"
+msgstr "Armageddon\n\nHoly terror strikes the battlefield, causing severe damage to all creatures."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.16"
+msgstr "Elemental Storm\n\nMagical elements pour down on the battlefield, damaging all creatures."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.17"
+msgstr "Meteor Shower\n\nA rain of rocks strikes an area of the battlefield, damaging all nearby creatures."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.18"
+msgstr "Paralyze\n\nThe targeted creatures are paralyzed, unable to move or retaliate."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.19"
+msgstr "View Mines\n\nCauses all mines across the land to become visible."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.20"
+msgstr "View Resources\n\nCauses all resources across the land to become visible."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.21"
+msgstr "View Artifacts\n\nCauses all artifacts across the land to become visible."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.22"
+msgstr "View Towns\n\nCauses all towns and castles across the land to become visible."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.23"
+msgstr "View Heroes\n\nCauses all Heroes across the land to become visible."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.24"
+msgstr "View All\n\nCauses the entire land to become visible."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.25"
+msgstr "Identify Hero\n\nAllows the caster to view detailed information on enemy Heroes."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.26"
+msgstr "Summon Boat\n\nSummons the nearest unoccupied, friendly boat to an adjacent shore location.  A friendly boat is one which you just built or were the most recent player to occupy."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.27"
+msgstr "Dimension Door\n\nAllows the caster to magically transport himself to a nearby location."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.28"
+msgstr "Town Gate\n\nReturns the caster to any town or castle currently owned."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellHelp.0"
+msgstr "View previous page"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellHelp.1"
+msgstr "View next page"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellHelp.2"
+msgstr "View adventure spells"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellHelp.3"
+msgstr "View combat spells"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellHelp.4"
+msgstr "Close Spellbook"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellHelp.5"
+msgstr "View Spells"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellHelp.6"
+msgstr "Select Spell"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellHelp.7"
+msgstr "View Combat Spells"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellNames.0"
+msgstr "Fireball"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellNames.1"
+msgstr "Lightning Bolt"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellNames.2"
+msgstr "Teleport"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellNames.3"
+msgstr "Cure"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellNames.4"
+msgstr "Resurrect"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellNames.5"
+msgstr "Haste"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellNames.6"
+msgstr "Slow"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellNames.7"
+msgstr "Blind"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellNames.8"
+msgstr "Bless"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellNames.9"
+msgstr "Protection"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellNames.10"
+msgstr "Curse"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellNames.11"
+msgstr "Turn Undead"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellNames.12"
+msgstr "Anti-Magic"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellNames.13"
+msgstr "Dispel Magic"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellNames.14"
+msgstr "Berzerker"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellNames.15"
+msgstr "Armageddon"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellNames.16"
+msgstr "Storm"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellNames.17"
+msgstr "Meteor Shower"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellNames.18"
+msgstr "Paralyze"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellNames.19"
+msgstr "View Mines"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellNames.20"
+msgstr "View Resources"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellNames.21"
+msgstr "View Artifacts"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellNames.22"
+msgstr "View Towns"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellNames.23"
+msgstr "View Heroes"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellNames.24"
+msgstr "View All"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellNames.25"
+msgstr "Identify Hero"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellNames.26"
+msgstr "Summon Boat"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellNames.27"
+msgstr "Dimension Door"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gSpellNames.28"
+msgstr "Town Gate"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gStatDesc.0"
+msgstr "Your attack skill is a bonus added to each creature's attack skill."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gStatDesc.1"
+msgstr "Your defense skill is a bonus added to each creature's defense skill."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gStatDesc.2"
+msgstr "Your spell power determines the length or power of a spell."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gStatDesc.3"
+msgstr "Your knowledge is the number of each spell you are able to memorize."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gStatDesc.4"
+msgstr "Your siege skill is the number of times your hero can shoot the catapult in one turn while attempting to siege a castle."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gStatNames.0"
+msgstr "Attack Skill"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gStatNames.1"
+msgstr "Defense Skill"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gStatNames.2"
+msgstr "Spell Power"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gStatNames.3"
+msgstr "Knowledge"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gStatNames.4"
+msgstr "Siege Skill"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTerrainNames.0"
+msgstr "Ocean"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTerrainNames.1"
+msgstr "Grass"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTerrainNames.2"
+msgstr "Snow"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTerrainNames.3"
+msgstr "Swamp"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTerrainNames.4"
+msgstr "Lava"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTerrainNames.5"
+msgstr "Desert"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTerrainNames.6"
+msgstr "Dirt"
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gTownCommand.0"
+msgstr "Redistribute %s army"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownCommand.1"
+msgstr "Cannot combine Hero's last army"
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gTownCommand.2"
+msgstr "Combine %s armies"
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gTownCommand.3"
+msgstr "Redistribute %s army"
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gTownCommand.4"
+msgstr "View %s"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownCommand.5"
+msgstr "Cannot move last army to garrison."
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gTownCommand.6"
+msgstr "Move %s"
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gTownCommand.7"
+msgstr "Exchange %s with %s"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownCommand.8"
+msgstr "Exit town"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownCommand.10"
+msgstr "Kingdom Overview"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownCommand.11"
+msgstr "Empty"
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gTownCommand.12"
+msgstr "Select %s"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownCommand.13"
+msgstr "View Hero"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownCommand.14"
+msgstr "Mage Guild"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownCommand.15"
+msgstr "Thieves' Guild"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownCommand.16"
+msgstr "Tavern"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownCommand.17"
+msgstr "Dock"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownCommand.18"
+msgstr "Well"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownCommand.19"
+msgstr "Tent"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownCommand.20"
+msgstr "Castle"
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gTownCommand.21"
+msgstr "Recruit %s"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownNames.0"
+msgstr "Blackridge"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownNames.1"
+msgstr "Pinehurst"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownNames.2"
+msgstr "Woodhaven"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownNames.3"
+msgstr "Hillstone"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownNames.4"
+msgstr "Whiteshield"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownNames.5"
+msgstr "Bloodreign"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownNames.6"
+msgstr "Dragontooth"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownNames.7"
+msgstr "Greywind"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownNames.8"
+msgstr "Blackwind"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownNames.9"
+msgstr "Portsmith"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownNames.10"
+msgstr "Middle Gate"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownNames.11"
+msgstr "Tundara"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownNames.12"
+msgstr "Vulcania"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownNames.13"
+msgstr "Sansobar"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownNames.14"
+msgstr "Atlantium"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownNames.15"
+msgstr "Baywatch"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownNames.16"
+msgstr "Wildabar"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownNames.17"
+msgstr "Fountainhead"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownNames.18"
+msgstr "Vertigo"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownNames.19"
+msgstr "Winterkill"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownNames.20"
+msgstr "Nightshadow"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownNames.21"
+msgstr "Sandcaster"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownNames.22"
+msgstr "Lakeside"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownNames.23"
+msgstr "Olympus"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownNames.24"
+msgstr "Necropolis"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownNames.25"
+msgstr "Burlock"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownNames.26"
+msgstr "Xabran"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownNames.27"
+msgstr "Dragadune"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownNames.28"
+msgstr "Alamar"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownNames.29"
+msgstr "Kalindra"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownNames.30"
+msgstr "Blackfang"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownNames.31"
+msgstr "Basenji"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownNames.32"
+msgstr "Algary"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownNames.33"
+msgstr "Sorpigal"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownNames.34"
+msgstr "Dusk"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gTownNames.35"
+msgstr "Erliquin"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gViewGeneralHelp.0"
+msgstr "Stop Catapult"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gViewGeneralHelp.1"
+msgstr "Cast Spell"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gViewGeneralHelp.2"
+msgstr "Retreat"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gViewGeneralHelp.3"
+msgstr "Surrender"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gViewGeneralHelp.4"
+msgstr "Cancel"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gViewGeneralHelp.5"
+msgstr "General's Options"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gViewGeneralLabels.0"
+msgstr "Attack: "
+
+#: src/SOURCE/KB.cpp
+msgid "table.gViewGeneralLabels.1"
+msgstr "Defense: "
+
+#: src/SOURCE/KB.cpp
+msgid "table.gViewGeneralLabels.2"
+msgstr "Spell Power: "
+
+#: src/SOURCE/KB.cpp
+msgid "table.gViewGeneralLabels.3"
+msgstr "Knowledge: "
+
+#: src/SOURCE/KB.cpp
+msgid "table.gViewGeneralLabels.4"
+msgstr "Morale: "
+
+#: src/SOURCE/KB.cpp
+msgid "table.gViewGeneralLabels.5"
+msgstr "Luck: "
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWeekNames.0"
+msgstr "Squirrel"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWeekNames.1"
+msgstr "Rabbit"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWeekNames.2"
+msgstr "Gopher"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWeekNames.3"
+msgstr "Badger"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWeekNames.4"
+msgstr "Rat"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWeekNames.5"
+msgstr "Eagle"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWeekNames.6"
+msgstr "Weasel"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWeekNames.7"
+msgstr "Raven"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWeekNames.8"
+msgstr "Mongoose"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWeekNames.9"
+msgstr "Dog"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWeekNames.10"
+msgstr "Aardvark"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWeekNames.11"
+msgstr "Lizard"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWeekNames.12"
+msgstr "Tortoise"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWeekNames.13"
+msgstr "Hedgehog"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWeekNames.14"
+msgstr "Condor"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.0"
+msgstr "Buy Spellbook:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.1"
+msgstr "Resource cost:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.2"
+msgstr "Build improvement:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.3"
+msgstr "Castle Options:  Town Improvements/Recruit Hero"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.4"
+msgstr "Mage Guild"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.5"
+msgstr "Thieves' Guild"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.6"
+msgstr "Tavern"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.7"
+msgstr "Shipyard"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.8"
+msgstr "Well"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.9"
+msgstr "Recruit Hero"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.10"
+msgstr "Music"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.11"
+msgstr "Effects"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.12"
+msgstr "Sound\nQuality"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.13"
+msgstr "Speed"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.14"
+msgstr "Show Path"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.15"
+msgstr "View Enemy\nMovement"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.16"
+msgstr "Dimension Door:\nSelect Destination"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.17"
+msgstr "Attack Skill"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.18"
+msgstr "Defense Skill"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.19"
+msgstr "Spell Power"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.20"
+msgstr "Knowledge"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.21"
+msgstr "The above spells have been added to your book."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.22"
+msgstr "Choose Game Difficulty:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.23"
+msgstr "Easy"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.24"
+msgstr "Normal"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.25"
+msgstr "Hard"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.26"
+msgstr "Expert"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.27"
+msgstr "Customize Opponents:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.28"
+msgstr "Normal"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.29"
+msgstr "Normal"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.30"
+msgstr "Normal"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.31"
+msgstr "Choose Color:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.32"
+msgstr "King of the Hill:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.33"
+msgstr "Choose Scenario:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.34"
+msgstr "Heroes"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.35"
+msgstr "Castles"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.36"
+msgstr "Towns"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.37"
+msgstr "Mines"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.38"
+msgstr "Treasury"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.39"
+msgstr "Total Gold Per Day:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.40"
+msgstr "Attack:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.41"
+msgstr "Defense:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.42"
+msgstr "Spell Power:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.43"
+msgstr "Knowledge:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.44"
+msgstr "Defenders:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.45"
+msgstr "Recruit Hero"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.46"
+msgstr "Build a new ship:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.47"
+msgstr "Resource cost:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.48"
+msgstr "Attack Skill"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.49"
+msgstr "Defense Skill"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.50"
+msgstr "Spell Power"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.51"
+msgstr "Knowledge  "
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.52"
+msgstr "Tavern"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.53"
+msgstr "The tavern increases the morale of all garrisoned troops."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.54"
+msgstr "Thieves' Guild: Player Rankings"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.55"
+msgstr "First"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.56"
+msgstr "Second"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.57"
+msgstr "Third"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.58"
+msgstr "Fourth"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.59"
+msgstr "Number of Towns:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.60"
+msgstr "Number of Castles:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.61"
+msgstr "Number of Heroes:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.62"
+msgstr "Gold in Treasury:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.63"
+msgstr "Wood, Crystal & Ore:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.64"
+msgstr "Gems, Sulfur & Mercury:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.65"
+msgstr "Number Obelisks Found:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.66"
+msgstr "Total Army Strength:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.67"
+msgstr "World Map"
+
+#: src/SOURCE/KB.cpp
+msgid "table.musicQualityText.0"
+msgstr "8 Bit Mono"
+
+#: src/SOURCE/KB.cpp
+msgid "table.musicQualityText.1"
+msgstr "8 Bit Stereo"
+
+#: src/SOURCE/KB.cpp
+msgid "table.musicQualityText.2"
+msgstr "CD Stereo"
+
+#: src/SOURCE/KB.cpp
+msgid "table.onOffText.0"
+msgstr "Off"
+
+#: src/SOURCE/KB.cpp
+msgid "table.onOffText.1"
+msgstr "On"
+
+#: src/SOURCE/KB.cpp
+msgid "table.onOffText.2"
+msgstr "On\nVolume 9"
+
+#: src/SOURCE/KB.cpp
+msgid "table.onOffText.3"
+msgstr "On\nVolume 8"
+
+#: src/SOURCE/KB.cpp
+msgid "table.onOffText.4"
+msgstr "On\nVolume 7"
+
+#: src/SOURCE/KB.cpp
+msgid "table.onOffText.5"
+msgstr "On\nVolume 6"
+
+#: src/SOURCE/KB.cpp
+msgid "table.onOffText.6"
+msgstr "On\nVolume 5"
+
+#: src/SOURCE/KB.cpp
+msgid "table.onOffText.7"
+msgstr "On\nVolume 4"
+
+#: src/SOURCE/KB.cpp
+msgid "table.onOffText.8"
+msgstr "On\nVolume 3"
+
+#: src/SOURCE/KB.cpp
+msgid "table.onOffText.9"
+msgstr "On\nVolume 2"
+
+#: src/SOURCE/KB.cpp
+msgid "table.onOffText.10"
+msgstr "On\nVolume 1"
+
+#: src/SOURCE/KB.cpp
+msgid "table.walkSpeedText.0"
+msgstr "Walk"
+
+#: src/SOURCE/KB.cpp
+msgid "table.walkSpeedText.1"
+msgstr "Trot"
+
+#: src/SOURCE/KB.cpp
+msgid "table.walkSpeedText.2"
+msgstr "Canter"
+
+#: src/SOURCE/KB.cpp
+msgid "table.walkSpeedText.3"
+msgstr "Gallop"
+
+#: src/SOURCE/KB.cpp
+msgid "table.walkSpeedText.4"
+msgstr "Jump"
+
+#: src/SOURCE/TOWNMGR.cpp
+msgid "town.boat.unavailable"
+msgstr "Cannot build another boat."
+
+#: src/SOURCE/TOWNMGR.cpp
+#, c-format
+msgid "town.build.mage_guild_level"
+msgstr "Mage Guild, Level %d"
+
+#: src/SOURCE/TOWNMGR.cpp
+msgid "town.build.requires"
+msgstr "\n\nRequires:"
+
+#: src/SOURCE/TOWNMGR.cpp
+msgid "town.mage.spells"
+msgstr "The above spells are available here."
+
+#: src/SOURCE/TOWNMGR.cpp
+msgid "town.screen.title"
+msgstr "Town Screen"
+
+#: src/SOURCE/TOWNMGR.cpp
+msgid "town.spellbook.no_space"
+msgstr "You must purchase a spell book to use the mage guild, but you currently have no room for a spell book.  Try giving one of your artifacts to another hero."
+
+#: src/SOURCE/TOWNMGR.cpp
+msgid "town.split.garrison"
+msgstr "Garrison"
+
+#: src/SOURCE/TOWNMGR.cpp
+msgid "town.split.hero_army"
+msgstr "Hero's Army"
+
+#: src/SOURCE/TOWNMGR.cpp
+#, c-format
+msgid "town.split.prompt"
+msgstr "Move how many %s troops from %s to %s?"
+
+#: src/SOURCE/TOWNMGR.cpp
+msgid "town.well.empty"
+msgstr "Available:\nNONE\nGrowth Rate:\nN/A"
+
+#: src/SOURCE/TOWNMGR.cpp
+#, c-format
+msgid "town.well.growth"
+msgstr "Available:\n%d\nGrowth Rate:\n%d/week"
+
+#: src/SOURCE/GAME.cpp
+#, c-format
+msgid "turn.player.prompt"
+msgstr "%s player turn."
+
+#: src/SOURCE/GAME.cpp
+msgid "ui.new_game.difficulty_rating"
+msgstr "Difficulty Rating:"
+
+#: src/SOURCE/kbwin.cpp
+msgid "window.gAppName"
+msgstr "Heroes"
+
+#: src/SOURCE/kbwin.cpp
+msgid "window.gTitle"
+msgstr "Heroes of Might and Magic"

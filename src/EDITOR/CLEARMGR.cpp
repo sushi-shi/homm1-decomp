@@ -42,7 +42,7 @@ i16 clearManager::Open(i16 priority) {
         ICON_WIDGET_DRAW,
         1
     );
-    gpEditManager->m_window->AddWidget(m_panel, -1);
+    gEditManager->m_window->AddWidget(m_panel, -1);
     m_optionsButton = new button(
         CLEAR_OPTIONS_BUTTON_X,
         CLEAR_OPTIONS_BUTTON_Y,
@@ -56,8 +56,8 @@ i16 clearManager::Open(i16 priority) {
         EDITOR_TOOL_OPTIONS_BUTTON,
         WIDGET_KIND_DEFAULT
     );
-    gpEditManager->m_window->AddWidget(m_optionsButton, -1);
-    gpEditManager->m_window->DrawWindow();
+    gEditManager->m_window->AddWidget(m_optionsButton, -1);
+    gEditManager->m_window->DrawWindow();
     m_messageMask = BASE_MANAGER_ACCEPT_EXECUTIVE;
     m_priority = priority;
     m_active = 1;
@@ -67,14 +67,14 @@ i16 clearManager::Open(i16 priority) {
 
 VA(0x004011cc, 0xc5)
 void clearManager::Close(void) {
-    gpEditManager->m_window->RemoveWidget(m_optionsButton);
+    gEditManager->m_window->RemoveWidget(m_optionsButton);
     delete m_optionsButton;
     if (m_panel) {
-        gpEditManager->m_window->RemoveWidget(m_panel);
+        gEditManager->m_window->RemoveWidget(m_panel);
         delete m_panel;
         m_panel = NULL;
     }
-    gpEditManager->m_window->DrawWindow();
+    gEditManager->m_window->DrawWindow();
     m_active = 0;
 }
 
@@ -104,50 +104,48 @@ i16 clearManager::Main(tag_message& message) {
                                 dragMode = CLEAR_DRAG_CELLS;
                             else
                                 dragMode = CLEAR_DRAG_RECTANGLE;
-                            gpMouseManager->MouseCoords(anchorX, anchorY);
-                            gpEditManager->ScreenToCell(anchorX, anchorY);
+                            gMouseManager->MouseCoords(anchorX, anchorY);
+                            gEditManager->ScreenToCell(anchorX, anchorY);
                             gSelectionX = -1;
-                            anchorX += gpEditManager->m_viewX;
-                            anchorY += gpEditManager->m_viewY;
-                            gpEditManager->SaveUndo();
-                            event = gpInputManager->GetEvent();
+                            anchorX += gEditManager->m_viewX;
+                            anchorY += gEditManager->m_viewY;
+                            gEditManager->SaveUndo();
+                            event = gInputManager->GetEvent();
                             while (event.type != MESSAGE_LEFT_BUTTON_UP
                                    && event.type != MESSAGE_RIGHT_BUTTON_UP) {
                                 Process1WindowsMessage();
-                                gpMouseManager->Main(event);
+                                gMouseManager->Main(event);
                                 if (event.type == MESSAGE_MOUSE_MOVE) {
-                                    gpMouseManager->MouseCoords(x, y);
-                                    gpEditManager->ScreenToCell(x, y);
-                                    x += gpEditManager->m_viewX;
-                                    y += gpEditManager->m_viewY;
+                                    gMouseManager->MouseCoords(x, y);
+                                    gEditManager->ScreenToCell(x, y);
+                                    x += gEditManager->m_viewX;
+                                    y += gEditManager->m_viewY;
                                     if (x != m_lastX || y != m_lastY) {
                                         m_lastX = x;
                                         m_lastY = y;
                                         switch (dragMode) {
                                             case CLEAR_DRAG_CELLS:
-                                                gpEditManager
-                                                    ->ClearArea(x, y, 1, 1, gClearFlags, 0);
+                                                gEditManager->ClearArea(x, y, 1, 1, gClearFlags, 0);
                                                 break;
                                             case CLEAR_DRAG_RECTANGLE:
                                                 gSelectionX = x < anchorX ? x : anchorX;
                                                 gSelectionY = y < anchorY ? y : anchorY;
                                                 gSelectionWidth = abs(x - anchorX) + 1;
                                                 gSelectionHeight = abs(y - anchorY) + 1;
-                                                gpEditManager->DrawMap();
-                                                gpEditManager->UpdateMapView();
-                                                gpEditManager->DrawRadar(1);
+                                                gEditManager->DrawMap();
+                                                gEditManager->UpdateMapView();
+                                                gEditManager->DrawRadar(1);
                                                 break;
                                         }
                                     }
                                 }
-                                event = gpInputManager->GetEvent();
+                                event = gInputManager->GetEvent();
                             }
                             if (dragMode == CLEAR_DRAG_RECTANGLE) {
                                 if (gSelectionX < 0)
-                                    gpEditManager
-                                        ->ClearArea(anchorX, anchorY, 1, 1, gClearFlags, 0);
+                                    gEditManager->ClearArea(anchorX, anchorY, 1, 1, gClearFlags, 0);
                                 else
-                                    gpEditManager->ClearArea(
+                                    gEditManager->ClearArea(
                                         gSelectionX,
                                         gSelectionY,
                                         gSelectionWidth,
@@ -157,12 +155,12 @@ i16 clearManager::Main(tag_message& message) {
                                     );
                             }
                             gSelectionX = gSelectionY = -1;
-                            gpEditManager->DrawMap();
-                            gpEditManager->UpdateMapView();
-                            gpEditManager->DrawRadar(1);
+                            gEditManager->DrawMap();
+                            gEditManager->UpdateMapView();
+                            gEditManager->DrawRadar(1);
                             m_lastY = CLEAR_MANAGER_NO_CELL;
                             m_lastX = CLEAR_MANAGER_NO_CELL;
-                            gpEditManager->m_mapChanged = 1;
+                            gEditManager->m_mapChanged = 1;
                             break;
                     }
                     break;
@@ -182,18 +180,18 @@ i16 clearManager::Main(tag_message& message) {
                     break;
                 case WIDGET_COMMAND_HOVER:
                     if (message.id != EDITOR_MAP_WIDGET
-                        && message.id == gpEditManager->m_lastCommandId)
+                        && message.id == gEditManager->m_lastCommandId)
                         return 1;
-                    gpEditManager->m_lastCommandId = message.id;
+                    gEditManager->m_lastCommandId = message.id;
                     switch (message.id) {
                         case EDITOR_MAP_WIDGET:
-                            gpMouseManager->MouseCoords(newX, newY);
-                            gpEditManager->ScreenToCell(newX, newY);
-                            if (gpEditManager->m_cursorX != newX
-                                || gpEditManager->m_cursorY != newY) {
-                                gpEditManager->m_cursorX = newX;
-                                gpEditManager->m_cursorY = newY;
-                                gpEditManager->UpdateCursor();
+                            gMouseManager->MouseCoords(newX, newY);
+                            gEditManager->ScreenToCell(newX, newY);
+                            if (gEditManager->m_cursorX != newX
+                                || gEditManager->m_cursorY != newY) {
+                                gEditManager->m_cursorX = newX;
+                                gEditManager->m_cursorY = newY;
+                                gEditManager->UpdateCursor();
                             }
                             break;
                     }

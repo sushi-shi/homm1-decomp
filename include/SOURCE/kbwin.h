@@ -70,7 +70,7 @@ H1_ENUM_BEGIN(CdSetupResult)
 H1_ENUM_END(CdSetupResult)
 
 H1_ENUM_CONST_BEGIN(PrefsConstant)
-    // ResizeWindow keeps the window's current left/top for this x/y.
+// ResizeWindow keeps the window's current left/top for this x/y.
     KBWIN_KEEP_POSITION = -1,
     DEFAULT_WINDOW_ORIGIN = 10,
     DEFAULT_SMALL_WINDOW_WIDTH = 480,
@@ -103,16 +103,23 @@ H1_ENUM_CONST_BEGIN(PrefsConstant)
     KBWIN_MIN_HEIGHT = 160
 H1_ENUM_CONST_END(PrefsConstant)
 
-extern HINSTANCE hInstApp;
+#define gAppInstance hInstApp // spelling fixes .bss order
+extern HINSTANCE gAppInstance;
 extern HANDLE gEventHandle;
+#define gCommandLine gCommandParams // spelling fixes .bss order
 extern char gCommandLine[];
-extern u8 bProcessMessage[];
+#define gProcessMessage bProcessMessage // spelling fixes .bss order
+extern u8 gProcessMessage[];
 extern char gAppName[];
 extern char gTitle[];
-extern i32 lTemp;
-extern struct tagRECT rcTemp;
+#define gTempValue lTemp // spelling fixes .bss order
+extern i32 gTempValue;
+#define gTempRect rcTemp // spelling fixes .bss order
+extern struct tagRECT gTempRect;
+#define gTempX iTempX // spelling fixes .bss order
 extern i32 gTempX;
-extern i32 iTempY;
+#define gTempY iTempY // spelling fixes .bss order
+extern i32 gTempY;
 
 #pragma pack(push, 1)
 struct SMenuEnableStatus {
@@ -130,7 +137,7 @@ struct WindowTextEntry {
 };
 #pragma pack(pop)
 
-extern HMENU hmnuCurrent;
+extern HMENU gCurrentMenu;
 i32 AppCommand(HWND window, u32 message, u32 messageParam, i32 messageData);
 i32 AppIdle(void);
 void AppExit(void);
@@ -150,12 +157,12 @@ void SetWinText(class heroWindow* window, i16 id);
 void UpdateDfltMenu(HMENU menu);
 extern i32 gForegroundApp;
 extern i32 gNoDialogMenusOn;
-extern HMENU hmnuApp;
+extern HMENU gAppMenu;
 // KB.cpp owns the per-screen menus and loads them in InitVars.
-extern HMENU hmnuAdv;
-extern HMENU hmnuDflt;
-extern HMENU hmnuCmbt;
-extern HMENU hmnuTown;
+extern HMENU gAdventureMenu;
+extern HMENU gDefaultMenu;
+extern HMENU gCombatMenu;
+extern HMENU gTownMenu;
 extern i32 gClosingApp;
 extern i32 gLastGetMessage;
 extern i32 gLastAilServe;
@@ -164,8 +171,9 @@ void Process1WindowsMessage();
 void SetNoDialogMenus(i32 menusEnabled);
 char* FindLastToken(char* text, char token);
 void SetMenus(HMENU menu, i32 enabled);
-extern HWND hwndApp;
-extern i32 iMainWinScreenWidth;
+extern HWND gAppWindow;
+extern i32 gMainWinScreenWidth;
+#define gMainWinScreenHeight iMainWinScreenHeight // spelling fixes .bss order
 extern i32 gMainWinScreenHeight;
 void ProcessAssert(i32 condition, char* file, i32 line);
 #define H1_ASSERT(condition) ProcessAssert((condition), __FILE__, __LINE__)
