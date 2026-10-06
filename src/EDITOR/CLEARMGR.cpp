@@ -5,6 +5,7 @@
 
 #include <BASE/button.h>
 #include <BASE/heroWindow.h>
+#include <BASE/icon.h>
 #include <BASE/iconWidget.h>
 #include <BASE/inputManager.h>
 #include <BASE/message.h>
@@ -37,12 +38,12 @@ i16 clearManager::Open(i16 priority) {
         EDIT_TOOL_PANEL_HEIGHT,
         "buttons.icn",
         EDIT_FRAME_CLEAR_PANEL,
-        0,
+        ICON_DRAW_NORMAL,
         WIDGET_ID_NONE,
         ICON_WIDGET_DRAW,
         1
     );
-    gEditManager->m_window->AddWidget(m_panel, -1);
+    gEditManager->m_window->AddWidget(m_panel, WINDOW_Z_ORDER_APPEND);
     m_optionsButton = new button(
         CLEAR_OPTIONS_BUTTON_X,
         CLEAR_OPTIONS_BUTTON_Y,
@@ -56,7 +57,7 @@ i16 clearManager::Open(i16 priority) {
         EDIT_CONTROL_TOOL_OPTIONS,
         WIDGET_KIND_DEFAULT
     );
-    gEditManager->m_window->AddWidget(m_optionsButton, -1);
+    gEditManager->m_window->AddWidget(m_optionsButton, WINDOW_Z_ORDER_APPEND);
     gEditManager->m_window->DrawWindow();
     m_messageMask = BASE_MANAGER_ACCEPT_EXECUTIVE;
     m_priority = priority;
@@ -91,7 +92,7 @@ i16 clearManager::Main(tag_message& message) {
     tag_message event;
 
     if (!(message.type & m_dispatchMask))
-        return 0;
+        return MESSAGE_DISPATCH_CONTINUE;
     switch (message.type) {
         case MESSAGE_WIDGET:
             switch (message.command) {
@@ -106,7 +107,7 @@ i16 clearManager::Main(tag_message& message) {
                                 dragMode = CLEAR_DRAG_RECTANGLE;
                             gMouseManager->MouseCoords(anchorX, anchorY);
                             gEditManager->ScreenToCell(anchorX, anchorY);
-                            gSelectionX = -1;
+                            gSelectionX = EDIT_NO_CELL;
                             anchorX += gEditManager->m_viewX;
                             anchorY += gEditManager->m_viewY;
                             gEditManager->SaveUndo();
@@ -154,7 +155,7 @@ i16 clearManager::Main(tag_message& message) {
                                         0
                                     );
                             }
-                            gSelectionX = gSelectionY = -1;
+                            gSelectionX = gSelectionY = EDIT_NO_CELL;
                             gEditManager->DrawMap();
                             gEditManager->UpdateMapView();
                             gEditManager->DrawRadar(1);
@@ -181,7 +182,7 @@ i16 clearManager::Main(tag_message& message) {
                 case WIDGET_COMMAND_HOVER:
                     if (message.id != EDIT_CONTROL_MAP
                         && message.id == gEditManager->m_lastCommandId)
-                        return 1;
+                        return MESSAGE_DISPATCH_CONSUME;
                     gEditManager->m_lastCommandId = message.id;
                     switch (message.id) {
                         case EDIT_CONTROL_MAP:
@@ -195,9 +196,9 @@ i16 clearManager::Main(tag_message& message) {
                             }
                             break;
                     }
-                    return 1;
+                    return MESSAGE_DISPATCH_CONSUME;
             }
             break;
     }
-    return 0;
+    return MESSAGE_DISPATCH_CONTINUE;
 }

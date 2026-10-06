@@ -1,1 +1,13 @@
 kind	owner	old	new	evidence
+enum	EventsObjectType	EVENTS_OBJECT_CASTLE/EVENTS_OBJECT_CASTLE_GATE	MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_TOWN/RANDOM_CASTLE	0xc0/0xc1 are the event bit on map-file codes 64/65 (game::ProcessRandomObjects' random town and castle), not a castle and its gate; the copies of the game's trigger codes are retired
+enum	EventsObjectType	EVENTS_OBJECT_MONSTER_2..6/EVENTS_OBJECT_HERO	MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_MONSTER(_WEAK.._VERY_STRONG)/MAP_FILE_OBJECT_HERO	0xbf, 0xc3..0xc6 and 0xc7 are the random-monster bands and the placed hero's map-file codes with the event bit (ProcessOnMapHeroes reads the hero record)
+enum	RandomMapConstant	RANDOM_MAP_BARBARIAN_CASTLE_FRAME/RANDOM_MAP_SORCERESS_CASTLE_FRAME	EDIT_CASTLE_FRAME(TOWN_TYPE_SORCERESS)/EDIT_CASTLE_FRAME(TOWN_TYPE_BARBARIAN)	town32.icn's race blocks follow TownType (WriteTowns writes objectIndex / TOWN_RACE_FRAME_STRIDE as the town's type and game::LoadMap reads it so): frame 46 is the sorceress castle, 70 the barbarian one
+enum	EditCoastTile	EDIT_COAST_OPEN/EDGE/OUTER_CORNER/SIDE/INNER_CORNER	EDIT_TILE_PLAIN/NORTH_EDGE/NORTH_EAST_CORNER/EAST_EDGE/NORTH_EAST_INNER_CORNER	every terrain's tiles come in these five runs (BlendTerrain fits terrainBase + run * 4 for a differing north, north-and-east, east or north-east neighbour; the flip bits mirror them), not only water's coast
+param	SetTileVariant	tile	firstTile	the first tile of the run of TERRAIN_TILE_VARIANT_COUNT variants the cell takes
+aliased	editManager::DrawRadar	buttonIcn	buttonsIcon	the buttons.icn icon whose radar cell and view-box frames it draws
+aliased	editManager::DrawCell	sx/sy	screenX/screenY	the cell's screen position in the map view
+aliased	editManager::PaintGround	spacing	cellPixels	the view's cell size in pixels (16 zoomed out, else 32)
+aliased	editManager::ClearArea	tag/ownerRec/thatCell	clearedId/cellIds/otherCell	the object id being erased, the scanned cell's editMapCellPair and that cell
+local	ScatterDetails	cellOwner	cellIds	the cell's editMapCellPair (object and overlay ids)
+aliased	editManager::WriteTowns	spot	cell	the scanned map cell
+aliased	editManager::WriteMines	spot/beaconX/beaconY/beaconCount/numCities/neighbour/mineNumber	cell/lighthouseX/lighthouseY/lighthouseCount/cityCount/markerCell/mineSlot	the lighthouse (MAP_OBJECT_LIGHTHOUSE, catalog "More than one lighthouse") and Dragon City counts, the cell east of a mine that carries its resource marker, and the game::m_mines slot (MINE_SLOT_STANDARD_FIRST on)

@@ -6,7 +6,7 @@
 # (tab-separated; every field is an fnmatch glob, `*` matches anything; the
 # first matching row wins): file owner spelling group detail reason.
 # group/detail are the census' review_group/review_context columns.
-#floor	3133
+#floor	2783
 *	*	0	trivial-function-literal	0 for-init	a for loop's counter starts at zero
 *	*	0	trivial-function-literal	0 initializer*	an accumulator or counter declared at zero
 *	*	1	trivial-function-literal	1 arithmetic*	a one-step offset: the next index, element or count
@@ -1266,3 +1266,42 @@ src/SOURCE/ADVMGR.cpp	advManager::UpdateRadar	4	array-index	array subscript gRad
 src/SOURCE/PHILAI.cpp	philAI::QuickCombat	-1	call-argument	ProbableOutcomeOfBattle(*	no defending player in the m_owner ternary: retail's int literal (an enumerator narrows VC4's ?: result to char)
 src/SOURCE/PHILAI.cpp	philAI::ChooseEvaluateBattle	-1	call-argument	ProbableOutcomeOfBattle(*	no defending player in the m_owner ternary: retail's int literal (an enumerator narrows VC4's ?: result to char)
 src/SOURCE/EVENTS.cpp	*	-1	trivial-function-literal	-1 conditional	retail's int-literal arm of `owner ? m_owner : -1`; an enumerator arm narrows the conditional to signed char (VC4)
+src/EDITOR/*	*	*	call-argument	ClearArea(* argument [1-4]	the erased rectangle's map x and y and its width and height in cells
+src/EDITOR/*	*	*	call-argument	ResetArea(* argument [1-4]	the reset rectangle's map x and y and its width and height in cells
+src/EDITOR/*	*	*	call-argument	PaintGround(* argument [1-4]	the painted view rectangle's x and y and its width and height in cells
+src/EDITOR/EDITOR.cpp	InterpretCommandLine	[12]	arithmetic	operator + i	the command line's option offsets: a switch's letter follows the '/', its digit the letter
+src/EDITOR/EDITOR.cpp	InterpretCommandLine	1	call-argument	toupper(int) argument 1	the switch letter after the '/'
+src/EDITOR/EDITOR.cpp	*	*	store	initializer of *	a local text buffer's extent
+src/EDITOR/EDITOR.cpp	NormalDialog	*	arithmetic	*	the dialog layout arithmetic (the frame margin, centring halves)
+src/EDITOR/EDITOR.cpp	NormalDialog	1	trivial-function-literal	1 store rows	a dialog with buttons keeps at least one text row
+src/EDITOR/EDITOR.cpp	IsCDDrive	0	trivial-function-literal	0 array-index gText	the drive letter of the "A:\" root path
+src/EDITOR/EDITOR.cpp	HandleAppSpecificMenuCommands	0	call-argument	PostMessageA(* argument [34]	WM_CLOSE carries no wParam or lParam
+src/EDITOR/EDITOR.cpp	oldmain	0	trivial-function-literal	0 store gMap[XY]	the adventure map origin reset to the map's corner
+src/EDITOR/CLEARMGR.cpp	clearManager::Open	0	call-argument	button(* argument 8	a plain button's select mode (only BUTTON_SELECT_DIALOG_RESULT ends a dialog)
+src/EDITOR/EDITMGR.cpp	editManager::[CR]*Area	0	trivial-function-literal	0 store *	a cleared cell's tilesets, flags, triggers, extra frame, metadata and object ids reset to zero
+src/EDITOR/*	*	0	trivial-function-literal	0 store *[XY]	a coordinate reset to the map's or the view's first cell
+src/EDITOR/*	*	0	trivial-function-literal	0 equality [xy]	the map's first column or row
+src/EDITOR/EDITMGR.cpp	editManager::Main	*	call-argument	Scroll(i16, i16) argument [12]	a scroll step in cells (-1, 0 or 1 per axis)
+src/EDITOR/EDITMGR.cpp	editManager::ToggleZoom	*	call-argument	Scroll(i16, i16) argument [12]	zooming moves the view origin by ten cells each way
+src/EDITOR/EDITMGR.cpp	editManager::Main	1	call-argument	SelectTool(i16) argument 1	the next tool (Tab cycles the tools)
+src/EDITOR/EDITMGR.cpp	*	*	store	initializer of *	a local text, file name or skipped-table buffer's extent
+src/EDITOR/EDITMGR.cpp	editManager::DrawRulers	1	trivial-function-literal	1 bitwise	the odd ruler slots, skipped when a cell spans two
+src/EDITOR/EDITMGR.cpp	editManager::DrawRulers	1	trivial-function-literal	1 conditional	one ruler slot per cell when zoomed out
+src/EDITOR/EDITMGR.cpp	editManager::DrawRulers	0	call-argument	DrawString(* argument [23]	no half-slot offset when zoomed out
+src/EDITOR/EDITMGR.cpp	editManager::DrawView	1	trivial-function-literal	1 conditional	the selection outline's one-pixel width when zoomed out
+src/EDITOR/EDITMGR.cpp	editManager::DrawCell	0xff	bitwise-or-packing	operator & m_tileIndex	the tile index's byte below TileToBitmap's flip bits (as advManager::DrawCell)
+src/EDITOR/EDITMGR.cpp	editManager::CheckObjects	1	trivial-function-literal	1 equality *	exactly one object of a pair (an unpaired set of stone liths or whirlpool)
+src/EDITOR/EDITMGR.cpp	editManager::Write*	0	trivial-function-literal	0 store *	a counter reset to zero, or an unused town record's type byte
+src/EDITOR/EDITMGR.cpp	editManager::Write*	1	trivial-function-literal	1 bound *	at least one castle with properties, or more than one unique site
+src/EDITOR/EDITMGR.cpp	editManager::WriteMines	-1	trivial-function-literal	-1 equality *	retail compares the u8 site coordinate with -1, which never matches, so both unique records are always written
+src/EDITOR/EDITMGR.cpp	*	-1	trivial-function-literal	-1 equality handle	the -1 failure result of the CRT open
+src/EDITOR/EDITMGR.cpp	editManager::PickMap	*	call-argument	fileRequester(* argument [12]	the requester window's x and y in pixels
+src/EDITOR/EDITMGR.cpp	editManager::ClearErrors	1	call-argument	free(void *) argument 1	the last message (count - 1)
+src/EDITOR/EDITMGR.cpp	editManager::IsCleared	1	trivial-function-literal	1 bitwise	the clear mask's bit of the terrain under the cell
+src/EDITOR/EDITMGR.cpp	MakeMapCode	*	*	array subscript code	the code's letters, filled from the last
+src/EDITOR/EDITMGR.cpp	MakeMapCode	[01]	trivial-function-literal	[01] array-index code	the code's letters, filled from the last
+src/EDITOR/EDITMGR.cpp	editManager::NewMap	0	trivial-function-literal	0 store currentMapOffset	the map serial restarts past EDIT_MAP_SERIAL_LIMIT
+src/EDITOR/EDITMGR.cpp	editManager::editManager	1	trivial-function-literal	1 store gNextObjectId	the object id counter's start (PlaceOverlay increments it before numbering an object)
+src/EDITOR/EDITMGR.cpp	editManager::editManager	-1	trivial-function-literal	-1 store m_placedState	m_placedState's start (the object tool stores 0; nothing reads it)
+src/EDITOR/EDITMGR.cpp	editManager::editManager	0	trivial-function-literal	0 store m_animationFrame	the object animation's first frame
+src/EDITOR/EDITMGR.cpp	editManager::C*	0	trivial-function-literal	0 store *	a counter reset to zero

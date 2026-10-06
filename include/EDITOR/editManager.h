@@ -45,6 +45,24 @@ H1_ENUM_CONST_BEGIN(EditManagerConstant)
     // A map needs at least this many castles (or random castles): the save
     // check warns below it and the generator retries.
     EDIT_MAP_MIN_CASTLES = 4,
+    // An unused town or mine record (editMapRecord) has x and y 0xff:
+    // game::LoadMap skips records with a negative x. A random mine's type is
+    // 0xff until game::RandomizeMine picks it.
+    EDIT_MAP_NO_RECORD = 0xff,
+    EDIT_MAP_RANDOM_MINE_TYPE = 0xff,
+    // Format words MAP_HEADER_ID .. MAP_HEADER_ID + 10 mark a map saved in the
+    // editor's own format (object ids follow the map extras).
+    EDIT_MAP_FORMAT_RANGE = 10,
+    // gConfig's map serial wraps past this; a new map's file name codes the
+    // serial in EDIT_MAP_CODE_LENGTH letters: the first one of the last
+    // EDIT_MAP_CODE_FIRST_LETTERS ("V".."Z"), then three of
+    // EDIT_MAP_CODE_LETTER_COUNT, and its name numbers it modulo
+    // EDIT_MAP_NAME_SERIAL_MODULUS.
+    EDIT_MAP_SERIAL_LIMIT = 65000,
+    EDIT_MAP_CODE_LENGTH = 4,
+    EDIT_MAP_CODE_LETTER_COUNT = 26,
+    EDIT_MAP_CODE_FIRST_LETTERS = 5,
+    EDIT_MAP_NAME_SERIAL_MODULUS = 1000,
     // The version word the editor writes after the header (hexadecimal 1112;
     // the game reads map extras from version MAP_EXTRA_VERSION on).
     EDIT_MAP_VERSION = 0x1112
@@ -66,13 +84,25 @@ H1_ENUM_CONST_BEGIN(EditViewGeometry)
     EDIT_VIEW_ZOOMED_CELL_PIXELS = 16,
     EDIT_VIEW_CELLS = 14,
     EDIT_VIEW_ZOOMED_CELLS = 28,
-    // A ruler numbers every view cell, every second one when zoomed out.
+    // The view's centre cell (the radar centres the view on the clicked
+    // cell) and the view origins a scroll knob spans.
+    EDIT_VIEW_CENTER = EDIT_VIEW_CELLS / 2,
+    EDIT_VIEW_ZOOMED_CENTER = EDIT_VIEW_ZOOMED_CELLS / 2,
+    EDIT_VIEW_ORIGINS = MAP_CELL_GRID_SIZE - EDIT_VIEW_CELLS + 1,
+    EDIT_VIEW_ZOOMED_ORIGINS = MAP_CELL_GRID_SIZE - EDIT_VIEW_ZOOMED_CELLS + 1,
+    // The drag selection's outline width (one pixel zoomed out).
+    EDIT_SELECTION_LINE_WIDTH = 2,
+    // A ruler numbers every view cell, every second one when zoomed out:
+    // a 32-pixel cell spans two 16-pixel slots, its number centred half a
+    // slot in. The numbers sit inset in the top ruler and the left ruler.
     EDIT_RULER_SLOTS = 28,
     EDIT_RULER_SLOT_PIXELS = 16,
-    EDIT_RADAR_LEFT = 480,
-    EDIT_RADAR_TOP = 16,
-    EDIT_RADAR_PIXELS = 144,
-    EDIT_RADAR_CELL_PIXELS = 2,
+    EDIT_RULER_SLOTS_PER_CELL = 2,
+    EDIT_RULER_CELL_TEXT_OFFSET = 8,
+    EDIT_TOP_RULER_TEXT_X = EDIT_VIEW_LEFT + 3,
+    EDIT_TOP_RULER_TEXT_Y = 2,
+    EDIT_LEFT_RULER_TEXT_X = 3,
+    EDIT_LEFT_RULER_TEXT_Y = EDIT_VIEW_TOP + 2,
     // The scroll knobs travel 35..428 along their tracks.
     EDIT_KNOB_FIRST = 35,
     EDIT_KNOB_LAST = 428,
@@ -97,6 +127,7 @@ H1_ENUM_CONST_BEGIN(EditButtonsFrame)
     EDIT_FRAME_TOP_RULER_CELL = 24,
     EDIT_FRAME_LEFT_RULER_CELL = 25,
     EDIT_FRAME_TOOL_BUTTONS = 26,
+    EDIT_FRAMES_PER_TOOL_BUTTON = 2,
     EDIT_FRAME_CLEAR_OPTIONS = 34,
     EDIT_FRAME_CLEAR_OPTIONS_PRESSED = 35,
     EDIT_FRAME_CLEAR_PANEL = 36,
@@ -112,7 +143,9 @@ H1_ENUM_CONST_BEGIN(EditScrollFrame)
     EDIT_SCROLL_HORIZONTAL_KNOB = 2,
     EDIT_SCROLL_VERTICAL_KNOB = 3,
     EDIT_SCROLL_LEFT_ARROW = 8,
+    EDIT_SCROLL_LEFT_ARROW_PRESSED = 9,
     EDIT_SCROLL_RIGHT_ARROW = 10,
+    EDIT_SCROLL_RIGHT_ARROW_PRESSED = 11,
     EDIT_SCROLL_SHORT_TRACK = 20
 H1_ENUM_CONST_END(EditScrollFrame)
 
@@ -131,6 +164,29 @@ H1_ENUM_CONST_BEGIN(EditCursorShape)
     EDIT_CURSOR_VERTICAL_DRAG = 4,
     EDIT_CURSOR_NORMAL = 6
 H1_ENUM_CONST_END(EditCursorShape)
+
+// Palette colours the map view, rulers and radar draw: a ruler number in the
+// cursor's column or row and the others; the radar's town and resource cells
+// (a resource in the neutral owner's colour, gRadarOwnerColor's last entry),
+// and the radar while the generator works unseen; the drag selection's
+// outline (through gMonoColorMap); the clouds tile pattern's mask.
+H1_ENUM_CONST_BEGIN(EditViewColor)
+    EDIT_RULER_CURSOR_COLOR = 1,
+    EDIT_RULER_TEXT_COLOR = 192,
+    EDIT_RADAR_TOWN_COLOR = 4,
+    EDIT_RADAR_RESOURCE_COLOR = 10,
+    EDIT_RADAR_UNSEEN_COLOR = 0,
+    EDIT_SELECTION_COLOR = 190,
+    EDIT_CLOUD_TILE_MASK = 3
+H1_ENUM_CONST_END(EditViewColor)
+
+// ClearArea's passes over a cell: its object layer, then its overlay layer
+// (with secondLayer set).
+H1_ENUM_BEGIN(EditClearLayer)
+    EDIT_CLEAR_OBJECT_LAYER = 0,
+    EDIT_CLEAR_OVERLAY_LAYER = 1,
+    EDIT_CLEAR_LAYER_COUNT = 2
+H1_ENUM_END(EditClearLayer)
 
 // editwind.bin widget ids and the tool commands.
 H1_ENUM_BEGIN(EditWindowControlId)
@@ -231,6 +287,10 @@ H1_ENUM_CONST_BEGIN(EditObjectFrame)
     EDIT_TREASURE_OBJECT_FRAME_A = 3,
     EDIT_TREASURE_OBJECT_FRAME_B = 4,
     EDIT_TREASURE_OBJECT_FRAME_C = 42,
+    // ScatterDetails' lava (obj32-04.icn) and desert (obj32-05.icn) details;
+    // the other terrains roll theirs.
+    EDIT_LAVA_DETAIL_FRAME = 0,
+    EDIT_DESERT_DETAIL_FRAME = 2,
     // The frames whose objects loop an environment sound (SetCellSound).
     EDIT_SOUND_ALCHEMIST_FRAME_A = 28,
     EDIT_SOUND_ALCHEMIST_FRAME_B = 36,
@@ -284,6 +344,15 @@ H1_ENUM_BEGIN(EditDrawLayer)
 H1_ENUM_END(EditDrawLayer)
 
 #pragma pack(push, 1)
+// CheckObjects finds a whirlpool by its two event cells, the second this far
+// right and down from the first; ScatterDetails dresses this share (percent)
+// of the bare plain cells.
+H1_ENUM_CONST_BEGIN(EditCheckConstant)
+    EDIT_WHIRLPOOL_SECOND_CELL_X = 2,
+    EDIT_WHIRLPOOL_SECOND_CELL_Y = 1,
+    EDIT_DETAIL_PERCENT = 3
+H1_ENUM_CONST_END(EditCheckConstant)
+
 // The per-cell ids of the placed objects whose frames the cell shows on its
 // object and overlay layers: PlaceOverlay numbers each placed object from
 // gNextObjectId, and ClearArea erases every cell of the object it hits
@@ -298,6 +367,14 @@ struct editMapCellPair {
 struct editMap {
     mapCell cells[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
     editMapCellPair cellPairs[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+};
+
+// A town or mine record of the map file (WriteTowns, WriteMines): its
+// entrance cell and its type (game::LoadMap reads the three bytes).
+struct editMapRecord {
+    u8 x;
+    u8 y;
+    u8 type;
 };
 
 // The editor's town and hero map-extra records end in a reserved block:

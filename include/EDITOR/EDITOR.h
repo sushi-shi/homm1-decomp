@@ -21,12 +21,17 @@ H1_ENUM_CONST_BEGIN(EditorStatusBarConstant)
     EDITOR_STATUS_BAR_HEIGHT = 16,
     EDITOR_STATUS_TEXT_CAPACITY = 200,
     // ShowStatusText keeps the text this long.
-    EDITOR_STATUS_TEXT_HOLD_MILLISECONDS = 3000
+    EDITOR_STATUS_TEXT_HOLD_MILLISECONDS = 3000,
+    // ShowStatusWarning's text is cleared after this long.
+    EDITOR_STATUS_WARNING_MILLISECONDS = 1500,
+    // gStatusTextClearTime when the text stays until it is replaced.
+    EDITOR_STATUS_TEXT_KEPT = 0
 H1_ENUM_CONST_END(EditorStatusBarConstant)
 
 extern i8 gCommandLineInterpreted;
 extern i32 gStatusTextShown;
-// When the status bar text is cleared (0: kept until replaced).
+// When the status bar text is cleared (EDITOR_STATUS_TEXT_KEPT: kept until
+// replaced).
 extern i32 gStatusTextClearTime;
 extern i32 gStatusTextHoldTime;
 extern char gStatusText[];

@@ -182,7 +182,7 @@ void ShutDown(char* message) {
     }
     DeleteMainClasses();
     AppExit();
-    exit(0);
+    exit(EXIT_SUCCESS);
 }
 
 // The /D (debug level) and /B (mouse masks) command-line switches.
@@ -235,7 +235,7 @@ i32 EarlySetup(void) {
                 localization::Tr("startup.error.title"),
                 MB_ICONHAND
             );
-            exit(0);
+            exit(EXIT_SUCCESS);
             break;
         case CD_SETUP_NOT_FOUND:
             MessageBoxA(
@@ -244,7 +244,7 @@ i32 EarlySetup(void) {
                 localization::Tr("startup.error.title"),
                 MB_ICONHAND
             );
-            exit(0);
+            exit(EXIT_SUCCESS);
             break;
         case CD_SETUP_NO_APP_PATH:
             MessageBoxA(
@@ -253,7 +253,7 @@ i32 EarlySetup(void) {
                 localization::Tr("startup.error.title"),
                 MB_ICONHAND
             );
-            exit(0);
+            exit(EXIT_SUCCESS);
             break;
         case CD_SETUP_NO_DATA:
             MessageBoxA(
@@ -262,7 +262,7 @@ i32 EarlySetup(void) {
                 localization::Tr("startup.error.title"),
                 MB_ICONHAND
             );
-            exit(0);
+            exit(EXIT_SUCCESS);
             break;
     }
     gDefaultMenu = LoadMenuA(gAppInstance, "mnuDflt");
@@ -483,7 +483,7 @@ void ShowStatusText(char* text) {
         EDITOR_STATUS_BAR_WIDTH,
         EDITOR_STATUS_BAR_HEIGHT,
         1,
-        1
+        FONT_ALIGN_CENTER
     );
     gWindowManager->UpdateScreenRegion(
         EDITOR_STATUS_BAR_X,
@@ -495,7 +495,7 @@ void ShowStatusText(char* text) {
 
 VA(0x0040918e, 0x4d)
 void ClearStatusText(void) {
-    gStatusTextClearTime = 0;
+    gStatusTextClearTime = EDITOR_STATUS_TEXT_KEPT;
     if (gStatusTextShown) {
         gStatusTextShown = 0;
         gEditManager->m_window->DrawWindow(0);
