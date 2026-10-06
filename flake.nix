@@ -105,7 +105,7 @@
               example = lib.literalExpression ''"''${homm1-game}/heroes.iso"'';
               description = ''
                 Your copy of the game: its CD image, the CD, an installed game folder or a
-                .zip/.7z of one, or a folder holding only the image. It is checked and its
+                .zip/.7z/.rar of one, or a folder holding only the image. It is checked and its
                 data laid out in the store on installation. If unset, set HOMM1_GAME when
                 launching for the first time.
               '';
