@@ -239,8 +239,10 @@ void RunReplayAction(const ReplayAction& action) {
         } else {
             Log("replay check: %d pixels differ in %d,%d-%d,%d", differing, box[0], box[1], box[2],
                 box[3]);
-            if (!action.arguments.empty())
+            if (!action.arguments.empty()) {
                 SaveDisplayBmp(action.arguments[0].c_str());
+                SaveReferenceBmp((action.arguments[0] + ".game.bmp").c_str());
+            }
         }
     } else if (action.verb == "quit") {
         Event event;

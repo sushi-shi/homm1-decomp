@@ -355,10 +355,9 @@ void CaptureDisplay(u8* rgb) {
     }
 }
 
-bool SaveDisplayBmp(const char* hostPath) {
-    const int height = kHeight + gBar;
-    std::vector<u8> rgb(static_cast<size_t>(kWidth * height * 3));
-    CaptureDisplay(rgb.data());
+namespace {
+
+bool WriteBmp(const char* hostPath, const std::vector<u8>& rgb, int height) {
     SDL_IOStream* file = SDL_IOFromFile(hostPath, "wb");
     if (file == nullptr)
         return false;
@@ -389,6 +388,28 @@ bool SaveDisplayBmp(const char* hostPath) {
         ok = SDL_WriteIO(file, row.data(), row.size()) == row.size();
     }
     return SDL_CloseIO(file) && ok;
+}
+
+}  // namespace
+
+bool SaveDisplayBmp(const char* hostPath) {
+    const int height = kHeight + gBar;
+    std::vector<u8> rgb(static_cast<size_t>(kWidth * height * 3));
+    CaptureDisplay(rgb.data());
+    return WriteBmp(hostPath, rgb, height);
+}
+
+bool SaveReferenceBmp(const char* hostPath) {
+    if (gReference == nullptr)
+        return false;
+    std::vector<u8> rgb(static_cast<size_t>(kWidth * kHeight * 3));
+    for (size_t i = 0; i < gIndexed.size(); i++) {
+        const Color& color = gPalette[gReference[i]];
+        rgb[i * 3] = color.r;
+        rgb[i * 3 + 1] = color.g;
+        rgb[i * 3 + 2] = color.b;
+    }
+    return WriteBmp(hostPath, rgb, kHeight);
 }
 
 void SetReferenceImage(const u8* pixels) {

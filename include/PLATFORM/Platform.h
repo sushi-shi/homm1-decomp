@@ -142,6 +142,8 @@ void SetReferenceImage(const u8* pixels);
 // The number of game image pixels that differ from the reference, and their
 // bounding box (left, top, right, bottom); 0 without a reference.
 int CompareWithReference(int box[4]);
+// The reference picture as a BMP, with the display's palette.
+bool SaveReferenceBmp(const char* hostPath);
 
 // ---------------------------------------------------------------- cursor
 

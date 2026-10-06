@@ -85,6 +85,9 @@ void font::DrawBoundedString(
     i16 lineTop;
     char* textCopy;
     char breakChar;
+    i16 overflow;
+    i16 fittingWidth;
+    i16 hardBreak;
 
     textLen = strlen(text);
     frameDirectory = m_glyphIcon->m_frameWords;
@@ -112,12 +115,17 @@ void font::DrawBoundedString(
                          + FONT_GLYPH_ADVANCE_SPACING;
             position++;
         }
+        hardBreak = 0;
         if (widthUsed > width) {
             position--;
+            overflow = position;
+            fittingWidth = widthUsed;
             // A word wider than the line has no space to break at: the walk
             // back ends before the line (at -1 on the first line, where the
-            // original read and wrote the byte before the copy). The line
-            // is then drawn whole, as before.
+            // original read and wrote the byte before the copy, and then
+            // drew the rest of the text on one line past the box, again on
+            // every line). The word is broken where it overflows, as
+            // LineLength counts it.
             while (position >= lineStart && textCopy[position] != ' ') {
                 baseGlyph = static_cast<u8>(textCopy[position]);
                 if (baseGlyph < ' '
@@ -130,10 +138,18 @@ void font::DrawBoundedString(
                 widthUsed -=
                     frameDirectory[baseGlyph * FONT_GLYPH_ENTRY_WORDS + FONT_GLYPH_WIDTH_WORD]
                     + FONT_GLYPH_ADVANCE_SPACING;
+                if (position == overflow && overflow > lineStart)
+                    fittingWidth = widthUsed;
                 position--;
             }
             if (position >= lineStart && textCopy[position] == ' ')
                 widthUsed -= frameDirectory[FONT_GLYPH_WIDTH_WORD] + FONT_GLYPH_ADVANCE_SPACING;
+            if (position < lineStart) {
+                // Up to the overflowing character, or that one alone.
+                hardBreak = 1;
+                position = overflow > lineStart ? overflow : overflow + 1;
+                widthUsed = fittingWidth;
+            }
         }
         lineEnd = position;
         breakChar = lineEnd >= 0 ? textCopy[lineEnd] : '\0';
@@ -154,7 +170,7 @@ void font::DrawBoundedString(
         if (lineEnd >= 0)
             textCopy[lineEnd] = breakChar;
         lineTop += m_height;
-        lineStart = lineEnd + 1;
+        lineStart = hardBreak ? lineEnd : lineEnd + 1;
         position = lineStart;
         widthUsed = 0;
     }

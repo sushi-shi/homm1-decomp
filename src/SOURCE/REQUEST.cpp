@@ -402,7 +402,13 @@ i16 fileRequester::Main(tag_message& message) {
                     switch (message.id) {
                         case fileNameId:
                             SET_WIDGET_MESSAGE(reply, WIDGET_COMMAND_GET_TEXT, fileNameId);
+                            // The load requester's name field is not a text
+                            // entry and does not answer; the original copied
+                            // from whatever the reply's text pointer held.
+                            reply.text = NULL;
                             m_window->BroadcastMessage(reply);
+                            if (reply.text == NULL)
+                                break;
                             memset(nameBuffer, 0, 9);
                             strcpy(nameBuffer, reply.text);
                             length = strlen(nameBuffer);
