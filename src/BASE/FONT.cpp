@@ -14,7 +14,7 @@ font::font(i16 id) : resource(RESOURCE_CATEGORY_FONT, id, RESOURCE_REFERENCE_INI
     char name[RESOURCE_NAME_CAPACITY];
     gResourceManager->PointToFile(id);
     m_height = gResourceManager->ReadWord();
-    m_headerWord = gResourceManager->ReadWord();
+    m_glyphOffsetY = gResourceManager->ReadWord();
     gResourceManager->Read13(name);
     gLoadingMonoIcon = 1;
     m_glyphIcon = gResourceManager->GetIcon(name);
@@ -59,7 +59,7 @@ void font::DrawString(char* text, i16 x, i16 y, i16 color) {
         if (glyph != 0)
             m_glyphIcon->FillToBuffer(
                 drawX,
-                y + m_headerWord,
+                y + m_glyphOffsetY,
                 glyph,
                 color,
                 ICON_DRAW_NORMAL,

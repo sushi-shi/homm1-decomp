@@ -137,3 +137,4 @@ local	PollRemote	newControl	peerHadControl	ReceiveRemotePlayerExit's hadControl:
 local-aliased	PollRemote	newFull	queueFull	set when all receive-queue slots are taken
 local	NormalDialog	amounts/sizedHeight/resCenterX	labelTexts/imageHeight/imageCenterX	the caption under each image (an amount, spell name or nothing) and the image geometry
 local-aliased	NormalDialog	resWidth/resourcePanel/captionText/msg	imageWidth/imageWidget/labelWidget/message	image widget, its caption widget and the widget message
+member	font	m_headerWord	m_glyphOffsetY	the font header's second word; DrawString adds it to y for every glyph

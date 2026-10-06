@@ -27,7 +27,7 @@ H1_ENUM_CONST_END(FontGlyphConstant)
 class font : public resource {
 public:
     i16 m_height;
-    i16 m_headerWord;
+    i16 m_glyphOffsetY;
     icon* m_glyphIcon;
     // --- constructors ---
     font(i16 id);
