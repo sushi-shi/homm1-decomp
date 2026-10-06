@@ -1,0 +1,135 @@
+:root {
+  --background: #f4f1ea;
+  --text: #1d1b16;
+  --muted: #5d574b;
+  --accent: #7a4a12;
+  --accent-text: #fff;
+  --panel: #fffdf8;
+  --border: #d8d0bf;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #16140f;
+    --text: #ece6d8;
+    --muted: #a59d8b;
+    --accent: #c98a3a;
+    --accent-text: #16140f;
+    --panel: #201d16;
+    --border: #3a3427;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--text);
+  font: 16px/1.5 system-ui, sans-serif;
+}
+
+header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 1.5rem;
+  padding: 0.5rem 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+nav a {
+  margin-right: 1rem;
+  color: var(--accent);
+}
+
+nav a.current {
+  color: var(--text);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+main {
+  padding: 1rem 16px;
+}
+
+#setup {
+  max-width: 44rem;
+  padding: 1rem 1.25rem;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.button,
+button {
+  display: inline-block;
+  margin: 0.25rem 0.5rem 0.25rem 0;
+  padding: 0.45rem 1rem;
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  background: var(--accent);
+  color: var(--accent-text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.button.secondary,
+button.secondary {
+  background: transparent;
+  color: var(--accent);
+}
+
+.button input {
+  display: none;
+}
+
+#play {
+  font-size: 1.15rem;
+  padding: 0.6rem 2rem;
+}
+
+#screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#screen {
+  width: 100%;
+}
+
+#canvas {
+  display: block;
+  image-rendering: pixelated;
+  background: #000;
+  outline: none;
+}
+
+#console {
+  margin-top: 1rem;
+  color: var(--muted);
+}
+
+#log {
+  max-height: 16rem;
+  overflow: auto;
+  font-size: 0.8rem;
+  white-space: pre-wrap;
+}
+
+#saves a {
+  color: var(--accent);
+}
+
+code {
+  font-size: 0.95em;
+}

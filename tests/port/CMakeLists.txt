@@ -34,6 +34,13 @@ homm1_test(blit_test
     ${CMAKE_SOURCE_DIR}/src/PORT/BASE/Icon2b.cpp ${CMAKE_SOURCE_DIR}/src/PORT/BASE/Icon2bc.cpp
     ${CMAKE_SOURCE_DIR}/src/PORT/BASE/TILE.cpp)
 
+# The WinHelp converter: a help file built by the test, and with HOMM1_HELP
+# or HOMM1_DATA the game's help file.
+homm1_test(help_test
+  SOURCES help_test.cpp)
+add_test(NAME help_game_test COMMAND help_test --game)
+set_tests_properties(help_game_test PROPERTIES SKIP_RETURN_CODE 77)
+
 # The network save compressor: the encoder and the portable decoder.
 homm1_test(lzhuf_test
   SOURCES lzhuf_roundtrip_test.cpp

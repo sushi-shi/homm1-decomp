@@ -28,8 +28,9 @@ void Shutdown();
 
 // The directory holding the running executable, with a trailing separator.
 std::string ExecutableDirectory();
-// Where the port keeps its own settings: $XDG_CONFIG_HOME/homm1 or the
-// platform's equivalent, created on demand, with a trailing separator.
+// Where the port keeps its own settings: $HOMM1_CONFIG when set, else
+// $XDG_CONFIG_HOME/homm1 (~/.config/homm1) or, on Windows, %APPDATA%\homm1;
+// created on demand, with a trailing separator. A UTF-8 host path.
 std::string ConfigDirectory();
 // A variable from the environment, or empty.
 std::string Environment(const char* name);
@@ -48,9 +49,17 @@ void Sleep(u32 milliseconds);
 // The game's text is single-byte in the language's Windows code page (the
 // build defines HOMM1_CODEPAGE); the host wants UTF-8.
 std::string ToUtf8(const char* text);
+// Text in a given Windows code page: 1251, else read as 1252.
+std::string ToUtf8(const std::string& text, int codepage);
 
 void ShowMessage(const char* title, const char* text);
-#if defined(__GNUC__)
+// Shows a local document (an HTML file at hostPath) in the system's browser,
+// or in a new browser tab when the program itself runs in a browser.
+bool OpenDocument(const std::string& hostPath);
+#if defined(__MINGW32__)
+// The backend formats with MinGW's C99 printf (__USE_MINGW_ANSI_STDIO).
+__attribute__((format(gnu_printf, 1, 2)))
+#elif defined(__GNUC__)
 __attribute__((format(printf, 1, 2)))
 #endif
 void Log(const char* format, ...);

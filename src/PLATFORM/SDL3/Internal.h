@@ -22,6 +22,12 @@ void WindowToDisplay(float windowX, float windowY, int& x, int& y, bool& inside)
 
 void MarkDisplayDirty();
 
+// In the browser the page shows frames and delivers input only while the
+// program has returned to it. SDL returns to it when it presents a frame or
+// sleeps (ASYNCIFY); a game loop that does neither between event polls
+// yields here at most once per frame. Elsewhere it does nothing.
+void YieldToBrowser();
+
 }  // namespace platform::sdl
 
 #endif

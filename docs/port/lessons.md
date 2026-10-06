@@ -115,6 +115,12 @@ ignored short reads, so a truncated or crafted file reads past buffers.
   continuing with partial state.
 - Fixed-width text from files is copied with `CopyTextField`, which stops at
   the field width and always terminates; record codecs terminate name fields.
+- The help book is read by the port's own converter (`src/PLATFORM/Help.cpp`)
+  and is equally untrusted: every read is bounds-checked, a reader that failed
+  stays failed (one that silently returned zeros after an error produced
+  plausible garbage), LZ77 and RLE output is capped, B+ tree walks refuse
+  cycles. `help_test` damages a synthetic book thousands of ways under the
+  sanitizers.
 
 ## 6. Retail out-of-bounds and overlap that "worked"
 
@@ -173,6 +179,13 @@ in sorted order, so the choice is deterministic. Directory listings are
 sorted. `tests/port/file_test.cpp` covers case folding, containment, missing
 files, creation of new folders on write, wildcards and ordering.
 
+On Windows the file system already ignores case, but the port resolves the
+same way there, so `..` and drive-relative game paths (`C:FILE`) stay
+refused, listings stay sorted and resolved names carry the spelling on disk.
+Host paths (the game folder, the settings folder) are UTF-8 inside the port
+and go through the wide-character API: the ANSI API mangles any folder
+name outside the system code page.
+
 ## 9. Interrupted and non-atomic saves
 
 **Mechanism.** The original truncated the save file and then wrote it; a
@@ -181,6 +194,15 @@ crash or full disk in between destroys the previous save.
 **Guard.** `FileReplace` writes the whole file to a sibling `.partial` file,
 flushes it with `fsync`, then renames it over the old one; on failure the old
 file is untouched. Saved games, high scores and settings use it.
+
+On Windows, `rename` refuses to replace an existing file, so the replace is
+`FlushFileBuffers` and `MoveFileExW(MOVEFILE_REPLACE_EXISTING |
+MOVEFILE_WRITE_THROUGH)`. The settings were first written with `std::rename`
+over the old file, which on Windows silently stopped updating them after
+the first start; they now go through `FileReplace` too. In a browser the file
+system is in memory: a replaced file reaches IndexedDB when it is closed
+(IDBFS `autoPersist`), and only a completely written file is ever renamed
+into place there too.
 
 ## 10. Format strings and fixed buffers
 
@@ -298,3 +320,43 @@ a Windows unit into a shared one can break the other program's link.
 and the editor's map writer is checked against every shipped map
 (`editor_maps_test`), whose header lists what the writer legitimately
 derives instead of copying.
+
+## 15. Hosts that do not let a program block
+
+**Mechanism.** The game is written as a set of blocking loops: each screen
+polls for input until it closes, and waits by spinning on the tick count. A
+browser page that never returns to the browser shows nothing and receives no
+input. Rewriting every loop as a callback is a rewrite of the game.
+
+**Guard.** The browser build compiles with ASYNCIFY, which turns any call
+into a point where the program can return to the browser and later resume.
+The return points are where the program already waits: SDL presenting a
+frame and `SDL_Delay`, plus the event poll, which yields at least once a
+frame even in a loop that neither draws nor sleeps
+(`platform::sdl::YieldToBrowser`). The game code is untouched; the cost is a
+larger WebAssembly file. JSPI is the lighter successor once every browser
+has it. Anything else that waits on the browser (message boxes, the audio
+unlock, opening a tab) must happen inside these returns or inside the
+user's click: the audio context is created in the click on **Play**, a
+context created later stays suspended in some browsers.
+
+## 16. Toolchains that accept wrong input silently
+
+**Mechanism.** Cross builds meet tools that do not fail on mistakes: FFmpeg's
+`configure` only warns about a component name it does not know (the
+Smacker video decoder is `smacker`, not its runtime name `smackvid`) and
+builds without it, after which every movie "cannot be opened"; SDL marks its
+headers as non-system, so strict warnings apply to its macros wherever the
+compiler is not Nix's native wrapper; MinGW's `printf` is Microsoft's unless
+asked otherwise, so `%zu` prints garbage.
+
+**Guard.** `nix/ffmpeg-minimal.nix` fails when any component the port needs
+is missing from `config_components.h`; `CMakeLists.txt` marks
+`SDL3::Headers` as system headers; the Windows build defines
+`__USE_MINGW_ANSI_STDIO` and checks `Log`'s format as `gnu_printf`; the
+Windows install fails when a program imports a DLL that is neither shipped
+nor part of Windows. Headless test runs of the help must also keep the
+desktop out of reach: `SDL_OpenURL` tries the D-Bus portal before `xdg-open`
+and opens the user's real browser, so such runs set
+`DBUS_SESSION_BUS_ADDRESS` to nothing and put a recording `xdg-open` first
+on the `PATH`.

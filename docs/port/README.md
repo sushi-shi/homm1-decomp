@@ -2,12 +2,15 @@
 
 This branch builds Heroes of Might and Magic (the Buka 2003 edition) and its
 scenario editor as native programs for current systems, from the same
-reconstructed sources as the Windows build. They run on 64-bit Linux; the
-platform layer is SDL3 with FFmpeg, so Windows and macOS builds need only their
-own toolchain and packages. The Visual C++ 6 build of `HEROES.EXE` and
+reconstructed sources as the Windows build. They run on 64-bit Linux, on
+64-bit Windows (cross-compiled with MinGW-w64) and in a web browser
+(WebAssembly); the platform layer is SDL3 with FFmpeg, so a macOS build needs
+only its toolchain and packages. The Visual C++ 6 build of `HEROES.EXE` and
 `EDITOR.EXE` (`build.py --target all`) keeps working on this branch.
 
-- [Build and run](#build-and-run)
+- [Build and run](#build-and-run): [Linux](#build-and-run),
+  [Windows](#windows), [in a browser](#in-a-browser), [macOS](#macos),
+  [the help book](#help)
 - [Architecture](#architecture)
 - [Status](#status)
 - [Keeping up with the source branch](#keeping-up-with-the-source-branch)
@@ -55,7 +58,134 @@ original's registry key).
 
 In a window both programs show their menu bar above the picture, as the
 original did; at full screen it is hidden, as it was. The game's options,
-the editor's window sizes, full screen and About are there.
+the editor's window sizes, full screen, About and Help are there.
+
+`$HOMM1_CONFIG` names another settings folder on every system.
+
+### Windows
+
+```sh
+nix build .#windows        # result/bin: heroes.exe, heroes-editor.exe and their DLLs
+```
+
+`nix/windows.nix` cross-compiles both programs for x86-64 Windows with
+nixpkgs' MinGW-w64 GCC, SDL3 built for the target and the minimal FFmpeg of
+`nix/ffmpeg-minimal.nix` (Smacker and Ogg Vorbis only), and ships the DLLs
+they import (SDL3, the four FFmpeg libraries, `libmcfgthread-2.dll`); the
+build fails if a program imports any other DLL that is not part of Windows.
+Copy `result/bin` to Windows and run `heroes.exe --data C:\Games\Heroes` or
+`heroes-editor.exe`. The game folder is searched as on Linux, with
+`%LOCALAPPDATA%\homm1-buka\game` in place of the XDG folders; settings and
+the converted help are in `%APPDATA%\homm1\`. The programs are GUI programs:
+their log goes to a redirected stderr, else to the console that started
+them, else to `%APPDATA%\homm1\homm1.log`.
+
+Under Wine (the flake's default shell has it):
+
+```sh
+xvfb-run wine result/bin/heroes.exe --data 'Z:\home\me\.local\share\homm1-buka\game' /I0
+```
+
+`HOMM1_INPUT_REPLAY` takes a Windows path there, and `shot` paths may be
+`Z:\...`. The unit tests cross-build and pass under Wine with
+`-DCMAKE_CROSSCOMPILING_EMULATOR=wine` (all but `save_roundtrip`, whose
+driver is a Linux script); the flake does not run them.
+
+### In a browser
+
+```sh
+nix build .#wasm           # result/share/homm1-web: the page and both programs
+nix run .#web              # serves it on http://127.0.0.1:8000/
+```
+
+`nix/wasm.nix` builds SDL3, the minimal FFmpeg and both programs with
+Emscripten. The page (`src/PLATFORM/Web/`) asks for the game folder once
+(**Choose a folder**: the folder with `DATA`, `MAPS`, ..., or one above it
+that also holds the CD's `Tracks` and `HEROES.HLP`; **Add single files**
+takes music tracks or the help file on their own), copies it into the
+browser's storage for the site (IndexedDB) and then starts the game, or the
+editor with `?program=editor`, on it. Nothing is uploaded; the build output
+holds no game data. **Remove the stored files** deletes everything,
+saved games included, and the page lists the saved games and maps for
+download. Any static web server works as long as it serves `.wasm` as
+`application/wasm`.
+
+- **The main loop.** The game never returns to a main loop: menus, dialogs,
+  combat and the adventure map each run their own loop that polls for
+  input, as the original's did around `GetMessage`. The browser build uses
+  Emscripten's ASYNCIFY, which lets those loops give control back to the
+  browser where they already wait and resumes them afterwards: SDL does so
+  when it presents a frame and in `SDL_Delay`, and the event poll does so at
+  least once per 16 ms (`YieldToBrowser` in `src/PLATFORM/SDL3/Host.cpp`).
+  The game code is unchanged. JSPI would do the same with smaller code,
+  but is not yet available in every browser (Firefox and Safari); an
+  explicit main-loop rewrite would mean restructuring every modal loop of the
+  game. ASYNCIFY costs code size (the game's `.wasm` is 3.5 MB) and some
+  speed, which this game does not notice.
+- **Files.** Everything lives under `/homm1` (`src/PLATFORM/Web/pre.js`):
+  `game` (the game folder), `cd` (`Tracks`) and `config` (settings and the
+  converted help), an IDBFS mount loaded before the program starts and
+  written back to IndexedDB shortly after each file the program writes is
+  closed (`autoPersist`), so saved games, maps and settings survive reloads.
+- **Audio.** Browsers keep audio suspended until the page is used. The
+  **Play** click creates the audio context that SDL then takes over, and any
+  later click or key resumes a suspended context.
+- **Pointer and keyboard.** SDL maps the canvas's events: pointer positions
+  through the canvas's shown size (the page scales the 640x500 canvas to the
+  window, pixelated), keys by their physical code, so the Set 1 scan codes
+  are the same as natively. The context menu is suppressed on the canvas.
+- **Movies and music.** The same FFmpeg code as natively, with FFmpeg built
+  for WebAssembly with only the Smacker and Ogg demuxers and the `smacker`,
+  `smackaud` and `vorbis` decoders.
+- **Help** opens in a new tab (a Blob URL of the converted page); when the
+  browser blocks the tab, the page shows a link instead.
+
+Page parameters: `program=editor`, `args=/I0` (the original's switches),
+`quiet=1` (message boxes to the log only).
+
+`nix run .#web-smoke -- --data DIR [--cd DIR] [--help-file HEROES.HLP]
+[--browser firefox] [--out DIR]` (`tests/port/web_smoke.py`) drives the
+built page in headless Chromium or Firefox through Playwright, the way a
+player would: it hands the page the folder through its file input, starts
+the game, opens the help from the menu, starts a new game to the adventure
+map, reloads (the files must still be there), checks that the intro movie
+runs and audio is unlocked by the click, loads the shipped saved game, saves
+it, reloads and checks that the save reached IndexedDB, and opens the editor,
+with a screenshot of each step. Clicks are made at the game's coordinates
+scaled through the canvas's size on the page. Headless Firefox has no audio
+device, which the script detects and reports.
+
+### macOS
+
+Not built. The code has nothing Windows- or Linux-only outside the platform
+layer: `File.cpp`'s POSIX half, `Host.cpp`'s XDG settings folder (which
+should become `SDL_GetPrefPath` there, as on Windows) and the system browser
+through `SDL_OpenURL` all apply. A build needs SDL3 and FFmpeg for macOS
+(`nix/ffmpeg-minimal.nix` builds natively too) and a `.app` bundle.
+
+### Help
+
+The game's help is a WinHelp 4.0 book, `HELP\HEROES.HLP` with its contents
+file `HEROES.CNT`, which no current system shows. The Help item of the game
+and of the editor converts it, on first use and again when the file or the
+converter changes, into one self-contained HTML page in the settings folder
+(`help/heroes.html`), and opens it in the system's browser, or in a new tab
+in the browser build. Without the file the item is greyed, as before. The
+book ships in the CD's installer cabinet, not in the game folder, so
+`nix run .#play`'s installation now copies it to the game folder's `Help`;
+for an existing installation copy `Help_Files/Help` from the cabinet there.
+
+The converter (`src/PLATFORM/Help.cpp`, no SDL) reads WinHelp 3.1 and 4.0:
+the internal file system and its B+ trees, LZ77 topic blocks, phrase and Hall
+compression, topic and paragraph records with their fonts, jumps and pop-ups
+(through the `|CONTEXT` hashes of the contents file's topic names), the
+keyword index, browse sequences and `|bmN` bitmaps (embedded as images). The
+contents and the index come first; each topic is a section of the page.
+Not supported: WinHelp 3.0 files, metafile pictures, hotspots, embedded
+windows, macros (shown as text) and jumps into other help files.
+`homm1-hlp2html IN.HLP [IN.CNT] OUT.html` runs the same converter (installed
+by `nix build .#native`). The converted text is the game's; neither the
+converter's tests nor the documentation contain any of it.
 
 ### Sanitizers and tests
 
@@ -69,6 +199,9 @@ HOMM1_DATA=~/.local/share/homm1-buka/game ctest --test-dir build/port-asan --out
 and re-encodes every shipped map, campaign map, saved game, high score table
 and the archive directory. `file_test` covers the game path resolver,
 `blit_test` the drawing routines, `lzhuf_test` the network save compressor,
+`help_test` the help converter on a synthetic book and thousands of
+damaged copies of it, `help_game_test` (with `$HOMM1_HELP` or
+`HELP/HEROES.HLP` under `HOMM1_DATA`) on the real book,
 `save_roundtrip` (with `HOMM1_DATA` and `xvfb-run`) loads the shipped
 saved game in the program and saves it again, comparing the bytes, and
 `editor_maps_test` (with `HOMM1_DATA`, headless) loads every shipped map with
@@ -82,7 +215,7 @@ map again must reproduce it.
 The `*_replay` tests replay the fuzz harnesses' regression inputs (see
 [Fuzzing the file parsers](#fuzzing-the-file-parsers)).
 `nix flake check` builds the native and sanitizer builds and runs their tests
-(without game data).
+(without game data), and builds the Windows programs.
 `-DHOMM1_SANITIZERS_RECOVER=ON` keeps going after undefined behaviour, to
 survey a whole session.
 
@@ -161,13 +294,17 @@ include/BASE, SOURCE    its headers; *Host.h are the Windows host's alone
 include/PLATFORM        File.h, Records.h: shared, plain C++98
                         Platform.h: the native platform interface
 src/PLATFORM            File.cpp, Records.cpp (both builds); Text.cpp,
-                        MsvcRuntime.cpp (native)
+                        MsvcRuntime.cpp, Help.cpp (the WinHelp converter)
+                        (native)
 src/PLATFORM/SDL3       the SDL3 + FFmpeg backend
+src/PLATFORM/Web        the browser build's page and its file system setup
 src/PORT                native replacements of the Windows-bound units
 tools/port              localize.py (game text), units.py (each program's
                         units from build.json), menus.py (menus from the
                         .rc scripts), sync.sh
-tests/port              ctest programs
+tools/help              homm1-hlp2html, the converter on the command line
+nix                     the Windows and browser builds, the minimal FFmpeg
+tests/port              ctest programs; web_smoke.py (the browser build)
 ```
 
 **The boundary.** The Windows original talks to its host in a few units:
@@ -233,7 +370,7 @@ with strict warnings as errors; see [lessons.md](lessons.md).
 
 | Area | State |
 | --- | --- |
-| Build | Game and editor on Linux x86-64 with GCC and Clang; sanitizer configuration. The Visual C++ 6 build of both is unaffected. |
+| Build | Game and editor on Linux x86-64 with GCC and Clang; sanitizer configuration; Windows x86-64 with MinGW-w64; WebAssembly with Emscripten. The Visual C++ 6 build of both is unaffected. |
 | Start-up, main menu, intro movies | Works. |
 | New game to the adventure map | Works (scripted under Xvfb). |
 | Load a saved game, shipped or new | Works; every shipped save parses and re-encodes byte for byte. |
@@ -246,10 +383,12 @@ with strict warnings as errors; see [lessons.md](lessons.md).
 | Sound effects | Works. |
 | Movies | Smacker through FFmpeg, with sound. |
 | Menu bars | Drawn for the game (default, adventure, combat, town) and the editor, with check marks, greyed items, submenus and a modal loop. |
-| Help file | Not available (WinHelp); the item is greyed. |
+| Help file | Converted from `HELP\HEROES.HLP` to HTML on first use and shown in the browser (a new tab in the browser build); greyed without the file. |
 | Network, modem, direct cable | Not available; the game reports it. |
 | Scenario editor | Works: opens shipped maps, edits, saves; every shipped map round-trips through its reader and writer; maps it saves load in the native game and in the Visual C++ game and editor. |
-| Windows, macOS | Not built yet; nothing in the code is Linux-only besides `File.cpp`'s POSIX half. |
+| Windows | Main menu, new game to the adventure map, intro movie, loading the shipped save and saving it again (byte for byte outside its name field), the editor, the help conversion: checked under Wine. |
+| Browser | Chromium and Firefox (headless): the page stores the player's files, the game reaches the main menu, a new game the adventure map, the intro movie plays, audio starts on the click, the shipped save loads and saves back to IndexedDB, the help opens in a new tab, the editor opens. |
+| macOS | Not built yet. |
 
 ## Keeping up with the source branch
 
