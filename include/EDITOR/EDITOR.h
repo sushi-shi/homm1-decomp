@@ -94,6 +94,18 @@ extern double gTerrainPercent[EDITOR_GENERATOR_TERRAIN_COUNT];
 extern double gDensityPercent[EDITOR_GENERATOR_DENSITY_COUNT];
 extern i32 gScatterTowns;
 extern i32 gSaveUnseen;
+// gDensityPercent's rows.
+H1_ENUM_BEGIN(GeneratorDensity)
+    GENERATOR_DENSITY_MOUNTAINS = 0,
+    GENERATOR_DENSITY_TREES = 1,
+    GENERATOR_DENSITY_OBJECTS = 2,
+    GENERATOR_DENSITY_TREASURE = 3,
+    GENERATOR_DENSITY_MONSTERS = 4
+H1_ENUM_END(GeneratorDensity)
+// The terrain names the generator's status line shows.
+extern char* gGeneratorTerrainNames[];
+// RemoveSmallRegions counts the map's land cells here.
+extern i32 gLandCellCount;
 // Set while the generator works unseen (gSaveUnseen): the map view draws
 // clouds only and the radar black.
 extern i32 gGeneratingMaps;

@@ -18,6 +18,7 @@ H1_ENUM_BEGIN(TerrainType)
     TERRAIN_LAVA = 4,
     TERRAIN_DESERT = 5,
     TERRAIN_DIRT = 6,
+    TERRAIN_LAST = TERRAIN_DIRT,
     // Terrains after WATER_LAST are land (philAI's embark/landing tests).
     TERRAIN_WATER_LAST = TERRAIN_WATER,
     TERRAIN_COUNT = 7
