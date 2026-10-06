@@ -359,8 +359,30 @@ public:
     void ResetArea(i32 x, i32 y, i32 width, i32 height);
     void FreeMapExtras(void);
     void NewMap(i32 random);
-    // Defined by MAPOBJ.
+    // The random map generator (src/EDITOR/MAPOBJ.cpp).
     void GenerateRandomMap(void);
+    // At least four castles stand on the map.
+    i32 HasEnoughCastles(void);
+    // Grows `percent` of the map's cells of terrain from random seeds over
+    // cells of baseTerrain (100: the whole map).
+    void PaintRandomTerrain(i32 terrain, i32 percent, i32 baseTerrain);
+    // Merges terrain regions of at most fifteen cells into a neighbour and
+    // counts the land cells.
+    void RemoveSmallRegions(void);
+    // Lays chains of the tileset's mountains or trees.
+    void PlaceObstacleChains(i32 density, i32 tileset);
+    // Places one chain link at (*x, *y) facing `direction` and steps on.
+    i32 PlaceChainLink(i32* x, i32* y, i32 direction, i32 tileset, char kind);
+    void PlaceTowns(void);
+    // Places a sawmill (kind 0), an alchemist's lab (1) or the mine of
+    // resource `kind` with its river at (x, y).
+    void PlaceResourceSite(i32 x, i32 y, i32 kind);
+    // Places towns, mines and obelisks.
+    void PlaceRandomObjects(i32 density, i32 strength);
+    // Places treasure (guarded in map corners) and wandering monsters.
+    void PlaceTreasures(i32 density, i32 strength);
+    // Scatters decorative objects over bare ground.
+    void ScatterDecorations(void);
 };
 #pragma pack(pop)
 
@@ -379,6 +401,9 @@ void SetTileVariant(mapCell* cell, i32 tile);
 char* MakeMapCode(i32 serial);
 // Shows text in the status bar with a beep and clears it after 1.5 seconds.
 void ShowStatusWarning(char* text);
+// Scales a generator count by a 0..100 density setting (50: unchanged apart
+// from the size bonus).
+void ScaleByDensity(i32* count, i32 density);
 void ScatterDetails(void);
 
 #endif // HOMM1_EDITOR_EDITMANAGER_H

@@ -522,6 +522,44 @@ msgstr ""
 msgid "editor.quit.confirm"
 msgstr ""
 
+#: src/EDITOR/MAPOBJ.cpp
+#, c-format
+msgid "editor.random.saved"
+msgstr ""
+
+#: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.status.land"
+msgstr ""
+
+#: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.status.mountains"
+msgstr ""
+
+#: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.status.objects"
+msgstr ""
+
+#: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.status.save_prompt"
+msgstr ""
+
+#: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.status.smoothing"
+msgstr ""
+
+#: src/EDITOR/MAPOBJ.cpp
+#, c-format
+msgid "editor.random.status.terrain"
+msgstr ""
+
+#: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.status.treasure"
+msgstr ""
+
+#: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.status.trees"
+msgstr ""
+
 #: src/EDITOR/EDITOR.cpp
 msgid "editor.startup.cd.required"
 msgstr ""
@@ -556,6 +594,34 @@ msgstr ""
 
 #: src/EDITOR/EDITOR.cpp
 msgid "editor.terrain.help.water"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.name.0"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.name.1"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.name.2"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.name.3"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.name.4"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.name.5"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.name.6"
 msgstr ""
 
 #: src/SOURCE/kbwin.cpp

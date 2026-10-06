@@ -47,7 +47,8 @@ struct overlayType {
     i8 tileset;
     // The category class (gOverlayCategoryKinds); 0 for terrain objects.
     i8 kind;
-    i16 unknown0b;
+    // How often the generator's ScatterDecorations picks it (in 100).
+    u16 frequency;
     // Cells on the object layer, which need free ground of a terrainMask
     // terrain.
     u16 groundMask;

@@ -14,7 +14,7 @@ rva	name	provenance
 0x000091e0	?CleanUpMenus@@YAXXZ	callee of placed SOURCE/kbwin body at site 0xd47f; game callee 0x42bcc
 0x0000921c	?EarlyShutDownSystem@@YAXXZ	callee of placed BASE/EXEC body at site 0x23d8b; game callee 0x42331
 0x00009241	?HandleAppSpecificMenuCommands@@YAHH@Z	callee of placed SOURCE/kbwin body at site 0xd726; game callee 0x4238b
-0x00010fa0	?GenerateRandomMap@editManager@@QAEXXZ	callee of a body compiled for this image from shared source
+0x0001262a	?PlaceTowns@editManager@@QAEXXZ	callee of a body compiled for this image from shared source
 0x0001b320	_CloseHandle@4	FF25 thunk of KERNEL32.DLL!CloseHandle; name of game thunk 0x68616
 0x0001b326	_GetDriveTypeA@4	FF25 thunk of KERNEL32.DLL!GetDriveTypeA; name of game thunk 0x68646
 0x0001b32c	_GetLastError@0	FF25 thunk of KERNEL32.DLL!GetLastError; name of game thunk 0x685ec
