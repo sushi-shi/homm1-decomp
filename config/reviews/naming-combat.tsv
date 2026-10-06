@@ -254,3 +254,265 @@ member	combatManager	m_catapultTarget	m_catapultTargetRow	row (0..4) of the cast
 param	combatManager::CombineGroups	from	sourceGroup	armyGroup moved from->to
 param	combatManager::CombineGroups	to	targetGroup	usage
 function	combatManager	SetGridMode	SetDrawRightToLeft	stores the flag DrawFrame uses to draw each row's occupants right to left; no grid mode
+local	AbsAiPrint	saved	savedDebugLevel	holds giDebugLevel across the forced print
+local	philAI::DoAllHeroInteractions	pTown	townPointer	no Hungarian; philAI's town-parameter name
+param	philAI::GoodAdjacent	pHero	aiHero	DoAI passes the hero it is moving (gpCurAIHero role)
+local	philAI::GoodAdjacent	idx	heading	map direction index into normalDirTable
+local	philAI::GoodAdjacent	x	cellX	adjacent cell x
+local	philAI::GoodAdjacent	y	cellY	adjacent cell y
+local	philAI::GoodAdjacent	num	eventValue	ValueOfEventAtPosition result
+local	philAI::GoodAdjacent	maxValueVal	bestEventValue	running best event value (starts 100)
+local	philAI::GoodAdjacent	iChance	chance	ValueOfEventAtPosition success chance; no Hungarian
+param	philAI::CheckReload	pHero	aiHero	DoAI passes the hero it is moving
+local	philAI::CheckReload	tile	cell	map cell of a reachable square
+local	philAI::CheckReload	enemy	armyFightValue	fight value of a town (own or enemy) or enemy hero army
+local	philAI::CheckReload	isAlly	friendlySupportSum	float sum of own towns' surplus strength, not a flag
+param	philAI::CheckBerserk	pHero	aiHero	DoAI passes the hero it is moving
+local	philAI::CheckBerserk	enemy	enemyStrength	enemy town/hero fight value
+local	philAI::CheckBerserk	theBest	strongest	strongest enemy fight value found
+local	philAI::CheckBerserk	val	ownFightValue	the moving hero's own fight value
+kept	philAI::CheckBerserk	theHero	theHero	enemy hero on the cell; no enemy-hero spelling fits bucket 14-15 after cell(14) with initialized decls (no reorder)
+param	philAI::DoDimensionDoor	pHero	aiHero	DoAI passes the hero it is moving
+local	philAI::DoDimensionDoor	x	cellX	walked path cell x
+local	philAI::DoDimensionDoor	y	cellY	walked path cell y
+local	philAI::DoDimensionDoor	i	pathIndex	index into gpSearchArray->m_directions
+local	philAI::DoDimensionDoor	len	skippedCount	path steps the door jump saves (len <= 4 refuses)
+local	philAI::DoAI	bestDirection	adjacentDirection	GoodAdjacent's chosen adjacent direction
+local	philAI::DoAI	oldX	stopPosX	MoveHero eventX out-param (cell where the move stopped)
+local	philAI::DoAI	ourY	stopPosY	MoveHero eventY out-param
+local	philAI::DoAI	minRV	minValue	mobility+42 scaled by difficulty; same role as minimumValue in the shared AI
+local	philAI::DoAI	savedAiHero	movingHero	the hero DetermineHeroToMove returned (not a saved copy)
+local	philAI::DoAI	origStep	stepQuota	steps allowed before re-targeting (5, 15 at sea, scaled)
+local	philAI::DoAI	baseSteps	stepCount	steps taken this leg
+local	philAI::DoAI	code	exhaustedMobility	MoveHero outOfMobility out-param
+local	philAI::DoAI	moveInterrupt	nearMonster	MoveHero adjacentMonster out-param
+kept	philAI::DoAI	nextOldShowIt	nextOldShowIt	saved bShowIt; savedShowIt does not fit with the set
+kept	philAI::DoAI	newDummyValue	newDummyValue	dead slot
+kept	philAI::DoAI	flagsState	flagsState	dead slot
+kept	philAI::DoAI	tempArrayData	tempArrayData	dead slot
+param	philAI::DetermineTargetPosition	pHero	aiHero	DoAI passes the hero it is moving
+local	philAI::DetermineTargetPosition	selCnt	rowCounter	per-row spacing counter
+local	philAI::DetermineTargetPosition	validFlag	good	cell worth scoring
+local	philAI::DetermineTargetPosition	curSpacing	gridStep	sampling step mobility/6
+local	philAI::DetermineTargetPosition	oldX	searchX	map column loop (was named old)
+local	philAI::DetermineTargetPosition	y	searchY	map row loop
+local	philAI::DetermineTargetPosition	entry	heroIndex	index into gpCurPlayer->m_heroIds
+local	philAI::DetermineTargetPosition	mainValue	posValue	RVOfPosition score of the cell
+local	philAI::DetermineTargetPosition	lastType	ground	terrain of the hero's cell
+local	philAI::DetermineTargetPosition	colPhase	colCounter	per-column spacing counter
+local	philAI::DetermineTargetPosition	theBestRV	maxRV	best position value so far
+kept	philAI::DetermineTargetPosition	thisCellRec	thisCellRec	scanned cell; cell/cellRec do not fit with the set
+local	philAI::GetTurnAIVars	oldX	nearX	map column within 10 of an enemy hero (was named old)
+local	philAI::GetTurnAIVars	entry	heroIndex	index into the other player's m_heroIds
+local	philAI::GetTurnAIVars	artTotal	artifactValueSum	sum of gArtifactBaseRV
+local	philAI::GetTurnAIVars	mineTotal	turnDistance	enemy-hero turn distance stored in gaiTurnValueOfMine
+kept	philAI::GetTurnAIVars	xPosVal	xPosVal	enemy hero x; no x/y name pair fits buckets 15/15
+kept	philAI::GetTurnAIVars	theYPos	theYPos	enemy hero y; same
+kept	philAI::GetTurnAIVars	basePlayer	basePlayer	other player's playerData; no fitting name in bucket 0
+kept	philAI::GetTurnAIVars	indexNum	indexNum	player index; no fitting name in 14-15
+kept	philAI::GetTurnAIVars	townPtr	townPtr	bucket 0-1 range, townPointer=12
+kept	philAI::GetTurnAIVars	fightVal	fightVal	float fight value; no fit
+param	philAI::GetBestBHC	(unnamed i32)	player	CheckBuyStuff passes giCurPlayer; unused
+local	philAI::GetBestBHC	total	totalStrength	sum of town fight values
+local	philAI::GetBestBHC	ideal	idealStrength	per-town target strength
+local	philAI::GetBestBHC	curMeanStrength	avgStrength	totalStrength / totalWeights
+local	philAI::GetBestBHC	newFValue	bhcValue	candidate purchase value (out of GetBest*)
+local	philAI::GetBestBHC	thisStrengths	townStrength	per-town fight value + 400
+local	philAI::GetBestBHC	newValue	topVal	best purchase value so far
+param	philAI::ProbableOutcomeOfBattle	attackerRemaining	expectedAttackerLoss	computed as loss*win + (1-win)*raw (an expected loss, not survivors); negated into outcomeValue
+param	philAI::ProbableOutcomeOfBattle	defenderRemaining	expectedDefenderLoss	same for the defender; added to outcomeValue as the attacker's gain
+local	philAI::ProbableOutcomeOfBattle	artsD	defArts	defender artifact RV sum (pairs attArts)
+local	philAI::ProbableOutcomeOfBattle	defendingArmyValue	defenderFight	defender adjusted fight value
+local	philAI::ProbableOutcomeOfBattle	attArmy	attFight	attacker adjusted fight value (float, not an army)
+local	philAI::ProbableOutcomeOfBattle	theExp	experience	ExperienceValueOfStack of the defender
+local	philAI::ProbableOutcomeOfBattle	curFactorValue	lossWeight	attention-weight multiplier on the expected losses
+local	philAI::ProbableOutcomeOfBattle	power	powCurve	exponent of the strength ratio (2.75 / 2.0)
+local	philAI::ProbableOutcomeOfBattle	attackStrengthValue	attStr	difficulty-scaled attacker strength
+local	philAI::ProbableOutcomeOfBattle	rawFightArray	rawFight	unadjusted fight values per side
+kept	philAI::ProbableOutcomeOfBattle	curDefStr	curDefStr	no defender-strength spelling fits 8-9
+kept	philAI::ProbableOutcomeOfBattle	defP	defP	defender pow() term; no fit
+kept	philAI::ProbableOutcomeOfBattle	slotNum	slotNum	artifact slot loop
+local	philAI::ValueOfBuyingBuilding	nextBenefit	score	the building's benefit being scaled
+local	philAI::ValueOfBuyingBuilding	theSlots	filledStackCount	count of garrison slots with creatures
+local	philAI::ValueOfBuyingBuilding	idx	level	dwelling level loop
+local	philAI::ValueOfBuyingBuilding	factionIdIndex	factionId	town m_type
+local	philAI::ValueOfBuyingBuilding	attackOddsVal	enemyAttackChance	LikelihoodOfEnemyAttacking attackChance out
+local	philAI::ValueOfBuyingBuilding	jj	i	plain slot/dwelling loop
+local	philAI::ValueOfBuyingBuilding	totalEnemyStrength	townLossRisk	LikelihoodOfEnemyAttacking lossRisk out (0.6), not a strength
+local	philAI::ValueOfBuyingBuilding	creatureLocatedOk	creaturePresent	garrison already holds the dwelling's creature
+local	philAI::ValueOfBuyingBuilding	selTurns	enemyStrength	attackStrength out (3000), not turns
+local	philAI::ValueOfBuyingBuilding	num	weightedAttack	attackStrength * attackChance out
+local	philAI::ValueOfBuyingBuilding	currentCreatureTypeNum	dwellingCreature	gDwellingType of the level
+local	philAI::ValueOfBuyingBuilding	theAttackWeek	attackWeeks	weeks-until-attack out (6)
+local	philAI::ValueOfBuyingBuilding	nextHighestDwellingId	lastDwellingIndex	highest owned dwelling level
+local	philAI::ValueOfBuyingBuilding	selLevel	castleTier	dwellingsOwned factor for the castle benefit
+param	philAI::LikelihoodOfEnemyAttacking	(unnamed town*)	townPointer	callers pass the town being valued
+param	philAI::LikelihoodOfEnemyAttacking	(unnamed hero*)	heroPointer	callers pass NULL or the hero
+param	philAI::LikelihoodOfEnemyAttacking	chanceA	attackChance	0.15, chance an enemy attacks
+param	philAI::LikelihoodOfEnemyAttacking	chanceB	lossRisk	0.6, chance the attack succeeds (danger = attackChance*lossRisk)
+param	philAI::LikelihoodOfEnemyAttacking	nAttack	attackStrength	3000 attacking strength
+param	philAI::LikelihoodOfEnemyAttacking	nValue	weightedAttack	attackStrength * attackChance
+param	philAI::LikelihoodOfEnemyAttacking	nWeeks	attackWeeks	6 weeks
+param	philAI::LikelihoodOfEnemyAttacking	fOut	dangerRating	attackChance * lossRisk; callers name it dangerRating
+local	philAI::GetBestBuilding	quantity	buildingBenefitCost	ValueOfBuyingBuilding benefitCost out; not a quantity
+local	philAI::GetBestBuilding	bestCost	bestBenefitCost	benefitCost of the chosen building
+local	philAI::GetBestBuilding	points	maxScore	best jittered score
+local	philAI::GetBestBuilding	curRv	resourceValue	ValueOfBuyingBuilding resourceValue out
+local	philAI::ValueOfBuyingCreature	creatRVVal	creatureRV	value of the purchased creatures
+local	philAI::ValueOfBuyingCreature	baseCost	buyCost	GetMonsterCost per-unit cost
+local	philAI::ValueOfBuyingCreature	attackChanceValue	attackOdds	LikelihoodOfEnemyAttacking attackChance out
+local	philAI::ValueOfBuyingCreature	rvCost	costRV	RVConversion of the purchase cost
+local	philAI::ValueOfBuyingCreature	prevStrength	lossOdds	lossRisk out (0.6), not a previous strength
+local	philAI::ValueOfBuyingCreature	savedTurns	attackStrength	attackStrength out (3000), not turns
+local	philAI::ValueOfBuyingCreature	firstFactor	dangerFactor	dangerRating + 0.96, cubed
+local	philAI::ValueOfBuyingCreature	pointsValue	weightedAttack	weightedAttack out
+local	philAI::ValueOfBuyingCreature	nWeeks	weekCount	attackWeeks out
+local	philAI::ValueOfBuyingCreature	archers	breathStacks	counts MONSTER_FLAGS_BREATH_ATTACK stacks (bit 8), not shooters
+local	philAI::ValueOfBuyingCreature	activeSlotNum	townSlot	garrison slot loop
+kept	philAI::ValueOfBuyingCreature	n	n	occupant army slot loop; no fitting slot name in 13-15
+local	philAI::GetBestCreature	bestCostVal	bestRaw	benefitCost of the best dwelling before jitter
+local	philAI::GetBestCreature	bestBuyValue	bestNumber	creature count for the chosen dwelling, not a value
+local	philAI::GetBestCreature	baseDwelling	bestDwelling	chosen dwelling level
+local	philAI::GetBestCreature	curDwelling	dwelling	dwelling level loop
+local	philAI::GetBestCreature	numUnits	count	CreaturesToBuy result
+local	philAI::GetBestCreature	iArmy	armyIndex	garrison slot loop; no Hungarian
+local	philAI::GetBestCreature	prevWorth	rawBenefitCost	ValueOfBuyingCreature benefitCost out
+local	philAI::GetBestCreature	curMon	creature	gDwellingType creature
+local	philAI::GetBestCreature	points	maxScore	best jittered score
+local	philAI::GetBestCreature	rand	randomScore	jittered score; shadowed rand()
+local	philAI::GetBestCreature	canAddSet	canAdd	garrison has a matching or empty slot
+local	philAI::GetBestCreature	curRv	resourceValue	ValueOfBuyingCreature resourceValue out
+local	philAI::CreaturesToBuy(town*,i32)	nGarrison	availableCount	dwelling stock passed as availableCount
+local	philAI::MaxBuyableCreatures	resourceIndex	affordable	holds resources/cost (affordable count), not an index; i is the resource index
+local	philAI::ValueOfBuyingHero	costRVVal	costRV	RVConversion of the 2500-gold hire cost
+local	philAI::ValueOfBuyingHero	tmpNum	unusedChance	StrategicValueOfPosition liveChance out, ignored
+local	philAI::GetBestHero	bestCostVal	bestRaw	benefitCost of the chosen hero before jitter
+local	philAI::GetBestHero	curHero	availableIndex	index into m_availableHeroIds
+local	philAI::GetBestHero	prevWorth	rawBenefitCost	ValueOfBuyingHero benefitCost out
+local	philAI::GetBestHero	points	maxScore	best jittered score
+local	philAI::GetBestHero	adjusted	randomScore	jittered benefitCost
+local	philAI::GetBestHero	availHero	candidate	hero offered for hire
+kept	philAI::GetBestHero	activeCostVal	activeCostVal	ValueOfBuyingHero resourceValue out; no value spelling fits 14-15
+local	philAI::TurnsToBuy	fTurns	turnCount	turns of income for one resource; no Hungarian
+param	philAI::RVOfPosition	pHero	aiHero	DetermineTargetPosition passes the moving hero
+local	philAI::RVOfPosition	xPos	monsterX	FindAdjacentMonster x out
+local	philAI::RVOfPosition	posY	monsterY	FindAdjacentMonster y out
+local	philAI::RVOfPosition	estTurnsVal	journeyTurns	search distance / mobility, scaled
+local	philAI::RVOfPosition	iMonsterChance	guardEventChance	adjacent guard's ValueOfEventAtPosition chance
+local	philAI::RVOfPosition	adjacentEventChance	followChance	live chance at the strategic follow-on position
+local	philAI::RVOfPosition	chanceVal	targetOdds	target cell event chance
+local	philAI::RVOfPosition	curLocType	triggerObjectType	trigger & MAP_TRIGGER_TYPE_MASK
+local	philAI::RVOfPosition	oldChance	primaryEventChance	chance of the path event (hasEvent)
+local	philAI::RVOfPosition	savedValue	followWorth	StrategicValueOfPosition at strategicX/Y
+local	philAI::RVOfPosition	num	startStrategicValue	strategic value at the hero's own cell (unused)
+local	philAI::RVOfPosition	newHeroLiveChance	originSurvival	live chance at the hero's own cell
+local	philAI::RVOfPosition	newCurTriggerType	triggerType	target cell m_triggerType
+local	philAI::RVOfPosition	oldDelta	positionStrategicValue	strategic value at the target
+local	philAI::RVOfPosition	oldVal	targetEventValue	event value at the target/guard
+local	philAI::RVOfPosition	activeChance	destinationSafety	live chance at the target
+param	philAI::StrategicValueOfPosition	pHero	aiHero	the hero whose position is valued
+local	philAI::StrategicValueOfPosition	curTerrain	terrain	terrain at another hero's destination
+local	philAI::StrategicValueOfPosition	newSeedRange	seedLimit	SeedPosition range 60/36
+local	philAI::StrategicValueOfPosition	oldX	searchX	search grid column (was named old)
+local	philAI::StrategicValueOfPosition	thisY	searchY	search grid row
+local	philAI::StrategicValueOfPosition	myValue	strategicWorth	accumulated strategic value returned
+local	philAI::StrategicValueOfPosition	theSearch	ownSearch	searchArray allocated when SVSearchArray is busy
+local	philAI::StrategicValueOfPosition	prevHeroNo	heroNum	index into gpCurPlayer->m_heroIds
+local	philAI::StrategicValueOfPosition	curReach	reach	enemy hero mobility
+local	philAI::StrategicValueOfPosition	searchData	activeSearchArray	the search in use (own or SVSearchArray)
+local	philAI::StrategicValueOfPosition	nGap	gap	distance between destinations; no Hungarian
+local	philAI::StrategicValueOfPosition	baseTerrainNum	targetTerrain	terrain at the target
+kept	philAI::StrategicValueOfPosition	nextExtra2	nextExtra2	dead slot
+param	philAI::FightValueOfStack	useHero	useAdjustedFightValue	also gates the quantity curve, not only the hero bonuses (all callers pass 0/1 for raw/adjusted)
+local	philAI::FightValueOfStack	theArmyWorth	armyValue	running army fight value returned
+local	philAI::FightValueOfStack	worthValue	stackWorth	one stack's fight value
+local	philAI::FightValueOfStack	curTotal	magicTotal	summed spell scores
+local	philAI::FightValueOfStack	baseSlot	slot	army/building/spell slot loop
+local	philAI::FightValueOfStack	quantityMod	countMod	stack-size curve
+local	philAI::FightValueOfStack	curArrows	keepArrows	castle archer count (5 + dwellings*4 + buildings)
+local	philAI::FightValueOfStack	pTown	castle	the defending town (no Hungarian)
+local	philAI::FightValueOfStack	theValue	bestScore	best single spell score
+local	philAI::FightValueOfStack	newLuck	heroLuck	GetLuck result
+local	philAI::FightValueOfStack	savedMod	spellMultiplier	0.25/0.5/1.0 by spell power
+local	philAI::FightValueOfStack	nextStats	combatStatSum	attack+defense+20 clamped, gStatPower index
+kept	philAI::TurnValueOfObelisk	ai	ai	playerAIData* local; playerAI/aiData do not fit, playerAIData is the type name
+param	philAI::EvaluateOneTimeCreaturePurchase	pHero	aiHero	the computer hero offered the creatures (EVENTS passes eventHero)
+local	philAI::EvaluateOneTimeCreaturePurchase	num	purchasedValue	fight value of the purchased creatures
+local	philAI::EvaluateOneTimeCreaturePurchase	n	index	army slot loop
+param	philAI::QuickCombat	attackerDamage	attackerCasualtyFraction	fraction of the attacker's army killed (1.0 = destroyed), handed to DamageGroup
+param	philAI::QuickCombat	defenderDamage	defenderCasualtyFraction	same for the defender
+local	philAI::QuickCombat	resValue	result	ProbableOutcomeOfBattle outcomeValue out (unused)
+local	philAI::QuickCombat	newWinner	army	winning army group (unused)
+local	philAI::QuickCombat	newRnd	roll	Random(0,100)/100
+local	philAI::QuickCombat	theDefenderExp	defExp	defender experience value
+local	philAI::QuickCombat	win	attackerWin	1 when the attacker wins
+local	philAI::QuickCombat	aDeadNum	attackerLossValue	attackerLoss out
+local	philAI::QuickCombat	fracLostVal	lostFraction	winner's casualty fraction
+local	philAI::QuickCombat	dDead	defenderLossValue	defenderLoss out
+local	philAI::QuickCombat	curWinChance	attackerChance	attacker win chance out
+local	philAI::QuickCombat	curWChance	victorChance	the winner's own win chance
+local	philAI::QuickCombat	aLeftNum	expectedAttackLosses	expectedAttackerLoss out (not survivors)
+local	philAI::QuickCombat	dLeft	expectedDefenseLosses	expectedDefenderLoss out (not survivors)
+param	philAI::HeroInteractionAtTown	doInteraction	evaluateOnly	inverted: nonzero only values the visit (shipyard bookkeeping, AddSpell checkOnly, returns transferRating); 0 (DoAllHeroInteractions, TownEvent) buys the book and moves troops; ValueOfEventAtPosition passes 1
+local	philAI::HeroInteractionAtTown	stackCount	heroTroops	sums the hero's creature counts, not stacks
+local	philAI::HeroInteractionAtTown	battlePower	heroArmyValue	hero army fight value (pairs townFV)
+local	philAI::HeroInteractionAtTown	otherIndex	moveToHero	1 when the garrison share exceeds the target, troops move town->hero
+kept	philAI::HeroInteractionAtTown	myTargetShare	myTargetShare	bucket-9 cluster; no target-share spelling in bucket 9
+param	philAI::ChooseGoldOrExperience	thisHero	heroPointer	the hero choosing (EVENTS passes eventHero); philAI's hero-parameter name
+local	philAI::ChooseEvaluateBattle	chance	winChance	ProbableOutcomeOfBattle winChance out
+local	philAI::ChooseEvaluateBattle	curA	attackLossValue	attackerLoss out
+local	philAI::ChooseEvaluateBattle	curB	defenseLossValue	defenderLoss out
+local	philAI::ChooseEvaluateBattle	leftA	expectedAttackLosses	expectedAttackerLoss out (not survivors)
+local	philAI::ChooseEvaluateBattle	leftB	expectedDefenseLosses	expectedDefenderLoss out
+local	philAI::ChooseEvaluateBattle	rating	netValue	outcomeValue plus reward
+param	philAI::ChooseToBuyArtifact	(unnamed hero*)	heroPointer	EVENTS passes eventHero
+param	philAI::ChooseToPayRansomOnHero	(unnamed hero*)	heroPointer	EVENTS passes eventHero
+param	philAI::ChooseToPayRansomOnHero	(unnamed i32)	goldCost	EVENTS passes DAEMON_GOLD
+param	philAI::CombatMonsterEvent	h	heroPointer	the computer hero fighting; philAI's hero-parameter name
+param	philAI::CombatMonsterEvent	monType	monsterType	creature type of the guards
+param	philAI::CombatMonsterEvent	pCount	monsterCount	in/out guard count; no Hungarian
+param	philAI::CombatMonsterEvent	(unnamed mapCell*)	cell	EVENTS passes the event cell
+local	philAI::CombatMonsterEvent	casualtyRatio	heroCasualtyFraction	QuickCombat attacker casualty out
+local	philAI::CombatMonsterEvent	fLoss	guardLosses	QuickCombat defender casualty out; no Hungarian
+local	philAI::CombatMonsterEvent	newCount	remaining	surviving guards
+local	philAI::FightEvent	localWon	heroVictory	QuickCombat result
+local	philAI::FightEvent	defenderLoss	heroCasualtyFraction	receives QuickCombat's attacker fraction (names were swapped)
+local	philAI::FightEvent	attackerLoss	ghostLossFraction	receives the defender (ghost) fraction
+local	philAI::FightEvent	curGuards	ghostCounts	ghosts per stack by site size
+local	philAI::FightEvent	bit	canFight	ChooseEvaluateBattle worthFighting out
+kept	philAI::FightEvent	theWorth	theWorth	netValue out; bucket 15 has no fitting name
+kept	philAI::FightEvent	activeRewardValue	activeRewardValue	site reward; bucket 15
+local	philAI::TownEvent	quickResult	heroVictory	QuickCombat result
+local	philAI::TownEvent	townPointerPtr	targetCastle	town on the cell (Ptr suffix junk)
+local	philAI::TownEvent	defenderLoss	heroCasualtyFraction	receives QuickCombat's attacker fraction (names were swapped)
+local	philAI::TownEvent	attackerLoss	garrisonCasualtyFraction	receives the garrison fraction
+local	philAI::TownEvent	savedOwner	savedPlayer	saved giCurPlayer (unused)
+local	philAI::TownEvent	firstOutcome	combatResult	DoCombat result
+local	philAI::TownEvent	theHero	defenderHero	hero garrisoned in the town
+param	philAI::DamageGroup	ag	group	army group damaged
+param	philAI::DamageGroup	dmg	casualtyFraction	fraction killed; >= 0.99 destroys
+param	philAI::DamageGroup	(unnamed hero*)	winner	callers pass the other side's hero
+local	philAI::CanBuyBHC	j	creature	holds the dwelling's creature type, not an index
+member	BHC	pTown	townPointer	no Hungarian; matches philAI's townPointer parameters (struct field, all uses in PHILAI)
+param	philAI::ValueOfEventAtPosition	pHero	aiHero	the computer hero evaluating the event
+local	philAI::ValueOfEventAtPosition	newPrize5	captureValue	dragon city capture reward
+local	philAI::ValueOfEventAtPosition	gateX1Val	twinX	column of a candidate twin gate/whirlpool
+local	philAI::ValueOfEventAtPosition	gateY28Val	twinY	row of a candidate twin gate
+local	philAI::ValueOfEventAtPosition	origExitRV5	gateStrategicValue	StrategicValueOfPosition at the candidate, *0.85
+local	philAI::ValueOfEventAtPosition	bBattleWon9	dragonBattle	ChooseEvaluateBattle worthFighting out (dragon city)
+local	philAI::ValueOfEventAtPosition	guardCount1Value	ghostCount	ghosts per stack by site size
+local	philAI::ValueOfEventAtPosition	loc	candidateCell	cell scanned for a matching gate
+local	philAI::ValueOfEventAtPosition	chosenExitY27Value	bestGateY	row of the best exit
+local	philAI::ValueOfEventAtPosition	prevChosenExitX0	bestGateX	column of the best exit
+local	philAI::ValueOfEventAtPosition	nextGoldCost	lootGold	graveyard/shipwreck gold reward
+local	philAI::ValueOfEventAtPosition	lastPositionValue	stayWorth	strategic value of staying at the hero's cell
+local	philAI::ValueOfEventAtPosition	won9Requested	shouldBattle	ChooseEvaluateBattle worthFighting out (ghost sites)
+local	philAI::ValueOfEventAtPosition	origBestRV	bestExitValue	best exit value so far
+kept	philAI::ValueOfEventAtPosition	theList	theList	windmill resource array; no fitting bucket-13 name
+kept	philAI::ValueOfEventAtPosition	theArmySlot2	theArmySlot2	replacementSlot out; bucket 13 forced
+kept	philAI::ValueOfEventAtPosition	tempChance	tempChance	ignored liveChance; unusedChance breaks order with the set
+param	philAI	(unnamed i32 in MeanRVOfUnexploredTerritory)	player	GetTurnAIVars passes player
+enum	AIPlaceVisitConstant	ADVMGR_PLACE_VISIT_COUNT	AI_PLACE_VISIT_COUNT	declared in philAI.h for DoAI's iPlacesVisited; ADVMGR_ prefix is the other game's header (update enum-reuse.tsv row 347)
+enum	AIPlaceVisitConstant	ADVMGR_PLACE_COORDINATE_COUNT	AI_PLACE_COORDINATE_COUNT	same
+param	philAI::ChooseEvaluateBattle	outFlag	worthFighting	1 when the rated outcome plus reward is positive
+param	philAI::ChooseEvaluateBattle	outValue	battleValue	the positive rating handed back to the caller
