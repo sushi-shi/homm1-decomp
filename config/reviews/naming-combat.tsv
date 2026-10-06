@@ -527,3 +527,5 @@ static	combatManager::HandleCastSpell	indexToCastOn	gSpellTargetHex	hex under th
 global	CMBTMGR	gSeed	gSavedSeed	SetupCombat saves the adventure random seed, GenerateMap restores it; alias keeps the symbol
 param	army::FindPath	(unnamed)	speed	every caller passes m_stats.speed; unused
 param	combatManager::DoCompAI	(unnamed)	side	CheckGetAIMove passes m_currentSide; unused
+param	combatManager::UpdateGrid	(unnamed)	attributes	every caller passes the stack's m_stats.attributes (UpdateGridForMove forwards its own); unused
+param	combatManager::NoShowCombatLog	(unnamed)	message	the combat log line it would show; empty body

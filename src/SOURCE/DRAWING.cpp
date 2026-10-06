@@ -23,7 +23,7 @@
 
 // Lowers the first grid row that needs redrawing to the one above the hex.
 VA(0x00423670, 0x50)
-void combatManager::UpdateGrid(i16 hex, i16) {
+void combatManager::UpdateGrid(i16 hex, i16 attributes) {
     i16 row;
 
     row = hex / COMBAT_GRID_COLUMNS - 1;

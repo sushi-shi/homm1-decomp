@@ -320,14 +320,14 @@ public:
     virtual void Close(void) OVERRIDE;
     virtual i16 Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
-    void NoShowCombatLog(char*);
+    void NoShowCombatLog(char* message);
     void CombatMessage(char* text, i32 updateScreen);
     void CombatMessage(H1_ENUM_PARAM(CombatMessageCommand, i16) messageType);
     void ResetLimitCreature(void);
     void UpdateCombatArea(void);
     // The upward directions also redraw the row above.
     void UpdateGridForMove(i16 hex, i8 direction, i16 attributes);
-    void UpdateGrid(i16 hex, i16);
+    void UpdateGrid(i16 hex, i16 attributes);
     void DrawBackground(void);
     void DrawFrame(i8 updateScreen);
     void SetDrawRightToLeft(i8 rightToLeft);

@@ -674,7 +674,7 @@ void combatManager::FreeArmies(void) {
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0041a842, 0xd)
-void combatManager::NoShowCombatLog(char*) {}
+void combatManager::NoShowCombatLog(char* message) {}
 
 // GetGridIndex over the 9x5 grid: rows 80 pixels high from y 60, odd rows
 // indented by 66 and even rows by 27, hexes 78 wide.
