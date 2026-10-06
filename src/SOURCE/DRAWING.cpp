@@ -61,7 +61,7 @@ void combatManager::CombatMessage(char* text, i32 updateScreen) {
     m_combatWindow->DrawWindow(0, COMBAT_STATUS_FIRST_CONTROL, COMBAT_STATUS_TEXT_CONTROL);
     SaveCombatBorder();
     if (updateScreen)
-        gpWindowManager->UpdateScreenRegion(
+        gWindowManager->UpdateScreenRegion(
             COMBAT_STATUS_X,
             COMBAT_STATUS_Y,
             COMBAT_STATUS_WIDTH,
@@ -189,7 +189,7 @@ void combatManager::UpdateCombatArea(void) {
     if (height + baseY > COMBAT_VIEW_HEIGHT)
         height = COMBAT_VIEW_HEIGHT - baseY;
     gEnlargeScreenBlit = 0;
-    gpWindowManager->UpdateScreenRegion(0, baseY, LOGICAL_SCREEN_WIDTH, height);
+    gWindowManager->UpdateScreenRegion(0, baseY, LOGICAL_SCREEN_WIDTH, height);
     gEnlargeScreenBlit = 1;
     m_gridUpdateRow = COMBAT_GRID_ROWS;
 }
@@ -229,7 +229,7 @@ void combatManager::DrawBackground(void) {
             }
         }
     }
-    gpWindowManager->m_screen
+    gWindowManager->m_screen
         ->CopyTo(m_backgroundBuffer, 0, 0, 0, 0, LOGICAL_SCREEN_WIDTH, COMBAT_VIEW_HEIGHT);
     m_backgroundDrawn = 1;
 }
@@ -254,9 +254,9 @@ void combatManager::DrawFrame(i8 updateScreen) {
     if (!m_combatWindowOpen)
         return;
     if (m_computeExtent) {
-        giMaxExtentX = giMaxExtentY = 0;
-        giMinExtentX = LOGICAL_SCREEN_WIDTH - 1;
-        giMinExtentY = COMBAT_VIEW_HEIGHT - 1;
+        gMaxExtentX = gMaxExtentY = 0;
+        gMinExtentX = LOGICAL_SCREEN_WIDTH - 1;
+        gMinExtentY = COMBAT_VIEW_HEIGHT - 1;
         savedDrawn = 0;
         for (side = 0; side < COMBAT_SIDE_COUNT; side++) {
             for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
@@ -290,14 +290,14 @@ void combatManager::DrawFrame(i8 updateScreen) {
                         else
                             theLeft -= 40;
                     }
-                    if (boxTopNum < giMinExtentY)
-                        giMinExtentY = boxTopNum;
-                    if (boxBottomValue > giMaxExtentY)
-                        giMaxExtentY = boxBottomValue;
-                    if (theLeft < giMinExtentX)
-                        giMinExtentX = theLeft;
-                    if (selBoxRight > giMaxExtentX)
-                        giMaxExtentX = selBoxRight;
+                    if (boxTopNum < gMinExtentY)
+                        gMinExtentY = boxTopNum;
+                    if (boxBottomValue > gMaxExtentY)
+                        gMaxExtentY = boxBottomValue;
+                    if (theLeft < gMinExtentX)
+                        gMinExtentX = theLeft;
+                    if (selBoxRight > gMaxExtentX)
+                        gMaxExtentX = selBoxRight;
                     if (m_armies[side][i].m_stats.attributes & MONSTER_FLAGS_WIDE) {
                         sideDeltaVal = side == COMBAT_DEFENDER_SIDE ? -1 : 1;
                         if (m_armies[side][i].m_facing == ARMY_FACING_LEFT) {
@@ -308,10 +308,10 @@ void combatManager::DrawFrame(i8 updateScreen) {
                             selBoxRight = (curCol + sideDeltaVal + 1) * COMBAT_HEX_WIDTH + 110;
                         }
                     }
-                    if (theLeft < giMinExtentX)
-                        giMinExtentX = theLeft;
-                    if (selBoxRight > giMaxExtentX)
-                        giMaxExtentX = selBoxRight;
+                    if (theLeft < gMinExtentX)
+                        gMinExtentX = theLeft;
+                    if (selBoxRight > gMaxExtentX)
+                        gMaxExtentX = selBoxRight;
                 }
             }
         }
@@ -319,31 +319,31 @@ void combatManager::DrawFrame(i8 updateScreen) {
             m_computeExtent = 0;
             return;
         }
-        if (giMinExtentX < 0)
-            giMinExtentX = 0;
-        if (giMinExtentY < 0)
-            giMinExtentY = 0;
-        if (giMaxExtentX > LOGICAL_SCREEN_WIDTH - 1)
-            giMaxExtentX = LOGICAL_SCREEN_WIDTH - 1;
-        if (giMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
-            giMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
+        if (gMinExtentX < 0)
+            gMinExtentX = 0;
+        if (gMinExtentY < 0)
+            gMinExtentY = 0;
+        if (gMaxExtentX > LOGICAL_SCREEN_WIDTH - 1)
+            gMaxExtentX = LOGICAL_SCREEN_WIDTH - 1;
+        if (gMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
+            gMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
     }
     m_gridUpdateRow = 0;
     if (!gLimitToExtent) {
         if (m_backgroundDrawn) {
             if (m_computeExtent || m_redrawExtent)
                 m_backgroundBuffer->CopyTo(
-                    gpWindowManager->m_screen,
-                    giMinExtentX,
-                    giMinExtentY,
-                    giMinExtentX,
-                    giMinExtentY,
-                    giMaxExtentX - giMinExtentX + 1,
-                    giMaxExtentY - giMinExtentY + 1
+                    gWindowManager->m_screen,
+                    gMinExtentX,
+                    gMinExtentY,
+                    gMinExtentX,
+                    gMinExtentY,
+                    gMaxExtentX - gMinExtentX + 1,
+                    gMaxExtentY - gMinExtentY + 1
                 );
             else
                 m_backgroundBuffer->CopyTo(
-                    gpWindowManager->m_screen,
+                    gWindowManager->m_screen,
                     0,
                     0,
                     0,
@@ -405,7 +405,7 @@ void combatManager::DrawFrame(i8 updateScreen) {
                 m_combatIcons[COMBAT_ICON_TENT]->DrawToBuffer(
                     0x250,
                     0xeb,
-                    gpGame->m_players[m_playerId[COMBAT_DEFENDER_SIDE]].Color() + 4,
+                    gGame->m_players[m_playerId[COMBAT_DEFENDER_SIDE]].Color() + 4,
                     ICON_DRAW_FLIPPED,
                     ICON_DRAW_OFFSET_FULL
                 );
@@ -429,7 +429,7 @@ void combatManager::DrawFrame(i8 updateScreen) {
                 m_combatIcons[COMBAT_ICON_TENT]->DrawToBuffer(
                     0x2f,
                     0x9b,
-                    gpGame->m_players[m_playerId[COMBAT_ATTACKER_SIDE]].Color() + 4,
+                    gGame->m_players[m_playerId[COMBAT_ATTACKER_SIDE]].Color() + 4,
                     ICON_DRAW_NORMAL,
                     ICON_DRAW_OFFSET_FULL
                 );
@@ -488,7 +488,7 @@ void combatManager::DrawFrame(i8 updateScreen) {
                 m_combatIcons[COMBAT_ICON_TENT]->DrawToBuffer(
                     0x2f,
                     0x9b,
-                    gpGame->m_players[m_playerId[COMBAT_ATTACKER_SIDE]].Color() + 4,
+                    gGame->m_players[m_playerId[COMBAT_ATTACKER_SIDE]].Color() + 4,
                     ICON_DRAW_NORMAL,
                     ICON_DRAW_OFFSET_FULL
                 );
@@ -512,7 +512,7 @@ void combatManager::DrawFrame(i8 updateScreen) {
                 m_combatIcons[COMBAT_ICON_TENT]->DrawToBuffer(
                     0x250,
                     0xeb,
-                    gpGame->m_players[m_playerId[COMBAT_DEFENDER_SIDE]].Color() + 4,
+                    gGame->m_players[m_playerId[COMBAT_DEFENDER_SIDE]].Color() + 4,
                     ICON_DRAW_FLIPPED,
                     ICON_DRAW_OFFSET_FULL
                 );
@@ -533,20 +533,20 @@ void combatManager::DrawFrame(i8 updateScreen) {
         gLimitToExtent = 0;
         gComputeExtent = 0;
         gFullCombatScreenDrawn = 0;
-        DelayTil(&glTimers[COMBAT_FRAME_TIMER_SLOT]);
-        glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
+        DelayTil(&gTimers[COMBAT_FRAME_TIMER_SLOT]);
+        gTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
         if (updateScreen == 1) {
-            if (giMaxExtentY > COMBAT_VIEW_HEIGHT)
-                giMaxExtentY = COMBAT_VIEW_HEIGHT;
+            if (gMaxExtentY > COMBAT_VIEW_HEIGHT)
+                gMaxExtentY = COMBAT_VIEW_HEIGHT;
             gEnlargeScreenBlit = 0;
-            UPDATE_INCLUSIVE_REGION(giMinExtentX, giMinExtentY, giMaxExtentX, giMaxExtentY);
+            UPDATE_INCLUSIVE_REGION(gMinExtentX, gMinExtentY, gMaxExtentX, gMaxExtentY);
             gEnlargeScreenBlit = 1;
             m_gridUpdateRow = COMBAT_GRID_ROWS;
         }
     } else if (updateScreen == 1) {
         gFullCombatScreenDrawn = 1;
-        DelayTil(&glTimers[COMBAT_FRAME_TIMER_SLOT]);
-        glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
+        DelayTil(&gTimers[COMBAT_FRAME_TIMER_SLOT]);
+        gTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
         UpdateCombatArea();
     }
 }

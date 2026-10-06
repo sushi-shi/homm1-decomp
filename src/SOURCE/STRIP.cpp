@@ -34,12 +34,12 @@ strip::strip(
     m_x = x;
     m_y = y;
     m_stripType = stripType;
-    m_portraitIcon = gpResourceManager->GetIcon(portraitId);
+    m_portraitIcon = gResourceManager->GetIcon(portraitId);
     m_portraitFrame = portraitFrame;
     m_army = army;
-    m_stripIcon = gpResourceManager->GetIcon("strip.icn");
-    m_monsterIcon = gpResourceManager->GetIcon("monsters.icn");
-    m_font = gpResourceManager->GetFont("smalfont.fnt");
+    m_stripIcon = gResourceManager->GetIcon("strip.icn");
+    m_monsterIcon = gResourceManager->GetIcon("monsters.icn");
+    m_font = gResourceManager->GetFont("smalfont.fnt");
     m_window =
         new heroWindow(m_x, m_y, STRIP_WINDOW_WIDTH, STRIP_WINDOW_HEIGHT, WINDOW_FLAG_STRIP_WINDOW);
     if (!m_window)
@@ -75,30 +75,30 @@ strip::strip(
         }
     }
     DrawIcons(drawWindow);
-    gpWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, drawWindow);
+    gWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, drawWindow);
 }
 
 VA(0x0045c940, 0x107)
 strip::~strip() {
     i16 i;
 
-    gpWindowManager->RemoveWindow(m_window);
+    gWindowManager->RemoveWindow(m_window);
     if (m_army) {
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++)
             delete m_borders[i];
         delete m_borders[ARMY_GROUP_SLOT_COUNT];
     }
     delete m_window;
-    gpResourceManager->Dispose(m_font);
-    gpResourceManager->Dispose(m_stripIcon);
-    gpResourceManager->Dispose(m_monsterIcon);
-    gpResourceManager->Dispose(m_portraitIcon);
+    gResourceManager->Dispose(m_font);
+    gResourceManager->Dispose(m_stripIcon);
+    gResourceManager->Dispose(m_monsterIcon);
+    gResourceManager->Dispose(m_portraitIcon);
 }
 
 VA(0x0045ca47, 0x37)
 void strip::Draw(void) {
     DrawIcons(1);
-    gpWindowManager->UpdateScreenRegion(m_x, m_y, STRIP_WINDOW_WIDTH, STRIP_WINDOW_HEIGHT);
+    gWindowManager->UpdateScreenRegion(m_x, m_y, STRIP_WINDOW_WIDTH, STRIP_WINDOW_HEIGHT);
 }
 
 VA(0x0045ca7e, 0x233)
@@ -189,13 +189,13 @@ bankBox::bankBox(i16 x, i16 y, class playerData* player) {
     m_window = new heroWindow(m_x, m_y, "bankbox.bin");
     if (!m_window)
         MemError();
-    gpWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, 1);
+    gWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, 1);
     Update();
 }
 
 VA(0x0045cdb1, 0x34)
 bankBox::~bankBox() {
-    gpWindowManager->RemoveWindow(m_window);
+    gWindowManager->RemoveWindow(m_window);
     delete m_window;
 }
 

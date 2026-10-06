@@ -168,12 +168,12 @@ public:
 };
 #pragma pack(pop)
 
-extern class heroWindow* gheroWin;
+extern class heroWindow* gHeroWin;
 
 void HeroMessageUpdate(char* text);
 void UpdateHeroScreenStatusBar(i16 widgetId);
 // Stale alias of gHeroWindShowing (0x494128): unreferenced, kept so later symbol handles stay put.
-extern i8 gbHeroScreenActive;
+extern i8 gHeroScreenActive;
 i16 HeroHandler(struct tag_message& message);
 // Moved from HERO.cpp.
 // clang-format off
@@ -253,7 +253,7 @@ H1_ENUM_CONST_BEGIN(HeroScreenMoodConstant)
     HERO_SCREEN_MOOD_ICON_COUNT = 3
 H1_ENUM_CONST_END(HeroScreenMoodConstant)
 
-// giHeroScreenSrcIndex: the army slot picked up on the hero screen, or NONE.
+// gHeroScreenSrcIndex: the army slot picked up on the hero screen, or NONE.
 // UpdateArmies shows an empty slot with background frame EMPTY and a
 // creature over its faction's frame (FACTION_FIRST + type / faction size).
 H1_ENUM_CONST_BEGIN(HeroScreenArmyConstant)

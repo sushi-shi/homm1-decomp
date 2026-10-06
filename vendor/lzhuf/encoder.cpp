@@ -38,13 +38,15 @@ DATA(0x004d4d14) i16 match_length;
 DATA(0x004d259c) i16 lson[WINDOW_SIZE + 1];
 DATA(0x004d4d18) i16 rson[WINDOW_SIZE + 257];
 DATA(0x004d00a0) i16 dad[WINDOW_SIZE + 1];
+#define textsize decodeSkip // spelling fixes .bss order
 DATA(0x004d4d10) u32 textsize;
 DATA(0x004d45a4) u32 codesize;
+#define putbuf encbuf // spelling fixes .bss order
 DATA(0x004d7f5c) u16 putbuf;
 DATA(0x004d7f5e) u8 putlen;
-DATA(0x004d2598) char *codePtr;
-DATA(0x004d4d08) char *decodeOutput;
-DATA(0x004d20a8) u32 decodeSize;
+DATA(0x004d2598) char *dataPtr;
+DATA(0x004d4d08) char *outputPos;
+DATA(0x004d20a8) u32 decodeLen;
 DATA(0x004a1740) u8 d_code[256] = {
     0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
     1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1, 2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
@@ -298,20 +300,20 @@ i32 DecodeData(char *destination, char *source)
     register u32 size;
 
     textsize = 0;
-    codePtr = source;
-    size = static_cast<u8>(*codePtr++);
+    dataPtr = source;
+    size = static_cast<u8>(*dataPtr++);
     size <<= 8;
-    size |= static_cast<u8>(*codePtr++);
+    size |= static_cast<u8>(*dataPtr++);
     size <<= 8;
-    size |= static_cast<u8>(*codePtr++);
+    size |= static_cast<u8>(*dataPtr++);
     size <<= 8;
-    size |= static_cast<u8>(*codePtr++);
+    size |= static_cast<u8>(*dataPtr++);
     getbuf = getlen = 0;
     memcpy(son, initialSon, sizeof(son));
     memcpy(freq, initialFrequency, sizeof(freq));
     memcpy(prnt, initialParent, sizeof(prnt));
-    decodeSize = size;
-    decodeOutput = destination;
+    decodeLen = size;
+    outputPos = destination;
     Decode();
     i32 decodedSize = static_cast<i32>(size);
     return decodedSize;
@@ -329,11 +331,11 @@ i32 EncodeData(char *destination, char *source, u32 sourceLength)
     memset(prnt, 0, sizeof(prnt));
     memset(son, 0, sizeof(son));
 
-    codePtr = destination;
-    *codePtr++ = static_cast<char>((sourceLength & 0xff000000) >> 24);
-    *codePtr++ = static_cast<char>((sourceLength & 0x00ff0000) >> 16);
-    *codePtr++ = static_cast<char>((sourceLength & 0x0000ff00) >> 8);
-    *codePtr++ = static_cast<char>(sourceLength & 0xff);
+    dataPtr = destination;
+    *dataPtr++ = static_cast<char>((sourceLength & 0xff000000) >> 24);
+    *dataPtr++ = static_cast<char>((sourceLength & 0x00ff0000) >> 16);
+    *dataPtr++ = static_cast<char>((sourceLength & 0x0000ff00) >> 8);
+    *dataPtr++ = static_cast<char>(sourceLength & 0xff);
 
     stillConsumed = 0;
     memcpy(son, initialSon, sizeof(son));
@@ -590,10 +592,10 @@ void PutCode(i16 length, u16 code)
     putbuf |= code >> putlen;
     putlen += length;
     if (putlen >= 8) {
-        *codePtr++ = static_cast<char>(putbuf >> 8) & 0xff;
+        *dataPtr++ = static_cast<char>(putbuf >> 8) & 0xff;
         putlen -= 8;
         if (putlen >= 8) {
-            *codePtr++ = static_cast<char>(putbuf) & 0xff;
+            *dataPtr++ = static_cast<char>(putbuf) & 0xff;
             codesize += 2;
             putlen -= 8;
             putbuf = static_cast<u16>(code << (length - putlen));
@@ -620,7 +622,7 @@ VA(0x0047474c, 0x4a)
 static void EncodeEnd(void)
 {
     if (putlen != 0) {
-        *codePtr++ = static_cast<char>(putbuf >> 8) & 0xff;
+        *dataPtr++ = static_cast<char>(putbuf >> 8) & 0xff;
         ++codesize;
     }
 }

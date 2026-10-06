@@ -97,17 +97,17 @@ i16 recruitUnit::Open(i16 priority) {
         *m_available
     );
     Update();
-    gpWindowManager->BroadcastMessage(
+    gWindowManager->BroadcastMessage(
         MESSAGE_WIDGET,
         WIDGET_COMMAND_SET_FLAGS,
         RECRUIT_CLOSE_CONTROL,
         WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED
     );
-    gpWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, 1);
+    gWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, 1);
 
-    goldMaximum = gpCurPlayer->m_resources[RESOURCE_GOLD] / m_goldCost;
+    goldMaximum = gCurPlayerData->m_resources[RESOURCE_GOLD] / m_goldCost;
     if (m_resourceType != RESOURCE_NONE) {
-        resourceMaximum = gpCurPlayer->m_resources[m_resourceType] / m_resourceCost;
+        resourceMaximum = gCurPlayerData->m_resources[m_resourceType] / m_resourceCost;
         m_maximum = __min(goldMaximum, resourceMaximum);
     } else
         m_maximum = goldMaximum;
@@ -116,20 +116,20 @@ i16 recruitUnit::Open(i16 priority) {
     m_recruited = 0;
     m_noRoom = 0;
     if (*m_available == 0) {
-        gpWindowManager->BroadcastMessage(
+        gWindowManager->BroadcastMessage(
             MESSAGE_WIDGET,
             WIDGET_COMMAND_CLEAR_FLAGS,
             RECRUIT_CONFIRM_CONTROL,
             WIDGET_FLAG_ENABLED
         );
-        gpWindowManager->BroadcastMessage(
+        gWindowManager->BroadcastMessage(
             MESSAGE_WIDGET,
             WIDGET_COMMAND_SET_FLAGS,
             RECRUIT_CONFIRM_CONTROL,
             WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED
         );
     }
-    KBChangeMenu(hmnuDflt);
+    KBChangeMenu(gDefaultMenu);
     m_messageMask = BASE_MANAGER_ACCEPT_EXECUTIVE;
     m_priority = priority;
     m_active = 1;
@@ -140,7 +140,7 @@ i16 recruitUnit::Open(i16 priority) {
 // Refreshes town strips whenever a town recruit succeeded.
 VA(0x00451154, 0xb7)
 void recruitUnit::Close(void) {
-    gpWindowManager->RemoveWindow(m_window);
+    gWindowManager->RemoveWindow(m_window);
     delete m_window;
     if (m_noRoom)
         NormalDialog(
@@ -149,15 +149,15 @@ void recruitUnit::Close(void) {
             RECRUIT_NO_ROOM_DIALOG_X,
             RECRUIT_NO_ROOM_DIALOG_Y
         );
-    gpWindowManager->BroadcastMessage(
+    gWindowManager->BroadcastMessage(
         MESSAGE_WIDGET,
         WIDGET_COMMAND_CLEAR_FLAGS,
         RECRUIT_CLOSE_CONTROL,
         WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED
     );
     if (m_sourceType == RECRUIT_SOURCE_TOWN && m_recruited) {
-        gpTownManager->ResetStrips();
-        gpTownManager->m_bankBox->Update();
+        gTownManager->ResetStrips();
+        gTownManager->m_bankBox->Update();
     }
     m_active = 0;
 }
@@ -232,7 +232,7 @@ i16 recruitUnit::Main(struct tag_message& message) {
                             m_quantity = m_maximum;
                         break;
                     case RECRUIT_CREATURE_CONTROL:
-                        gpGame->ViewArmy(
+                        gGame->ViewArmy(
                             RECRUIT_VIEW_ARMY_X,
                             RECRUIT_VIEW_ARMY_Y,
                             m_creatureType,
@@ -281,9 +281,10 @@ i16 recruitUnit::Main(struct tag_message& message) {
                             m_noRoom = 1;
                             goto checkClose;
                         }
-                        gpCurPlayer->m_resources[RESOURCE_GOLD] -= m_quantity * m_goldCost;
+                        gCurPlayerData->m_resources[RESOURCE_GOLD] -= m_quantity * m_goldCost;
                         if (m_resourceType != RESOURCE_NONE)
-                            gpCurPlayer->m_resources[m_resourceType] -= m_quantity * m_resourceCost;
+                            gCurPlayerData->m_resources[m_resourceType] -=
+                                m_quantity * m_resourceCost;
                         *m_available -= m_quantity;
                         m_recruited = 1;
                         done = 1;
@@ -388,9 +389,9 @@ void QuickViewRecruit(town* townData, i8 dwelling) {
     if (recruitWindow == NULL)
         MemError();
     SetupRecruitWin(recruitWindow, monsterType, goldCost, resourceType, resourceCost, avail);
-    gpMouseManager->ReallyHidePointer();
-    gpWindowManager->AddWindow(recruitWindow, WINDOW_Z_ORDER_APPEND, 1);
+    gMouseManager->ReallyHidePointer();
+    gWindowManager->AddWindow(recruitWindow, WINDOW_Z_ORDER_APPEND, 1);
     QuickViewWait();
-    gpWindowManager->RemoveWindow(recruitWindow);
-    gpMouseManager->ReallyShowPointer();
+    gWindowManager->RemoveWindow(recruitWindow);
+    gMouseManager->ReallyShowPointer();
 }

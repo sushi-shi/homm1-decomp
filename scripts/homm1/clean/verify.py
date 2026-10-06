@@ -121,21 +121,65 @@ def _canonical(sections: list[dict], symbols: list[tuple[str, int]]) -> list[dic
     return sections
 
 
-def compare_objects(clean: Path, matching: Path, *, local_names: bool = True) -> list[str]:
+def _renamed(sections: list[dict], symbols: list[tuple[str, int]], renames: dict[str, str]
+             ) -> tuple[list[dict], list[tuple[str, int]]]:
+    """The matching object's names with each `.bss` storage spelling replaced
+    by the readable name the generated tree compiles under."""
+    if not renames:
+        return sections, symbols
+    # A name starts the symbol after its C decoration (`_name`) or after a
+    # C++ decoration character (`?name@@`, `@?1??f@@`).
+    pattern = re.compile(r"(?:(?<=^_)|(?<![A-Za-z0-9_]))(" + "|".join(map(re.escape, renames))
+                         + r")(?![A-Za-z0-9_])")
+
+    def name(spelling: str) -> str:
+        return pattern.sub(lambda m: renames[m.group(1)], spelling)
+    for section in sections:
+        section["relocations"] = [(offset, kind, name(n))
+                                  for offset, kind, n in section["relocations"]]
+        section["defines"] = [name(n) for n in section["defines"]]
+    return sections, [(name(n), sec) for n, sec in symbols]
+
+
+#: Largest alignment gap VC6 leaves before one uninitialized symbol.
+_BSS_PADDING = 8
+
+
+def _relaid_bss(ours: dict, theirs: dict, readable: set[str]) -> bool:
+    """True when two uninitialized sections differ only by the layout that
+    readable spellings choose: the compiler orders `.bss` by a hash of each
+    name, so a dropped `// spelling fixes .bss order` alias reorders the same
+    symbols and moves their alignment padding. The section must define an
+    aliased name, the same symbols, and differ in size by padding alone."""
+    if not readable or not isinstance(theirs["data"], int) or ours["name"] != theirs["name"] \
+            or ours["flags"] != theirs["flags"] or ours["relocations"] != theirs["relocations"]:
+        return False
+    words = {w for define in theirs["defines"] for w in re.findall(r"[A-Za-z]\w*", define)}
+    if not words & readable or sorted(ours["defines"]) != sorted(theirs["defines"]):
+        return False
+    return abs(ours["data"] - theirs["data"]) < _BSS_PADDING * len(theirs["defines"])
+
+
+def compare_objects(clean: Path, matching: Path, *, local_names: bool = True,
+                    renames: dict[str, str] | None = None) -> list[str]:
     """Differences between two objects' non-debug sections; [] when identical.
 
     `local_names=False` numbers compiler-local labels by first appearance
-    before comparing (see _LOCAL_NAME)."""
+    before comparing (see _LOCAL_NAME); `renames` maps the matching build's
+    `.bss` storage spellings to the generated tree's readable names."""
     ours, ours_symbols = _sections(clean)
-    theirs, their_symbols = _sections(matching)
+    theirs, their_symbols = _renamed(*_sections(matching), renames or {})
     if not local_names:
         ours, theirs = _canonical(ours, ours_symbols), _canonical(theirs, their_symbols)
     ours = [s for s in ours if not s["name"].startswith(".debug")]
     theirs = [s for s in theirs if not s["name"].startswith(".debug")]
     if len(ours) != len(theirs):
         return [f"{len(ours)} sections against {len(theirs)}"]
+    readable = set(renames.values()) if renames else set()
     differences = []
     for a, b in zip(ours, theirs):
+        if _relaid_bss(a, b, readable):
+            continue
         if (a["name"], a["flags"], a["data"], a["relocations"]) != \
                 (b["name"], b["flags"], b["data"], b["relocations"]):
             owner = ", ".join(b["defines"][:3]) or a["name"]
@@ -308,8 +352,8 @@ def _build_unit(localized: Path, work: Path, record: dict, flags: list[str],
     return unit, obj, obj
 
 
-def _build_tree(tree: Path, work: Path, label: str, *, exact: bool
-                ) -> tuple[list, dict[str, list[str]]]:
+def _build_tree(tree: Path, work: Path, label: str, *, exact: bool,
+                renames: dict[str, str] | None = None) -> tuple[list, dict[str, list[str]]]:
     """Compile every unit of `tree` and compare each object with the matching
     build; `exact` keeps compiler-local names in the comparison."""
     from homm1.manifest import flag_profiles, units
@@ -327,7 +371,7 @@ def _build_tree(tree: Path, work: Path, label: str, *, exact: bool
     different = {}
     for unit, obj, _link_obj in built:
         differences = compare_objects(obj, REPO / graph.BASE_DIR / f"{unit}.obj",
-                                      local_names=exact)
+                                      local_names=exact, renames=None if exact else renames)
         if differences:
             different[unit] = differences
     what = ("in every non-debug section" if exact else
@@ -379,6 +423,7 @@ def verify(tree: Path, inputs: dict[str, bytes], variant: str = "source") -> int
     """Build the control and source trees and check the variant's tree; 0 when
     every check in the module docstring passes."""
     from homm1.clean.run import generate
+    from homm1.clean import source as clean_source
     from homm1.graph.verbs import link_main
     from homm1.tool import ToolError
 
@@ -393,6 +438,8 @@ def verify(tree: Path, inputs: dict[str, bytes], variant: str = "source") -> int
     if work.exists():
         shutil.rmtree(work)
     control = _write(work / "control-tree", generate(inputs, control=True)[0])
+    renames = clean_source.aliases(data.decode("utf-8", "replace") for name, data in inputs.items()
+                                   if name.endswith((".cpp", ".c", ".h")))
     source_tree = tree
     if variant != "source":
         source_tree = _write(work / "source-tree", generate(inputs, variant="source")[0])
@@ -411,7 +458,7 @@ def verify(tree: Path, inputs: dict[str, bytes], variant: str = "source") -> int
               f"VC6 toolchain ({WINE_JOBS} jobs)")
         for label, root, out, exact in (("control", control, work / "control", True),
                                         ("source", source_tree, work / "source", False)):
-            built, different = _build_tree(root, out, label, exact=exact)
+            built, different = _build_tree(root, out, label, exact=exact, renames=renames)
             same, _counts = _link(out, built, res, label)
             report += [f"{label}\t{unit}\t{section}"
                        for unit, sections in sorted(different.items()) for section in sections]
@@ -550,7 +597,7 @@ def classic_equivalence(classic_tree: Path, localized: Path, source_tree: Path) 
                      if p.is_file()}
     source_files = {p.relative_to(source_tree).as_posix() for p in source_tree.rglob("*")
                     if p.is_file() and not p.relative_to(source_tree).parts[0] == "build"}
-    build_only = {"build.py", "build.json", "flake.nix", "flake.lock", "catalog.py"}
+    build_only = {"build.py", "build.json", "flake.nix", "flake.lock", "catalog.py", "play.py"}
     expected = {name for name in source_files
                 if name not in build_only and not name.startswith("locales/")}
     for name in sorted(expected ^ (classic_files - {".homm1-clean-generated"})):

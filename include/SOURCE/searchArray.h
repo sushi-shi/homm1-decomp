@@ -146,6 +146,7 @@ public:
     void PushCombatPoint(i16 hex, i16 direction, u16 distance, u16 speed);
 };
 #pragma pack(pop)
+#define gFullySeeded gSearchSeedingComplete // spelling fixes .bss order
 extern i32 gFullySeeded;
 
 #endif // HOMM1_SOURCE_SEARCHARRAY_H

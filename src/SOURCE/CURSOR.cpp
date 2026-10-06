@@ -71,7 +71,7 @@ void advManager::DrawCursor(void) {
     i16 posY;
     i16 drawFrame;
 
-    if (bShowIt == 0 || bSpecialHideCursor)
+    if (gShowIt == 0 || gSpecialHideCursor)
         return;
     if (gDrawSavedCursor) {
         m_cursorDirection = S1cursorDirection;
@@ -90,7 +90,7 @@ void advManager::DrawCursor(void) {
         if (m_drawHeroShadows && m_cursorType != ADVMGR_HERO_ICON_BOAT)
             FlipDimIconToBitmap(
                 m_shadowIcon,
-                gpWindowManager->m_screen,
+                gWindowManager->m_screen,
                 drawX,
                 posY,
                 drawFrame,
@@ -98,7 +98,7 @@ void advManager::DrawCursor(void) {
             );
         FlipIconToBitmap(
             m_heroIcons[m_cursorType],
-            gpWindowManager->m_screen,
+            gWindowManager->m_screen,
             drawX,
             posY,
             drawFrame,
@@ -108,8 +108,8 @@ void advManager::DrawCursor(void) {
             if (m_cursorCycle == 0)
                 drawFrame = m_cursorFrame & HERO_FRAME_INDEX_MASK;
             FlipIconToBitmap(
-                m_boatFlagIcons[gpCurPlayer->m_color],
-                gpWindowManager->m_screen,
+                m_boatFlagIcons[gCurPlayerData->m_color],
+                gWindowManager->m_screen,
                 drawX,
                 posY,
                 drawFrame,
@@ -121,8 +121,8 @@ void advManager::DrawCursor(void) {
                             + (m_flagFrameCounter & CURSOR_FLAG_FRAME_CYCLE_MASK)
                             + CURSOR_FLAG_FRAME_BASE;
             FlipIconToBitmap(
-                m_flagIcons[gpCurPlayer->m_color],
-                gpWindowManager->m_screen,
+                m_flagIcons[gCurPlayerData->m_color],
+                gWindowManager->m_screen,
                 drawX,
                 posY,
                 drawFrame,
@@ -135,7 +135,7 @@ void advManager::DrawCursor(void) {
         if (m_drawHeroShadows && m_cursorType != ADVMGR_HERO_ICON_BOAT)
             DimIconToBitmap(
                 m_shadowIcon,
-                gpWindowManager->m_screen,
+                gWindowManager->m_screen,
                 drawX,
                 posY,
                 drawFrame,
@@ -143,7 +143,7 @@ void advManager::DrawCursor(void) {
             );
         IconToBitmap(
             m_heroIcons[m_cursorType],
-            gpWindowManager->m_screen,
+            gWindowManager->m_screen,
             drawX,
             posY,
             drawFrame,
@@ -153,8 +153,8 @@ void advManager::DrawCursor(void) {
             if (m_cursorCycle == 0)
                 drawFrame = m_cursorFrame;
             IconToBitmap(
-                m_boatFlagIcons[gpCurPlayer->m_color],
-                gpWindowManager->m_screen,
+                m_boatFlagIcons[gCurPlayerData->m_color],
+                gWindowManager->m_screen,
                 drawX,
                 posY,
                 drawFrame,
@@ -165,8 +165,8 @@ void advManager::DrawCursor(void) {
                 drawFrame = m_cursorFrame + (m_flagFrameCounter & CURSOR_FLAG_FRAME_CYCLE_MASK)
                             + CURSOR_FLAG_FRAME_BASE;
             IconToBitmap(
-                m_flagIcons[gpCurPlayer->m_color],
-                gpWindowManager->m_screen,
+                m_flagIcons[gCurPlayerData->m_color],
+                gWindowManager->m_screen,
                 drawX,
                 posY,
                 drawFrame,
@@ -253,12 +253,12 @@ void advManager::TurnTo(i8 direction) {
         m_cursorFrame = m_cursorType < ADVMGR_HERO_ICON_CLASS_END ? horseFrameFlip[frameIndex]
                                                                   : boatFrameFlip[frameIndex];
         m_cursorFrameCount = 0;
-        glTimers[CURSOR_TURN_TIMER_SLOT] = KBTickCount() + delayTime;
+        gTimers[CURSOR_TURN_TIMER_SLOT] = KBTickCount() + delayTime;
         if (gConfig.walkSpeed != WALK_SPEED_JUMP) {
             if (ComboDraw(m_mapOriginX, m_mapOriginY, 0))
                 UpdateScreen(0, 0);
-            if (bShowIt)
-                DelayTil(&glTimers[CURSOR_TURN_TIMER_SLOT]);
+            if (gShowIt)
+                DelayTil(&gTimers[CURSOR_TURN_TIMER_SLOT]);
         }
         frameIndex += inc;
         if (frameIndex < 0)
@@ -267,8 +267,8 @@ void advManager::TurnTo(i8 direction) {
     } while (frameIndex != direction * TURN_FRAME_MULTIPLIER);
     m_cursorDirection = direction;
     StopCursor(1);
-    if (bShowIt)
-        DelayTil(&glTimers[CURSOR_TURN_TIMER_SLOT]);
+    if (gShowIt)
+        DelayTil(&gTimers[CURSOR_TURN_TIMER_SLOT]);
     if (ComboDraw(m_mapOriginX, m_mapOriginY, 0))
         UpdateScreen(0, 0);
 }
@@ -281,14 +281,14 @@ i32 advManager::GetMoveShowIt(i8 direction) {
     hero* movingHero;
     i16 dx;
 
-    if (gpCurPlayer->CurrentHero() == HERO_ID_NONE)
+    if (gCurPlayerData->CurrentHero() == HERO_ID_NONE)
         return 0;
-    movingHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
+    movingHero = gGame->GetHero(gCurPlayerData->m_currentHero);
     dx = normalDirTable[direction].x;
     dy = normalDirTable[direction].y;
-    if ((gbThisNetHumanPlayer[giCurPlayer] || (!gConfig.blackoutComputer && !gRemoteOn))
-        && ((gpGame->m_mapExtra[movingHero->m_x][movingHero->m_y] & gCurWatchPlayerHighBit)
-            || (gpGame->m_mapExtra[movingHero->m_x + dx][movingHero->m_y + dy]
+    if ((gThisNetHumanPlayer[gCurPlayer] || (!gConfig.blackoutComputer && !gRemoteOn))
+        && ((gGame->m_mapExtra[movingHero->m_x][movingHero->m_y] & gCurWatchPlayerHighBit)
+            || (gGame->m_mapExtra[movingHero->m_x + dx][movingHero->m_y + dy]
                 & gCurWatchPlayerHighBit)))
         return 1;
     else
@@ -322,18 +322,18 @@ mapCell* advManager::MoveHero(
     i32 delayNum;
     i16 numSteps;
 
-    if (gbThisNetHumanPlayer[giCurPlayer])
+    if (gThisNetHumanPlayer[gCurPlayer])
         SetNoDialogMenus(0);
     *adjacentMonster = 0;
     *outOfMobility = 0;
     gHeroMoving = 1;
     retCell = NULL;
-    champion = gpGame->GetHero(gpCurPlayer->m_currentHero);
+    champion = gGame->GetHero(gCurPlayerData->m_currentHero);
     posX = champion->m_x;
     startY = champion->m_y;
     xInc = normalDirTable[direction].x;
     yInc = normalDirTable[direction].y;
-    bShowIt = GetMoveShowIt(direction);
+    gShowIt = GetMoveShowIt(direction);
     theTerrain = CELL_TERRAIN(GetCell(champion->m_x, champion->m_y));
     nextCellItem = GetCell(champion->m_x + xInc, champion->m_y + yInc);
     if (champion->m_remainingMobility < CalcTerrainCost(
@@ -357,10 +357,10 @@ mapCell* advManager::MoveHero(
         mapCell* boatCell;
 
         for (inc = 0; inc < GAME_BOAT_COUNT; inc++) {
-            if (gpGame->m_boats[inc].heroId == champion->m_id)
+            if (gGame->m_boats[inc].heroId == champion->m_id)
                 break;
         }
-        boat = &gpGame->m_boats[inc];
+        boat = &gGame->m_boats[inc];
         boatCell = GetCell(champion->m_x, champion->m_y);
         boat->savedTriggerType = boatCell->m_triggerType;
         boat->savedEventData = boatCell->m_objectMetadata;
@@ -382,14 +382,14 @@ mapCell* advManager::MoveHero(
                     goto movementDone;
                 StopCursor(1);
                 m_cursorActive = 0;
-                gpWindowManager->SaveFizzleSource(
+                gWindowManager->SaveFizzleSource(
                     COAST_FIZZLE_X,
                     COAST_FIZZLE_Y,
                     COAST_FIZZLE_WIDTH,
                     COAST_FIZZLE_HEIGHT
                 );
                 CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
-                gpWindowManager->FizzleForward(
+                gWindowManager->FizzleForward(
                     COAST_FIZZLE_X,
                     COAST_FIZZLE_Y,
                     COAST_FIZZLE_WIDTH,
@@ -404,7 +404,7 @@ mapCell* advManager::MoveHero(
                     goto stoppingEvent;
             case MAP_OBJECT_HERO:
                 if (champion->IsEmbarked()) {
-                    if (gpGame->GetHero(nextCellItem->m_objectMetadata)->IsEmbarked())
+                    if (gGame->GetHero(nextCellItem->m_objectMetadata)->IsEmbarked())
                         goto stoppingEvent;
                     else
                         goto movementDone;
@@ -446,8 +446,8 @@ mapCell* advManager::MoveHero(
                 retCell = nextCellItem;
                 goto movementDone;
             case MAP_OBJECT_TOWN:
-                if (gpGame->GetTown(nextCellItem->m_objectMetadata)->m_owner != giCurPlayer
-                    && gpGame->GetTown(nextCellItem->m_objectMetadata)->HasGarrison()) {
+                if (gGame->GetTown(nextCellItem->m_objectMetadata)->m_owner != gCurPlayer
+                    && gGame->GetTown(nextCellItem->m_objectMetadata)->HasGarrison()) {
                     StopCursor(1);
                     CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
                     UpdateScreen(0, 0);
@@ -479,17 +479,17 @@ mapCell* advManager::MoveHero(
     if (champion->m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
         town* occupiedTown;
 
-        occupiedTown = gpGame->GetTown(champion->m_occupiedTown);
+        occupiedTown = gGame->GetTown(champion->m_occupiedTown);
         occupiedTown->m_occupyingHeroId = TOWN_OCCUPYING_HERO_NONE;
     }
     if (m_routeShown)
         *(m_routeMap + (champion->m_x + xInc) + (champion->m_y + yInc) * MAP_CELL_GRID_SIZE) =
             0;
     m_scrollOffsetX = m_scrollOffsetY = 0;
-    gpGame->SetVisibility(
+    gGame->SetVisibility(
         m_mapOriginX + xInc + ADVMGR_VIEW_CENTER,
         m_mapOriginY + yInc + ADVMGR_VIEW_CENTER,
-        giCurPlayer,
+        gCurPlayer,
         gHeroScoutRadius[champion->m_heroClass]
     );
     m_forceCompleteDraw = 1;
@@ -532,7 +532,7 @@ mapCell* advManager::MoveHero(
                 gLimitUpdMinX = UPDATE_NONE;
                 UpdateScreen(0, 0);
             }
-            if (bShowIt)
+            if (gShowIt)
                 DelayTilMilli(tick + delayNum);
         }
         gNoBorder = 0;
@@ -557,15 +557,11 @@ mapCell* advManager::MoveHero(
     StopCursor(stopAfterMove);
     if (processEvent && stopAfterMove && ComboDraw(0))
         UpdateScreen(0, 0);
-    SetEnvironmentOrigin(
-        m_mapOriginX + ADVMGR_VIEW_CENTER,
-        m_mapOriginY + ADVMGR_VIEW_CENTER,
-        0
-    );
-    inc = GetCell(m_mapOriginX + ADVMGR_VIEW_CENTER, m_mapOriginY + ADVMGR_VIEW_CENTER)
-              ->m_tileIndex;
-    if (giGroundToTerrain[inc] != m_currentTerrain && inc % MAP_CELL_TILES_PER_TERRAIN < 4) {
-        m_currentTerrain = giGroundToTerrain[inc];
+    SetEnvironmentOrigin(m_mapOriginX + ADVMGR_VIEW_CENTER, m_mapOriginY + ADVMGR_VIEW_CENTER, 0);
+    inc =
+        GetCell(m_mapOriginX + ADVMGR_VIEW_CENTER, m_mapOriginY + ADVMGR_VIEW_CENTER)->m_tileIndex;
+    if (gGroundToTerrain[inc] != m_currentTerrain && inc % MAP_CELL_TILES_PER_TERRAIN < 4) {
+        m_currentTerrain = gGroundToTerrain[inc];
         PlayMusic(m_currentTerrain);
     }
     m_scrollOffsetX = m_scrollOffsetY = 0;
@@ -612,7 +608,7 @@ movementDone:
         }
     }
 adjacentDone:
-    if (gbThisNetHumanPlayer[giCurPlayer])
+    if (gThisNetHumanPlayer[gCurPlayer])
         SetNoDialogMenus(1);
     return retCell;
 }
@@ -627,7 +623,7 @@ void advManager::CheckAdjacentMon(i8* adjacentMonster) {
     mapCell* heroCell;
     mapCell* tile;
 
-    curHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
+    curHero = gGame->GetHero(gCurPlayerData->m_currentHero);
     dead = 0;
     if (FindAdjacentMonster(
             curHero->m_x,
@@ -642,7 +638,7 @@ void advManager::CheckAdjacentMon(i8* adjacentMonster) {
         UpdateScreen(0, 0);
         tile = GetCell(posX, posY);
         heroCell = GetCell(curHero->m_x, curHero->m_y);
-        if (gbThisNetHumanPlayer[giCurPlayer])
+        if (gThisNetHumanPlayer[gCurPlayer])
             PlayerMonsterInteract(
                 tile,
                 heroCell,
@@ -658,7 +654,7 @@ void advManager::CheckAdjacentMon(i8* adjacentMonster) {
             ComputerMonsterInteract(tile, curHero, &dead);
         if (dead) {
             EraseObj(tile, posX, posY);
-            if (gbThisNetHumanPlayer[giCurPlayer])
+            if (gThisNetHumanPlayer[gCurPlayer])
                 FizzleCenter(EVENT_FIZZLE_HERO_LOSS);
         }
         *adjacentMonster = 1;
@@ -690,7 +686,7 @@ i16 advManager::ValidMoveWithEvent(hero* movingHero, i16 direction) {
                 return 0;
         case MAP_OBJECT_HERO:
             if (movingHero->IsEmbarked()) {
-                if (gpGame->GetHero(cellPtr->m_objectMetadata)->IsEmbarked())
+                if (gGame->GetHero(cellPtr->m_objectMetadata)->IsEmbarked())
                     return 1;
                 else
                     return 0;

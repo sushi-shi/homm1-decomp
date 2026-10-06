@@ -87,7 +87,7 @@ extern i32 gMainVideoModeWidth;
 extern BOOL gDDrawAttached;
 extern BOOL gWinGAttached;
 extern BOOL gWinGraphBusy;
-extern HPALETTE hpalApp;
+extern HPALETTE gAppPalette;
 extern HINSTANCE gDDrawLibrary;
 extern DirectDrawCreateProc gDirectDrawCreate;
 extern IDirectDraw* gDD;
@@ -109,13 +109,16 @@ extern i16 gDDSetFullScreenLineBase;
 extern i16 gDDPaintLineBase;
 extern RECT gDDClientRect;
 extern RECT gDDSourceRect;
+#define gDDDestinationRect gDDDestRect // spelling fixes .bss order
 extern RECT gDDDestinationRect;
+#define gDDResult gDDrawStatus // spelling fixes .bss order
 extern i32 gDDResult;
+#define gDDSurfaceDesc gDDrawSurfaceDesc // spelling fixes .bss order
 extern _DDSURFACEDESC gDDSurfaceDesc;
-extern i32 gPaintStart;
+extern i32 gDDPaintStart;
 extern i32 gBusyRetry;
-extern HDC hdcImage;
-extern HBITMAP gbmOldMonoBitmap;
+extern HDC gImageDC;
+extern HBITMAP gOldMonoBitmap;
 extern WingImage screenImage;
 extern WingPalette LogicalPalette;
 extern i32 Orientation;

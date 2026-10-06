@@ -23,7 +23,7 @@ i16 army::FindPath(i16 sourceHex, i16 targetHex, i8, i8 ignoreSpeed, i8 pathMode
     savedSpeed = m_stats.speed;
     if (ignoreSpeed)
         m_stats.speed = IGNORE_SPEED;
-    retVal = gpSearchArray->FindCombatPath(sourceHex, targetHex, this, pathMode);
+    retVal = gSearchArray->FindCombatPath(sourceHex, targetHex, this, pathMode);
     if (!retVal && (m_stats.attributes & MONSTER_FLAGS_WIDE) && !pathMode) {
         switch (m_facing) {
             case ARMY_FACING_LEFT:
@@ -36,7 +36,7 @@ i16 army::FindPath(i16 sourceHex, i16 targetHex, i8, i8 ignoreSpeed, i8 pathMode
         if (!ValidHex(targetHex))
             retVal = 0;
         else
-            retVal = gpSearchArray->FindCombatPath(sourceHex, targetHex, this, pathMode);
+            retVal = gSearchArray->FindCombatPath(sourceHex, targetHex, this, pathMode);
     }
     m_stats.speed = savedSpeed;
     return retVal;
@@ -113,8 +113,8 @@ i16 army::ValidMove(i16 sourceHex, i16 direction) {
     if (!ValidHex(destHexNext))
         return 0;
     frontValid = 0;
-    if (gpCombatManager->m_hexCells[destHexNext].m_occupantSide == COMBAT_SIDE_NONE
-        && gpCombatManager->m_hexCells[destHexNext].m_obstacleIndex == COMBAT_OBSTACLE_NONE)
+    if (gCombatManager->m_hexCells[destHexNext].m_occupantSide == COMBAT_SIDE_NONE
+        && gCombatManager->m_hexCells[destHexNext].m_obstacleIndex == COMBAT_OBSTACLE_NONE)
         frontValid = 1;
     if (m_stats.attributes & MONSTER_FLAGS_WIDE) {
         rearSquare = ARMY_HEX_INVALID;
@@ -134,8 +134,8 @@ i16 army::ValidMove(i16 sourceHex, i16 direction) {
         }
         rearValidResult = 0;
         if (ValidHex(rearSquare)
-            && gpCombatManager->m_hexCells[rearSquare].m_occupantSide == COMBAT_SIDE_NONE
-            && gpCombatManager->m_hexCells[rearSquare].m_obstacleIndex == COMBAT_OBSTACLE_NONE)
+            && gCombatManager->m_hexCells[rearSquare].m_occupantSide == COMBAT_SIDE_NONE
+            && gCombatManager->m_hexCells[rearSquare].m_obstacleIndex == COMBAT_OBSTACLE_NONE)
             rearValidResult = 1;
         if (direction == COMBAT_DIRECTION_EAST || direction == COMBAT_DIRECTION_WEST)
             return rearValidResult;
@@ -197,15 +197,15 @@ i16 army::ValidAttack(
         return 0;
     if (requiredTargetHex != ARMY_HEX_INVALID && *attackHex != requiredTargetHex)
         return 0;
-    occupantSide = gpCombatManager->m_hexCells[*attackHex].m_occupantSide;
+    occupantSide = gCombatManager->m_hexCells[*attackHex].m_occupantSide;
     switch (targetMode) {
         case ARMY_ATTACK_TARGET_ASSIGNED:
             if (occupantSide == m_targetSide
-                && gpCombatManager->m_hexCells[*attackHex].m_occupantIndex == m_targetIndex)
+                && gCombatManager->m_hexCells[*attackHex].m_occupantIndex == m_targetIndex)
                 return 1;
             break;
         case ARMY_ATTACK_TARGET_ENEMY:
-            if (occupantSide == 1 - gpCombatManager->m_currentSide)
+            if (occupantSide == 1 - gCombatManager->m_currentSide)
                 return 1;
             break;
         case ARMY_ATTACK_TARGET_OCCUPIED:

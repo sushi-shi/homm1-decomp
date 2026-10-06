@@ -13,7 +13,7 @@ H1_ENUM_CONST_END(FindPathDistanceConstant)
 
 H1_ENUM_CONST_BEGIN(FindPathTerrainConstant)
     FINDPATH_TERRAIN_COUNT = 7,
-    // giTerrainCost's second index and CalcTerrainCost's diagonal argument:
+    // gTerrainCost's second index and CalcTerrainCost's diagonal argument:
     // a straight or a diagonal step (SeedPosition's s_stepCost pair).
     FINDPATH_STEP_STRAIGHT = 0,
     FINDPATH_STEP_DIAGONAL = 1,
