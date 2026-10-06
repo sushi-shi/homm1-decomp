@@ -413,7 +413,12 @@ class mapCell* advManager::DoAdvCommand(void) {
     b8 userStopRequested;
 
     cellPtr = NULL;
-    selectedHero = gGame->GetHero(gCurPlayerData->m_currentHero);
+    // The commands that do not move a hero (town view, ...) also run with no
+    // current hero (-1); the original took the address of the hero before
+    // the table for them, unused.
+    selectedHero = gCurPlayerData->m_currentHero != HERO_ID_NONE
+                       ? gGame->GetHero(gCurPlayerData->m_currentHero)
+                       : NULL;
     userStopRequested = false;
     hover = false;
     switch (m_pendingCommand) {

@@ -9693,7 +9693,22 @@ void editManager::SelectTool(i16 tool) {
         return;
     if (m_toolManager) {
         gExec->RemoveManager(m_toolManager);
-        delete m_toolManager;
+        // baseManager has no virtual destructor; the original deleted the
+        // tool through it. Each tool is deleted as what it was created as.
+        switch (m_tool) {
+            case EDIT_TOOL_TERRAIN:
+                delete static_cast<terrainManager*>(m_toolManager);
+                break;
+            case EDIT_TOOL_OBJECTS:
+                delete static_cast<overlayManager*>(m_toolManager);
+                break;
+            case EDIT_TOOL_DETAILS:
+                delete static_cast<eventsManager*>(m_toolManager);
+                break;
+            case EDIT_TOOL_ERASER:
+                delete static_cast<clearManager*>(m_toolManager);
+                break;
+        }
         m_toolManager = NULL;
     }
     for (i = EDIT_TOOL_TERRAIN; i < EDIT_TOOL_COUNT; i++) {
