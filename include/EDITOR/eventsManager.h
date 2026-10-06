@@ -8,6 +8,7 @@
 // heroedit.bin, clearwin.bin, dtlwind.bin and editnew.bin.
 
 #include <BASE/baseManager.h>
+#include <BASE/dialog.h>
 #include <Domains.h>
 #include <H1/Macros.h>
 #include <SOURCE/game.h>
@@ -27,85 +28,85 @@ H1_ENUM_CONST_BEGIN(EventsWindowText)
     EVENTS_WINDOW_TEXT_NEW_MAP = 0x6a
 H1_ENUM_CONST_END(EventsWindowText)
 
-// Main tests message.type against the dispatch mask the managers share.
-H1_ENUM_CONST_BEGIN(EventsManagerConstant)
-    EVENTS_MANAGER_DISPATCH_MASK = 0x32f,
-    // EditCell opens only from this debug level.
-    EVENTS_CELL_EDIT_DEBUG_LEVEL = 1,
-    // The hover cursor sits on 32-pixel cells (16 zoomed) from the map view's
-    // origin at (16, 16).
-    EVENTS_CELL_SIZE = 32,
-    EVENTS_ZOOMED_CELL_SIZE = 16,
-    EVENTS_MAP_VIEW_ORIGIN = 16
-H1_ENUM_CONST_END(EventsManagerConstant)
+// The editor dialogs' closing buttons (heroWindowManager::m_dialogResult):
+// cancel keeps the edited record or settings as they were.
+H1_ENUM_BEGIN(EventsDialogButton)
+    EVENTS_DIALOG_CANCEL = DIALOG_BUTTON_1,
+    EVENTS_DIALOG_OK = DIALOG_BUTTON_2
+H1_ENUM_END(EventsDialogButton)
 
-// The tool panel (a buttons.icn frame).
 H1_ENUM_CONST_BEGIN(EventsManagerLayout)
-    EVENTS_PANEL_X = 480,
-    EVENTS_PANEL_Y = 197,
-    EVENTS_PANEL_WIDTH = 144,
-    EVENTS_PANEL_HEIGHT = 139,
-    EVENTS_PANEL_FRAME = 37,
-    // Every dialog opens at (16, 16).
+// Every dialog opens at (16, 16).
     EVENTS_DIALOG_X = 16,
-    EVENTS_DIALOG_Y = 16
+    EVENTS_DIALOG_Y = 16,
+    // Main outlines the hovered cell (overlay.icn) in this palette colour.
+    EVENTS_HOVER_COLOR = 1
 H1_ENUM_CONST_END(EventsManagerLayout)
 
-// mapCell::m_triggerType values Main opens a dialog for.
-H1_ENUM_BEGIN(EventsObjectType)
-    EVENTS_OBJECT_MONSTER = 0x9a,
-    EVENTS_OBJECT_TOWN = 0xa8,
-    EVENTS_OBJECT_MONSTER_2 = 0xbf,
-    EVENTS_OBJECT_CASTLE = 0xc0,
-    EVENTS_OBJECT_CASTLE_GATE = 0xc1,
-    EVENTS_OBJECT_MONSTER_3 = 0xc3,
-    EVENTS_OBJECT_MONSTER_4 = 0xc4,
-    EVENTS_OBJECT_MONSTER_5 = 0xc5,
-    EVENTS_OBJECT_MONSTER_6 = 0xc6,
-    EVENTS_OBJECT_HERO = 0xc7
-H1_ENUM_END(EventsObjectType)
-
-// cellwin.bin: a text field per cell byte and per pair word, and toggles for
-// the bits of the cell's seventh byte and the object type's top bit.
+// cellwin.bin: a text field per mapCell byte and per editMapCellPair word
+// from CELL_WINDOW_FIRST_BYTE (CellWindowField order), a toggle per m_flags
+// bit from CELL_WINDOW_FIRST_FLAG (bit order) and a toggle for the trigger's
+// event bit (MAP_TRIGGER_EVENT).
 H1_ENUM_CONST_BEGIN(CellWindowConstant)
     CELL_WINDOW_FIRST_BYTE = 0x2bc,
     CELL_WINDOW_FIRST_FLAG = 0x40,
-    CELL_WINDOW_OBJECT_FLAG = 0x48,
-    CELL_WINDOW_OBJECT_FLAG_BIT = 0x80,
-    CELL_WINDOW_NIBBLE_MAX = 15,
+    CELL_WINDOW_EVENT_TOGGLE = 0x48,
     CELL_WINDOW_BYTE_MASK = 0xff
 H1_ENUM_CONST_END(CellWindowConstant)
 
+// cellwin.bin's text fields, offsets from CELL_WINDOW_FIRST_BYTE: the ten
+// mapCell bytes in record order, then the cell's object and overlay ids.
+H1_ENUM_CONST_BEGIN(CellWindowField)
+    CELL_FIELD_TILE_INDEX = 0,
+    CELL_FIELD_OBJECT_TILESET = 1,
+    CELL_FIELD_OBJECT_INDEX = 2,
+    CELL_FIELD_OVERLAY_TILESET = 3,
+    CELL_FIELD_OVERLAY_INDEX = 4,
+    CELL_FIELD_EXTRA_FRAME = 5,
+    CELL_FIELD_FLAGS = 6,
+    CELL_FIELD_SECONDARY_TRIGGER = 7,
+    CELL_FIELD_TRIGGER_TYPE = 8,
+    CELL_FIELD_OBJECT_METADATA = 9,
+    CELL_FIELD_OBJECT_ID = 10,
+    CELL_FIELD_OVERLAY_ID = 11
+H1_ENUM_CONST_END(CellWindowField)
+
 // edittown.bin, monedit.bin and heroedit.bin share the garrison and owner
-// rows: troop types, names and counts by slot, and owner radio buttons from
-// the unset owner (-2) up.
+// rows: troop types, names and counts by army slot, and an owner radio
+// button per owner value (FIRST_PLAYER + owner) from the town's unset owner
+// MAP_TOWN_OWNER_UNSET (-2) and the neutral GAME_PLAYER_NONE (-1) up to the
+// last player.
 H1_ENUM_CONST_BEGIN(ExtraWindowConstant)
     EXTRA_WINDOW_FIRST_TYPE = 0x200,
     EXTRA_WINDOW_FIRST_NAME = 0x205,
     EXTRA_WINDOW_FIRST_COUNT = 0x20a,
-    EXTRA_WINDOW_FIRST_OWNER = 0x23e,
-    EXTRA_WINDOW_NEUTRAL_OWNER = 0x240,
-    EXTRA_WINDOW_OWNER_END = 0x244,
+    EXTRA_WINDOW_FIRST_PLAYER = 0x240,
+    EXTRA_WINDOW_FIRST_OWNER = EXTRA_WINDOW_FIRST_PLAYER + MAP_TOWN_OWNER_UNSET,
+    EXTRA_WINDOW_OWNER_END = EXTRA_WINDOW_FIRST_PLAYER + GAME_PLAYER_COUNT,
     EXTRA_WINDOW_MAX_COUNT = 999,
+    // The last creature type (CREATURE_GENIE) a troop type field accepts.
     EXTRA_WINDOW_MAX_TYPE = 27,
     TOWN_WINDOW_CUSTOMIZED = 0x1f7,
     TOWN_WINDOW_FIRST_FIELD = 0x1f8,
     TOWN_WINDOW_LAST_FIELD = 0x243,
+    // A toggle per building slot (BuildingSlotType) up to the last dwelling,
+    // except the tent and castle slots the town type decides.
     TOWN_WINDOW_FIRST_BUILDING = 0x225,
+    // The mage guild field shows town::m_buildState + 1 (levels 1..4).
     TOWN_WINDOW_MAGE_GUILD = 0x230,
+    TOWN_WINDOW_MIN_MAGE_GUILD = 1,
     TOWN_WINDOW_MAX_MAGE_GUILD = 4,
-    // Building bits 0..12 have toggles but the tent and castle bits.
-    TOWN_WINDOW_LAST_BUILDING_BIT = 12,
-    TOWN_WINDOW_TENT_BIT = 5,
-    TOWN_WINDOW_CASTLE_BIT = 6,
-    MONSTER_WINDOW_COUNT = 0x20a,
+    // monedit.bin's stack count (mapCell::m_objectMetadata; 0 lets the game
+    // choose it) is the first garrison count field.
+    MONSTER_WINDOW_COUNT = EXTRA_WINDOW_FIRST_COUNT,
     MONSTER_WINDOW_MAX_COUNT = 127,
     HERO_WINDOW_HERO_ID = 0x215,
     HERO_WINDOW_FIRST_ARTIFACT = 0x216,
     HERO_WINDOW_EXPERIENCE = 0x21a,
     HERO_WINDOW_HERO_NAME = 0x21b,
     HERO_WINDOW_FIRST_ARTIFACT_NAME = 0x21c,
-    HERO_WINDOW_MAX_HERO_ID = 35,
+    // An artifact field shows the artifact id + 1 (0: none), up to the last
+    // artifact before the magic book (ARTIFACT_REGULAR_END).
     HERO_WINDOW_MAX_ARTIFACT = 37,
     HERO_WINDOW_MAX_EXPERIENCE = 999999,
     // HeroWindowHandler's field: the edited control's offset from the hero id.
@@ -126,7 +127,6 @@ H1_ENUM_CONST_BEGIN(ClearWindowConstant)
     CLEAR_FLAG_EVERY_CLASS = 0xfffff,
     CLEAR_FLAG_EVERYTHING = 0x100000,
     CLEAR_FLAG_WHOLE_MAP = 0x200000,
-    CLEAR_FLAG_CLASS_MASK = 0xffff,
     CLEAR_FLAG_ALL = 0x7fffffff
 H1_ENUM_CONST_END(ClearWindowConstant)
 
@@ -160,32 +160,23 @@ H1_ENUM_CONST_BEGIN(NewMapWindowConstant)
     NEW_MAP_TRACK_X = 154,
     NEW_MAP_TRACK_WIDTH = 250,
     NEW_MAP_TRACK_HEIGHT = 16,
-    NEW_MAP_TRACK_FRAME = 20,
+    // A knob's x at 0 percent.
     NEW_MAP_KNOB_X = 157,
     NEW_MAP_KNOB_Y_OFFSET = 3,
     NEW_MAP_KNOB_WIDTH = 17,
     NEW_MAP_KNOB_HEIGHT = 8,
-    NEW_MAP_KNOB_FRAME = 2,
     NEW_MAP_ROW_HEIGHT = 24,
     NEW_MAP_FIRST_TERRAIN_Y = 26,
     NEW_MAP_FIRST_DENSITY_Y = 222,
-    // A knob travels from x 157 to 383; the window lies 16 pixels in and a
-    // knob is grabbed by its middle.
-    NEW_MAP_KNOB_LEFT = 157,
+    // A dragged knob travels from NEW_MAP_KNOB_X to 383 and is grabbed by its
+    // middle; UpdateNewMapWindow places it over 227 pixels.
     NEW_MAP_KNOB_RIGHT = 383,
     NEW_MAP_KNOB_TRAVEL = 227,
-    NEW_MAP_DRAG_X_OFFSET = 16,
-    NEW_MAP_KNOB_HALF_WIDTH = 8,
+    NEW_MAP_KNOB_HALF_WIDTH = NEW_MAP_KNOB_WIDTH / 2,
     // The land terrains keep at least 20 percent; water is capped at 75.
     NEW_MAP_MINIMUM_LAND = 20,
     NEW_MAP_MAXIMUM_WATER = 75
 H1_ENUM_CONST_END(NewMapWindowConstant)
-
-// mouseManager cursor shapes the slider drag switches between.
-H1_ENUM_CONST_BEGIN(EventsCursorConstant)
-    EVENTS_CURSOR_SLIDER = 2,
-    EVENTS_CURSOR_NORMAL = 6
-H1_ENUM_CONST_END(EventsCursorConstant)
 
 // Closes the running dialog: the dialog manager reads the select command.
 #define FINISH_DIALOG_SELECT(message)                                                              \
@@ -232,12 +223,15 @@ i16 MapDetailsWindowHandler(tag_message& message);
 // Sets up the random map generator (editnew.bin); returns 0 when cancelled.
 i32 NewMapDialog(void);
 void UpdateNewMapWindow(void);
-// Rescales the other terrains after terrain `fixed` changed (-1: none).
-void BalanceTerrainPercents(i32 fixed);
+// After a slider changed terrain changedTerrain, tops grass up to the land
+// minimum. Without one (TERRAIN_INVALID, as the window closes) it scales the
+// terrains to 100 percent less the share read at index -1, then caps water
+// and rebalances from it.
+void BalanceTerrainPercents(i32 changedTerrain);
 i16 NewMapWindowHandler(tag_message& message);
-// Drags a generator slider: a terrain row when `terrain` is set, else a
+// Drags a generator slider: a terrain row when terrainRow is set, else a
 // density row.
-void DragNewMapSlider(i32 terrain, i32 index);
+void DragNewMapSlider(i32 terrainRow, i32 index);
 
 extern editTownExtra gTownEdit;
 extern editHeroExtra gHeroEdit;

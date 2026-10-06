@@ -130,7 +130,15 @@ void icon::FillToBuffer(
                 || m_drawTop > gMaxExtentY || m_drawBottom < gMinExtentY)
                 return;
         }
-        MonoIconToBitmap(this, gWindowManager->m_screen, x, y, frame, gMonoColorMap[color], offsetMode);
+        MonoIconToBitmap(
+            this,
+            gWindowManager->m_screen,
+            x,
+            y,
+            frame,
+            gMonoColorMap[color],
+            offsetMode
+        );
     } else {
         FlipMonoIconToBitmap(
             this,

@@ -281,6 +281,59 @@ depending on the operation. Its leading unused `i32` keeps the `com_sess(i32, i3
 calling shape, because retail pushes a zero in front of the operation. No
 function walks its arguments by address.
 
+## Editor-only units
+
+The scenario editor's own units (`src/EDITOR`: EDITOR, EDITMGR, CLEARMGR,
+TERRMGR, EVENTMGR, OVERLAY, MAPOBJ, and `include/EDITOR`) were read in full
+with the same passes as the game. Every editor function stays exact.
+
+- Constants: `homm1 verify constants` reads these units with the editor's
+  compile commands, so the one floor covers both programs. Their 1,270 open
+  literals are down to 328, nearly all 0/1 flag stores, arguments and returns
+  left for the boolean types. Duplicates moved into shared domains: the five
+  managers' dispatch masks, the four tool-panel rectangles and sentinels, the
+  terrain counts (`EDITOR_TERRAIN_COUNT`), the radar geometry, shade and
+  viewport colour (the adventure screen's `AdventureRadarConstant`), the
+  animation cycle, the event-bit trigger copies (`MAP_TRIGGER_EVENT |` the
+  game's codes), the generator's site kinds (`ResourceType`) and the castle
+  frames (`EDIT_CASTLE_FRAME`). The editor keeps its own domains for its
+  ICN frames, pointers, help tables, object classes (`OverlayKind`), tile
+  runs, clear layers, view colours and window controls
+  ([ledger](../config/reviews/enum-reuse.tsv)).
+- Naming: the [editor naming ledger](../config/reviews/naming-editor.tsv)
+  records each rename and its evidence. Locals whose readable names would move
+  the `/Od` frame keep their slots through 62 frame-slot aliases; globals keep
+  their storage spellings.
+- `goto`: **3**, all kept. Rewriting BlendTerrain's skip as `if (!skipFill)
+  { ... }` drops it to 99.51%; duplicating the object tool's shared
+  category tail drops overlayManager::Main to 97.78% and PickOverlay to
+  97.68%.
+- `static_cast`: **30** (from 38). The `double`-to-`i32` argument and store
+  casts are gone. The rest are the `void*` map-extra record and tool-manager
+  downcasts (9), `malloc` results (6), the map-code field's CP1251 character
+  tests (13, as `REQUEST.cpp`'s) and PlaceTowns' float shares (2), whose
+  parenthesized divisor is the [parenthesized-cast pattern](patterns/vc6-parenthesized-cast-operand.md).
+- Unknown members and unread tails: `overlayManager::m_unused16ca` (no
+  instruction of the editor image touches the offset) and the town and hero
+  records' `unused14`/`unused19` blocks, which only whole-record copies cover.
+  The map header lives in a 2000-byte character buffer that its six users
+  view as `SMapHeader` (retail places it 4-byte aligned, which VC6 gives no
+  record), and its last 636 bytes are unread; the linked image's other unread
+  `.bss` placeholders are listed in [the editor's data debt](editor.md#data-debt).
+- Dead declarations: none in the editor headers.
+- Byte layouts: the map file's town and mine records are an `editMapRecord`,
+  SaveMap and LoadMap name the header range with `offsetof`, the generator's
+  cell grids go through `MAP_GRID_CELL` and the object footprints through
+  `OVERLAY_FOOTPRINT_CELL`/`_BIT`.
+- Helpers: the editor reuses `CELL_TERRAIN` (31 neighbour reads) and
+  `SET_WIDGET_MESSAGE` (4); `EDIT_CASTLE_FRAME`/`EDIT_TOWN_FRAME`,
+  `MAP_GRID_CELL`, `OVERLAY_FOOTPRINT_CELL`/`_BIT` and `OVERLAY_TERRAIN_BIT`
+  are recovered at every site. `MAP_CELL_IN_BOUNDS` does not apply: the
+  editor's bounds tests compare `> MAP_CELL_GRID_SIZE - 1`. The generator's
+  `x ± 1` neighbour reads stay open-coded (the macro groups the offset and
+  the functions drop to 95-96%), and the zoom-dependent cell sizes stay
+  explicit, because the matching source spells them three ways.
+
 ## Resolved
 
 Categories closed during the game cleanup. Each count is final; a regression

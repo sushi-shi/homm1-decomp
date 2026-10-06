@@ -5,6 +5,7 @@
 
 #include <BASE/button.h>
 #include <BASE/heroWindow.h>
+#include <BASE/icon.h>
 #include <BASE/iconWidget.h>
 #include <BASE/inputManager.h>
 #include <BASE/message.h>
@@ -22,41 +23,41 @@
 
 VA(0x00401000, 0x44)
 clearManager::clearManager(void) {
-    m_lastY = CLEAR_MANAGER_NO_CELL;
-    m_lastX = CLEAR_MANAGER_NO_CELL;
-    m_dispatchMask = CLEAR_MANAGER_DISPATCH_MASK;
+    m_lastY = EDIT_NO_CELL;
+    m_lastX = EDIT_NO_CELL;
+    m_dispatchMask = EDIT_MANAGER_DISPATCH_MASK;
     m_panel = NULL;
 }
 
 VA(0x00401044, 0x188)
 i16 clearManager::Open(i16 priority) {
     m_panel = new iconWidget(
-        CLEAR_PANEL_X,
-        CLEAR_PANEL_Y,
-        CLEAR_PANEL_WIDTH,
-        CLEAR_PANEL_HEIGHT,
+        EDIT_TOOL_PANEL_X,
+        EDIT_TOOL_PANEL_Y,
+        EDIT_TOOL_PANEL_WIDTH,
+        EDIT_TOOL_PANEL_HEIGHT,
         "buttons.icn",
-        CLEAR_PANEL_FRAME,
-        0,
+        EDIT_FRAME_CLEAR_PANEL,
+        ICON_DRAW_NORMAL,
         WIDGET_ID_NONE,
         ICON_WIDGET_DRAW,
         1
     );
-    gEditManager->m_window->AddWidget(m_panel, -1);
+    gEditManager->m_window->AddWidget(m_panel, WINDOW_Z_ORDER_APPEND);
     m_optionsButton = new button(
         CLEAR_OPTIONS_BUTTON_X,
         CLEAR_OPTIONS_BUTTON_Y,
         CLEAR_OPTIONS_BUTTON_WIDTH,
         CLEAR_OPTIONS_BUTTON_HEIGHT,
         "buttons.icn",
-        CLEAR_OPTIONS_BUTTON_FRAME,
-        CLEAR_OPTIONS_BUTTON_PRESSED_FRAME,
+        EDIT_FRAME_CLEAR_OPTIONS,
+        EDIT_FRAME_CLEAR_OPTIONS_PRESSED,
         0,
         BUTTON_NO_HOTKEY,
         EDIT_CONTROL_TOOL_OPTIONS,
         WIDGET_KIND_DEFAULT
     );
-    gEditManager->m_window->AddWidget(m_optionsButton, -1);
+    gEditManager->m_window->AddWidget(m_optionsButton, WINDOW_Z_ORDER_APPEND);
     gEditManager->m_window->DrawWindow();
     m_messageMask = BASE_MANAGER_ACCEPT_EXECUTIVE;
     m_priority = priority;
@@ -91,7 +92,7 @@ i16 clearManager::Main(tag_message& message) {
     tag_message event;
 
     if (!(message.type & m_dispatchMask))
-        return 0;
+        return MESSAGE_DISPATCH_CONTINUE;
     switch (message.type) {
         case MESSAGE_WIDGET:
             switch (message.command) {
@@ -106,7 +107,7 @@ i16 clearManager::Main(tag_message& message) {
                                 dragMode = CLEAR_DRAG_RECTANGLE;
                             gMouseManager->MouseCoords(anchorX, anchorY);
                             gEditManager->ScreenToCell(anchorX, anchorY);
-                            gSelectionX = -1;
+                            gSelectionX = EDIT_NO_CELL;
                             anchorX += gEditManager->m_viewX;
                             anchorY += gEditManager->m_viewY;
                             gEditManager->SaveUndo();
@@ -154,12 +155,12 @@ i16 clearManager::Main(tag_message& message) {
                                         0
                                     );
                             }
-                            gSelectionX = gSelectionY = -1;
+                            gSelectionX = gSelectionY = EDIT_NO_CELL;
                             gEditManager->DrawMap();
                             gEditManager->UpdateMapView();
                             gEditManager->DrawRadar(1);
-                            m_lastY = CLEAR_MANAGER_NO_CELL;
-                            m_lastX = CLEAR_MANAGER_NO_CELL;
+                            m_lastY = EDIT_NO_CELL;
+                            m_lastX = EDIT_NO_CELL;
                             gEditManager->m_mapChanged = 1;
                             break;
                     }
@@ -179,10 +180,9 @@ i16 clearManager::Main(tag_message& message) {
                         );
                     break;
                 case WIDGET_COMMAND_HOVER:
-                    if (message.id != EDIT_CONTROL_MAP
-                        && message.id == gEditManager->m_lastCommandId)
-                        return 1;
-                    gEditManager->m_lastCommandId = message.id;
+                    if (message.id != EDIT_CONTROL_MAP && message.id == gEditManager->m_lastHoverId)
+                        return MESSAGE_DISPATCH_CONSUME;
+                    gEditManager->m_lastHoverId = message.id;
                     switch (message.id) {
                         case EDIT_CONTROL_MAP:
                             gMouseManager->MouseCoords(newX, newY);
@@ -195,9 +195,9 @@ i16 clearManager::Main(tag_message& message) {
                             }
                             break;
                     }
-                    return 1;
+                    return MESSAGE_DISPATCH_CONSUME;
             }
             break;
     }
-    return 0;
+    return MESSAGE_DISPATCH_CONTINUE;
 }

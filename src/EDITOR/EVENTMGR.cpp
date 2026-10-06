@@ -19,6 +19,7 @@
 #include <SOURCE/fileRequester.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
+#include <SOURCE/mapObjectTypes.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -35,17 +36,17 @@ heroWindow* gClearWindow = 0;
 DATA(0x004529a8)
 i16 gEventsLastHoverId = 0;
 DATA(0x004529ac)
-iconWidget* gTerrainKnobs[EDITOR_GENERATOR_TERRAIN_COUNT] = {0};
+iconWidget* gTerrainKnobs[EDITOR_TERRAIN_COUNT] = {0};
 DATA(0x004529c8)
 editMapCellPair* gEditCellPair = 0;
 DATA(0x004529cc)
 iconWidget* gDensityKnobs[EDITOR_GENERATOR_DENSITY_COUNT] = {0};
 DATA(0x004529e0)
-iconWidget* gTerrainTracks[EDITOR_GENERATOR_TERRAIN_COUNT] = {0};
+iconWidget* gTerrainTracks[EDITOR_TERRAIN_COUNT] = {0};
 DATA(0x00452a00)
 editTownExtra gTownEdit = {0};
 DATA(0x00452a48)
-i32 gMonsterCount = 0;
+i32 gMonsterCountEdit = 0;
 DATA(0x00452a4c)
 heroWindow* gDetailsWindow = 0;
 DATA(0x00452a50)
@@ -53,25 +54,25 @@ heroWindow* gNewMapWindow = 0;
 
 VA(0x004092c0, 0x32)
 eventsManager::eventsManager(void) {
-    m_dispatchMask = EVENTS_MANAGER_DISPATCH_MASK;
+    m_dispatchMask = EDIT_MANAGER_DISPATCH_MASK;
     m_panel = NULL;
 }
 
 VA(0x004092f2, 0x123)
 i16 eventsManager::Open(i16 priority) {
     m_panel = new iconWidget(
-        EVENTS_PANEL_X,
-        EVENTS_PANEL_Y,
-        EVENTS_PANEL_WIDTH,
-        EVENTS_PANEL_HEIGHT,
+        EDIT_TOOL_PANEL_X,
+        EDIT_TOOL_PANEL_Y,
+        EDIT_TOOL_PANEL_WIDTH,
+        EDIT_TOOL_PANEL_HEIGHT,
         "buttons.icn",
-        EVENTS_PANEL_FRAME,
-        0,
+        EDIT_FRAME_EVENTS_PANEL,
+        ICON_DRAW_NORMAL,
         WIDGET_ID_NONE,
         ICON_WIDGET_DRAW,
         1
     );
-    gEditManager->m_window->AddWidget(m_panel, -1);
+    gEditManager->m_window->AddWidget(m_panel, WINDOW_Z_ORDER_APPEND);
     gEditManager->m_window->DrawWindow();
     m_cursorIcon = gResourceManager->GetIcon("overlay.icn");
     m_messageMask = BASE_MANAGER_ACCEPT_EXECUTIVE;
@@ -104,7 +105,7 @@ i16 eventsManager::Main(tag_message& message) {
     i16 newY;
 
     if (!(message.type & m_dispatchMask))
-        return 0;
+        return MESSAGE_DISPATCH_CONTINUE;
     switch (message.type) {
         case MESSAGE_WIDGET:
             switch (message.command) {
@@ -116,18 +117,30 @@ i16 eventsManager::Main(tag_message& message) {
                     cell = &gEditManager->m_map.cells[x][y];
                     switch (message.id) {
                         case EDIT_CONTROL_MAP:
-                            if (cell->m_triggerType == EVENTS_OBJECT_TOWN
-                                || cell->m_triggerType == EVENTS_OBJECT_CASTLE
-                                || cell->m_triggerType == EVENTS_OBJECT_CASTLE_GATE)
+                            if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)
+                                || cell->m_triggerType
+                                       == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_TOWN)
+                                || cell->m_triggerType
+                                       == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_CASTLE))
                                 EditTown(x, y);
-                            else if (cell->m_triggerType == EVENTS_OBJECT_MONSTER
-                                     || cell->m_triggerType == EVENTS_OBJECT_MONSTER_2
-                                     || cell->m_triggerType == EVENTS_OBJECT_MONSTER_3
-                                     || cell->m_triggerType == EVENTS_OBJECT_MONSTER_4
-                                     || cell->m_triggerType == EVENTS_OBJECT_MONSTER_5
-                                     || cell->m_triggerType == EVENTS_OBJECT_MONSTER_6)
+                            else if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER)
+                                     || cell->m_triggerType
+                                            == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_MONSTER)
+                                     || cell->m_triggerType
+                                            == (MAP_TRIGGER_EVENT
+                                                | MAP_FILE_OBJECT_RANDOM_MONSTER_WEAK)
+                                     || cell->m_triggerType
+                                            == (MAP_TRIGGER_EVENT
+                                                | MAP_FILE_OBJECT_RANDOM_MONSTER_MEDIUM)
+                                     || cell->m_triggerType
+                                            == (MAP_TRIGGER_EVENT
+                                                | MAP_FILE_OBJECT_RANDOM_MONSTER_STRONG)
+                                     || cell->m_triggerType
+                                            == (MAP_TRIGGER_EVENT
+                                                | MAP_FILE_OBJECT_RANDOM_MONSTER_VERY_STRONG))
                                 EditMonster(x, y);
-                            else if (cell->m_triggerType == EVENTS_OBJECT_HERO)
+                            else if (cell->m_triggerType
+                                     == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_HERO))
                                 EditHero(x, y);
                             else
                                 EditCell(x, y);
@@ -136,7 +149,7 @@ i16 eventsManager::Main(tag_message& message) {
                     break;
                 case WIDGET_COMMAND_HOVER:
                     if (message.id != EDIT_CONTROL_MAP && message.id == gEventsLastHoverId)
-                        return 1;
+                        return MESSAGE_DISPATCH_CONSUME;
                     gEventsLastHoverId = message.id;
                     switch (message.id) {
                         case EDIT_CONTROL_MAP:
@@ -146,20 +159,22 @@ i16 eventsManager::Main(tag_message& message) {
                                 || gEditManager->m_cursorY != newY) {
                                 gEditManager->m_cursorX = newX;
                                 gEditManager->m_cursorY = newY;
-                                newX = newX
-                                           * (gEditManager->m_zoomedOut ? EVENTS_ZOOMED_CELL_SIZE
-                                                                        : EVENTS_CELL_SIZE)
-                                       + EVENTS_MAP_VIEW_ORIGIN;
-                                newY = newY
-                                           * (gEditManager->m_zoomedOut ? EVENTS_ZOOMED_CELL_SIZE
-                                                                        : EVENTS_CELL_SIZE)
-                                       + EVENTS_MAP_VIEW_ORIGIN;
+                                newX =
+                                    newX
+                                        * (gEditManager->m_zoomedOut ? EDIT_VIEW_ZOOMED_CELL_PIXELS
+                                                                     : EDIT_VIEW_CELL_PIXELS)
+                                    + EDIT_VIEW_LEFT;
+                                newY =
+                                    newY
+                                        * (gEditManager->m_zoomedOut ? EDIT_VIEW_ZOOMED_CELL_PIXELS
+                                                                     : EDIT_VIEW_CELL_PIXELS)
+                                    + EDIT_VIEW_TOP;
                                 gEditManager->DrawMap();
                                 m_cursorIcon->FillToBuffer(
                                     newX,
                                     newY,
                                     !gEditManager->m_zoomedOut,
-                                    1,
+                                    EVENTS_HOVER_COLOR,
                                     ICON_DRAW_NORMAL,
                                     ICON_DRAW_OFFSET_FULL
                                 );
@@ -168,11 +183,11 @@ i16 eventsManager::Main(tag_message& message) {
                             }
                             break;
                     }
-                    return 1;
+                    return MESSAGE_DISPATCH_CONSUME;
             }
             break;
     }
-    return 0;
+    return MESSAGE_DISPATCH_CONTINUE;
 }
 
 VA(0x004097fb, 0x410)
@@ -182,7 +197,7 @@ void eventsManager::EditCell(i16 x, i16 y) {
     // Never filled: only the cell is restored on cancel.
     editMapCellPair savedPair;
 
-    if (giDebugLevel < EVENTS_CELL_EDIT_DEBUG_LEVEL) {
+    if (gDebugLevel < EVENTS_CELL_EDIT_DEBUG_LEVEL_MIN) {
         NormalDialog(localization::Tr("editor.events.cell.unavailable"), NORMAL_DIALOG_TYPE_OK);
         return;
     }
@@ -197,44 +212,44 @@ void eventsManager::EditCell(i16 x, i16 y) {
     msg.command = WIDGET_COMMAND_SET_TEXT;
     msg.text = text;
     sprintf(text, "%d", gEditCell->m_tileIndex);
-    msg.id = firstByteId;
+    msg.id = firstByteId + CELL_FIELD_TILE_INDEX;
     gEditDialog->BroadcastMessage(msg);
     sprintf(text, "%d", gEditCell->m_objectTileset);
-    msg.id = firstByteId + 1;
+    msg.id = firstByteId + CELL_FIELD_OBJECT_TILESET;
     gEditDialog->BroadcastMessage(msg);
     sprintf(text, "%d", gEditCell->m_objectIndex);
-    msg.id = firstByteId + 2;
+    msg.id = firstByteId + CELL_FIELD_OBJECT_INDEX;
     gEditDialog->BroadcastMessage(msg);
     sprintf(text, "%d", gEditCell->m_overlayTileset);
-    msg.id = firstByteId + 3;
+    msg.id = firstByteId + CELL_FIELD_OVERLAY_TILESET;
     gEditDialog->BroadcastMessage(msg);
     sprintf(text, "%d", gEditCell->m_overlayIndex);
-    msg.id = firstByteId + 4;
+    msg.id = firstByteId + CELL_FIELD_OVERLAY_INDEX;
     gEditDialog->BroadcastMessage(msg);
     sprintf(text, "%d", gEditCell->m_extraFrame);
-    msg.id = firstByteId + 5;
+    msg.id = firstByteId + CELL_FIELD_EXTRA_FRAME;
     gEditDialog->BroadcastMessage(msg);
     sprintf(text, "%d", gEditCell->m_flags);
-    msg.id = firstByteId + 6;
+    msg.id = firstByteId + CELL_FIELD_FLAGS;
     gEditDialog->BroadcastMessage(msg);
     sprintf(text, "%d", gEditCell->m_secondaryTrigger);
-    msg.id = firstByteId + 7;
+    msg.id = firstByteId + CELL_FIELD_SECONDARY_TRIGGER;
     gEditDialog->BroadcastMessage(msg);
     sprintf(text, "%d", gEditCell->m_triggerType);
-    msg.id = firstByteId + 8;
+    msg.id = firstByteId + CELL_FIELD_TRIGGER_TYPE;
     gEditDialog->BroadcastMessage(msg);
     sprintf(text, "%d", gEditCell->m_objectMetadata);
-    msg.id = firstByteId + 9;
+    msg.id = firstByteId + CELL_FIELD_OBJECT_METADATA;
     gEditDialog->BroadcastMessage(msg);
     sprintf(text, "%d", gEditCellPair->objectId);
-    msg.id = firstByteId + 10;
+    msg.id = firstByteId + CELL_FIELD_OBJECT_ID;
     gEditDialog->BroadcastMessage(msg);
     sprintf(text, "%d", gEditCellPair->overlayId);
-    msg.id = firstByteId + 11;
+    msg.id = firstByteId + CELL_FIELD_OVERLAY_ID;
     gEditDialog->BroadcastMessage(msg);
     gWindowManager->DoDialog(gEditDialog, CellWindowHandler, 0);
     delete gEditDialog;
-    if (gWindowManager->m_dialogResult == DIALOG_BUTTON_1)
+    if (gWindowManager->m_dialogResult == EVENTS_DIALOG_CANCEL)
         gEditManager->m_map.cells[x][y] = original;
     else
         gEditManager->m_mapChanged = 1;
@@ -253,8 +268,8 @@ i16 CellWindowHandler(tag_message& message) {
             switch (message.command) {
                 case WIDGET_NOTIFY_DESELECT:
                     switch (message.id) {
-                        case DIALOG_BUTTON_1:
-                        case DIALOG_BUTTON_2:
+                        case EVENTS_DIALOG_CANCEL:
+                        case EVENTS_DIALOG_OK:
                             gWindowManager->m_dialogResult = message.id;
                             FINISH_DIALOG_SELECT(message);
                             return MESSAGE_DISPATCH_FORWARD;
@@ -262,54 +277,54 @@ i16 CellWindowHandler(tag_message& message) {
                     break;
                 case WIDGET_NOTIFY_SELECT:
                     switch (message.id) {
-                        case CELL_WINDOW_FIRST_BYTE:
-                        case CELL_WINDOW_FIRST_BYTE + 1:
-                        case CELL_WINDOW_FIRST_BYTE + 2:
-                        case CELL_WINDOW_FIRST_BYTE + 3:
-                        case CELL_WINDOW_FIRST_BYTE + 4:
-                        case CELL_WINDOW_FIRST_BYTE + 5:
-                        case CELL_WINDOW_FIRST_BYTE + 6:
-                        case CELL_WINDOW_FIRST_BYTE + 7:
-                        case CELL_WINDOW_FIRST_BYTE + 8:
-                        case CELL_WINDOW_FIRST_BYTE + 9:
+                        case CELL_WINDOW_FIRST_BYTE + CELL_FIELD_TILE_INDEX:
+                        case CELL_WINDOW_FIRST_BYTE + CELL_FIELD_OBJECT_TILESET:
+                        case CELL_WINDOW_FIRST_BYTE + CELL_FIELD_OBJECT_INDEX:
+                        case CELL_WINDOW_FIRST_BYTE + CELL_FIELD_OVERLAY_TILESET:
+                        case CELL_WINDOW_FIRST_BYTE + CELL_FIELD_OVERLAY_INDEX:
+                        case CELL_WINDOW_FIRST_BYTE + CELL_FIELD_EXTRA_FRAME:
+                        case CELL_WINDOW_FIRST_BYTE + CELL_FIELD_FLAGS:
+                        case CELL_WINDOW_FIRST_BYTE + CELL_FIELD_SECONDARY_TRIGGER:
+                        case CELL_WINDOW_FIRST_BYTE + CELL_FIELD_TRIGGER_TYPE:
+                        case CELL_WINDOW_FIRST_BYTE + CELL_FIELD_OBJECT_METADATA:
                             message.command = WIDGET_COMMAND_GET_TEXT;
                             gEditDialog->BroadcastMessage(message);
                             value = atoi(message.text);
                             if (value < 0)
                                 break;
                             switch (message.id) {
-                                case CELL_WINDOW_FIRST_BYTE:
+                                case CELL_WINDOW_FIRST_BYTE + CELL_FIELD_TILE_INDEX:
                                     gEditCell->m_tileIndex = value & CELL_WINDOW_BYTE_MASK;
                                     break;
-                                case CELL_WINDOW_FIRST_BYTE + 1:
-                                    if (value > CELL_WINDOW_NIBBLE_MAX)
-                                        value = CELL_WINDOW_NIBBLE_MAX;
+                                case CELL_WINDOW_FIRST_BYTE + CELL_FIELD_OBJECT_TILESET:
+                                    if (value > MAP_CELL_TILESET_MASK)
+                                        value = MAP_CELL_TILESET_MASK;
                                     gEditCell->m_objectTileset = value;
                                     break;
-                                case CELL_WINDOW_FIRST_BYTE + 2:
+                                case CELL_WINDOW_FIRST_BYTE + CELL_FIELD_OBJECT_INDEX:
                                     gEditCell->m_objectIndex = value & CELL_WINDOW_BYTE_MASK;
                                     break;
-                                case CELL_WINDOW_FIRST_BYTE + 3:
-                                    if (value > CELL_WINDOW_NIBBLE_MAX)
-                                        value = CELL_WINDOW_NIBBLE_MAX;
+                                case CELL_WINDOW_FIRST_BYTE + CELL_FIELD_OVERLAY_TILESET:
+                                    if (value > MAP_CELL_TILESET_MASK)
+                                        value = MAP_CELL_TILESET_MASK;
                                     gEditCell->m_overlayTileset = value;
                                     break;
-                                case CELL_WINDOW_FIRST_BYTE + 4:
+                                case CELL_WINDOW_FIRST_BYTE + CELL_FIELD_OVERLAY_INDEX:
                                     gEditCell->m_overlayIndex = value & CELL_WINDOW_BYTE_MASK;
                                     break;
-                                case CELL_WINDOW_FIRST_BYTE + 5:
+                                case CELL_WINDOW_FIRST_BYTE + CELL_FIELD_EXTRA_FRAME:
                                     gEditCell->m_extraFrame = value;
                                     break;
-                                case CELL_WINDOW_FIRST_BYTE + 6:
+                                case CELL_WINDOW_FIRST_BYTE + CELL_FIELD_FLAGS:
                                     gEditCell->m_flags = value;
                                     break;
-                                case CELL_WINDOW_FIRST_BYTE + 7:
+                                case CELL_WINDOW_FIRST_BYTE + CELL_FIELD_SECONDARY_TRIGGER:
                                     gEditCell->m_secondaryTrigger = value;
                                     break;
-                                case CELL_WINDOW_FIRST_BYTE + 8:
+                                case CELL_WINDOW_FIRST_BYTE + CELL_FIELD_TRIGGER_TYPE:
                                     gEditCell->m_triggerType = value;
                                     break;
-                                case CELL_WINDOW_FIRST_BYTE + 9:
+                                case CELL_WINDOW_FIRST_BYTE + CELL_FIELD_OBJECT_METADATA:
                                     gEditCell->m_objectMetadata = value;
                                     break;
                             }
@@ -333,10 +348,10 @@ i16 CellWindowHandler(tag_message& message) {
                             gEditDialog->BroadcastMessage(message);
                             gEditDialog->DrawWindow();
                             break;
-                        case CELL_WINDOW_OBJECT_FLAG:
-                            gEditCell->m_triggerType ^= CELL_WINDOW_OBJECT_FLAG_BIT;
+                        case CELL_WINDOW_EVENT_TOGGLE:
+                            gEditCell->m_triggerType ^= MAP_TRIGGER_EVENT;
                             message.type = MESSAGE_WIDGET;
-                            message.command = gEditCell->m_triggerType & CELL_WINDOW_OBJECT_FLAG_BIT
+                            message.command = gEditCell->m_triggerType & MAP_TRIGGER_EVENT
                                                   ? WIDGET_COMMAND_SET_FLAGS
                                                   : WIDGET_COMMAND_CLEAR_FLAGS;
                             message.value = WIDGET_FLAG_DRAW;
@@ -376,7 +391,7 @@ void eventsManager::EditTown(i16 x, i16 y) {
     UpdateTownWindow(&gTownEdit);
     gWindowManager->DoDialog(gEditDialog, TownWindowHandler, 0);
     delete gEditDialog;
-    if (gWindowManager->m_dialogResult != DIALOG_BUTTON_1) {
+    if (gWindowManager->m_dialogResult != EVENTS_DIALOG_CANCEL) {
         gEditManager->m_mapChanged = 1;
         *static_cast<editTownExtra*>(gEditManager->m_extras[gEditCell->m_objectMetadata]) =
             gTownEdit;
@@ -390,12 +405,13 @@ void eventsManager::UpdateTownWindow(editTownExtra* town) {
     tag_message message;
     i32 i;
     char text[20];
-    i32 building;
+    i32 toggleIndex;
 
-    message.type = MESSAGE_WIDGET;
-    message.command =
-        town->record.customized ? WIDGET_COMMAND_SET_FLAGS : WIDGET_COMMAND_CLEAR_FLAGS;
-    message.id = TOWN_WINDOW_CUSTOMIZED;
+    SET_WIDGET_MESSAGE(
+        message,
+        town->record.customized ? WIDGET_COMMAND_SET_FLAGS : WIDGET_COMMAND_CLEAR_FLAGS,
+        TOWN_WINDOW_CUSTOMIZED
+    );
     message.value = WIDGET_FLAG_DRAW;
     gEditDialog->BroadcastMessage(message);
     if (!town->record.customized) {
@@ -429,15 +445,15 @@ void eventsManager::UpdateTownWindow(editTownExtra* town) {
         sprintf(text, "%d", town->record.buildState + 1);
         message.id = TOWN_WINDOW_MAGE_GUILD;
         gEditDialog->BroadcastMessage(message);
-        building = 0;
+        toggleIndex = 0;
         message.value = WIDGET_FLAG_DRAW;
-        for (i = 0; i <= TOWN_WINDOW_LAST_BUILDING_BIT; i++) {
-            if (i != TOWN_WINDOW_TENT_BIT && i != TOWN_WINDOW_CASTLE_BIT) {
+        for (i = 0; i <= BUILDING_SLOT_DWELLING_LAST; i++) {
+            if (i != BUILDING_SLOT_TENT && i != BUILDING_SLOT_CASTLE) {
                 message.command = town->record.buildings & (1 << i) ? WIDGET_COMMAND_SET_FLAGS
                                                                     : WIDGET_COMMAND_CLEAR_FLAGS;
-                message.id = building + TOWN_WINDOW_FIRST_BUILDING;
+                message.id = toggleIndex + TOWN_WINDOW_FIRST_BUILDING;
                 gEditDialog->BroadcastMessage(message);
-                building++;
+                toggleIndex++;
             }
         }
         message.value = WIDGET_FLAG_DRAW;
@@ -447,7 +463,7 @@ void eventsManager::UpdateTownWindow(editTownExtra* town) {
             gEditDialog->BroadcastMessage(message);
         }
         message.command = WIDGET_COMMAND_SET_FLAGS;
-        message.id = town->record.owner + EXTRA_WINDOW_NEUTRAL_OWNER;
+        message.id = town->record.owner + EXTRA_WINDOW_FIRST_PLAYER;
         gEditDialog->BroadcastMessage(message);
     }
 }
@@ -466,8 +482,8 @@ i16 TownWindowHandler(tag_message& message) {
             switch (message.command) {
                 case WIDGET_NOTIFY_DESELECT:
                     switch (message.id) {
-                        case DIALOG_BUTTON_1:
-                        case DIALOG_BUTTON_2:
+                        case EVENTS_DIALOG_CANCEL:
+                        case EVENTS_DIALOG_OK:
                             gWindowManager->m_dialogResult = message.id;
                             FINISH_DIALOG_SELECT(message);
                             return MESSAGE_DISPATCH_FORWARD;
@@ -514,13 +530,13 @@ i16 TownWindowHandler(tag_message& message) {
                                 amount;
                             changed = 1;
                             break;
-                        case EXTRA_WINDOW_FIRST_OWNER:
-                        case EXTRA_WINDOW_FIRST_OWNER + 1:
-                        case EXTRA_WINDOW_NEUTRAL_OWNER:
-                        case EXTRA_WINDOW_NEUTRAL_OWNER + 1:
-                        case EXTRA_WINDOW_NEUTRAL_OWNER + 2:
-                        case EXTRA_WINDOW_NEUTRAL_OWNER + 3:
-                            gTownEdit.record.owner = message.id - EXTRA_WINDOW_NEUTRAL_OWNER;
+                        case EXTRA_WINDOW_FIRST_PLAYER + MAP_TOWN_OWNER_UNSET:
+                        case EXTRA_WINDOW_FIRST_PLAYER + GAME_PLAYER_NONE:
+                        case EXTRA_WINDOW_FIRST_PLAYER:
+                        case EXTRA_WINDOW_FIRST_PLAYER + 1:
+                        case EXTRA_WINDOW_FIRST_PLAYER + 2:
+                        case EXTRA_WINDOW_FIRST_PLAYER + 3:
+                            gTownEdit.record.owner = message.id - EXTRA_WINDOW_FIRST_PLAYER;
                             changed = 1;
                             break;
                         case TOWN_WINDOW_FIRST_BUILDING:
@@ -535,8 +551,8 @@ i16 TownWindowHandler(tag_message& message) {
                         case TOWN_WINDOW_FIRST_BUILDING + 9:
                         case TOWN_WINDOW_FIRST_BUILDING + 10:
                             amount = message.id - TOWN_WINDOW_FIRST_BUILDING;
-                            if (amount >= TOWN_WINDOW_TENT_BIT)
-                                amount += 2;
+                            if (amount >= BUILDING_SLOT_RACE_FIRST)
+                                amount += BUILDING_SLOT_DWELLING_FIRST - BUILDING_SLOT_RACE_FIRST;
                             bit = 1 << amount;
                             has = gTownEdit.record.buildings & bit;
                             if (has)
@@ -549,12 +565,13 @@ i16 TownWindowHandler(tag_message& message) {
                             message.command = WIDGET_COMMAND_GET_TEXT;
                             gEditDialog->BroadcastMessage(message);
                             amount = atoi(message.text);
-                            if (amount < 1 || amount > TOWN_WINDOW_MAX_MAGE_GUILD) {
+                            if (amount < TOWN_WINDOW_MIN_MAGE_GUILD
+                                || amount > TOWN_WINDOW_MAX_MAGE_GUILD) {
                                 NormalDialog(
                                     localization::Tr("editor.events.town.mage_guild.range"),
                                     NORMAL_DIALOG_TYPE_OK
                                 );
-                                amount = 1;
+                                amount = TOWN_WINDOW_MIN_MAGE_GUILD;
                             }
                             gTownEdit.record.buildState = amount - 1;
                             changed = 1;
@@ -588,18 +605,16 @@ void eventsManager::EditMonster(i16 x, i16 y) {
     gEditCell = &gEditManager->m_map.cells[x][y];
     gEditDialog = new heroWindow(EVENTS_DIALOG_X, EVENTS_DIALOG_Y, "monedit.bin");
     SetWinText(gEditDialog, EVENTS_WINDOW_TEXT_MONSTER);
-    gMonsterCount = gEditCell->m_objectMetadata;
+    gMonsterCountEdit = gEditCell->m_objectMetadata;
     sprintf(text, "%d", gEditCell->m_objectMetadata);
-    widgetMessage.type = MESSAGE_WIDGET;
-    widgetMessage.command = WIDGET_COMMAND_SET_TEXT;
-    widgetMessage.id = MONSTER_WINDOW_COUNT;
+    SET_WIDGET_MESSAGE(widgetMessage, WIDGET_COMMAND_SET_TEXT, MONSTER_WINDOW_COUNT);
     widgetMessage.text = text;
     gEditDialog->BroadcastMessage(widgetMessage);
     gWindowManager->DoDialog(gEditDialog, MonsterWindowHandler, 0);
     delete gEditDialog;
-    if (gWindowManager->m_dialogResult != DIALOG_BUTTON_1) {
+    if (gWindowManager->m_dialogResult != EVENTS_DIALOG_CANCEL) {
         gEditManager->m_mapChanged = 1;
-        gEditCell->m_objectMetadata = gMonsterCount;
+        gEditCell->m_objectMetadata = gMonsterCountEdit;
     }
     gEditManager->DrawMap();
     gEditManager->UpdateMapView();
@@ -616,8 +631,8 @@ i16 MonsterWindowHandler(tag_message& message) {
             switch (message.command) {
                 case WIDGET_NOTIFY_DESELECT:
                     switch (message.id) {
-                        case DIALOG_BUTTON_1:
-                        case DIALOG_BUTTON_2:
+                        case EVENTS_DIALOG_CANCEL:
+                        case EVENTS_DIALOG_OK:
                             gWindowManager->m_dialogResult = message.id;
                             FINISH_DIALOG_SELECT(message);
                             return MESSAGE_DISPATCH_FORWARD;
@@ -636,11 +651,13 @@ i16 MonsterWindowHandler(tag_message& message) {
                                 value = 0;
                             if (value > MONSTER_WINDOW_MAX_COUNT)
                                 value = MONSTER_WINDOW_MAX_COUNT;
-                            gMonsterCount = value;
-                            sprintf(gText, "%d", gMonsterCount);
-                            reply.type = MESSAGE_WIDGET;
-                            reply.command = WIDGET_COMMAND_SET_TEXT;
-                            reply.id = MONSTER_WINDOW_COUNT;
+                            gMonsterCountEdit = value;
+                            sprintf(gText, "%d", gMonsterCountEdit);
+                            SET_WIDGET_MESSAGE(
+                                reply,
+                                WIDGET_COMMAND_SET_TEXT,
+                                MONSTER_WINDOW_COUNT
+                            );
                             reply.text = gText;
                             gEditDialog->BroadcastMessage(reply);
                             gEditDialog->DrawWindow();
@@ -679,7 +696,7 @@ void eventsManager::EditHero(i16 x, i16 y) {
     UpdateHeroWindow(&gHeroEdit);
     gWindowManager->DoDialog(gEditDialog, HeroWindowHandler, 0);
     delete gEditDialog;
-    if (gWindowManager->m_dialogResult != DIALOG_BUTTON_1) {
+    if (gWindowManager->m_dialogResult != EVENTS_DIALOG_CANCEL) {
         gEditManager->m_mapChanged = 1;
         *static_cast<editHeroExtra*>(gEditManager->m_extras[gEditCell->m_objectMetadata]) =
             gHeroEdit;
@@ -716,7 +733,7 @@ void eventsManager::UpdateHeroWindow(editHeroExtra* hero) {
         gEditDialog->BroadcastMessage(message);
     }
     message.command = WIDGET_COMMAND_SET_FLAGS;
-    message.id = hero->record.owner + EXTRA_WINDOW_NEUTRAL_OWNER;
+    message.id = hero->record.owner + EXTRA_WINDOW_FIRST_PLAYER;
     gEditDialog->BroadcastMessage(message);
     sprintf(text, "%d", hero->record.heroId);
     message.command = WIDGET_COMMAND_SET_TEXT;
@@ -753,8 +770,8 @@ i16 HeroWindowHandler(tag_message& message) {
             switch (message.command) {
                 case WIDGET_NOTIFY_DESELECT:
                     switch (message.id) {
-                        case DIALOG_BUTTON_1:
-                        case DIALOG_BUTTON_2:
+                        case EVENTS_DIALOG_CANCEL:
+                        case EVENTS_DIALOG_OK:
                             gWindowManager->m_dialogResult = message.id;
                             FINISH_DIALOG_SELECT(message);
                             return MESSAGE_DISPATCH_FORWARD;
@@ -797,11 +814,11 @@ i16 HeroWindowHandler(tag_message& message) {
                                 amount;
                             changed = 1;
                             break;
-                        case EXTRA_WINDOW_NEUTRAL_OWNER:
-                        case EXTRA_WINDOW_NEUTRAL_OWNER + 1:
-                        case EXTRA_WINDOW_NEUTRAL_OWNER + 2:
-                        case EXTRA_WINDOW_NEUTRAL_OWNER + 3:
-                            gHeroEdit.record.owner = message.id - EXTRA_WINDOW_NEUTRAL_OWNER;
+                        case EXTRA_WINDOW_FIRST_PLAYER:
+                        case EXTRA_WINDOW_FIRST_PLAYER + 1:
+                        case EXTRA_WINDOW_FIRST_PLAYER + 2:
+                        case EXTRA_WINDOW_FIRST_PLAYER + 3:
+                            gHeroEdit.record.owner = message.id - EXTRA_WINDOW_FIRST_PLAYER;
                             changed = 1;
                             break;
                         case HERO_WINDOW_HERO_ID:
@@ -817,8 +834,8 @@ i16 HeroWindowHandler(tag_message& message) {
                             if (fieldIndex == HERO_FIELD_HERO_ID) {
                                 if (amount < 0)
                                     amount = 0;
-                                if (amount > HERO_WINDOW_MAX_HERO_ID)
-                                    amount = HERO_WINDOW_MAX_HERO_ID;
+                                if (amount > GAME_HERO_COUNT - 1)
+                                    amount = GAME_HERO_COUNT - 1;
                                 gHeroEdit.record.heroId = amount;
                             }
                             if (fieldIndex >= HERO_FIELD_FIRST_ARTIFACT
@@ -869,20 +886,21 @@ i32 ClearOptionsDialog(void) {
     UpdateClearWindow();
     gWindowManager->DoDialog(gClearWindow, ClearWindowHandler, 0);
     delete gClearWindow;
-    if (gWindowManager->m_dialogResult == DIALOG_BUTTON_2 && (gClearFlags & CLEAR_FLAG_WHOLE_MAP)) {
+    if (gWindowManager->m_dialogResult == EVENTS_DIALOG_OK
+        && (gClearFlags & CLEAR_FLAG_WHOLE_MAP)) {
         gEditManager->SaveUndo();
         gEditManager->ClearArea(
             0,
             0,
             MAP_CELL_GRID_SIZE,
             MAP_CELL_GRID_SIZE,
-            gClearFlags & CLEAR_FLAG_CLASS_MASK,
+            gClearFlags & EDIT_CLEAR_ALL,
             0
         );
     }
     gEditManager->DrawMap();
     gEditManager->UpdateMapView();
-    if (gWindowManager->m_dialogResult == DIALOG_BUTTON_2)
+    if (gWindowManager->m_dialogResult == EVENTS_DIALOG_OK)
         return 1;
     return 0;
 }
@@ -908,16 +926,16 @@ void UpdateClearWindow(void) {
 VA(0x0040b4d3, 0x1a7)
 i16 ClearWindowHandler(tag_message& message) {
     const i16 firstToggleId = CLEAR_WINDOW_FIRST_TOGGLE;
-    i32 set;
-    i32 index;
+    i32 wasSet;
+    i32 flagIndex;
 
     if (message.type != MESSAGE_WIDGET)
         return MESSAGE_DISPATCH_CONTINUE;
     switch (message.command) {
         case WIDGET_NOTIFY_DESELECT:
             switch (message.id) {
-                case DIALOG_BUTTON_1:
-                case DIALOG_BUTTON_2:
+                case EVENTS_DIALOG_CANCEL:
+                case EVENTS_DIALOG_OK:
                     gWindowManager->m_dialogResult = message.id;
                     FINISH_DIALOG_SELECT(message);
                     return MESSAGE_DISPATCH_FORWARD;
@@ -925,20 +943,20 @@ i16 ClearWindowHandler(tag_message& message) {
             break;
         case WIDGET_NOTIFY_SELECT:
             if (message.id >= CLEAR_WINDOW_FIRST_TOGGLE && message.id <= CLEAR_WINDOW_LAST_TOGGLE) {
-                index = message.id - firstToggleId;
-                set = (gClearFlags & (1 << index)) != 0;
-                if (index <= CLEAR_WINDOW_LAST_CLASS) {
+                flagIndex = message.id - firstToggleId;
+                wasSet = (gClearFlags & (1 << flagIndex)) != 0;
+                if (flagIndex <= CLEAR_WINDOW_LAST_CLASS) {
                     gClearFlags &= CLEAR_FLAG_ALL - CLEAR_FLAG_EVERYTHING;
-                    if (set)
-                        gClearFlags &= CLEAR_FLAG_ALL - (1 << index);
+                    if (wasSet)
+                        gClearFlags &= CLEAR_FLAG_ALL - (1 << flagIndex);
                     else
-                        gClearFlags |= 1 << index;
+                        gClearFlags |= 1 << flagIndex;
                 } else {
-                    if (set)
-                        gClearFlags &= CLEAR_FLAG_ALL - (1 << index);
+                    if (wasSet)
+                        gClearFlags &= CLEAR_FLAG_ALL - (1 << flagIndex);
                     else
-                        gClearFlags |= 1 << index;
-                    if (index == CLEAR_WINDOW_EVERYTHING && !set)
+                        gClearFlags |= 1 << flagIndex;
+                    if (flagIndex == CLEAR_WINDOW_EVERYTHING && !wasSet)
                         gClearFlags |= CLEAR_FLAG_EVERY_CLASS;
                 }
                 UpdateClearWindow();
@@ -964,9 +982,9 @@ i32 MapDetailsDialog(i32) {
     gDetailsWindow = NULL;
     gEditManager->DrawMap();
     gEditManager->UpdateMapView();
-    if (gWindowManager->m_dialogResult == DIALOG_BUTTON_1)
+    if (gWindowManager->m_dialogResult == EVENTS_DIALOG_CANCEL)
         *gMapHeader = saved;
-    return gWindowManager->m_dialogResult != DIALOG_BUTTON_1;
+    return gWindowManager->m_dialogResult != EVENTS_DIALOG_CANCEL;
 }
 
 VA(0x0040b7cc, 0x15b)
@@ -1001,7 +1019,7 @@ void UpdateMapDetailsWindow(void) {
     gDetailsWindow->BroadcastMessage(message);
     message.id = DETAILS_WINDOW_MAP_CODE;
     strcpy(gText, gEditManager->m_mapFileName);
-    gText[DETAILS_WINDOW_MAP_CODE_LENGTH] = 0;
+    gText[DETAILS_WINDOW_MAP_CODE_LENGTH] = '\0';
     message.text = gText;
     gDetailsWindow->BroadcastMessage(message);
 }
@@ -1012,16 +1030,14 @@ i16 MapDetailsWindowHandler(tag_message& message) {
     tag_message request;
     i32 i;
 
-    request.type = MESSAGE_WIDGET;
-    request.command = WIDGET_COMMAND_GET_TEXT;
-    request.id = message.id;
+    SET_WIDGET_MESSAGE(request, WIDGET_COMMAND_GET_TEXT, message.id);
     if (message.type != MESSAGE_WIDGET)
         return MESSAGE_DISPATCH_CONTINUE;
     switch (message.command) {
         case WIDGET_NOTIFY_DESELECT:
             switch (message.id) {
-                case DIALOG_BUTTON_1:
-                case DIALOG_BUTTON_2:
+                case EVENTS_DIALOG_CANCEL:
+                case EVENTS_DIALOG_OK:
                     gWindowManager->m_dialogResult = message.id;
                     FINISH_DIALOG_SELECT(message);
                     return MESSAGE_DISPATCH_FORWARD;
@@ -1085,33 +1101,33 @@ i32 NewMapDialog(void) {
     if (gNewMapWindow == NULL)
         MemError();
     SetWinText(gNewMapWindow, EVENTS_WINDOW_TEXT_NEW_MAP);
-    for (i = 0; i < EDITOR_GENERATOR_TERRAIN_COUNT; i++) {
+    for (i = 0; i < EDITOR_TERRAIN_COUNT; i++) {
         gTerrainTracks[i] = new iconWidget(
             NEW_MAP_TRACK_X,
             i * NEW_MAP_ROW_HEIGHT + NEW_MAP_FIRST_TERRAIN_Y,
             NEW_MAP_TRACK_WIDTH,
             NEW_MAP_TRACK_HEIGHT,
             "escroll.icn",
-            NEW_MAP_TRACK_FRAME,
-            0,
+            EDIT_SCROLL_SHORT_TRACK,
+            ICON_DRAW_NORMAL,
             i + NEW_MAP_FIRST_TERRAIN_TRACK,
             ICON_WIDGET_DRAW,
             1
         );
-        gNewMapWindow->AddWidget(gTerrainTracks[i], -1);
+        gNewMapWindow->AddWidget(gTerrainTracks[i], WINDOW_Z_ORDER_APPEND);
         gTerrainKnobs[i] = new iconWidget(
             NEW_MAP_KNOB_X,
             i * NEW_MAP_ROW_HEIGHT + NEW_MAP_FIRST_TERRAIN_Y + NEW_MAP_KNOB_Y_OFFSET,
             NEW_MAP_KNOB_WIDTH,
             NEW_MAP_KNOB_HEIGHT,
             "escroll.icn",
-            NEW_MAP_KNOB_FRAME,
-            0,
+            EDIT_SCROLL_HORIZONTAL_KNOB,
+            ICON_DRAW_NORMAL,
             i + NEW_MAP_FIRST_TERRAIN_KNOB,
             ICON_WIDGET_DRAW,
             1
         );
-        gNewMapWindow->AddWidget(gTerrainKnobs[i], -1);
+        gNewMapWindow->AddWidget(gTerrainKnobs[i], WINDOW_Z_ORDER_APPEND);
     }
     for (i = 0; i < EDITOR_GENERATOR_DENSITY_COUNT; i++) {
         gDensityTracks[i] = new iconWidget(
@@ -1120,33 +1136,33 @@ i32 NewMapDialog(void) {
             NEW_MAP_TRACK_WIDTH,
             NEW_MAP_TRACK_HEIGHT,
             "escroll.icn",
-            NEW_MAP_TRACK_FRAME,
-            0,
+            EDIT_SCROLL_SHORT_TRACK,
+            ICON_DRAW_NORMAL,
             i + NEW_MAP_FIRST_DENSITY_TRACK,
             ICON_WIDGET_DRAW,
             1
         );
-        gNewMapWindow->AddWidget(gDensityTracks[i], -1);
+        gNewMapWindow->AddWidget(gDensityTracks[i], WINDOW_Z_ORDER_APPEND);
         gDensityKnobs[i] = new iconWidget(
             NEW_MAP_KNOB_X,
             i * NEW_MAP_ROW_HEIGHT + NEW_MAP_FIRST_DENSITY_Y + NEW_MAP_KNOB_Y_OFFSET,
             NEW_MAP_KNOB_WIDTH,
             NEW_MAP_KNOB_HEIGHT,
             "escroll.icn",
-            NEW_MAP_KNOB_FRAME,
-            0,
+            EDIT_SCROLL_HORIZONTAL_KNOB,
+            ICON_DRAW_NORMAL,
             i + NEW_MAP_FIRST_DENSITY_KNOB,
             ICON_WIDGET_DRAW,
             1
         );
-        gNewMapWindow->AddWidget(gDensityKnobs[i], -1);
+        gNewMapWindow->AddWidget(gDensityKnobs[i], WINDOW_Z_ORDER_APPEND);
     }
     UpdateNewMapWindow();
     gWindowManager->DoDialog(gNewMapWindow, NewMapWindowHandler, 0);
     delete gNewMapWindow;
     gNewMapWindow = NULL;
-    BalanceTerrainPercents(-1);
-    if (gWindowManager->m_dialogResult == DIALOG_BUTTON_1)
+    BalanceTerrainPercents(TERRAIN_INVALID);
+    if (gWindowManager->m_dialogResult == EVENTS_DIALOG_CANCEL)
         return 0;
     return 1;
 }
@@ -1156,12 +1172,10 @@ void UpdateNewMapWindow(void) {
     tag_message message;
     i32 i;
 
-    for (i = 0; i < EDITOR_GENERATOR_TERRAIN_COUNT; i++)
-        gTerrainKnobs[i]->m_x =
-            NEW_MAP_KNOB_TRAVEL * gTerrainPercent[i] / 100.0 + NEW_MAP_KNOB_LEFT;
+    for (i = 0; i < EDITOR_TERRAIN_COUNT; i++)
+        gTerrainKnobs[i]->m_x = NEW_MAP_KNOB_TRAVEL * gTerrainPercent[i] / 100.0 + NEW_MAP_KNOB_X;
     for (i = 0; i < EDITOR_GENERATOR_DENSITY_COUNT; i++)
-        gDensityKnobs[i]->m_x =
-            NEW_MAP_KNOB_TRAVEL * gDensityPercent[i] / 100.0 + NEW_MAP_KNOB_LEFT;
+        gDensityKnobs[i]->m_x = NEW_MAP_KNOB_TRAVEL * gDensityPercent[i] / 100.0 + NEW_MAP_KNOB_X;
     message.type = MESSAGE_WIDGET;
     message.value = WIDGET_FLAG_DRAW;
     message.id = NEW_MAP_SCATTER_TOWNS;
@@ -1175,43 +1189,47 @@ void UpdateNewMapWindow(void) {
     gNewMapWindow->BroadcastMessage(message);
 }
 
+#define othersTotal unfixedTotal // frame-slot spelling
+#define landTotal total          // frame-slot spelling
 VA(0x0040c17a, 0x193)
-void BalanceTerrainPercents(i32 fixed) {
-    double unfixedTotal;
+void BalanceTerrainPercents(i32 changedTerrain) {
+    double othersTotal;
     double remaining;
     double ratio;
     i32 i;
-    double total;
+    double landTotal;
 
-    remaining = 100.0 - gTerrainPercent[fixed];
-    unfixedTotal = 0.0;
-    total = 0.0;
-    for (i = 0; i < EDITOR_GENERATOR_TERRAIN_COUNT; i++)
-        if (i != fixed)
-            unfixedTotal += gTerrainPercent[i];
-    for (i = 1; i < EDITOR_GENERATOR_TERRAIN_COUNT; i++)
-        total += gTerrainPercent[i];
-    if (fixed != -1) {
-        if (total < NEW_MAP_MINIMUM_LAND)
-            gTerrainPercent[1] += NEW_MAP_MINIMUM_LAND - total;
+    remaining = 100.0 - gTerrainPercent[changedTerrain];
+    othersTotal = 0.0;
+    landTotal = 0.0;
+    for (i = 0; i < EDITOR_TERRAIN_COUNT; i++)
+        if (i != changedTerrain)
+            othersTotal += gTerrainPercent[i];
+    for (i = TERRAIN_GRASS; i < EDITOR_TERRAIN_COUNT; i++)
+        landTotal += gTerrainPercent[i];
+    if (changedTerrain != TERRAIN_INVALID) {
+        if (landTotal < NEW_MAP_MINIMUM_LAND)
+            gTerrainPercent[TERRAIN_GRASS] += NEW_MAP_MINIMUM_LAND - landTotal;
     } else {
-        if (unfixedTotal < 1.0) {
-            unfixedTotal = 1.0;
-            if (gTerrainPercent[0] < 1.0)
-                gTerrainPercent[0] = 1.0;
+        if (othersTotal < 1.0) {
+            othersTotal = 1.0;
+            if (gTerrainPercent[TERRAIN_WATER] < 1.0)
+                gTerrainPercent[TERRAIN_WATER] = 1.0;
             else
-                gTerrainPercent[1] = 1.0;
+                gTerrainPercent[TERRAIN_GRASS] = 1.0;
         }
-        ratio = remaining / unfixedTotal;
-        for (i = 0; i < EDITOR_GENERATOR_TERRAIN_COUNT; i++)
-            if (i != fixed)
+        ratio = remaining / othersTotal;
+        for (i = 0; i < EDITOR_TERRAIN_COUNT; i++)
+            if (i != changedTerrain)
                 gTerrainPercent[i] = ratio * gTerrainPercent[i];
-        if (gTerrainPercent[0] > NEW_MAP_MAXIMUM_WATER + 0.5) {
-            gTerrainPercent[0] = NEW_MAP_MAXIMUM_WATER;
-            BalanceTerrainPercents(0);
+        if (gTerrainPercent[TERRAIN_WATER] > NEW_MAP_MAXIMUM_WATER + 0.5) {
+            gTerrainPercent[TERRAIN_WATER] = NEW_MAP_MAXIMUM_WATER;
+            BalanceTerrainPercents(TERRAIN_WATER);
         }
     }
 }
+#undef othersTotal
+#undef landTotal
 
 VA(0x0040c30d, 0x3f8)
 i16 NewMapWindowHandler(tag_message& message) {
@@ -1224,15 +1242,14 @@ i16 NewMapWindowHandler(tag_message& message) {
         case WIDGET_NOTIFY_DESELECT:
             redraw = true;
             if (message.id >= NEW_MAP_FIRST_TERRAIN_DECREASE
-                && message.id < NEW_MAP_FIRST_TERRAIN_DECREASE + EDITOR_GENERATOR_TERRAIN_COUNT) {
+                && message.id < NEW_MAP_FIRST_TERRAIN_DECREASE + EDITOR_TERRAIN_COUNT) {
                 index = message.id - NEW_MAP_FIRST_TERRAIN_DECREASE;
                 gTerrainPercent[index] -= 1.0;
                 if (gTerrainPercent[index] < 0.0)
                     gTerrainPercent[index] = 0.0;
                 BalanceTerrainPercents(index);
             } else if (message.id >= NEW_MAP_FIRST_TERRAIN_INCREASE
-                       && message.id
-                              < NEW_MAP_FIRST_TERRAIN_INCREASE + EDITOR_GENERATOR_TERRAIN_COUNT) {
+                       && message.id < NEW_MAP_FIRST_TERRAIN_INCREASE + EDITOR_TERRAIN_COUNT) {
                 index = message.id - NEW_MAP_FIRST_TERRAIN_INCREASE;
                 gTerrainPercent[index] += 1.0;
                 if (gTerrainPercent[index] > 100.0)
@@ -1254,7 +1271,7 @@ i16 NewMapWindowHandler(tag_message& message) {
                     gDensityPercent[index] = 100.0;
             } else {
                 redraw = false;
-                if (message.id == DIALOG_BUTTON_2 || message.id == DIALOG_BUTTON_1) {
+                if (message.id == EVENTS_DIALOG_OK || message.id == EVENTS_DIALOG_CANCEL) {
                     gWindowManager->m_dialogResult = message.id;
                     FINISH_DIALOG_SELECT(message);
                     return MESSAGE_DISPATCH_FORWARD;
@@ -1263,16 +1280,16 @@ i16 NewMapWindowHandler(tag_message& message) {
             break;
         case WIDGET_NOTIFY_SELECT:
             if (message.id >= NEW_MAP_FIRST_TERRAIN_TRACK
-                && message.id < NEW_MAP_FIRST_TERRAIN_TRACK + EDITOR_GENERATOR_TERRAIN_COUNT)
+                && message.id < NEW_MAP_FIRST_TERRAIN_TRACK + EDITOR_TERRAIN_COUNT)
                 DragNewMapSlider(1, message.id - NEW_MAP_FIRST_TERRAIN_TRACK);
             else if (message.id >= NEW_MAP_FIRST_TERRAIN_KNOB
-                     && message.id < NEW_MAP_FIRST_TERRAIN_KNOB + EDITOR_GENERATOR_TERRAIN_COUNT)
+                     && message.id < NEW_MAP_FIRST_TERRAIN_KNOB + EDITOR_TERRAIN_COUNT)
                 DragNewMapSlider(1, message.id - NEW_MAP_FIRST_TERRAIN_KNOB);
             else if (message.id >= NEW_MAP_FIRST_DENSITY_TRACK
-                     && message.id < NEW_MAP_FIRST_DENSITY_TRACK + EDITOR_GENERATOR_TERRAIN_COUNT)
+                     && message.id < NEW_MAP_FIRST_DENSITY_TRACK + EDITOR_TERRAIN_COUNT)
                 DragNewMapSlider(0, message.id - NEW_MAP_FIRST_DENSITY_TRACK);
             else if (message.id >= NEW_MAP_FIRST_DENSITY_KNOB
-                     && message.id < NEW_MAP_FIRST_DENSITY_KNOB + EDITOR_GENERATOR_TERRAIN_COUNT)
+                     && message.id < NEW_MAP_FIRST_DENSITY_KNOB + EDITOR_TERRAIN_COUNT)
                 DragNewMapSlider(0, message.id - NEW_MAP_FIRST_DENSITY_KNOB);
             if (message.id >= NEW_MAP_SCATTER_TOWNS && message.id <= NEW_MAP_CENTRE_TOWNS) {
                 gScatterTowns = message.id == NEW_MAP_SCATTER_TOWNS;
@@ -1292,14 +1309,14 @@ i16 NewMapWindowHandler(tag_message& message) {
 }
 
 VA(0x0040c705, 0x25e)
-void DragNewMapSlider(i32 terrain, i32 index) {
+void DragNewMapSlider(i32 terrainRow, i32 index) {
     tag_message last;
     double knobPercent;
     i16 x;
     i16 y;
     tag_message event;
 
-    gMouseManager->SetCursorShape(EVENTS_CURSOR_SLIDER);
+    gMouseManager->SetCursorShape(EDIT_CURSOR_HORIZONTAL_DRAG);
     gMouseManager->MouseCoords(x, y);
     gInputManager->Flush();
     event.type = MESSAGE_MOUSE_MOVE;
@@ -1313,16 +1330,15 @@ void DragNewMapSlider(i32 terrain, i32 index) {
                 last = event;
                 event = gInputManager->GetEvent();
             }
-            last.x -= NEW_MAP_DRAG_X_OFFSET;
+            last.x -= EVENTS_DIALOG_X;
             last.x -= NEW_MAP_KNOB_HALF_WIDTH;
-            if (last.x < NEW_MAP_KNOB_LEFT)
-                last.x = NEW_MAP_KNOB_LEFT;
+            if (last.x < NEW_MAP_KNOB_X)
+                last.x = NEW_MAP_KNOB_X;
             if (last.x > NEW_MAP_KNOB_RIGHT)
                 last.x = NEW_MAP_KNOB_RIGHT;
             gMouseManager->Main(last);
-            knobPercent =
-                (last.x - NEW_MAP_KNOB_LEFT) * 100 / (NEW_MAP_KNOB_RIGHT - NEW_MAP_KNOB_LEFT);
-            if (terrain) {
+            knobPercent = (last.x - NEW_MAP_KNOB_X) * 100 / (NEW_MAP_KNOB_RIGHT - NEW_MAP_KNOB_X);
+            if (terrainRow) {
                 gTerrainPercent[index] = knobPercent;
                 BalanceTerrainPercents(index);
             } else
@@ -1332,9 +1348,9 @@ void DragNewMapSlider(i32 terrain, i32 index) {
         } else
             event = gInputManager->GetEvent();
     }
-    gMouseManager->SetCursorShape(EVENTS_CURSOR_NORMAL);
+    gMouseManager->SetCursorShape(EDIT_CURSOR_NORMAL);
     gInputManager->Flush();
-    if (terrain) {
+    if (terrainRow) {
         gTerrainKnobs[index]->m_flags &= ~WIDGET_FLAG_SELECTED;
         gTerrainTracks[index]->m_flags &= ~WIDGET_FLAG_SELECTED;
     } else {
