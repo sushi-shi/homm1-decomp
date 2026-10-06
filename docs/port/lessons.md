@@ -1,0 +1,255 @@
+# Porting lessons: the bug classes and their guards
+
+A reconstructed Windows game of this period carries assumptions that held on
+one compiler, one pointer width, one byte order and one operating system. A
+port that only makes the code compile tends to keep them, and they come back
+as crashes, corrupted saves or wrong pictures long after the first screen
+works. This file lists the classes of defect such a port runs into, how each
+one shows, and what in this port prevents it. Each guard names the code that
+implements it, so that a later change can tell when it removes one.
+
+The classes are ordered roughly from "silent data corruption" to "visible
+glitch".
+
+## 1. File records that depend on in-memory layout
+
+**Mechanism.** The original wrote and read its files by handing whole
+structures, or arrays of them, to `write` and `read`: heroes, towns, mines,
+boats, map cells, high scores, the resource archive's directory, the map
+header. The file format is therefore whatever the compiler's layout was:
+`#pragma pack(1)`, 4-byte `long`, 4-byte pointers, little-endian integers. A
+port that changes any of these (natural alignment for speed, a 64-bit target,
+a big-endian target, a field widened to hold UTF-8) silently writes a
+different format and reads garbage from the shipped files, often without any
+crash.
+
+**Guard.**
+
+- Every file record is encoded field by field, little-endian, at its declared
+  width: `RecordWriter`/`RecordReader` (`include/PLATFORM/Records.h`) and the
+  per-record codecs (`include/SOURCE/saveRecords.h`, `src/SOURCE/SAVEREC.cpp`).
+  Saved games, maps, campaign maps, high scores, map headers and the archive
+  directory go through them; nothing in the game writes a structure with
+  `sizeof`.
+- The record sizes are named constants (`HERO_RECORD_SIZE` = 182, ...). The
+  structures the game still reads straight out of file data in memory (icon
+  frame tables, map extra blocks) and the ones that are file images keep
+  their packed layout and carry `H1_STATIC_ASSERT(sizeof(...) == ...)` in
+  `SAVEREC.cpp`, which also compiles under Visual C++ 6.
+- `tests/port/records_test.cpp` checks that each codec writes exactly its
+  record size, decodes back to the same bytes and refuses one byte less.
+  With the game data it parses **every shipped map, campaign map, saved game,
+  high score table and the archive directory** to exactly their file length
+  and re-encodes each byte for byte.
+
+## 2. Packed runtime structures
+
+**Mechanism.** The reconstruction marks most classes `#pragma pack(1)`
+because that was the original layout. For runtime-only classes the packing
+buys nothing but misaligned members: a reference or pointer to a misaligned
+`i32` or `float` (passed to a function, or a nested struct used through its
+own type) is undefined behaviour. x86 forgives it until the optimizer emits an
+aligned vector load; other CPUs fault.
+
+**Guard.** Runtime classes (managers, widgets, `game`, `hero`, `town`,
+`playerData`, `army`, `tag_message`, ...) are naturally aligned. Packing
+remains only on file and wire images (`IconEntry`, `aggEntry`, map extra
+records, high score entries, `mapCell`, network packets) and on the four
+resource classes whose layout the Windows build's assembly routines address
+by offset (`resource`, `bitmap`, `icon`, `tileset`). The codecs never bind a
+reference to a member of a packed structure: multi-byte fields are read by
+value (`RecordReader::GetI32()`), arrays element by element. The sanitizer
+build checks alignment (section 12).
+
+## 3. Pointer width and `long` width
+
+**Mechanism.** On a 64-bit host a pointer no longer fits in an `i32`, and on
+LP64 hosts `long` is 8 bytes. Code that casts pointers to integers
+(`H1_ASSERT(reinterpret_cast<i32>(ptr))`, `(u32)key + i`), stores pointers in
+integer slots, or uses `long`/`unsigned long` in a structure shared with a
+file or a library, changes size or truncates addresses.
+
+**Guard.**
+
+- `include/H1/Ints.h` defines `i8`...`u64` from `<stdint.h>` everywhere but
+  Visual C++ 6, so the fixed-width names mean what they say.
+- The game has no `long` left in shared structures: the Smacker `Smack`
+  structure, which the original declared with `unsigned long`, uses `u32`.
+- Pointer-to-integer casts are compile errors natively
+  (`-Werror=int-to-pointer-cast`, and C++ rejects narrowing pointer casts);
+  the three that existed were rewritten as pointer comparisons or pointer
+  arithmetic.
+- Message payloads (`tag_message`) keep a pointer and integers in one union;
+  every reader of the pointer arm is paired with a writer of the same arm.
+
+## 4. Byte order and unaligned reads of file data
+
+**Mechanism.** Reading a little-endian 16-bit value with
+`*(i16*)(buffer + offset)` is wrong on a big-endian host and misaligned on any
+host when the offset is odd.
+
+**Guard.** Archive words and longs (`resourceManager::ReadWord`, `ReadLong`)
+and all records are decoded byte by byte. The build refuses big-endian targets
+outright (`CMakeLists.txt`), since the in-memory resource formats (icons,
+tiles, fonts) are still read in place.
+
+## 5. Untrusted lengths and counts in data files
+
+**Mechanism.** Counts and sizes inside the files drive allocations and copies:
+the archive's entry count and offsets, the number and length of a map's extra
+records, the map header's text fields. The original trusted them, and also
+ignored short reads, so a truncated or crafted file reads past buffers.
+
+**Guard.**
+
+- The archive directory must fit in the file and every entry must lie inside
+  it, or the archive is refused (`resourceManager::LoadAggregateHeader`). A
+  resource id that is not found is reported before the directory is indexed
+  past its end (`PointToFile`, `GetFileSize`).
+- A map's extra-record count must be within the record table and each
+  record's length within the file; each block is allocated at least as large
+  as the largest record type, so reading a short block through its structure
+  stays inside the allocation (`game::LoadMap`).
+- `RecordReader` fails on any read past the end and returns zeros instead of
+  stale memory; loaders report a short file as a file error instead of
+  continuing with partial state.
+- Fixed-width text from files is copied with `CopyTextField`, which stops at
+  the field width and always terminates; record codecs terminate name fields.
+
+## 6. Retail out-of-bounds and overlap that "worked"
+
+**Mechanism.** Some original code reads one element past an array, copies a
+string onto itself, or reads the table after the one it means, and works only
+because of how the original linker laid out memory. A different compiler,
+layout or allocator turns it into a crash or a different result; sanitizers
+report it at once.
+
+The assembly routines replaced by C++ have their own: the bit routines
+touch a 32-bit word around the addressed byte, zero or negative counts make
+loops run for billions of iterations, and the decoder reads past the end of
+its input and before its tree table. The C++ replacements (`src/PORT/BASE`)
+were checked against the original assembly, assembled and linked into one
+32-bit test program, on about 130,000 generated inputs; they keep every
+result on valid input and bound the out-of-range accesses (the remaining
+edge cases are listed in [divergences.md](divergences.md)).
+`tests/port/blit_test.cpp` draws into exactly-sized buffers under the
+sanitizers.
+
+**Guard.** The AddressSanitizer/UBSan build (section 12) runs the start-up,
+new game and load paths; each finding is fixed where it happens with the same
+observable result (for example `strcpy(gMapName, gMapName)` in
+`game::NewMap`, and the archive lookup above), and listed in
+[divergences.md](divergences.md).
+
+## 7. Compiler semantics the code relies on
+
+**Mechanism.** The original compiler made plain `char` signed, wrapped signed
+overflow and did no type-based alias analysis. Game code compares `char`
+values against negative sentinels, lets random-number and checksum arithmetic
+overflow, and reinterprets buffers. On ARM `char` is unsigned by default;
+modern optimizers assume signed overflow and aliasing never happen.
+
+**Guard.** Every native target compiles with `-fsigned-char -fwrapv
+-fno-strict-aliasing` (`HOMM1_SEMANTICS` in `CMakeLists.txt`): the port keeps
+the semantics the game was written against instead of auditing every
+expression.
+
+## 8. Case, separators and roots of file names
+
+**Mechanism.** The game names files like `.\DATA\heroes.agg` and
+`MAPS\CAMP1.CMP`; installed copies spell them `Data/HEROES.AGG` or any other
+case. Backslashes and case-sensitive lookups fail on POSIX hosts. Naive
+fixes resolve `..` out of the game folder or pick an arbitrary file among
+several case variants.
+
+**Guard.** One resolver (`src/PLATFORM/File.cpp`): game paths are split on
+either separator, `.` is dropped, `..` and drive or absolute game paths are
+refused, and each component is matched exactly first, then case-insensitively
+in sorted order, so the choice is deterministic. Directory listings are
+sorted. `tests/port/file_test.cpp` covers case folding, containment, missing
+files, creation of new folders on write, wildcards and ordering.
+
+## 9. Interrupted and non-atomic saves
+
+**Mechanism.** The original truncated the save file and then wrote it; a
+crash or full disk in between destroys the previous save.
+
+**Guard.** `FileReplace` writes the whole file to a sibling `.partial` file,
+flushes it with `fsync`, then renames it over the old one; on failure the old
+file is untouched. Saved games, high scores and settings use it.
+
+## 10. Format strings and fixed buffers
+
+**Mechanism.** `sprintf(buffer, text)` treats `text` as a format; when the
+text is a player-entered save name, a `%` in it reads arbitrary stack.
+Fixed-size buffers sized for the original text overflow when text gets longer.
+
+**Guard.** The two places where user text was a format string
+(`game::SaveGame`, `game::LoadGame`) copy it instead. The remaining
+`sprintf(buffer, gameText)` calls take the game's own catalog text, which has
+no `%`; the build reports them (`-Wformat-security`) so they stay visible. The
+map requester copies map names and descriptions bounded to their fields.
+
+## 11. Time
+
+**Mechanism.** The game compares millisecond tick counts as signed 32-bit
+values (`deadline > KBTickCount()`) and asserts that deadlines exceed 10000,
+assuming a Windows tick count that starts at boot. A clock that starts at 0
+trips the assertion; one that wraps breaks every comparison.
+
+**Guard.** `platform::Ticks()` counts from 1,000,000 at start-up, which
+satisfies the assertion and keeps the signed comparisons valid for 24 days of
+continuous play.
+
+## 12. Sanitizers, warnings and tests in the build
+
+- `-DHOMM1_SANITIZERS=ON` builds everything with AddressSanitizer and
+  UndefinedBehaviorSanitizer, undefined behaviour fatal;
+  `-DHOMM1_SANITIZERS_RECOVER=ON` keeps running to survey all findings.
+- Port and platform code compile with `-Wall -Wextra -Wpedantic -Wconversion
+  -Wsign-conversion -Wshadow -Wold-style-cast -Werror`; game code with the
+  defect-class errors (`return-type`, `int-to-pointer-cast`,
+  `mismatched-new-delete`) and visible format-security warnings.
+- `ctest` runs `records_test`, `file_test` and the LZHUF round trip; set
+  `HOMM1_DATA` to include the shipped data checks.
+- Scripted input (`HOMM1_INPUT_REPLAY`) drives the real binary headless, so a
+  sanitizer build can be run through menus, a new game and a loaded save
+  under Xvfb (`docs/port/README.md`).
+
+## 13. Replaced host subsystems
+
+**Mechanism.** Replacing the window system, sound library and movie player is
+where a port loses behaviour without noticing: a stubbed cursor call leaves the
+desktop arrow instead of the game's cursors, a music backend inherits a
+"which tracks exist" table from the old one, a movie stub returns nothing and
+the caller dereferences it, input arrives with logical instead of physical key
+codes.
+
+**Guard.** Each replaced subsystem keeps the original's contract, written
+down where it is implemented:
+
+- **Cursors** (`src/PORT/SOURCE/wingraph.cpp`, `src/PLATFORM/SDL3/Video.cpp`):
+  the game still builds both the colour and the monochrome cursors from its
+  own art, with the Windows AND/XOR mask rules; the display draws them over
+  the picture with the current palette, so they fade and cycle as they did
+  on the 8-bit display.
+- **Keys** (`src/PLATFORM/SDL3/Input.cpp`): physical keys become PC Set 1
+  scan codes exactly as the Windows message carried them; arrows and the
+  keypad share codes whatever the Num Lock state, so keypad movement and
+  arrow keys reach the game's own scan-code table, and the game applies its
+  own keyboard layout table (the language's `keyboard` descriptor).
+- **Presentation** (`src/PLATFORM/SDL3/Video.cpp`): the display keeps an
+  8-bit image and a palette like DirectDraw's primary surface; palette changes
+  show without a copy; many small copies are coalesced into one frame; the
+  adventure map's scrolling copy takes its source from the scrolled position
+  as the original paint did.
+- **Music** (`src/PORT/BASE/Audio.cpp`): the original host's track policy (CD
+  track map, which tracks repeat, where a track resumes) is kept; only the
+  decoder changes.
+- **Movies** (`src/PORT/SOURCE/Smacker.cpp`): the Smacker calls the game makes
+  are implemented, including the decode-ahead palette and the frame counter
+  that wraps to 0 at the end, which is how the game detects a movie's end. A
+  movie that cannot be opened returns no handle, which the game already
+  handles.
+- **Networking** (`src/PORT/SOURCE/netwin.cpp`, `comwin.cpp`): reports itself
+  unavailable through the original's own error path.

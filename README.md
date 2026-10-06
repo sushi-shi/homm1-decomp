@@ -71,11 +71,11 @@ source-win95-1.0                                             |                  
 | [source-win95-1.0](https://github.com/sushi-shi/homm1-decomp/tree/source-win95-1.0) | Generated clean source for Win95 1.0 |
 | [source-buka-2003](https://github.com/sushi-shi/homm1-decomp/tree/source-buka-2003) | Generated clean source for Buka 2003: the primary C++ tree, with its Russian and English text catalog |
 | [classic-buka-2003](https://github.com/sushi-shi/homm1-decomp/tree/classic-buka-2003) | The same generated tree as a reading view, its text spelled out as UTF-8 Russian |
-| [port](https://github.com/sushi-shi/homm1-decomp/tree/port) | Native port of the game and editor on `source-buka-2003`: SDL3 on Linux, Windows and the browser, multiplayer over TCP, the help book |
+| [port](https://github.com/sushi-shi/homm1-decomp/tree/port) | Native port of the game and editor on `source-buka-2003`: SDL3 on Linux, Windows and the browser, multiplayer over TCP, the help book: [docs/port](docs/port/README.md) |
 | [source-te](https://github.com/sushi-shi/homm1-decomp/tree/source-te) | The Tournament Edition (TE 1.05 f3) as source changes on `source-buka-2003` |
 | [port-te](https://github.com/sushi-shi/homm1-decomp/tree/port-te) | The Tournament Edition on the native port |
 
-This branch is `source-buka-2003`.
+This branch is `port`: the native build is described in [docs/port/README.md](docs/port/README.md).
 
 ## Build
 
@@ -121,8 +121,11 @@ edition, Cyrillic; a language needing other letters also needs new fonts.
 
 ## Regeneration
 
-`decomp-buka-2003` generates this branch with `homm1 clean`. Make source changes
-there and regenerate; do not edit this branch by hand.
+`decomp-buka-2003` generates `source-buka-2003` with `homm1 clean`. This branch
+is that generated source plus the port's commits, replayed onto each
+regeneration ([sync procedure](docs/port/README.md#keeping-up-with-the-source-branch)).
+Reconstruction changes belong on `decomp-buka-2003`; portability changes
+belong here.
 
 ## License
 
