@@ -227,7 +227,7 @@ i16 resourceManager::Main(tag_message& message) {
 // Loads only the default aggregate.
 VA(0x0046c886, 0x66)
 i16 resourceManager::Open(i16 priority) {
-    if (LoadAggregateHeader(DEFAULT_AGGREGATE_NAME) != 0)
+    if (LoadAggregateHeader(gDefaultAggregateName) != 0)
         return RESOURCE_MANAGER_LOAD_ERROR;
     m_messageMask = BASE_MANAGER_ACCEPT_RESOURCE;
     m_priority = priority;

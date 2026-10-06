@@ -9,8 +9,8 @@ rva	size	symbol	provenance
 0x0003f20c	352	?gTracksPath@@3PADA	game 0x91250: 1 code reference(s) from placed bodies
 0x0003f380	20	?gMapPath@@3PADA	game 0x913c4: complete initialized bytes (20) unique in the image; no code user
 0x0004c6c0	4	?gWinGAttached@@3HA	game 0xa0190: 1 code reference(s) from placed bodies
-0x0004c6d4	4	?Orientation@@3HA	game 0xa01a4: 2 code reference(s) from placed bodies
-0x0004c6d8	1028	?LogicalPalette@@3UWingPalette@@A	game 0xa01a8: 29 code reference(s) from placed bodies
+0x0004c6d4	4	?gOrientation@@3HA	game 0xa01a4: 2 code reference(s) from placed bodies
+0x0004c6d8	1028	?gLogicalPalette@@3UWingPalette@@A	game 0xa01a8: 29 code reference(s) from placed bodies
 0x0004d158	18	?gDynamicConstruct@@3PADA	game 0xa1374: 1 code reference(s) from placed bodies
 0x0004d16c	128	_gInputCharacterMap	game 0xa1388: 1 code reference(s) from placed bodies
 0x0004d228	12	?gMouseOffset@@3PAHA	game 0xa0ff8: 1 code reference(s) from placed bodies

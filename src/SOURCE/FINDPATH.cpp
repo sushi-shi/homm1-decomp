@@ -304,8 +304,8 @@ void searchArray::PushPoint(
 
     if (cost > gCurTempMobility && rvFlag2 == 0) {
         gSearchQueueNode->rvFlag2 = 1;
-        gSearchQueueNode->previousX = x - normalDirTable[direction].x;
-        gSearchQueueNode->previousY = y - normalDirTable[direction].y;
+        gSearchQueueNode->previousX = x - gNormalDirTable[direction].x;
+        gSearchQueueNode->previousY = y - gNormalDirTable[direction].y;
     } else {
         gSearchQueueNode->rvFlag2 = rvFlag2;
         gSearchQueueNode->previousX = previousX;
@@ -336,8 +336,8 @@ void searchArray::TestPossibleDirections(
     gSearchCurrentCell = gAdvManager->GetCell(x, y);
 
     for (gSearchDirection = 0; gSearchDirection < MAP_DIRECTION_COUNT; gSearchDirection++) {
-        gSearchNextX = x + normalDirTable[gSearchDirection].x;
-        gSearchNextY = y + normalDirTable[gSearchDirection].y;
+        gSearchNextX = x + gNormalDirTable[gSearchDirection].x;
+        gSearchNextY = y + gNormalDirTable[gSearchDirection].y;
         if (gSearchNextX <= -7 || gSearchNextX >= MAP_CELL_GRID_SIZE || gSearchNextY <= -7
             || gSearchNextY >= MAP_CELL_GRID_SIZE) {
             gSearchTerrain = TERRAIN_INVALID;

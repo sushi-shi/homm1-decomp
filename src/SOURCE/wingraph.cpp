@@ -38,9 +38,9 @@ i32 gMainVideoModeWidth = 1024;
 DATA(0x004a01a0)
 i32 gMainVideoModeHeight = 768;
 DATA(0x004a01a4)
-i32 Orientation = 1;
+i32 gOrientation = 1;
 DATA(0x004a01a8)
-WingPalette LogicalPalette = {0x300, PALETTE_COLOR_COUNT};
+WingPalette gLogicalPalette = {0x300, PALETTE_COLOR_COUNT};
 DATA(0x004cdda4)
 void* gInitWin = NULL;
 // No retail code reads this; it holds its retail .bss place.
@@ -88,7 +88,7 @@ _DDSURFACEDESC gDDSurfaceDesc;
 DATA(0x004cdd88)
 i32 gDDPaintStart;
 DATA(0x004cd948)
-WingImage screenImage;
+WingImage gScreenImage;
 
 VA(0x00466710, 0x3e)
 #line 49 WINGRAPH_CPP_PATH
@@ -321,26 +321,26 @@ void DDInitializePalette() {
             systemDeviceContext,
             0,
             WINGRAPH_SYSTEM_PALETTE_SIZE,
-            LogicalPalette.entries
+            gLogicalPalette.entries
         );
         GetSystemPaletteEntries(
             systemDeviceContext,
             WINGRAPH_MUTABLE_PALETTE_END,
             WINGRAPH_SYSTEM_PALETTE_SIZE,
-            &LogicalPalette.entries[WINGRAPH_MUTABLE_PALETTE_END]
+            &gLogicalPalette.entries[WINGRAPH_MUTABLE_PALETTE_END]
         );
         ReleaseDC(NULL, systemDeviceContext);
         for (i = 0; i < WINGRAPH_SYSTEM_PALETTE_END; i++) {
-            LogicalPalette.entries[i].peFlags = 0;
-            LogicalPalette.entries[WINGRAPH_MUTABLE_PALETTE_END + i].peFlags = 0;
+            gLogicalPalette.entries[i].peFlags = 0;
+            gLogicalPalette.entries[WINGRAPH_MUTABLE_PALETTE_END + i].peFlags = 0;
         }
         for (i = WINGRAPH_SYSTEM_PALETTE_SIZE; i < WINGRAPH_MUTABLE_PALETTE_END; i++) {
-            LogicalPalette.entries[i].peRed = 0;
-            LogicalPalette.entries[i].peGreen = 0;
-            LogicalPalette.entries[i].peBlue = 0;
-            LogicalPalette.entries[i].peFlags = PC_NOCOLLAPSE;
+            gLogicalPalette.entries[i].peRed = 0;
+            gLogicalPalette.entries[i].peGreen = 0;
+            gLogicalPalette.entries[i].peBlue = 0;
+            gLogicalPalette.entries[i].peFlags = PC_NOCOLLAPSE;
         }
-        status = gDD->CreatePalette(DDPCAPS_8BIT, LogicalPalette.entries, &gDDPal, NULL);
+        status = gDD->CreatePalette(DDPCAPS_8BIT, gLogicalPalette.entries, &gDDPal, NULL);
         if (status != DD_OK)
 #line 360
             DDSD(status, __FILE__, __LINE__);
@@ -526,13 +526,13 @@ void DDUpdatePalette(i8* paletteData) {
     if (gForegroundApp == 0)
         return;
     for (entry = WINGRAPH_SYSTEM_PALETTE_SIZE; entry < WINGRAPH_MUTABLE_PALETTE_END; entry++) {
-        LogicalPalette.entries[entry].peRed = paletteData[entry * PALETTE_GRAPHICS_CHANNELS]
-                                              << WINGRAPH_PALETTE_VALUE_SHIFT;
-        LogicalPalette.entries[entry].peGreen = paletteData[entry * PALETTE_GRAPHICS_CHANNELS + 1]
-                                                << WINGRAPH_PALETTE_VALUE_SHIFT;
-        LogicalPalette.entries[entry].peBlue = paletteData[entry * PALETTE_GRAPHICS_CHANNELS + 2]
+        gLogicalPalette.entries[entry].peRed = paletteData[entry * PALETTE_GRAPHICS_CHANNELS]
                                                << WINGRAPH_PALETTE_VALUE_SHIFT;
-        LogicalPalette.entries[entry].peFlags = PC_NOCOLLAPSE;
+        gLogicalPalette.entries[entry].peGreen = paletteData[entry * PALETTE_GRAPHICS_CHANNELS + 1]
+                                                 << WINGRAPH_PALETTE_VALUE_SHIFT;
+        gLogicalPalette.entries[entry].peBlue = paletteData[entry * PALETTE_GRAPHICS_CHANNELS + 2]
+                                                << WINGRAPH_PALETTE_VALUE_SHIFT;
+        gLogicalPalette.entries[entry].peFlags = PC_NOCOLLAPSE;
     }
     // API-forced: ProcessAssert accepts the pointer assertion as a 32-bit int.
 #line 521
@@ -541,7 +541,7 @@ void DDUpdatePalette(i8* paletteData) {
         0,
         WINGRAPH_SYSTEM_PALETTE_SIZE,
         PALETTE_COLOR_COUNT - WINGRAPH_SYSTEM_PALETTE_SIZE * 2,
-        &LogicalPalette.entries[WINGRAPH_SYSTEM_PALETTE_SIZE]
+        &gLogicalPalette.entries[WINGRAPH_SYSTEM_PALETTE_SIZE]
     );
     if (status != DD_OK)
 #line 525
@@ -689,31 +689,34 @@ void WGInitGraphics() {
 
     if (gImageDC != NULL)
         return;
-    if (WinGRecommendDIBFormat(reinterpret_cast<LPBITMAPINFO>(&screenImage))) {
-        screenImage.header.biBitCount = WINGRAPH_COLOR_DEPTH;
-        screenImage.header.biCompression = BI_RGB;
-        Orientation = screenImage.header.biHeight;
+    if (WinGRecommendDIBFormat(reinterpret_cast<LPBITMAPINFO>(&gScreenImage))) {
+        gScreenImage.header.biBitCount = WINGRAPH_COLOR_DEPTH;
+        gScreenImage.header.biCompression = BI_RGB;
+        gOrientation = gScreenImage.header.biHeight;
     } else {
-        screenImage.header.biSize = sizeof(BITMAPINFOHEADER);
-        screenImage.header.biPlanes = 1;
-        screenImage.header.biBitCount = WINGRAPH_COLOR_DEPTH;
-        screenImage.header.biCompression = BI_RGB;
-        screenImage.header.biSizeImage = 0;
-        screenImage.header.biClrUsed = 0;
-        screenImage.header.biClrImportant = 0;
+        gScreenImage.header.biSize = sizeof(BITMAPINFOHEADER);
+        gScreenImage.header.biPlanes = 1;
+        gScreenImage.header.biBitCount = WINGRAPH_COLOR_DEPTH;
+        gScreenImage.header.biCompression = BI_RGB;
+        gScreenImage.header.biSizeImage = 0;
+        gScreenImage.header.biClrUsed = 0;
+        gScreenImage.header.biClrImportant = 0;
     }
-    screenImage.header.biWidth = LOGICAL_SCREEN_WIDTH;
-    screenImage.header.biHeight = -LOGICAL_SCREEN_HEIGHT;
+    gScreenImage.header.biWidth = LOGICAL_SCREEN_WIDTH;
+    gScreenImage.header.biHeight = -LOGICAL_SCREEN_HEIGHT;
     InitializePalette();
     gImageDC = WinGCreateDC();
-    screenImage.header.biWidth = LOGICAL_SCREEN_WIDTH;
-    screenImage.header.biHeight = -LOGICAL_SCREEN_HEIGHT;
-    bitmap =
-        WinGCreateBitmap(gImageDC, reinterpret_cast<LPBITMAPINFO>(&screenImage), &screenImage.bits);
-    screenImage.header.biSizeImage = screenImage.header.biWidth * screenImage.header.biHeight;
-    screenImage.header.biSizeImage *= Orientation;
+    gScreenImage.header.biWidth = LOGICAL_SCREEN_WIDTH;
+    gScreenImage.header.biHeight = -LOGICAL_SCREEN_HEIGHT;
+    bitmap = WinGCreateBitmap(
+        gImageDC,
+        reinterpret_cast<LPBITMAPINFO>(&gScreenImage),
+        &gScreenImage.bits
+    );
+    gScreenImage.header.biSizeImage = gScreenImage.header.biWidth * gScreenImage.header.biHeight;
+    gScreenImage.header.biSizeImage *= gOrientation;
     gOldMonoBitmap = static_cast<HBITMAP>(SelectObject(gImageDC, bitmap));
-    gInitWin = screenImage.bits;
+    gInitWin = gScreenImage.bits;
     PatBlt(gImageDC, 0, 0, gMainWinScreenWidth, gMainWinScreenHeight, BLACKNESS);
 }
 
@@ -725,28 +728,28 @@ void WGUpdatePalette(i8* paletteData) {
     i32 idx;
 
     for (idx = WINGRAPH_SYSTEM_PALETTE_SIZE; idx < WINGRAPH_MUTABLE_PALETTE_END; idx++) {
-        LogicalPalette.entries[idx].peRed = paletteData[idx * 3] << 2;
-        screenImage.colors[idx].rgbRed = LogicalPalette.entries[idx].peRed;
-        LogicalPalette.entries[idx].peGreen = paletteData[idx * 3 + 1] << 2;
-        screenImage.colors[idx].rgbGreen = LogicalPalette.entries[idx].peGreen;
-        LogicalPalette.entries[idx].peBlue = paletteData[idx * 3 + 2] << 2;
-        screenImage.colors[idx].rgbBlue = LogicalPalette.entries[idx].peBlue;
+        gLogicalPalette.entries[idx].peRed = paletteData[idx * 3] << 2;
+        gScreenImage.colors[idx].rgbRed = gLogicalPalette.entries[idx].peRed;
+        gLogicalPalette.entries[idx].peGreen = paletteData[idx * 3 + 1] << 2;
+        gScreenImage.colors[idx].rgbGreen = gLogicalPalette.entries[idx].peGreen;
+        gLogicalPalette.entries[idx].peBlue = paletteData[idx * 3 + 2] << 2;
+        gScreenImage.colors[idx].rgbBlue = gLogicalPalette.entries[idx].peBlue;
     }
     AnimatePalette(
         gAppPalette,
         WINGRAPH_SYSTEM_PALETTE_SIZE,
         PALETTE_COLOR_COUNT - WINGRAPH_SYSTEM_PALETTE_SIZE * 2,
-        &LogicalPalette.entries[WINGRAPH_SYSTEM_PALETTE_SIZE]
+        &gLogicalPalette.entries[WINGRAPH_SYSTEM_PALETTE_SIZE]
     );
     WinGSetDIBColorTable(
         gImageDC,
         WINGRAPH_SYSTEM_PALETTE_SIZE,
         PALETTE_COLOR_COUNT - WINGRAPH_SYSTEM_PALETTE_SIZE * 2,
-        &screenImage.colors[WINGRAPH_SYSTEM_PALETTE_SIZE]
+        &gScreenImage.colors[WINGRAPH_SYSTEM_PALETTE_SIZE]
     );
     if (gAppPalette != NULL)
         DeleteObject(gAppPalette);
-    gAppPalette = CreatePalette(reinterpret_cast<LPLOGPALETTE>(&LogicalPalette));
+    gAppPalette = CreatePalette(reinterpret_cast<LPLOGPALETTE>(&gLogicalPalette));
     deviceContext = GetDC(gAppWindow);
     if (gAppPalette != NULL)
         SelectPalette(deviceContext, gAppPalette, FALSE);
@@ -793,37 +796,37 @@ void WGInitializePalette() {
     if (gAppPalette != NULL)
         return;
     screenDC = GetDC(NULL);
-    GetSystemPaletteEntries(screenDC, 0, WINGRAPH_SYSTEM_PALETTE_SIZE, LogicalPalette.entries);
+    GetSystemPaletteEntries(screenDC, 0, WINGRAPH_SYSTEM_PALETTE_SIZE, gLogicalPalette.entries);
     GetSystemPaletteEntries(
         screenDC,
         WINGRAPH_MUTABLE_PALETTE_END,
         WINGRAPH_SYSTEM_PALETTE_SIZE,
-        &LogicalPalette.entries[WINGRAPH_MUTABLE_PALETTE_END]
+        &gLogicalPalette.entries[WINGRAPH_MUTABLE_PALETTE_END]
     );
     ReleaseDC(NULL, screenDC);
     for (i = 0; i < WINGRAPH_SYSTEM_PALETTE_END; i++) {
-        screenImage.colors[i].rgbRed = LogicalPalette.entries[i].peRed;
-        screenImage.colors[i].rgbGreen = LogicalPalette.entries[i].peGreen;
-        screenImage.colors[i].rgbBlue = LogicalPalette.entries[i].peBlue;
-        screenImage.colors[i].rgbReserved = 0;
-        LogicalPalette.entries[i].peFlags = 0;
-        screenImage.colors[WINGRAPH_MUTABLE_PALETTE_END + i].rgbRed =
-            LogicalPalette.entries[WINGRAPH_MUTABLE_PALETTE_END + i].peRed;
-        screenImage.colors[WINGRAPH_MUTABLE_PALETTE_END + i].rgbGreen =
-            LogicalPalette.entries[WINGRAPH_MUTABLE_PALETTE_END + i].peGreen;
-        screenImage.colors[WINGRAPH_MUTABLE_PALETTE_END + i].rgbBlue =
-            LogicalPalette.entries[WINGRAPH_MUTABLE_PALETTE_END + i].peBlue;
-        screenImage.colors[WINGRAPH_MUTABLE_PALETTE_END + i].rgbReserved = 0;
-        LogicalPalette.entries[WINGRAPH_MUTABLE_PALETTE_END + i].peFlags = 0;
+        gScreenImage.colors[i].rgbRed = gLogicalPalette.entries[i].peRed;
+        gScreenImage.colors[i].rgbGreen = gLogicalPalette.entries[i].peGreen;
+        gScreenImage.colors[i].rgbBlue = gLogicalPalette.entries[i].peBlue;
+        gScreenImage.colors[i].rgbReserved = 0;
+        gLogicalPalette.entries[i].peFlags = 0;
+        gScreenImage.colors[WINGRAPH_MUTABLE_PALETTE_END + i].rgbRed =
+            gLogicalPalette.entries[WINGRAPH_MUTABLE_PALETTE_END + i].peRed;
+        gScreenImage.colors[WINGRAPH_MUTABLE_PALETTE_END + i].rgbGreen =
+            gLogicalPalette.entries[WINGRAPH_MUTABLE_PALETTE_END + i].peGreen;
+        gScreenImage.colors[WINGRAPH_MUTABLE_PALETTE_END + i].rgbBlue =
+            gLogicalPalette.entries[WINGRAPH_MUTABLE_PALETTE_END + i].peBlue;
+        gScreenImage.colors[WINGRAPH_MUTABLE_PALETTE_END + i].rgbReserved = 0;
+        gLogicalPalette.entries[WINGRAPH_MUTABLE_PALETTE_END + i].peFlags = 0;
     }
     for (i = WINGRAPH_SYSTEM_PALETTE_SIZE; i < WINGRAPH_MUTABLE_PALETTE_END; i++) {
-        screenImage.colors[i].rgbRed = LogicalPalette.entries[i].peRed = 0;
-        screenImage.colors[i].rgbGreen = LogicalPalette.entries[i].peGreen = 0;
-        screenImage.colors[i].rgbBlue = LogicalPalette.entries[i].peBlue = 0;
-        screenImage.colors[i].rgbReserved = 0;
-        LogicalPalette.entries[i].peFlags = PC_NOCOLLAPSE;
+        gScreenImage.colors[i].rgbRed = gLogicalPalette.entries[i].peRed = 0;
+        gScreenImage.colors[i].rgbGreen = gLogicalPalette.entries[i].peGreen = 0;
+        gScreenImage.colors[i].rgbBlue = gLogicalPalette.entries[i].peBlue = 0;
+        gScreenImage.colors[i].rgbReserved = 0;
+        gLogicalPalette.entries[i].peFlags = PC_NOCOLLAPSE;
     }
-    gAppPalette = CreatePalette(reinterpret_cast<LPLOGPALETTE>(&LogicalPalette));
+    gAppPalette = CreatePalette(reinterpret_cast<LPLOGPALETTE>(&gLogicalPalette));
 }
 
 // The client-to-game transform uses the pinned 640x480 viewport.
@@ -841,7 +844,7 @@ BOOL WGAppPaint(HWND window, HDC paintDC) {
     i32 destHeight;
 
     unusedChar = 0;
-    if (screenImage.bits != NULL) {
+    if (gScreenImage.bits != NULL) {
         paintDC = BeginPaint(window, &ps);
         SelectPalette(paintDC, gAppPalette, FALSE);
         RealizePalette(paintDC);

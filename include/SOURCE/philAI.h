@@ -311,7 +311,7 @@ extern float gReduceFactor;
 H1_ENUM_CONST_BEGIN(AIResourceValue)
     RV_UNSET = -32001
 H1_ENUM_CONST_END(AIResourceValue)
-// mapExtra bit 7: game::SetupAdjacentMons sets it where FindAdjacentMonster
+// gMapExtra bit 7: game::SetupAdjacentMons sets it where FindAdjacentMonster
 // finds a guard next to the cell and clears it (mask 0x7f) elsewhere.
 H1_ENUM_BEGIN(MapExtraFlag)
     MAP_EXTRA_MONSTER_ADJACENT = 0x80

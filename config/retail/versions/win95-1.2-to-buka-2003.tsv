@@ -1582,8 +1582,8 @@ old_rva	new_rva	name	note
 0x00090f98	0x000903ec	?gSpellAIFlags@@3PACA	
 0x00090fb8	0x0009040c	?gMageGuildSpellPool@@3PAY07CA	
 0x00090fd8	0x0009042c	?gCombatAdjacency@@3PAY05CA	
-0x000910e8	0x0009053c	?horseFrameFlip@@3PAFA	
-0x00091108	0x0009055c	?boatFrameFlip@@3PAFA	
+0x000910e8	0x0009053c	?gHorseFrameFlip@@3PAFA	
+0x00091108	0x0009055c	?gBoatFrameFlip@@3PAFA	
 0x00091128	0x0009057c	?gRadarOwnerColor@@3PAFA	
 0x00091138	0x00090588	?gRadarTerrainColor@@3PAFA	
 0x00091168	0x000905b8	?gTownObjectNames@@3PAPADA	
@@ -1599,7 +1599,7 @@ old_rva	new_rva	name	note
 0x00091640	0x00090a84	?gCastleAmounts@@3PAFA	
 0x00091648	0x00090a8c	?gHeroGoldCost@@3FA	
 0x00091650	0x00090a90	?gVesaMode@@3PAFA	
-0x00091660	0x00090a9c	?normalDirTable@@3PAUtag_tilePoint@@A	
+0x00091660	0x00090a9c	?gNormalDirTable@@3PAUtag_tilePoint@@A	
 0x00091680	0x00090ac0	?gTownBuildingExtents@@3PAY0BA@UTownBuildingExtent@@A	
 0x00091880	0x00090cc0	?gDwellingRequirements@@3PAGA	
 0x000918b0	0x00090cf0	?gResourceBaseValue@@3PAHA	
@@ -1630,7 +1630,7 @@ old_rva	new_rva	name	note
 0x000925fc	0x000925fc	?gArmySpriteNames@@3PAPADA	
 0x00092650	0x00091bc8	?gWinSetup@@3PAUWindowTextEntry@@A	
 0x0009266c	0x0009266c	?gArmyNamesPlural@@3PAPADA	
-0x00092760	0x00091cd8	?townTheme@@3PACA	
+0x00092760	0x00091cd8	?gTownTheme@@3PACA	
 0x00092768	0x00091ce0	?gCampaignScenarios@@3PAUcampaignScenario@@A	
 0x00092804	0x00092804	?gMineNames@@3PAPADA	
 0x00092a68	0x00091fe0	?gCampaignSideCrests@@3PAY01CA	
@@ -1670,8 +1670,8 @@ old_rva	new_rva	name	note
 0x00093578	0x00092b08	?gAdvMenuHelp@@3PAPADA	
 0x00093590	0x00092b20	?gLuckText@@3PAPADA	
 0x000935b0	0x00092b3c	?gMoraleText@@3PAPADA	
-0x000935d0	0x00092b58	?onOffText@@3PAPADA	
-0x00093600	0x00092b84	?walkSpeedText@@3PAPADA	
+0x000935d0	0x00092b58	?gOnOffText@@3PAPADA	
+0x00093600	0x00092b84	?gWalkSpeedText@@3PAPADA	
 0x00093618	0x00092b98	?gColorNames@@3PAPADA	
 0x00093628	0x00092ba8	?gAlignmentNames@@3PAPADA	
 0x00093640	0x00092bbc	?gSpellDesc@@3PAPADA	
@@ -1717,7 +1717,7 @@ old_rva	new_rva	name	note
 0x00093db8	0x000932c0	?gCampaignSideNames@@3PAPADA	
 0x00093dc8	0x000932d0	?gScoreLabels@@3PAPADA	
 0x00093df8	0x000932f8	?gHandicapNames@@3PAPADA	
-0x00093e10	0x0009330c	?musicQualityText@@3PAPADA	
+0x00093e10	0x0009330c	?gMusicQualityText@@3PAPADA	
 0x00093e20	0x00093318	?gWinSetupText@@3PAPADA	
 0x00093f30	0x00093428	?gRequiredExtendedMemory@@3HA	
 0x00093f34	0x0009342c	?gRequiredConventionalMemory@@3HA	
@@ -1755,8 +1755,8 @@ old_rva	new_rva	name	note
 0x0009f850	0x000a9e48	_?gLastCycleTickCount@?1??AppWndProc@@YGJPAUHWND__@@IIJ@Z@4HA	
 0x0009f854	0x000a9e4c	?gClosingApp@@3HA	
 0x0009fe60	0x000a0190	?gWinGAttached@@3HA	
-0x0009fe78	0x000a01a4	?Orientation@@3HA	
-0x0009fe80	0x000a01a8	?LogicalPalette@@3UWingPalette@@A	
+0x0009fe78	0x000a01a4	?gOrientation@@3HA	
+0x0009fe80	0x000a01a8	?gLogicalPalette@@3UWingPalette@@A	
 0x000a0284	0x000cdda4	?gInitWin@@3PAXA	
 0x000a028c	0x000cddac	?gTtlBlts@@3HA	
 0x000a02a8	0x000cddc8	?gDDPal@@3PAUIDirectDrawPalette@@A	

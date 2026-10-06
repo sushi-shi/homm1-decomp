@@ -357,8 +357,8 @@ rva	size	kind	name	unit	channel	game_rva	evidence
 0x0004c6c8	0x4	data	?gMainVideoModeColorDepth@@3HA	SOURCE/wingraph	src	0x000a0198	2 code reference(s) from placed bodies
 0x0004c6cc	0x4	data	?gMainVideoModeWidth@@3HA	SOURCE/wingraph	src	0x000a019c	6 code reference(s) from placed bodies
 0x0004c6d0	0x4	data	?gMainVideoModeHeight@@3HA	SOURCE/wingraph	src	0x000a01a0	1 code reference(s) from placed bodies
-0x0004c6d4	0x4	data	?Orientation@@3HA	SOURCE/wingraph	src	0x000a01a4	2 code reference(s) from placed bodies
-0x0004c6d8	0x404	data	?LogicalPalette@@3UWingPalette@@A	SOURCE/wingraph	src	0x000a01a8	29 code reference(s) from placed bodies
+0x0004c6d4	0x4	data	?gOrientation@@3HA	SOURCE/wingraph	src	0x000a01a4	2 code reference(s) from placed bodies
+0x0004c6d8	0x404	data	?gLogicalPalette@@3UWingPalette@@A	SOURCE/wingraph	src	0x000a01a8	29 code reference(s) from placed bodies
 0x0004d144	0x12	data	?gDefaultConstruct@@3PADA	BASE/WINDOW	src	0x000a1360	1 code reference(s) from placed bodies
 0x0004d158	0x12	data	?gDynamicConstruct@@3PADA	BASE/WINDOW	src	0x000a1374	1 code reference(s) from placed bodies
 0x0004d16c	0x80	data	_gInputCharacterMap	BASE/INPUTMGR	src	0x000a1388	1 code reference(s) from placed bodies

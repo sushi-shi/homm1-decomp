@@ -155,7 +155,7 @@ rva	size	symbol	provenance
 0x0009276c	96	?gDwellingNames@@3PAPADA	Buka typed initializer and reviewed code/pointer users
 0x00092750	28	?gNeutralBuildingNames@@3PAPADA	Buka typed initializer and reviewed code/pointer users
 0x00093268	36	?gCampaignWinTexts@@3PAPADA	Buka typed initializer and reviewed code/pointer users
-0x00091cd8	4	?townTheme@@3PACA	Buka typed initializer and reviewed code/pointer users
+0x00091cd8	4	?gTownTheme@@3PACA	Buka typed initializer and reviewed code/pointer users
 0x00092194	4	?gEnlargeScreenBlit@@3HA	Buka typed initializer and reviewed code/pointer users
 0x000a9910	4	?gRemoteReady@@3HA	Buka typed initializer and reviewed code/pointer users
 0x00091ce0	765	?gCampaignScenarios@@3PAUcampaignScenario@@A	Complete typed array payload and independently verified references; remove census splits inside source arrays
@@ -227,7 +227,7 @@ rva	size	symbol	provenance
 0x0008a6e8	4	_SPELL_AI_BLESS_MODIFIER	Buka typed payload, unique anchored code uses and disjoint data owners
 0x0008a6ec	4	_SPELL_AI_STONESKIN_MODIFIER	Buka typed payload, unique anchored code uses and disjoint data owners
 0x0008a70c	64	?gTownObjectType@@3QAY0BA@$$CBCA	Buka typed payload, unique anchored code uses and disjoint data owners
-0x000a01a8	1028	?LogicalPalette@@3UWingPalette@@A	Buka typed payload, unique anchored code uses and disjoint data owners
+0x000a01a8	1028	?gLogicalPalette@@3UWingPalette@@A	Buka typed payload, unique anchored code uses and disjoint data owners
 0x0009f97c	1	_?indexToCastOn@?1??HandleCastSpell@@YAFAAUtag_message@@@Z@4CA	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000cdd78	16	?gDDClientRect@@3UtagRECT@@A	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000cdd90	16	?gDDDestRect@@3UtagRECT@@A	Buka typed payload, unique anchored code uses and disjoint data owners
@@ -342,7 +342,7 @@ rva	size	symbol	provenance
 0x0009f058	4	?gLastConfirm@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000cc818	4	?gLastHeartbeatSend@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000cc828	1	_?gInTimeoutFail@?1??PollRemote@@YAXXZ@4CA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000a01a4	4	?Orientation@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
+0x000a01a4	4	?gOrientation@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000a0190	4	?gWinGAttached@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000a7fbc	4	?giScore@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000ca168	4	?iCurPlaceToVisit@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
@@ -370,7 +370,7 @@ rva	size	symbol	provenance
 0x000bb134	4	?gPrizeGuardedWorth@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000ca15c	4	?gCellSeen@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x0009f7c0	144	_gSmackSoundFormats	Typed Smacker globals and localized window titles; complete payload and retail uses
-0x0009f850	162	?SmackOptions@@3PAUSSmackOptions@@A	Typed Smacker globals and localized window titles; complete payload and retail uses
+0x0009f850	162	?gSmackOptions@@3PAUSSmackOptions@@A	Typed Smacker globals and localized window titles; complete payload and retail uses
 0x0009f8f4	44	_gSmackVolumes	Typed Smacker globals and localized window titles; complete payload and retail uses
 0x000cc8d0	1	?gMovieId@@3CA	Typed Smacker globals and localized window titles; complete payload and retail uses
 0x000cc8d4	4	_gSmackEnded	Typed Smacker globals and localized window titles; complete payload and retail uses

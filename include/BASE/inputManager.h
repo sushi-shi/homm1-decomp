@@ -144,7 +144,7 @@ public:
     H1_ENUM_STORAGE(MessageModifier, i16) m_modifiers;
     i16 m_mouseX;
     i16 m_mouseY;
-    i8 m_field_0x34a;
+    i8 m_forceMouseMove;
     i32 m_recordFile;
     i32 m_field_0x34f;
 

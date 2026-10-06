@@ -683,7 +683,7 @@ i32 InterpretCommandLine(void) {
     // Buka enables sound after parsing the legacy /S option.
     gNoSound = 0;
     sprintf(gAggPathName, "%s%s", gDataPath, "heroes.agg");
-    DEFAULT_AGGREGATE_NAME = gAggPathName;
+    gDefaultAggregateName = gAggPathName;
     gFrameStep = 6;
     for (i = 0; i < GAME_PLAYER_COUNT; i++)
         gHumanPlayer[i] = i < gNumHumanPlayers;
@@ -1537,9 +1537,9 @@ i8 gCombatAdjacency[45][6] = {
     {33, 43, -1, -1, 41, 32}, {34, -1, -1, -1, 42, 33}, {-1, -1, -1, -1, -1, -1},
 };
 DATA(0x0049053c)
-i16 horseFrameFlip[16] = {45, 46, 47, 48, 49, 50, 51, 52, 53, 179, 178, 177, 54, 175, 174, 55};
+i16 gHorseFrameFlip[16] = {45, 46, 47, 48, 49, 50, 51, 52, 53, 179, 178, 177, 54, 175, 174, 55};
 DATA(0x0049055c)
-i16 boatFrameFlip[16] = {0, 0, 9, 9, 18, 18, 27, 27, 36, 36, 155, 155, 146, 146, 137, 137};
+i16 gBoatFrameFlip[16] = {0, 0, 9, 9, 18, 18, 27, 27, 36, 36, 155, 155, 146, 146, 137, 137};
 DATA(0x0049057c)
 // Four player colors and the neutral-owner color; the following bytes are linker alignment.
 i16 gRadarOwnerColor[5] = {79, 105, 200, 129, 10};
@@ -2523,23 +2523,23 @@ void GetDataEntry(char* prompt, char* destination, i32 maximumLength, char* init
     gDataEntryDest = destination;
     gDataEntryMaxLen = maximumLength;
     strcpy(gDataEntryDest, "");
-    DataEntryWin = new heroWindow(0xb1, 0x14, "dataentr.bin");
-    if (!DataEntryWin)
+    gDataEntryWindow = new heroWindow(0xb1, 0x14, "dataentr.bin");
+    if (!gDataEntryWindow)
         MemError();
     SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, DATA_ENTRY_PROMPT);
     message.text = prompt;
-    DataEntryWin->BroadcastMessage(message);
+    gDataEntryWindow->BroadcastMessage(message);
     if (initialText)
         strcpy(textBuffer, initialText);
     else
         strcpy(textBuffer, "");
     message.id = DATA_ENTRY_TEXT;
     message.text = textBuffer;
-    DataEntryWin->BroadcastMessage(message);
+    gDataEntryWindow->BroadcastMessage(message);
     strcpy(destination, textBuffer);
     gDataEntryTime = 0;
-    gWindowManager->DoDialog(DataEntryWin, DataEntryWindowHandler, 0);
-    delete DataEntryWin;
+    gWindowManager->DoDialog(gDataEntryWindow, DataEntryWindowHandler, 0);
+    delete gDataEntryWindow;
 }
 
 VA(0x00441f97, 0x1af)
@@ -2551,7 +2551,7 @@ i16 DataEntryWindowHandler(tag_message& message) {
         message.type = MESSAGE_LEFT_BUTTON_DOWN;
         message.x = 0xc3;
         message.y = 0x9a;
-        DataEntryWin->BroadcastMessage(message);
+        gDataEntryWindow->BroadcastMessage(message);
         return MESSAGE_DISPATCH_CONSUME;
     }
 
@@ -2568,7 +2568,7 @@ i16 DataEntryWindowHandler(tag_message& message) {
                         message.type = MESSAGE_WIDGET;
                         message.id = DATA_ENTRY_TEXT;
                         message.command = WIDGET_COMMAND_GET_TEXT;
-                        DataEntryWin->BroadcastMessage(message);
+                        gDataEntryWindow->BroadcastMessage(message);
                         if (strlen(message.text) == 0) {
                             break;
                         } else {
@@ -2577,8 +2577,8 @@ i16 DataEntryWindowHandler(tag_message& message) {
                         }
                         SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, DATA_ENTRY_TEXT);
                         message.text = gDataEntryDest;
-                        DataEntryWin->BroadcastMessage(message);
-                        DataEntryWin->DrawWindow(1, DATA_ENTRY_TEXT, DATA_ENTRY_TEXT);
+                        gDataEntryWindow->BroadcastMessage(message);
+                        gDataEntryWindow->DrawWindow(1, DATA_ENTRY_TEXT, DATA_ENTRY_TEXT);
                         FINISH_DIALOG_MESSAGE(message);
                         return MESSAGE_DISPATCH_FORWARD;
                 }
@@ -3005,7 +3005,7 @@ i16 gHeroGoldCost = 2500;
 DATA(0x00490a90)
 i16 gVesaMode[6] = {640, 480, 256, 20226, 257, 0};
 DATA(0x00490a9c)
-tag_tilePoint normalDirTable[8] = {
+tag_tilePoint gNormalDirTable[8] = {
     {0, -1, 16},
     {1, -1, 16},
     {1, 0, 16},
@@ -3250,7 +3250,7 @@ WindowTextEntry gWinSetup[68] = {
     {609, 15}, {610, 15}, {611, 15}, {1, 16},
 };
 DATA(0x00491cd8)
-i8 townTheme[4] = {3, 0, 2, 1};
+i8 gTownTheme[4] = {3, 0, 2, 1};
 DATA(0x00491ce0)
 campaignScenario gCampaignScenarios[CAMPAIGN_SCENARIO_COUNT] = {
     {0,
@@ -3828,7 +3828,7 @@ char* gMoraleText[7] = {
     localization::Tr("table.gMoraleText.6"),
 };
 DATA(0x00492b58)
-char* onOffText[11] = {
+char* gOnOffText[11] = {
     localization::Tr("table.onOffText.0"),
     localization::Tr("table.onOffText.1"),
     localization::Tr("table.onOffText.2"),
@@ -3842,7 +3842,7 @@ char* onOffText[11] = {
     localization::Tr("table.onOffText.10")
 };
 DATA(0x00492b84)
-char* walkSpeedText[5] = {
+char* gWalkSpeedText[5] = {
     localization::Tr("table.walkSpeedText.0"),
     localization::Tr("table.walkSpeedText.1"),
     localization::Tr("table.walkSpeedText.2"),
@@ -4392,7 +4392,7 @@ char* gHandicapNames[5] = {
     localization::Tr("table.gHandicapNames.4")
 };
 DATA(0x0049330c)
-char* musicQualityText[3] = {
+char* gMusicQualityText[3] = {
     localization::Tr("table.musicQualityText.0"),
     localization::Tr("table.musicQualityText.1"),
     localization::Tr("table.musicQualityText.2")
@@ -4488,7 +4488,7 @@ palette* gPalette;
 DATA(0x004a74d8)
 resourceManager* gResourceManager;
 DATA(0x004a7fc0)
-u8 mapExtra[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+u8 gMapExtra[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 DATA(0x004a74cc)
 i32 gSpecialHideCursor;
 DATA(0x004a74ac)
@@ -4498,7 +4498,7 @@ i32 gBlackoutPlayer;
 DATA(0x004a7838)
 char gNetBoxLine[2][60];
 DATA(0x004a7b98)
-heroWindow* DataEntryWin;
+heroWindow* gDataEntryWindow;
 DATA(0x004a74d0)
 i8 gWeekTypeExtra;
 DATA(0x004a74e4)
@@ -4592,7 +4592,7 @@ i32 gThisNetPos;
 DATA(0x004a973c)
 char gRegCDRomPath[352];
 DATA(0x004a7628)
-class heroWindow* heroWin;
+class heroWindow* gHeroScreenWindow;
 DATA(0x004a9400)
 class icon* gCurLoadedSpellIcon;
 DATA(0x004a7bb8)
@@ -4626,7 +4626,7 @@ i8 gMonthType;
 DATA(0x004a6c4c)
 char gMapDescription[124];
 DATA(0x004a7498)
-char* DEFAULT_AGGREGATE_NAME;
+char* gDefaultAggregateName;
 DATA(0x004a7b94)
 i8 gThisNetHumanPlayer[4];
 DATA(0x004a78b0)

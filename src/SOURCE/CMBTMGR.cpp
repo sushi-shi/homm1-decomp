@@ -536,8 +536,8 @@ i8 combatManager::MoreTreesNear(void) {
     homeY = m_combatY;
     for (pass = 0; pass < 3; pass++) {
         for (n = 0; n < MAP_DIRECTION_COUNT; n++) {
-            xPos = posX + normalDirTable[n].x * pass;
-            yPos = homeY + normalDirTable[n].y * pass;
+            xPos = posX + gNormalDirTable[n].x * pass;
+            yPos = homeY + gNormalDirTable[n].y * pass;
             if (xPos >= 0 && xPos < MAP_CELL_GRID_SIZE && yPos >= 0 && yPos < MAP_CELL_GRID_SIZE) {
                 tile = gAdvManager->GetCell(xPos, yPos);
                 nearbyTileset = tile->m_objectTileset & MAP_CELL_TILESET_MASK;

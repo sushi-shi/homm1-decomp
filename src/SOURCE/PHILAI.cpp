@@ -367,10 +367,10 @@ i32 philAI::GoodAdjacent(hero* pHero, i32* direction) {
         return 0;
     for (idx = 0; idx < MAP_DIRECTION_COUNT; idx++) {
         if (gAdvManager->ValidMoveWithEvent(pHero, idx)) {
-            x = pHero->m_x + normalDirTable[idx].x;
-            y = pHero->m_y + normalDirTable[idx].y;
+            x = pHero->m_x + gNormalDirTable[idx].x;
+            y = pHero->m_y + gNormalDirTable[idx].y;
             if ((gAdvManager->GetCell(x, y)->m_triggerType & MAP_TRIGGER_EVENT)
-                && !(mapExtra[x][y] & MAP_EXTRA_MONSTER_ADJACENT)
+                && !(gMapExtra[x][y] & MAP_EXTRA_MONSTER_ADJACENT)
                 && (gAdvManager->GetCell(x, y)->m_triggerType & MAP_TRIGGER_TYPE_MASK)
                        != MAP_OBJECT_STONE_LITHS
                 && (gAdvManager->GetCell(x, y)->m_triggerType & MAP_TRIGGER_TYPE_MASK)
@@ -546,8 +546,8 @@ i8 philAI::DoDimensionDoor(hero* pHero) {
     x = pHero->m_x;
     y = pHero->m_y;
     for (i = gSearchArray->m_pathLength - 1; i >= 1; i--) {
-        x += normalDirTable[gSearchArray->m_directions[i]].x;
-        y += normalDirTable[gSearchArray->m_directions[i]].y;
+        x += gNormalDirTable[gSearchArray->m_directions[i]].x;
+        y += gNormalDirTable[gSearchArray->m_directions[i]].y;
         if (abs(x - pHero->m_x) <= 7 && abs(y - pHero->m_y) <= 7) {
             cell = gAdvManager->GetCell(x, y);
             if (!(cell->m_triggerType & MAP_TRIGGER_EVENT)
@@ -3899,7 +3899,7 @@ i32 philAI::ValueOfEventAtPosition(hero* pHero, i16 x, i16 y, i32 immediate, i32
     if (gBerserk && gReduceByBerserk)
         gVisitResult = static_cast<i32>(gVisitResult * gBerserkFactor);
     if (!immediate) {
-        if (gVisitResult > 0 && (mapExtra[x][y] & MAP_EXTRA_MONSTER_ADJACENT)
+        if (gVisitResult > 0 && (gMapExtra[x][y] & MAP_EXTRA_MONSTER_ADJACENT)
             && (gEventLocation->m_triggerType & MAP_TRIGGER_TYPE_MASK) != MAP_OBJECT_MONSTER)
             gVisitResult = 0;
         if (gVisitResult < 0

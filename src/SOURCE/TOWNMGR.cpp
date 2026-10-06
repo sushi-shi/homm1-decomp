@@ -153,7 +153,7 @@ i16 townManager::Open(i16 priority) {
     i8 buildId;
 
     gGame->CheckHeroConsistency();
-    PlayMusic(townTheme[m_town->m_type] + MUSIC_TRACK_TOWN_FIRST);
+    PlayMusic(gTownTheme[m_town->m_type] + MUSIC_TRACK_TOWN_FIRST);
     PollSound();
     m_townWindow = new heroWindow(0, 0, "townwind.bin");
     if (m_townWindow == NULL)
@@ -1685,7 +1685,12 @@ void townManager::SetupWell(class heroWindow* window) {
         else {
             theRate = gMonsterDatabase[gDwellingType[m_town->m_type][i]].growth;
             theRate += WEEKLY_WELL_GROWTH_BONUS;
-            sprintf(gText, localization::Tr("town.well.growth"), m_town->m_dwellingAvailable[i], theRate);
+            sprintf(
+                gText,
+                localization::Tr("town.well.growth"),
+                m_town->m_dwellingAvailable[i],
+                theRate
+            );
         }
         msg.text = gText;
         window->BroadcastMessage(msg);
@@ -2208,7 +2213,7 @@ void townManager::DoTavern(void) {
     PlayMusic(MUSIC_TRACK_TAVERN);
     gWindowManager->DoDialog(m_heroWindow0, TavernHandler, 0);
     delete m_heroWindow0;
-    PlayMusic(townTheme[m_town->m_type] + MUSIC_TRACK_TOWN_FIRST);
+    PlayMusic(gTownTheme[m_town->m_type] + MUSIC_TRACK_TOWN_FIRST);
 }
 
 // Hovers by widget id and recruits a single hero (control 0x30).

@@ -39,7 +39,7 @@ static SmackSoundFormat gSmackSoundFormats[12] = {
     {WAVE_FORMAT_1M08, 1, 11025, 8}
 };
 DATA(0x0049f850)
-SSmackOptions SmackOptions[6] = {
+SSmackOptions gSmackOptions[6] = {
     {"BUKA", "", 1, 1, 1, 0, 0, 0, 0},
     {"NWCLOGO", "", 1, 1, 1, 0, 0, 0, 0},
     {"INTRO", "", 1, 1, 1, 0, 0, 0, 0},
@@ -199,9 +199,9 @@ void SmackMain() {
         AIL_set_digital_master_volume(gSmackDigDriver, gSmackVolumes[gConfig.soundVolume]);
         SmackSoundUseMSS(gSmackDigDriver);
     }
-    sprintf(gText, "%s%s.SMK", gAnimPath, SmackOptions[gMovieId].fileName);
+    sprintf(gText, "%s%s.SMK", gAnimPath, gSmackOptions[gMovieId].fileName);
     soundFlags = gSmackSound ? SMACK_TRACKS : 0;
-    preloadFlags = SmackOptions[gMovieId].preload ? SMACK_PRELOAD_ALL : 0;
+    preloadFlags = gSmackOptions[gMovieId].preload ? SMACK_PRELOAD_ALL : 0;
     gSmackPrimary = SmackOpen(gText, soundFlags + preloadFlags, SMACK_AUTO_EXTRA);
     SmackToBuffer(
         gSmackPrimary,
@@ -212,14 +212,14 @@ void SmackMain() {
         gWindowManager->m_screen->m_pixels,
         0
     );
-    if (strlen(SmackOptions[gMovieId].companionFileName) > 1) {
-        sprintf(gText, "%s%s.SMK", gAnimPath, SmackOptions[gMovieId].companionFileName);
+    if (strlen(gSmackOptions[gMovieId].companionFileName) > 1) {
+        sprintf(gText, "%s%s.SMK", gAnimPath, gSmackOptions[gMovieId].companionFileName);
         gSmackCompanion = SmackOpen(gText, soundFlags, SMACK_AUTO_EXTRA);
-        if (SmackOptions[gMovieId].drawCompanion)
+        if (gSmackOptions[gMovieId].drawCompanion)
             SmackToBuffer(
                 gSmackCompanion,
-                SmackOptions[gMovieId].companionX,
-                SmackOptions[gMovieId].companionY,
+                gSmackOptions[gMovieId].companionX,
+                gSmackOptions[gMovieId].companionY,
                 LOGICAL_SCREEN_WIDTH,
                 LOGICAL_SCREEN_HEIGHT,
                 gWindowManager->m_screen->m_pixels,
@@ -236,7 +236,7 @@ void SmackMain() {
         0,
         0
     );
-    if (SmackOptions[gMovieId].fadeIn)
+    if (gSmackOptions[gMovieId].fadeIn)
         gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_NORMAL, NULL);
     active = 1;
     primaryOn = 0;
@@ -244,9 +244,9 @@ void SmackMain() {
     while (active) {
         if (!SmackWait(gSmackPrimary)) {
             if (!primaryOn || gSmackPrimary->Frames > 1)
-                DoAdvance(gSmackPrimary, 1, 1, primaryOn || !SmackOptions[gMovieId].fadeIn, 0);
+                DoAdvance(gSmackPrimary, 1, 1, primaryOn || !gSmackOptions[gMovieId].fadeIn, 0);
             if (gSmackPrimary->FrameNum > 0 || gSmackPrimary->Frames <= 1) {
-                if (!primaryOn && SmackOptions[gMovieId].fadeIn) {
+                if (!primaryOn && gSmackOptions[gMovieId].fadeIn) {
                     memcpy(gBufferPalette->m_data, gPalette->m_data, PALETTE_DATA_SIZE);
                     gWindowManager->FadeScreen(WINDOW_FADE_IN, 4, NULL);
                 }
@@ -256,7 +256,7 @@ void SmackMain() {
         if (gSmackCompanion && primaryOn && !SmackWait(gSmackCompanion)) {
             if (companionOn && gSmackCompanion->FrameNum == gSmackCompanion->Frames - 1) {
                 i32 drawLastFrame;
-                if (SmackOptions[gMovieId].drawCompanion)
+                if (gSmackOptions[gMovieId].drawCompanion)
                     drawLastFrame = 1;
                 else
                     drawLastFrame = 0;
@@ -265,7 +265,7 @@ void SmackMain() {
                 while (SmackWait(gSmackCompanion))
                     Process1WindowsMessage();
             } else {
-                DoAdvance(gSmackCompanion, SmackOptions[gMovieId].drawCompanion, 1, 0, 1);
+                DoAdvance(gSmackCompanion, gSmackOptions[gMovieId].drawCompanion, 1, 0, 1);
             }
             if (gSmackCompanion && gSmackCompanion->FrameNum > 0)
                 companionOn = 1;
@@ -282,7 +282,7 @@ void SmackMain() {
                 active = 0;
                 continue;
         }
-        if (!SmackOptions[gMovieId].waitForInput
+        if (!gSmackOptions[gMovieId].waitForInput
             && (gSmackPrevFrame
                 || (gSmackCompanion
                     && (gSmackCompanion->FrameNum >= gSmackCompanion->Frames
@@ -294,7 +294,7 @@ void SmackMain() {
             gSmackEnded = 1;
         }
     }
-    if (SmackOptions[gMovieId].fadeOut) {
+    if (gSmackOptions[gMovieId].fadeOut) {
         memcpy(gBufferPalette->m_data, gPalette->m_data, PALETTE_DATA_SIZE);
         gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, NULL);
         FillBitmapArea(

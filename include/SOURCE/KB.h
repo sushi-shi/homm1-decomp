@@ -67,8 +67,9 @@ extern i32 gRequiredConventionalMemory;
 extern i32 gLoadingMonoIcon;
 extern struct configStruct gConfig;
 // Retail DoDimensionDoor walks gSearchArray paths through this delta table.
-extern struct tag_tilePoint normalDirTable[];
-extern char* DEFAULT_AGGREGATE_NAME;
+extern struct tag_tilePoint gNormalDirTable[];
+#define gDefaultAggregateName DEFAULT_AGGREGATE_NAME // spelling fixes .bss order
+extern char* gDefaultAggregateName;
 #define gResourceManager gpResourceManager // spelling fixes .bss order
 extern class resourceManager* gResourceManager;
 #define gWindowManager gpWindowManager // spelling fixes .bss order
@@ -102,7 +103,8 @@ extern i32 gBottomViewResourceQty;
 extern char gBottomViewText[];
 extern i32 gHeroMoving;
 extern i32 gRemoteOn;
-extern class heroWindow* DataEntryWin;
+#define gDataEntryWindow DataEntryWin // spelling fixes .bss order
+extern class heroWindow* gDataEntryWindow;
 #define gDataEntryDest cDEDest // spelling fixes .bss order
 extern char* gDataEntryDest;
 #define gDataEntryMaxLen iDEMaxLen // spelling fixes .bss order
@@ -490,7 +492,8 @@ extern i16 gMinExpForLevel[][HERO_EXPERIENCE_LEVEL_TABLE_COUNT];
 extern class hero* gInfoViewedHero;
 extern char* gStatDesc[];
 extern char* gStatNames[];
-extern class heroWindow* heroWin;
+#define gHeroScreenWindow heroWin // spelling fixes .bss order
+extern class heroWindow* gHeroScreenWindow;
 extern i8 gHighScoreRank;
 i32 EarlySetup(void);
 i32 GameUnsaved(void);
@@ -533,7 +536,8 @@ extern i32 gResourceBaseValue[];
 extern i8 gTownHeroClass[];
 extern i32 gUltArtifactAvgValue;
 // GoodAdjacent skips cells whose adjacency byte carries the monster bit.
-extern u8 mapExtra[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+#define gMapExtra mapExtra // spelling fixes .bss order
+extern u8 gMapExtra[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 #define gGamePosToNetPos gbGamePosToNetPos // spelling fixes .bss order
 extern i8 gGamePosToNetPos[];
 // WaitForOtherPlayer stores the game position of net position zero here
@@ -563,7 +567,7 @@ extern char* gTownCommand[];
 extern struct TownBuildingExtent gTownBuildingExtents[4][16];
 // KB's tavern recruit dialog handler (retail 0x0045140e).
 i16 RecruitHeroHandler(struct tag_message& message);
-extern i8 townTheme[];
+extern i8 gTownTheme[];
 extern i32 gFullCombatScreenDrawn;
 extern i32 gLimitedCombatUpdatePalette;
 extern i32 gScrollX;
@@ -576,7 +580,7 @@ extern i32 gScore;
 // oldmain's re-entry guard and the intro, end-sequence and remote state it
 // shares with the game screens.
 extern i8 gKBDone;
-extern i16 boatFrameFlip[];
+extern i16 gBoatFrameFlip[];
 // Combat ground tiles (0x00490e70) and obstacle icons (0x00490e90) per
 // combat terrain.
 extern char* gCombatGroundNames[];
@@ -679,12 +683,12 @@ extern i32 gStartingResources[][7];
 extern char* gTownNames[];
 extern char* gWeekNames[];
 // Hero frame flips for the horse and boat walk cycles.
-extern i16 horseFrameFlip[];
-extern char* musicQualityText[];
+extern i16 gHorseFrameFlip[];
+extern char* gMusicQualityText[];
 // Adventure control panel: option labels, then the control-panel and
 // adventure-panel help lines.
-extern char* onOffText[];
-extern char* walkSpeedText[];
+extern char* gOnOffText[];
+extern char* gWalkSpeedText[];
 
 // gAdvDisposeLevel while combat runs: how much adventure-screen art the
 // resource manager may release.

@@ -652,7 +652,7 @@ i16 game::LoadGame(char* filename, i32 origData, i32) {
     gCurPlayerHighBit = 1 << (gCurPlayer + GAME_PLAYER_HIGH_BIT_SHIFT);
     gCurWatchPlayerHighBit = 1 << (gCurWatchPlayer + GAME_PLAYER_HIGH_BIT_SHIFT);
     gShowIt = gThisNetHumanPlayer[gCurPlayer];
-    memset(mapExtra, 0, sizeof(mapExtra));
+    memset(gMapExtra, 0, sizeof(gMapExtra));
     if (!origData)
         SetupAdjacentMons();
     return 1;
@@ -1141,7 +1141,8 @@ void game::InitCampaignMap(i32 scenario, i32) {
     NewMap(gMapName);
     for (i = 0; i < GAME_PLAYER_COUNT; i++) {
         for (resourceIdx = 0; resourceIdx < RESOURCE_COUNT; resourceIdx++)
-            m_players[i].m_resources[resourceIdx] = gCampaignScenarios[scenario].resources[i][resourceIdx];
+            m_players[i].m_resources[resourceIdx] =
+                gCampaignScenarios[scenario].resources[i][resourceIdx];
     }
 }
 
@@ -3186,7 +3187,8 @@ void game::RandomizeTown(i8 x, i8 y, i8 isCastle) {
     if (isCastle) {
         m_castleRecs[townNum].m_buildings |=
             ((1 << BUILDING_SLOT_CASTLE) | (1 << BUILDING_SLOT_DWELLING_1));
-        m_castleRecs[townNum].m_dwellingAvailable[0] = gMonsterDatabase[gDwellingType[race][0]].growth;
+        m_castleRecs[townNum].m_dwellingAvailable[0] =
+            gMonsterDatabase[gDwellingType[race][0]].growth;
         if (m_castleRecs[townNum].m_buildings & (1 << BUILDING_SLOT_TENT))
             m_castleRecs[townNum].m_buildings -= (1 << BUILDING_SLOT_TENT);
     } else {
@@ -3232,7 +3234,8 @@ void game::SetupTown(i8 townId, i8 aiOwned) {
     }
     if (!m_castleRecs[townId].m_customized) {
         m_castleRecs[townId].m_buildings |= (1 << BUILDING_SLOT_DWELLING_1);
-        m_castleRecs[townId].m_dwellingAvailable[0] = gMonsterDatabase[gDwellingType[curTownType][0]].growth;
+        m_castleRecs[townId].m_dwellingAvailable[0] =
+            gMonsterDatabase[gDwellingType[curTownType][0]].growth;
         if (aiOwned && dwellingCount == 1 && Random(1, 10) < 4)
             dwellingCount++;
         if (--dwellingCount) {
@@ -3799,9 +3802,9 @@ void game::SetupAdjacentMons(void) {
     for (x = 0; x < MAP_CELL_GRID_SIZE; ++x) {
         for (y = 0; y < MAP_CELL_GRID_SIZE; ++y) {
             if (gAdvManager->FindAdjacentMonster(x, y, &monX, &monY, -1, -1))
-                mapExtra[x][y] |= MAP_EXTRA_MONSTER_ADJACENT;
+                gMapExtra[x][y] |= MAP_EXTRA_MONSTER_ADJACENT;
             else
-                mapExtra[x][y] &= oldMask;
+                gMapExtra[x][y] &= oldMask;
         }
     }
 }

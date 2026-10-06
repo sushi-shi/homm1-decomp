@@ -36,7 +36,7 @@ hero::hero(void) {
     m_heroClass = 0;
     m_portrait = 0;
     m_name[0] = 0;
-    heroWin = NULL;
+    gHeroScreenWindow = NULL;
     gHeroScreenSrcIndex = HERO_SCREEN_SOURCE_NONE;
 }
 
@@ -221,7 +221,7 @@ done:
 VA(0x00439646, 0x48)
 void hero::RedrawHeroScreen(void) {
     gResourceManager->GetBackdrop("heroscrn.bmp", gWindowManager->m_screen);
-    heroWin->DrawWindow();
+    gHeroScreenWindow->DrawWindow();
     gWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
 }
 
@@ -236,42 +236,42 @@ i8 hero::HeroView(i8 viewOnly) {
     gAdvManager->TrimLoopingSounds(8);
     gHeroWindShowing = 1;
     gWindowManager->FadeScreen(WINDOW_FADE_OUT, 8, NULL);
-    heroWin = new heroWindow(0, 0, "herowind.bin");
-    if (!heroWin)
+    gHeroScreenWindow = new heroWindow(0, 0, "herowind.bin");
+    if (!gHeroScreenWindow)
         MemError();
-    gHeroWin = heroWin;
-    SetWinText(heroWin, WINDOW_TEXT_HERO);
+    gHeroWin = gHeroScreenWindow;
+    SetWinText(gHeroScreenWindow, WINDOW_TEXT_HERO);
     message.type = MESSAGE_WIDGET;
     sprintf(gText, localization::Tr("hero.title"), m_name, gClassNames[m_heroClass]);
     message.command = WIDGET_COMMAND_SET_TEXT;
     message.id = HERO_SCREEN_TITLE;
     message.text = gText;
-    heroWin->BroadcastMessage(message);
+    gHeroScreenWindow->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_CLEAR_FLAGS;
     message.value = WIDGET_FLAG_DRAW;
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
         message.id = i + HERO_SCREEN_STAT_FIRST;
-        heroWin->BroadcastMessage(message);
+        gHeroScreenWindow->BroadcastMessage(message);
         message.id = i + HERO_SCREEN_ARMY_SLOT_FIRST;
-        heroWin->BroadcastMessage(message);
+        gHeroScreenWindow->BroadcastMessage(message);
     }
     if (viewOnly || gTownManager->m_castleDialogActive
         || (!gCurPlayerData->m_townCount && gCurPlayerData->m_heroCount == 1)) {
         message.id = HERO_SCREEN_DISMISS;
         message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
-        heroWin->BroadcastMessage(message);
+        gHeroScreenWindow->BroadcastMessage(message);
     }
     sprintf(gText, "port%04d.icn", m_portrait);
     message.command = WIDGET_COMMAND_SET_ICON;
     message.id = HERO_SCREEN_PORTRAIT;
     message.text = gText;
-    heroWin->BroadcastMessage(message);
+    gHeroScreenWindow->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_TEXT;
     for (i = 0; i < HERO_PRIMARY_STAT_COUNT; i++) {
         sprintf(gText, "%d", m_primaryStats[i]);
         message.id = i + HERO_SCREEN_STAT_VALUE_FIRST;
         message.text = gText;
-        heroWin->BroadcastMessage(message);
+        gHeroScreenWindow->BroadcastMessage(message);
     }
     heroLuck = gGame->GetLuck(this, NULL);
     for (i = 0; i < HERO_SCREEN_MOOD_ICON_COUNT; i++) {
@@ -283,7 +283,7 @@ i8 hero::HeroView(i8 viewOnly) {
             message.value = HERO_LUCK_FRAME_NEUTRAL;
         else
             message.value = HERO_LUCK_FRAME_GOOD;
-        heroWin->BroadcastMessage(message);
+        gHeroScreenWindow->BroadcastMessage(message);
     }
     magnitude = abs(heroLuck);
     if (magnitude <= 0)
@@ -292,7 +292,7 @@ i8 hero::HeroView(i8 viewOnly) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.id = i + (HERO_SCREEN_LUCK_FIRST - 1);
         message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
-        heroWin->BroadcastMessage(message);
+        gHeroScreenWindow->BroadcastMessage(message);
     }
     moraleValue = m_army.GetMorale(this, NULL);
     for (i = 0; i < HERO_SCREEN_MOOD_ICON_COUNT; i++) {
@@ -304,7 +304,7 @@ i8 hero::HeroView(i8 viewOnly) {
             message.value = HERO_MORALE_FRAME_NEUTRAL;
         else
             message.value = HERO_MORALE_FRAME_GOOD;
-        heroWin->BroadcastMessage(message);
+        gHeroScreenWindow->BroadcastMessage(message);
     }
     magnitude = abs(moraleValue);
     if (magnitude <= 0)
@@ -313,44 +313,44 @@ i8 hero::HeroView(i8 viewOnly) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.id = i + (HERO_SCREEN_MORALE_FIRST - 1);
         message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
-        heroWin->BroadcastMessage(message);
+        gHeroScreenWindow->BroadcastMessage(message);
     }
     sprintf(gText, "\n%d", m_experience);
     message.command = WIDGET_COMMAND_SET_TEXT;
     message.id = HERO_SCREEN_EXPERIENCE;
     message.text = gText;
-    heroWin->BroadcastMessage(message);
+    gHeroScreenWindow->BroadcastMessage(message);
     sprintf(gText, "crst%04d.icn", gCurPlayerData->Color() * 4 + m_heroClass);
     message.command = WIDGET_COMMAND_SET_ICON;
     message.id = HERO_SCREEN_CREST;
-    heroWin->BroadcastMessage(message);
+    gHeroScreenWindow->BroadcastMessage(message);
     UpdateArmies();
     for (i = 0; i < HERO_ARTIFACT_SLOT_COUNT; i++) {
         message.id = i + HERO_SCREEN_ARTIFACT_FIRST;
         if (m_artifacts[i] != ARTIFACT_NONE) {
             message.command = WIDGET_COMMAND_SET_FRAME;
             message.value = m_artifacts[i];
-            heroWin->BroadcastMessage(message);
+            gHeroScreenWindow->BroadcastMessage(message);
             if (m_artifacts[i] >= ARTIFACT_REGULAR_FIRST) {
                 message.command = WIDGET_COMMAND_CLEAR_FLAGS;
                 message.id = i + HERO_SCREEN_ARTIFACT_BACKGROUND_FIRST;
                 message.value = WIDGET_FLAG_DRAW;
-                heroWin->BroadcastMessage(message);
+                gHeroScreenWindow->BroadcastMessage(message);
             }
         } else {
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
             message.value = WIDGET_FLAG_DRAW;
-            heroWin->BroadcastMessage(message);
+            gHeroScreenWindow->BroadcastMessage(message);
             message.id = i + HERO_SCREEN_ARTIFACT_BACKGROUND_FIRST;
-            heroWin->BroadcastMessage(message);
+            gHeroScreenWindow->BroadcastMessage(message);
         }
     }
     RedrawHeroScreen();
     gWindowManager->FadeScreen(WINDOW_FADE_IN, 8, NULL);
     gInfoViewedHero = this;
-    gWindowManager->DoDialog(heroWin, HeroHandler, 0);
+    gWindowManager->DoDialog(gHeroScreenWindow, HeroHandler, 0);
     gWindowManager->FadeScreen(WINDOW_FADE_OUT, 8, NULL);
-    delete heroWin;
+    delete gHeroScreenWindow;
     gHeroWin = NULL;
     if (gWindowManager->m_dialogResult == HERO_SCREEN_DISMISS) {
         return 1;
@@ -390,9 +390,9 @@ void hero::HeroScreenUpdate(void) {
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.value = WIDGET_FLAG_DRAW;
         message.id = i + HERO_SCREEN_ARMY_SLOT_FIRST;
-        heroWin->BroadcastMessage(message);
+        gHeroScreenWindow->BroadcastMessage(message);
     }
-    heroWin->DrawWindow();
+    gHeroScreenWindow->DrawWindow();
     gWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
 }
 
@@ -407,35 +407,35 @@ void hero::UpdateArmies(void) {
             message.command = WIDGET_COMMAND_SET_FRAME;
             message.id = i + HERO_SCREEN_ARMY_BACKGROUND_FIRST;
             message.value = HERO_ARMY_BACKGROUND_EMPTY_FRAME;
-            heroWin->BroadcastMessage(message);
+            gHeroScreenWindow->BroadcastMessage(message);
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
             message.id = i + HERO_SCREEN_ARMY_CREATURE_FIRST;
             message.value = WIDGET_FLAG_DRAW;
-            heroWin->BroadcastMessage(message);
+            gHeroScreenWindow->BroadcastMessage(message);
             message.id = i + HERO_SCREEN_ARMY_COUNT_FIRST;
-            heroWin->BroadcastMessage(message);
+            gHeroScreenWindow->BroadcastMessage(message);
             message.id = i + HERO_SCREEN_ARMY_SLOT_FIRST;
-            heroWin->BroadcastMessage(message);
+            gHeroScreenWindow->BroadcastMessage(message);
         } else {
             message.command = WIDGET_COMMAND_SET_FRAME;
             message.id = i + HERO_SCREEN_ARMY_BACKGROUND_FIRST;
             message.value = m_army.m_creatureTypes[i] / CREATURE_FACTION_SIZE
                             + HERO_ARMY_BACKGROUND_FACTION_FIRST_FRAME;
-            heroWin->BroadcastMessage(message);
+            gHeroScreenWindow->BroadcastMessage(message);
             message.id = i + HERO_SCREEN_ARMY_CREATURE_FIRST;
             message.value = m_army.m_creatureTypes[i];
-            heroWin->BroadcastMessage(message);
+            gHeroScreenWindow->BroadcastMessage(message);
             message.command = WIDGET_COMMAND_SET_FLAGS;
             message.value = WIDGET_FLAG_DRAW;
-            heroWin->BroadcastMessage(message);
+            gHeroScreenWindow->BroadcastMessage(message);
             sprintf(gText, "%d", m_army.m_creatureCounts[i]);
             message.command = WIDGET_COMMAND_SET_TEXT;
             message.id = i + HERO_SCREEN_ARMY_COUNT_FIRST;
             message.text = gText;
-            heroWin->BroadcastMessage(message);
+            gHeroScreenWindow->BroadcastMessage(message);
             message.command = WIDGET_COMMAND_SET_FLAGS;
             message.value = WIDGET_FLAG_DRAW;
-            heroWin->BroadcastMessage(message);
+            gHeroScreenWindow->BroadcastMessage(message);
         }
     }
 }

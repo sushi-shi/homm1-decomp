@@ -67,3 +67,51 @@ local	SetupCDDrive	thisFh/tempDrives/pos/subKeyArray	probeFd/drivesCount/tailRes
 local	DriveSupportsFreeSpaceQuery	szPath/availToCaller	path/availableToCaller	no Hungarian
 local	DDSD	unused	reportCode	not unused: the DDSD_REPORT_* code printed in the "Direct Draw Error #%d" message
 local	DDCreateSurface/DDInitializePalette/DDUpdatePalette/WGInitializePalette	ddrval/lpSurface/curHdc/curRes/hdc	status/createdSurface/systemDeviceContext/status/screenDC	no Hungarian; one name for a DirectDraw call status
+member	inputManager	m_field_0x34a	m_forceMouseMove	advManager sets it where the same code calls inputManager::ForceMouseMove (after recentring on a town/hero); only the constructor clears it
+param	nb_snd	queueToFree	priority	the node goes to the queue nb_thr_ctl sends first; com_snd calls the same argument priority
+global	SOURCE/netwin	gNbFreeQueue	gNbPriorityQueue (alias)	not a free list: nb_thr_ctl pops it before gNbSndQueue to send, as com_snd's priorityQueue
+param	nb_term/nb_rcv/nb_snd/nb_sess/nb_stat	<unnamed#1>/len	port/maxLength,length	the driver interface's port argument (com_* name it port; NetBIOS ignores it)
+param	com_snd/com_stat/com_sess	<unnamed>	session/session/port,operation	same driver-interface slots as nb_snd/nb_stat/nb_sess
+local	nb_sess/nb_thr_ctl	returnCodeValue/nextList/anyIsFree/keepRunningNum/pktPtr	result/args/releaseSource/running/packet	MOVE clears the source session when the flag is set; the queued packet node
+local	com_snd/comm_wrt_task	res/callRv	success	same name as com_rcv's API result
+global	SOURCE/KB	heroWin	gHeroScreenWindow	g-prefixed name; the hero screen's herowind.bin window (HERO.cpp); gHeroWin is a separate pointer to it
+global	SOURCE/KB	DataEntryWin	gDataEntryWindow	g-prefixed name
+global	SOURCE/KB	mapExtra	gMapExtra	g-prefixed name
+global	SOURCE/KB	DEFAULT_AGGREGATE_NAME	gDefaultAggregateName	g-prefixed name
+global	SOURCE/KB	horseFrameFlip	gHorseFrameFlip	g-prefixed name
+global	SOURCE/KB	boatFrameFlip	gBoatFrameFlip	g-prefixed name
+global	SOURCE/KB	normalDirTable	gNormalDirTable	g-prefixed name
+global	SOURCE/KB	townTheme	gTownTheme	g-prefixed name
+global	SOURCE/KB	onOffText	gOnOffText	g-prefixed name
+global	SOURCE/KB	walkSpeedText	gWalkSpeedText	g-prefixed name
+global	SOURCE/KB	musicQualityText	gMusicQualityText	g-prefixed name
+global	SOURCE/wingraph	screenImage	gScreenImage	g-prefixed name
+global	SOURCE/wingraph	Orientation	gOrientation	g-prefixed name
+global	SOURCE/wingraph	LogicalPalette	gLogicalPalette	g-prefixed name
+global	SOURCE/SMACKMGR	SmackOptions	gSmackOptions	g-prefixed name
+global	SOURCE/REMOTE	GameMode	gRemoteGameMode	g-prefixed name; the RemoteGameMode RemoteMain sets
+global	SOURCE/REMOTE	packetlen	gModemPacketLength	g-prefixed name
+global	SOURCE/REMOTE	newpacket	gModemNewPacket	g-prefixed name
+global	SOURCE/REMOTE	inescape	gModemInEscape	g-prefixed name
+global	SOURCE/REMOTE	packet	gPacket	g-prefixed name
+global	SOURCE/REMOTE	inque	gModemInQueue	g-prefixed name
+global	SOURCE/REMOTE	outque	gModemOutQueue	g-prefixed name
+global	SOURCE/REMOTE	rcvBuf	gReceiveQueue	g-prefixed name; the received-message queue GetRemoteData reads
+global	SOURCE/REMOTE	rcvBufOut	gReceiveOut	g-prefixed name
+global	SOURCE/REMOTE	rcvBufIn	gReceiveIn	g-prefixed name
+global	SOURCE/REMOTE	sndBuf	gSendMessage	g-prefixed name; the outgoing RemoteMessage record
+global	SOURCE/REMOTE	PacketSend	gPacketSend	g-prefixed name
+global	SOURCE/REMOTE	idstr	gModemIdString	g-prefixed name
+global	SOURCE/REMOTE	remoteidstr	gRemoteModemIdString	g-prefixed name
+global	SOURCE/REMOTE	numbuf	gPhoneNumber	g-prefixed name; the dialled telephone number (SETUP prompts for it)
+global	SOURCE/REMOTE	oldsec	gLastIdSendTime	g-prefixed name; tick of the last ID broadcast (compared by whole seconds)
+global	SOURCE/REMOTE	stime	gConnectTick	g-prefixed name; the current tick in the connect loops
+global	SOURCE/REMOTE	remotestage	gRemoteConnectStage	g-prefixed name
+global	SOURCE/REMOTE	localstage	gLocalConnectStage	g-prefixed name
+global	SOURCE/REMOTE	WFDCStage	gDirectConnectStage	g-prefixed name; WaitForDirectConnect's stage
+global	SOURCE/REMOTE	GUIMRresponse	gModemResponseLine	g-prefixed name; the modem line GUIModemResponseExec collects
+global	SOURCE/REMOTE	GUIMRresp	gModemExpectedResponse	g-prefixed name; the response GUIModemResponse waits for
+global	SOURCE/REMOTE	GUIMRrespptr	gModemResponseLength	g-prefixed name; length of the collected modem line
+global	SOURCE/REMOTE	GUIMRc	gModemResponseChar	g-prefixed name; the last byte read from the modem
+param	ReceiveRemoteData	decodeType	source	the sender DecodePacket accepts (REMOTE_BROADCAST_PLAYER or a net position)
+local	WaitForDirectConnect/Connect/calc_crc/FileSize	rng/msg/theCarry/f	idSeed/idMessage/overflow/stream	the six-digit ID seed and "ID%s_%i" packet; the CRC's shifted-out top bit; the FILE*

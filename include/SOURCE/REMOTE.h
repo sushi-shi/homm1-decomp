@@ -89,9 +89,9 @@ struct RemotePacketHeader {
 };
 #pragma pack(pop)
 
-// API-forced: PacketSend/packet are byte buffers framed by this header.
+// API-forced: gPacketSend/gPacket are byte buffers framed by this header.
 #define REMOTE_PACKET(buffer) (reinterpret_cast<RemotePacketHeader*>(buffer))
-// API-forced: rcvBufIn is a byte buffer read as a message record (retail
+// API-forced: gReceiveIn is a byte buffer read as a message record (retail
 // keeps it 4-byte aligned, as an array, not 8-byte aligned like a record).
 #define REMOTE_MESSAGE(buffer) (reinterpret_cast<RemoteMessage*>(buffer))
 
@@ -129,20 +129,23 @@ struct RemoteMessage {
 
 extern i8 gInNetSetup;
 extern i32 gIDCtr;
-extern u8 GameMode;
+extern u8 gRemoteGameMode;
 extern u8 gPacketSequence;
 extern i32 gNetNameIndex;
-extern char PacketSend[];
+#define gPacketSend PacketSend // spelling fixes .bss order
+extern char gPacketSend[];
 #define gNumNetGuests iNetGuests // spelling fixes .bss order
 extern i32 gNumNetGuests;
 extern i32 gLastConfirm;
 #define gInOrder iInOrder // spelling fixes .bss order
 extern i32 gInOrder[REMOTE_QUEUE_CAPACITY];
-extern RemoteMessage rcvBuf[REMOTE_QUEUE_CAPACITY];
-extern char rcvBufOut[REMOTE_MESSAGE_SIZE];
+#define gReceiveQueue rcvBuf // spelling fixes .bss order
+extern RemoteMessage gReceiveQueue[REMOTE_QUEUE_CAPACITY];
+#define gReceiveOut rcvBufOut // spelling fixes .bss order
+extern char gReceiveOut[REMOTE_MESSAGE_SIZE];
 
 i32 SendRemoteData(u8* dataToSend, u8*, i32 destination, i32 length);
-i32 ReceiveRemoteData(u8*, u8* data, i32 decodeType);
+i32 ReceiveRemoteData(u8*, u8* data, i32 source);
 // The trailing destination flag defaults to game-position addressing.
 i32 TransmitRemoteData(
     char* data,
@@ -180,8 +183,10 @@ i8 WaitForGuest(void);
 // incoming/outgoing message buffers.
 extern i32 gLastHeartbeatSend;
 extern i32 gLastHeartbeatReceive;
-extern RemoteMessage sndBuf;
-extern char rcvBufIn[REMOTE_MESSAGE_SIZE];
+#define gSendMessage sndBuf // spelling fixes .bss order
+extern RemoteMessage gSendMessage;
+#define gReceiveIn rcvBufIn // spelling fixes .bss order
+extern char gReceiveIn[REMOTE_MESSAGE_SIZE];
 #define gLastIds iLastIds // spelling fixes .bss order
 extern i32 gLastIds[REMOTE_RECENT_ID_COUNT];
 extern i32 gInOrderCtr;
@@ -218,34 +223,49 @@ extern i32 gLastActionTime;
 #define gModemCommandPos iModemCommandPos // spelling fixes .bss order
 extern i32 gModemCommandPos;
 extern char gModemCommand[];
-extern char GUIMRresponse[];
-extern char GUIMRresp[];
-extern i32 GUIMRrespptr;
-extern i32 GUIMRc;
+#define gModemResponseLine GUIMRresponse // spelling fixes .bss order
+extern char gModemResponseLine[];
+#define gModemExpectedResponse GUIMRresp // spelling fixes .bss order
+extern char gModemExpectedResponse[];
+#define gModemResponseLength GUIMRrespptr // spelling fixes .bss order
+extern i32 gModemResponseLength;
+#define gModemResponseChar GUIMRc // spelling fixes .bss order
+extern i32 gModemResponseChar;
 #define gLastDialPos iLastDialPos // spelling fixes .bss order
 extern i32 gLastDialPos;
-extern char numbuf[];
+#define gPhoneNumber numbuf // spelling fixes .bss order
+extern char gPhoneNumber[];
 struct inque_t {
     i32 readPosition;
     i32 writePosition;
     char data[4096];
 };
-extern inque_t inque;
+#define gModemInQueue inque // spelling fixes .bss order
+extern inque_t gModemInQueue;
 // The transmit queue holds 2K (retail 0x004c9c80-0x004ca487); SETUP.cpp
 // completes its type.
-extern struct outque_t outque;
+#define gModemOutQueue outque // spelling fixes .bss order
+extern struct outque_t gModemOutQueue;
 extern i32 gBaudBits;
-extern i32 inescape;
-extern i32 newpacket;
-extern i32 packetlen;
-extern char packet[];
-extern char idstr[];
-extern char remoteidstr[];
-extern i32 oldsec;
-extern i32 stime;
-extern i32 remotestage;
-extern i32 localstage;
-extern i32 WFDCStage;
+extern i32 gModemInEscape;
+extern i32 gModemNewPacket;
+extern i32 gModemPacketLength;
+#define gPacket packet // spelling fixes .bss order
+extern char gPacket[];
+#define gModemIdString idstr // spelling fixes .bss order
+extern char gModemIdString[];
+#define gRemoteModemIdString remoteidstr // spelling fixes .bss order
+extern char gRemoteModemIdString[];
+#define gLastIdSendTime oldsec // spelling fixes .bss order
+extern i32 gLastIdSendTime;
+#define gConnectTick stime // spelling fixes .bss order
+extern i32 gConnectTick;
+#define gRemoteConnectStage remotestage // spelling fixes .bss order
+extern i32 gRemoteConnectStage;
+#define gLocalConnectStage localstage // spelling fixes .bss order
+extern i32 gLocalConnectStage;
+#define gDirectConnectStage WFDCStage // spelling fixes .bss order
+extern i32 gDirectConnectStage;
 
 void GUIModemCommand(char* message, char* command);
 void ModemCommand(char* command);
@@ -303,7 +323,7 @@ H1_ENUM_CONST_BEGIN(NetSessionWaitStage)
     NET_WAIT_CONNECTED = 1
 H1_ENUM_CONST_END(NetSessionWaitStage)
 
-// WaitForDirectConnect's stages (WFDCStage): make the six-digit ID, exchange
+// WaitForDirectConnect's stages (gDirectConnectStage): make the six-digit ID, exchange
 // "ID<id>_<stage>" packets until both sides reach stage 2, then drain.
 H1_ENUM_CONST_BEGIN(DirectConnectStage)
     DIRECT_CONNECT_MAKE_ID = 0,
