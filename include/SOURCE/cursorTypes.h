@@ -4,7 +4,7 @@
 #include <Domains.h>
 
 H1_ENUM_BEGIN(MapDirection)
-    // advManager::Main's arrow keys before one picks a direction.
+// advManager::Main's arrow keys before one picks a direction.
     MAP_DIRECTION_NONE = -1,
     MAP_DIRECTION_NORTH = 0,
     MAP_DIRECTION_FIRST = MAP_DIRECTION_NORTH,
@@ -72,7 +72,11 @@ inline i32 OppositeMapDirection(i32 direction) {
     return (direction + MAP_DIRECTION_OPPOSITE_OFFSET) & MAP_DIRECTION_INDEX_MASK;
 }
 
+// GetCursorBaseFrame: direction * FRAMES_PER_DIRECTION for the unmirrored
+// directions (north's base frame is the first), the boat's own frames for the
+// mirrored ones.
 H1_ENUM_CONST_BEGIN(CursorFrameConstant)
+    CURSOR_BASE_FRAME_NORTH = 0,
     CURSOR_FRAMES_PER_DIRECTION = 9,
     CURSOR_BOAT_BASE_FRAME_5 = 0x9b,
     CURSOR_BOAT_BASE_FRAME_6 = 0x92,
@@ -85,20 +89,15 @@ H1_ENUM_CONST_END(CursorFrameConstant)
 // days of travel (0..DAY_LAST); WATER_ACTION + day marks a buoy or whirlpool
 // reached by boat. WAIT is shown while another (AI or remote) player moves.
 H1_ENUM_ID_BEGIN(AdventurePointerFrame)
-    ADVENTURE_POINTER_DEFAULT = 0,
-    ADVENTURE_POINTER_WAIT = 1,
-    ADVENTURE_POINTER_HERO = 2,
-    ADVENTURE_POINTER_TOWN = 3,
-    ADVENTURE_POINTER_MOVE = 4,
-    ADVENTURE_POINTER_ATTACK = 5,
-    ADVENTURE_POINTER_SAIL = 6,
-    ADVENTURE_POINTER_DISEMBARK = 7,
-    ADVENTURE_POINTER_SELECT_HERO = 8,
+ADVENTURE_POINTER_DEFAULT = 0,
+    ADVENTURE_POINTER_WAIT = 1, ADVENTURE_POINTER_HERO = 2, ADVENTURE_POINTER_TOWN = 3,
+    ADVENTURE_POINTER_MOVE = 4, ADVENTURE_POINTER_ATTACK = 5, ADVENTURE_POINTER_SAIL = 6,
+    ADVENTURE_POINTER_DISEMBARK = 7, ADVENTURE_POINTER_SELECT_HERO = 8,
     ADVENTURE_POINTER_ACTION = 9,
-    ADVENTURE_POINTER_WATER_ACTION = 28
-H1_ENUM_ID_END(AdventurePointerFrame)
+    ADVENTURE_POINTER_WATER_ACTION =
+        28 H1_ENUM_ID_END(AdventurePointerFrame)
 
-H1_ENUM_CONST_BEGIN(AdventurePointerConstant)
+            H1_ENUM_CONST_BEGIN(AdventurePointerConstant)
     ADVENTURE_POINTER_DAY_STRIDE = 6,
     ADVENTURE_POINTER_DAY_LAST = 3
 H1_ENUM_CONST_END(AdventurePointerConstant)

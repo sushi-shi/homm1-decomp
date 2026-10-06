@@ -34,7 +34,8 @@ void advManager::StartCursor(H1_ENUM_PARAM(MapDirection, i8) direction) {
 
     m_cursorDirection = direction;
     m_cursorFrame = GetCursorBaseFrame(direction) + 1;
-    m_cursorCycle = gConfig.walkSpeed > WALK_SPEED_FIRST ? 1 : SLOW_CURSOR_CYCLE_START;
+    m_cursorCycle =
+        gConfig.walkSpeed > WALK_SPEED_FIRST ? CURSOR_CYCLE_RUNNING : SLOW_CURSOR_CYCLE_START;
     deltaX = gNormalDirTable[H1_ENUM_ENCODE(MapDirection, direction)].x;
     deltaY = gNormalDirTable[H1_ENUM_ENCODE(MapDirection, direction)].y;
     m_previousCursorMapX = m_cursorMapX;
@@ -55,7 +56,7 @@ void advManager::StopCursor(b8 stopSound) {
         m_cursorFrameCount = 0;
         gEveryOther = 0;
     }
-    m_cursorCycle = 0;
+    m_cursorCycle = CURSOR_CYCLE_STOPPED;
     if (m_previousCursorMapX != CURSOR_CELL_NONE) {
         m_mapData[m_mapOriginX + m_previousCursorMapX][m_mapOriginY + m_previousCursorMapY]
             .m_flags &= ~MAP_CELL_HERO_CURSOR;
@@ -105,7 +106,7 @@ void advManager::DrawCursor(void) {
             ICON_DRAW_OFFSET_FULL
         );
         if (m_cursorType == ADVMGR_HERO_ICON_BOAT) {
-            if (m_cursorCycle == 0)
+            if (m_cursorCycle == CURSOR_CYCLE_STOPPED)
                 drawFrame = m_cursorFrame & HERO_FRAME_INDEX_MASK;
             FlipIconToBitmap(
                 m_boatFlagIcons[gCurPlayerData->m_color],
@@ -116,7 +117,7 @@ void advManager::DrawCursor(void) {
                 ICON_DRAW_OFFSET_FULL
             );
         } else {
-            if (m_cursorCycle == 0)
+            if (m_cursorCycle == CURSOR_CYCLE_STOPPED)
                 drawFrame = (m_cursorFrame & HERO_FRAME_INDEX_MASK)
                             + (m_flagFrameCounter & CURSOR_FLAG_FRAME_CYCLE_MASK)
                             + CURSOR_FLAG_FRAME_BASE;
@@ -150,7 +151,7 @@ void advManager::DrawCursor(void) {
             ICON_DRAW_OFFSET_FULL
         );
         if (m_cursorType == ADVMGR_HERO_ICON_BOAT) {
-            if (m_cursorCycle == 0)
+            if (m_cursorCycle == CURSOR_CYCLE_STOPPED)
                 drawFrame = m_cursorFrame;
             IconToBitmap(
                 m_boatFlagIcons[gCurPlayerData->m_color],
@@ -161,7 +162,7 @@ void advManager::DrawCursor(void) {
                 ICON_DRAW_OFFSET_FULL
             );
         } else {
-            if (m_cursorCycle == 0)
+            if (m_cursorCycle == CURSOR_CYCLE_STOPPED)
                 drawFrame = m_cursorFrame + (m_flagFrameCounter & CURSOR_FLAG_FRAME_CYCLE_MASK)
                             + CURSOR_FLAG_FRAME_BASE;
             IconToBitmap(
@@ -178,7 +179,8 @@ void advManager::DrawCursor(void) {
     if (m_cursorCycle && gConfig.walkSpeed != WALK_SPEED_JUMP) {
         m_cursorFrameCount++;
         if (gConfig.walkSpeed == WALK_SPEED_GALLOP
-            && (m_cursorFrameCount == SKIPPED_ANIMATION_FRAME || m_cursorFrameCount == 1))
+            && (m_cursorFrameCount == SKIPPED_ANIMATION_FRAME
+                || m_cursorFrameCount == SKIPPED_ANIMATION_FRAME_EARLY))
             m_cursorFrameCount++;
         if (gConfig.walkSpeed == WALK_SPEED_WALK) {
             gEveryOther = 1 - gEveryOther;
@@ -221,7 +223,7 @@ i16 advManager::GetCursorBaseFrame(H1_ENUM_PARAM(MapDirection, i16) direction) {
             case MAP_DIRECTION_NORTH_WEST:
                 return CURSOR_BOAT_BASE_FRAME_7;
             default:
-                return 0;
+                return CURSOR_BASE_FRAME_NORTH;
         }
     } else {
         return static_cast<i32>(direction) * CURSOR_FRAMES_PER_DIRECTION;
@@ -249,7 +251,7 @@ void advManager::TurnTo(H1_ENUM_PARAM(MapDirection, i8) direction) {
     if (gConfig.walkSpeed == WALK_SPEED_TROT)
         delayTime = delayTime * 1.5;
     do {
-        m_cursorCycle = 1;
+        m_cursorCycle = CURSOR_CYCLE_RUNNING;
         m_cursorFrame = m_cursorType < ADVMGR_HERO_ICON_CLASS_END ? gHorseFrameFlip[frameIndex]
                                                                   : gBoatFrameFlip[frameIndex];
         m_cursorFrameCount = 0;
@@ -484,7 +486,7 @@ mapCell* advManager::MoveHero(
         occupiedTown->m_occupyingHeroId = TOWN_OCCUPYING_HERO_NONE;
     }
     if (m_routeShown)
-        *(m_routeMap + (champion->m_x + xInc) + (champion->m_y + yInc) * MAP_CELL_GRID_SIZE) = 0;
+        ADVMGR_ROUTE_AT(champion->m_x + xInc, champion->m_y + yInc) = ROUTE_CELL_NONE;
     m_scrollOffsetX = m_scrollOffsetY = 0;
     gGame->SetVisibility(
         m_mapOriginX + xInc + ADVMGR_VIEW_CENTER,

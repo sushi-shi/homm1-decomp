@@ -525,7 +525,7 @@ i32 oldmain(void) {
                 );
                 if (!gFunctionComplete)
                     ShutDown(NULL);
-                gGame->LoadGame("REMOTE.GAM", false, 1);
+                gGame->LoadGame("REMOTE.GAM", false, true);
                 goto playScenario;
             }
         playScenario:

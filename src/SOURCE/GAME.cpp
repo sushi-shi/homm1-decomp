@@ -543,7 +543,7 @@ i16 game::SaveGame(char* filename, b8 generateName) {
 // origdata.bin restores the default hero names and blank visibility, and
 // the seats are re-dealt to this session's human players.
 VA(0x0042cc73, 0x87f)
-i16 game::LoadGame(char* filename, b32 origData, i32) {
+i16 game::LoadGame(char* filename, b32 origData, b32) {
     i32 junk2;
     i32 numHumans;
     i32 ix;
@@ -1004,7 +1004,7 @@ i8 game::NewGame(void) {
     }
     if (gWaitForRemoteReceive)
         return 1;
-    LoadGame("origdata.bin", true, 0);
+    LoadGame("origdata.bin", true, false);
     m_newGameWindow = new heroWindow(310, 14, "newgame.bin");
     if (!m_newGameWindow)
         MemError();
@@ -1119,7 +1119,7 @@ void game::ShowCampaignInfo(i32 scenario, b32 viewOnly, i32) {
 // Reloads origdata.bin first and starts the campaign calendar on day 1.
 VA(0x0042e521, 0x74)
 void game::InitEntireCampaign(i32 side) {
-    LoadGame("origdata.bin", true, 0);
+    LoadGame("origdata.bin", true, false);
     strcpy(gFullMapName, "");
     gGame->m_difficulty = DIFFICULTY_EXPERT;
     m_campaignType = side;
@@ -1144,7 +1144,7 @@ void game::InitCampaignMap(i32 scenario, i32) {
     firstSavedScenario = m_campaignScenario;
     savedWon = m_campaignScenariosWon;
     savedDay = m_campaignDay;
-    LoadGame("origdata.bin", true, 0);
+    LoadGame("origdata.bin", true, false);
     m_campaignType = saveTypeValue;
     m_campaignScenario = firstSavedScenario;
     m_campaignScenariosWon = savedWon;

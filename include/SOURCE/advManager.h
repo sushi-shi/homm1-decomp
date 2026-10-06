@@ -64,10 +64,12 @@ H1_ENUM_CONST_END(AdventureFrameTimerConstant)
 // m_combatMonsterX/Y: the map cell of the monster CombatMonsterEvent turns to
 // face the attacker (DrawCell draws it facing); the constructor starts it at
 // NONE (-99, off every drawable cell) and CombatMonsterEvent clears the x back
-// to CLEARED (-1) after the redraw.
+// to CLEARED (-1) after the redraw. A combatX of AT_EVENT fights the monster
+// on the event cell itself, with no turn to face the attacker.
 H1_ENUM_CONST_BEGIN(AdventureCombatMonsterCellConstant)
     COMBAT_MONSTER_CELL_NONE = -99,
-    COMBAT_MONSTER_CELL_CLEARED = -1
+    COMBAT_MONSTER_CELL_CLEARED = -1,
+    COMBAT_MONSTER_CELL_AT_EVENT = -1
 H1_ENUM_CONST_END(AdventureCombatMonsterCellConstant)
 
 // m_hoverCellX/m_hoverCellY before the mouse hovers a view cell.
@@ -667,16 +669,21 @@ H1_ENUM_CONST_END(AdventureLocatorWidget)
 // locators.icn frames: the empty hero slots (one per slot), the empty town
 // slots from EMPTY_TOWN_FIRST, the occupied hero frame, and the town frames
 // by town type from TOWN_FIRST, CASTLE_OFFSET further on once it has a castle.
-// m_routeMap while a route is shown (ShowRoute, DrawCell): a 1-based
-// route.icn frame (FRAME_MASK) with FLIPPED mirroring it. The last step is
+// m_routeMap while a route is shown (ShowRoute, DrawCell): NONE off the
+// route, else a 1-based route.icn frame (FRAME_MASK) with FLIPPED mirroring it. The last step is
 // the DESTINATION mark; steps the hero reaches today move REACHABLE_OFFSET
 // frames on to the second arrow set.
 H1_ENUM_CONST_BEGIN(AdventureRouteCell)
+    ROUTE_CELL_NONE = 0,
     ROUTE_CELL_FRAME_MASK = 0x1f,
     ROUTE_CELL_FLIPPED = 0x20,
     ROUTE_CELL_DESTINATION = 14,
     ROUTE_CELL_REACHABLE_OFFSET = 14
 H1_ENUM_CONST_END(AdventureRouteCell)
+
+// The route-overlay byte at (column, row) of this->m_routeMap, indexed
+// row-major as row * size + column.
+#define ADVMGR_ROUTE_AT(column, row) (*(m_routeMap + (column) + (row) * MAP_CELL_GRID_SIZE))
 
 H1_ENUM_CONST_BEGIN(AdventureLocatorFrame)
     LOCATOR_FRAME_EMPTY_TOWN_FIRST = 4,
@@ -1233,7 +1240,13 @@ H1_ENUM_CONST_BEGIN(CursorConstant)
     CURSOR_SLOW_TURN_MULTIPLIER = 3,
     CURSOR_MOVE_HALF_TILE_PIXELS = 16,
     CURSOR_DIAGONAL_DIRECTION_BIT = 1,
+    // m_cursorCycle: STOPPED, or a walk/turn cycle running (the slow walk
+    // starts at SLOW_CURSOR_CYCLE_START).
+    CURSOR_CYCLE_STOPPED = 0,
+    CURSOR_CYCLE_RUNNING = 1,
     SLOW_CURSOR_CYCLE_START = 2,
+    // The gallop skips frames 1 and 4 of the eight-frame walk.
+    SKIPPED_ANIMATION_FRAME_EARLY = 1,
     SKIPPED_ANIMATION_FRAME = 4,
     FOOTSTEP_ANIMATION_FRAME = 3,
     DIRECTION_HALF_COUNT = 4,

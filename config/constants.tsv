@@ -6,7 +6,7 @@
 # (tab-separated; every field is an fnmatch glob, `*` matches anything; the
 # first matching row wins): file owner spelling group detail reason.
 # group/detail are the census' review_group/review_context columns.
-#floor	1616
+#floor	1443
 *	*	0	trivial-function-literal	0 for-init	a for loop's counter starts at zero
 *	*	0	trivial-function-literal	0 initializer*	an accumulator or counter declared at zero
 *	*	1	trivial-function-literal	1 arithmetic*	a one-step offset: the next index, element or count
@@ -106,7 +106,7 @@ src/SOURCE/VIEW.cpp	combatManager::ViewArmy	*	*	*	the army view window's pixel g
 src/SOURCE/REMOTE.cpp	InitNetGuest	3	arithmetic	*	the NetBIOS initialisation state machine's step skip
 src/SOURCE/REMOTE.cpp	WaitForDirectConnect	*	arithmetic	*	the decimal digits of the direct-connect id
 src/SOURCE/REMOTE.cpp	WaitForDirectConnect	*	array-index	array subscript idstr	the direct-connect id's digit positions
-src/SOURCE/EVENTS.cpp	advManager::GiveTakeArtifactStat	*	store	store to amount	the artifact's primary-stat bonus
+src/SOURCE/EVENTS.cpp	advManager::GiveTakeArtifactStat	*	*	*amount	the artifact's primary-stat bonus
 src/SOURCE/GAME.cpp	game::RandomizeEvents	*	arithmetic	operator % Random()	a random roll's range
 *	*	*.*	arithmetic	*	a floating-point tuning factor (AI weight, damage or value scale)
 *	*	*.*	comparison-or-bound	*	a floating-point tuning threshold
@@ -221,7 +221,6 @@ src/SOURCE/HERO.cpp	*	*	call-argument	TrimLoopingSounds(* argument 1	the number 
 src/SOURCE/HERO.cpp	*	1	call-argument	GetExperience(* argument 1	the next level
 src/SOURCE/FLY.cpp	*	0	call-argument	GetBestDirection(* argument 3	no blocked directions
 src/SOURCE/HERO.cpp	*	0	call-argument	NormalDialog(* argument 2	the quick-view test that picks the dialog type
-src/SOURCE/HERO.cpp	*	0	call-argument	Show*Info(* argument 2	the quick-view test that picks the dialog type
 src/SOURCE/HERO.cpp	*	[01]	call-argument	RestoreCell(* argument 6	game::RestoreCell's redraw flag
 src/SOURCE/HERO.cpp	hero::hero	0	trivial-function-literal	0 store*	constructor zero-initialisation
 src/SOURCE/ARMY.cpp	army::army	0	trivial-function-literal	0 store*	constructor zero-initialisation
@@ -1142,3 +1141,37 @@ src/EDITOR/MAPOBJ.cpp	editManager::GenerateRandomMap	*	store	store to unusedPerc
 src/EDITOR/MAPOBJ.cpp	editManager::ScatterDecorations	*	initializer-payload	initializer list	each terrain's chance in 1000 of a decoration on a bare cell
 src/EDITOR/MAPOBJ.cpp	editManager::PlaceResourceSite	*	store	initializer of name	the object name buffer's extent
 src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	1	trivial-function-literal	1 for-init	land regions and region ranks count from 1 (0 marks water)
+src/SOURCE/EVENTS.cpp	*	*	store	initializer of resourceText	the resource name buffer's extent
+src/SOURCE/EVENTS.cpp	advManager::DoAIEvent	4	store	initializer of eventWork	the extent of an unused retail work array (it sizes DoAIEvent's frame)
+src/SOURCE/EVENTS.cpp	*	0	trivial-function-literal	0 store m_remainingMobility	the hero's movement points used up (the event ends its move)
+src/SOURCE/EVENTS.cpp	*	1	trivial-function-literal	1 bitwise	the single bit (1 << n) of a visited-site or player bit set
+src/SOURCE/EVENTS.cpp	*	0	trivial-function-literal	0 array-index *	the text's first character, re-cased after formatting
+src/SOURCE/EVENTS.cpp	*	0	call-argument	Cyrillic*(char) argument 1	the text's first character, re-cased after formatting
+src/SOURCE/EVENTS.cpp	*	1	trivial-function-literal	1 bound portalCount	at least one other exit (none leaves the hero), more than one to roll among
+src/SOURCE/EVENTS.cpp	advManager::EventWindow	1	trivial-function-literal	1 store newUnused	a retail local stored and never read (i16)
+src/SOURCE/EVENTS.cpp	advManager::DoWhirlpool	1	trivial-function-literal	1 bound *	a single stack or a single creature, which the whirlpool spares from halving away
+src/SOURCE/EVENTS.cpp	advManager::DoAIEvent	1	trivial-function-literal	1 store m_creatureCounts[[]]	one dragon per slot: the probe army the AI weighs Dragon City's guards with
+src/SOURCE/EVENTS.cpp	*	0	trivial-function-literal	0 store gbRetreatWin	KB.h's retreat-win byte (i8, also sent as a network combat field) cleared after a battle
+src/SOURCE/EVENTS.cpp	advManager::DoNetCombat	1	trivial-function-literal	1 return	DoNetCombat's handled result (i32)
+src/SOURCE/EVENTS.cpp	advManager::DoCombat	1	trivial-function-literal	1 condition	an unconditional loop (left by break)
+src/SOURCE/EVENTS.cpp	advManager::DoCombat	1	trivial-function-literal	1 store bShowIt	KB.h's gShowIt (an i32 flag) forced on to show the battle
+src/SOURCE/EVENTS.cpp	advManager::SendHeroTownData	0	trivial-function-literal	0 conditional	no gold to report for an absent hero
+src/SOURCE/CURSOR.cpp	*	0	trivial-function-literal	0 store m_remainingMobility	the hero's movement points used up (the step ends its move)
+src/SOURCE/CURSOR.cpp	advManager::MoveHero	0	trivial-function-literal	0 store m_scrollOffset[XY]	the view's pixel scroll back at rest on the new origin
+src/SOURCE/CURSOR.cpp	advManager::MoveOrigin	0	trivial-function-literal	0 equality direction[XY]	a nonzero origin shift
+src/SOURCE/CURSOR.cpp	advManager::TurnTo	0	trivial-function-literal	0 equality directionDifference	already facing the new direction
+src/SOURCE/CURSOR.cpp	advManager::TurnTo	1	trivial-function-literal	1 initializer	the turn's frame step: one frame clockwise
+src/SOURCE/CURSOR.cpp	advManager::TurnTo	-1	trivial-function-literal	-1 store inc	the turn's frame step: one frame counter-clockwise
+src/SOURCE/CURSOR.cpp	*	[01]	trivial-function-literal	[01] store m_cursorTurning	the cursor's turning flag, an i16 (saved in gSavedCursorTurning) with no 16-bit flag type
+src/SOURCE/CURSOR.cpp	advManager::StopCursor	0	trivial-function-literal	0 store EveryOther	gEveryOther, the alternate-frame toggle flipped as 1 - gEveryOther
+src/SOURCE/CURSOR.cpp	advManager::ValidMove*	[01]	trivial-function-literal	[01] return	ValidMove's i16 yes/no result (callers test it for truth; no 16-bit flag type)
+src/SOURCE/CURSOR.cpp	advManager::DrawCursor	0	trivial-function-literal	0 equality bShowIt	KB.h's gShowIt (an i32 flag) off: nothing to draw
+src/SOURCE/HERO.cpp	hero::HeroView	1	trivial-function-literal	1 store magnitude	at least one luck/morale icon (neutral shows one)
+src/SOURCE/HISCORE.cpp	*	0	call-argument	CyrillicToUpper(char) argument 1	the text's first character, capitalized
+src/SOURCE/HISCORE.cpp	*	-1	trivial-function-literal	-1 equality inputFile	the -1 failure result of the CRT open
+src/SOURCE/PATH.cpp	army::FindPath	0	trivial-function-literal	0 store retVal	no path (FindCombatPath's empty result) to a target off the grid
+src/SOURCE/PATH.cpp	army::Get*Mask	0	*	*	an empty direction mask (no direction blocked yet)
+src/SOURCE/PATH.cpp	army::GetAttackMask	1	trivial-function-literal	1 store curDirBit	the first direction's bit, shifted left once per direction
+src/SOURCE/RECRUIT.cpp	QuickViewRecruit	0	trivial-function-literal	0 store resourceCost	no second-resource cost (a gold-only creature)
+src/SOURCE/RECRUIT.cpp	*	0	call-argument	CyrillicToLower(char) argument 1	the name's first character, lower-cased
+src/SOURCE/SETUP.cpp	game::SetupComPort	40	store	initializer of initString	the modem init string buffer's extent

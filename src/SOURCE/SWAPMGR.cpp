@@ -724,7 +724,7 @@ void swapManager::SplitMons(void) {
     selectedArmy = &m_heroes[m_selectedSide]->m_army;
     targetTroops = &m_heroes[m_targetSide]->m_army;
     found = 0;
-    textControl = 1;
+    textControl = TOWN_SPLIT_PROMPT_CONTROL;
     gTownManager->m_heroWindow1 =
         new heroWindow(TOWN_SPLIT_WINDOW_X, TOWN_SPLIT_WINDOW_Y, "splitwin.bin");
     if (!gTownManager->m_heroWindow1)

@@ -53,10 +53,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-// The route-overlay byte at (column, row) of this->m_routeMap, indexed
-// row-major as row * size + column.
-#define ADVMGR_ROUTE_AT(column, row) (*(m_routeMap + (column) + (row) * MAP_CELL_GRID_SIZE))
-
 // DrawCell's per-call drawing state, kept in module storage.
 DATA(0x004a65c8)
 i32 s_drawCloudFrame;
@@ -126,7 +122,7 @@ advManager::advManager(void) {
     gMapX = 0;
     gMapY = 0;
     m_cursorFrameCount = 0;
-    m_cursorCycle = 0;
+    m_cursorCycle = CURSOR_CYCLE_STOPPED;
     m_cursorTurning = 0;
 }
 
@@ -6569,7 +6565,7 @@ void advManager::LoadRemote(void) {
     gMouseManager->ReallyHidePointer();
     if (gThisNetHumanPlayer[gCurPlayer])
         gMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
-    gGame->LoadGame("REMOTE.GAM", false, 1);
+    gGame->LoadGame("REMOTE.GAM", false, true);
     if (gThisNetHumanPlayer[gCurPlayer])
         gGame->CancelComputerScreen();
     gGame->DoNewTurn();

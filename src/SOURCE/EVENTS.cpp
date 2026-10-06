@@ -1701,7 +1701,7 @@ H1_ENUM_RETURN(CombatSide, i8) advManager::CombatMonsterEvent(
     H1_ENUM_LOCAL(CombatSide, i32) combatRes;
 
     DemobilizeCurrHero();
-    if (combatX == -1) {
+    if (combatX == COMBAT_MONSTER_CELL_AT_EVENT) {
         combatX = x;
         combatY = y;
     } else {
@@ -1942,7 +1942,7 @@ void advManager::DoWhirlpool(class hero* eventHero) {
         != EVENT_WHIRLPOOL_TRIGGER_ROLL)
         return;
     lowestValue = EVENT_WHIRLPOOL_ARMY_VALUE_LIMIT;
-    selectedSlot = -1;
+    selectedSlot = EVENT_WHIRLPOOL_NO_SLOT;
     for (slotNo = 0; slotNo < ARMY_GROUP_SLOT_COUNT; slotNo++) {
         if (eventHero->m_army.m_creatureCounts[slotNo] > 0) {
             creatureValue =

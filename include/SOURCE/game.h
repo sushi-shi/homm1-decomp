@@ -379,7 +379,7 @@ public:
     i8 GetTownId(i8 x, i8 y);
     i8 GetMineId(i8 x, i8 y);
     i16 SaveGame(char* filename, b8 generateName);
-    i16 LoadGame(char* filename, b32 origData, i32);
+    i16 LoadGame(char* filename, b32 origData, b32 remoteGame);
     void GiveTroopsToNeutralTowns(void);
     void NewMap(char* mapName);
     void RandomizeEvents(void);

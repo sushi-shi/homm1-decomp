@@ -409,7 +409,7 @@ i8 game::PickLoadGame(void) {
     dialogResult = gExec->DoDialog(fileReq);
     gMouseManager->ReallyHidePointer();
     if (dialogResult == DIALOG_BUTTON_2) {
-        gGame->LoadGame(gLastFilename, false, 0);
+        gGame->LoadGame(gLastFilename, false, false);
         delete fileReq;
         return 1;
     } else {

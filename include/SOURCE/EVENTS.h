@@ -105,6 +105,8 @@ H1_ENUM_CONST_BEGIN(MapEventDisplayConstant)
     EVENT_WHIRLPOOL_TRIGGER_ROLL = 1,
     EVENT_WHIRLPOOL_TRIGGER_MAX = 3,
     EVENT_WHIRLPOOL_ARMY_VALUE_LIMIT = 99999999,
+    // DoWhirlpool's weakest stack before the scan picks one.
+    EVENT_WHIRLPOOL_NO_SLOT = -1,
     EVENT_TEXT_BUFFER_SIZE = 500
 H1_ENUM_CONST_END(MapEventDisplayConstant)
 
