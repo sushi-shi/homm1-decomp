@@ -423,7 +423,6 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                     } else {
                         sprintf(
                             gText,
-                            "%s %s",
                             gEventText[EVENT_TEXT_SKELETON_ARTIFACT],
                             gArtifactNames[artifactId]
                         );
@@ -800,7 +799,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
         case MAP_OBJECT_SPELL_SHRINE:
             sprintf(
                 gText,
-                "%s'%s'.",
+                localization::Tr("event.spell_shrine.format"),
                 gEventText[EVENT_TEXT_SPELL_SHRINE],
                 gSpellNames
                     [(cell->m_objectMetadata - MAP_EVENT_SPELL_OFFSET)]
@@ -1457,7 +1456,7 @@ void advManager::EventWindow(
     else if (eventId == EVENT_TEXT_CUSTOM)
         sprintf(eventText, text);
     else
-        sprintf(eventText, "Event ID %d", eventId);
+        sprintf(eventText, localization::Tr("event.unknown"), eventId);
     NormalDialog(eventText, buttons, 0x61, -1, type1, value1, type2, value2, showOrText);
 }
 

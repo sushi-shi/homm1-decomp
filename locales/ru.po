@@ -5,11 +5,11 @@ msgstr ""
 
 #: src/SOURCE/ADVMGR.cpp
 msgid "adventure.confirm_end_turn"
-msgstr "Один или более героев все еще могут ходить. Окончить ход?"
+msgstr "Один или более героев всё ещё могут ходить. Окончить ход?"
 
 #: src/SOURCE/ADVMGR.cpp
 msgid "adventure.confirm_load"
-msgstr "Загрузить новую игру? (Данная игра будет потеряна)."
+msgstr "Загрузить новую игру (данная игра будет потеряна)?"
 
 #: src/PORT/SOURCE/kbwin.cpp src/SOURCE/ADVMGR.cpp src/SOURCE/kbwin.cpp
 msgid "adventure.confirm_quit"
@@ -17,7 +17,7 @@ msgstr "Вы хотите выйти из игры?"
 
 #: src/SOURCE/ADVMGR.cpp
 msgid "adventure.confirm_restart"
-msgstr "Вы действительно хотите начать сначала?  (Данная игра будет потеряна)."
+msgstr "Вы действительно хотите начать сначала (данная игра будет потеряна)?"
 
 #: src/SOURCE/ADVMGR.cpp
 msgid "adventure.dimension_door.failed"
@@ -70,19 +70,24 @@ msgstr "Попробуйте искать на чистой земле."
 
 #: src/SOURCE/ADVMGR.cpp
 msgid "adventure.search.eye_of_goros_enemy"
-msgstr "О, ужас - враг нашел первым Око Гороса! Воины покинули вас, и вы проиграли."
+msgstr "О, ужас — враг нашёл первым Око Гороса! Воины покинули вас, и вы проиграли."
 
 #: src/SOURCE/ADVMGR.cpp
 msgid "adventure.search.eye_of_goros_found"
 msgstr "Проведя многие часы в поисках, вы таки нашли Око Гороса!"
 
 #: src/SOURCE/ADVMGR.cpp
+#, c-format
+msgid "adventure.search.found_format"
+msgstr "%s«%s»"
+
+#: src/SOURCE/ADVMGR.cpp
 msgid "adventure.search.found_prefix"
-msgstr "Поздравляем! Потратив уйму времени, вы таки нашли "
+msgstr "Поздравляем! Потратив уйму времени, вы таки нашли Могущественный артефакт "
 
 #: src/SOURCE/ADVMGR.cpp
 msgid "adventure.search.no_artifact_room"
-msgstr "У вас нет места для еще одного артефакта!"
+msgstr "У вас нет места для ещё одного артефакта!"
 
 #: src/SOURCE/ADVMGR.cpp
 msgid "adventure.search.nothing_here"
@@ -94,7 +99,7 @@ msgstr "Попробуйте поискать на земле!!!"
 
 #: src/SOURCE/ADVMGR.cpp
 msgid "adventure.search.requires_full_day"
-msgstr "Поиски артефакта займут весь день. Попробуйте завтра."
+msgstr "Поиски Могущественного артефакта займут весь день. Попробуйте завтра."
 
 #: src/SOURCE/ADVMGR.cpp
 msgid "adventure.spell.identify_hero"
@@ -106,7 +111,7 @@ msgstr "Ваш герой слишком устал, чтобы направля
 
 #: src/SOURCE/ADVMGR.cpp
 msgid "adventure.status_help"
-msgstr "Статус\nВ этом окне сообщается информация о статусе вашего героя или королевства, а также показывает календарь. Щелчком левой кнопки мыши вы можете менять эти окна."
+msgstr "Cтатус\n\nВ этом окне сообщается информация о статусе вашего героя или королевства, а также отображается календарь. Щелчком левой кнопки мыши вы можете менять эти окна."
 
 #: src/SOURCE/ADVMGR.cpp
 msgid "adventure.summon_boat.failed"
@@ -114,19 +119,19 @@ msgstr "Не удалось вызвать корабль!"
 
 #: src/SOURCE/ADVMGR.cpp
 msgid "adventure.town_gate.land_required"
-msgstr "Заклинание Врата города провалено! Вы должны быть на суше, чтобы это заклинание сработало."
+msgstr "Заклинание «Врата города» провалено! Вы должны быть на суше, чтобы это заклинание сработало."
 
 #: src/SOURCE/ADVMGR.cpp
 msgid "adventure.town_gate.no_town"
-msgstr "Нет доступного города. Не удалось направить Врата города!"
+msgstr "Нет доступного города. Не удалось направить «Врата города»!"
 
 #: src/SOURCE/ADVMGR.cpp
 msgid "adventure.town_gate.occupied"
-msgstr "Ближайший город оккупирован. Не удалось направить Врата города!"
+msgstr "Ближайший город оккупирован. Не удалось направить «Врата города»!"
 
 #: src/SOURCE/ADVMGR.cpp
 msgid "adventure.world_map_help"
-msgstr "Карта мира (Левой кнопкой мыши осматривать районы карты)."
+msgstr "Карта мира (левой кнопкой мыши осматривать районы карты)."
 
 #: src/SOURCE/GAME.cpp
 msgid "army.dismiss.confirm"
@@ -135,7 +140,7 @@ msgstr "Вы хотите распустить этот отряд?"
 #: src/SOURCE/SWAPMGR.cpp
 #, c-format
 msgid "army.transfer.prompt"
-msgstr "Перенести %s воинов от %s к %s?"
+msgstr "Передать %s из армии %s в армию %s"
 
 #: src/SOURCE/SWAPMGR.cpp
 msgid "artifact.trade.forbidden"
@@ -194,7 +199,7 @@ msgstr " Замок Аламара  "
 #: src/SOURCE/KB.cpp
 #, c-format
 msgid "campaign.victory"
-msgstr "Мои герои! Наши враги были разбиты, а их замки преданы разорению. Великий поход окончен, и я предстаю перед вами как всеми признанный Великий Король!\n\nМы достигли  победы за %d дней!"
+msgstr "Мои герои! Наши враги были разбиты, а их замки преданы разорению. Великий поход окончен, и я предстаю перед вами как всеми признанный Великий Король!\nМы достигли  победы за %d дней!"
 
 #: src/SOURCE/SPELLS.cpp
 #, c-format
@@ -207,11 +212,11 @@ msgstr "Вы захватили вражеский артефакт!"
 
 #: src/SOURCE/COMMAND.cpp
 msgid "combat.casualties.attacker"
-msgstr "Нападающие:"
+msgstr "Нападающие"
 
 #: src/SOURCE/COMMAND.cpp
 msgid "combat.casualties.defender"
-msgstr "Обороняющиеся:"
+msgstr "Обороняющиеся"
 
 #: src/SOURCE/COMMAND.cpp
 msgid "combat.casualties.title"
@@ -299,8 +304,18 @@ msgstr "Низкая мораль заставляет %s замереть в п
 
 #: src/SOURCE/CMBTMGR.cpp
 #, c-format
+msgid "combat.morale.bad_single"
+msgstr "%s замирает в панике из-за низкой морали."
+
+#: src/SOURCE/CMBTMGR.cpp
+#, c-format
 msgid "combat.morale.good"
-msgstr "Высокая мораль дает отряду %s еще одну атаку."
+msgstr "Высокая мораль %s дает отряду еще одну атаку!"
+
+#: src/SOURCE/CMBTMGR.cpp
+#, c-format
+msgid "combat.morale.good_single"
+msgstr "%s может атаковать еще раз из-за высокой морали!"
 
 #: src/SOURCE/EVENTS.cpp
 #, c-format
@@ -330,12 +345,12 @@ msgstr "Вы уже направили заклинание в этом раун
 #: src/SOURCE/SPELLS.cpp
 #, c-format
 msgid "combat.spell.cast"
-msgstr "Направить %s"
+msgstr "Направить «%s»"
 
 #: src/SOURCE/SPELLS.cpp
 #, c-format
 msgid "combat.spell.cast_target"
-msgstr "Направить %s на %s"
+msgstr "Направить «%s» на %s"
 
 #: src/SOURCE/COMMAND.cpp
 msgid "combat.spell.no_hero"
@@ -358,7 +373,7 @@ msgstr "%s говорит:\n\n\"Пропустите меня и моих вои
 #: src/SOURCE/COMMAND.cpp
 #, c-format
 msgid "combat.surrender.offer"
-msgstr "%s говорит:\n\n\"Я приму вашу капитуляцию и пропущу вас и ваших воинов за %d золотых."
+msgstr "%s говорит:\n\n«Я приму вашу капитуляцию и пропущу вас и ваших воинов за %d золотых»."
 
 #: src/SOURCE/CMBTMGR.cpp
 msgid "combat.tower.garrison.damage.prefix"
@@ -1028,11 +1043,11 @@ msgstr "Враг захватил Могущественный артефакт!
 
 #: src/SOURCE/KB.cpp
 msgid "endgame.enemy.captured_dragon_city"
-msgstr "Враг захватил Драконий город!"
+msgstr "Враг захватил Город драконов!"
 
 #: src/SOURCE/KB.cpp
 msgid "endgame.enemy.captured_town"
-msgstr "Враг захватил город XX!!"
+msgstr "Враг захватил город XX!"
 
 #: src/SOURCE/KB.cpp
 #, c-format
@@ -1052,23 +1067,28 @@ msgstr "%s игрок, вы потеряли ваш последний горо�
 #: src/SOURCE/EVENTS.cpp
 #, c-format
 msgid "event.artifact.disappears"
-msgstr "Это %s. Но едва вы добрались до артефакта, как он таинственным образом исчез..."
+msgstr "Это артефакт «%s». Но едва вы до него добрались, как он таинственным образом исчез..."
 
 #: src/SOURCE/EVENTS.cpp
 msgid "event.artifact.full"
-msgstr "Вы не можете подобрать этот артефакт, у вас нет места для него!"
+msgstr "Вы не можете подобрать этот артефакт: у вас нет места для него!"
 
 #: src/SOURCE/EVENTS.cpp
 msgid "event.shrine.no_spellbook"
-msgstr "  К сожалению, у вас нет Волшебной книги, чтобы запомнить заклинание."
+msgstr "\n\nК сожалению, у вас нет Книги заклинаний, чтобы запомнить заклинание."
 
 #: src/SOURCE/EVENTS.cpp
 msgid "event.shrine.rankings"
-msgstr "Оракул - информация об игроках"
+msgstr "Оракул — информация об игроках"
 
 #: src/SOURCE/EVENTS.cpp
 msgid "event.skeleton.treasure"
 msgstr "Сокровище"
+
+#: src/SOURCE/EVENTS.cpp
+#, c-format
+msgid "event.spell_shrine.format"
+msgstr "%s «%s»."
 
 #: src/SOURCE/EVENTS.cpp
 msgid "event.stronghold.abandoned"
@@ -1098,6 +1118,11 @@ msgstr "Вы победили паладинов и освободили злы�
 msgid "event.stronghold.waiting_ghosts_join"
 msgstr "Призраки молча присоединяются к вам."
 
+#: src/SOURCE/EVENTS.cpp
+#, c-format
+msgid "event.unknown"
+msgstr "Событие №%d"
+
 #: src/BASE/RESMGR.cpp
 #, c-format
 msgid "file.aggregate.open_failed"
@@ -1106,7 +1131,7 @@ msgstr "Не могу открыть файл: %s"
 #: src/SOURCE/REQUEST.cpp
 #, c-format
 msgid "file.humans.computer"
-msgstr "Выбранная игра предназначена для %d человек. Разрешается ли занять оставшиеся %d мест компьютеру? "
+msgstr "Выбранная игра предназначена для %d человек. Разрешается ли занять оставшиеся %d мест компьютеру?"
 
 #: src/SOURCE/REQUEST.cpp
 #, c-format
@@ -1120,7 +1145,7 @@ msgstr "Загрузить:"
 #: src/EDITOR/EDITOR.cpp src/SOURCE/GAME.cpp src/SOURCE/KB.cpp
 #, c-format
 msgid "file.open.failed"
-msgstr "Ошибка открытия файла %s!"
+msgstr "Ошибка открытия файла «%s»!"
 
 #: src/SOURCE/REQUEST.cpp
 msgid "file.players.label"
@@ -1166,7 +1191,7 @@ msgstr "%d уровень\n\n%d оч. опыта\nСледующий урове�
 #: src/SOURCE/SWAPMGR.cpp
 #, c-format
 msgid "hero.meeting.title"
-msgstr "Встречаются %s и %s"
+msgstr "%s встречает %s"
 
 #: src/SOURCE/HERO.cpp src/SOURCE/VIEW.cpp
 #, c-format
@@ -1175,7 +1200,7 @@ msgstr "%s %s"
 
 #: src/SOURCE/REMOTE.cpp
 msgid "modem.connecting"
-msgstr "Налаживаю соединение..."
+msgstr "Устанавливаю соединение..."
 
 #: src/SOURCE/REMOTE.cpp
 msgid "modem.dialing"
@@ -1195,15 +1220,15 @@ msgstr "Укажите номер телефона."
 
 #: src/SOURCE/REMOTE.cpp
 msgid "network.direct.wait"
-msgstr "Ожидание другого компьютера для прямого соединения.\n\nНажмите 'ОТМЕНА', чтобы отменить действие."
+msgstr "Ожидание другого компьютера для прямого соединения.\n\nНажмите «ОТМЕНА», чтобы отменить действие."
 
 #: src/SOURCE/REMOTE.cpp
 msgid "network.guest.wait"
-msgstr "Ожидание гостя.\n\n Нажмите 'ОТМЕНА', чтобы закончить."
+msgstr "Ожидание гостя.\n\nНажмите «ОТМЕНА», чтобы закончить."
 
 #: src/SOURCE/REMOTE.cpp
 msgid "network.host.wait"
-msgstr "Ожидание хоста.\n\n Нажмите 'ОТМЕНА', чтобы закончить."
+msgstr "Ожидание хоста.\n\nНажмите «ОТМЕНА», чтобы закончить."
 
 #: src/SOURCE/KB.cpp
 msgid "network.incoming.close"
@@ -1211,23 +1236,23 @@ msgstr "[ Входящая информация, необходимо закры
 
 #: src/SOURCE/REMOTE.cpp
 msgid "network.initialize.failed"
-msgstr "Не удалось инициировать сетевое соединение"
+msgstr "Не удалось инициировать сетевое соединение."
 
 #: src/SOURCE/REMOTE.cpp
 msgid "network.initialize.slots_full"
-msgstr "Не удалось инициировать сетевое соединение, все места заняты!"
+msgstr "Не удалось инициировать сетевое соединение, все места заняты."
 
 #: src/SOURCE/REMOTE.cpp
 msgid "network.initialize.wait"
-msgstr "Инициирование сети.\n\n Нажмите 'ОТМЕНА', чтобы закончить."
+msgstr "Инициирование сети\n\nНажмите «ОТМЕНА», чтобы закончить."
 
 #: src/SOURCE/REMOTE.cpp
 msgid "network.netbios.missing"
-msgstr "НЕТБИОС не загружена."
+msgstr "NETBIOS не загружена."
 
 #: src/SOURCE/REMOTE.cpp
 msgid "network.peer.wait"
-msgstr "Компьютер другого игрока не отвечает. Желаете продолжить ожидание? "
+msgstr "Компьютер другого игрока не отвечает. Желаете продолжить ожидание?"
 
 #: src/SOURCE/KB.cpp
 msgid "network.player.eliminated"
@@ -1236,12 +1261,12 @@ msgstr "Вы были исключены из игры!"
 #: src/SOURCE/KB.cpp
 #, c-format
 msgid "network.player.exit.computer"
-msgstr "Игрок %d покинул игру. Данная игра была сохранена как 'ИГРОК ВЫШЕЛ'. Вы желаете продолжить игру с компьютерным игроком, занявшим место выбывшего %d игрока?"
+msgstr "Игрок %d покинул игру. Данная игра была сохранена как «ИГРОК ВЫШЕЛ». Вы желаете продолжить игру с компьютерным игроком, занявшим место выбывшего %d игрока?"
 
 #: src/SOURCE/KB.cpp
 #, c-format
 msgid "network.player.timeout.computer"
-msgstr "%d игрок был выкинут из игры. Данная игра была сохранена как 'ИГРОК ВЫШЕЛ'. Желаете ли вы продолжить игру и заместить выбывшего %d игрока компьютером?"
+msgstr "%d игрок был выкинут из игры. Данная игра была сохранена как «ИГРОК ВЫШЕЛ». Желаете ли вы продолжить игру и заместить выбывшего %d игрока компьютером?"
 
 #: src/SOURCE/GAME.cpp
 msgid "network.receive.title"
@@ -1253,7 +1278,7 @@ msgstr "Ошибка отправки данных. Продолжать?"
 
 #: src/SOURCE/GAME.cpp
 msgid "network.send.title"
-msgstr "Пересылка данных"
+msgstr "Передача данных"
 
 #: src/SOURCE/KB.cpp
 msgid "network.setup.wait"
@@ -1936,6 +1961,10 @@ msgstr "&Экран"
 msgid "resource.MNUTOWN.popup.2"
 msgstr "&Помощь"
 
+#: src/BASE/RESMGR.cpp
+msgid "resource.aggregate.invalid"
+msgstr "Ошибка файла: некорректный файл .AGG"
+
 #: src/SOURCE/COMMAND.cpp
 msgid "resource.gold.insufficient"
 msgstr "У вас недостаточно золота!"
@@ -1958,19 +1987,19 @@ msgstr "ИГРОК ВЫШЕЛ"
 
 #: src/SOURCE/GAME.cpp
 msgid "scenario.bay.description"
-msgstr "Большая земля, полная ущелий, идущих по кругу."
+msgstr "Большой кольцеобразный остров с тесными проходами."
 
 #: src/SOURCE/GAME.cpp
 msgid "scenario.bay.name"
-msgstr "Вблизи залива"
+msgstr "Вокруг залива"
 
 #: src/SOURCE/GAME.cpp src/SOURCE/KB.cpp
 msgid "scenario.claw.description"
-msgstr "Грифоны будут защищать вас пока вы не будете готовы сделать ваш ход."
+msgstr "Грифоны будут защищать вас, пока вы не подготовитесь к наступлению."
 
 #: src/SOURCE/GAME.cpp src/SOURCE/KB.cpp
 msgid "scenario.claw.name"
-msgstr "Когти (Легкая)"
+msgstr "Когти (лёгкий)"
 
 #: src/SOURCE/GAME.cpp
 msgid "scenario.info.no"
@@ -1982,11 +2011,77 @@ msgstr "Да"
 
 #: src/SOURCE/KB.cpp
 msgid "score.name.prompt"
-msgstr "Наберите ваше имя русскими буквами."
+msgstr "Наберите ваше имя для таблицы рекордов."
+
+#: src/SOURCE/REMOTE.cpp
+msgid "serial.connect.duplicate_id"
+msgstr "Дублирующиеся строки ID!\nИзвините, попытайтесь снова, пожалуйста\n"
+
+#: src/SOURCE/comwin.cpp
+msgid "serial.error.baud_rate"
+msgstr "\n4) Рассмотрите вариант снижения скорости передачи данных в «Настройках» до 19200 или 9600 бод."
+
+#: src/SOURCE/comwin.cpp
+msgid "serial.error.cables"
+msgstr "\n1) Убедитесь, что все кабели надёжно подключены."
+
+#: src/SOURCE/comwin.cpp
+msgid "serial.error.clear_break"
+msgstr "Удаление сигнала «Break»"
+
+#: src/SOURCE/comwin.cpp
+msgid "serial.error.clear_errors"
+msgstr "Очистка очереди сообщений об ошибках"
+
+#: src/SOURCE/comwin.cpp
+msgid "serial.error.configure"
+msgstr "Настройка устройства связи"
+
+#: src/SOURCE/comwin.cpp
+#, c-format
+msgid "serial.error.header"
+msgstr "Произошла ошибка при попытке %s\n\nКод ошибки Win95: %d\nОписание ошибки Win95: %s\n\n"
+
+#: src/SOURCE/comwin.cpp
+msgid "serial.error.initialize"
+msgstr "Инициализация параметров сеанса связи"
+
+#: src/SOURCE/comwin.cpp
+#, c-format
+msgid "serial.error.open_port"
+msgstr "открытия порта COM%d"
+
+#: src/SOURCE/comwin.cpp
+msgid "serial.error.port"
+msgstr "\n3) Убедитесь, что вы задали правильные параметры COM-порта в «Настройках» (третья кнопка сверху на экране, где вы выбираете «Хост» или «Гость»)."
+
+#: src/SOURCE/comwin.cpp
+msgid "serial.error.read"
+msgstr "Чтение данных сеанса связи"
+
+#: src/SOURCE/comwin.cpp
+msgid "serial.error.reboot"
+msgstr "\n2) Перезагрузите компьютер."
+
+#: src/SOURCE/comwin.cpp
+msgid "serial.error.set_break"
+msgstr "Установка сигнала «Break»"
+
+#: src/SOURCE/comwin.cpp
+msgid "serial.error.solutions"
+msgstr "Предлагаемые решения:\n"
+
+#: src/SOURCE/comwin.cpp
+msgid "serial.error.timeouts"
+msgstr "Установка тайм-аутов сеанса связи"
+
+#: src/SOURCE/comwin.cpp
+msgid "serial.error.write"
+msgstr "Запись данных сеанса связи"
 
 #: src/SOURCE/SETUP.cpp
 msgid "setup.modem.initialization_prompt"
-msgstr "Пожалуйста, укажите значения строки инициализации модема или нажмите 'ENTER'."
+msgstr "Пожалуйста, укажите значения строки инициализации модема или нажмите «ENTER»."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "shutdown.unexpected.title"
@@ -2013,7 +2108,7 @@ msgstr "Молния наносит %d ед. урона отряду %s."
 #: src/SOURCE/SPELLS.cpp
 #, c-format
 msgid "spell.meteor.damage"
-msgstr "Звездопад наносит %d ед. урона."
+msgstr "Метеоритный дождь наносит %d ед. урона."
 
 #: src/SOURCE/GAME.cpp
 msgid "spell.none.available"
@@ -2022,17 +2117,17 @@ msgstr "Нет заклинаний."
 #: src/SOURCE/SPELLS.cpp
 #, c-format
 msgid "spell.resurrect.plural"
-msgstr "%d %s были воскрешены из мертвых!"
+msgstr "%d %s были воскрешены из мёртвых!"
 
 #: src/SOURCE/SPELLS.cpp
 #, c-format
 msgid "spell.resurrect.singular"
-msgstr "%d %s был воскрешен из мертвых!"
+msgstr "%d %s был воскрешён из мёртвых!"
 
 #: src/SOURCE/SPELLS.cpp
 #, c-format
 msgid "spell.storm.damage"
-msgstr "Шторм наносить %d ед. урона."
+msgstr "Буря стихий наносит %d ед. урона."
 
 #: src/SOURCE/SPELLS.cpp
 msgid "spell.target.select"
@@ -2044,7 +2139,7 @@ msgstr "Ошибочная точка телепортации"
 
 #: src/SOURCE/SPELLS.cpp
 msgid "spell.teleport.select"
-msgstr "Выберите место назначения."
+msgstr "Выберите место назначения"
 
 #: src/EDITOR/EDITOR.cpp
 msgid "startup.cd.inaccessible"
@@ -2073,12 +2168,12 @@ msgstr "Не удалось инициализировать игру!"
 
 #: src/BASE/EXEC.cpp
 msgid "startup.input.failed"
-msgstr "Ошибка инициации клавиатуры или мышки."
+msgstr "Ошибка инициализации клавиатуры или мыши."
 
 #: src/SOURCE/kbwin.cpp
 #, c-format
 msgid "startup.instance.already_running"
-msgstr "Только одна копия %s может быть запущена одновременно"
+msgstr "Только одна копия игры «%s» может быть запущена одновременно."
 
 #: src/SOURCE/kbwin.cpp
 msgid "startup.instance.event_name"
@@ -2086,7 +2181,7 @@ msgstr "Герои"
 
 #: src/SOURCE/kbwin.cpp
 msgid "startup.instance.game_title"
-msgstr "Герои Меча и Магии"
+msgstr "Герои Меча и Магии TE 1.04"
 
 #: src/SOURCE/KB.cpp
 msgid "startup.loading.game"
@@ -2094,19 +2189,19 @@ msgstr "# Загрузка Героев Меча и Магии TE 1.05 f3 #"
 
 #: src/BASE/EXEC.cpp src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "startup.manager.failed"
-msgstr "Не могу добавить менеджера!"
+msgstr "Не могу добавить менеджер!"
 
 #: src/BASE/EXEC.cpp
 msgid "startup.mouse.failed"
-msgstr "Ошибка инициации мышки."
+msgstr "Ошибка инициализации мыши."
 
 #: src/BASE/EXEC.cpp
 msgid "startup.resources.failed"
-msgstr "Ошибка инициации ресурсов. Вероятно, проблемы с диском."
+msgstr "Ошибка инициализации ресурсов. Вероятно, проблемы с диском."
 
 #: src/BASE/EXEC.cpp
 msgid "startup.sound.failed"
-msgstr "Ошибка инициации звука."
+msgstr "Ошибка инициализации звука."
 
 #: src/BASE/EXEC.cpp
 msgid "startup.windows.failed"
@@ -2138,7 +2233,7 @@ msgstr "Следующий герой\n\nВыбрать следующего г�
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gAdvMenuHelp.1"
-msgstr "Продолжить движение \n\nПродолжить движение героя по намеченному пути."
+msgstr "Продолжить движение\n\nПродолжить движение героя по намеченному пути."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gAdvMenuHelp.2"
@@ -2486,199 +2581,199 @@ msgstr "Стрел: "
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.0"
-msgstr "Книга всезнания\n(Знания +12)\n\nКнига всезнания увеличивает Знания на 12 единиц."
+msgstr "Великая книга знаний\n(+12 к знаниям)\n\nВеликая книга знаний повышает уровень знаний на 12 единиц"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.1"
-msgstr "Меч власти\n(Атака +12)\n\nМеч власти увеличивает навык атаки на 12 единиц."
+msgstr "Великий меч власти\n(+12 к атаке)\n\nВеликий меч власти повышает уровень атаки на 12 единиц"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.2"
-msgstr "Защитная накидка\n(Защита +12)\n\nЗащитная накидка увеличивает защиту на 12 единиц."
+msgstr "Великая мантия защиты\n(+12 к защите)\n\nВеликая мантия защиты повышает уровень защиты на 12 единиц"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.3"
-msgstr "Жезл магии\n(Сила магии +12)\n\nЖезл магии увеличивает силу заклинаний на 12 единиц."
+msgstr "Великий жезл магии\n(+12 к силе магии)\n\nВеликий жезл магии повышает уровень силы магии на 12 единиц"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.4"
-msgstr "Ожерелье тайной магии\n(Сила магии +4)\n\nОжерелье тайной магии увеличивает силу магии на 4 единицы."
+msgstr "Колдовское ожерелье\n(+4 к силе магии)\n\nКолдовское ожерелье повышает уровень силы магии на 4 единицы"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.5"
-msgstr "Магический браслет\n(Сила магии +2)\n\nМагический браслет увеличивает силу заклинаний на 2 единицы."
+msgstr "Браслет заклинателя\n(+2 к силе магии)\n\nБраслет заклинателя повышает уровень силы магии на 2 единицы"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.6"
-msgstr "Кольцо мага\n(Сила магии +2)\n\nКольцо мага увеличивает силу магии на 2 единицы."
+msgstr "Перстень мага\n(+2 к силе магии)\n\nПерстень мага повышает уровень силы магии на 2 единицы"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.7"
-msgstr "Брошь ведьмы\n(Сила магии +3)\n\nБрошь ведьмы увеличивает силу магии на 3 единицы."
+msgstr "Брошь ведьмы\n(+3 к силе магии)\n\nБрошь ведьмы повышает уровень силы магии на 3 единицы"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.8"
-msgstr "Медаль отваги\n\nМедаль отваги увеличивает мораль."
+msgstr "Медаль «За доблесть»\n(+1 к боевому духу)\n\nМедаль «За доблесть» повышает боевой дух на 1 единицу"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.9"
-msgstr "Медаль мужества\n\nМедаль мужества увеличивает мораль."
+msgstr "Медаль «За отвагу»\n(+1 к боевому духу)\n\nМедаль «За отвагу» повышает боевой дух на 1 единицу"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.10"
-msgstr "Медаль доблести\n\nМедаль доблести увеличивает мораль."
+msgstr "Медаль Почёта\n(+1 к боевому духу)\n\nМедаль Почёта повышает боевой дух на 1 единицу"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.11"
-msgstr "Медаль почета\n\nМедаль почета увеличивает мораль."
+msgstr "Медаль «За отличие»\n(+1 к боевому духу)\n\nМедаль «За отличие» повышает боевой дух на 1 единицу"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.12"
-msgstr "Символ неудачи\n\nСимвол неудачи сильно уменьшает удачу."
+msgstr "Физбин неудачи\n(-3 к удаче)\n\nФизбин неудачи снижает удачу на 3 единицы"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.13"
-msgstr "Громовая палица\n(Атака +1)\n\nГромовая палица увеличивает навык атаки на 1 единицу."
+msgstr "Громовой кистень\n(+1 к атаке)\n\nГромовой кистень повышает уровень атаки на 1 единицу"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.14"
-msgstr "Защитная перчатка\n(Защита +1)\n\nЗащитная перчатка увеличивает навык защиты на 1 единицу."
+msgstr "Латная рукавица\n(+1 к защите)\n\nЛатная рукавица повышает уровень защиты на 1 единицу"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.15"
-msgstr "Шлем защитника\n(Защита +1)\n\nШлем защитника увеличивает навык защиты на 1 единицу."
+msgstr "Шлем защитника\n(+1 к защите)\n\nШлем защитника повышает уровень защиты на 1 единицу"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.16"
-msgstr "Гигантский цеп\n(Атака +1)\n\nГигантский цеп увеличивает навык атаки на 1 единицу."
+msgstr "Цеп гиганта\n(+1 к атаке)\n\nЦеп гиганта повышает уровень атаки на 1 единицу"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.17"
-msgstr "Баллиста\n\nБаллиста позволяет вашей катапульте дважды стрелять в один ход боя."
+msgstr "Скорострельная баллиста\n\nСкорострельная баллиста позволяет вашей катапульте стрелять дважды за ход"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.18"
-msgstr "Незримый щит\n(Защита +2)\n\nНезримый щит увеличивает навык защиты на 2 единицы."
+msgstr "Незримый щит\n(+2 к защите)\n\nНезримый щит повышает уровень защиты на 2 единицы"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.19"
-msgstr "Драконий меч\n(Атака +3)\n\nДраконий меч увеличивает навык атаки на 3 единицы."
+msgstr "Меч дракона\n(+3 к атаке)\n\nМеч дракона повышает уровень атаки на 3 единицы"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.20"
-msgstr "Топор власти\n(Атака +2)\n\nТопор власти увеличивает навык атаки на 2 единицы."
+msgstr "Могучая секира\n(+2 к атаке)\n\nМогучая секира повышает уровень атаки на 2 единицы"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.21"
-msgstr "Божественный доспех\n(Защита +3)\n\nБожественный доспех увеличивает навык защиты на 3 единицы."
+msgstr "Божественный нагрудник\n(+3 к защите)\n\nБожественный нагрудник повышает уровень защиты на 3 единицы"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.22"
-msgstr "Малый свиток знания\n(Знания +2)\n\nМалый свиток знания увеличивает Знания на 2 единицы."
+msgstr "Малый свиток\n(+2 к знаниям)\n\nМалый свиток повышает уровень знаний на 2 единицы"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.23"
-msgstr "Большой свиток знания\n(Знания +3)\n\nБольшой свиток знания увеличивает Знания на 3 единицы."
+msgstr "Средний свиток\n(+3 к знаниям)\n\nСредний свиток повышает уровень знаний на 3 единицы"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.24"
-msgstr "Могущественный свиток знания\n(Знания +4)\n\nМогущественный свиток знания увеличивает Знания на 4 единицы."
+msgstr "Большой свиток\n(+4 к знаниям)\n\nБольшой свиток повышает уровень знаний на 4 единицы"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.25"
-msgstr "Свиток высшего знания\n(Знания +5)\n\nСвиток высшего знания увеличивает Знания на 5 единиц."
+msgstr "Высший свиток\n(+5 к знаниям)\n\nВысший свиток повышает уровень знаний на 5 единиц"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.26"
-msgstr "Бездонный мешок\n\nБездонный мешок приносит вам 1000 золотых в день."
+msgstr "Бездонный мешок\n\nБездонный мешок приносит вам 1000 золотых в день"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.27"
-msgstr "Бездонная сума\n\nБездонная сума приносит вам 750 золотых в день."
+msgstr "Бездонная сума\n\nБездонная сума приносит вам 750 золотых в день"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.28"
-msgstr "Бездонный кошель\n\nБездонный кошель приносит вам 500 золотых в день."
+msgstr "Бездонный кошель\n\nБездонный кошель приносит вам 500 золотых в день"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.29"
-msgstr "Башмаки кочевника\n\nБашмаки кочевника увеличивают дальность передвижения по суше."
+msgstr "Сапоги кочевника\n(+24 к передвижению по суше)\n\nСапоги кочевника увеличивают дальность передвижения по суше, добавляя 24 очка передвижения"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.30"
-msgstr "Башмаки путника\n\nБашмаки путника увеличивают подвижность отряда на суше."
+msgstr "Сапоги путника\n(+12 к передвижению по суше)\n\nСапоги путника увеличивают дальность передвижения по суше, добавляя 12 очков передвижения"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.31"
-msgstr "Лапка кролика\n\nЛапка кролика увеличивает удачу в бою."
+msgstr "Кроличья лапка\n(+1 к удаче)\n\nКроличья лапка повышает удачу на 1 единицу"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.32"
-msgstr "Золотая подкова\n\nЗолотая подкова увеличивает удачу в бою."
+msgstr "Золотая подкова\n(+1 к удаче)\n\nЗолотая подкова повышает удачу на 1 единицу"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.33"
-msgstr "Монета\n\nСчастливая монета увеличивает удачу в бою."
+msgstr "Счастливая монета\n(+1 к удаче)\n\nСчастливая монета повышает удачу на 1 единицу"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.34"
-msgstr "Клевер\n\nКлевер увеличивает удачу в бою."
+msgstr "Четырёхлистный клевер\n(+1 к удаче)\n\nЧетырёхлистный клевер повышает удачу на 1 единицу"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.35"
-msgstr "Компас\n\nКомпас увеличивает подвижность отряда на суше и на море."
+msgstr "Точный компас\n(+20 к передвижению по суше и по морю)\n\nТочный компас увеличивает дальность передвижения по суше и по морю, добавляя 20 очков передвижения"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.36"
-msgstr "Астролябия\n\nАстролябия увеличивает подвижность отряда на море."
+msgstr "Астролябия моряка\n(+40 к передвижению по морю)\n\nАстролябия моряка увеличивает дальность передвижения по морю, добавляя 40 очков передвижения"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.37"
-msgstr "Волшебная книга\n\nВолшебная книга позволяет направлять заклинания."
+msgstr "Книга заклинаний\n\nКнига заклинаний позволяет вам направлять заклинания"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactEvent.4"
-msgstr "Вы вызволяете волшебницу, заточенную в проклятой гробнице, и в награду она вручает вам изысканное алмазное ожерелье."
+msgstr "Вы освобождаете волшебницу, заточённую в проклятой гробнице, и в награду за героический поступок она вручает вам изысканное ожерелье из драгоценных камней."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactEvent.5"
-msgstr "Изучая завалы в заброшенной шахте, вы спасаете артель гномов-старателей. В знак благодарности их старшина дарит вам золотой браслет."
+msgstr "Обыскивая завалы в заброшенной шахте, вы спасаете артель гномов-старателей. В знак благодарности их предводитель дарит вам золотой браслет."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactEvent.6"
-msgstr "Вы спешите на звук отчаянного вопля боли и видите кентавра, попавшего в западню. Вы помогаете ему освободиться, и он вручает вам кожаный мешочек. Заглянув внутрь, вы видите ослепительное бриллиантовое кольцо."
+msgstr "Вы спешите на звуки отчаянного вопля и видите кентавра, попавшего в западню. Вы помогаете ему освободиться, и он вручает вам кожаный мешочек. Вытряхивая содержимое мешочка на свою ладонь, вы обнаруживаете ослепительный перстень, богато украшенный драгоценными камнями."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactEvent.7"
-msgstr "Рядом с останками сожженной колдуньи лежит изящная брошь прекрасной работы. Осторожно приблизившись к обугленному трупу, вы забираете брошь себе."
+msgstr "Рядом с останками сожжённой ведьмы лежит красивая брошь с замысловатыми узорами. Вы осторожно подходите к обугленному трупу и кладёте брошь в свой рюкзак."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactEvent.8"
-msgstr "В награду за спасение прекрасной девы от посягательств ненавистного барона королевский герольд вручает вам Медаль отваги."
+msgstr "В награду за спасение благородной девицы от лап мерзкого барона королевский герольд вручает вам медаль «За доблесть»."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactEvent.9"
-msgstr "Вы спасаете маленького мальчика от стаи кровожадных волков и провожаете в имение родителей. Счастливый отец награждает вас Медалью мужества."
+msgstr "Вы спасаете маленького мальчика от стаи кровожадных волков и отводите его в отцовское имение. Благодарный дворянин награждает вас медалью «За отвагу»."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactEvent.10"
-msgstr "Вы вырываете принцессу соседнего королевства из мерзких лап презренных работорговцев и в награду за подвиг получаете Медаль доблести."
+msgstr "Вы вырываете принцессу соседнего королевства из грязных лап презренных работорговцев, и в награду за подвиг она вручает вам медаль Почёта."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactEvent.11"
-msgstr "Вы избавляете округу от ужасного минотавра, добычей которому служили благородные рыцари, и становитесь кавалером Медали почета."
+msgstr "Вы избавляете жителей округи от ужасного минотавра, добычей которому служили благородные рыцари, и становитесь кавалером медали «За отличие»."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactEvent.12"
-msgstr "На обочине пустынной дороги вы находите медаль. Вы подобрали ее и обнаружили, что стали несчастным обладателем Символа неудачи, который понижает удачу вашей армии."
+msgstr "На обочине пустынной дороги вы случайно находите странную медаль. Вы кладёте её в свой рюкзак и тут же с ужасом осознаёте, что стали несчастным обладателем Физбина неудачи, значительно снижающего удачу вашей армии в бою."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactEvent.13"
-msgstr "Во время жуткой грозы молния бьет в дерево, разнося его на мелкие щепки. Среди обломков вы обнаруживаете таинственную палицу."
+msgstr "Во время внезапно разразившейся грозы молния ударяет в дерево, разнося его на мелкие щепки. Среди обломков вы обнаруживаете таинственно появившийся кистень."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactEvent.14"
-msgstr "Вы повстречали печально известного Черного Рыцаря! Ваш поединок заканчивается вничью, и рыцарь в знак уважения дарит вам пару латных перчаток."
+msgstr "Вы сталкиваетесь лицом к лицу с печально известным Чёрным рыцарем! Жестокий поединок заканчивается в ничью, и рыцарь, в знак уважения, дарит вам пару латных рукавиц."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactEvent.15"
@@ -2686,119 +2781,119 @@ msgstr "Краем глаза вы замечаете золотистый бл�
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactEvent.16"
-msgstr "Неуклюжий гигант нанес себе смертельную рану собственным боевым цепом. Вы прекрасно владеете этим оружием и с уверенностью вынимаете цеп из мертвых рук гиганта."
+msgstr "Неуклюжий гигант на ваших глазах убивает себя собственным боевым цепом. Вы же прекрасно владеете этим оружием и с уверенностью вынимаете цеп из мёртвых рук гиганта."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactEvent.17"
-msgstr "Пробираясь через развалины древней крепости, вы находите орудие, которое превратило ее в руины, удивительную баллисту замысловатой конструкции."
+msgstr "Пробираясь через развалины древнего города-крепости, вы находите орудие, при помощи которого он был полностью разрушен, — удивительную баллисту искусной работы."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactEvent.18"
-msgstr "В руках у каменной статуи воина - великолепный серебряный щит. Как только вы забираете щит себе, статуя рассыпается в прах."
+msgstr "В руках у каменной статуи воина находится красивый серебряный щит. Как только вы забираете приглянувшийся щит себе, статуя тут же рассыпается в прах."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactEvent.19"
-msgstr "Вы пробираетесь узкой тропой, как вдруг ближайший куст загорается ярким пламенем. Постепенно в огненном смерче проступают очертания прекрасной дамы, которая протягивает вам меч чудесной работы."
+msgstr "Вы пробираетесь узкой тропой, как вдруг ближайший куст загорается ярким пламенем. Постепенно в огненном смерче проступают очертания прекрасной дамы, которая протягивает вам дивный меч."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactEvent.20"
-msgstr "Вы видите серебряный топор, вогнанный в землю по самую рукоять. Ваши воины пытаются выдернуть его, но усилия их тщетны. Вам же хватило одного усилия и топор у вас в руках!"
+msgstr "Вы замечаете серебряную секиру, воткнутую в землю по самую рукоять. Ваши воины пытаются выдернуть её, однако все их усилия тщетны. Вам же хватило одного лёгкого движения и неподатливая секира у вас в руках!"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactEvent.21"
-msgstr "Шайка разбойников обыскивает тела мертвых воинов. Вы разгоняете мародеров и вдруг замечаете, что в спешке они потеряли великолепный доспех."
+msgstr "Шайка разбойников обыскивает тела павших воинов. Вы разгоняете мародёров и вдруг замечаете, что они упустили из виду великолепный серебряный нагрудник."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactEvent.22"
-msgstr " Перед вами возникает парящий в воздухе стеклянный ларец со свитком внутри, лежащем на подушке из пурпурного бархата. Повинуясь вашему прикосновению, крышка ларца открывается, и свиток оказывается у вас в руках."
+msgstr "Перед вами возникает парящий в воздухе стеклянный ларец со свитком внутри, лежащем на подушке из малинового бархата. Повинуясь вашему прикосновению, крышка таинственного ларца открывается, и вожделённый свиток оказывается в ваших руках."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactEvent.23"
-msgstr "Вы навещаете местного мудреца и рассказываете о цели вашего путешествия. Он достает из мешка пожелтевший свиток и передает его вам."
+msgstr "Вы навещаете местного мудреца и рассказываете о цели вашего путешествия. Недолго думая, он достаёт из своего мешка пожелтевший свиток и передаёт его вам."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactEvent.24"
-msgstr "Вы стоите перед останками давно умершей жрицы друидов. Пожелтевшие от времени кости проглядывают через прорехи истлевшего одеяния. Пошевелив груду ветоши, вы находите древний свиток."
+msgstr "Вы стоите перед останками давно умершей жрицы друидов. Пожелтевшие от времени кости проглядывают сквозь прорехи истлевшего одеяния. Пошевелив груду ветоши, вы находите в её складках древний свиток."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactEvent.25"
-msgstr "Груда пожелтевших костей и обрывки истлевшей материи - вот все, что осталось от жрицы друидов. Среди этих останков вы замечаете таинственный свиток."
+msgstr "Груда пожелтевших костей и обрывки истлевшей материи — вот всё, что осталось от жрицы друидов. Среди этих ветхих останков вы замечаете таинственный свиток."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactEvent.26"
-msgstr "Маленький лепрекон пританцовывает у волшебного мешка. Завидев вас, он замирает на месте, затем издает возмущенный возглас, топает ножкой и растворяется в воздухе. Следуя старинной поговорке, \"Кто успел - тот и съел\", вы забираете мешок себе."
+msgstr "Маленький лепрекон радостно пританцовывает у волшебного мешка. Завидев вас, старичок замирает на полушаге, затем издаёт возмущенный возглас, гневно топает ножкой и растворяется в воздухе. Вспоминая его слова «Было ничьё — стало моё», вы хватаете мешок и убираетесь прочь."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactEvent.27"
-msgstr "Благородная путешественница, отбившаяся от спутников, просит вас о помощи. Проводив ее до дома, вы получаете в награду суму, полную золота."
+msgstr "Благородная леди, отставшая от своих спутников, просит вас о помощи. Проводив незадачливую путешественницу до дома, вы получаете в награду суму, полную золота."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactEvent.28"
-msgstr "Однажды вам в руки попадает наполненный золотом кожаный кошель, принадлежавший великому королю, который умел превращать любой предмет в золото."
+msgstr "Во время очередного своего путешествия вы находите наполненный золотом кожаный кошель. Оказывается, что эта удивительная находка некогда принадлежала великому королю-воителю, который умел превращать любой неодушевлённый предмет в золото."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactEvent.29"
-msgstr "Бродячий торговец просит вас защитить его от банды гоблинов. В награду он дарит вам пару изящных башмаков, испещеренных загадочными древними письменами."
+msgstr "Кочевник-торговец ищет защиты от племени пакостливых гоблинов. Вы разгоняете мелких трусов, и признательный кочевник дарит вам пару изящных сапог, сделанных из тончайшей кожи. Присмотревшись внимательнее, вы замечаете очаровательные старинные узоры, выгравированные на голенищах сапог."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactEvent.30"
-msgstr "Обнаружив пару замечательных башмаков украшенных бисером, вы благодарите загадочного благодетеля и оставляете их себе."
+msgstr "Обнаружив на просторах здешних земель пару замечательных сапог, изготовленных из нежнейшей кожи и расшитых бисером, вы про себя благодарите загадочного благодетеля и оставляете их себе."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactEvent.31"
-msgstr "В уплату за охрану в пути странствующий торговец предлагает вам лапку кролика. По его словам, она принесет вам удачу в бою."
+msgstr "Странствующий купец в обмен на обеспечение безопасной переправы предлагает вам кроличью лапку, изготовленную из блестящего серебристого меха. По его словам, этот амулет принесёт вам удачу в бою."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactEvent.32"
-msgstr "Попавший в ловушку единорог испуганно кричит. Вы успокаиваете его и освобождаете от пут. Всхрапнув и ударив копытом, он уносится прочь. Там, где он только что стоял, осталась лежать золотая подкова."
+msgstr "Попавший в ловушку единорог испуганно ржал. Вы приближаетесь к нему, нашёптывая успокаивающие слова, и освобождаете его от пут. Всхрапнув и ударив передним копытом, быстроногий зверь уносится прочь. Там, где он только что стоял, осталась лежать золотая подкова."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactEvent.33"
-msgstr "Вы поймали озорного бесенка, который не давал покоя всей округе. В обмен на свободу он предлагает вам волшебную монету."
+msgstr "Вы хватаете за шкирку озорного бесёнка, который держал в страхе всю округу. В обмен на свободу он предлагает вам волшебную монету."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactEvent.34"
-msgstr "Посреди мертвой лощины, заполненной иссохшей растительностью, вы, к своему удивлению, замечете веселый зеленый побег четырехлистного клевера."
+msgstr "Посреди лощины, покрытой омертвелой, иссохшей растительностью, вы, к своему изумлению, находите цветущий зелёный четырёхлистный клевер."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactEvent.35"
-msgstr "Странноватый старикашка утверждает, что он - великий изобретатель, и просит вас испытать его новое творение. Надувшись от важности, он вручает вам компас."
+msgstr "Странноватый старикашка утверждает, что он великий изобретатель, и просит вас испытать его новый прибор. Надувшись от важности, он вручает вам компас."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactEvent.36"
-msgstr "Старый мореход стал добычей людоедов. Вы спасаете его, и в знак благодарности он дарит вам чудесный инструмент, позволяющий измерять расстояния по звездам."
+msgstr "Старый мореход подвергся истязаниям в плену у злобных огров. Вы немедля расправляетесь с тупыми великанами и освобождаете замученного старика, который в знак огромной благодарности дарит вам дивный инструмент для определения положения небесных тел."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactEvent.37"
-msgstr "Волшебная книга?!"
+msgstr "Книга заклинаний?!"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactNames.0"
-msgstr "Книга всезнания"
+msgstr "Великая книга знаний"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactNames.1"
-msgstr "Меч власти"
+msgstr "Великий меч власти"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactNames.2"
-msgstr "Защитная накидка"
+msgstr "Великая мантия защиты"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactNames.3"
-msgstr "Жезл магии"
+msgstr "Великий жезл магии"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactNames.4"
-msgstr "Ожерелье тайной магии"
+msgstr "Колдовское ожерелье"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactNames.5"
-msgstr "Магический браслет"
+msgstr "Браслет заклинателя"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactNames.6"
-msgstr "Кольцо мага"
+msgstr "Перстень мага"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactNames.7"
@@ -2806,31 +2901,31 @@ msgstr "Брошь ведьмы"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactNames.8"
-msgstr "Медаль отваги"
+msgstr "Медаль «За доблесть»"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactNames.9"
-msgstr "Медаль мужества"
+msgstr "Медаль «За отвагу»"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactNames.10"
-msgstr "Медаль доблести"
+msgstr "Медаль Почёта"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactNames.11"
-msgstr "Медаль почета"
+msgstr "Медаль «За отличие»"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactNames.12"
-msgstr "Символ неудачи"
+msgstr "Физбин неудачи"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactNames.13"
-msgstr "Громовая алица "
+msgstr "Громовой кистень"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactNames.14"
-msgstr "Защитная перчатка"
+msgstr "Латная рукавица"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactNames.15"
@@ -2838,11 +2933,11 @@ msgstr "Шлем защитника"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactNames.16"
-msgstr "Гигантский цеп"
+msgstr "Цеп гиганта"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactNames.17"
-msgstr "Баллиста"
+msgstr "Скорострельная баллиста"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactNames.18"
@@ -2850,31 +2945,31 @@ msgstr "Незримый щит"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactNames.19"
-msgstr "Драконий меч"
+msgstr "Меч дракона"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactNames.20"
-msgstr "Топор власти"
+msgstr "Могучая секира"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactNames.21"
-msgstr "Божественный доспех"
+msgstr "Божественный нагрудник"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactNames.22"
-msgstr "Малый свиток знания"
+msgstr "Малый свиток"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactNames.23"
-msgstr "Большой свиток знания"
+msgstr "Средний свиток"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactNames.24"
-msgstr "Могущественный свиток знания"
+msgstr "Большой свиток"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactNames.25"
-msgstr "Свиток высшего знания"
+msgstr "Высший свиток"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactNames.26"
@@ -2890,15 +2985,15 @@ msgstr "Бездонный кошель"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactNames.29"
-msgstr "Башмаки кочевника"
+msgstr "Сапоги кочевника"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactNames.30"
-msgstr "Башмаки путника"
+msgstr "Сапоги путника"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactNames.31"
-msgstr "Лапка кролика"
+msgstr "Кроличья лапка"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactNames.32"
@@ -2910,19 +3005,19 @@ msgstr "Счастливая монета"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactNames.34"
-msgstr "Клевер"
+msgstr "Четырёхлистный клевер"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactNames.35"
-msgstr "Компас"
+msgstr "Точный компас"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactNames.36"
-msgstr "Астролябия"
+msgstr "Астролябия моряка"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactNames.37"
-msgstr "Волшебная книга"
+msgstr "Книга заклинаний"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gBattleResults.0"
@@ -2939,12 +3034,12 @@ msgstr "Великая победа!"
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 #, c-format
 msgid "table.gBattleResults.3"
-msgstr "\n\nЗа мужество, проявленное в бою, %s получает %d оч. опыта."
+msgstr "\n\nЗа мужество, проявленное в бою, %s получает %d очков опыта."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 #, c-format
 msgid "table.gBattleResults.4"
-msgstr "%s сдается врагу и отступает с позором."
+msgstr "%s сдаётся врагу и отступает с позором."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 #, c-format
@@ -2954,7 +3049,7 @@ msgstr "%s трусливо бежит с поля боя."
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 #, c-format
 msgid "table.gBattleResults.6"
-msgstr "Ваши войска потерпели поражение и %s покидает вас."
+msgstr "Ваши войска потерпели поражение, и %s покидает вас."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gBattleResults.7"
@@ -2971,7 +3066,7 @@ msgstr "Ваши войска потерпели поражение."
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 #, c-format
 msgid "table.gBattleResults.10"
-msgstr "\n\nЗа мужество, проявленное в бою, %s получает %d оч. опыта, и получает %d уровень(я)."
+msgstr "\n\nЗа мужество, проявленное в бою, %s получает %d очков опыта и получает %d уровень(я)."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCPanelHelp.0"
@@ -2979,11 +3074,11 @@ msgstr "Начать одиночную или сетевую игру."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCPanelHelp.1"
-msgstr "Загрузить ранее сохраненную игру."
+msgstr "Загрузить ранее сохранённую игру."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCPanelHelp.2"
-msgstr "Выйти из Героев Меча и Магии и вернуться в ОС."
+msgstr "Выйти из «Героев Меча и Магии» и вернуться в ОС."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCPanelHelp.3"
@@ -2995,11 +3090,11 @@ msgstr "Сохранить данную игру."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCPanelHelp.5"
-msgstr "Включить или выключить музыку"
+msgstr "Включить или выключить музыку."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCPanelHelp.6"
-msgstr "Включить или выключить фоновые звуки"
+msgstr "Включить или выключить фоновые звуки."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCPanelHelp.7"
@@ -3007,15 +3102,15 @@ msgstr "Изменить скорость передвижения героев 
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCPanelHelp.8"
-msgstr "Изменить качество звука. CD-стерео имеет наилучшее качество, и, как правило, не снижает производительность системы. Однако некоторые системы не способны воспроизводить звук с компакт-диска; тогда приходится использовать 8-битный звук."
+msgstr "Изменить качество звука. CD-стерео имеет наилучшее качество и, как правило, не снижает производительность системы. Однако некоторые системы не способны воспроизводить звук с компакт-диска; тогда приходится использовать 8-битный звук."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCPanelHelp.9"
-msgstr "Вкл./Выкл. 'Показать путь'. Если опция отмечена, первый щелчок по объекту на игровой карте показывает путь до него, а по второму щелчку начинается движение. Если эта опция отключена, движение к заданной точке начинается по первому щелчку мыши."
+msgstr "Вкл./Выкл. «Показать путь». Если опция отмечена, первый щелчок по объекту на игровой карте показывает путь до нему, а по второму щелчку начинается движение. Если эта опция отключена, движение к заданной точке начинается по первому щелчку мыши."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCPanelHelp.10"
-msgstr "Включение/выключение режима 'Показать перемещения противника'. Если этот режим включен, будут показаны перемещения всех противников на открытой части игровой карты. Следует иметь в виду, что при игре по сети или модему этот режим автоматически отключается."
+msgstr "Включение/выключение режима «Показать перемещения противника». Если этот режим включён, будут показаны перемещения всех противников на открытой части игровой карты. Следует иметь в виду, что при игре по сети или модему этот режим автоматически отключается."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCPanelHelp.11"
@@ -3023,43 +3118,43 @@ msgstr "Показать информацию о текущем сценарии
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCampaignScenarioNames.0"
-msgstr "Вы захватили плацдарм в новой стране. Вместе с вами еще три славных героя вступили в жестокий спор за обладание маленьким островком. Всех вас влечет к его центру - городу Предвратье. Город стоит посреди острова, и обладание им равносильно победе. Берегитесь дракона, который стережет подступы к Предвратью!"
+msgstr "\nВы закрепились на новых землях, создав плацдарм\nна небольшом острове. Этот остров стал ареной ожесточённой борьбы трёх других фракций,\nкаждая из которых наперебой стремится занять стратегически важный город под названием Застава. Он располагается в центре острова, и поэтому господствует надо всеми окрестностями. Не упустите возможность захватить этот город, и тогда остальным фракциям останется лишь сдаться на вашу милость. Однако будьте осторожны — подступы к Заставе охраняет дракон!"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCampaignScenarioNames.1"
-msgstr "Путь к материку преграждает Архипелаг Древних. Он состоит из четырех островов, каждым из которых владеет один правитель. Все четыре властителя должны быть разгромлены, и сделать это надо сейчас или никогда! Конечно, вам не обойтись без кораблей, но пользуйтесь ими мудро."
+msgstr "\nПуть к вашей главной цели — материку — преграждает группа из четырёх больших островов под названием Архипелаг Древних. Лорды-беглецы прочно заняли позиции на каждом из островов, уступив вам один из них. Необходимо подавить любое сопротивление вражеских войск на всей территории архипелага, но имейте в виду, что на этот раз ими руководят более опытные полководцы.\n\nКорабли тут просто необходимы —\nраспоряжайтесь ими мудро!"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCampaignScenarioNames.2"
-msgstr "Страна погрузилась в водоворот кровавой бойни. Но люди готовы пойти за героем, который овладеет Оком Гороса. Артефакт был захоронен и потерян в стародавние времена. Первый, кто отыщет Око, объединит народы и покорит эту землю."
+msgstr "\nВоцарился хаос. Вихри сражений опустошают всю страну. Чаша страданий жителей уже переполнена, и поэтому они готовы сплотиться вокруг владетеля Ока Гороса — древнего и могучего артефакта, способного исцелить истерзанные войной земли. Он был предан земле и затерян в незапамятные времена. Опередите соперников — добудьте этот артефакт, и тогда вы сможете объединить народ и подчинить себе материк. К сожалению, место его захоронения находится на обширной территории, однако фрагменты карты-головоломки укажут вам верный путь."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCampaignScenarioNames.3"
-msgstr "Теперь соседи видят в вас серьезного соперника. Все они стремятся завоевать центральный континент. Земля огромна, а враги далеко. Но здесь мало ресурсов, и они сильно охраняются. Вы должны победить всех и стать хозяином целого материка."
+msgstr "\n\nТеперь, когда вы обосновались на землях материка, соперники взялись за вас всерьёз. Однако каждый из них с подозрением относится к остальным, и поэтому все они стремятся единолично взять под контроль центральный материк. Территория огромна, и враг не скоро окажется у ваших ворот. А вот природные ресурсы здесь скудны и, судя по всему, усиленно охраняются. Чтобы заявить о своей победе, вам надлежит остаться последним лордом на этой земле."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCampaignScenarioNames.4"
-msgstr "Страна рыцарей, которой правит Лорд Айронфист, разделена извилистой Половодной рекой. Айронфист надеется, что она защитит его. Единственный прибрежный город, где есть верфь, находится далеко на востоке. Вы победите. Если захватите замок Айронфиста на северо-западе."
+msgstr "\n\nВладения рыцарей, управляемые лордом Айронфистом, отделены от материка извилистой Половодной рекой. Айронфист наивно считает, что река защитит его землю от вражеского вторжения.\n\nЕдинственный город, пригодный для кораблестроения, находится у реки на востоке.\nЧтобы нанести поражение Айронфисту,\nнеобходимо захватить его главный замок,\nрасположенный на северо-западе."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCampaignScenarioNames.5"
-msgstr "Далеко на севере, за Непроходимой пустыней, лежат Мерзлые пустоши. Там обосновался Вождь Слэйер - кровожадный предводитель варварских кланов. Как только заставы в ущелье падут, орды варваров хлынут на юг. Замок Вождя Слэйера стоит к северо-востоку от ущелья."
+msgstr "\n\nДалеко на севере, за пределами Непроходимой пустыни, простираются Мёрзлые пустоши. Это родина лорда Слэйера и его последователей — варваров.\nНе теряйте бдительность — рано или поздно неутомимые варвары пробьют брешь по обе стороны горного перевала, и тогда их бесчисленные орды хлынут на юг. В пустыне нашли пристанище неизвестные союзники, которые смогут вам помочь. Замок Слэйера располагается на северо-востоке\nот перевала."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCampaignScenarioNames.6"
-msgstr "Предупрежденная о вашем приближении, Царица Ламанда сотворила заклятье, затопившее подходы к единственному порту. Вы должны найти портал, чтобы захватить порт. Единственный участок суши доступный для высадки находится на северо-востоке. Оттуда вам надо пробиваться к замку на северо-западе."
+msgstr "\nОсведомлённая о вашем приближении, королева волшебниц Ламанда усердно трудилась над неким чудовищным заклинанием. С его помощью она затопила подступы к единственному городу, в котором можно построить верфь. Вы должны найти пространственные врата, чтобы переместиться на юго-западную землю и захватить этот город. Разведке известен лишь один подход к берегу земли волшебниц, который находится к северо-востоку от верфи. Оттуда вы попадёте в лесной лабиринт, который придётся пройти через сражения с армиями Ламанды вплоть до её замка на северо-западе."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCampaignScenarioNames.7"
-msgstr "Замок чернокнижников стоит в кратере вулкана. Чтобы пробиться к замку Колдуна Аламара, вам следует пройти через Лабиринт Минотавра. Маги уверены в своей неуязвимости и не ожидают атаки. Горгульи поджидают вас на истинной дороге к выходу из Лабиринта."
+msgstr "\n\nЗамки чернокнижников находятся в долине вулканов, окутанной плотной завесой дыма. Чтобы добраться до главного замка лорда Аламара, расположенного\nна юго-восточной окраине долины, вам придётся поблуждать в Лабиринте Минотавра. Чернокнижники слишком уверены в своей неуязвимости, и поэтому не ожидают атаки — ведь ещё никто не смог пройти их лабиринт. Кроме того, они разместили горгулий с целью отговорить захватчиков от истинного пути."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCampaignScenarioNames.8"
-msgstr "Великая победа не за горами, но поверженные лорды еще опасны! Они объединили остатки своих сил и двинули несметные рати на ваши замки. Если вы укротите драконов, мятежные лорды сложат оружие. Захватите Драконий город на центральном острове и победа будет в ваших руках!"
+msgstr "\n\nОкончательная победа почти в ваших руках, однако поверженные лорды всё ещё опасны. Они собрали в общий котёл последние ресурсы и объединились против вас. Если вам удастся склонить на свою сторону непокорных драконов и в союзе с ними вести войну, то тогда остальные лорды будут вынуждены капитулировать и все земли перейдут под ваш контроль. Захватите Цитадель драконов на центральном острове и победа будет вашей!"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCampaignScenarioText.0"
-msgstr "Предвратье"
+msgstr "Застава"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCampaignScenarioText.1"
@@ -3067,11 +3162,11 @@ msgstr "Архипелаг"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCampaignScenarioText.2"
-msgstr "Больные земли"
+msgstr "Раненые земли"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCampaignScenarioText.3"
-msgstr "Свобода любой ценой"
+msgstr "Всеобщая война"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCampaignScenarioText.4"
@@ -3111,39 +3206,39 @@ msgstr "Колдун Аламар"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCampaignWinTexts.0"
-msgstr "Предвратье в ваших руках! Враги оставили свои замки на произвол судьбы и позорно бежали. Они нашли себе новые земли и снова копят силы. Промедление смерти подобно!"
+msgstr "Застава пала! Вражеские лорды, спасаясь бегством, бросили свои замки на произвол судьбы. У себя на родине они объявили всеобщую тревогу и теперь собирают новые силы, поэтому вам следует поторопиться."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCampaignWinTexts.1"
-msgstr "Архипелаг Древних покорен и присоединен к вашим владеньям. За горизонтом лежит обширный неисследованный враждебный континент."
+msgstr "Вы покорили Архипелаг Древних и присоединили его к своим владениям. На горизонте виднеется огромный неизведанный материк, обитатели которого, похоже, имеют враждебные настроения."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCampaignWinTexts.2"
-msgstr "Целительная сила Ока Гороса возрождает измученную землю. Люди собираются под ваши знамена, а противники отступают. Грядет война за власть над миром!"
+msgstr "Исцеляющие силы Ока Гороса распространяются по всему материку. Население сплачивается вокруг вас, а остальные лорды отступают. Решающая борьба за власть только начинается!"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCampaignWinTexts.3"
-msgstr "Победа осталась за вами, враги расползлись по своим логовам. Вам еще предстоит захватить их родовые замки, по одному выкуривая их из насиженных нор."
+msgstr "Ваша триумфальная победа привела вражеских лордов к последнему отступлению! Теперь вам придётся сразиться с каждым соперником по очереди на их родных землях, захватив личные замки."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCampaignWinTexts.4"
-msgstr "Сопротивление рыцарей сломлено! Их страна лежит у ваших ног."
+msgstr "Рыцари были разгромлены в битве! Вы завоевали их владения."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCampaignWinTexts.5"
-msgstr "Замок варваров взят штурмом, а их армии разбиты!"
+msgstr "Замок варваров был превращён в руины, а их армия бросилась врассыпную!"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCampaignWinTexts.6"
-msgstr "Вы пробились через лесной лабиринт и сравняли с землей замок Ламанды."
+msgstr "Вы прорвались через лесной лабиринт и стёрли с лица земли замок Ламанды!"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCampaignWinTexts.7"
-msgstr "Вы преследовали горгулий до самого замка Колдуна Аламара и повергли в прах чернокнижников."
+msgstr "Вы последовали за горгульями к замку лорда Аламара и сокрушили мощь чернокнижников!"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCampaignWinTexts.8"
-msgstr "Драконы встают под ваши знамена, и мятежные лорды молят о пощаде. Теперь вы и только вы - великий властелин единой и необозримой страны!"
+msgstr "Драконы встают под ваши знамёна, и мятежные лорды признают своё полное поражение. Теперь вы и только вы — настоящий король огромной и единой страны!"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCastleInfo.0"
@@ -3151,35 +3246,35 @@ msgstr "Построить Гильдию магов"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCastleInfo.1"
-msgstr "Построены все этажи Гильдии магов."
+msgstr "Построены все этажи Гильдии магов"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCastleInfo.2"
-msgstr "Нельзя построить следующий этаж."
+msgstr "Нельзя построить следующий этаж"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCastleInfo.3"
-msgstr "Построить следующий этаж Гильдии магов "
+msgstr "Построить следующий этаж Гильдии магов"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 #, c-format
 msgid "table.gCastleInfo.4"
-msgstr "Постройка '%s' уже возведена"
+msgstr "Постройка «%s» уже возведена"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 #, c-format
 msgid "table.gCastleInfo.5"
-msgstr "Нельзя возвести постройку '%s'"
+msgstr "Нельзя возвести постройку «%s»"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 #, c-format
 msgid "table.gCastleInfo.6"
-msgstr "Нельзя возвести постройку '%s'"
+msgstr "Нельзя возвести постройку «%s»"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 #, c-format
 msgid "table.gCastleInfo.7"
-msgstr "Возвести постройку '%s'"
+msgstr "Возвести постройку «%s»"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCastleInfo.8"
@@ -3188,15 +3283,15 @@ msgstr "Герой вам не по карману."
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 #, c-format
 msgid "table.gCastleInfo.9"
-msgstr "Нельзя нанять - у вас уже %d героев."
+msgstr "Нельзя нанять: у вас уже %d героев"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCastleInfo.10"
-msgstr "Нельзя нанять - в этом городе у вас уже есть герой."
+msgstr "Нельзя нанять: в этом городе у вас уже есть герой"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCastleInfo.11"
-msgstr "Нанять нового героя "
+msgstr "Нанять нового героя"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCastleInfo.12"
@@ -3216,7 +3311,7 @@ msgstr "Варвар"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gClassNames.2"
-msgstr "Колдунья"
+msgstr "Волшебница"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gClassNames.3"
@@ -3228,7 +3323,7 @@ msgstr "синий"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gColorNames.1"
-msgstr "зеленый"
+msgstr "зелёный"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gColorNames.2"
@@ -3236,7 +3331,7 @@ msgstr "красный"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gColorNames.3"
-msgstr "желтый"
+msgstr "жёлтый"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gCombatHelp.0"
@@ -3249,12 +3344,12 @@ msgstr "Пропустить ход отряда"
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 #, c-format
 msgid "table.gCombatMessage.1"
-msgstr "%s - идти сюда."
+msgstr "%s — идти сюда"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 #, c-format
 msgid "table.gCombatMessage.2"
-msgstr "%s - перелететь сюда."
+msgstr "%s — перелететь сюда"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 #, c-format
@@ -3285,11 +3380,11 @@ msgstr "Нет стрел!"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gConventionalMemoryUnits.0"
-msgstr "Кб общей памяти "
+msgstr "КБ общей памяти"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gDifficultyNames.0"
-msgstr "Легкая"
+msgstr "Лёгкая"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gDifficultyNames.1"
@@ -3297,7 +3392,7 @@ msgstr "Обычная"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gDifficultyNames.2"
-msgstr "Тяжелая"
+msgstr "Тяжёлая"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gDifficultyNames.3"
@@ -3305,99 +3400,99 @@ msgstr "Эксперт"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gDwellingDescriptions.0"
-msgstr "В Мазанке покупают крестьян."
+msgstr "\nВ Мазанке покупают крестьян."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gDwellingDescriptions.1"
-msgstr "На Стрельбище покупают лучников."
+msgstr "\nНа Стрельбище покупают лучников."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gDwellingDescriptions.2"
-msgstr "В Кузнице покупают копейщиков."
+msgstr "\nВ Кузнице покупают копейщиков."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gDwellingDescriptions.3"
-msgstr "Оружейная позволяет покупать мечников."
+msgstr "\nОружейная позволяет покупать мечников."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gDwellingDescriptions.4"
-msgstr "На Ристалище покупают всадников."
+msgstr "\nНа Ристалище покупают всадников."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gDwellingDescriptions.5"
-msgstr "В Соборе покупают паладинов."
+msgstr "\nВ Соборе покупают паладинов."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gDwellingDescriptions.6"
-msgstr "В Древо-доме покупают фей."
+msgstr "\nВ Древо-доме покупают фей."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gDwellingDescriptions.7"
-msgstr "В Коттеджах покупают гномов."
+msgstr "\nВ Избушке покупают гномов."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gDwellingDescriptions.8"
-msgstr "На Стрельбище покупают эльфов."
+msgstr "\nНа Стрельбище покупают эльфов."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gDwellingDescriptions.9"
-msgstr "В Стоунхендже покупают друидов."
+msgstr "\nВ Стоунхендже покупают друидов."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gDwellingDescriptions.10"
-msgstr "В Загоне покупают единорогов."
+msgstr "\nВ Загоне покупают единорогов."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gDwellingDescriptions.11"
-msgstr "В Алой башне покупают фениксов."
+msgstr "\nВ Алой башне покупают фениксов."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gDwellingDescriptions.12"
-msgstr "В Хижине покупают гоблинов."
+msgstr "\nВ Хижине покупают гоблинов."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gDwellingDescriptions.13"
-msgstr "В Хибаре покупают орков."
+msgstr "\nВ Хибаре покупают орков."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gDwellingDescriptions.14"
-msgstr "В Логове покупают волков."
+msgstr "\nВ Логове покупают волков."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gDwellingDescriptions.15"
-msgstr "В Доме огров покупают огров."
+msgstr "\nВ Доме огров покупают огров."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gDwellingDescriptions.16"
-msgstr "Под Мостом покупают троллей."
+msgstr "\nПод мостом покупают троллей."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gDwellingDescriptions.17"
-msgstr "В Пирамиде покупают циклопов."
+msgstr "\nВ Пирамиде покупают циклопов."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gDwellingDescriptions.18"
-msgstr "В Пещере покупают кентавров."
+msgstr "\nВ Пещере покупают кентавров."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gDwellingDescriptions.19"
-msgstr "В Крипте покупают горгулий."
+msgstr "\nВ Крипте покупают горгулий"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gDwellingDescriptions.20"
-msgstr "В Гнезде покупают грифонов."
+msgstr "\nВ Гнезде покупают грифонов."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gDwellingDescriptions.21"
-msgstr "В Лабиринте покупают Минотавров."
+msgstr "\nВ Лабиринте покупают минотавров."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gDwellingDescriptions.22"
-msgstr "В Болоте покупают гидр."
+msgstr "\nВ Болоте покупают гидр."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gDwellingDescriptions.23"
-msgstr "В Черной башне покупают драконов."
+msgstr "\nВ Чёрной башне покупают драконов."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gDwellingNames.0"
@@ -3493,7 +3588,7 @@ msgstr "Болото"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gDwellingNames.23"
-msgstr "Черная башня"
+msgstr "Чёрная башня"
 
 #: src/EDITOR/EDITOR.cpp
 msgid "table.gEditAreaHelp.1"
@@ -3561,209 +3656,209 @@ msgstr "Использовать генератор случайных карт.
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.0"
-msgstr "Алхимик\n\nВы стали хозяином лаборатории местного алхимика. Она будет приносить вам по 1 единице ртути в день."
+msgstr "Лаборатория алхимика\n\nВы установили контроль над лабораторией местного алхимика. Теперь она будет приносить в вашу казну по 1 единице ртути в день."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 #, c-format
 msgid "table.gEventText.1"
-msgstr "Указатель\n\nНа указателе написано:\n\n%s находится неподалеку отсюда."
+msgstr "Указательный столб\n\nНадпись на указателе гласит:\n\n%s находится неподалёку отсюда."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.2"
-msgstr "Буй\n\nВаши спутники замечают морской буй. Он указывает верный курс."
+msgstr "Ваши воины замечают навигационный буй, а это значит, что корабль следует верным курсом."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.3"
-msgstr "Буй\n\nВаши спутники замечают морской буй. Он указывает верный курс, и это повышает их мораль."
+msgstr "Ваши воины замечают навигационный буй, а это значит, что корабль следует верным курсом. Ваш капитанский талант поднимает боевой дух армии."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.4"
-msgstr "Влага оседает на стенах и тонкими струйками стекает на землю. Повсюду видны следы побоища, но больше в пещере ничего нет."
+msgstr "Осевшая на стенах влага тонкими струйками стекает на землю. Повсюду видны следы жестокого побоища, но больше в пещере ничего нет."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.5"
-msgstr "Огромный демон выступает из тени, и вы бросаетесь в атаку. Победив в нелегком поединке, вы получаете 1000 очков опыта."
+msgstr "Внезапно из темноты выскакивает огромный демон, и вы сразу же бросаетесь в атаку. В изнуряющем поединке вы одолеваете свирепого демона, при этом получаете 1000 очков опыта."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.6"
-msgstr "Огромный демон выступает из тени, и вы бросаетесь в атаку. Победив в нелегком поединке, вы поучаете 1000 очков опыта и волшебный артефакт."
+msgstr "Внезапно из темноты выскакивает огромный демон, и вы сразу же бросаетесь в атаку. В изнуряющем поединке вы одолеваете свирепого демона, при этом получаете 1000 очков опыта и артефакт в качестве трофея."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.7"
-msgstr "Огромный демон выступает из тени, и вы бросаетесь в атаку. Победив в нелегком поединке, вы получаете 1000 очков опыта и 2500 золотых."
+msgstr "Внезапно из темноты выскакивает огромный демон, и вы сразу же бросаетесь в атаку. В изнуряющем поединке вы одолеваете свирепого демона, при этом получаете 1000 очков опыта и 2500 золотых в качестве трофея."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.8"
-msgstr "Вы попали в плен к огромному демону. Он предлагает вам свободу в обмен на 2500 золотых. Если вы откажетесь, он сожрет вас. Будете платить?"
+msgstr "Один неловкий шаг — и вы оказываетесь в плену у огромного демона. Он предлагает вам свободу в обмен на 2500 золотых. Если вы откажетесь, он тотчас же сожрёт вас. Будете платить?"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.9"
-msgstr "Поняв, что у вас нет 2500 золотых, демон вонзает в вас свои жуткие когти. Ваш взор застилает кровавая пелена и мир погружается во тьму."
+msgstr "Поняв, что у вас нет 2500 золотых, демон мгновенно вонзает в вас свои острые когти, и ваш взор застилает багровый туман."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.10"
-msgstr "Пещера демона\n\nИз пещеры веет промозглой затхлостью. Два огромных красных глаза светятся во тьме. Желаете войти внутрь?"
+msgstr "Пещера демона\n\nИз глубины таинственной пещеры веет промозглой затхлостью. Два огромных красных глаза зловеще сверкают во тьме. Желаете войти внутрь?"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.11"
-msgstr "Ларец\n\nОбследовав окрестности, вы находите клад. Вы можете взять золото или раздать его крестьянам в обмен на опыт. Хотите взять золото?"
+msgstr "Сундук с сокровищами\n\nТщательно прочесав окрестности, вы в конце концов находите тайник и с жадностью набрасываетесь на его золотые сокровища. Вы можете забрать золото себе или же раздать его крестьянам в обмен на опыт. Хотите взять золото?"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.12"
-msgstr "Кольцо фейри\n\nВаше войско вступает внутрь кольца фейри, но ничего не происходит."
+msgstr "Кольцо фейри\n\nВы снова вступаете внутрь мистического кольца фейри, однако ничего не происходит."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.13"
-msgstr "Кольцо фейри\n\nВаше войско вступает внутрь кольца фейри, чары которого принесут вам удачу в грядущем сражении."
+msgstr "Кольцо фейри\n\nВаше войско вступает внутрь мистического кольца фейри, и оно наделяет вас удачей, так необходимой в грядущем сражении."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.14"
-msgstr "Костер\n\nОбыскав вражеский лагерь, вы находите спрятанный клад."
+msgstr "Бивачный костёр\n\nОсторожно обыскивая вражеский бивак, вы находите спрятанный клад."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.15"
-msgstr "Фонтан\n\nВы припадаете к струям волшебного фонтана, но ничего не происходит."
+msgstr "Фонтан\n\nВы снова вступаете внутрь мистического кольца фейри, однако ничего не происходит."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.16"
-msgstr "Фонтан\n\nБлагоуханная влага волшебного фонтана принесет вам удачу в грядущем сражении."
+msgstr "Фонтан\n\nВаше войско вступает внутрь мистического кольца фейри, и оно наделяет вас удачей, так необходимой в грядущем сражении."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.17"
-msgstr "Беседка\n\nНа ступенях беседки появляется старый рыцарь. \"Мне жаль, храбрый воин, но я уже научил тебя всему, что знаю сам.\""
+msgstr "Беседка\n\nНа ступенях знакомой вам беседки появляется старый рыцарь: «Сожалею, мой верный вассал, но я уже научил тебя всему, чему мог»."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.18"
-msgstr "Беседка\n\nНа ступенях беседки появляется старый рыцарь. \"О храбрый воин, я научу тебя всему, что знаю сам; пусть мой опыт поможет тебе в твоих странствиях.\""
+msgstr "Беседка\n\nНа ступенях увитой зеленью беседки появляется старый рыцарь: «О, мой верный вассал, я научу тебя всему, что знаю сам; пусть мой опыт поможет тебе в твоих странствиях»."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.19"
-msgstr "Лампа джинна\n\nВы находите засыпанную землей помятую и закопченную лампа. Хотите ее потереть?"
+msgstr "Волшебная лампа\n\nВы наталкиваетесь на помятую и потускневшую от времени волшебную лампу, наполовину засыпанную землёй. Хотите её потереть?"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.20"
-msgstr "Кладбище\n\nВы осторожно приближаетесь к захоронению древних воинов. Хотите вскрыть их могилы?"
+msgstr "Кладбище\n\nВы осторожно крадётесь к месту захоронения древних воинов. Хотите вскрыть и обыскать их могилы?"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.21"
-msgstr "Одержав победу над призраками, вы несколько часов подряд обыскиваете могилы, но ничего не находите. Ваш недостойный поступок отрицательно влияет на мораль войска."
+msgstr "Одержав победу над призраками, вы несколько часов подряд роетесь в могилах, но ничего не находите. Такой безнравственный поступок отрицательно сказывается на боевом духе вашего войска."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.22"
-msgstr "Одержав победу над призраками, вы обыскиваете могилы и удаляетесь с находкой!"
+msgstr "Одержав непростую победу над жуткими призраками, вы обыскиваете ветхие могилы и кое-что находите!"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.23"
-msgstr "Хижина\n\nГруппа гоблинов в поисках славы желает примкнуть к вашему войску. Согласны ли вы принять их?"
+msgstr "Соломенная хижина\n\nГруппа гоблинов в поисках большей славы желает присоединиться к вашему войску. Согласны ли вы принять их?"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.24"
-msgstr "Вы не можете принять новых рекрутов в свое войско, его ряды полны."
+msgstr "Вы не можете принять новых рекрутов, так как все ряды вашего войска уже заполнены."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.25"
-msgstr "Хижина\n\nПриблизившись к жилищу гоблинов, вы обнаруживаете, что оно пустует."
+msgstr "Соломенная хижина\n\nПриблизившись к жилищу гоблинов, вы замечаете, что там никого нет."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.26"
-msgstr "Мазанка\n\nГруппа крестьян в поисках славы желает примкнуть к вашему войску. Согласны ли вы принять их? "
+msgstr "Летняя изба\n\nГруппа крестьян в поисках большей славы желает присоединиться к вашему войску. Согласны ли вы принять их?"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.27"
-msgstr "Вы не можете принять новых рекрутов в свое войско, его ряды полны."
+msgstr "Вы не можете принять новых рекрутов, так как все ряды вашего войска уже заполнены."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.28"
-msgstr "Мазанка\n\nПриблизившись к жилищу крестьян, вы обнаруживаете, что оно пустует."
+msgstr "Летняя изба\n\nПриблизившись к жилищу крестьян, вы замечаете, что там никого нет."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.29"
-msgstr "Избушка\n\nГруппа лучников в поисках славы желает примкнуть к вашему войску. Согласны ли вы принять их?"
+msgstr "Сруб\n\nГруппа лучников в поисках большей славы желает присоединиться к вашему войску. Согласны ли вы принять их?"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.30"
-msgstr "Вы не можете принять новых рекрутов в свое войско, его ряды полны."
+msgstr "Вы не можете принять новых рекрутов, так как все ряды вашего войска уже заполнены."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.31"
-msgstr "Избушка\n\nПриблизившись к жилищу лучников, вы обнаруживаете, что оно пустует."
+msgstr "Сруб\n\nПриблизившись к жилищу лучников, вы замечаете, что там никого нет."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.32"
-msgstr "Избушка\n\nГруппа гномов в поисках славы желает примкнуть к вашему войску. Согласны ли вы принять их?"
+msgstr "Избушка\n\nГруппа гномов в поисках большей славы желает присоединиться к вашему войску. Согласны  ли вы принять их?"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.33"
-msgstr "Вы не можете принять новых рекрутов в свое войско, его ряды полны."
+msgstr "Вы не можете принять новых рекрутов, так как все ряды вашего войска уже заполнены."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.34"
-msgstr "Избушка\n\nПриблизившись к жилищу гномов, вы обнаруживаете, что оно пустует."
+msgstr "Избушка\n\nПриблизившись к жилищу гномов, вы замечаете, что там никого нет."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.35"
-msgstr "Мазанка\n\nГруппа крестьян в поисках славы желает примкнуть к вашему войску. Согласны ли вы принять их?"
+msgstr "Зимняя изба\n\nГруппа крестьян в поисках большей славы желает присоединиться к вашему войску. Согласны ли вы принять их?"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.36"
-msgstr "Вы не можете принять новых рекрутов в свое войско, его ряды полны."
+msgstr "Вы не можете принять новых рекрутов, так как все ряды вашего войска уже заполнены."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.37"
-msgstr "Мазанка\n\nПриблизившись к жилищу крестьян, вы обнаруживаете, что оно пустует."
+msgstr "Зимняя изба\n\nПриблизившись к жилищу крестьян, вы замечаете, что там никого нет."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.38"
-msgstr "Город драконов\n\nВы подошли к Городу драконов, славному своими богатствами и неисчислимыми опасностями. Вы хотите атаковать его?"
+msgstr "Город драконов\n\nВы с опаской подходите к городу драконов, известному своими несметными богатствами и в то же время серьёзными опасностями, которые поджидают всех посягателей. Хотите атаковать его?"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.39"
-msgstr "Вы одержали победу над могучими драконами. Отдавая должное вашей доблести, они готовы ежедневно платить в вашу казну по 1000 золотых и оборонять город от неприятелей."
+msgstr "Вы одержали сокрушительную победу над могущественными драконами! Отдавая должное вашей доблести, они готовы ежедневно платить в вашу казну по 1000 золотых, а также оборонять город от посягательств неприятеля."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.40"
-msgstr "Маяк\n\nТеперь маяк ваш, и все ваши корабли будут преодолевать большее расстояние за один ход."
+msgstr "Маяк\n\nТеперь маяк перешёл под ваш контроль, и все корабли вашего флота будут преодолевать большее расстояние за один ход."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.41"
-msgstr "Водяная мельница\n\nМельник обращается к вам со словами: \"Сожалею, господин, но сегодня золота у меня нет. Приходите на следующей неделе.\""
+msgstr "Водяная мельница\n\nХозяин мельницы с грустью сообщает вам: «Я очень сожалею, почтенный милорд, в данный момент золота нет в наличии. Зайдите, пожалуйста, на следующей неделе»."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.42"
-msgstr "Водяная мельница\n\nМельник обращается к вам со словами: \"Господин, я трудился в поте лица и прошу вас принять мою скромную лепту. Приходите на следующей неделе, и вы получите еще столько же.\""
+msgstr "Водяная мельница\n\nХозяин мельницы хвалится перед вами: «Милорд, я работаю не покладая рук, чтобы обеспечить вас этим золотом. Если вам нужно ещё, приходите на следующей неделе»."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.43"
-msgstr "Рудная шахта\n\nВы стали хозяином рудной шахты. Она будет приносить вам по 2 единицы руды в день."
+msgstr "Рудная шахта\n\nВы установили контроль над рудной шахтой. Теперь она будет приносить в вашу казну по 2 единицы руды в день."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.44"
-msgstr "Серные копи\n\nВы стали хозяином серных копей. Они будут приносить вам по 1 единице серы в день."
+msgstr "Серная шахта\n\nВы установили контроль над серной шахтой. Теперь она будет приносить в вашу казну по 1 единице серы в день."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.45"
-msgstr "Кристальная шахта\n\nВы стали хозяином кристальной шахты. Она будет приносить вам по одной мере кристаллов в день."
+msgstr "Кристальная шахта\n\nВы установили контроль над кристальной шахтой. Теперь она будет в вашу казну приносить по 1 единице кристаллов в день."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.46"
-msgstr "Самоцветная шахта\n\nВы стали хозяином самоцветной шахты. Она будет приносить вам по 1 единице самоцветов в день."
+msgstr "Самоцветная шахта\n\nВы установили контроль над самоцветной шахтой. Теперь она будет приносить в вашу казну по 1 единице самоцветов в день."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.47"
-msgstr "Золотая шахта\n\nВы стали хозяином золотой шахты. Она будет приносить вам по 1000 золотых в день."
+msgstr "Золотая шахта\n\nВы установили контроль над золотой шахтой. Теперь она будет в вашу казну приносить по 1000 единиц золота в день.\n\n"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 #, c-format
 msgid "table.gEventText.48"
-msgstr "Последователи\n\nГруппа %s в поисках славы желает примкнуть к вашему войску. Вы согласны принять их?"
+msgstr "Последователи\n\nГруппа %s в поисках большей славы желает присоединиться к вашему войску. Согласны ли вы принять их?"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.49"
-msgstr "Оскорбленные отказом быть принятыми в ваши ряды, они нападают на вас!"
+msgstr "Оскорблённые неожиданным отказом быть принятыми в ваши ряды, они нападают на вас!"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.50"
-msgstr "Обелиск\n\nПеред вами обелиск, высеченный из невиданного камня. Вы вглядываетесь в его гладкую поверхность и вдруг замечаете, что на ней начинают проступать таинственные знаки. Знаки складываются во фрагмент древней карты. Вы торопливо срисовываете его, и знаки исчезают так же внезапно, как и появились."
+msgstr "Обелиск\n\nВы наталкиваетесь на ветхий обелиск, высеченный из невиданного ранее камня. Пристально вглядываясь в гладкую поверхность камня, вы вдруг замечаете, как на ней проступают какие-то таинственные знаки. Похоже, они являются фрагментом древней затерянной карты. Вы торопливо перерисовываете его, и знаки исчезают так же внезапно, как и появились."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.51"
@@ -3771,110 +3866,111 @@ msgstr "Обелиск\n\nВы уже посещали этот обелиск."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.52"
-msgstr "Оазис\n\nВы находите оазис, но его колодец пересох, и вы удаляетесь ни с чем."
+msgstr "Оазис\n\nВ жаркой пустыне вы находите оазис, но, к сожалению, его водоём уже пересох. Вы понимаете, что придётся уйти ни с чем."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.53"
-msgstr "Оазис\n\nСтранствующий торговец, бредущий пешком, окликает вас и рассказывает, что его лошадь убежала и он остался один в чужом краю. В благодарность за помощь он приводит ваше войско к оазису, что повышает их мораль в грядущем сражении."
+msgstr "Оазис\n\nКочевник-торговец, одиноко бредущий пешком в жаркой пустыне, окликает вас и рассказывает, что его лошадь чего-то сильно испугалась и рванула галопом, выбросив его из седла. В обмен на обеспечение безопасной переправы он приводит ваше войско к очаровательному оазису, пребывание в котором поднимает его боевой дух."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 #, c-format
 msgid "table.gEventText.54"
-msgstr "Вы нашли ресурс (%s)."
+msgstr "Вы нашли ресурсы (%s)"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.55"
-msgstr "Лесопилка\n\nВы стали хозяином лесопилки. Она будет приносить вам по 2 единицы древесины в день."
+msgstr "Лесопилка\n\nВы установили контроль над лесопилкой. Теперь она будет приносить в вашу казну по 2 единицы древесины в день."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.56"
-msgstr "Оракул\n\nВнутри величественного храма восседает слепой оракул. Вы рассказываете ему о целях вашего похода, и он показывает вам сильные и слабые стороны ваших противников в волшебном хрустальном шаре."
+msgstr "Оракул\n\nВнутри богато украшенного святилища восседает слепой оракул. Вы рассказываете ему о целях вашего похода, и он, используя свой волшебный хрустальный шар, показывает вам сильные и слабые стороны ваших соперников."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.57"
-msgstr "Святилище\n\nВ центре небольшого храма, скрытого от чужих глаз, стоит старый деревянный алтарь. На алтаре покоится золотая пластина, на которой начертан секрет древнего магического заклинания "
+msgstr "Святилище\n\nВ глубине небольшого потаённого святилища находится старинный деревянный алтарь. Над алтарём висит золотая пластина, на которой начертан секрет древнего магического заклинания"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.58"
-msgstr "Разбитый корабль\n\nВолны прибили к скалам полузатонувший корпус большого пиратского корабля. Вы хотите заглянуть внутрь?"
+msgstr "Разбитый корабль\n\nГниющий остов большого пиратского корабля жутко поскрипывает, когда накатывает морская волна. Хотите заглянуть внутрь и обыскать обломки?"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.59"
-msgstr "Одержав победу над призраками, вы несколько часов подряд обыскиваете останки корабля, но ничего не находите. Ваш недостойный поступок отрицательно влияет на мораль войска."
+msgstr "Одержав победу над призраками, вы несколько часов подряд роетесь в обломках корабля, но ничего не находите. Такой безнравственный поступок отрицательно сказывается на боевом духе вашего войска."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.60"
-msgstr "Одержав победу над призраками, вы обыскиваете останки корабля и удаляетесь с находкой!"
+msgstr "Одержав непростую победу над жуткими призраками, вы обыскиваете старые обломки корабля и кое-что находите!"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.61"
-msgstr "Статуя\n\nНад вами возвышается огромная статуя ангела. Внезапно ангел открывает глаза, и ваши воины с радостью ощущают, что их мораль возрасла."
+msgstr "Статуя\n\nНад вами возвышается огромная статуя ангела. Внезапно каменный ангел открывает глаза, и ваше войско ощущает небывалый прилив боевого духа."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.62"
-msgstr "Статуя\n\nНад вами возвышается гигантская статуя ангела. Ваши воины окружают ее, но она остается мертвой и неподвижной."
+msgstr "Статуя\n\nНад вами возвышается огромная статуя ангела. Ваши воины окружают её, однако никакого чуда не происходит."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.63"
-msgstr "Шатры\n\nВаше внимание привлекает группа шатров, пологи которых трепещут на жарком ветру пустыни. В шатрах никого нет. Пройдет время, и быть может, сюда придет новый отряд кочевников."
+msgstr "Шатры\n\nВаше внимание привлекает группа потёртых шатров, пологи которых трепещут на жарком ветру пустыни. Однако в них никого нет. Возможно, кочевники появятся здесь со временем."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.64"
-msgstr "Шатры\n\nВаше внимание привлекает группа шатров, пологи которых трепещут на жарком ветру пустыни. Вы хотите принять в ваше войско отряд кочевников?"
+msgstr "Шатры\n\nВаше внимание привлекает группа потёртых шатров, пологи которых трепещут на жарком ветру пустыни. Желаете ли вы принять кочевников в ряды своего войска?"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.65"
-msgstr "Фургоны\n\nЯркие фургоны разбойников пусты. Пройдет время, и быть может, здесь обоснуется новая шайка."
+msgstr "Фургоны\n\nВ ярко раскрашенных фургонах никого нет. Возможно, разбойники обоснуются здесь позже."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.66"
-msgstr "Фургоны\n\nВдалеке слышится музыка и смех. Вы идете на эти звуки и находите  яркие фургоны, в которых живут разбойники. Вы хотите принять в ваше войско шайку разбойников?"
+msgstr "Фургоны\n\nМузыка и смех, доносящиеся издалека, приводят вас к ярко раскрашенным фургонам, в которых проживают разбойники. Желаете ли вы пополнить ими ряды своего войска?"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.67"
-msgstr "Водоворот\n\nВаш корабль попадает в водоворот. Часть вашего войска исчезает в пучине."
+msgstr "Водоворот\n\nВаш корабль засасывает в водоворот. Часть войска падает за борт."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.68"
-msgstr "Ветряная мельница\n\nМельник обращается к вам со словами: \"Сожалею, господин, но сегодня у меня ничего нет. Приходите на следующей неделе.\""
+msgstr "Ветряная мельница\n\nХозяин мельницы с грустью сообщает вам: «Я очень сожалею, почтенный милорд, в данный момент ресурсов нет в наличии. Зайдите, пожалуйста, на следующей неделе»."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.69"
-msgstr "Ветряная мельница\n\n Мельник обращается к вам со словами: \"Господин, я работал не покладая рук, и прошу вас принять мой скромный дар. Приходите на следующей неделе, у меня опять найдется, чем вас порадовать.\""
+msgstr "Ветряная мельница\n\nХозяин мельницы хвалится перед вами: «Милорд, я работаю не покладая рук, чтобы обеспечить вас этими ресурсами. Если вам нужны ещё, приходите на следующей неделе»."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.70"
-msgstr "Артефакт\n\nВы находите древний артефакт. Вы направляетесь к нему, но дорогу вам преграждает шайка разбойников, готовых драться за свою добычу."
+msgstr "Артефакт\n\nНеожиданно на дороге вы находите древний артефакт. Вы протягиваете руку, чтобы забрать его, но внезапно из кустов выскакивает шайка разбойников, готовая сражаться до последней капли крови за награбленное добро."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 #, c-format
 msgid "table.gEventText.71"
-msgstr "Артефакт\n\nМаленький лепрекон предлагает вам %s в обмен на 2000 золотых. Вы хотите приобрести артефакт?"
+msgstr "Артефакт\n\nХитроумный лепрекон предлагает вам артефакт «%s» в обмен на скромные 2000 золотых. Вы хотите приобрести его?"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.72"
-msgstr "Оскорбленный вашим отказом от такой выгодной сделки лепрекон в гневе топает ножкой и исчезает."
+msgstr "Оскорблённый отказом от такого щедрого предложения маленький старичок в гневе топает ножкой и бесследно исчезает."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.73"
-msgstr "Вы достаете кошель, но вдруг обнаруживаете, что у вас нет 2000 золотых. Лепрекон топает ножкой и с презрением поворачивается к вам спиной."
+msgstr "Вы достаёте кошель, но вдруг обнаруживаете, что у вас нет 2000 золотых. Недовольный лепрекон топает ножкой и с презрением поворачивается к вам спиной."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 #, c-format
 msgid "table.gEventText.74"
-msgstr "Перебив разбойников, вы обыскиваете их трупы и обнаруживаете %s."
+msgstr "Перебив дерзких разбойников, вы обыскиваете их трупы и забираете артефакт «%s»."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gEventText.75"
-msgstr "Скелет\n\nВы обнаруживаете останки незадачливого искателя приключений. Пошарив в груде лохмотьев, прикрывающих скелет, вы ничего не находите."
+msgstr "Скелет\n\nВы наталкиваетесь на останки незадачливого искателя приключений. Пошарив в груде истлевших лохмотьев, прикрывающих скелет, вы ничего находите."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
 msgid "table.gEventText.76"
-msgstr "Скелет\n\nВы обнаруживаете останки незадачливого искателя приключений. Пошарив в груде лохмотьев, вы находите"
+msgstr "Скелет\n\nВы наталкиваетесь на останки незадачливого искателя приключений. Пошарив в груде истлевших лохмотьев, прикрывающих скелет, вы, к своему удивлению, находите артефакт «%s»"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gExtendedMemoryUnits.0"
-msgstr "Кб верхней памяти (XMS или EMS) и"
+msgstr "КБ верхней памяти (XMS или EMS) и"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gGameTypeHelp.0"
@@ -3902,15 +3998,15 @@ msgstr "Чел.-"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gHandicapNames.1"
-msgstr "Чел.-Легкая игра"
+msgstr "Чел.-Лёгкий"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gHandicapNames.2"
-msgstr "Чел.-Обычная игра"
+msgstr "Чел.-Обычный"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gHandicapNames.3"
-msgstr "Чел.-Тяжелая игра"
+msgstr "Чел.-Тяжёлый"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gHandicapNames.4"
@@ -3919,16 +4015,16 @@ msgstr "Чел.-Эксперт"
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 #, c-format
 msgid "table.gHeroLevel.0"
-msgstr "%s получает"
+msgstr "%s получает\n"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gHeroLevel.1"
-msgstr " уровень опыта.\n"
+msgstr "уровень опыта.\n"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 #, c-format
 msgid "table.gHeroLevel.2"
-msgstr " %d уровня опыта.\n"
+msgstr "%d уровня опыта.\n"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gHeroNames.0.0"
@@ -4225,7 +4321,7 @@ msgstr "Обзор королевства"
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 #, c-format
 msgid "table.gHeroScreen.1"
-msgstr "%s - информация"
+msgstr "%s — информация"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gHeroScreen.2"
@@ -4285,16 +4381,16 @@ msgstr "Показать заклинания"
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 #, c-format
 msgid "table.gHeroScreen.15"
-msgstr "Описание артефакта '%s'"
+msgstr "Описание артефакта «%s»"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 #, c-format
 msgid "table.gHeroScreen.16"
-msgstr "%s %s будет уволен(а)?"
+msgstr "Уволить %s %s"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gHeroScreen.17"
-msgstr "Закрыть экрана героя"
+msgstr "Закрыть экран героя"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gHeroScreen.18"
@@ -4306,15 +4402,15 @@ msgstr "Человек\n"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gHumanPlayerTypeNames.1"
-msgstr "Человек\nЛегкая игра"
+msgstr "Человек\nЛёгкий"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gHumanPlayerTypeNames.2"
-msgstr "Человек\nОбычная игра"
+msgstr "Человек\nОбычный"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gHumanPlayerTypeNames.3"
-msgstr "Человек\nТяжелая игра"
+msgstr "Человек\nТяжёлый"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gHumanPlayerTypeNames.4"
@@ -4326,7 +4422,7 @@ msgstr "Начать одиночную или сетевую игру."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gInitMenuHelp.1"
-msgstr "Загрузить сохраненную игру."
+msgstr "Загрузить сохранённую игру."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gInitMenuHelp.2"
@@ -4338,7 +4434,7 @@ msgstr "Посмотреть список авторов."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gInitMenuHelp.4"
-msgstr "Выйти из Героев Меча и Магии и вернуться в систему."
+msgstr "Выйти из «Героев Меча и Магии» и вернуться в систему."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gLuckInfoText.0"
@@ -4350,28 +4446,28 @@ msgstr "Обычная удача\n\nС обычной удачей ваше в�
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gLuckInfoText.2"
-msgstr "Плохая удача\n\nЕсли вашему войску не везет, урон, наносимый  отдельными отрядами на поле боя, может оказаться вдвое меньше обычного."
+msgstr "Плохая удача\n\nЕсли вашему войску не везёт, урон, наносимый  отдельными отрядами на поле боя, может оказаться вдвое меньше обычного."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 #, c-format
 msgid "table.gLuckInfoText.3"
-msgstr "%s\n\n\nТекущие компоненты удачи:"
+msgstr "%s\n\nТекущие модификаторы удачи:\n"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gLuckInfoText.4"
-msgstr "\nЛапка кролика +1"
+msgstr "\nКроличья лапка +1"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gLuckInfoText.5"
-msgstr "\nПодкова +1"
+msgstr "\nЗолотая подкова +1"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gLuckInfoText.6"
-msgstr "\nМонета +1"
+msgstr "\nСчастливая монета +1"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gLuckInfoText.7"
-msgstr "\nКлевер +1"
+msgstr "\nЧетырёхлистный клевер +1"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gLuckInfoText.8"
@@ -4383,11 +4479,11 @@ msgstr "\nФонтан +1"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gLuckInfoText.10"
-msgstr "\nнет"
+msgstr "\nНет"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gLuckInfoText.11"
-msgstr "\nСимвол неудачи -3"
+msgstr "\nФизбин неудачи -3"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gLuckText.0"
@@ -4419,7 +4515,7 @@ msgstr "Божественная"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gMapDifficultyNames.0"
-msgstr "Легкая"
+msgstr "Лёгкая"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gMapDifficultyNames.1"
@@ -4427,7 +4523,7 @@ msgstr "Обычная"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gMapDifficultyNames.2"
-msgstr "Тяжелая"
+msgstr "Тяжёлая"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gMapDifficultyNames.3"
@@ -4455,7 +4551,7 @@ msgstr "Не хватает памяти"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gMemoryRequirements.0"
-msgstr "Игре Герои Меча и Магии требуется как минимум:"
+msgstr "Игре «Герои Меча и Магии» требуется как минимум:"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gMineNames.0"
@@ -4483,7 +4579,7 @@ msgstr "Самоцветная шахта"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gMineNames.6"
-msgstr "Золотоносная шахта"
+msgstr "Золотая шахта"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gMonthNames.0"
@@ -4531,7 +4627,7 @@ msgstr "Высокая мораль\n\nВысокая мораль может д
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gMoraleInfoText.1"
-msgstr "Обычная мораль\n\nС обычной моралью ваши армии никогда не получат дополнительную атаку и не будут прокляты."
+msgstr "Обычная мораль\n\nС обычной моралью ваши армии никогда не получат дополнительную атаку, но и не пропустят ход."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gMoraleInfoText.2"
@@ -4540,7 +4636,7 @@ msgstr "Низкая мораль\n\nНизкая мораль может при
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 #, c-format
 msgid "table.gMoraleInfoText.3"
-msgstr "%s\n\n\nМодификаторы морали:"
+msgstr "%s\n\nТекущие модификаторы морали:\n"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gMoraleInfoText.4"
@@ -4561,31 +4657,31 @@ msgstr "\nВоины 4 рас -2"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gMoraleInfoText.8"
-msgstr "\nМедаль отваги +1"
+msgstr "\nМедаль «За доблесть» +1"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gMoraleInfoText.9"
-msgstr "\nМедаль мужества +1"
+msgstr "\nМедаль «За отвагу» +1"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gMoraleInfoText.10"
-msgstr "\nМедаль доблести +1"
+msgstr "\nМедаль Почёта +1"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gMoraleInfoText.11"
-msgstr "\nМедаль почета +1"
+msgstr "\nМедаль «За отличие» +1"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gMoraleInfoText.12"
-msgstr "\nСимвол неудачи -3"
+msgstr "\nФизбин неудачи -3"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gMoraleInfoText.13"
-msgstr "\nПосещен буй +1"
+msgstr "\nПосещён буй +1"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gMoraleInfoText.14"
-msgstr "\nПосещен оазис +1"
+msgstr "\nПосещён оазис +1"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gMoraleInfoText.15"
@@ -4642,31 +4738,31 @@ msgstr "Кровавая!"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gNeutralBuildingDescriptions.0"
-msgstr "Гильдия магов позволяет разучивать новые заклинания."
+msgstr "\nГильдия магов позволяет разучивать новые заклинания."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gNeutralBuildingDescriptions.1"
-msgstr "Гильдия воров дает информацию о врагах. Также, Гильдия воров дает разведывательную информацию о вражеских городах.  Дополнительные гильдии дают дополнительную информацию."
+msgstr "\nГильдия воров даёт информацию о врагах. Также Гильдия воров даёт разведывательную информацию о вражеских городах. Дополнительные гильдии дают дополнительную информацию."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gNeutralBuildingDescriptions.2"
-msgstr "Таверна увеличивает мораль бойцов, защищающих замок."
+msgstr "\nТаверна увеличивает мораль бойцов, защищающих замок."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gNeutralBuildingDescriptions.3"
-msgstr "Верфь позволяет строить корабли."
+msgstr "\nВерфь позволяет строить корабли."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gNeutralBuildingDescriptions.4"
-msgstr "Колодец увеличивает прирост всех воинов на 2 в неделю."
+msgstr "\nКолодец увеличивает прирост всех воинов на 2 в неделю."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gNeutralBuildingDescriptions.5"
-msgstr "Шатры дают рабочих, которые могут возвести замок."
+msgstr "\nШатры дают рабочих, которые могут возвести замок."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gNeutralBuildingDescriptions.6"
-msgstr "Замок улучшает защиту города и увеличивает доход."
+msgstr "\nЗамок улучшает защиту города и увеличивает доход."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gNeutralBuildingNames.0"
@@ -4706,15 +4802,15 @@ msgstr "Вернуться в главное меню."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gNewGameHelp.2"
-msgstr "Бросить вызов 'Царь горы' компьютерным игрокам. Ваша наглая выходка оскорбит компьютерных игроков и они, оставив друг друга в покое, будут стремиться разгромить вас в прах."
+msgstr "Бросить вызов «Царь горы» компьютерным игрокам. Ваша наглая выходка оскорбит компьютерных игроков и они, оставив друг друга в покое, будут стремиться разгромить вас в прах."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gNewGameHelp.3"
-msgstr "Выберите сценарий, на котором хотите играть."
+msgstr "Выберите сценарий, в который хотите играть."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gNewGameHelp.4"
-msgstr "Изменить начальную сложность игры. Чем больший уровень сложности вы выберете, тем с меньшим количеством ресурсов вы начнете игру."
+msgstr "Изменить начальную сложность игры. Чем выше уровень сложности вы выберете, тем с меньшим количеством ресурсов вы начнёте игру."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gNewGameHelp.5"
@@ -4726,11 +4822,11 @@ msgstr "Изменить цвет вашего знамени."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gNewGameHelp.7"
-msgstr "Уровень сложности отражает соотношение различных параметров игры. Указанное количество очков будет прибавлено к вашему финальному счету."
+msgstr "Уровень сложности отражает соотношение различных параметров игры. Указанное количество очков будет прибавлено к вашему финальному счёту."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gNewGameHelp.8"
-msgstr "Изменить стартовую сложность игры другого игрока. Чем больший уровень сложности вы выберете, тем с меньшим количеством ресурсов вы начнете игру."
+msgstr "Изменить стартовую сложность игры другого игрока. Чем выше уровень сложности вы выберете, тем с меньшим количеством ресурсов он начнёт игру."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 #, c-format
@@ -4740,7 +4836,7 @@ msgstr "%s игрок, у вас осталось всего %d дней на т
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 #, c-format
 msgid "table.gNewTurnText.1"
-msgstr "%s игрок, настал последний день, когда вы еще можете завоевать себе город; в противном случае вы будете навеки изгнаны из страны."
+msgstr "%s игрок, настал последний день, когда вы ещё можете завоевать себе город; в противном случае вы будете навеки изгнаны из страны."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 #, c-format
@@ -4772,7 +4868,7 @@ msgstr "Лаборатория алхимика"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gObjectNames.2"
-msgstr "Указатель"
+msgstr "Указательный столб"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gObjectNames.3"
@@ -4788,7 +4884,7 @@ msgstr "Пещера демона"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gObjectNames.6"
-msgstr "Ларец с сокровищами"
+msgstr "Сундук с сокровищами"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gObjectNames.7"
@@ -4796,7 +4892,7 @@ msgstr "Кольцо фейри"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gObjectNames.8"
-msgstr "Костер"
+msgstr "Бивачный костёр"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gObjectNames.9"
@@ -4808,7 +4904,7 @@ msgstr "Беседка"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gObjectNames.11"
-msgstr "Древняя лампа"
+msgstr "Волшебная лампа"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gObjectNames.12"
@@ -4816,23 +4912,23 @@ msgstr "Кладбище"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gObjectNames.13"
-msgstr "Лачуга"
+msgstr "Соломенная хижина"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gObjectNames.14"
-msgstr "Дом"
+msgstr "Летняя изба"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gObjectNames.15"
-msgstr "Будка"
+msgstr "Сруб"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gObjectNames.16"
-msgstr "Хижина"
+msgstr "Избушка"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gObjectNames.17"
-msgstr "Хижина"
+msgstr "Зимняя изба"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gObjectNames.18"
@@ -4852,7 +4948,7 @@ msgstr "Таверна 4"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gObjectNames.22"
-msgstr "Драконий город"
+msgstr "Город драконов"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gObjectNames.23"
@@ -4896,7 +4992,7 @@ msgstr "Лесопилка"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gObjectNames.33"
-msgstr "Святилище"
+msgstr "Оракул"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gObjectNames.34"
@@ -4904,7 +5000,7 @@ msgstr "Святилище"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gObjectNames.35"
-msgstr "Кораблекрушение"
+msgstr "Разбитый корабль"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gObjectNames.36"
@@ -5009,7 +5105,7 @@ msgstr "Обзор королевства     Месяц: %d, Неделя: %d, 
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gOverviewText.1"
-msgstr "Ваш Драконий город."
+msgstr "Ваш Город драконов."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gOverviewText.2"
@@ -5077,7 +5173,7 @@ msgstr "Сложность:"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gScoreLabels.3"
-msgstr "Счет:"
+msgstr "Счёт:"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gScoreLabels.4"
@@ -5085,11 +5181,11 @@ msgstr "Ранг:"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSetupBaudHelp.0"
-msgstr "Скорость соединения 2400 бод. \n\nДля модемов со скоростью 14400 бод используйте скорость 19200 бод. Для модемов со скоростью 28800 бод используйте скорость 38400 бод."
+msgstr "Скорость соединения 2400 бод.\n\nДля модемов со скоростью 14400 бод используйте скорость 19200 бод. Для модемов со скоростью 28800 бод используйте скорость 38400 бод."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSetupBaudHelp.1"
-msgstr "Скорость соединения 9600 бод. \n\nДля модемов со скоростью 14400 бод используйте скорость 19200 бод. Для модемов со скоростью 28800 бод используйте скорость 38400 бод."
+msgstr "Скорость соединения 9600 бод.\n\nДля модемов со скоростью 14400 бод используйте скорость 19200 бод. Для модемов со скоростью 28800 бод используйте скорость 38400 бод."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSetupBaudHelp.2"
@@ -5125,19 +5221,19 @@ msgstr "Отменить и вернуться в главное меню."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSetupComPortHelp.0"
-msgstr "Использовать порт COM 1 для модемного соединения."
+msgstr "Использовать порт COM1 для модемного соединения."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSetupComPortHelp.1"
-msgstr "Использовать порт COM 2 для модемного соединения."
+msgstr "Использовать порт COM2 для модемного соединения."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSetupComPortHelp.2"
-msgstr "Использовать порт COM 3 для модемного соединения."
+msgstr "Использовать порт COM3 для модемного соединения."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSetupComPortHelp.3"
-msgstr "Использовать порт COM 4 для модемного соединения."
+msgstr "Использовать порт COM4 для модемного соединения."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSetupComPortHelp.4"
@@ -5145,39 +5241,39 @@ msgstr "Отменить и вернуться в главное меню."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSetupDCBaudHelp.0"
-msgstr "Скорость соединения 2400 бод. \n\nДля компьютеров с устаревшим чипом UART 8250 следует использовать скорость 19200 бод, а для компьютеров с более современным чипом UART 16550 - скорость 38400 бод. Если вы не уверены, какой у вас чип, начните с более низких скоростей. В большинстве компьютеров, произведенных в 1994 году и позднее, используется чип UART 16550."
+msgstr "Скорость соединения 2400 бод.\n\nДля компьютеров с устаревшим чипом UART 8250 следует использовать скорость 19200 бод, а для компьютеров с более современным чипом UART 16550 — скорость 38400 бод. Если вы не уверены, какой у вас чип, начните с более низких скоростей. В большинстве компьютеров, произведённых в 1994 году и позднее, используется чип UART 16550."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSetupDCBaudHelp.1"
-msgstr "Скорость соединения 9600 бод. \n\n Для компьютеров с устаревшим чипом UART 8250 следует использовать скорость 19200 бод, а для компьютеров с более современным чипом UART 16550 - скорость 38400 бод. Если вы не уверены, какой у вас чип, начните с более низких скоростей. В большинстве компьютеров, произведенных в 1994 году и позднее, используется чип UART 16550."
+msgstr "Скорость соединения 9600 бод.\n\nДля компьютеров с устаревшим чипом UART 8250 следует использовать скорость 19200 бод, а для компьютеров с более современным чипом UART 16550 — скорость 38400 бод. Если вы не уверены, какой у вас чип, начните с более низких скоростей. В большинстве компьютеров, произведённых в 1994 году и позднее, используется чип UART 16550."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSetupDCBaudHelp.2"
-msgstr "Скорость соединения 19200 бод.\n\n Для компьютеров с устаревшим чипом UART 8250 следует использовать скорость 19200 бод, а для компьютеров с более современным чипом UART 16550 - скорость 38400 бод. Если вы не уверены, какой у вас чип, начните с более низких скоростей. В большинстве компьютеров, произведенных в 1994 году и позднее, используется чип UART 16550."
+msgstr "Скорость соединения 19200 бод.\n\nДля компьютеров с устаревшим чипом UART 8250 следует использовать скорость 19200 бод, а для компьютеров с более современным чипом UART 16550 — скорость 38400 бод. Если вы не уверены, какой у вас чип, начните с более низких скоростей. В большинстве компьютеров, произведённых в 1994 году и позднее, используется чип UART 16550."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSetupDCBaudHelp.3"
-msgstr "Скорость соединения 38400 бод.\n\n Для компьютеров с устаревшим чипом UART 8250 следует использовать скорость 19200 бод, а для компьютеров с более современным чипом UART 16550 - скорость 38400 бод. Если вы не уверены, какой у вас чип, начните с более низких скоростей. В большинстве компьютеров, произведенных в 1994 году и позднее, используется чип UART 16550."
+msgstr "Скорость соединения 38400 бод.\n\nДля компьютеров с устаревшим чипом UART 8250 следует использовать скорость 19200 бод, а для компьютеров с более современным чипом UART 16550 — скорость 38400 бод. Если вы не уверены, какой у вас чип, начните с более низких скоростей. В большинстве компьютеров, произведённых в 1994 году и позднее, используется чип UART 16550."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSetupDCBaudHelp.4"
-msgstr "Отменить и вернуться в главное меню. "
+msgstr "Отменить и вернуться в главное меню."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSetupDCComPortHelp.0"
-msgstr "Использовать порт COM 1 для прямого соединения."
+msgstr "Использовать порт COM1 для прямого соединения."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSetupDCComPortHelp.1"
-msgstr "Использовать порт COM 2 для прямого соединения."
+msgstr "Использовать порт COM2 для прямого соединения."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSetupDCComPortHelp.2"
-msgstr "Использовать порт COM 3 для прямого соединения."
+msgstr "Использовать порт COM3 для прямого соединения."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSetupDCComPortHelp.3"
-msgstr "Использовать порт COM 4 для прямого соединения."
+msgstr "Использовать порт COM4 для прямого соединения."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSetupDCComPortHelp.4"
@@ -5185,7 +5281,7 @@ msgstr "Отменить и вернуться в главное меню."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSetupDCGameHelp.0"
-msgstr "Хост задает настройки игры."
+msgstr "Хост задаёт настройки игры."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSetupDCGameHelp.1"
@@ -5217,7 +5313,7 @@ msgstr "Отменить и вернуться в главное меню."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSetupHotSeatGameHelp.0"
-msgstr "Играть с 2 людьми и, опционально, до 2 дополнительных компьютерных игроков."
+msgstr "Играть с 2 людьми и, опционально, с 1 или 2 компьютерными игроками."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSetupHotSeatGameHelp.1"
@@ -5257,11 +5353,11 @@ msgstr "Играть по локальной сети, где машины 2 и�
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSetupMultiPlayerGameHelp.2"
-msgstr "Играть по модему, где 2 игрока используют свои компьютеры, соединенные между собой по телефонной линии с использованием модема."
+msgstr "Играть по модему, где два игрока используют свои компьютеры, соединённые между собой по телефонной линии с использованием модема."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSetupMultiPlayerGameHelp.3"
-msgstr "Играть через прямое соединение, где 2 игрока играют на машинах соединенных через порты по ноль-модему."
+msgstr "Играть через прямое соединение, где 2 игрока играют на машинах, соединённых через порты по ноль-модему."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSetupMultiPlayerGameHelp.4"
@@ -5269,7 +5365,7 @@ msgstr "Отменить и вернуться в главное меню."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSetupNetworkGameHelp.0"
-msgstr "Сервер задает настройки игры. Может быть, только один хост в одном сетевом соединении."
+msgstr "Сервер задаёт настройки игры. Может быть только один хост в одном сетевом соединении."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSetupNetworkGameHelp.1"
@@ -5296,124 +5392,130 @@ msgid "table.gSpeedText.4"
 msgstr "Оч. высокая"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
 msgid "table.gSpellDesc.0"
-msgstr "Огненный шар\n\nОгромный огненный шар взрывается над выбранным участком поля боя, поражая всех находящихся поблизости участников сражения."
+msgstr "Вызывает огромный огненный шар, наносящий урон выбранной цели и находящимся рядом с ней вражеским и дружественным отрядам.\n\nНаносит %d ед. урона."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
 msgid "table.gSpellDesc.1"
-msgstr "Молния\n\nМощный электрический разряд поражает выбранную группу воинов."
+msgstr "Вызывает мощный электрический разряд, наносящий урон выбранному вражескому отряду.\n\nНаносит %d ед. урона."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellDesc.2"
-msgstr "Телепортация\n\nПереносит выбранную группу воинов в любое свободное место на поле боя."
+msgstr "Перемещает выбранный дружественный отряд в любое указанное свободное место на поле боя."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellDesc.3"
-msgstr "Лечение\n\nНейтрализует все враждебные чары, насланные на ваших воинов."
+msgstr "Снимает все отрицательные эффекты заклинаний со всех дружественных отрядов на поле боя."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
 msgid "table.gSpellDesc.4"
-msgstr "Воскрешение\n\nВоскрешает воинов в группе, которой был нанесен урон."
+msgstr "Воскрешает павших существ в выбранном дружественном отряде.\n\nВосстанавливает %d ед. здоровья."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellDesc.5"
-msgstr "Ускорение\n\nСкорость любой группы воинов становится 'очень высокой'."
+msgstr "Увеличивает скорость выбранного дружественного отряда до уровня «Очень высокая»."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellDesc.6"
-msgstr "Замедление\n\nУменьшает скорость даже самой быстрой группы вражеских воинов."
+msgstr "Уменьшает скорость выбранного вражеского отряда до уровня «Низкая», а также лишает его способности к полёту."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellDesc.7"
-msgstr "Ослепление\n\nЗатуманивает взоры воинов в выбранной группе и тем самым не позволяет им перемещаться по полю боя."
+msgstr "Затуманивает взор выбранному вражескому отряду так, что он не может ни атаковать, ни передвигаться, но при этом сохраняет способность отвечать на атаку."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellDesc.8"
-msgstr "Благословение\n\nУвеличивает до максимума урон, наносимый выбранной группой воинов."
+msgstr "Увеличивает до максимума урон, наносимый выбранным дружественным отрядом."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellDesc.9"
-msgstr "Защита\n\nУвеличивает навык защиты воинов выбранной группы."
+msgstr "Повышает у выбранного дружественного отряда уровень защиты на 3 единицы."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellDesc.10"
-msgstr "Проклятие\n\nУменьшает до минимума урон, причиняемый выбранной группой воинов."
+msgstr "Уменьшает до минимума урон, наносимый выбранным вражеским отрядом."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellDesc.11"
-msgstr "Убить нежить\n\nМгновенно загоняет призраков в покинутые ими могилы."
+msgstr "Уничтожает выбранный отряд призраков, отправляя его обратно в могилу."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellDesc.12"
-msgstr "Антимагия\n\nДелает невозможным применение враждебных чар против выбранной группы воинов."
+msgstr "Наделяет выбранный дружественный отряд иммунитетом ко всем негативным и позитивным заклинаниям."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellDesc.13"
-msgstr "Снять чары\n\nНейтрализует любые чары, насланные на всех участников сражения."
+msgstr "Снимает все позитивные и негативные эффекты заклинаний со всех вражеских и дружественных отрядов на поле боя."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellDesc.14"
-msgstr "Берсерк\n\nЗаставляет выбранную группу воинов нападать на ближайшую к ней соседнюю группу."
+msgstr "Приводит в ярость выбранный вражеский отряд, что заставляет его атаковать находящийся рядом с ним вражеский или дружественный отряд."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
 msgid "table.gSpellDesc.15"
-msgstr "Армагеддон\n\nМогущественные силы поражают всех участников сражения, нанося им жестокий урон."
+msgstr "Вызывает природный катаклизм, наносящий серьёзный урон всем вражеским и дружественным отрядам на поле боя.\n\nНаносит %d ед. урона."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
 msgid "table.gSpellDesc.16"
-msgstr "Шторм\n\nСилы стихий обрушиваются на поле боя, нанося урон всем участникам сражения."
+msgstr "Вызывает бурю с градом, наносящую урон всем вражеским и дружественным отрядам на поле боя.\n\nНаносит %d ед. урона."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
 msgid "table.gSpellDesc.17"
-msgstr "Звездопад\n\nЗвездопад поражает выбранный участок поля боя, нанося урон всем находящимся поблизости участникам сражения."
+msgstr "Вызывает падение камней с неба, наносящих урон выбранной цели и находящимся рядом с ней вражеским и дружественным отрядам.\n\nНаносит %d ед. урона."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellDesc.18"
-msgstr "Паралич\n\nГруппу, против которой направлено это заклинание, поражает паралич, и она теряет способность передвигаться или отвечать на удары."
+msgstr "Приводит в состояние оцепенения выбранный вражеский отряд так, что он не может ни атаковать, ни передвигаться, ни отвечать на атаку."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellDesc.19"
-msgstr "Шахты\n\nДелает видимыми все шахты на игровой карте."
+msgstr "Отображает тип, местоположение и принадлежность всех шахт на неизведанной территории."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellDesc.20"
-msgstr "Ресурсы\n\nДелает видимыми все ресурсы на игровой карте."
+msgstr "Отображает тип и местоположение всех не захваченных противником ресурсов на неизведанной территории."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellDesc.21"
-msgstr "Артефакты\n\nДелает видимыми все артефакты на игровой карте."
+msgstr "Отображает местоположение всех не захваченных противником артефактов на неизведанной территории."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellDesc.22"
-msgstr "Города\n\nДелает видимыми все города и замки на игровой карте."
+msgstr "Отображает тип, местоположение и принадлежность всех городов и замков на неизведанной территории."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellDesc.23"
-msgstr "Герои\n\nДелает видимыми всех героев на игровой карте."
+msgstr "Отображает текущее местоположение и принадлежность всех вражеских героев на неизведанной территории."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellDesc.24"
-msgstr "Все\n\nДелает видимой всю игровую карту."
+msgstr "Отображает неизведанную территорию целиком с указанием типа, местоположения и принадлежности всех вражеских героев, городов, замков, шахт, ресурсов и артефактов."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellDesc.25"
-msgstr "Опознать героя\n\nПозволяет получить подробную информацию о вражеских героях."
+msgstr "Отображает детальную информацию обо всех видимых вражеских героях: их навыки и точное количество войск."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellDesc.26"
-msgstr "Корабль\n\nПереносит ближайший незанятый дружественный корабль в соответствующую точку побережья. Дружественным считается корабль, который вы только что построили, либо тот, на котором после вас никто не плавал."
+msgstr "Перемещает из любой точки мира к близлежащему берегу один из незанятых дружественных кораблей."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellDesc.27"
-msgstr "Портал\n\nПереносит вас в точку на карте, расположенную поблизости."
+msgstr "Перемещает творящего на небольшое расстояние в любое указанное свободное место."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellDesc.28"
-msgstr "Врата города\n\nПереносит вас в любой принадлежащий вам город или замок."
+msgstr "Перемещает творящего в ближайший дружественный город или замок."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellHelp.0"
-msgstr "Предыдущая страница "
+msgstr "Предыдущая страница"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellHelp.1"
@@ -5429,7 +5531,7 @@ msgstr "Боевые заклинания"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellHelp.4"
-msgstr "Закрыть магическую книгу"
+msgstr "Закрыть Книгу заклинаний"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellHelp.5"
@@ -5457,7 +5559,7 @@ msgstr "Телепортация"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellNames.3"
-msgstr "Лечение"
+msgstr "Исцеление"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellNames.4"
@@ -5489,7 +5591,7 @@ msgstr "Проклятие"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellNames.11"
-msgstr "Убить нежить"
+msgstr "Изгнание нежити"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellNames.12"
@@ -5497,7 +5599,7 @@ msgstr "Антимагия"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellNames.13"
-msgstr "Снять чары"
+msgstr "Снятие чар"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellNames.14"
@@ -5509,11 +5611,11 @@ msgstr "Армагеддон"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellNames.16"
-msgstr "Шторм"
+msgstr "Буря стихий"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellNames.17"
-msgstr "Звездопад"
+msgstr "Метеоритный дождь"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellNames.18"
@@ -5521,39 +5623,39 @@ msgstr "Паралич"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellNames.19"
-msgstr "Шахты"
+msgstr "Обзор шахт"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellNames.20"
-msgstr "Ресурсы"
+msgstr "Обзор ресурсов"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellNames.21"
-msgstr "Артефакты"
+msgstr "Обзор артефактов"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellNames.22"
-msgstr "Города"
+msgstr "Обзор городов"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellNames.23"
-msgstr "Герои"
+msgstr "Обзор героев"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellNames.24"
-msgstr "Все"
+msgstr "Полный обзор"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellNames.25"
-msgstr "Опознать героя"
+msgstr "Опознание героев"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellNames.26"
-msgstr "Корабль"
+msgstr "Вызов корабля"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellNames.27"
-msgstr "Портал"
+msgstr "Дверь измерений"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellNames.28"
@@ -5561,11 +5663,11 @@ msgstr "Врата города"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gStatDesc.0"
-msgstr "Ваш навык атаки - бонус, добавляемый к навыку атаки каждого воина."
+msgstr "Ваш навык атаки — бонус, добавляемый к навыку атаки каждого воина."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gStatDesc.1"
-msgstr "Ваш навык защиты - бонус, добавляемый к навыку защиты каждого воина."
+msgstr "Ваш навык защиты — бонус, добавляемый к навыку защиты каждого воина."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gStatDesc.2"
@@ -5663,7 +5765,7 @@ msgstr "Передвинуть сюда отряд %s"
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 #, c-format
 msgid "table.gTownCommand.7"
-msgstr "Отряды %s и %s меняются местами"
+msgstr "Поменять местами отряды %s и %s"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gTownCommand.8"
@@ -5721,19 +5823,19 @@ msgstr "Нанять %s"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gTownNames.0"
-msgstr "Блэкбридж"
+msgstr "Блэкридж"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gTownNames.1"
-msgstr "Сосновый холм"
+msgstr "Пайнхёрст"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gTownNames.2"
-msgstr "Вудхавен"
+msgstr "Вудхейвн"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gTownNames.3"
-msgstr "Хилстон"
+msgstr "Хиллстоун"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gTownNames.4"
@@ -5745,7 +5847,7 @@ msgstr "Бладрейн"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gTownNames.6"
-msgstr "Клык дракона"
+msgstr "Драгонтус"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gTownNames.7"
@@ -5757,11 +5859,11 @@ msgstr "Блэквинд"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gTownNames.9"
-msgstr "Портсмис"
+msgstr "Портсмит"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gTownNames.10"
-msgstr "Мидлгейт"
+msgstr "Миддлгейт"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gTownNames.11"
@@ -5773,7 +5875,7 @@ msgstr "Вулкания"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gTownNames.13"
-msgstr "Занзобар"
+msgstr "Сансобар"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gTownNames.14"
@@ -5781,7 +5883,7 @@ msgstr "Атлантиум"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gTownNames.15"
-msgstr "Байвоч"
+msgstr "Бэйвотч"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gTownNames.16"
@@ -5789,7 +5891,7 @@ msgstr "Вилдабар"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gTownNames.17"
-msgstr "Фонтанхед"
+msgstr "Фаунтинхед"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gTownNames.18"
@@ -5797,7 +5899,7 @@ msgstr "Вертиго"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gTownNames.19"
-msgstr "Винтеркил"
+msgstr "Винтеркилл"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gTownNames.20"
@@ -5809,7 +5911,7 @@ msgstr "Сэндкастер"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gTownNames.22"
-msgstr "Лайксайд"
+msgstr "Лэйксайд"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gTownNames.23"
@@ -5829,7 +5931,7 @@ msgstr "Ксабран"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gTownNames.27"
-msgstr "Драгадун"
+msgstr "Драгадюн"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gTownNames.28"
@@ -5845,7 +5947,7 @@ msgstr "Блэкфанг"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gTownNames.31"
-msgstr "Бесенжи"
+msgstr "Басенджи"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gTownNames.32"
@@ -5861,7 +5963,7 @@ msgstr "Даск"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gTownNames.35"
-msgstr "Эрликиум"
+msgstr "Эрликвин"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gViewGeneralHelp.0"
@@ -5973,7 +6075,7 @@ msgstr "Кондора"
 
 #: src/SOURCE/KB.cpp
 msgid "table.gWinSetupText.0"
-msgstr "Купить книгу:"
+msgstr "Купить Книгу:"
 
 #: src/SOURCE/KB.cpp
 msgid "table.gWinSetupText.1"
@@ -6057,7 +6159,7 @@ msgstr "Знания"
 
 #: src/SOURCE/KB.cpp
 msgid "table.gWinSetupText.21"
-msgstr "Указанные заклинания были добавлены в вашу Волшебную книгу."
+msgstr "Указанные заклинания были добавлены в вашу Книгу."
 
 #: src/SOURCE/KB.cpp
 msgid "table.gWinSetupText.22"
@@ -6065,7 +6167,7 @@ msgstr "Выбрать сложность:"
 
 #: src/SOURCE/KB.cpp
 msgid "table.gWinSetupText.23"
-msgstr "Легкая"
+msgstr "Лёгкая"
 
 #: src/SOURCE/KB.cpp
 msgid "table.gWinSetupText.24"
@@ -6073,7 +6175,7 @@ msgstr "Обычная"
 
 #: src/SOURCE/KB.cpp
 msgid "table.gWinSetupText.25"
-msgstr "Тяжелая"
+msgstr "Тяжёлая"
 
 #: src/SOURCE/KB.cpp
 msgid "table.gWinSetupText.26"
@@ -6189,7 +6291,7 @@ msgstr "Таверна увеличивает мораль воинов гарн
 
 #: src/SOURCE/KB.cpp
 msgid "table.gWinSetupText.54"
-msgstr "Гильдия воров: Достижения игроков"
+msgstr "Гильдия воров — Достижения игроков"
 
 #: src/SOURCE/KB.cpp
 msgid "table.gWinSetupText.55"
@@ -6321,16 +6423,16 @@ msgstr "Прыжками"
 
 #: src/SOURCE/TOWNMGR.cpp
 msgid "town.boat.unavailable"
-msgstr "Нельзя построить еще один корабль."
+msgstr "Нельзя построить ещё один корабль."
 
 #: src/SOURCE/TOWNMGR.cpp
 #, c-format
 msgid "town.build.mage_guild_level"
-msgstr "Гильдия магов, %d этаж"
+msgstr "Гильдия магов %d ур."
 
 #: src/SOURCE/TOWNMGR.cpp
 msgid "town.build.requires"
-msgstr "\nНужно:"
+msgstr "\n\nТребуется:"
 
 #: src/SOURCE/TOWNMGR.cpp
 msgid "town.mage.spells"
@@ -6342,7 +6444,7 @@ msgstr "Экран города"
 
 #: src/SOURCE/TOWNMGR.cpp
 msgid "town.spellbook.no_space"
-msgstr "Вам следует купить Волшебную книгу, чтобы воспользоваться Гильдией магов, но сейчас у вас нет места для книги. Передайте другому герою один из артефактов."
+msgstr "Вам следует купить Книгу заклинаний, чтобы воспользоваться Гильдией магов, но сейчас у вас нет места для Книги. Передайте другому герою один из артефактов."
 
 #: src/SOURCE/TOWNMGR.cpp
 msgid "town.split.garrison"
@@ -6381,4 +6483,4 @@ msgstr "Герои"
 
 #: src/PORT/SOURCE/kbwin.cpp src/SOURCE/kbwin.cpp
 msgid "window.gTitle"
-msgstr "Герои Меча и Магии"
+msgstr "Герои Меча и Магии TE"

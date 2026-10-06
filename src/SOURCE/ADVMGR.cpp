@@ -1530,7 +1530,7 @@ b32 advManager::ProcessSearch(i32 x, i32 y) {
                 EventSound(MAP_OBJECT_ULTIMATE_ARTIFACT, 0);
                 sprintf(
                     gText,
-                    "%s%s",
+                    localization::Tr("adventure.search.found_format"),
                     localization::Tr("adventure.search.found_prefix"),
                     gArtifactNames[gGame->m_ultimateArtifactId]
                 );
