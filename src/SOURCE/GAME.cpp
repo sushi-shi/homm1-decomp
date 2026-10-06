@@ -1136,6 +1136,24 @@ void game::NewMap(char* mapName) {
     ProcessRandomObjects(true);
     ProcessRandomObjects(false);
     RandomizeEvents();
+    // The heroes the map places are not free for the starting heroes and
+    // taverns drawn below; the original drew among them, and a hero drawn
+    // for a player or a tavern that the map also places was given twice
+    // (to the map's owner and to the player, or offered in a tavern), which
+    // left one of its hero cells behind with the wrong or no owner. They are
+    // marked as the map's owner would mark them in ProcessOnMapHeroes.
+    if (!m_noMapHeroes) {
+        for (i = 0; i < MAP_CELL_GRID_SIZE; i++) {
+            for (j = 0; j < MAP_CELL_GRID_SIZE; j++) {
+                if ((m_map[i][j].m_triggerType & MAP_TRIGGER_TYPE_MASK) != MAP_FILE_OBJECT_HERO)
+                    continue;
+                mapHeroExtra* placed =
+                    static_cast<mapHeroExtra*>(gMapExtraBlocks[m_map[i][j].m_objectMetadata]);
+                m_availableHeroes[placed->heroId] =
+                    placed->owner >= m_playerCount ? m_playerCount - 1 : placed->owner;
+            }
+        }
+    }
     m_deadPlayerCount = 0;
     for (i = m_playerCount; i < GAME_PLAYER_COUNT; i++)
         m_playerDead[i] = true;

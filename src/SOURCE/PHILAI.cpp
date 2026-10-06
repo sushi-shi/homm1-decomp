@@ -236,7 +236,16 @@ void philAI::CheckBuyStuff(void) {
         }
     }
     if (gBuildBoat[gCurPlayer] >= 0) {
+        // A boat can only be launched onto a free dock inside the map (the
+        // Tournament Edition's TE-FIX-1). The original launched it over
+        // whatever stood there, a hero in a boat included: the hero's cell
+        // became the new boat's, another hero could board it on the same
+        // cell, and hero cells were left behind whose heroes stood elsewhere
+        // or had no owner (indexing the player table at -1 later).
         if ((dockTown->m_buildings & (1 << BUILDING_SLOT_SHIPYARD))
+            && dockTown->m_y + 1 < MAP_CELL_GRID_SIZE
+            && gGame->m_map[dockTown->m_x - 1][dockTown->m_y + 1].m_triggerType == MAP_OBJECT_NONE
+            && !(gGame->m_map[dockTown->m_x - 1][dockTown->m_y + 1].m_flags & MAP_CELL_HERO_CURSOR)
             && gCurPlayerData->m_resources[RESOURCE_GOLD] >= TOWN_BOAT_GOLD_COST
             && gCurPlayerData->m_resources[RESOURCE_WOOD] >= TOWN_BOAT_WOOD_COST) {
             if (gGame->CreateBoat(dockTown->m_x - 1, dockTown->m_y + 1) != GAME_TABLE_FREE) {

@@ -774,11 +774,20 @@ i16 townManager::Main(struct tag_message& message) {
                                 WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED
                             );
                             if (gGame->GetBoatsBuilt() < GAME_BOAT_COUNT
+                                && m_town->m_y + 1 < MAP_CELL_GRID_SIZE
                                 && gAdvManager->GetCell(m_town->m_x - 1, m_town->m_y + 1)
                                            ->m_triggerType
                                        == MAP_OBJECT_TRIGGER(MAP_OBJECT_NONE)
-                                && gAdvManager->m_cursorMapX != m_town->m_x - 1
-                                && gAdvManager->m_cursorMapY != m_town->m_y + 1) {
+                                // The selected hero's own cell holds no hero
+                                // while it is the cursor; the original
+                                // compared the cursor's view position with the
+                                // dock's map position, so a boat could be
+                                // built under the hero (the Tournament
+                                // Edition's TE-FIX-2 uses the cursor flag).
+                                && !(
+                                    gAdvManager->GetCell(m_town->m_x - 1, m_town->m_y + 1)->m_flags
+                                    & MAP_CELL_HERO_CURSOR
+                                )) {
                                 m_heroWindow0 = new heroWindow(0xb1, 0x14, "shipwind.bin");
                                 if (m_heroWindow0 == NULL)
                                     MemError();
