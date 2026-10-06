@@ -12,9 +12,9 @@ generator resolves each macro to the production expansion the pinned VC6
 compiler already sees and removes the rest.
 
 Two variants come from one snapshot. `source` keeps the catalog references
-(`localization::Tr("id")`) and builds Russian or English with VC6; `classic`
-is the same tree with the Russian text spelled out as readable UTF-8 for
-reading. See docs/clean-source.md.
+(`localization::Tr("id")`) and builds any language of its locales/ catalog
+with VC6; `classic` is the same tree with the retail program's Russian text
+spelled out as readable UTF-8 for reading. See docs/clean-source.md.
 """
 
 from __future__ import annotations
@@ -102,18 +102,20 @@ def selected(files: dict[str, bytes]) -> dict[str, str]:
     return chosen
 
 
-LOCALE_FILES = ("locales/messages.def", "locales/ru.po", "locales/format-variants.json")
+def locale_files(files: dict[str, bytes]) -> dict[str, bytes]:
+    """The snapshot's catalog: locales/messages.pot and each language's .po
+    and .json descriptor."""
+    return {name: data for name, data in files.items()
+            if name.startswith("locales/") and name.count("/") == 1
+            and name.endswith((".pot", ".po", ".json"))}
 
 
 def catalog_of(files: dict[str, bytes]):
     """The snapshot's localization catalog (None without one)."""
     from homm1.graph.catalog import Catalog
-    if "locales/messages.def" not in files:
-        return None
-    variants = files.get("locales/format-variants.json")
-    return Catalog.parse(files["locales/messages.def"].decode("utf-8"),
-                         files["locales/ru.po"].decode("utf-8"),
-                         variants.decode("utf-8") if variants is not None else None)
+    catalog = {name.removeprefix("locales/"): data.decode("utf-8")
+               for name, data in locale_files(files).items()}
+    return Catalog.parse(catalog) if "messages.pot" in catalog else None
 
 
 def generate(files: dict[str, bytes], *, variant: str = "source", control: bool = False
@@ -141,9 +143,9 @@ def generate(files: dict[str, bytes], *, variant: str = "source", control: bool 
         try:
             cleaned = transforms[kind](text, keep_lines=control)
             if variant == "classic" and kind == "cpp":
-                cleaned = classic.render_cpp(cleaned, catalog)
+                cleaned = classic.render_cpp(cleaned, catalog, retail_locale(files))
             elif variant == "classic" and kind == "rc":
-                cleaned = classic.render_rc(cleaned, catalog)
+                cleaned = classic.render_rc(cleaned, catalog, retail_locale(files))
         except ValueError as error:
             raise ValueError(f"{name}: {error}") from error
         if control:
@@ -160,7 +162,7 @@ def generate(files: dict[str, bytes], *, variant: str = "source", control: bool 
             problems.append(f"{name}: a catalog reference survived the classic rendering")
         output[name] = cleaned.encode("utf-8")
     if variant == "source" and catalog is not None:
-        output.update({name: files[name] for name in LOCALE_FILES if name in files})
+        output.update(locale_files(files))
         output["catalog.py"] = files["scripts/homm1/graph/catalog.py"]
     if control:
         output["build.json"] = json.dumps({"locale": retail_locale(files)}).encode()

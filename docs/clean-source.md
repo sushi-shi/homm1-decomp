@@ -5,8 +5,8 @@ machinery, and can publish each one as a local single-commit branch:
 
 | Variant | Branch | Contents |
 | --- | --- | --- |
-| `source` | `source-buka-2003` | The primary C++ tree. Game text stays as catalog references (`localization::Tr("id")`) with an English and a Russian catalog. Builds either language with the pinned VC6. |
-| `classic` | `classic-buka-2003` | The same tree as a reading view. Every reference is spelled out as a readable UTF-8 Russian literal. The `HOMM1_RUSSIAN` conditionals keep their Russian branch. The integer-enum and name-mangling model is unchanged. |
+| `source` | `source-buka-2003` | The primary C++ tree. Game text stays as catalog references (`localization::Tr("id")`) with one catalog per language ([localization](localization.md)). Builds any of them with the pinned VC6. |
+| `classic` | `classic-buka-2003` | The same tree as a reading view. Every reference is spelled out as a readable UTF-8 Russian literal. The integer-enum and name-mangling model is unchanged. |
 
 ```sh
 homm1 clean                                        # build/source
@@ -52,8 +52,7 @@ Generation fails in any of these cases:
 - a comment, scaffolding name or `#line` survives;
 - a construct leaves a stranded `;` or `,`;
 - `src/` holds a file that no rule covers;
-- in the classic view, a catalog reference or `HOMM1_RUSSIAN` survives, or an
-  `#elif` follows a `HOMM1_RUSSIAN` conditional.
+- in the classic view, a catalog reference survives.
 
 Both trees carry the unit sources, every header, `Heroes.rc`, the module
 definition and import stubs for `mss32.dll`, `smackw32.dll` and `audiere.dll`.
@@ -61,8 +60,8 @@ The stubs come from the retail import table through `homm1.graph.implib`.
 
 The source tree also carries:
 
-- `locales/` (`messages.def`, `ru.po`, `format-variants.json`) and
-  `catalog.py`;
+- `locales/` (`messages.pot`, each language's `.po` and `.json` descriptor)
+  and `catalog.py`;
 - a `build.json` link contract and `build.py`;
 - `play.py`, the game runner shared with `homm1 play` ([playing](play.md)),
   behind the flake's `nix run .#play`;
@@ -79,12 +78,11 @@ on `decomp-buka-2003`.
 ## Localization
 
 The source tree names each piece of text by catalog ID. Its `build.py
---locale ru|en` writes a copy of the sources to `build/<locale>/localized/`
-with each reference resolved to the selected language's literal: Windows-1251
-bytes, or a brace-enclosed character initializer for `Chars`. In the same copy,
-`HOMM1_RUSSIAN` becomes `1` or `0`. `Heroes.rc` gets wide Unicode string
-literals and `LANG_RUSSIAN` or `LANG_ENGLISH`. Nothing is looked up at run
-time.
+--locale LANG` writes a copy of the sources to `build/<LANG>/localized/` with
+each reference resolved to the selected language's literal: bytes in its
+Windows code page, or a brace-enclosed character initializer for `Chars`.
+`Heroes.rc` gets wide Unicode string literals and the descriptor's resource
+language. Nothing is looked up at run time.
 
 The classic view resolves the same references once, for Russian:
 
@@ -125,8 +123,8 @@ without `/FORCE`, and an unresolved external fails verification.
   assertion units INPUTMGR, MOUSEMGR, RESMGR, WINMGR, miscwin, EVENTS, NOOPT,
   PATH, SMACKMGR, TOWNMGR, netwin and wingraph.
 - **Standalone** (source variant). The tree's `build.py` runs through its own
-  flake for `--locale ru` and `--locale en`. Each run must produce
-  `build/<locale>/HEROES.EXE`.
+  flake for every language of its catalog (`--locale en`, `--locale ru`).
+  Each run must produce `build/<locale>/HEROES.EXE`.
 - **Classic equivalence** (classic variant). The classic files must equal the
   source tree's Russian compiler input token for token. Each UTF-8 literal is
   read back as the Windows-1251 bytes it shows, and it may stand for a byte
