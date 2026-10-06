@@ -1,1 +1,52 @@
 kind	owner	old	new	evidence
+aliased	editManager::GenerateRandomMap	type	terrain	loops over gTerrainPercent/gGeneratorTerrainNames rows and passes it as PaintRandomTerrain's terrain
+aliased	editManager::GenerateRandomMap	canvas	paintFrom	one past the first terrain with a share: later terrains are painted from it over terrain paintFrom - 1
+aliased	editManager::PaintRandomTerrain	sourceY	seedY	the seed's row, paired with the seed column; the walk starts there
+aliased	editManager::PaintRandomTerrain	total	targetCells	percent of the map's cells: the cells the terrain should cover
+aliased	editManager::PaintRandomTerrain	xBias	horizontalWeight	Random(0, 9) below it steps the walk horizontally, else vertically
+aliased	editManager::PaintRandomTerrain	upperWeight	maxWeight	the drifting weights' upper clamp
+aliased	editManager::PaintRandomTerrain	yAxis	upWeight	Random(0, 9) below it steps the walk north (walkY--), else south
+aliased	editManager::PaintRandomTerrain	turnWeight	leftWeight	Random(0, 9) below it steps the walk west (walkX--), else east
+aliased	editManager::PaintRandomTerrain	lowerCap	minWeight	the drifting weights' lower clamp
+aliased	editManager::PaintRandomTerrain	startX	seedX	the seed's column (drifts every eighth step); the walk starts there
+aliased	editManager::RemoveSmallRegions	fromX	minX	the region's bounding box: left column (pairs with maxX)
+local	editManager::RemoveSmallRegions	other	neighbourTerrain	the first differing terrain met beside the region; a small region takes it
+aliased	editManager::RemoveSmallRegions	tallyX	countX	column of the land-cell count into gLandCellCount
+aliased	editManager::RemoveSmallRegions	j	y	the scanned cell's row inside the bounding box
+aliased	editManager::RemoveSmallRegions	landY	countY	row of the land-cell count into gLandCellCount
+aliased	editManager::RemoveSmallRegions	homeY	startY	the row of the cell a region starts from (pairs with startX)
+aliased	editManager::RemoveSmallRegions	y1	maxY	the region's bounding box: bottom row
+aliased	editManager::RemoveSmallRegions	n	x	the scanned cell's column inside the bounding box
+aliased	editManager::RemoveSmallRegions	searchTop	minY	the region's bounding box: top row
+local	editManager::PlaceObstacleChains	variety	treeFamily	the first letter of the tree objects the chain uses (a autumn, p pine, t deciduous: atmn-, pine-, tree-); PlaceChainLink compares it with name[0]
+aliased	editManager::PlaceObstacleChains	ridges	chainCount	chains to lay (one per 40 land cells, scaled by density) for mountains and trees alike
+aliased	editManager::PlaceChainLink	frame	piece	not an icon frame: the offset of the chain object for the direction's slope from the chain's first object (n + piece)
+aliased	editManager::PlaceChainLink	generic	anyTerrainChain	the chain object for any terrain (terrainMask RANDOM_MAP_ANY_TERRAIN), of treeFamily for trees
+aliased	editManager::PlaceChainLink	specific	terrainChain	the chain object made for the cell's terrain (terrainMask == the terrain bit)
+aliased	editManager::PlaceChainLink	bit	terrainBit	the cell's terrain bit, compared with overlayType::terrainMask
+param	editManager::PlaceChainLink	kind	treeFamily	PlaceObstacleChains' tree family letter, compared with the object name's first letter
+aliased	editManager::PlaceTowns	belongs	castleRegion	the land region (rank) each of the four castles is placed in
+aliased	editManager::PlaceTowns	anyGate	stoneLiths	xtgate: object trigger 41 MAP_OBJECT_STONE_LITHS; the road loop keeps it away from other stone liths
+aliased	editManager::PlaceTowns	winterGate	snowStoneLiths	stgate (snow tileset obj32-02): trigger 41 MAP_OBJECT_STONE_LITHS, placed on snow
+aliased	editManager::PlaceTowns	desertGateLiths	desertStoneLiths	dtgate (desert tileset obj32-05): trigger 41 MAP_OBJECT_STONE_LITHS, placed on desert
+aliased	editManager::PlaceTowns	endY	destY	the road's end row, paired with destX (retail computes it from the peer's x)
+aliased	editManager::PlaceTowns	y0	fromY	the road's start row, paired with fromX
+aliased	editManager::PlaceTowns	freeX	foundX	the column of the first unnumbered land cell, paired with foundY
+aliased	editManager::PlaceTowns	scanY	nearY	the row paired with nearX in the site, approach and road walks
+local	editManager::PlaceResourceSite	river	resourceMarker	rovr-0N: flags OVERLAY_TYPE_MINE_RESOURCE, trigger 51 MAP_OBJECT_RESOURCE_SHADOW; PlaceMineResource draws it as the mine's resource marker
+aliased	editManager::PlaceRandomObjects	siteIndex	siteResource	Random(0, RESOURCE_COUNT - 1): the resource of the site to place (quota[] index, PlaceResourceSite argument)
+aliased	editManager::PlaceRandomObjects	towns	townTries	the try budget: towns to place times RANDOM_MAP_TRIES_PER_OBJECT, minus a try per loop
+aliased	editManager::PlaceRandomObjects	obeliskTurns	obeliskTries	the try budget: obelisks to place times RANDOM_MAP_TRIES_PER_OBJECT
+aliased	editManager::PlaceRandomObjects	townObject	randomTown	xtown: trigger 64 MAP_FILE_OBJECT_RANDOM_TOWN
+aliased	editManager::PlaceTreasures	caches	treasureTries	the try budget: treasures to place times RANDOM_MAP_TRIES_PER_OBJECT
+aliased	editManager::PlaceTreasures	down	southBlocked	set when the cell's south side is the map edge, water or a terrain obstacle
+aliased	editManager::PlaceTreasures	right	eastBlocked	set when the cell's east side is the map edge, water or a terrain obstacle
+aliased	editManager::PlaceTreasures	up	northBlocked	set when the cell's north side is the map edge, water or a terrain obstacle
+aliased	editManager::PlaceTreasures	left	westBlocked	set when the cell's west side is the map edge, water or a terrain obstacle
+aliased	editManager::PlaceTreasures	goods	randomResource	xrsrc: trigger 62 MAP_FILE_OBJECT_RANDOM_RESOURCE
+aliased	editManager::PlaceTreasures	bonfire	campfire	firemult: trigger 8 MAP_OBJECT_CAMPFIRE
+aliased	editManager::PlaceTreasures	wanderers	monsterTries	the try budget: wandering monsters times RANDOM_MAP_TRIES_PER_OBJECT
+aliased	editManager::PlaceTreasures	bounty	randomArtifact	xart: trigger 61 MAP_FILE_OBJECT_RANDOM_ARTIFACT
+aliased	editManager::PlaceTreasures	layout	guard	holds a TreasureGuard (the guarded corner)
+enum	RandomMapSiteKind	RANDOM_MAP_SITE_SAWMILL/ALCHEMIST_LAB/FIRST_MINE/KIND_COUNT	RESOURCE_WOOD/MERCURY/ORE/COUNT	the site kinds are the resource the site produces (WriteMines' 0, 1, frame + 2; gMineSiteKinds)
+param	editManager::PlaceResourceSite	kind	resource	the site's resource: 0 sawmill (wood), 1 alchemist's lab (mercury), 2..6 the mine whose marker WriteMines records as frame + 2
