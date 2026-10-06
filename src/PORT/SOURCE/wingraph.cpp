@@ -124,6 +124,14 @@ void SetFullScreenStatus(i32 fullScreen) {
 void KBPaintScreen(i32 left, i32 top, i32 right, i32 bottom) {
     if (gInitWin == NULL)
         return;
+    // The original invalidated [left, right) and DDAppPaint then copied one
+    // more column and row than the rectangle it was given (right++ below the
+    // screen's edge, and a width of right - left + 1): the game's blits rely
+    // on it, drawing up to two pixels past what they name.
+    if (right < LOGICAL_SCREEN_WIDTH)
+        right++;
+    if (bottom < LOGICAL_SCREEN_HEIGHT)
+        bottom++;
     i32 width = right - left + 1;
     i32 height = bottom - top + 1;
     i32 sourceX = left;

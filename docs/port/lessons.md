@@ -290,7 +290,11 @@ down where it is implemented:
   8-bit image and a palette like DirectDraw's primary surface; palette changes
   show without a copy; many small copies are coalesced into one frame; the
   adventure map's scrolling copy takes its source from the scrolled position
-  as the original paint did.
+  as the original paint did, and every copy covers one more column and row
+  than the rectangle the game names, as `DDAppPaint` did (the game's blits
+  draw up to there). The survey's display check (`check` in a replay)
+  compares the display with the game's picture after each pause; what is
+  left are the original's own omissions (a button state not repainted).
 - **Music** (`src/PORT/BASE/Audio.cpp`): the original host's track policy (CD
   track map, which tracks repeat, where a track resumes) is kept; only the
   decoder changes.
