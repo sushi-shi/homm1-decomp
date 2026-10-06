@@ -233,7 +233,8 @@ extern char gMapName[];
 #define gBlackoutPlayer gbBlackoutPlayer // spelling fixes .bss order
 extern i32 gBlackoutPlayer;
 extern char gFullMapName[];
-extern char gMapDesc[];
+#define gMapDescription gMapDesc // spelling fixes .bss order
+extern char gMapDescription[];
 #define gAggPathName cAggPathName // spelling fixes .bss order
 extern char gAggPathName[];
 extern i32 gNumHumanPlayers;

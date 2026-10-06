@@ -96,9 +96,9 @@ rva	size	symbol	provenance
 0x000cea00	300	?hbmpColor@@3PAPAXA	75 color bitmap handles
 0x000cf438	1500	?cursorIconInfo@@3PAU_ICONINFO@@A	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000cfa14	300	?cAndBits@@3PAPAEA	Buka typed payload, unique anchored code uses and disjoint data owners
-0x000cf240	4	?nMCIError@@3IA	retail-backed code identity only
-0x000cf248	256	?CommandString@@3PADA	retail-backed code identity only
-0x000cf348	256	?lpszReturnString@@3PADA	retail-backed code identity only
+0x000cf240	4	?gMciError@@3IA	retail-backed code identity only
+0x000cf248	256	?gMciCommandString@@3PADA	retail-backed code identity only
+0x000cf348	256	?gMciReturnString@@3PADA	retail-backed code identity only
 0x000cf448	2	?gSampleVolumes@@3PAFA	retail code-required identity, initializer/complete extent deferred
 0x000cf488	16	?gWaveFormat@@3Upcmwaveformat_tag@@A	retail writes all fields of the real SDK PCMWAVEFORMAT, code layout only
 0x000cf498	48	?gAuxCaps@@3UtagAUXCAPSA@@A	CDStartup fills the real SDK auxiliary-device capability record, code layout only

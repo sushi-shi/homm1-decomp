@@ -317,8 +317,9 @@ DATA(0x004cfb64)
 static u8* sClipRow;
 DATA(0x004cfb68)
 static IconEntry* sClipFrameEntry;
+#define sClipSource sClipSrcPtr // spelling fixes .bss order
 DATA(0x004cfb5c)
-static u8* sClipSrcPtr;
+static u8* sClipSource;
 DATA(0x004cfb54)
 static i32 sClipLimitX;
 DATA(0x004cfb60)
@@ -342,7 +343,7 @@ void ClipIconToBitmap(
     i32 clipH
 ) {
     sClipFrameEntry = sourceIcon->m_frames + frame;
-    sClipSrcPtr = sourceIcon->m_data + sClipFrameEntry->srcOffset;
+    sClipSource = sourceIcon->m_data + sClipFrameEntry->srcOffset;
     sClipX = sClipRowStart = x + sClipFrameEntry->x;
     sClipY = y + sClipFrameEntry->y;
     if (ICON_FITS_CLIP(
@@ -363,7 +364,7 @@ void ClipIconToBitmap(
     }
     sClipRow = destination->m_pixels + sClipY * destination->m_width;
     for (;;) {
-        sClipRun = *sClipSrcPtr++;
+        sClipRun = *sClipSource++;
         if (static_cast<i8>(sClipRun) < 0) {
             if (sClipRun & ICON_MONO_SKIP_MASK)
                 sClipX += sClipRun & ICON_MONO_SKIP_MASK;
@@ -371,23 +372,23 @@ void ClipIconToBitmap(
                 break;
         } else if (sClipRun != 0) {
             if (sClipInside) {
-                memcpy(sClipRow + sClipX, sClipSrcPtr, sClipRun);
+                memcpy(sClipRow + sClipX, sClipSource, sClipRun);
             } else if (sClipY >= clipY && sClipY <= sClipLimitY && sClipX + sClipRun >= clipX
                        && sClipX <= sClipLimitX) {
                 if (sClipX >= clipX) {
                     if (sClipX + sClipRun <= sClipLimitX)
-                        memcpy(sClipRow + sClipX, sClipSrcPtr, sClipRun);
+                        memcpy(sClipRow + sClipX, sClipSource, sClipRun);
                     else
-                        memcpy(sClipRow + sClipX, sClipSrcPtr, sClipLimitX - sClipX + 1);
+                        memcpy(sClipRow + sClipX, sClipSource, sClipLimitX - sClipX + 1);
                 } else {
-                    if (sClipX + *sClipSrcPtr <= sClipLimitX)
-                        memcpy(sClipRow + sClipX, sClipSrcPtr, sClipX + sClipRun - clipX);
+                    if (sClipX + *sClipSource <= sClipLimitX)
+                        memcpy(sClipRow + sClipX, sClipSource, sClipX + sClipRun - clipX);
                     else
-                        memcpy(sClipRow + sClipX, sClipSrcPtr, clipW);
+                        memcpy(sClipRow + sClipX, sClipSource, clipW);
                 }
             }
             sClipX += sClipRun;
-            sClipSrcPtr += sClipRun;
+            sClipSource += sClipRun;
         } else {
             sClipX = sClipRowStart;
             sClipY++;

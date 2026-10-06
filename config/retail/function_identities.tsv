@@ -1603,7 +1603,7 @@ rva	name
 0x000a6c24	?gGameOver@@3HA
 0x000a6c28	_?gNewGameSettingsSaved@?1??NewGame@game@@QAECXZ@4CA
 0x000a6c29	?gShowMapInfo@@3CA
-0x000a6c3c	?gheroWin@@3PAVheroWindow@@A
+0x000a6c3c	?gHeroWin@@3PAVheroWindow@@A
 0x000a6c48	?giDebugLevel@@3HA
 0x000a6c4c	?gMapDesc@@3PADA
 0x000a6cc8	?iSizeOfMapExtra@@3PAHA
@@ -1958,7 +1958,7 @@ rva	name
 0x000cddcc	?gBusyRetry@@3HA
 0x000cddd0	?gInDDSD@@3HA
 0x000cddd4	?gImageDC@@3PAUHDC__@@A
-0x000cddd8	?gbmOldMonoBitmap@@3PAUHBITMAP__@@A
+0x000cddd8	?gOldMonoBitmap@@3PAUHBITMAP__@@A
 0x000cdddc	?gAppPalette@@3PAUHPALETTE__@@A
 0x000cdde0	?gDDrawLibrary@@3PAUHINSTANCE__@@A
 0x000cdde8	_gMusicSuspensions

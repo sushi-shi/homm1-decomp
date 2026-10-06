@@ -780,7 +780,7 @@ void fileRequester::ShowMapInfo(void) {
     if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE)
         strcpy(gFullMapName, m_mapNames[m_selectedIndex].text);
     if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE)
-        strcpy(gMapDesc, m_mapInfo[m_selectedIndex].description);
+        strcpy(gMapDescription, m_mapInfo[m_selectedIndex].description);
     SET_WIDGET_MESSAGE(msg, WIDGET_COMMAND_SET_TEXT, descriptionId);
     if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE)
         msg.text = m_mapInfo[m_selectedIndex].description;

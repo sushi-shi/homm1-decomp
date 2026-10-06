@@ -436,7 +436,7 @@ rva	size	kind	name	unit	channel	game_rva	evidence
 0x0005342c	0x4	data	?gBusyRetry@@3HA	SOURCE/wingraph	src	0x000cddcc	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x00053430	0x4	data	?gInDDSD@@3HA	SOURCE/wingraph	src	0x000cddd0	2 code reference(s) from placed bodies
 0x00053434	0x4	data	?gImageDC@@3PAUHDC__@@A	SOURCE/wingraph	src	0x000cddd4	11 code reference(s) from placed bodies
-0x00053438	0x4	data	?gbmOldMonoBitmap@@3PAUHBITMAP__@@A	SOURCE/wingraph	src	0x000cddd8	2 code reference(s) from placed bodies
+0x00053438	0x4	data	?gOldMonoBitmap@@3PAUHBITMAP__@@A	SOURCE/wingraph	src	0x000cddd8	2 code reference(s) from placed bodies
 0x0005343c	0x4	data	?gAppPalette@@3PAUHPALETTE__@@A	SOURCE/wingraph	src	0x000cdddc	8 code reference(s) from placed bodies
 0x00053440	0x4	data	?gDDrawLibrary@@3PAUHINSTANCE__@@A	SOURCE/wingraph	src	0x000cdde0	5 code reference(s) from placed bodies
 0x00053448	0x4	data	?gLeftRightSave@@3HA	BASE/BUTTON	src	0x000d7f60	3 code reference(s) from placed bodies

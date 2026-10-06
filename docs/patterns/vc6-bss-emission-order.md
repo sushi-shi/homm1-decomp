@@ -79,9 +79,13 @@ extern class game* gGame;
 ```
 
 The compiler hashes the storage spelling, and function-local statics take it
-into their decorated name (`?s_direction_4@?1??SeedPosition@...`). Tie order
-still follows the first declaration. The generated trees (`homm1 clean`)
-drop these defines.
+into their decorated name (`?s_direction_4@?1??SeedPosition@...`): a define
+of the identifier works for them too, measured on `SOURCE/SEARCH`, whose
+`SeedPosition` statics keep their retail order behind readable names. Tie
+order still follows the first declaration. A define is visible wherever its
+header is, so the readable name must not also spell a local, member or
+parameter there; a file or function static's define stays in its `.cpp`.
+The generated trees (`homm1 clean`) drop these defines.
 
 ## Does not establish
 

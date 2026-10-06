@@ -537,7 +537,7 @@ i16 HandleCastSpell(struct tag_message& message);
 // teleport second-click state (0x00490690).
 extern i8 gInTeleportGetDest;
 // Frame of the mass-spell glow drawn by DrawFrame (0x004c78b4).
-extern i16 giCombatFxFrame;
+extern i16 gCombatFxFrame;
 // Captured artifacts shown page by page on the victory window.
 #define gMaxTransferArtifacts iMaxTransferArtifacts // spelling fixes .bss order
 extern i8 gMaxTransferArtifacts;
@@ -574,7 +574,7 @@ H1_ENUM_BEGIN(CombatMessageText)
     COMBAT_TEXT_COUNT = 9
 H1_ENUM_END(CombatMessageText)
 // Fallback net player for a combat action broadcast (0x004c6710).
-extern i32 giRemoteDefaultPlayer;
+extern i32 gRemoteDefaultPlayer;
 #define gTransferArtifacts iTransferArtifacts // spelling fixes .bss order
 extern i8 gTransferArtifacts[];
 // Network combat: this machine controls the current side (0x004a4b98).

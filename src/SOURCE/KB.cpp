@@ -646,7 +646,7 @@ i32 InterpretCommandLine(void) {
     gBlackoutPlayer = 1;
     strcpy(gMapName, "AES31000.map");
     strcpy(gFullMapName, localization::Tr("scenario.claw.name"));
-    strcpy(gMapDesc, localization::Tr("scenario.claw.description"));
+    strcpy(gMapDescription, localization::Tr("scenario.claw.description"));
 
     size = strlen(gCommandLine);
     for (i = 0; i < size; i++) {
@@ -4594,7 +4594,7 @@ H1_ENUM_STORAGE(MainMenuControl, i16) gGameCommand;
 DATA(0x004a9738)
 i8 gMonthType;
 DATA(0x004a6c4c)
-char gMapDesc[124];
+char gMapDescription[124];
 DATA(0x004a7498)
 char* DEFAULT_AGGREGATE_NAME;
 DATA(0x004a7b94)

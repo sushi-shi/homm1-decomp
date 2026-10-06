@@ -168,12 +168,12 @@ public:
 };
 #pragma pack(pop)
 
-extern class heroWindow* gheroWin;
+extern class heroWindow* gHeroWin;
 
 void HeroMessageUpdate(char* text);
 void UpdateHeroScreenStatusBar(i16 widgetId);
 // Stale alias of gHeroWindShowing (0x494128): unreferenced, kept so later symbol handles stay put.
-extern i8 gbHeroScreenActive;
+extern i8 gHeroScreenActive;
 i16 HeroHandler(struct tag_message& message);
 // Moved from HERO.cpp.
 // clang-format off

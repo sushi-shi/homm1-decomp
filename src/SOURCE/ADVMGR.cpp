@@ -63,15 +63,17 @@ DATA(0x004a65c8)
 i32 s_drawCloudFrame;
 DATA(0x004a6714)
 u16 s_drawGroundTile;
+#define s_drawFlipCloud s_drawCloudMirrored // spelling fixes .bss order
 DATA(0x004a672c)
-i8 s_drawCloudMirrored;
+i8 s_drawFlipCloud;
 #define s_drawTileset s_drawCellSet // spelling fixes .bss order
 DATA(0x004a65a4)
 u8 s_drawTileset;
 DATA(0x004a65d4)
 i32 s_drawCovered;
+#define s_drawStoneTile s_drawMapStoneTile // spelling fixes .bss order
 DATA(0x004a65e8)
-i32 s_drawMapStoneTile;
+i32 s_drawStoneTile;
 
 VA(0x00401000, 0x2af)
 advManager::advManager(void) {
@@ -1943,36 +1945,36 @@ void advManager::DrawCell(
     newCell0 = GetCell(mapX, mapY);
     if (!gAllBlack
         && (mapX < 0 || mapY < 0 || mapX >= MAP_CELL_GRID_SIZE || mapY >= MAP_CELL_GRID_SIZE)) {
-        s_drawMapStoneTile = STONE_TILE_NONE;
+        s_drawStoneTile = STONE_TILE_NONE;
         if (mapX == -1) {
             if (mapY == -1)
-                s_drawMapStoneTile = STONE_TILE_TOP_LEFT;
+                s_drawStoneTile = STONE_TILE_TOP_LEFT;
             else if (mapY == MAP_CELL_GRID_SIZE)
-                s_drawMapStoneTile = STONE_TILE_BOTTOM_LEFT;
+                s_drawStoneTile = STONE_TILE_BOTTOM_LEFT;
             else if (mapY >= 0 && mapY < MAP_CELL_GRID_SIZE)
-                s_drawMapStoneTile = ((mapY + STONE_PATTERN_COORDINATE_SHIFT) & CLOUD_VARIANT_MASK)
-                                     + STONE_TILE_LEFT_BASE;
+                s_drawStoneTile = ((mapY + STONE_PATTERN_COORDINATE_SHIFT) & CLOUD_VARIANT_MASK)
+                                  + STONE_TILE_LEFT_BASE;
         } else if (mapX == MAP_CELL_GRID_SIZE) {
             if (mapY == -1)
-                s_drawMapStoneTile = STONE_TILE_TOP_RIGHT;
+                s_drawStoneTile = STONE_TILE_TOP_RIGHT;
             else if (mapY == MAP_CELL_GRID_SIZE)
-                s_drawMapStoneTile = STONE_TILE_BOTTOM_RIGHT;
+                s_drawStoneTile = STONE_TILE_BOTTOM_RIGHT;
             else if (mapY >= 0 && mapY < MAP_CELL_GRID_SIZE)
-                s_drawMapStoneTile = ((mapY + STONE_PATTERN_COORDINATE_SHIFT) & CLOUD_VARIANT_MASK)
-                                     + STONE_TILE_RIGHT_BASE;
+                s_drawStoneTile = ((mapY + STONE_PATTERN_COORDINATE_SHIFT) & CLOUD_VARIANT_MASK)
+                                  + STONE_TILE_RIGHT_BASE;
         } else if (mapY == -1) {
             if (mapX >= 0 && mapX < MAP_CELL_GRID_SIZE)
-                s_drawMapStoneTile = ((mapX + STONE_PATTERN_COORDINATE_SHIFT) & CLOUD_VARIANT_MASK)
-                                     + STONE_TILE_TOP_BASE;
+                s_drawStoneTile = ((mapX + STONE_PATTERN_COORDINATE_SHIFT) & CLOUD_VARIANT_MASK)
+                                  + STONE_TILE_TOP_BASE;
         } else if (mapY == MAP_CELL_GRID_SIZE && mapX >= 0 && mapX < MAP_CELL_GRID_SIZE) {
-            s_drawMapStoneTile = ((mapX + STONE_PATTERN_COORDINATE_SHIFT) & CLOUD_VARIANT_MASK)
-                                 + STONE_TILE_BOTTOM_BASE;
+            s_drawStoneTile = ((mapX + STONE_PATTERN_COORDINATE_SHIFT) & CLOUD_VARIANT_MASK)
+                              + STONE_TILE_BOTTOM_BASE;
         }
-        if (s_drawMapStoneTile == STONE_TILE_NONE)
-            s_drawMapStoneTile =
+        if (s_drawStoneTile == STONE_TILE_NONE)
+            s_drawStoneTile =
                 (mapX + STONE_PATTERN_COORDINATE_SHIFT) % CLOUD_VARIANTS
                 + ((mapY + STONE_PATTERN_COORDINATE_SHIFT) % CLOUD_VARIANTS) * CLOUD_VARIANTS;
-        TileToBitmap(m_stoneTiles, s_drawMapStoneTile, gWindowManager->m_screen, pixelX7, pixelY3);
+        TileToBitmap(m_stoneTiles, s_drawStoneTile, gWindowManager->m_screen, pixelX7, pixelY3);
         return;
     } else {
         if (!((!gAllBlack && (gGame->m_mapExtra[mapX][mapY] & gCurWatchPlayerBit))
@@ -1994,10 +1996,10 @@ void advManager::DrawCell(
                 return;
             }
             if (s_drawCloudFrame >= CLOUD_FLIPPED_FRAME_BASE) {
-                s_drawCloudMirrored = 1;
+                s_drawFlipCloud = 1;
                 s_drawCloudFrame -= CLOUD_FLIPPED_FRAME_BASE;
             } else {
-                s_drawCloudMirrored = 0;
+                s_drawFlipCloud = 0;
             }
             if ((s_drawCloudFrame == CLOUD_X_ALTERNATE_FRAME_1
                  || s_drawCloudFrame == CLOUD_X_ALTERNATE_FRAME_2)
@@ -2011,7 +2013,7 @@ void advManager::DrawCell(
     }
     if (drawMask & ADVMGR_DRAW_CLOUD) {
         if (s_drawCovered) {
-            if (s_drawCloudMirrored)
+            if (s_drawFlipCloud)
                 FlipIconToBitmap(
                     m_cloudOverlayIcon,
                     gWindowManager->m_screen,
@@ -5725,10 +5727,12 @@ void advManager::InsertSound(i16 x, i16 y, i16 distance, i8 soundLayer) {
     }
 }
 
-// ADVMGR .bss keeps four objects no code references: iThisMaxY, iThisMinY,
+// ADVMGR .bss keeps four objects no code references: gThisMaxY, gThisMinY,
 // USMsg and CDMsg.
-i32 iThisMaxY;
-i32 iThisMinY;
+#define gThisMaxY iThisMaxY // spelling fixes .bss order
+i32 gThisMaxY;
+#define gThisMinY iThisMinY // spelling fixes .bss order
+i32 gThisMinY;
 
 VA(0x0040f55c, 0x2f7)
 void advManager::TeleportTo(i32 x, i32 y, i32) {
