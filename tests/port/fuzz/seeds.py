@@ -54,6 +54,20 @@ def make_file_id(name):
     return file_id
 
 
+def remote_crc(data):
+    """calc_crc (src/SOURCE/REMOTEREC.cpp): CRC-16, polynomial 0x1021."""
+    crc = 0
+    for byte in data:
+        mask = 0x80
+        while mask:
+            overflow = crc & 0x8000
+            crc = ((crc << 1) & 0xFFFF) | (1 if byte & mask else 0)
+            if overflow:
+                crc ^= 0x1021
+            mask >>= 1
+    return crc
+
+
 def archive(entries):
     """An archive of (id, payload) entries."""
     out = bytearray(struct.pack("<H", len(entries)))
@@ -173,6 +187,17 @@ def main():
         write(out / "fuzz_help", "help", hlp + struct.pack("<H", 0xFFFF))
         if cnt:
             write(out / "fuzz_help", "help-contents", hlp + cnt + struct.pack("<H", len(cnt)))
+    # fuzz_remote: packets of the sizes the protocol's messages have, with
+    # their CRC, and the bare payloads (no game data).
+    for size in (0, 2, 3, 4, 8, 16, 27, 110, 183, 200, 202, 246):
+        payload = bytes((index * 37 + size) & 0xFF for index in range(size))
+        message = struct.pack("<BiBBh", 1, size, 2, 3, size) + payload
+        header = struct.pack("<BBBB", 0, 1, size & 0xFF, len(message))
+        crc = remote_crc(header + b"\0\0" + message)
+        write(out / "fuzz_remote", f"packet-{size}", header + struct.pack("<H", crc) + message)
+        write(out / "fuzz_remote", f"payload-{size}", payload)
+    write(out / "fuzz_remote", "modem-id", b"ID123456_3")
+    write(out / "fuzz_remote", "netbios", b"Empire Too " + b"HOST".ljust(16, b" "))
     for harness in sorted(os.listdir(out)):
         print(f"{harness}: {len(os.listdir(out / harness))} seeds")
 

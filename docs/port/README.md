@@ -300,7 +300,8 @@ high score tables (`fuzz_highscore`, through the high score screen), the
 resource archive and every decoder that reads a resource in place, drawing
 what it decodes into exactly-sized buffers (`fuzz_resources`), the WinHelp
 converter on a help file and its contents file (`fuzz_help`), the record
-codecs (`fuzz_records`) and the network save compressor (`fuzz_lzhuf`). The
+codecs (`fuzz_records`), the network and serial message codecs, packets and
+payloads (`fuzz_remote`) and the network save compressor (`fuzz_lzhuf`). The
 game's own units run headless; its error exits (`FileError`, `ShutDown`)
 are wrapped to throw, so a file the game refuses is an ordinary outcome.
 

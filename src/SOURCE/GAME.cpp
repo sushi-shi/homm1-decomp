@@ -4292,7 +4292,21 @@ b32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
                       | static_cast<u32>(static_cast<u8>(curInData[3]));
         if (decodedSize > REMOTE_SAVE_DECODE_BUFFER_SIZE)
             goto refused;
+#ifdef HOMM1_PORT
+        // The portable decoder reads no further than the receive buffer (its
+        // zeroed tail stands in for the four bytes the original's senders
+        // leave off) and refuses a stream that ends before its save.
+        dataSize = DecodeDataBounded(
+            decodedData,
+            REMOTE_SAVE_DECODE_BUFFER_SIZE,
+            curInData,
+            dataSize + REMOTE_SAVE_BUFFER_EXTRA
+        );
+        if (dataSize < 0)
+            goto refused;
+#else
         dataSize = DecodeData(decodedData, curInData);
+#endif
     } else {
         decodedData = curInData;
     }

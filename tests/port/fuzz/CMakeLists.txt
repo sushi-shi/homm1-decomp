@@ -113,3 +113,8 @@ homm1_fuzz_harness(fuzz_highscore
 # The WinHelp converter on a help file and its contents file.
 homm1_fuzz_harness(fuzz_help
   SOURCES fuzz_help.cpp)
+
+# The network and serial message codecs.
+homm1_fuzz_harness(fuzz_remote
+  SOURCES fuzz_remote.cpp
+  GAME_SOURCES ${CMAKE_SOURCE_DIR}/src/SOURCE/REMOTEREC.cpp ${CMAKE_SOURCE_DIR}/src/SOURCE/SAVEREC.cpp)
