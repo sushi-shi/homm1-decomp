@@ -12,6 +12,7 @@
 #include <EDITOR/editManager.h>
 #include <EDITOR/eventsManager.h>
 #include <EDITOR/overlayManager.h>
+#include <PLATFORM/Records.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/mapCell.h>
 #include <SOURCE/mapObjectTypes.h>
@@ -66,7 +67,11 @@ void TerrainShares() {
     Expect(finite && std::fabs(sum - 100.0) < 0.01, "closing the random map dialog keeps the shares");
 }
 
-// Each placed town takes an extra record; the table is not overrun.
+// Each placed town takes an extra record. Records of towns erased (or
+// whose placement was undone) were never given back and the 255-entry table
+// filled up; the original then overran it. Records neither the map nor its
+// undo copy shows are now freed before a new one is taken, and a table still
+// full refuses the object.
 void ExtraRecordCapacity() {
     const overlayType* town = nullptr;
     for (int i = 0; i < OVERLAY_TYPE_COUNT && town == nullptr; i++)
@@ -76,15 +81,50 @@ void ExtraRecordCapacity() {
     if (town == nullptr)
         return;
     Ground(FirstTerrain(*town));
+    // A full table, every record named by a town cell along the bottom rows.
+    for (int i = MAP_EXTRA_FIRST_RECORD; i < MAP_EXTRA_RECORD_CAPACITY; i++) {
+        gEditManager->m_extras[i] = std::calloc(1, sizeof(editTownExtra));
+        gEditManager->m_extraSizes[i] = sizeof(editTownExtra);
+        mapCell* cell = &gEditManager->m_map.cells[i % MAP_CELL_GRID_SIZE][64 + i / MAP_CELL_GRID_SIZE];
+        cell->m_triggerType = MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN);
+        cell->m_objectMetadata = static_cast<u8>(i);
+    }
     gEditManager->m_extraCount = MAP_EXTRA_RECORD_CAPACITY;
+    gEditManager->SaveUndo();
     i32 placed = PlaceOverlay(const_cast<overlayType*>(town), 30, 30);
     Expect(placed == 0 && gEditManager->m_extraCount == MAP_EXTRA_RECORD_CAPACITY,
-           "a town is refused when the record table is full");
-    gEditManager->m_extraCount = MAP_EXTRA_FIRST_RECORD;
+           "a town is refused when every record is in use");
+    // Erase those towns: their records are given back for the next one.
+    for (int i = MAP_EXTRA_FIRST_RECORD; i < MAP_EXTRA_RECORD_CAPACITY; i++)
+        gEditManager->m_map.cells[i % MAP_CELL_GRID_SIZE][64 + i / MAP_CELL_GRID_SIZE].m_triggerType = 0;
+    gEditManager->SaveUndo();
     placed = PlaceOverlay(const_cast<overlayType*>(town), 30, 30);
     Expect(placed != 0 && gEditManager->m_extraCount == MAP_EXTRA_FIRST_RECORD + 1,
-           "a town is placed with room in the table");
+           "the records of erased towns are given back");
+    // Erased again, but the undo copy still shows it: its record stays.
+    gEditManager->SaveUndo();
+    gEditManager->ResetArea(0, 0, MAP_CELL_GRID_SIZE, MAP_CELL_GRID_SIZE);
+    for (int x = 0; x < MAP_CELL_GRID_SIZE; x++)
+        for (int y = 0; y < MAP_CELL_GRID_SIZE; y++)
+            gEditManager->m_map.cells[x][y].m_tileIndex =
+                static_cast<u8>(FirstTerrain(*town) * MAP_CELL_TILES_PER_TERRAIN);
+    placed = PlaceOverlay(const_cast<overlayType*>(town), 40, 40);
+    Expect(placed != 0 && gEditManager->m_extraCount == MAP_EXTRA_FIRST_RECORD + 2,
+           "a town the undo copy shows keeps its record");
+    gEditManager->SaveUndo();
     gEditManager->FreeMapExtras();
+}
+
+// The Dragon City and lighthouse coordinates are u8: the test against -1
+// never matched, so a map without them wrote (255, 255, type).
+void EmptyMineRecords() {
+    Ground(2);
+    RecordWriter file;
+    gEditManager->WriteMines(file);
+    bool empty = file.Size() >= 6;
+    for (int i = 0; i < 6 && empty; i++)
+        empty = file.Data()[i] == EDIT_MAP_NO_RECORD;
+    Expect(empty, "a map without Dragon City and lighthouse writes their empty records");
 }
 
 // Every object type at every position along the map's edges: the pieces
@@ -150,6 +190,7 @@ int main() {
         return 1;
     TerrainShares();
     ExtraRecordCapacity();
+    EmptyMineRecords();
     PlacementAtTheEdges();
     std::string cleanup = "rm -r '" + config + "'";
     if (std::system(cleanup.c_str()) != 0)

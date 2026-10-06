@@ -9812,7 +9812,7 @@ void editManager::PaintGround(i16 column, i16 row, i16 width, i16 height, i16 te
                     < (m_zoomedOut == EDIT_ZOOM_OUT ? EDIT_VIEW_ZOOMED_CELLS : EDIT_VIEW_CELLS)
                 && row + j
                        < (m_zoomedOut == EDIT_ZOOM_OUT ? EDIT_VIEW_ZOOMED_CELLS : EDIT_VIEW_CELLS))
-                DrawCell(startX, startY, column + i, row + j, EDIT_DRAW_ALL);
+                DrawCell(startX + i, startY + j, column + i, row + j, EDIT_DRAW_ALL);
         }
     }
     redrawLeft = column * cellPixels + EDIT_VIEW_LEFT;
@@ -10214,10 +10214,10 @@ void editManager::DoVerticalKnob(void) {
                 latest = message;
                 message = gInputManager->GetEvent();
             }
-            if (latest.x < EDIT_KNOB_FIRST)
-                latest.x = EDIT_KNOB_FIRST;
-            if (latest.x > EDIT_KNOB_LAST)
-                latest.x = EDIT_KNOB_LAST;
+            if (latest.y < EDIT_KNOB_FIRST)
+                latest.y = EDIT_KNOB_FIRST;
+            if (latest.y > EDIT_KNOB_LAST)
+                latest.y = EDIT_KNOB_LAST;
             gMouseManager->Main(latest);
             m_verticalKnob->m_y = latest.y;
             newY = latest.y;
@@ -10729,7 +10729,7 @@ void editManager::WriteMines(RecordWriter& file) {
     empty.x = EDIT_MAP_NO_RECORD;
     empty.y = EDIT_MAP_NO_RECORD;
     empty.type = EDIT_MAP_NO_RECORD;
-    if (cityX != -1) {
+    if (cityX != EDIT_MAP_NO_RECORD) {
         type = MAP_OBJECT_TRIGGER(MAP_OBJECT_DRAGON_CITY);
         file.Put(static_cast<u8>(cityX));
         file.Put(static_cast<u8>(cityY));
@@ -10737,7 +10737,7 @@ void editManager::WriteMines(RecordWriter& file) {
     } else {
         WriteEditMapRecord(file, empty);
     }
-    if (lighthouseX != -1) {
+    if (lighthouseX != EDIT_MAP_NO_RECORD) {
         type = MAP_OBJECT_TRIGGER(MAP_OBJECT_LIGHTHOUSE);
         file.Put(static_cast<u8>(lighthouseX));
         file.Put(static_cast<u8>(lighthouseY));
@@ -10831,6 +10831,7 @@ i16 editManager::SaveMap(char* name) {
     gMouseManager->SetPointer(EDIT_POINTER_WAIT);
     CheckObjects();
     UpdateTriggers();
+    FreeUnusedExtras();
     sprintf(fileName, ".\\maps\\%s", name);
     WriteMapFile(file);
     if (!file.SaveFile(fileName))
@@ -11262,6 +11263,58 @@ void editManager::FreeMapExtras(void) {
     for (i = MAP_EXTRA_FIRST_RECORD; i < m_extraCount; i++)
         free(m_extras[i]);
     m_extraCount = MAP_EXTRA_FIRST_RECORD;
+}
+
+// Whether the cell is a town or a hero with a record in the extra table.
+static b32 HasExtraRecord(mapCell* cell, i32 extraCount) {
+    return (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN)
+            || cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_TOWN)
+            || cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_CASTLE)
+            || cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_HERO))
+           && cell->m_objectMetadata >= MAP_EXTRA_FIRST_RECORD
+           && cell->m_objectMetadata < extraCount;
+}
+
+// An erased town or hero, or one whose placement was undone, leaves its
+// record in the extra table. The records that neither the map nor its undo
+// copy shows are freed, and the others are closed up in their order.
+void editManager::FreeUnusedExtras(void) {
+    u8 newIndex[MAP_EXTRA_RECORD_CAPACITY];
+    i32 oldCount;
+    i32 i;
+    i32 x;
+    i32 y;
+
+    memset(newIndex, 0, sizeof(newIndex));
+    for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
+        for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
+            if (HasExtraRecord(&m_map.cells[x][y], m_extraCount))
+                newIndex[m_map.cells[x][y].m_objectMetadata] = true;
+            if (HasExtraRecord(&m_undoMap.cells[x][y], m_extraCount))
+                newIndex[m_undoMap.cells[x][y].m_objectMetadata] = true;
+        }
+    }
+    oldCount = m_extraCount;
+    m_extraCount = MAP_EXTRA_FIRST_RECORD;
+    for (i = MAP_EXTRA_FIRST_RECORD; i < oldCount; i++) {
+        if (newIndex[i]) {
+            newIndex[i] = m_extraCount;
+            m_extras[m_extraCount] = m_extras[i];
+            m_extraSizes[m_extraCount] = m_extraSizes[i];
+            m_extraCount++;
+        } else {
+            free(m_extras[i]);
+        }
+    }
+    for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
+        for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
+            if (HasExtraRecord(&m_map.cells[x][y], oldCount))
+                m_map.cells[x][y].m_objectMetadata = newIndex[m_map.cells[x][y].m_objectMetadata];
+            if (HasExtraRecord(&m_undoMap.cells[x][y], oldCount))
+                m_undoMap.cells[x][y].m_objectMetadata =
+                    newIndex[m_undoMap.cells[x][y].m_objectMetadata];
+        }
+    }
 }
 
 void editManager::NewMap(b32 random) {

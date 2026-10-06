@@ -948,3 +948,6 @@ section 1, each with the reproduction it was checked against.
   below 100 and by at most 10, so the byte never exceeds 109.
 - *Random map generator (BUG-GEN-1–5):* region ranking, region bounds,
   diagonal chain lengths, roads between castles, and desert stone liths.
+- *Editor (BUG-EDT-1–4):* the mine records' empty test, the vertical scroll
+  knob, ground painting's redraw, and the extra records of erased towns and
+  heroes.
