@@ -10,17 +10,17 @@ comparison COFF. The objects then link through `homm1.graph.link` exactly like
 
 Both programs are checked: the game, and the scenario editor, whose units
 (the shared ones again, with the editor's profiles and HOMM1_EDITOR) compile
-against the matching build's editor objects (build/editor/objdiff/base).
+against the matching build's editor objects (build/editor/objdiff/base) and
+link like `homm1 --image editor link`.
 
-Four checks, all of which must pass:
+These checks must all pass:
 
 * The control tree applies the same macro expansions and comment removal as
   the source tree but keeps every line, the `#line` pins and the scaffolding
   headers. It must reproduce every non-debug object section (bytes,
-  relocations, symbol names) of both programs and the candidate HEROES.EXE
-  byte for byte, LINK's TimeDateStamps aside: the transforms change no code.
-  (The matching build has no editor candidate to compare an EDITOR.EXE
-  with; the standalone build links it.)
+  relocations, symbol names) of both programs and both candidates
+  (HEROES.EXE, EDITOR.EXE) byte for byte, LINK's TimeDateStamps aside: the
+  transforms change no code.
 * The source tree must compile and link without /FORCE. Without the `#line`
   pins its assertions carry their own line numbers and file names, without
   the frame-slot aliases its locals take their readable spellings' `/Od`
@@ -400,20 +400,44 @@ def _build_tree(localized: Path, work: Path, label: str, image: str, *, exact: b
     return built, different
 
 
-def _link(work: Path, built: list, res: Path | None, label: str) -> tuple[bool, dict]:
+def _link(work: Path, built: list, res: Path | None, label: str,
+          image: str = "game") -> tuple[bool, dict]:
+    """Link `built` as `image`'s candidate does (homm1.graph.link, the image's
+    profile) and compare the result with the matching candidate."""
+    import os
+    import subprocess
+    from homm1.core.paths import IMAGE_ENV
     from homm1.graph.link import candidate
-    exe = work / "HEROES.EXE"
-    result = candidate(exe, work / "obj", explicit=[str(o) for _u, _o, o in built], res=res)
-    if result["unresolved"]:
-        raise ValueError(f"{label}: {len(result['unresolved'])} unresolved external(s): "
-                         + ", ".join(sorted(result["unresolved"])[:6]))
-    same, counts = compare_images(exe, REPO / graph.CANDIDATE_EXE)
+    exe = work / _executable(image)
+    objects = [str(o) for _u, _o, o in built]
+    if image == "game":
+        result = candidate(exe, work / "obj", explicit=objects, res=res)
+        if result["unresolved"]:
+            raise ValueError(f"{label}: {len(result['unresolved'])} unresolved external(s): "
+                             + ", ".join(sorted(result["unresolved"])[:6]))
+    else:
+        # The link line, object order and PDB follow the selected image, which
+        # the module reads from the environment at import.
+        command = [sys.executable, "-m", "homm1.graph.link", "--out", str(exe),
+                   "--objs-dir", str(work / "obj"), *[f"--obj={o}" for o in objects],
+                   *(["--res", str(res)] if res is not None else [])]
+        result = subprocess.run(command, cwd=REPO, env=dict(os.environ, **{IMAGE_ENV: image}),
+                                capture_output=True, text=True)
+        if result.returncode or not exe.is_file():
+            raise ValueError(f"{label}: {image} link failed:\n"
+                             + "\n".join((result.stdout + result.stderr).strip()
+                                         .splitlines()[-12:]))
+    same, counts = compare_images(exe, REPO / graph.image_paths(image)["CANDIDATE_EXE"])
     shown = exe.relative_to(REPO) if exe.is_relative_to(REPO) else exe
     print(f"[clean] verify: {label}: linked {shown} (no unresolved externals, no /FORCE); "
           + ("byte-identical to the matching candidate apart from build timestamps"
              if same else "differs from the matching candidate in "
              + ", ".join(f"{name} {n} B" for name, n in sorted(counts.items()))))
     return same, counts
+
+
+def _executable(image: str) -> str:
+    return json.loads((REPO / "config/retail/targets.json").read_text())[image]["name"]
 
 
 #: Spellings whose value moves when `#line` pins and blank lines go.
@@ -451,20 +475,20 @@ def _images() -> list[str]:
 
 
 def _matching_objects(image: str) -> int:
-    """Bring the matching build's objects of a non-game image up to date."""
+    """Bring the matching build's objects and candidate of a non-game image up
+    to date (`homm1 --image <image> link`)."""
     from homm1.graph.verbs import ninja
-    base = graph.image_paths(image)["BASE_DIR"]
-    return ninja([f"{base}/{unit['unit']}.obj" for unit, _flags in _image_units(image)])
+    return ninja([f"candidate-{image}"])
 
 
-def _resources(tree: Path, work: Path) -> Path | None:
+def _resources(tree: Path, work: Path) -> dict[str, Path]:
     """Compile each program's resource script of `tree` against its staged
-    retail executable; returns the game's .res for the link (None when the
-    matching build compiles no resources)."""
+    retail executable; returns {image: .res} for the links (the game's only
+    when the matching build compiles its resources)."""
     from homm1.clean.project import RESOURCES
     from homm1.core.paths import retail_exe
     from homm1.tool import rc
-    res = None
+    compiled = {}
     for image in _images():
         if image == "game" and not (REPO / graph.RESOURCE_RES).is_file():
             continue
@@ -476,9 +500,8 @@ def _resources(tree: Path, work: Path) -> Path | None:
         rc.compile(tree / RESOURCES[image], out, retail=retail_exe(image))
         print(f"[clean] verify: {Path(RESOURCES[image]).name} compiles to the retail "
               "resource payloads")
-        if image == "game":
-            res = out
-    return res
+        compiled[image] = out
+    return compiled
 
 
 def verify(tree: Path, inputs: dict[str, bytes], variant: str = "source") -> int:
@@ -509,7 +532,7 @@ def verify(tree: Path, inputs: dict[str, bytes], variant: str = "source") -> int
     if variant != "source":
         source_tree = _write(work / "source-tree", generate(inputs, variant="source")[0])
 
-    res = None
+    res = {}
     status = 0
     report = []
     try:
@@ -525,9 +548,8 @@ def verify(tree: Path, inputs: dict[str, bytes], variant: str = "source") -> int
                 built, different = _build_tree(localized, out if image == "game" else
                                                out / image, label, image, exact=exact,
                                                renames=renames)
-                same = True
-                if image == "game":
-                    same, _counts = _link(out, built, res, label)
+                same, _counts = _link(out if image == "game" else out / image, built,
+                                      res.get(image), label, image)
                 report += [f"{label}\t{image}\t{unit}\t{section}"
                            for unit, sections in sorted(different.items())
                            for section in sections]

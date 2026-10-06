@@ -9,7 +9,7 @@ into the library LINK searches after audiere.lib, the library line and flags.
 The game's order is each unit's lowest claimed function address, read from
 the annotations before they are removed; the editor's is its reviewed
 `config/retail/editor/link_order.tsv` (a shared unit's claims spell game
-addresses). `imports/` holds the stub-DLL sources `homm1.graph.implib`
+addresses); the library line is `homm1.graph.link.PROFILES`. `imports/` holds the stub-DLL sources `homm1.graph.implib`
 derives from the retail import table for the vendor DLLs whose SDKs ship no
 import library; the editor imports only audiere's, a subset of the game's.
 Only names, ordinals and order are carried; no address reaches the tree.
@@ -29,14 +29,6 @@ RUNNER = "scripts/homm1/graph/play.py"
 EXECUTABLE = ("build.py", "play.py")
 #: Each image's resource script.
 RESOURCES = {"game": "src/SOURCE/Heroes.rc", "editor": "src/EDITOR/Editor.rc"}
-#: EDITOR.EXE's library line: its import descriptors read KERNEL32, USER32,
-#: GDI32, ADVAPI32, WING32 and audiere (the game's line without WINMM, mss32,
-#: smackw32 and NETAPI32), with OLDNAMES first and msvcprt (operator delete)
-#: after the import libraries, as in the game. It keeps LINK's default stack.
-EDITOR_LINK_LIBS = ["oldnames.lib", "kernel32.lib", "user32.lib", "gdi32.lib",
-                    "advapi32.lib", "wing32.lib", "audiere.lib", "msvcprt.lib"]
-
-
 def _units(files: dict[str, bytes], image: str = "game") -> list[dict]:
     """The units `image` links, in manifest order."""
     import tomllib
@@ -93,8 +85,8 @@ def _profile(config: dict, unit: dict, image: str) -> list[str]:
 def target(files: dict[str, bytes], image: str) -> dict:
     """One program's build and link contract."""
     import tomllib
-    from homm1.graph.link import (BASE_LIBRARY, BASE_LIBRARY_AFTER, BASE_LIBRARY_FROM,
-                                  CRT_LIBRARY, CRT_REPLACES, LINK_LIBS, LINK_RETAIL_FLAGS)
+    from homm1.graph.link import (BASE_LIBRARY, BASE_LIBRARY_AFTER, CRT_LIBRARY,
+                                  CRT_REPLACES, LINK_RETAIL_FLAGS, PROFILES)
     config = tomllib.loads(files["config/units.toml"].decode())
     pins = json.loads(files["config/retail/targets.json"])
     units = _units(files, image)
@@ -106,16 +98,10 @@ def target(files: dict[str, bytes], image: str) -> dict:
             raise ValueError(f"{image}: {unit['unit']}: no claimed function orders it in the link")
         keyed.append((rva, index, unit["unit"], unit["source"]))
     ordered = sorted(keyed)
-    if image == "game":
-        library_from = BASE_LIBRARY_FROM
-        libraries = [*LINK_LIBS, CRT_LIBRARY]
-        stack = ["/STACK:0x10240,0x1000"]
-    else:
-        # LINK places library members after every object, so the BASE library
-        # begins at the first BASE unit of the retail code order.
-        library_from = min(rva for rva, _i, _u, path in ordered if path.startswith("src/BASE/"))
-        libraries = [*EDITOR_LINK_LIBS, CRT_LIBRARY]
-        stack = []
+    # The image's link line (homm1.graph.link): its import libraries, the
+    # start of its BASE library and its stack.
+    line = PROFILES[image]
+    library_from = line["base_library_from"]
     if RESOURCES[image] not in files:
         raise ValueError(f"{image}: no resource script {RESOURCES[image]}")
     return {
@@ -129,9 +115,9 @@ def target(files: dict[str, bytes], image: str) -> dict:
             "members": [name for rva, _i, name, _p in ordered if rva >= library_from],
             "library": BASE_LIBRARY,
             "library_after": BASE_LIBRARY_AFTER,
-            "libraries": libraries,
+            "libraries": [*line["libs"], CRT_LIBRARY],
             "flags": ["/SUBSYSTEM:WINDOWS", "/BASE:0x400000", "/INCREMENTAL:NO",
-                      *LINK_RETAIL_FLAGS, f"/NODEFAULTLIB:{CRT_REPLACES}", *stack],
+                      *LINK_RETAIL_FLAGS, f"/NODEFAULTLIB:{CRT_REPLACES}", *line["flags"]],
         },
     }
 

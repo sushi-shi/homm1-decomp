@@ -276,7 +276,7 @@ images = ["editor"]
     ORDER = ("# reviewed spans\nindex\tunit\tlo\thi\tclass\n"
              "0\tEDITOR/EDITOR\t0x00001000\t0x00002000\tcode\n"
              "1\tSOURCE/kbwin\t0x00002000\t0x00003000\tcode\n"
-             "2\tBASE/WINDOW\t0x00004000\t0x00005000\tcode\n"
+             "2\tBASE/WINDOW\t0x0001b500\t0x0001c000\tcode\n"
              "3\tSOURCE/kbwin\t0x00001800\t0x00001900\tcode\n")
 
     def files(self):
@@ -302,7 +302,7 @@ images = ["editor"]
         files = self.files()
         self.assertEqual(project.images(files), ["game", "editor"])
         self.assertEqual(project.image_starts(files, "editor"),
-                         {"EDITOR/EDITOR": 0x1000, "SOURCE/kbwin": 0x1800, "BASE/WINDOW": 0x4000})
+                         {"EDITOR/EDITOR": 0x1000, "SOURCE/kbwin": 0x1800, "BASE/WINDOW": 0x1b500})
         editor = project.target(files, "editor")
         self.assertEqual(editor["executable"], "EDITOR.EXE")
         self.assertEqual(editor["resources"], "src/EDITOR/Editor.rc")

@@ -83,10 +83,11 @@ and `editor`). Each lists its units with their full VC6 flags (the per-image
 profile of `config/units.toml` and the image's defines), its resource script,
 and its link: the retail object order, the BASE library and the retail
 `/OPT:NOREF`. The game's order is computed from the annotations before they are
-removed; the editor's comes from `config/retail/editor/link_order.tsv`, whose
-first BASE unit starts the editor's BASE library, and its library line is the
-game's without WINMM, mss32, smackw32 and NETAPI32 and without the game's
-`/STACK`. No address reaches the tree.
+removed; the editor's comes from `config/retail/editor/link_order.tsv`. Each
+program's library line, BASE library start and stack are its
+`homm1.graph.link` profile (the editor's: the game's libraries without WINMM,
+mss32, smackw32 and NETAPI32, and LINK's default stack). No address reaches
+the tree.
 
 The classic tree drops the build files and the catalog. It keeps a README that
 points to `source-buka-2003` for building. Research notes and all tooling stay
@@ -128,11 +129,11 @@ editor's profiles and `HOMM1_EDITOR`) against `build/editor/objdiff/base`.
   Each unit compiles in the matching build's localization view (the
   length-padded catalog macros through the forced include). The control must
   reproduce every non-debug section of all 68 game and 39 editor objects
-  (bytes, relocations and symbol names) and the candidate `HEROES.EXE` byte for
+  (bytes, relocations and symbol names) and both candidates, `HEROES.EXE` and
+  `EDITOR.EXE` (linked with the editor's `homm1.graph.link` profile), byte for
   byte. The only exception is LINK's TimeDateStamps (PE header, export,
   resource and debug directories, and the CodeView signature). This proves
-  that the transforms change no code. The matching build has no editor
-  candidate to compare a linked `EDITOR.EXE` with.
+  that the transforms change no code.
 - **Source.** The generated tree is compiled from its Russian localized copy,
   as its own `build.py` does, and must link. Its objects are compared after
   VC6's compiler-local names (`$L`, `$T`, `$SG`, `$E`, `$S`, `$label$N`) are
