@@ -80,6 +80,9 @@ H1_ENUM_CONST_BEGIN(RandomMapConstant)
     // PlaceChainLink: a tileset with no chain of the cell's terrain matches
     // no object's terrainMask.
     RANDOM_MAP_NO_CHAIN_TERRAIN = -1,
+    // PlaceChainLink's treeFamily when a chain takes trees of any family
+    // (no first letter to match).
+    RANDOM_MAP_ANY_TREE_FAMILY = 0,
     // PlaceRandomObjects: the obelisk objects are named "obelisk<terrain>".
     RANDOM_MAP_OBELISK_NAME_LENGTH = 7,
     // gMineSiteKinds: the resources of the five mines' resource marker

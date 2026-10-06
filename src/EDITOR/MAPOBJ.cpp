@@ -74,7 +74,7 @@ void editManager::GenerateRandomMap(void) {
     if (!NewMapDialog()) {
         DrawMap();
         UpdateMapView();
-        DrawRadar(1);
+        DrawRadar(true);
         return;
     }
     if (gSaveUnseen)
@@ -87,7 +87,7 @@ void editManager::GenerateRandomMap(void) {
         ResetArea(0, 0, MAP_CELL_GRID_SIZE, MAP_CELL_GRID_SIZE);
         DrawMap();
         UpdateMapView();
-        DrawRadar(1);
+        DrawRadar(true);
         unusedPercent = 100.0;
         paintFrom = 0;
         for (terrain = 0; terrain <= H1_ENUM_ENCODE(TerrainType, TERRAIN_LAST); terrain++) {
@@ -166,7 +166,7 @@ void editManager::GenerateRandomMap(void) {
     ShowStatusText("");
     ClearStatusText();
     UpdateMapView();
-    DrawRadar(1);
+    DrawRadar(true);
 }
 #undef terrain
 #undef paintFrom
@@ -386,7 +386,7 @@ void editManager::RemoveSmallRegions(void) {
     i32 minX;
     b32 spread;
     H1_ENUM_LOCAL(TerrainType, i32) neighbourTerrain;
-    i8* done;
+    b8* done;
     i32 countX;
     i32 y;
     H1_ENUM_LOCAL(TerrainType, i32) ground;
@@ -400,7 +400,7 @@ void editManager::RemoveSmallRegions(void) {
     i32 x;
     i32 minY;
 
-    done = static_cast<i8*>(malloc(MAP_CELL_GRID_SIZE * MAP_CELL_GRID_SIZE));
+    done = static_cast<b8*>(malloc(MAP_CELL_GRID_SIZE * MAP_CELL_GRID_SIZE));
     inRegion = static_cast<i8*>(malloc(MAP_CELL_GRID_SIZE * MAP_CELL_GRID_SIZE));
     memset(done, 0, MAP_CELL_GRID_SIZE * MAP_CELL_GRID_SIZE);
     for (startY = 0; startY < MAP_CELL_GRID_SIZE; startY++) {
@@ -473,7 +473,7 @@ void editManager::RemoveSmallRegions(void) {
             for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
                 for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
                     if (MAP_GRID_CELL(inRegion, x, y)) {
-                        MAP_GRID_CELL(done, x, y) = 1;
+                        MAP_GRID_CELL(done, x, y) = true;
                         m_map.cells[x][y].m_tileIndex =
                             H1_ENUM_ENCODE(TerrainType, neighbourTerrain)
                             * MAP_CELL_TILES_PER_TERRAIN;
@@ -530,7 +530,7 @@ void editManager::PlaceObstacleChains(i32 density, H1_ENUM_PARAM(MapTileset, i32
     i32 rootY;
 
     placed = 0;
-    treeFamily = 0;
+    treeFamily = RANDOM_MAP_ANY_TREE_FAMILY;
     ground = TERRAIN_WATER;
     landCells = 0;
     for (rootX = 0; rootX < MAP_CELL_GRID_SIZE; rootX++)
@@ -557,7 +557,7 @@ void editManager::PlaceObstacleChains(i32 density, H1_ENUM_PARAM(MapTileset, i32
         if (Random(1, 100) <= 25)
             direction++;
         going = true;
-        treeFamily = 0;
+        treeFamily = RANDOM_MAP_ANY_TREE_FAMILY;
         if (tileset == TILESET_TREE32) {
             switch (H1_ENUM_DECODE(ChainTreeFamily, Random(0, 2))) {
                 case CHAIN_TREE_AUTUMN:
@@ -646,7 +646,7 @@ void editManager::PlaceObstacleChains(i32 density, H1_ENUM_PARAM(MapTileset, i32
 #define terrainChain specific   // frame-slot spelling
 #define terrainBit bit          // frame-slot spelling
 VA(0x00412327, 0x303)
-i32 editManager::PlaceChainLink(
+b32 editManager::PlaceChainLink(
     i32* x,
     i32* y,
     H1_ENUM_PARAM(ChainDirection, i32) direction,
@@ -661,7 +661,7 @@ i32 editManager::PlaceChainLink(
     i32 terrainBit;
 
     if (*x < 0 || *x > MAP_CELL_GRID_SIZE - 1 || *y < 0 || *y > MAP_CELL_GRID_SIZE - 1)
-        return 0;
+        return false;
     piece = CHAIN_PIECE_STEEP_RISING;
     ground = CELL_TERRAIN(&m_map.cells[*x][*y]);
     terrainBit = RANDOM_MAP_NO_CHAIN_TERRAIN;
@@ -722,15 +722,15 @@ i32 editManager::PlaceChainLink(
         PlaceOverlay(terrainChain, *x, *y);
         *x += gChainSteps[direction][MAP_STEP_X];
         *y += gChainSteps[direction][MAP_STEP_Y];
-        return 1;
+        return true;
     }
     if (CanPlaceOverlay(anyTerrainChain, *x, *y)) {
         PlaceOverlay(anyTerrainChain, *x, *y);
         *x += gChainSteps[direction][MAP_STEP_X];
         *y += gChainSteps[direction][MAP_STEP_Y];
-        return 1;
+        return true;
     }
-    return 0;
+    return false;
 }
 #undef piece
 #undef anyTerrainChain
@@ -748,8 +748,8 @@ i32 editManager::PlaceChainLink(
 VA(0x0041262a, 0x1f4c)
 void editManager::PlaceTowns(void) {
     i32 terrain;
-    i32 cutOff[RANDOM_MAP_CASTLE_SLOTS];
-    i32 extraRoads[RANDOM_MAP_CASTLE_SLOTS];
+    b32 cutOff[RANDOM_MAP_CASTLE_SLOTS];
+    b32 extraRoads[RANDOM_MAP_CASTLE_SLOTS];
     i32 nearX;
     i32 castleRegion[RANDOM_MAP_CASTLE_SLOTS];
     i32 tileX;
@@ -796,8 +796,8 @@ void editManager::PlaceTowns(void) {
     u8* reachedGrids[RANDOM_MAP_CASTLE_SLOTS];
 
     for (slot = 0; slot < RANDOM_MAP_CASTLE_SLOTS; slot++) {
-        cutOff[slot] = 0;
-        extraRoads[slot] = 0;
+        cutOff[slot] = false;
+        extraRoads[slot] = false;
     }
     castle = NULL;
     snowStoneLiths = NULL;
@@ -1074,8 +1074,8 @@ void editManager::PlaceTowns(void) {
                     stepX = 0;
                 else {
                     tracing = false;
-                    cutOff[c] = 1;
-                    cutOff[peerIndex] = 1;
+                    cutOff[c] = true;
+                    cutOff[peerIndex] = true;
                 }
                 if (tracing
                     && m_map.cells[nearX + stepX][nearY + stepY].m_tileIndex
@@ -1089,17 +1089,17 @@ void editManager::PlaceTowns(void) {
         }
     }
     if (Random(0, 100) < 50) {
-        extraRoads[0] = 1;
-        extraRoads[1] = 1;
+        extraRoads[0] = true;
+        extraRoads[1] = true;
         if (Random(0, 100) < 50)
-            extraRoads[2] = 1;
+            extraRoads[2] = true;
         if (Random(0, 100) < 50)
-            extraRoads[3] = 1;
+            extraRoads[3] = true;
     }
     if (cutOff[0] || cutOff[1] || cutOff[2] || cutOff[3] || extraRoads[0]) {
         ShowStatusText(localization::Tr("editor.random.status.roads"));
         for (slot = 0; slot < RANDOM_MAP_CASTLE_SLOTS; slot++) {
-            cutOff[slot] = 0;
+            cutOff[slot] = false;
             reachable[slot] = 0;
             for (tileX = keeps[slot].x - RANDOM_MAP_SITE_LEFT;
                  tileX <= keeps[slot].x + RANDOM_MAP_SITE_RIGHT;
@@ -1158,8 +1158,8 @@ void editManager::PlaceTowns(void) {
                                 && MAP_GRID_CELL(reachedGrids[t], tileX, tileY))
                                 meet = true;
                     if (!meet) {
-                        cutOff[slot] = 1;
-                        cutOff[t] = 1;
+                        cutOff[slot] = true;
+                        cutOff[t] = true;
                     }
                 }
             }
