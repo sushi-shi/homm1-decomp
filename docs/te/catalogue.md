@@ -936,3 +936,5 @@ section 1, each with the reproduction it was checked against.
 - *Computer player (BUG-AI-1–6):* the replaced stack's value, the affordable
   creature count, sites visited by other players, stale route nodes, hero
   distances, and artifacts taken without a free slot.
+- *Combat (BUG-CMB-1–2):* berserk stacks that loop or act without an
+  action, and commander skills that wrap the stack's attack and defense.

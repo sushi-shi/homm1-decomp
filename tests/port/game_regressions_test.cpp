@@ -21,6 +21,8 @@
 #include <PLATFORM/Records.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/advManager.h>
+#include <SOURCE/army.h>
+#include <SOURCE/combatManager.h>
 #include <SOURCE/artifactTypes.h>
 #include <SOURCE/creatureTypes.h>
 #include <SOURCE/game.h>
@@ -174,6 +176,63 @@ void LongWords() {
     gResourceManager->Dispose(small);
 }
 
+
+// A commander's Attack and Defense were added into the stack's 8-bit
+// attack and defense, which wrapped negative above 127.
+void CommanderStatsHoldInTheirByte() {
+    hero* commander = &gGame->m_heroRecs[5];
+    i8 savedAttack = commander->m_primaryStats[HERO_PRIMARY_ATTACK];
+    i8 savedDefense = commander->m_primaryStats[HERO_PRIMARY_DEFENSE];
+    hero* savedHero = gCombatManager->m_heroes[0];
+    commander->m_primaryStats[HERO_PRIMARY_ATTACK] = 120;
+    commander->m_primaryStats[HERO_PRIMARY_DEFENSE] = 120;
+    gCombatManager->m_heroes[0] = commander;
+    army* stack = new army;
+    stack->Init(CREATURE_DRAGON, 1, 0, 0);
+    Expect(stack->m_stats.attack == ARMY_STAT_MAX && stack->m_stats.defense == ARMY_STAT_MAX,
+           "a commander's skill of 120 holds the stack's attack and defense at 127");
+    delete stack;
+    gCombatManager->m_heroes[0] = savedHero;
+    commander->m_primaryStats[HERO_PRIMARY_ATTACK] = savedAttack;
+    commander->m_primaryStats[HERO_PRIMARY_DEFENSE] = savedDefense;
+}
+
+// A berserk stack with nothing to attack: a flier drew hexes without end,
+// a walker that drew a blocked direction was left without an action.
+void BerserkWithNothingToAttack() {
+    hexcell savedCells[COMBAT_HEX_COUNT];
+    memcpy(savedCells, gCombatManager->m_hexCells, sizeof(savedCells));
+    for (int i = 0; i < COMBAT_HEX_COUNT; i++) {
+        gCombatManager->m_hexCells[i].m_occupantSide = COMBAT_SIDE_NONE;
+        gCombatManager->m_hexCells[i].m_obstacleIndex = COMBAT_OBSTACLE_NONE;
+    }
+    // Hex 0 is a corner the flier's draws (1-43) never pick.
+    gCombatManager->m_hexCells[0].m_occupantSide = 0;
+    gCombatManager->m_hexCells[0].m_occupantIndex = 0;
+    army* stack = new army;
+    stack->Init(CREATURE_GRIFFIN, 5, 0, 0);
+    stack->m_hex = 0;
+    gNextAction = ACTION_NONE;
+    stack->GoBerserk();
+    Expect(gNextAction == ACTION_SKIP_TURN, "a berserk flier with nothing to reach waits");
+    // A walker whose neighbours are all obstacles.
+    stack->Init(CREATURE_PEASANT, 5, 0, 0);
+    stack->m_hex = 0;
+    for (int direction = COMBAT_DIRECTION_ADJACENT_FIRST; direction <= COMBAT_DIRECTION_ADJACENT_LAST;
+         direction++) {
+        i16 next = GetAdjacentCellIndexNoArmy(0, direction);
+        if (ValidHex(next))
+            gCombatManager->m_hexCells[next].m_obstacleIndex = 0;
+    }
+    gNextAction = ACTION_NONE;
+    stack->GoBerserk();
+    Expect(gNextAction == ACTION_SKIP_TURN, "a berserk walker that cannot move waits");
+    delete stack;
+    memcpy(gCombatManager->m_hexCells, savedCells, sizeof(savedCells));
+    gNextAction = ACTION_NONE;
+}
+
+
 // MaxBuyableCreatures kept only the last resource's (gold's) count.
 void AffordableCreaturesNeedEveryResource() {
     i32 cost[RESOURCE_COUNT];
@@ -293,6 +352,8 @@ int main() {
     HeroDistanceUsesY();
     RouteThroughAStaleNode();
     RandomArtifactWithoutAFreeSlot();
+    CommanderStatsHoldInTheirByte();
+    BerserkWithNothingToAttack();
     std::string cleanup = "rm -r '" + config + "'";
     if (std::system(cleanup.c_str()) != 0)
         std::fprintf(stderr, "could not remove %s\n", config.c_str());
