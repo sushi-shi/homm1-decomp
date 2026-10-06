@@ -390,8 +390,8 @@ asked otherwise, so `%zu` prints garbage.
 for every shipped movie. `CMakeLists.txt` marks SDL's headers as system
 headers, the installed SDL's and the one it builds itself; the Windows build defines
 `__USE_MINGW_ANSI_STDIO` and checks `Log`'s format as `gnu_printf`; the
-Windows install fails when a program imports a DLL that is neither shipped
-nor part of Windows. Headless test runs of the help must also keep the
+Windows build links every library in and fails when a program imports a DLL
+that is not part of Windows. Headless test runs of the help must also keep the
 desktop out of reach: `SDL_OpenURL` tries the D-Bus portal before `xdg-open`
 and opens the user's real browser, so such runs set
 `DBUS_SESSION_BUS_ADDRESS` to nothing and put a recording `xdg-open` first

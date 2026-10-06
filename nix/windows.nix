@@ -1,14 +1,27 @@
 # The native port cross-compiled for 64-bit Windows with MinGW-w64: the game
-# (heroes.exe) and the scenario editor (heroes-editor.exe) in bin/, with the
-# DLLs they need beside them (SDL3, nixpkgs' cross build, and the compiler's
-# thread library).
+# (heroes.exe) and the scenario editor (heroes-editor.exe) in bin/. Each is a
+# single file: SDL3, the C++ runtime and the compiler's thread library are
+# linked in (CMakeLists.txt links MinGW programs with -static), so a player
+# can copy them anywhere without DLLs.
 { pkgs, src }:
 
 let
   cross = pkgs.pkgsCross.mingwW64;
-  sdl3 = cross.sdl3;
-  # GCC's thread model on this target: libstdc++ calls into mcfgthread.
-  threads = cross.windows.mcfgthreads;
+  # nixpkgs builds SDL3 shared only, and -static cannot link a DLL in.
+  sdl3 = cross.sdl3.overrideAttrs (previous: {
+    cmakeFlags = previous.cmakeFlags ++ [
+      "-DSDL_SHARED:BOOL=OFF"
+      "-DSDL_STATIC:BOOL=ON"
+    ];
+  });
+  # Windows' own DLLs. Anything else a program imported would be a "missing
+  # DLL" error on the player's machine, since the package ships no DLL.
+  windowsSystemDlls = [
+    "advapi32.dll" "bcrypt.dll" "cfgmgr32.dll" "gdi32.dll" "hid.dll"
+    "imm32.dll" "kernel32.dll" "msvcrt.dll" "ntdll.dll" "ole32.dll"
+    "oleaut32.dll" "setupapi.dll" "shell32.dll" "user32.dll"
+    "version.dll" "winmm.dll" "ws2_32.dll"
+  ];
 in
 cross.stdenv.mkDerivation {
   pname = "homm1-windows";
@@ -16,7 +29,9 @@ cross.stdenv.mkDerivation {
   inherit src;
 
   nativeBuildInputs = with cross.buildPackages; [ cmake ninja pkg-config python3 ];
-  buildInputs = [ sdl3 ];
+  # GCC's thread model on this target: libstdc++ calls into mcfgthread,
+  # whose static library -static links in.
+  buildInputs = [ sdl3 cross.windows.mcfgthreads ];
   cmakeFlags = [ "-DCMAKE_BUILD_TYPE=RelWithDebInfo" "-DBUILD_TESTING=ON" ];
   # The programs and the path tests that run under Wine (windows-checks.nix);
   # the other tests are not cross-built here.
@@ -27,27 +42,26 @@ cross.stdenv.mkDerivation {
     runHook preInstall
     mkdir -p $out/bin
     install -m755 heroes.exe heroes-editor.exe $out/bin/
-    install -m644 ${sdl3.out}/bin/SDL3.dll $out/bin/
-    install -m644 ${threads}/bin/libmcfgthread-2.dll $out/bin/
     mkdir -p $tests/bin
     install -m755 tests/port/file_test.exe tests/port/data_root_test.exe $tests/bin/
-    cp $out/bin/*.dll $tests/bin/
     runHook postInstall
   '';
 
-  # Everything the programs import must be shipped here or be part of Windows.
-  doInstallCheck = true;
-  installCheckPhase = ''
-    shipped=$(cd $out/bin && ls *.dll | tr 'A-Z' 'a-z')
-    for program in $out/bin/*.exe $out/bin/*.dll $tests/bin/*.exe; do
-      for dll in $(${cross.stdenv.cc.targetPrefix}objdump -p "$program" | sed -n 's/^\s*DLL Name: //p' | tr 'A-Z' 'a-z'); do
-        case "$dll" in
-          kernel32.dll|user32.dll|gdi32.dll|advapi32.dll|shell32.dll|ole32.dll|oleaut32.dll| \
-          imm32.dll|winmm.dll|version.dll|setupapi.dll|cfgmgr32.dll|bcrypt.dll|msvcrt.dll| \
-          ntdll.dll|uxtheme.dll|dwmapi.dll|shcore.dll|hid.dll|ws2_32.dll|api-ms-win-*) ;;
-          *) echo "$shipped" | grep -qx "$dll" || { echo "$program imports $dll, which is not shipped"; exit 1; } ;;
+  # Every program may import only Windows' own DLLs, and none is shipped.
+  # (An install check would be skipped: the build machine cannot run them.)
+  postFixup = ''
+    for program in $out/bin/*.exe $tests/bin/*.exe; do
+      for dll in $(${cross.stdenv.cc.targetPrefix}objdump -p "$program" | sed -n 's/^[[:space:]]*DLL Name: //p' | tr 'A-Z' 'a-z'); do
+        case " ${pkgs.lib.concatStringsSep " " windowsSystemDlls} " in
+          *" $dll "*) ;;
+          *) echo "$program imports $dll, which is not part of Windows" >&2; exit 1 ;;
         esac
       done
+    done
+    # (stdenv globs with nullglob: no match is an empty list.)
+    for dll in $out/bin/*.dll $tests/bin/*.dll; do
+      echo "the Windows package is meant to be static, but ships $dll" >&2
+      exit 1
     done
   '';
 

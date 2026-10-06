@@ -77,14 +77,15 @@ the editor's window sizes, full screen, About and Help are there.
 ### Windows
 
 ```sh
-nix build .#windows        # result/bin: heroes.exe, heroes-editor.exe and their DLLs
+nix build .#windows        # result/bin: heroes.exe, heroes-editor.exe
 ```
 
 `nix/windows.nix` cross-compiles both programs for x86-64 Windows with
-nixpkgs' MinGW-w64 GCC and SDL3 built for the target, and ships the DLLs
-they import (`SDL3.dll`, `libmcfgthread-2.dll`); the
-build fails if a program imports any other DLL that is not part of Windows.
-Copy `result/bin` to Windows and run `heroes.exe --data C:\Games\Heroes` or
+nixpkgs' MinGW-w64 GCC and a static SDL3 built for the target, and links
+SDL, the C++ runtime and the thread library into each program (`-static`):
+both are single files with no DLL beside them, and the build fails if a
+program imports any DLL that is not part of Windows. Copy the two programs
+anywhere on Windows and run `heroes.exe --data C:\Games\Heroes` or
 `heroes-editor.exe`. The game folder is searched as on Linux, with
 `%LOCALAPPDATA%\homm1-buka\game` in place of the XDG folders; settings and
 the converted help are in `%APPDATA%\homm1\`. The programs are GUI programs:
@@ -107,11 +108,11 @@ game folder three ways.
 
 On Windows itself (MinGW-w64, CMake 3.25+, Ninja, Python 3), `cmake --preset
 windows` and `cmake --build --preset windows` build both programs in
-`build\windows`; without an installed SDL, CMake fetches it and links it, the C++ runtime and the
-thread library in (`-static`), so each program is a single `.exe` that
-imports only Windows' own DLLs. That path is checked by cross-building the
-preset with nixpkgs' MinGW-w64 from a fetched SDL and starting the result
-under Wine.
+`build\windows`; without an installed static SDL, CMake fetches SDL and
+links it, the C++ runtime and the thread library in (`-static`), so each
+program is a single `.exe` that imports only Windows' own DLLs. That path
+is checked by cross-building the preset with nixpkgs' MinGW-w64 from a
+fetched SDL and starting the result under Wine.
 
 The game folder search takes the paths a player gives (`--data`,
 `HOMM1_DATA`, `HOMM1_CD`, `HOMM1_CONFIG`) without surrounding blanks, one pair
