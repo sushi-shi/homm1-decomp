@@ -2163,10 +2163,14 @@ void advManager::DrawCell(
             heroYOffset = 0;
             if (drawnCell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_HERO)) {
                 occupyingHero = gGame->GetHero(drawnCell->m_objectMetadata);
-                playerColor = (occupyingHero->IsEmbarked() ? PLAYER_COLOR_NONE : (gGame->m_players[occupyingHero->m_owner].m_color));
-                heroIcon = occupyingHero->IsEmbarked()
-                               ? static_cast<i8>(ADVMGR_HERO_ICON_BOAT)
-                               : occupyingHero->m_heroClass;
+                // A hero without an owner has no flag; the original read the
+                // colour from before the player table (and drew a flag icon
+                // from wherever it pointed).
+                playerColor = (occupyingHero->IsEmbarked() || occupyingHero->m_owner < 0
+                                  ? PLAYER_COLOR_NONE
+                                  : (gGame->m_players[occupyingHero->m_owner].m_color));
+                heroIcon = occupyingHero->IsEmbarked() ? static_cast<i8>(ADVMGR_HERO_ICON_BOAT)
+                                                       : occupyingHero->m_heroClass;
                 heroFrame = GetCursorBaseFrame(occupyingHero->m_direction);
                 showHero = true;
                 if (occupyingHero->IsEmbarked())
@@ -5835,11 +5839,17 @@ void advManager::TeleportTo(i32 x, i32 y, i32) {
     }
     if (savedShow)
         HideRoute(true, true, true);
-    if (gShowIt) {
-        m_mapOriginX = x - ADVMGR_VIEW_CENTER;
-        m_mapOriginY = y - ADVMGR_VIEW_CENTER;
+    // The current hero's position is the view's centre (DemobilizeCurrHero
+    // takes it from there), and MoveHero moves the view with the hero
+    // whether or not the move is shown. The original moved the view here
+    // only when the teleport was shown: a computer player's Dimension Door
+    // out of the watcher's sight was undone when the hero was put down,
+    // after the spell and the movement were spent, and the hero could be
+    // put down onto a boat or another hero, leaving a hero cell behind.
+    m_mapOriginX = x - ADVMGR_VIEW_CENTER;
+    m_mapOriginY = y - ADVMGR_VIEW_CENTER;
+    if (gShowIt)
         DelayMilli(90);
-    }
     mapHero->m_x = x;
     mapHero->m_y = y;
     gGame->SetVisibility(

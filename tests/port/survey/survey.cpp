@@ -43,6 +43,7 @@
 #include <SOURCE/hero.h>
 #include <SOURCE/kbwin.h>
 #include <SOURCE/mapCell.h>
+#include <SOURCE/mapObjectTypes.h>
 #include <SOURCE/philAI.h>
 #include <SOURCE/playerData.h>
 #include <SOURCE/spellTypes.h>
@@ -241,6 +242,28 @@ void CheckEndOfGame() {
     gThisNetHumanPlayer[watcher] = 0;
 }
 
+// Every hero cell names a living hero standing there: a cell left behind
+// by a hero that moved, died or was dismissed is drawn and visited as a
+// hero without an owner.
+void CheckMapConsistency(int day, const char* when) {
+    for (int x = 0; x < MAP_CELL_GRID_SIZE; x++) {
+        for (int y = 0; y < MAP_CELL_GRID_SIZE; y++) {
+            const mapCell& cell = gGame->m_map[x][y];
+            if (cell.m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO))
+                continue;
+            int id = cell.m_objectMetadata;
+            if (id >= GAME_HERO_COUNT) {
+                Progress("FINDING map-hero: day %d %s: cell %d,%d names hero %d", day, when, x, y, id);
+                continue;
+            }
+            const hero& theHero = gGame->m_heroRecs[id];
+            if (theHero.m_owner < 0 || theHero.m_x != x || theHero.m_y != y)
+                Progress("FINDING map-hero: day %d %s: cell %d,%d names hero %d (owner %d at %d,%d)",
+                         day, when, x, y, id, theHero.m_owner, theHero.m_x, theHero.m_y);
+        }
+    }
+}
+
 // The adventure loop for computer players (advManager::Main's branch for a
 // player that is not human), for the given number of days.
 void PlayDays(int days, bool roundTrips) {
@@ -249,7 +272,11 @@ void PlayDays(int days, bool roundTrips) {
     while (played < days && !gGameOver) {
         Progress("day %d player %d: %d heroes, %d towns", GAME_DAY_NUMBER(*gGame), gCurPlayer,
                  gCurPlayerData->m_heroCount, gCurPlayerData->m_townCount);
+        int player = gCurPlayer;
         gPhilAI->DoAI(gCurPlayer);
+        char when[32];
+        std::snprintf(when, sizeof(when), "after player %d", player);
+        CheckMapConsistency(GAME_DAY_NUMBER(*gGame), when);
         if (gGameOver)
             break;
         CheckEndOfGame();
