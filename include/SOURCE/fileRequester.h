@@ -12,6 +12,8 @@ class iconWidget;
 enum FileRequesterStorageConstant {
     FILE_REQUESTER_NAME_SIZE = 0x15f,
     FILE_REQUESTER_EXTENSION_SIZE = 5,
+    // The longest name listed: the original's 8.3 names, which gMapName holds.
+    FILE_REQUESTER_LISTED_NAME_LIMIT = 12,
     FILE_REQUESTER_LOCAL_NAME_SIZE = 352,
     FILE_REQUESTER_UNUSED_NAME_SIZE = 200,
     FILE_REQUESTER_MAP_DESCRIPTION_SIZE = 101,
