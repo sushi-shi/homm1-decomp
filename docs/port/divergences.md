@@ -111,48 +111,51 @@ commit.
 ## Retail gameplay bugs (kept)
 
 Found while hunting the defects above. They give wrong results without
-memory errors, so the port keeps them, as the Visual C++ build does; each
-needs a decision before it changes. Rows marked TE are fixed in the
-Tournament Edition (`source-te`).
+memory errors, so the port keeps them, as the Visual C++ build does: plain
+`port` stays faithful to the original game. The Tournament Edition
+(`source-te`, and `port-te` on the native port) fixes every one of them:
+the rows marked TE as the edition itself does, the others as the `BUG-*`
+rows of its `docs/te/changes.tsv`, which record each fix and its
+reproduction. The last column names the fix.
 
-| Area | Bug | Reproduction |
-| --- | --- | --- |
-| Skeletons | A hero with all 14 artifact slots full is told he finds 1000 gold, but none is given (`DoEvent`, `SKELETON_ARTIFACT`). | Visit a skeleton holding an artifact with a hero carrying 14 artifacts; the treasury does not change. |
-| Ghost retaliation (TE X10) | A retaliating ghost stack grows from its kills twice. | Attack ghosts that kill something in retaliation; compare their count with the kills. |
-| Bad luck (TE X11) | Bad luck triggers on `SRandom(1,12) < -luck`, good luck on `<= luck`, so bad luck is rarer. | `army::CheckLuck`. |
-| Auto-resolved losses (TE X12) | Losses roll 0..100 against the kill chance. | `armyGroup::DamageGroup`. |
-| Duplicate stacks (TE X13) | `UpdateArmyGroup` writes every combat stack's survivors to the first slot of its creature type: an army with two stacks of one creature loses or duplicates troops after a battle. | Fight with two separate stacks of peasants, lose some of the second; the first stack takes the losses. |
-| Wandering monster count (TE X14) | Survivors are summed into the 8-bit cell byte and wrap above 127/255. | Leave more than 127 monsters alive after a fight with a wandering stack. |
-| Experience (TE X15) | Stacks that grew in combat (ghosts, resurrection) subtract experience. | `ExperienceValueOfStack`. |
-| Map-placed heroes (TE X27) | Heroes placed on the map start with movement computed before their artifacts and owner are known. | A map hero carrying boots starts with normal movement on day 1. |
-| Tavern (TE X30) | `PerWeek` does not reserve the heroes it offers, so one hero can be offered in two taverns (and bought twice). | Play several weeks with 3–4 players and compare the taverns. |
-| Obelisks (TE X32) | Pieces per obelisk are 48 / count rounded down: visiting every obelisk need not complete the puzzle. | A map with 18 obelisks: 2 pieces each, 12 never revealed. |
-| Ultimate artifact hint (TE X33) | The hint chance is a signed byte; above 127 it is negative. | `ComputeUALoc`. |
-| Shipwreck (TE X34) | The shipwreck rewards from the cell the hero came from, not its own. | `DoEvent`, `MAP_OBJECT_SHIPWRECK`. |
-| AI army value (TE X36) | Morale and luck scaling multiply integers that overflow for large armies. | `philAI::FightValueOfStack` with a very large army. |
-| Elves' second shot (TE-FIX-3) | Elves fire their second shot without a shot left. | Elves with one arrow left. |
-| AI auto-resolve (TE-FIX-4) | When the defender wins `QuickCombat` applies the win to the attacking hero and gives the defender the defender's own experience. | Two computer heroes fight; the defender wins. |
-| Recruit maximum (TE-FIX-7) | The affordable count is stored in 16 bits before it is limited by the creatures available; a large treasury wraps it. | More than 32767 affordable creatures. |
-| Town footprint (TE-MAP-1) | Only the town's entrance cell names the town. | `SetupTown`. |
-| AI spell evaluation | Bless and Curse are valued on stacks whose damage is a single value (TE-UNR-1). | `DetermineEffectOfSpell`. |
-| AI creature purchase | The value of the stack a purchase would replace uses `gMonsterDatabase[slot]`, the slot number as a creature. | `philAI::EvaluateOneTimeCreaturePurchase`. |
-| AI resources | `MaxBuyableCreatures` returns only the last resource's (gold's) count. | `philAI::MaxBuyableCreatures`. |
-| AI sites | `ValueOfEventAtPosition` tests `gMapVisitFlags[x][y] && gCurPlayerBit` (`&&` for `&`): any player's visit counts. | |
-| AI routes | `BuildPath`'s check that a node belongs to its cell uses `&&` where `||` is meant, so stale routes pass (also drawn as bogus routes). | |
-| AI relocation | `ResetHeroRVs` uses `m_x` for the y distance. | |
-| AI artifacts | The computer ignores `GiveArtifact`'s "no free slot" and loses the artifact with 14 slots full. | |
-| Berserk | `GoBerserk`'s flying branch can loop without end; its walking branch can leave no action set. | |
-| Combat stats | `army::Init` adds the hero's Attack and Defense into 8-bit fields, which wrap above about 100. | A hero with Attack 120. |
-| Summon Boat on the edge | Next to the map's edge the boat is summoned beside (0,0) with a coordinate of -1 or 72. | Cast Summon Boat with the hero on the edge of SEL21234. |
-| Campfire | Clears the ambient sound at the view's centre instead of the campfire's cell. | |
-| Puzzle | Off-map cells of the puzzle show cell (0,0). | |
-| Stray hero and town cells | Some shipped maps (DNL3, AES3, PNM3, UHS6) have hero or town triggers with no record; clicking them shows hero or town 0, and selects it if owned. | |
-| Campaign crests | The crest table should be read at `[i-1]`, so the enemy lords' crests are random. | |
-| Thieves' Guild | Resources are grouped wrongly in the Thieves' Guild view (`TOWNMGR`). | |
-| Recruiting a hero | `RecruitHero` sets the owner of both tavern heroes. | |
-| Weekly monster growth | `m_objectMetadata +=` can wrap the 8-bit count. | |
-| Editor generator | A broken bubble sort ranks the regions; `minX--` for `minY--`; `direction % 1`; `castleRegion[c-1]`; road destinations take `.x` for `y`; the road trace stops on its destination; a missing `else` places stone liths twice on desert. | Random maps (MAPOBJ.cpp). |
-| Editor | A `u8 != -1` test is always true (EDITMGR.cpp, map writer); the vertical scroll knob clamps x; `PaintGround` redraws only its first cell; extra records are not freed on erase or undo. | |
+| Area | Bug | Reproduction | On the Tournament Edition |
+| --- | --- | --- | --- |
+| Skeletons | A hero with all 14 artifact slots full is told he finds 1000 gold, but none is given (`DoEvent`, `SKELETON_ARTIFACT`). | Visit a skeleton holding an artifact with a hero carrying 14 artifacts; the treasury does not change. | Fixed (`BUG-ADV-1`). |
+| Ghost retaliation (TE X10) | A retaliating ghost stack grows from its kills twice. | Attack ghosts that kill something in retaliation; compare their count with the kills. | Fixed by the edition (X10). |
+| Bad luck (TE X11) | Bad luck triggers on `SRandom(1,12) < -luck`, good luck on `<= luck`, so bad luck is rarer. | `army::CheckLuck`. | Fixed by the edition (X11). |
+| Auto-resolved losses (TE X12) | Losses roll 0..100 against the kill chance. | `armyGroup::DamageGroup`. | Fixed by the edition (X12). |
+| Duplicate stacks (TE X13) | `UpdateArmyGroup` writes every combat stack's survivors to the first slot of its creature type: an army with two stacks of one creature loses or duplicates troops after a battle. | Fight with two separate stacks of peasants, lose some of the second; the first stack takes the losses. | Fixed by the edition (X13). |
+| Wandering monster count (TE X14) | Survivors are summed into the 8-bit cell byte and wrap above 127/255. | Leave more than 127 monsters alive after a fight with a wandering stack. | Fixed by the edition (X14). |
+| Experience (TE X15) | Stacks that grew in combat (ghosts, resurrection) subtract experience. | `ExperienceValueOfStack`. | Fixed by the edition (X15). |
+| Map-placed heroes (TE X27) | Heroes placed on the map start with movement computed before their artifacts and owner are known. | A map hero carrying boots starts with normal movement on day 1. | Fixed by the edition (X27). |
+| Tavern (TE X30) | `PerWeek` does not reserve the heroes it offers, so one hero can be offered in two taverns (and bought twice). | Play several weeks with 3–4 players and compare the taverns. | Fixed by the edition (X30). |
+| Obelisks (TE X32) | Pieces per obelisk are 48 / count rounded down: visiting every obelisk need not complete the puzzle. | A map with 18 obelisks: 2 pieces each, 12 never revealed. | Fixed by the edition (X32). |
+| Ultimate artifact hint (TE X33) | The hint chance is a signed byte; above 127 it is negative. | `ComputeUALoc`. | Fixed by the edition (X33). |
+| Shipwreck (TE X34) | The shipwreck rewards from the cell the hero came from, not its own. | `DoEvent`, `MAP_OBJECT_SHIPWRECK`. | Fixed by the edition (X34). |
+| AI army value (TE X36) | Morale and luck scaling multiply integers that overflow for large armies. | `philAI::FightValueOfStack` with a very large army. | Fixed by the edition (X36). |
+| Elves' second shot (TE-FIX-3) | Elves fire their second shot without a shot left. | Elves with one arrow left. | Fixed by the edition (TE-FIX-3). |
+| AI auto-resolve (TE-FIX-4) | When the defender wins `QuickCombat` applies the win to the attacking hero and gives the defender the defender's own experience. | Two computer heroes fight; the defender wins. | Fixed by the edition (TE-FIX-4). |
+| Recruit maximum (TE-FIX-7) | The affordable count is stored in 16 bits before it is limited by the creatures available; a large treasury wraps it. | More than 32767 affordable creatures. | Fixed by the edition (TE-FIX-7). |
+| Town footprint (TE-MAP-1) | Only the town's entrance cell names the town. | `SetupTown`. | Fixed by the edition (TE-MAP-1). |
+| AI spell evaluation | Bless and Curse are valued on stacks whose damage is a single value (TE-UNR-1). | `DetermineEffectOfSpell`. | Fixed by the edition (TE-UNR-1). |
+| AI creature purchase | The value of the stack a purchase would replace uses `gMonsterDatabase[slot]`, the slot number as a creature. | `philAI::EvaluateOneTimeCreaturePurchase`. | Fixed (`BUG-AI-1`). |
+| AI resources | `MaxBuyableCreatures` returns only the last resource's (gold's) count. | `philAI::MaxBuyableCreatures`. | Fixed (`BUG-AI-2`). |
+| AI sites | `ValueOfEventAtPosition` tests `gMapVisitFlags[x][y] && gCurPlayerBit` (`&&` for `&`): any player's visit counts. | A site visited only by another player. | Fixed (`BUG-AI-3`). |
+| AI routes | `BuildPath`'s check that a node belongs to its cell uses `&&` where `||` is meant, so stale routes pass (also drawn as bogus routes). | A node whose x matches its cell but whose y does not. | Fixed (`BUG-AI-4`). |
+| AI relocation | `ResetHeroRVs` uses `m_x` for the y distance. | Two heroes in one column, 30 cells apart. | Fixed (`BUG-AI-5`). |
+| AI artifacts | The computer ignores `GiveArtifact`'s "no free slot" and loses the artifact with 14 slots full. | A computer hero carrying 14 artifacts on an artifact, a skeleton, a daemon cave or a huge ghost site. | Fixed (`BUG-AI-6`). |
+| Berserk | `GoBerserk`'s flying branch can loop without end; its walking branch can leave no action set. | Berserk on a flier with nothing in reach, or on a walker hemmed in by obstacles. | Fixed (`BUG-CMB-1`). |
+| Combat stats | `army::Init` adds the hero's Attack and Defense into 8-bit fields, which wrap above about 100. | A hero with Attack 120. | Fixed (`BUG-CMB-2`). |
+| Summon Boat on the edge | Next to the map's edge the boat is summoned beside (0,0) with a coordinate of -1 or 72. | Cast Summon Boat with the hero on the edge of SEL21234. | Fixed (`BUG-ADV-2`). |
+| Campfire | Clears the ambient sound at the view's centre instead of the campfire's cell. | A computer hero takes a campfire away from the view's centre. | Fixed (`BUG-ADV-3`). |
+| Puzzle | Off-map cells of the puzzle show cell (0,0). | An ultimate artifact near the map's edge. | Fixed (`BUG-ADV-4`). |
+| Stray hero and town cells | Some shipped maps (DNL3, AES3, PNM3, UHS6) have hero or town triggers with no record; clicking them shows hero or town 0, and selects it if owned. | PNM31234: defeat the monsters at (7,45) or (33,61) and click their cells. | Fixed (`BUG-ADV-5`). |
+| Campaign crests | The crest table should be read at `[i-1]`, so the enemy lords' crests are random. | Campaign scenarios 5-8: the enemy lord's crest. | Fixed (`BUG-CAM-1`). |
+| Thieves' Guild | Resources are grouped wrongly in the Thieves' Guild view (`TOWNMGR`). | Crystal is counted with wood and ore; 20 crystal and no wood or ore. | Fixed (`BUG-TWN-1`). |
+| Recruiting a hero | `RecruitHero` sets the owner of both tavern heroes. | With the original tavern, the same hero offered in two taverns. | Fixed (`BUG-TWN-2`). |
+| Weekly monster growth | `PerWeek` adds 1 to 10 to a recruiting site's 8-bit stock (`m_objectMetadata +=`). | The stock grows only while below 100, so it stays at 109 or less: it cannot wrap. | Not a defect. |
+| Editor generator | A broken bubble sort ranks the regions; `minX--` for `minY--`; `direction % 1`; `castleRegion[c-1]`; road destinations take `.x` for `y`; the road trace stops on its destination; a missing `else` places stone liths twice on desert. | Random maps (MAPOBJ.cpp). | Fixed (`BUG-GEN-1–5`). |
+| Editor | A `u8 != -1` test is always true (EDITMGR.cpp, map writer); the vertical scroll knob clamps x; `PaintGround` redraws only its first cell; extra records are not freed on erase or undo. | Save a map without a lighthouse; place and erase towns until the record table fills. | Fixed (`BUG-EDT-1–4`). |
 
 ## Tournament Edition fixes
 

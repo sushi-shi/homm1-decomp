@@ -178,15 +178,32 @@ native counterparts carry the same effect:
 
 ### Retail gameplay bugs the port keeps and port-te fixes
 
-`docs/port/divergences.md` lists retail gameplay bugs the port keeps. On
-port-te the edition fixes: ghost retaliation (X10), bad luck (X11),
+`docs/port/divergences.md` lists retail gameplay bugs the port keeps; plain
+`port` stays faithful to the original game, and port-te fixes all of them.
+The edition itself fixes ghost retaliation (X10), bad luck (X11),
 auto-resolved losses (X12), duplicate stacks (X13), the wandering monster
 count (X14), experience of grown stacks (X15), map-placed heroes' movement
 (X27), the tavern (X30), obelisks (X32), the ultimate artifact hint (X33),
 the shipwreck (X34), the computer's army value (X36), the Elves' second
 shot (TE-FIX-3), the computer's auto-resolve (TE-FIX-4), the recruit
 maximum (TE-FIX-7), the town footprint (TE-MAP-1) and the computer's Bless
-and Curse evaluation (TE-UNR-1). The others remain on port-te too.
+and Curse evaluation (TE-UNR-1). The others are fixed on source-te as the
+`BUG-*` rows of `changes.tsv` (catalogue section 9) and replayed here like
+the edition's commits: the computer player (BUG-AI-*), combat (BUG-CMB-*),
+the adventure map (BUG-ADV-*), the campaign's crests (BUG-CAM-1), towns
+(BUG-TWN-*), the random map generator (BUG-GEN-*) and the editor
+(BUG-EDT-*). The "weekly monster growth" row is not a defect: a site's stock
+grows only while below 100, by at most 10. `game_regressions_test` and
+`editor_regressions_test` drive the reproductions the harness can reach
+(not the recruit window, the generator, ground painting or the scroll
+knob, which need their screens).
+
+Where a port fix and one of these meet, the edition's form keeps the port's
+guard: `BuildPath` keeps its bounds check and emptied route, the skeleton
+pays through `GiveRandomArtifact` in place of the port's folded test (which
+still paid nothing to a hero with 14 artifacts), the crest table's bound is
+that of the corrected read, and the editor's full-table refusal follows the
+release of unused records.
 
 ### Keeping port-te in step
 
