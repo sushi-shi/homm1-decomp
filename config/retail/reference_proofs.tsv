@@ -3121,7 +3121,7 @@ site_rva	target_rva	symbol
 0x0001405f	0x000a7828	?gpCombatManager@@3PAVcombatManager@@A
 0x00014064	0x00023670	?UpdateGrid@combatManager@@QAEXFF@Z
 0x00014077	0x000a7828	?gpCombatManager@@3PAVcombatManager@@A
-0x0001407c	0x00023acc	?SetGridMode@combatManager@@QAEXC@Z
+0x0001407c	0x00023acc	?SetDrawRightToLeft@combatManager@@QAEXC@Z
 0x0001409b	0x000a9564	?giMinExtentY@@3HA
 0x000140a5	0x000a9564	?giMinExtentY@@3HA
 0x000140ab	0x000a9560	?giMinExtentX@@3HA
@@ -3161,7 +3161,7 @@ site_rva	target_rva	symbol
 0x00014359	0x000a7828	?gpCombatManager@@3PAVcombatManager@@A
 0x00014362	0x0003b73f	?TakeOccupant@hexcell@@QAEPAV1@PAV1@@Z
 0x000143cf	0x000a7828	?gpCombatManager@@3PAVcombatManager@@A
-0x000143d4	0x00023acc	?SetGridMode@combatManager@@QAEXC@Z
+0x000143d4	0x00023acc	?SetDrawRightToLeft@combatManager@@QAEXC@Z
 0x000143f0	0x00068b37	?PlaySample@@YAXPAVsample@@@Z
 0x0001440c	0x0001c7ff	?ValidHex@@YAHH@Z
 0x00014423	0x000a7828	?gpCombatManager@@3PAVcombatManager@@A
@@ -3331,7 +3331,7 @@ site_rva	target_rva	symbol
 0x00015ca7	0x000154c8	?DoHydraAttack@army@@QAEXXZ
 0x00015cc1	0x00017eaf	?CancelSpell@army@@QAEXXZ
 0x00015d7d	0x000a7828	?gpCombatManager@@3PAVcombatManager@@A
-0x00015d82	0x00023acc	?SetGridMode@combatManager@@QAEXC@Z
+0x00015d82	0x00023acc	?SetDrawRightToLeft@combatManager@@QAEXC@Z
 0x00015d8a	0x00016fdc	?CheckLuck@army@@QAEXXZ
 0x00015e14	0x00046ad2	?GetAdjacentCellIndex@army@@QAEFFF@Z
 0x00015e1e	0x000a7828	?gpCombatManager@@3PAVcombatManager@@A
@@ -3817,7 +3817,7 @@ site_rva	target_rva	symbol
 0x00019361	0x00019865	?GenerateMap@combatManager@@QAEXXZ
 0x00019367	0x000a7823	?gbRetreatWin@@3CA
 0x0001936e	0x000a7495	?gbCombatSurrender@@3CA
-0x00019397	0x00023acc	?SetGridMode@combatManager@@QAEXC@Z
+0x00019397	0x00023acc	?SetDrawRightToLeft@combatManager@@QAEXC@Z
 0x000193ba	0x00023d6c	?DrawFrame@combatManager@@QAEXC@Z
 0x000193bf	0x00044b4e	?KBTickCount@@YAHXZ
 0x000193c7	0x000a98a0	?glTimers@@3PAHA
@@ -4060,7 +4060,7 @@ site_rva	target_rva	symbol
 0x0001bb99	0x0001a787	?FreeArmies@combatManager@@QAEXXZ
 0x0001bba1	0x0001a528	?LoadArmies@combatManager@@QAEXXZ
 0x0001bba9	0x00019865	?GenerateMap@combatManager@@QAEXXZ
-0x0001bbb3	0x00023acc	?SetGridMode@combatManager@@QAEXC@Z
+0x0001bbb3	0x00023acc	?SetDrawRightToLeft@combatManager@@QAEXC@Z
 0x0001bbc9	0x00023d6c	?DrawFrame@combatManager@@QAEXC@Z
 0x0001bbd7	0x00088aae	__ehreg$?KeepAttack@combatManager@@QAEXXZ
 0x0001bdc2	0x0009140a	?gMonsterDatabase@@3PAUtag_monsterInfo@@A
@@ -4068,7 +4068,7 @@ site_rva	target_rva	symbol
 0x0001be34	0x0006bf87	?ReallyHidePointer@mouseManager@@QAEXXZ
 0x0001be43	0x000a7828	?gpCombatManager@@3PAVcombatManager@@A
 0x0001be8a	0x000a7828	?gpCombatManager@@3PAVcombatManager@@A
-0x0001be8f	0x00023acc	?SetGridMode@combatManager@@QAEXC@Z
+0x0001be8f	0x00023acc	?SetDrawRightToLeft@combatManager@@QAEXC@Z
 0x0001bebe	0x0008f2ec	$SG41308
 0x0001bec3	0x000a7168	?gText@@3PADA
 0x0001bec8	0x0007823f	_sprintf

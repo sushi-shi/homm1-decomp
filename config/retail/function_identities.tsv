@@ -211,7 +211,7 @@ rva	name
 0x00023707	?CombatMessage@combatManager@@QAEXPADH@Z
 0x000237b4	?CombatMessage@combatManager@@QAEXF@Z
 0x00023a3a	?ResetLimitCreature@combatManager@@QAEXXZ
-0x00023acc	?SetGridMode@combatManager@@QAEXC@Z
+0x00023acc	?SetDrawRightToLeft@combatManager@@QAEXC@Z
 0x00023ae5	?UpdateCombatArea@combatManager@@QAEXXZ
 0x00023bab	?DrawBackground@combatManager@@QAEXXZ
 0x00023d6c	?DrawFrame@combatManager@@QAEXC@Z

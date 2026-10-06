@@ -58,7 +58,7 @@ H1_ENUM_BEGIN(CombatPointerCode)
     COMBAT_POINTER_ATTACK_FIRST = 7
 H1_ENUM_END(CombatPointerCode)
 
-// Two sides (attacker 0, defender 1) index m_armies and m_numArmies.
+// Two sides (defender 0, attacker 1) index m_armies and m_numArmies.
 // The hex grid is nine columns by five rows (hex = row * 9 + column):
 // DrawBackground and DrawFrame walk it row by row, army/AI/FLY code splits
 // m_hex with % and / 9 and treats columns 0 and 8 as the side edges. In a
@@ -96,12 +96,12 @@ H1_ENUM_CONST_BEGIN(CombatViewConstant)
     COMBAT_CATAPULT_ROW = 3
 H1_ENUM_CONST_END(CombatViewConstant)
 
-// Per-side draw sentinels: m_heroType and m_catapultFrame hold -1 for a side
+// Per-side draw sentinels: m_heroClass and m_catapultFrame hold -1 for a side
 // without a hero or catapult (DrawFrame skips the tent / catapult);
 // ResetLimitCreature marks a dead stack's m_limitCreatureCount HIDDEN so
 // DrawFrame never grows the redraw box for it.
 H1_ENUM_CONST_BEGIN(CombatDrawStateConstant)
-    COMBAT_HERO_TYPE_NONE = -1,
+    COMBAT_HERO_CLASS_NONE = -1,
     COMBAT_CATAPULT_FRAME_NONE = -1,
     COMBAT_LIMIT_CREATURE_HIDDEN = -1,
     // m_wallDamage without damage frames to draw (hexcell::DrawWall).
@@ -197,8 +197,9 @@ public:
     hexcell m_hexCells[COMBAT_HEX_COUNT];
     // First grid row (0-4) UpdateCombatArea must redraw; 5 when clean.
     i16 m_gridUpdateRow;
-    // DrawFrame skips the grid overlay while this is set (SetGridMode).
-    i8 m_gridMode;
+    // DrawFrame draws each row's occupants right to left while this is set
+    // (SetDrawRightToLeft).
+    i8 m_drawRightToLeft;
     // LoadIcons indexes the ground and obstacle tables by this terrain;
     // GetBackgroundName forces 6 for a graveyard field.
     i8 m_terrainType;
@@ -229,10 +230,10 @@ public:
     // game::ViewArmy).
     class armyGroup* m_armyGroups[2];
     // Set by a surrender (ProcessNextAction).
-    i8 m_sideDefeated[2];
+    i8 m_sideSurrendered[2];
     // SetupCombat copies gHumanPlayer per side; a bad-morale roll may spare
     // a computer side.
-    char m_humanSide[2];
+    char m_humanPlayerSide[2];
     i8 m_playerId[2];
     i32 m_experienceValue[2];
     i8 m_heroCastSpell[2];
@@ -256,8 +257,9 @@ public:
     i16 m_catapultAttackCount[2];
     i16 m_catapultAttacksRemaining[2];
     i16 m_keepAttacksRemaining[2];
-    // SetupCombat copies each hero's +0x1c byte (-1 without a hero).
-    i16 m_heroType[2];
+    // SetupCombat copies each hero's class (-1 without a hero); DrawFrame
+    // draws it as the tent frame.
+    i16 m_heroClass[2];
     i16 m_unknown6d9;
     i16 m_unknown6db;
     // Per side: the side fights from a castle. hexcell::DrawTower/DrawWall
@@ -266,7 +268,7 @@ public:
     // SetupCombat sets side 0 when the defending town has a garrisoned hero.
     char m_visitingHeroPresent[2];
     // CatAttack's target row in the castle wall column.
-    i16 m_catapultTarget;
+    i16 m_catapultTargetRow;
     // CatAttack: 1 when the shot only damages the wall, 0 when it falls;
     // hexcell::DrawObstacle keeps the tower during the impact frames.
     i8 m_wallSurvives;
@@ -328,7 +330,7 @@ public:
     void UpdateGrid(i16 hex, i16);
     void DrawBackground(void);
     void DrawFrame(i8 updateScreen);
-    void SetGridMode(i8 mode);
+    void SetDrawRightToLeft(i8 rightToLeft);
     i8 ViewGeneral(i32 side, i32 allowActions, i32 quickView);
     void ViewArmy(class army* viewedArmy, i32 side, i32 quickView);
     i8 ViewSpells(i32);
@@ -380,7 +382,7 @@ public:
     void EffectSpellCure(i32* effect, i32 targetSide, i8 cureOnly);
     void EffectSpellResurrect(i32* effect, i32 hex);
     void EffectSpellDamage(i32* effect, i32 spell, i32 damagePerPower, i32 targetHex);
-    void CombineGroups(class armyGroup* from, class armyGroup* to);
+    void CombineGroups(class armyGroup* sourceGroup, class armyGroup* targetGroup);
     void SetupCombat(
         i32 mapX,
         i32 mapY,

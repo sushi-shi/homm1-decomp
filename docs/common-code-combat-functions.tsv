@@ -107,7 +107,7 @@ src/SOURCE/DRAWING.cpp	0x236c0	combatManager::UpdateGridForMove	read	none	Direct
 src/SOURCE/DRAWING.cpp	0x23707	combatManager::CombatMessage(text)	read	none	Uses SET_WIDGET_MESSAGE already.		kept-existing-source	100	100
 src/SOURCE/DRAWING.cpp	0x237b4	combatManager::CombatMessage(command)	read	current-army	Help line formatting.		kept-existing-source	100	100
 src/SOURCE/DRAWING.cpp	0x23a3a	combatManager::ResetLimitCreature	read	none	Redraw mask reset.		kept-existing-source	100	100
-src/SOURCE/DRAWING.cpp	0x23acc	combatManager::SetGridMode	read	none	Setter.		kept-existing-source	100	100
+src/SOURCE/DRAWING.cpp	0x23acc	combatManager::SetDrawRightToLeft	read	none	Setter.		kept-existing-source	100	100
 src/SOURCE/DRAWING.cpp	0x23ae5	combatManager::UpdateCombatArea	read	none	Row blit.		kept-existing-source	100	100
 src/SOURCE/DRAWING.cpp	0x23bab	combatManager::DrawBackground	read	hex-index	Ground and wall strip.		kept-existing-source	100	100
 src/SOURCE/DRAWING.cpp	0x23d6c	combatManager::DrawFrame	read	inclusive-region;extent-clamp;extent-reset	Extent screen update is UPDATE_INCLUSIVE_REGION; clamps and box computation stay.	UPDATE_INCLUSIVE_REGION	retained-exact	100	100

@@ -29,7 +29,7 @@ reference identities. Stack-local placement remains non-exact; no comparison
 normalization was added.
 
 The Buka `SOURCE/ARMY` callers provide signed-byte argument controls as well.
-`SetGridMode(i8)` receives a conditional with both arms cast to `i8`; this emits
+`SetDrawRightToLeft(i8)` receives a conditional with both arms cast to `i8`; this emits
 the retail byte Boolean sequence in `DoAttack` and `SpecialAttack`. Casting the
 completed integer comparison to `i8` was byte-flat and did not recover it.
 The two retaliation calls to `GetAdjacentCellIndex` likewise require each

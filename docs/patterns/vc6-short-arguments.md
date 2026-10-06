@@ -78,7 +78,7 @@ Do not infer full-register equality from a byte argument. Retail's `SETcc`
 leaves upper bits untouched, whereas the candidate's `NEG/SBB` idiom can define
 them. The per-bit dataflow review checks only the argument bits the retail
 callee actually consumes and rejects an artificial 32-bit contract here.
-Explicit signed-byte conversion and logical negation at the `SetGridMode`
+Explicit signed-byte conversion and logical negation at the `SetDrawRightToLeft`
 call both retain the non-retail materialization; neither control was kept.
 These observations do not authorize a new CPU profile or comparison mask.
 

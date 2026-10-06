@@ -97,7 +97,7 @@
 *	*	[01]	call-argument	ViewArmy(class army *, i32, i32) argument [23]	combatManager::ViewArmy's view flags
 *	*	[01]	call-argument	MoveAttack(* argument 2	army::MoveAttack's move-only flag
 *	*	[01]	call-argument	GetNextArmy(* argument 1	combatManager::GetNextArmy's check-morale flag
-*	*	[01]	call-argument	SetGridMode(* argument 1	combatManager::SetGridMode's grid flag
+*	*	[01]	call-argument	SetDrawRightToLeft(* argument 1	combatManager::SetDrawRightToLeft's right-to-left draw flag
 *	*	[01]	call-argument	UpdateGrid(* argument 2	combatManager::UpdateGrid's redraw flag
 *	*	[01]	call-argument	CastMassSpell(* argument 2	combatManager::CastMassSpell's cure-only flag
 *	*	[01]	call-argument	CastSpell(* argument 3	combatManager::CastSpell's flag argument
@@ -319,7 +319,7 @@ src/SOURCE/SPELLS.cpp	*	4	arithmetic	operator % SRandom()	the dwarves' magic-res
 src/SOURCE/ARMY.cpp	*	*	*	* store gMonoIconSkip	gMonoIconSkip writes; retail never reads the variable
 src/SOURCE/SWAPMGR.cpp	*	*	*	store to gMonoIconSkip	gMonoIconSkip writes; retail never reads the variable
 src/SOURCE/SWAPMGR.cpp	*	*	*	* store gMonoIconSkip	gMonoIconSkip writes; retail never reads the variable
-src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_gridMode	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_drawRightToLeft	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	-1	trivial-function-literal	-1 store m_unknown6f9	an index, position or timer local/field reset to -1 (none yet)
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_limitCreatureHex	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_limitCreature	a flag, counter or index local/field set to 0 or 1
@@ -329,7 +329,7 @@ src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_unknown6e8	a flag,
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_unknown6db	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_castleSide[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_combatWindowOpen	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_humanSide[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_humanPlayerSide[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store m_catapultAttacksRemaining[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store m_keepAttacksRemaining[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_visitingHeroPresent[[][]]	a flag, counter or index local/field set to 0 or 1
@@ -344,7 +344,7 @@ src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_redrawExtent	a fla
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store gEffectFileId	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store gbRetreatWin	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store gbCombatSurrender	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_sideDefeated[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_sideSurrendered[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store m_limitCreature	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store m_combatWindowOpen	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store gLimitedCombatUpdatePalette	a flag, counter or index local/field set to 0 or 1
@@ -363,7 +363,6 @@ src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_groundFrame	a flag
 src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store m_groundFrame	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_pathFlag	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_obstacleIndex	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store numTrees	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_numArmies[[][]]	a flag, counter or index local/field set to 0 or 1
@@ -373,8 +372,8 @@ src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store gInHighMoraleBonus	a
 src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store gInHighMoraleBonus	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 bound m_quantity	a bound at one (the last remaining item, more than one)
 src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 equality SRandom()	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
-src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store bSkip	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store bSkip	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store skip	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store skip	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store isWinner	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store isWinner	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store giMinExtentX	a flag, counter or index local/field set to 0 or 1
@@ -424,7 +423,7 @@ src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 store gbThisNetHasControl	
 src/SOURCE/COMMAND.cpp	*	0	trivial-function-literal	0 store gbThisNetHasControl	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 store m_sideRetreated[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 store gbCombatSurrender	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 store m_sideDefeated[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 store m_sideSurrendered[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/PATH.cpp	*	0	trivial-function-literal	0 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
 src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
 src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 store mask	a flag, counter or index local/field set to 0 or 1

@@ -161,3 +161,96 @@ local	army::Walk	col	boundMinX	left edge of the union redraw rectangle (giMinExt
 local	army::Walk	rectMaxX	boundMaxX	right edge of the union redraw rectangle
 local	army::Walk	ourMinY	boundTop	top edge of the union redraw rectangle
 local	army::Walk	ourMaxY	boundBottom	bottom edge of the union redraw rectangle
+local	combatManager::Close	survivor	monsterSide	side whose group count refills the wandering-monster cell (defender w/o player -> side 0)
+kept	combatManager::Close	ii	ii	used for side and slot loops; i/index/side do not fit slot range [0-6]
+local	combatManager::MoreTreesNear	posX	originX	copy of m_combatX, origin of the survey; reorder needed
+local	combatManager::MoreTreesNear	homeY	originY	copy of m_combatY, origin of the survey
+local	combatManager::MoreTreesNear	curNumMountains	mountainCount	count of mountain cells
+local	combatManager::MoreTreesNear	numTrees	treeCount	count of tree cells
+local	combatManager::MoreTreesNear	tile	cell	mapCell* from GetCell
+local	combatManager::MoreTreesNear	lastTypeTable	nearbyTypeGrid	per ring/direction: 0 mountain, 1 tree, -1 none; nothing 'last' about it
+local	combatManager::MoreTreesNear	n	dir	MAP direction index into normalDirTable
+kept	combatManager::MoreTreesNear	pass	pass	ring radius; 'radius' conflicts with originY bucket order
+local	combatManager::CheckApplyGoodMorale	theGroup	group	the side's armyGroup; drop 'the' prefix
+local	combatManager::CheckApplyGoodMorale	activeArmyRef	currentArmy	&m_armies[side][index], the acting stack; same name as COMMAND/DRAWING
+local	combatManager::CheckApplyGoodMorale	moraleVal	moraleLevel	armyGroup::GetMorale result
+kept	combatManager::CheckApplyGoodMorale	sample	sample	only 'sample' fits slot range [0-11] among morale-sound names
+local	combatManager::CheckApplyBadMorale	theGroup	group	the side's armyGroup; drop 'the' prefix
+local	combatManager::CheckApplyBadMorale	activeArmyRef	currentArmy	&m_armies[side][index], the acting stack; same name as COMMAND/DRAWING
+local	combatManager::CheckApplyBadMorale	moraleVal	moraleLevel	armyGroup::GetMorale result
+kept	combatManager::CheckApplyBadMorale	sample	sample	only 'sample' fits slot range [0-11] among morale-sound names
+local	combatManager::GetNextArmy	oldSpeed	speedLevelIndex	loop 0..4 over speed levels; pass 0 takes only high-morale stacks, later passes lower m_currentSpeed - not a saved speed
+local	combatManager::GetNextArmy	theArmy	checkArmy	the stack being tested for eligibility
+local	combatManager::GetNextArmy	counterValue	armyCounter	army index within stackSide; becomes m_currentArmyIndex
+local	combatManager::GetNextArmy	bSkip	skip	Hungarian b-prefix; skip flag
+kept	combatManager::GetNextArmy	temp	temp	unused dead local
+local	combatManager::ExperienceValueOfStack	num	sideExperience	experience the side's losses (lost HP) plus a hero are worth
+local	combatManager::CatAttack	prevFrm	frameIndex	boulder spin frame 0..2 drawn each step, not a previous frame
+local	combatManager::CatAttack	dxVal	xDelta	x pixels the boulder moves per step
+local	combatManager::CatAttack	localDy	yDelta	y step unit of the boulder (scaled per step on the arc)
+local	combatManager::CatAttack	curTgtX	endX	x of the targeted wall hex: end of the flight
+local	combatManager::CatAttack	posY	endY	y of the targeted wall hex minus a row: end of the flight
+local	combatManager::CatAttack	ourY	yPos	boulder's current y (pairs with xPos)
+local	combatManager::CatAttack	summitXValue	topPosX	x of the arc's top: halfway between start and target
+local	combatManager::CatAttack	newY	topPosY	y of the arc's top (25 or row*20+25); not a 'new' y
+local	combatManager::CatAttack	activeForce	collapseChance	SRandom(0,150) (-15 for a computer attacker); below 30 the wall piece collapses
+local	combatManager::CatAttack	theLeft	anyStanding	set when any wall piece in the castle column still stands
+local	combatManager::CatAttack	nextCol	castleColumn	the wall column for the side (5 or 3); not a 'next' column
+local	combatManager::CatAttack	boulderRef	boulderIcon	icon* boulder.icn
+kept	combatManager::CatAttack	sampleInfo	sampleInfo	'sample' collides with the class name; other sound names miss slot range [0-1]
+local	combatManager::Main	thisArmy	currentArmy	&m_armies[m_currentSide][m_currentArmyIndex]; same name as the other combat handlers
+local	combatManager::SetCombatDirections	owner	enemySide	the current stack's m_targetSide, restored at the end; not an owner
+local	combatManager::SetCombatDirections	mainTarget	enemyArmy	&m_armies[enemySide][targetIndex], the stack being attacked
+local	combatManager::SetCombatDirections	curArmyPtr	currentArmy	acting stack
+local	combatManager::SetCombatDirections	keptReachable	pathValid	per direction: the attacker can stand there and reach it; nothing is 'kept'
+local	combatManager::SetCombatDirections	myRear	behindHexes	per direction: the wide attacker's second (rear) hex
+local	combatManager::SetCombatDirections	wasMapped	approachDir	opposite of the attack direction: the pointer sector block it fills
+local	combatManager::SetCombatDirections	outDir	attackDirection	direction value written into m_directionMap, wide-adjusted
+local	combatManager::SetCombatDirections	bestBefore	previousSector	(sector + 23) % 24, the neighbour sector to copy from
+local	combatManager::SetCombatDirections	oldUnset	remainingSectors	count of sectors still -1 after a fill pass
+local	combatManager::CheckSetMouseDirection	myDistY	yPos	pointer y relative to the hex centre; pairs with xPos
+local	combatManager::CheckSetMouseDirection	direction	directionCopy	the unadjusted attack direction kept to test the wide directions later
+local	combatManager::CheckSetMouseDirection	alternate	alternateDirection	second-choice neighbour when the first hex is not standable
+local	combatManager::CheckSetMouseDirection	curArmyRef	movingUnit	acting stack; currentArmy/actingArmy miss the slot range
+local	combatManager::CheckSetMouseDirection	targetObj	enemyArmy	the (unused) target stack
+local	combatManager::CheckSetMouseDirection	backHexVal	rearHex	rear hex of a wide attacker at the destination
+kept	combatManager::CheckSetMouseDirection	slot	slot	pointer sector 0..23; 'sector' misses bucket 4
+local	combatManager::ProcessCombatMsg	selectedHexVal	hoverGridIndex	GetGridIndex of the hovered pointer position
+local	combatManager::GetCommand	oldArmy	attackingStack	the current stack whose target is set; nothing 'old'
+kept	combatManager::GetCommand	indexNum	indexNum	occupant army index; targetIndex/occupantIndex miss bucket 15
+local	combatManager::ShowDeadArmies	casualtyTypeStr	deadMonsters	i32 creature types of the lost stacks, not strings
+local	combatManager::ShowDeadArmies	theIconSpacing	iconDeltaX	x step between casualty icons
+local	combatManager::ShowDeadArmies	rowYVal	sectionPosY	y of the side's casualty heading/row
+kept	combatManager::ShowDeadArmies	team	team	side loop; side misses bucket range [4-5] under initializer-pinned order
+local	combatManager::DoLoseWindow	party	losingParty	side whose loss is shown to the local human
+local	combatManager::DoLoseWindow	packet	msg	tag_message used for the text broadcast and the event loop, not a net packet
+local	combatManager::DoLoseWindow	newBmp	scrollBitmap	losecmbt.bmp, the scrolling backdrop
+local	combatManager::DoLoseWindow	bestOffset	scrollX	x offset into the backdrop, +2 per frame, wraps at 0x1a0
+local	combatManager::DoLoseWindow	res	dispatchResult	heroWindowManager::Main result
+local	combatManager::DoLoseWindow	delayVal	delay	dead: frame delay 0xb4
+local	combatManager::DoLoseWindow	lAnimY	animationY	dead: animation box y; Hungarian l-prefix
+local	combatManager::DoLoseWindow	sx	animationX	dead: animation box x
+local	combatManager::DoLoseWindow	curWalkX	walkPosX	dead: walker x 0x6f
+local	combatManager::DoLoseWindow	curUnusedWalkY	walkY	dead: walker y 0x8a
+local	combatManager::DoLoseWindow	iAreaWidthVal	areaWidth	dead: blit width 0xdf; Hungarian i-prefix
+local	combatManager::DoLoseWindow	blitHeightVal	animHeight	dead: blit height 0x7d
+kept	combatManager::DoLoseWindow	nextWidth	nextWidth	dead 0x280 (backdrop width); bitmapWidth/screenWidth miss the slot range
+kept	combatManager::DoLoseWindow	walkFrameNum	walkFrameNum	walkFrame misses bucket 5
+local	combatManager::DoSurrender	win	window	surrendr.bin heroWindow
+local	combatManager::DrawFrame	curCol	col	grid column of the stack / drawing loop column; Hungarian cur-prefix
+local	combatManager::DrawFrame	savedDrawn	anyLimited	set when any stack is marked in m_limitCreatureCount; nothing is saved or drawn
+local	combatManager::DrawFrame	boxTopNum	armyTop	top of the stack's redraw box (row*80, raised for luck/morale effects and cavalry)
+local	combatManager::DrawFrame	boxBottomValue	armyBottom	bottom of the stack's redraw box
+local	combatManager::DrawFrame	theLeft	armyLeft	left of the stack's redraw box
+local	combatManager::DrawFrame	sideDeltaVal	rearDelta	column offset of a wide stack's second hex (-1 defender, +1 attacker)
+kept	combatManager::DrawFrame	selBoxRight	selBoxRight	right edge of the box; armyRight misses bucket range [2-3]
+member	combatManager	m_sideDefeated	m_sideSurrendered	only ACTION_SURRENDER sets it (ProcessNextAction); IsWinner reads it as the other side surrendering
+member	combatManager	m_humanSide	m_humanPlayerSide	SetupCombat copies gbHumanPlayer[m_playerId[side]]
+member	combatManager	m_heroType	m_heroClass	SetupCombat copies hero::m_heroClass; DrawFrame uses it as the tent frame (class and class+8)
+enum	CombatDrawStateConstant	COMBAT_HERO_TYPE_NONE	COMBAT_HERO_CLASS_NONE	sentinel of m_heroClass (follows the member rename)
+member	combatManager	m_gridMode	m_drawRightToLeft	DrawFrame: 0 draws each row's occupants left to right, 1 right to left; it has nothing to do with a grid overlay
+param	combatManager::SetGridMode	mode	rightToLeft	stored into m_drawRightToLeft (also DRAWING.cpp definition)
+member	combatManager	m_catapultTarget	m_catapultTargetRow	row (0..4) of the castle-wall hex the catapult hits; CatAttack indexes m_hexCells[row*9 + column]
+param	combatManager::CombineGroups	from	sourceGroup	armyGroup moved from->to
+param	combatManager::CombineGroups	to	targetGroup	usage
+function	combatManager	SetGridMode	SetDrawRightToLeft	stores the flag DrawFrame uses to draw each row's occupants right to left; no grid mode

@@ -357,7 +357,7 @@ old_rva	new_rva	name	note
 0x00022f62	0x0003e656	?GetBuildingBaseResourceValue@@YAHHHH@Z	
 0x00022fc2	0x0003e693	?NormalDialog@@YAXPADHHHHHHHH@Z	
 0x00023707	0x00023707	?CombatMessage@combatManager@@QAEXPADH@Z	
-0x00023acc	0x00023acc	?SetGridMode@combatManager@@QAEXC@Z	
+0x00023acc	0x00023acc	?SetDrawRightToLeft@combatManager@@QAEXC@Z	
 0x00023ebf	0x0003f440	?UpdateNormalDialog@@YAXPAD@Z	
 0x00023f2a	0x0003f4a2	?WaitHandler@@YAFAAUtag_message@@@Z	
 0x000240ef	0x0003f5ef	?EventWindowHandler@@YAFAAUtag_message@@@Z	
@@ -596,7 +596,7 @@ old_rva	new_rva	name	note
 0x00038869	0x00023707	?CombatMessage@combatManager@@QAEXPADH@Z	
 0x0003891e	0x000237b4	?CombatMessage@combatManager@@QAEXF@Z	
 0x00038c11	0x00023a3a	?ResetLimitCreature@combatManager@@QAEXXZ	
-0x00038ce5	0x00023acc	?SetGridMode@combatManager@@QAEXC@Z	
+0x00038ce5	0x00023acc	?SetDrawRightToLeft@combatManager@@QAEXC@Z	
 0x00038d09	0x00023ae5	?UpdateCombatArea@combatManager@@QAEXXZ	
 0x00038d44	0x00038d44	?RandomizePlayerCrests@game@@QAEXXZ	
 0x00038de7	0x00023bab	?DrawBackground@combatManager@@QAEXXZ	

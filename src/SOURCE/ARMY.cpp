@@ -342,7 +342,7 @@ void army::Wince(void) {
     m_animationFrame = 2;
     m_walkYStep = 0;
     gCombatManager->UpdateGrid(m_hex, m_stats.attributes);
-    gCombatManager->SetGridMode(
+    gCombatManager->SetDrawRightToLeft(
         m_facing != ARMY_FACING_RIGHT ? static_cast<i8>(1) : static_cast<i8>(0)
     );
 }
@@ -434,7 +434,7 @@ void army::Walk(i16 direction, i8 standAfter, i8 continued) {
             drawRightToLeft = 1;
         else if (m_facing == ARMY_FACING_LEFT && direction == COMBAT_DIRECTION_NORTHWEST)
             drawRightToLeft = 1;
-        gCombatManager->SetGridMode(drawRightToLeft);
+        gCombatManager->SetDrawRightToLeft(drawRightToLeft);
     }
     m_animationSequence = ARMY_ANIMATION_WALK;
     m_animationFrame = startFrame;
@@ -589,7 +589,7 @@ void army::SpecialAttack(void) {
         m_facing = ARMY_FACING_RIGHT;
     else
         m_facing = ARMY_FACING_LEFT;
-    gCombatManager->SetGridMode(
+    gCombatManager->SetDrawRightToLeft(
         m_facing == ARMY_FACING_RIGHT ? static_cast<i8>(1) : static_cast<i8>(0)
     );
     CheckLuck();
@@ -1007,7 +1007,7 @@ void army::DoAttack(i32 retaliation) {
         frameBase = 8;
     else
         frameBase = 7;
-    gCombatManager->SetGridMode(
+    gCombatManager->SetDrawRightToLeft(
         m_facing == ARMY_FACING_RIGHT ? static_cast<i8>(1) : static_cast<i8>(0)
     );
     CheckLuck();
