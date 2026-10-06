@@ -59,10 +59,11 @@ H1_ENUM_CONST_END(FileRequesterScrollGeometry)
 H1_ENUM_CONST_BEGIN(MapHeaderConstant)
     MAP_HEADER_ID = 1000,
     MAP_EXTRA_VERSION = 1112,
-    MAP_HEADER_NAME_COUNT = 10,
+    // NWC's maps hold a name and a description in each of ten language slots
+    // ("German name", ..., "??? name", "??? description").
+    MAP_HEADER_SLOT_COUNT = 10,
     MAP_HEADER_NAME_SIZE = 15,
-    // The map's name and description in each of eight languages (the
-    // requester shows the first).
+    // The languages the editor fills (the requester shows the first).
     MAP_HEADER_LANGUAGE_COUNT = 8,
     MAP_HEADER_DESCRIPTION_SIZE = 121
 H1_ENUM_CONST_END(MapHeaderConstant)
@@ -127,18 +128,18 @@ struct FileRequesterMapInfo {
 };
 
 // .MAP header: 0x554 bytes, id 1000 marks a valid map. A name and a
-// description per language (the requester shows the first; the editor fills
-// eight of each), and the editor's maps end the header with the format word
-// (1000 for the editor's own format; maps without it are two bytes shorter).
-// No code reads the two name slots after the languages' or the bytes between
-// the descriptions and the format.
+// description per language slot; the requester shows the first and the
+// editor fills eight. Maps in the editor's own format end the header with
+// the format word (1000), written over the last two bytes of the tenth
+// description; older maps keep text there and the header is followed by the
+// map version alone.
 struct SMapHeader {
     i16 id;
     H1_ENUM_STORAGE(MapDifficulty, i8) difficulty;
     H1_ENUM_STORAGE(MapSize, i8) size;
-    char name[MAP_HEADER_NAME_COUNT][MAP_HEADER_NAME_SIZE];
-    char description[MAP_HEADER_LANGUAGE_COUNT][MAP_HEADER_DESCRIPTION_SIZE];
-    u8 unknown462[0xf0];
+    char name[MAP_HEADER_SLOT_COUNT][MAP_HEADER_NAME_SIZE];
+    char description[MAP_HEADER_SLOT_COUNT - 1][MAP_HEADER_DESCRIPTION_SIZE];
+    char lastDescription[MAP_HEADER_DESCRIPTION_SIZE - sizeof(i16)];
     i16 format;
 };
 

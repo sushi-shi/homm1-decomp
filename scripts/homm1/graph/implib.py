@@ -62,12 +62,13 @@ import re
 import struct
 from pathlib import Path
 
-from homm1.core.paths import BUILD, dxsdk_dir, msvc_dir
+from homm1.core.paths import dxsdk_dir, image_build, msvc_dir
 from homm1.core.pe import Pe, image
 from homm1.tool import ToolError
 from homm1.tool.wine import find_ci, winepath
 
-OUT_DIR = BUILD / "lib"
+#: Each image synthesizes from its own import table (build/lib for the game).
+OUT_DIR = image_build() / "lib"
 
 #: `_name@n` = __stdcall (n = argument bytes); a bare `name` = __cdecl/data.
 STDCALL = re.compile(r"^_(?P<name>[A-Za-z_][A-Za-z0-9_]*)@(?P<bytes>\d+)$")

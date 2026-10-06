@@ -53,7 +53,33 @@ def image_paths(image: str) -> dict[str, str]:
         "OBJDIFF_JSON": f"{compare}/objdiff.json",
         "REPORT_JSON": f"{compare}/report.json",
         "COMPDB": f"{root}/clangd/compile_commands.json",
+        **CANDIDATES.get(image, {
+            "CANDIDATE_EXE": f"{root}/exe/{image.upper()}.candidate.EXE",
+            "CANDIDATE_MAP": f"{root}/exe/{image.upper()}.candidate.map",
+            "RESOURCE_SCRIPT": "",
+            "RESOURCE_RES": f"{root}/gen/{image}.res",
+            "RESOURCE_REPORT": f"{root}/gen/{image}.res.json"}),
     }
+
+
+#: Phase 2 (opt-in): each image's candidate executable, link map and resource
+#: script. The game keeps its historical paths.
+CANDIDATES = {
+    "game": {
+        "CANDIDATE_EXE": "build/exe/HEROESW.candidate.EXE",
+        "CANDIDATE_MAP": "build/exe/HEROESW.candidate.map",
+        "RESOURCE_SCRIPT": "src/SOURCE/Heroes.rc",
+        "RESOURCE_RES": "build/gen/heroes.res",
+        "RESOURCE_REPORT": "build/gen/heroes.res.json",
+    },
+    "editor": {
+        "CANDIDATE_EXE": "build/editor/exe/EDITOR.candidate.EXE",
+        "CANDIDATE_MAP": "build/editor/exe/EDITOR.candidate.map",
+        "RESOURCE_SCRIPT": "src/EDITOR/Editor.rc",
+        "RESOURCE_RES": "build/editor/gen/editor.res",
+        "RESOURCE_REPORT": "build/editor/gen/editor.res.json",
+    },
+}
 
 
 def _selected() -> dict[str, str]:
@@ -90,13 +116,15 @@ NORMALIZE_STAMP = _P["NORMALIZE_STAMP"]
 OBJDIFF_JSON = _P["OBJDIFF_JSON"]
 REPORT_JSON = _P["REPORT_JSON"]
 
-#: Phase 2 (opt-in): candidate image and link map.
-CANDIDATE_EXE = "build/exe/HEROESW.candidate.EXE"
-CANDIDATE_MAP = "build/exe/HEROESW.candidate.map"
+#: Phase 2 (opt-in): the selected image's candidate image, link map and
+#: resources. The MASM objects' OMF twins serve every image (one source, one
+#: flag set).
+CANDIDATE_EXE = _P["CANDIDATE_EXE"]
+CANDIDATE_MAP = _P["CANDIDATE_MAP"]
 LINK_OMF_DIR = "build/link/omf"
-RESOURCE_SCRIPT = "src/SOURCE/Heroes.rc"
-RESOURCE_RES = "build/gen/heroes.res"
-RESOURCE_REPORT = "build/gen/heroes.res.json"
+RESOURCE_SCRIPT = _P["RESOURCE_SCRIPT"]
+RESOURCE_RES = _P["RESOURCE_RES"]
+RESOURCE_REPORT = _P["RESOURCE_REPORT"]
 
 #: `wine cl` parallelism. Wine serialises far more than it looks under a
 #: shared wineserver, and past ~8 concurrent cl.exe the server thrashes and

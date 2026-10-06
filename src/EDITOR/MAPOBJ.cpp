@@ -25,12 +25,12 @@
 
 // The cell after a chain link in each of the eight directions.
 DATA(0x0044c0e4)
-static mapStep gChainSteps[CHAIN_DIRECTION_COUNT] =
+static i32 gChainSteps[CHAIN_DIRECTION_COUNT][MAP_STEP_AXES] =
     {{1, -2}, {1, -1}, {1, 2}, {1, 1}, {-1, 2}, {-1, 1}, {-1, -2}, {-1, -1}};
 
 // A chain's sideways shift when it turns clockwise or counterclockwise.
 DATA(0x0044c124)
-static mapStep gChainTurns[CHAIN_DIRECTION_COUNT][CHAIN_TURN_COUNT] = {
+static i32 gChainTurns[CHAIN_DIRECTION_COUNT][CHAIN_TURN_COUNT][MAP_STEP_AXES] = {
     {{1, 3}, {-1, 0}},
     {{1, 0}, {0, 0}},
     {{-1, 0}, {-3, 1}},
@@ -46,6 +46,11 @@ static mapStep gChainTurns[CHAIN_DIRECTION_COUNT][CHAIN_TURN_COUNT] = {
 DATA(0x0044c1a4)
 static i32 gMineSiteKinds[RANDOM_MAP_MINE_RESOURCE_COUNT] =
     {RESOURCE_ORE, RESOURCE_SULFUR, RESOURCE_CRYSTAL, RESOURCE_GEMS, RESOURCE_GOLD};
+
+// No retail code reads this; it holds its retail .bss place, before
+// GenerateRandomMap's empty status text.
+DATA(0x00452ef4)
+i32 gUnusedData452ef4;
 
 #define terrain type     // frame-slot spelling
 #define paintFrom canvas // frame-slot spelling
@@ -165,18 +170,6 @@ i32 editManager::HasEnoughCastles(void) {
         }
     }
     return count >= EDIT_MAP_MIN_CASTLES;
-}
-
-VA(0x00411ef7, 0x62)
-void ScaleByDensity(i32* count, i32 density) {
-    i32 base;
-
-    base = *count;
-    *count = base * (base + 50) / RANDOM_MAP_FULL_PERCENT;
-    if (density < RANDOM_MAP_NEUTRAL_DENSITY)
-        *count = *count * (density + RANDOM_MAP_NEUTRAL_DENSITY) / RANDOM_MAP_FULL_PERCENT;
-    else
-        *count = *count * density / RANDOM_MAP_NEUTRAL_DENSITY;
 }
 
 #define seedY sourceY          // frame-slot spelling
@@ -476,6 +469,18 @@ void editManager::RemoveSmallRegions(void) {
 #undef x
 #undef minY
 
+VA(0x00411ef7, 0x62)
+void ScaleByDensity(i32* count, i32 density) {
+    i32 base;
+
+    base = *count;
+    *count = base * (base + 50) / RANDOM_MAP_FULL_PERCENT;
+    if (density < RANDOM_MAP_NEUTRAL_DENSITY)
+        *count = *count * (density + RANDOM_MAP_NEUTRAL_DENSITY) / RANDOM_MAP_FULL_PERCENT;
+    else
+        *count = *count * density / RANDOM_MAP_NEUTRAL_DENSITY;
+}
+
 #define chainCount ridges // frame-slot spelling
 VA(0x00411f59, 0x3ce)
 void editManager::PlaceObstacleChains(i32 density, i32 tileset) {
@@ -578,12 +583,12 @@ void editManager::PlaceObstacleChains(i32 density, i32 tileset) {
                     chance = 40;
                 if (Random(1, 100) < chance) {
                     if (Random(0, 1)) {
-                        rootX += gChainTurns[direction][CHAIN_TURN_CLOCKWISE].x;
-                        rootY += gChainTurns[direction][CHAIN_TURN_CLOCKWISE].y;
+                        rootX += gChainTurns[direction][CHAIN_TURN_CLOCKWISE][MAP_STEP_X];
+                        rootY += gChainTurns[direction][CHAIN_TURN_CLOCKWISE][MAP_STEP_Y];
                         direction = (direction + CHAIN_CLOCKWISE_STEP) % CHAIN_DIRECTION_COUNT;
                     } else {
-                        rootX += gChainTurns[direction][CHAIN_TURN_COUNTERCLOCKWISE].x;
-                        rootY += gChainTurns[direction][CHAIN_TURN_COUNTERCLOCKWISE].y;
+                        rootX += gChainTurns[direction][CHAIN_TURN_COUNTERCLOCKWISE][MAP_STEP_X];
+                        rootY += gChainTurns[direction][CHAIN_TURN_COUNTERCLOCKWISE][MAP_STEP_Y];
                         direction =
                             (direction + CHAIN_COUNTERCLOCKWISE_STEP) % CHAIN_DIRECTION_COUNT;
                     }
@@ -670,14 +675,14 @@ i32 editManager::PlaceChainLink(i32* x, i32* y, i32 direction, i32 tileset, char
     }
     if (terrainChain && CanPlaceOverlay(terrainChain, *x, *y)) {
         PlaceOverlay(terrainChain, *x, *y);
-        *x += gChainSteps[direction].x;
-        *y += gChainSteps[direction].y;
+        *x += gChainSteps[direction][MAP_STEP_X];
+        *y += gChainSteps[direction][MAP_STEP_Y];
         return 1;
     }
     if (CanPlaceOverlay(anyTerrainChain, *x, *y)) {
         PlaceOverlay(anyTerrainChain, *x, *y);
-        *x += gChainSteps[direction].x;
-        *y += gChainSteps[direction].y;
+        *x += gChainSteps[direction][MAP_STEP_X];
+        *y += gChainSteps[direction][MAP_STEP_Y];
         return 1;
     }
     return 0;

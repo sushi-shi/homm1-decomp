@@ -407,6 +407,8 @@ class LocalizationTests(unittest.TestCase):
         for image_table in sorted((root / 'config/retail').glob('*/localization.tsv')):
             rows += table(image_table.relative_to(root / 'config/retail').as_posix())
         resource_rows = table('localization_resources.tsv')
+        for image_table in sorted((root / 'config/retail').glob('*/localization_resources.tsv')):
+            resource_rows += table(image_table.relative_to(root / 'config/retail').as_posix())
         fixed_rows = table('localization_fixed_width.tsv')
         # The fixed-width rows include INPUTMGR's key table, which the Russian
         # descriptor supplies (Buka's ЙЦУКЕН layout on US keys).

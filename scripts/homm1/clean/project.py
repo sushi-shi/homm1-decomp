@@ -1,13 +1,18 @@
 """The generated tree's standalone build inputs.
 
-`build.json` lists each unit with its VC6 profile and the candidate link
-contract of `homm1.graph.link`: objects in retail code order (each unit's
-lowest claimed function address, read from the annotations before they are
-removed), the BASE units archived into the library LINK searches after
-mss32.lib, the library line and flags. `imports/` holds the stub-DLL sources
-`homm1.graph.implib` derives from the retail import table for the vendor DLLs
-whose SDKs ship no import library. Only names, ordinals and order are carried;
-no address reaches the tree.
+`build.json` describes each program the tree builds (`targets`: the game's
+HEROES.EXE and the scenario editor's EDITOR.EXE) with its units, each unit's
+VC6 profile and the image's defines (`/DHOMM1_EDITOR` for every editor
+compile), its resource script, and the candidate link contract of
+`homm1.graph.link`: objects in retail code order, the BASE units archived
+into the library LINK searches after audiere.lib, the library line and flags.
+The game's order is each unit's lowest claimed function address, read from
+the annotations before they are removed; the editor's is its reviewed
+`config/retail/editor/link_order.tsv` (a shared unit's claims spell game
+addresses); the library line is `homm1.graph.link.PROFILES`. `imports/` holds the stub-DLL sources `homm1.graph.implib`
+derives from the retail import table for the vendor DLLs whose SDKs ship no
+import library; the editor imports only audiere's, a subset of the game's.
+Only names, ordinals and order are carried; no address reaches the tree.
 """
 
 from __future__ import annotations
@@ -22,15 +27,23 @@ TEMPLATE = "scripts/homm1/clean/template/"
 #: The game runner shared with `homm1 play`; the source tree carries it as play.py.
 RUNNER = "scripts/homm1/graph/play.py"
 EXECUTABLE = ("build.py", "play.py")
-
-
-def _units(files: dict[str, bytes]) -> list[dict]:
-    """The game's units; units only another image links stay out of the tree."""
+#: Each image's resource script.
+RESOURCES = {"game": "src/SOURCE/Heroes.rc", "editor": "src/EDITOR/Editor.rc"}
+def _units(files: dict[str, bytes], image: str = "game") -> list[dict]:
+    """The units `image` links, in manifest order."""
     import tomllib
-    from homm1.core.paths import DEFAULT_IMAGE
     from homm1.manifest import unit_images
     return [u for u in tomllib.loads(files["config/units.toml"].decode())["unit"]
-            if DEFAULT_IMAGE in unit_images(u)]
+            if image in unit_images(u)]
+
+
+def images(files: dict[str, bytes]) -> list[str]:
+    """The snapshot's pinned programs that link at least one unit (game first)."""
+    import tomllib
+    from homm1.manifest import unit_images
+    config = tomllib.loads(files["config/units.toml"].decode())
+    linked = {image for unit in config["unit"] for image in unit_images(unit)}
+    return [key for key in json.loads(files["config/retail/targets.json"]) if key in linked]
 
 
 def first_function(files: dict[str, bytes], unit: dict) -> int | None:
@@ -47,36 +60,77 @@ def first_function(files: dict[str, bytes], unit: dict) -> int | None:
     return min(addresses) - IMAGE_BASE if addresses else None
 
 
-def manifest(files: dict[str, bytes]) -> dict:
+def image_starts(files: dict[str, bytes], image: str) -> dict[str, int]:
+    """{unit: lowest code span start} from another image's reviewed
+    link_order.tsv."""
+    table = files[f"config/retail/{image}/link_order.tsv"].decode()
+    rows = [line.split("\t") for line in table.splitlines() if line and not line.startswith("#")]
+    header, rows = rows[0], rows[1:]
+    column = {name: index for index, name in enumerate(header)}
+    starts: dict[str, int] = {}
+    for row in rows:
+        unit, start = row[column["unit"]], int(row[column["lo"]], 16)
+        starts[unit] = min(start, starts.get(unit, start))
+    return starts
+
+
+def _profile(config: dict, unit: dict, image: str) -> list[str]:
+    """The unit's full compile flags for `image`: its profile (per image when
+    `image_flags` names one) and the image's defines."""
+    name = unit.get("image_flags", {}).get(image, unit["flags"])
+    defines = config.get("images", {}).get(image, {}).get("defines", [])
+    return [*config["flags"][name], *(f"/D{define}" for define in defines)]
+
+
+def target(files: dict[str, bytes], image: str) -> dict:
+    """One program's build and link contract."""
     import tomllib
-    from homm1.graph.link import (BASE_LIBRARY, BASE_LIBRARY_AFTER, BASE_LIBRARY_FROM,
-                                  CRT_LIBRARY, CRT_REPLACES, LINK_LIBS)
+    from homm1.graph.link import (BASE_LIBRARY, BASE_LIBRARY_AFTER, CRT_LIBRARY,
+                                  CRT_REPLACES, LINK_RETAIL_FLAGS, PROFILES)
     config = tomllib.loads(files["config/units.toml"].decode())
-    units = _units(files)
+    pins = json.loads(files["config/retail/targets.json"])
+    units = _units(files, image)
+    starts = image_starts(files, image) if image != "game" else {}
     keyed = []
     for index, unit in enumerate(units):
-        rva = first_function(files, unit)
+        rva = first_function(files, unit) if image == "game" else starts.get(unit["unit"])
         if rva is None:
-            raise ValueError(f"{unit['unit']}: no claimed function orders it in the link")
-        keyed.append((rva, index, unit["unit"]))
-    ordered = [(rva, name) for rva, _i, name in sorted(keyed)]
-    from homm1.graph.link import LINK_RETAIL_FLAGS
+            raise ValueError(f"{image}: {unit['unit']}: no claimed function orders it in the link")
+        keyed.append((rva, index, unit["unit"], unit["source"]))
+    ordered = sorted(keyed)
+    # The image's link line (homm1.graph.link): its import libraries, the
+    # start of its BASE library and its stack.
+    line = PROFILES[image]
+    library_from = line["base_library_from"]
+    if RESOURCES[image] not in files:
+        raise ValueError(f"{image}: no resource script {RESOURCES[image]}")
     return {
-        "compiler": config["build"]["compiler"],
-        "executable": json.loads(files["config/retail/targets.json"])["game"]["name"],
-        "locale": json.loads(files["config/retail/targets.json"])["game"].get("locale", "ru"),
+        "executable": pins[image]["name"],
+        "resources": RESOURCES[image],
+        "defines": list(config.get("images", {}).get(image, {}).get("defines", [])),
         "units": [{"unit": u["unit"], "source": u["source"],
-                   "flags": config["flags"][u["flags"]]} for u in units],
+                   "flags": _profile(config, u, image)} for u in units],
         "link": {
-            "objects": [name for rva, name in ordered if rva < BASE_LIBRARY_FROM],
-            "members": [name for rva, name in ordered if rva >= BASE_LIBRARY_FROM],
+            "objects": [name for rva, _i, name, _p in ordered if rva < library_from],
+            "members": [name for rva, _i, name, _p in ordered if rva >= library_from],
             "library": BASE_LIBRARY,
             "library_after": BASE_LIBRARY_AFTER,
-            "libraries": [*LINK_LIBS, CRT_LIBRARY],
+            "libraries": [*line["libs"], CRT_LIBRARY],
             "flags": ["/SUBSYSTEM:WINDOWS", "/BASE:0x400000", "/INCREMENTAL:NO",
-                      *LINK_RETAIL_FLAGS, f"/NODEFAULTLIB:{CRT_REPLACES}",
-                      "/STACK:0x10240,0x1000"],
+                      *LINK_RETAIL_FLAGS, f"/NODEFAULTLIB:{CRT_REPLACES}", *line["flags"]],
         },
+    }
+
+
+def manifest(files: dict[str, bytes]) -> dict:
+    import tomllib
+    config = tomllib.loads(files["config/units.toml"].decode())
+    pins = json.loads(files["config/retail/targets.json"])
+    return {
+        "compiler": config["build"]["compiler"],
+        "locale": pins["game"].get("locale", "ru"),
+        "default_target": "game",
+        "targets": {image: target(files, image) for image in images(files)},
     }
 
 

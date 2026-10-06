@@ -14,9 +14,12 @@
 
 #include <stdio.h>
 
-// No retail code reads this; it holds its retail .bss place.
+// No retail code reads this; it holds its retail .bss place. EDITOR.EXE's
+// compile of this file, from another checkout, has no such object.
+#ifndef HOMM1_EDITOR
 DATA(0x004cdde4)
 static int gAudioOldStore;
+#endif
 #define gSampleBuffer gSampleBufferly // spelling fixes .bss order
 DATA(0x004cdf58)
 static void* gSampleBuffer;

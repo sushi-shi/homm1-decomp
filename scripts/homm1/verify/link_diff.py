@@ -10,8 +10,10 @@ ceiling, config/link_diff.tsv, holds the highest count each region may have.
 A count above it fails the gate; a lower count passes and is reported as
 bankable with `--update`.
 
-Only the game image has a linked candidate; for another image the gate is
-empty.
+Each image with a linked candidate banks its own ceiling beside its retail
+facts (`homm1 --image editor verify link-diff --update`:
+config/retail/editor/link_diff.tsv), and the gate checks every image that
+has one.
 """
 
 from __future__ import annotations
@@ -20,9 +22,17 @@ import struct
 import sys
 from pathlib import Path
 
-from homm1.core.paths import CONFIG, REPO
+from homm1.core.paths import CONFIG, DEFAULT_IMAGE, REPO, image_key, retail_dir
 
-CEILING = CONFIG / "link_diff.tsv"
+
+def ceiling_path(image: str | None = None) -> Path:
+    """The image's committed ceiling: config/link_diff.tsv for the game,
+    config/retail/<image>/link_diff.tsv for another image."""
+    key = image or image_key()
+    return CONFIG / "link_diff.tsv" if key == DEFAULT_IMAGE else retail_dir(key) / "link_diff.tsv"
+
+
+CEILING = ceiling_path()
 
 
 def _sections(data: bytes) -> list[tuple[str, int, int]]:
@@ -58,11 +68,12 @@ def regions(retail: bytes, cand: bytes) -> dict[str, int]:
     return out
 
 
-def read_ceiling() -> dict[str, int]:
-    if not CEILING.is_file():
+def read_ceiling(image: str | None = None) -> dict[str, int]:
+    path = ceiling_path(image)
+    if not path.is_file():
         return {}
     out = {}
-    for ln in CEILING.read_text().splitlines():
+    for ln in path.read_text().splitlines():
         if not ln or ln.startswith("#") or ln.startswith("region\t"):
             continue
         name, count = ln.split("\t")[:2]
@@ -70,44 +81,54 @@ def read_ceiling() -> dict[str, int]:
     return out
 
 
-def write_ceiling(counts: dict[str, int]) -> None:
+def write_ceiling(counts: dict[str, int], image: str | None = None) -> None:
     lines = ["# Linked-candidate ceiling: bytes differing from retail per region.",
              "# Written only by `homm1 verify link-diff --update`.",
              "region\tdiffering"]
     lines += [f"{k}\t{v}" for k, v in counts.items()]
-    CEILING.write_text("\n".join(lines) + "\n")
+    ceiling_path(image).write_text("\n".join(lines) + "\n")
 
 
-def measure(relink: bool = True) -> dict[str, int] | None:
+def measure(relink: bool = True, image: str | None = None) -> dict[str, int]:
+    """Per-region counts of the image's linked candidate (relinked first
+    unless `relink` is false; only the selected image can relink)."""
     from homm1 import graph
-    from homm1.core.paths import DEFAULT_IMAGE, image_key, retail_exe
-    if image_key() != DEFAULT_IMAGE:
-        return None
+    from homm1.core.paths import retail_exe
+    key = image or image_key()
     if relink:
+        if key != image_key():
+            raise SystemExit(f"relink {key} under `homm1 --image {key}`")
         from homm1.graph.verbs import link_main
         if link_main([]):
             raise SystemExit("homm1 link failed")
-    cand = REPO / graph.CANDIDATE_EXE
+    cand = REPO / graph.image_paths(key)["CANDIDATE_EXE"]
     if not cand.is_file():
         raise SystemExit(f"no linked candidate at {cand}")
-    return regions(Path(retail_exe()).read_bytes(), cand.read_bytes())
+    return regions(Path(retail_exe(key)).read_bytes(), cand.read_bytes())
+
+
+def gated_images() -> list[str]:
+    """The game and every image that banked a ceiling."""
+    from homm1.core.paths import images
+    return [i for i in images() if i == DEFAULT_IMAGE or ceiling_path(i).is_file()]
 
 
 def gate_findings(relink: bool = True) -> list[str]:
-    counts = measure(relink)
-    if counts is None:
-        return []
-    ceiling = read_ceiling()
-    if not ceiling:
-        return [f"no ceiling in {CEILING.relative_to(REPO)}: run "
-                "`homm1 verify link-diff --update`"]
     out = []
-    for name, count in counts.items():
-        limit = ceiling.get(name)
-        if limit is None:
-            out.append(f"{name}: {count} differing byte(s), no banked ceiling")
-        elif count > limit:
-            out.append(f"{name}: {count} differing byte(s) > ceiling {limit}")
+    for image in gated_images():
+        tag = "" if image == DEFAULT_IMAGE else f"{image} "
+        ceiling = read_ceiling(image)
+        if not ceiling:
+            out.append(f"no ceiling in {ceiling_path(image).relative_to(REPO)}: run "
+                       "`homm1 verify link-diff --update`")
+            continue
+        counts = measure(relink and image == image_key(), image)
+        for name, count in counts.items():
+            limit = ceiling.get(name)
+            if limit is None:
+                out.append(f"{tag}{name}: {count} differing byte(s), no banked ceiling")
+            elif count > limit:
+                out.append(f"{tag}{name}: {count} differing byte(s) > ceiling {limit}")
     return out
 
 
@@ -125,9 +146,6 @@ def main(argv=None) -> int:
                     help="compare the existing candidate without relinking")
     a = ap.parse_args(argv)
     counts = measure(relink=not a.no_link)
-    if counts is None:
-        print("[link-diff] no linked candidate for this image")
-        return 0
     ceiling = read_ceiling()
     for name, count in counts.items():
         limit = ceiling.get(name)
@@ -138,7 +156,7 @@ def main(argv=None) -> int:
     print(f"[link-diff] total {sum(counts.values())}")
     if a.update:
         write_ceiling(counts)
-        print(f"[link-diff] ceiling written to {CEILING.relative_to(REPO)}")
+        print(f"[link-diff] ceiling written to {ceiling_path().relative_to(REPO)}")
         return 0
     bad = [n for n, c in counts.items() if ceiling.get(n) is None or c > ceiling[n]]
     return 1 if bad else 0

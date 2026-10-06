@@ -8,27 +8,36 @@ program's language); MASM units assemble as the retail link's OMF and as
 comparison COFF. The objects then link through `homm1.graph.link` exactly like
 `homm1 link` (retail object order, BASE library, no /FORCE).
 
-Four checks, all of which must pass:
+Both programs are checked: the game, and the scenario editor, whose units
+(the shared ones again, with the editor's profiles and HOMM1_EDITOR) compile
+against the matching build's editor objects (build/editor/objdiff/base) and
+link like `homm1 --image editor link`.
+
+These checks must all pass:
 
 * The control tree applies the same macro expansions and comment removal as
   the source tree but keeps every line, the `#line` pins and the scaffolding
   headers. It must reproduce every non-debug object section (bytes,
-  relocations, symbol names) and the candidate HEROES.EXE byte for byte,
-  LINK's TimeDateStamps aside: the transforms change no code.
+  relocations, symbol names) of both programs and both candidates
+  (HEROES.EXE, EDITOR.EXE) byte for byte, LINK's TimeDateStamps aside: the
+  transforms change no code.
 * The source tree must compile and link without /FORCE. Without the `#line`
   pins its assertions carry their own line numbers and file names, without
   the frame-slot aliases its locals take their readable spellings' `/Od`
   slots, and VC6's local label counters ($L, $T, $SG) shift with the removed
   scaffolding headers, so its objects are compared after numbering those
   compiler-local names by first appearance; every remaining difference is
-  listed, and each must be in a unit that one of those explains.
+  listed, and each must be in a unit that one of those explains. Both resource
+  scripts must compile to their retail programs' payloads.
 * For the classic variant, every classic file must equal the source tree's
   Russian compiler input token for token once its UTF-8 literals are read as
   the Windows-1251 bytes they show (classic_equivalence).
+* The source tree's own catalog tool must find its locales/ complete and
+  current for the sources it carries (`catalog.py check`, `update --check`).
 * The source tree's own build.py, run through its flake (which fetches the
-  hash-pinned toolchain release), must produce HEROES.EXE in every language
-  of its catalog, and its game runner (`nix run .#play`, play.py) must
-  complete a dry run.
+  hash-pinned toolchain release), must produce HEROES.EXE and EDITOR.EXE in
+  every language of its catalog, and its runners (`nix run .#play` and
+  `nix run .#editor`, play.py) must complete a dry run.
 
 Nothing is patched or banked; this proves the generated source compiles to
 the matching program, not a retail match.
@@ -357,49 +366,78 @@ def _build_unit(localized: Path, work: Path, record: dict, flags: list[str],
     return unit, obj, obj
 
 
-def _build_tree(tree: Path, work: Path, label: str, *, exact: bool,
-                renames: dict[str, str] | None = None) -> tuple[list, dict[str, list[str]]]:
-    """Compile every unit of `tree` and compare each object with the matching
-    build; `exact` keeps compiler-local names in the comparison."""
-    from homm1.manifest import flag_profiles, units
-
-    # The control compiles as the matching build does; the source tree as its
-    # own build.py does (resolved literals in a copy).
-    localized = tree if exact else localize(tree, work / "localized")
-    includes = _include_flags(localized)
+def _image_units(image: str) -> list[tuple[dict, list[str]]]:
+    """[(unit, full compile flags)] of `image`, as homm1.graph.emit compiles
+    them: the unit's profile for that image, then the image's defines."""
+    from homm1.manifest import flag_profiles, image_defines, units
     profiles = flag_profiles()
+    return [(u, [*profiles[u.get("image_flags", {}).get(image, u["flags"])],
+                 *image_defines(image)]) for u in units(image=image)]
+
+
+def _build_tree(localized: Path, work: Path, label: str, image: str, *, exact: bool,
+                renames: dict[str, str] | None = None) -> tuple[list, dict[str, list[str]]]:
+    """Compile every unit `image` links from `localized` and compare each
+    object with the matching build's; `exact` keeps compiler-local names in
+    the comparison."""
+    includes = _include_flags(localized)
     with ThreadPoolExecutor(WINE_JOBS) as pool:
         built = list(pool.map(
-            lambda r: _build_unit(localized, work, r, profiles[r["flags"]], includes,
-                                  matching_view=exact),
-            units()))
+            lambda pair: _build_unit(localized, work, pair[0], pair[1], includes,
+                                     matching_view=exact),
+            _image_units(image)))
+    matching = REPO / graph.image_paths(image)["BASE_DIR"]
     different = {}
     for unit, obj, _link_obj in built:
-        differences = compare_objects(obj, REPO / graph.BASE_DIR / f"{unit}.obj",
+        differences = compare_objects(obj, matching / f"{unit}.obj",
                                       local_names=exact, renames=None if exact else renames)
         if differences:
             different[unit] = differences
     what = ("in every non-debug section" if exact else
             "in every non-debug section, compiler-local label numbers aside")
-    print(f"[clean] verify: {label}: {len(built) - len(different)}/{len(built)} unit objects "
-          f"identical to the matching build {what}")
+    print(f"[clean] verify: {label}: {image}: {len(built) - len(different)}/{len(built)} "
+          f"unit objects identical to the matching build {what}")
     return built, different
 
 
-def _link(work: Path, built: list, res: Path | None, label: str) -> tuple[bool, dict]:
+def _link(work: Path, built: list, res: Path | None, label: str,
+          image: str = "game") -> tuple[bool, dict]:
+    """Link `built` as `image`'s candidate does (homm1.graph.link, the image's
+    profile) and compare the result with the matching candidate."""
+    import os
+    import subprocess
+    from homm1.core.paths import IMAGE_ENV
     from homm1.graph.link import candidate
-    exe = work / "HEROES.EXE"
-    result = candidate(exe, work / "obj", explicit=[str(o) for _u, _o, o in built], res=res)
-    if result["unresolved"]:
-        raise ValueError(f"{label}: {len(result['unresolved'])} unresolved external(s): "
-                         + ", ".join(sorted(result["unresolved"])[:6]))
-    same, counts = compare_images(exe, REPO / graph.CANDIDATE_EXE)
+    exe = work / _executable(image)
+    objects = [str(o) for _u, _o, o in built]
+    if image == "game":
+        result = candidate(exe, work / "obj", explicit=objects, res=res)
+        if result["unresolved"]:
+            raise ValueError(f"{label}: {len(result['unresolved'])} unresolved external(s): "
+                             + ", ".join(sorted(result["unresolved"])[:6]))
+    else:
+        # The link line, object order and PDB follow the selected image, which
+        # the module reads from the environment at import.
+        command = [sys.executable, "-m", "homm1.graph.link", "--out", str(exe),
+                   "--objs-dir", str(work / "obj"), *[f"--obj={o}" for o in objects],
+                   *(["--res", str(res)] if res is not None else [])]
+        result = subprocess.run(command, cwd=REPO, env=dict(os.environ, **{IMAGE_ENV: image}),
+                                capture_output=True, text=True)
+        if result.returncode or not exe.is_file():
+            raise ValueError(f"{label}: {image} link failed:\n"
+                             + "\n".join((result.stdout + result.stderr).strip()
+                                         .splitlines()[-12:]))
+    same, counts = compare_images(exe, REPO / graph.image_paths(image)["CANDIDATE_EXE"])
     shown = exe.relative_to(REPO) if exe.is_relative_to(REPO) else exe
     print(f"[clean] verify: {label}: linked {shown} (no unresolved externals, no /FORCE); "
           + ("byte-identical to the matching candidate apart from build timestamps"
              if same else "differs from the matching candidate in "
              + ", ".join(f"{name} {n} B" for name, n in sorted(counts.items()))))
     return same, counts
+
+
+def _executable(image: str) -> str:
+    return json.loads((REPO / "config/retail/targets.json").read_text())[image]["name"]
 
 
 #: Spellings whose value moves when `#line` pins and blank lines go.
@@ -412,8 +450,8 @@ def unexplained_differences(tree: Path, different: dict[str, list[str]],
     defines no function behind frame-slot aliases (`framed`, source paths):
     the generated tree compiles their readable local names, which the `/Od`
     frame orders by spelling."""
-    from homm1.manifest import units
-    sources = {u["unit"]: u["source"] for u in units()}
+    from homm1.manifest import all_units
+    sources = {u["unit"]: u["source"] for u in all_units()}
     return sorted(unit for unit in different if sources[unit] not in framed
                   and not _POSITIONAL.search((tree / sources[unit]).read_text(encoding="utf-8")))
 
@@ -428,6 +466,44 @@ def _write(tree: Path, files: dict[str, bytes]) -> Path:
     return tree
 
 
+def _images() -> list[str]:
+    """The programs the trees build: every pinned image that links a unit."""
+    from homm1.core.paths import images
+    from homm1.manifest import all_units, unit_images
+    linked = {image for unit in all_units() for image in unit_images(unit)}
+    return [image for image in images() if image in linked]
+
+
+def _matching_objects(image: str) -> int:
+    """Bring the matching build's objects and candidate of a non-game image up
+    to date (`homm1 --image <image> link`)."""
+    from homm1.graph.verbs import ninja
+    return ninja([f"candidate-{image}"])
+
+
+def _resources(tree: Path, work: Path) -> dict[str, Path]:
+    """Compile each program's resource script of `tree` against its staged
+    retail executable; returns {image: .res} for the links (the game's only
+    when the matching build compiles its resources)."""
+    from homm1.clean.project import RESOURCES
+    from homm1.core.paths import retail_exe
+    from homm1.tool import rc
+    compiled = {}
+    for image in _images():
+        if image == "game" and not (REPO / graph.RESOURCE_RES).is_file():
+            continue
+        if not retail_exe(image).is_file():
+            print(f"[clean] verify: {RESOURCES[image]}: no staged retail "
+                  f"{retail_exe(image).name}; its resources are not compared")
+            continue
+        out = work / f"{image}.res"
+        rc.compile(tree / RESOURCES[image], out, retail=retail_exe(image))
+        print(f"[clean] verify: {Path(RESOURCES[image]).name} compiles to the retail "
+              "resource payloads")
+        compiled[image] = out
+    return compiled
+
+
 def verify(tree: Path, inputs: dict[str, bytes], variant: str = "source") -> int:
     """Build the control and source trees and check the variant's tree; 0 when
     every check in the module docstring passes."""
@@ -437,8 +513,9 @@ def verify(tree: Path, inputs: dict[str, bytes], variant: str = "source") -> int
     from homm1.tool import ToolError
 
     tree = Path(tree).resolve()
-    print("[clean] verify: bringing the matching candidate up to date (homm1 link)")
-    if link_main([]):
+    print("[clean] verify: bringing the matching candidate and editor objects up to date "
+          "(homm1 link)")
+    if link_main([]) or _matching_objects("editor"):
         print("[clean] verify: the matching build failed; nothing to compare against",
               file=sys.stderr)
         return 1
@@ -455,44 +532,48 @@ def verify(tree: Path, inputs: dict[str, bytes], variant: str = "source") -> int
     if variant != "source":
         source_tree = _write(work / "source-tree", generate(inputs, variant="source")[0])
 
-    res = None
+    res = {}
     status = 0
     report = []
     try:
-        if (REPO / graph.RESOURCE_RES).is_file():
-            from homm1.core.paths import retail_exe
-            from homm1.tool import rc
-            res = work / "heroes.res"
-            rc.compile(source_tree / graph.RESOURCE_SCRIPT, res, retail=retail_exe())
-            print("[clean] verify: Heroes.rc compiles to the retail resource payloads")
+        res = _resources(source_tree, work)
         print(f"[clean] verify: compiling the control and source trees with the pinned "
               f"VC6 toolchain ({WINE_JOBS} jobs)")
         for label, root, out, exact in (("control", control, work / "control", True),
                                         ("source", source_tree, work / "source", False)):
-            built, different = _build_tree(root, out, label, exact=exact, renames=renames)
-            same, _counts = _link(out, built, res, label)
-            report += [f"{label}\t{unit}\t{section}"
-                       for unit, sections in sorted(different.items()) for section in sections]
-            if label == "control" and (different or not same):
-                print("[clean] verify: FAIL: the control must reproduce the matching build; "
-                      "a transform changed code", file=sys.stderr)
-                status = 1
-            if label == "source":
-                unexplained = unexplained_differences(root, different, framed)
-                if unexplained:
-                    print("[clean] verify: FAIL: source objects differ without an assertion "
-                          "line or file name to explain it: " + ", ".join(unexplained),
-                          file=sys.stderr)
+            # The control compiles as the matching build does; the source tree
+            # as its own build.py does (resolved literals in a copy).
+            localized = root if exact else localize(root, out / "localized")
+            for image in _images():
+                built, different = _build_tree(localized, out if image == "game" else
+                                               out / image, label, image, exact=exact,
+                                               renames=renames)
+                same, _counts = _link(out if image == "game" else out / image, built,
+                                      res.get(image), label, image)
+                report += [f"{label}\t{image}\t{unit}\t{section}"
+                           for unit, sections in sorted(different.items())
+                           for section in sections]
+                if label == "control" and (different or not same):
+                    print(f"[clean] verify: FAIL: the control must reproduce the matching "
+                          f"build ({image}); a transform changed code", file=sys.stderr)
                     status = 1
-                elif different:
-                    print(f"[clean] verify: source: the {len(different)} differing units are "
-                          "those whose assertions now carry their own line numbers and file "
-                          "names, or whose aliased locals take their readable spellings' "
-                          "frame slots: " + ", ".join(sorted(different)))
+                if label == "source":
+                    unexplained = unexplained_differences(root, different, framed)
+                    if unexplained:
+                        print(f"[clean] verify: FAIL: {image} source objects differ without "
+                              "an assertion line or file name to explain it: "
+                              + ", ".join(unexplained), file=sys.stderr)
+                        status = 1
+                    elif different:
+                        print(f"[clean] verify: source: {image}: the {len(different)} "
+                              "differing units are those whose assertions now carry their "
+                              "own line numbers and file names, or whose aliased locals take "
+                              "their readable spellings' frame slots: "
+                              + ", ".join(sorted(different)))
     except (ToolError, ValueError, OSError) as error:
         print(f"[clean] verify: FAIL: {error}", file=sys.stderr)
         return 1
-    (work / "differences.tsv").write_text("tree\tunit\tsection\n" + "".join(
+    (work / "differences.tsv").write_text("tree\timage\tunit\tsection\n" + "".join(
         line + "\n" for line in report))
     print(f"[clean] verify: per-section differences: {work / 'differences.tsv'}")
     if variant == "classic":
@@ -506,7 +587,7 @@ def verify(tree: Path, inputs: dict[str, bytes], variant: str = "source") -> int
             print("[clean] verify: classic: every file equals the source tree's Russian "
                   "compiler input, its UTF-8 literals read as Windows-1251")
     else:
-        status = standalone(tree) or play_dry_run(tree, work) or status
+        status = catalog_check(tree) or standalone(tree) or play_dry_run(tree, work) or status
     return status
 
 
@@ -677,42 +758,66 @@ def _equivalent_rc(classic: str, reference: str, catalog, locale: str) -> str | 
     return None
 
 
+def catalog_check(tree: Path) -> int:
+    """The tree's own catalog tool must find its locales/ complete and current
+    for the sources it carries (`catalog.py check`, `catalog.py update --check`):
+    an ID only an unexported source uses would be stale there."""
+    import os
+    import subprocess
+    env = {key: value for key, value in os.environ.items() if key != "PYTHONPATH"}
+    for arguments in (["check"], ["update", "--check"]):
+        result = subprocess.run([sys.executable, "catalog.py", *arguments], cwd=tree, env=env,
+                                capture_output=True, text=True)
+        if result.returncode:
+            print("\n".join((result.stdout + result.stderr).strip().splitlines()[-20:]),
+                  file=sys.stderr)
+            print(f"[clean] verify: FAIL: python3 catalog.py {' '.join(arguments)} fails in "
+                  "the generated tree", file=sys.stderr)
+            return 1
+    print("[clean] verify: catalog: python3 catalog.py check and update --check pass in the "
+          "generated tree")
+    return 0
+
+
 def standalone(tree: Path) -> int:
-    """Run the tree's own build (its flake's toolchain, Wine and llvm-rc) for
-    every language of its catalog (locales/<code>.json)."""
+    """Run the tree's own build (its flake's toolchain, Wine and llvm-rc) of
+    every program for every language of its catalog (locales/<code>.json)."""
     import os
     import subprocess
     from homm1.core.paths import retail_exe
 
     env = {key: value for key, value in os.environ.items()
            if key not in ("WINEPREFIX", "PYTHONPATH", "HOMM1_TOOLCHAIN", "MSVC_DIR")}
-    executable = json.loads((tree / "build.json").read_text())["executable"]
+    targets = json.loads((tree / "build.json").read_text())["targets"]
+    icons = []
+    for image in targets:
+        if retail_exe(image).is_file():
+            icons += ["--icon-from", str(retail_exe(image))]
     for locale in sorted(path.stem for path in (tree / "locales").glob("*.json")):
         command = ["nix", "develop", f"path:{tree}", "-c", "python3", "build.py",
-                   "--locale", locale]
-        if retail_exe().is_file():
-            command += ["--icon-from", str(retail_exe())]
+                   "--target", "all", "--locale", locale, *icons]
         print(f"[clean] verify: standalone: {' '.join(command[:3])} -c python3 build.py "
-              f"--locale {locale}")
+              f"--target all --locale {locale}")
         result = subprocess.run(command, cwd=tree, env=env, capture_output=True, text=True)
-        exe = tree / "build" / locale / executable
-        if result.returncode or not exe.is_file():
+        built = [tree / "build" / locale / target["executable"] for target in targets.values()]
+        if result.returncode or not all(exe.is_file() for exe in built):
             print("\n".join((result.stdout + result.stderr).strip().splitlines()[-20:]),
                   file=sys.stderr)
             print("[clean] verify: FAIL: the tree's own build failed", file=sys.stderr)
             return 1
-        print(f"[clean] verify: standalone: built {exe.relative_to(tree)} "
-              f"({exe.stat().st_size:,} B) with the flake's pinned toolchain")
+        print("[clean] verify: standalone: built " + ", ".join(
+            f"{exe.relative_to(tree)} ({exe.stat().st_size:,} B)" for exe in built)
+            + " with the flake's pinned toolchain")
     return 0
 
 
 def play_dry_run(tree: Path, work: Path) -> int:
-    """Run the tree's game runner through its flake app with --dry-run, in a
-    fresh state directory: it must plan the build, prefix and launch. A game
-    copy named by HOMM1_GAME is checked too."""
+    """Run the tree's runners (`#play`, the game; `#editor`) through its flake
+    apps with --dry-run, in a fresh state directory: each must plan the build,
+    prefix and launch. A game copy named by HOMM1_GAME is checked too."""
     import os
     import subprocess
-    from homm1.graph.play import EXECUTABLE
+    from homm1.graph.play import PROGRAMS
 
     if not (tree / "play.py").is_file():
         print("[clean] verify: FAIL: the tree has no play.py", file=sys.stderr)
@@ -720,19 +825,24 @@ def play_dry_run(tree: Path, work: Path) -> int:
     env = {key: value for key, value in os.environ.items()
            if key not in ("WINEPREFIX", "PYTHONPATH", "HOMM1_TOOLCHAIN", "MSVC_DIR")}
     state = work / "play-state"
-    command = ["nix", "run", f"path:{tree}#play", "--", "--dry-run", "--state", str(state)]
-    if os.environ.get("HOMM1_GAME"):
-        command += ["--game", os.environ["HOMM1_GAME"]]
-    print(f"[clean] verify: play: nix run path:<tree>#play -- {' '.join(command[4:])}")
-    result = subprocess.run(command, cwd=tree, env=env, capture_output=True, text=True)
-    output = result.stdout + result.stderr
-    expected = ("would create the Wine prefix", "would install", "would run in")
-    missing = [step for step in expected if step not in output]
-    if result.returncode or missing or state.exists():
-        print("\n".join(output.strip().splitlines()[-20:]), file=sys.stderr)
-        print("[clean] verify: FAIL: the tree's game runner dry run "
-              + ("changed its state directory" if state.exists() else "failed"),
-              file=sys.stderr)
-        return 1
-    print(f"[clean] verify: play: the dry run plans the prefix and runs {EXECUTABLE}")
+    for app, program in (("play", "game"), ("editor", "editor")):
+        command = ["nix", "run", f"path:{tree}#{app}", "--", "--dry-run", "--state", str(state)]
+        if os.environ.get("HOMM1_GAME"):
+            command += ["--game", os.environ["HOMM1_GAME"]]
+        print(f"[clean] verify: {app}: nix run path:<tree>#{app} -- {' '.join(command[4:])}")
+        result = subprocess.run(command, cwd=tree, env=env, capture_output=True, text=True)
+        output = result.stdout + result.stderr
+        executable = PROGRAMS[program]["executable"]
+        expected = ("would create the Wine prefix", "would install", "would run in",
+                    executable)
+        missing = [step for step in expected if step not in output]
+        if result.returncode or missing or state.exists():
+            print("\n".join(output.strip().splitlines()[-20:]), file=sys.stderr)
+            print(f"[clean] verify: FAIL: the tree's {app} runner dry run "
+                  + ("changed its state directory" if state.exists() else
+                     f"failed (missing: {', '.join(missing)})" if missing else "failed"),
+                  file=sys.stderr)
+            return 1
+        print(f"[clean] verify: {app}: the dry run plans the build, the prefix and runs "
+              f"{executable}")
     return 0

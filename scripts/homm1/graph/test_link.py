@@ -1,4 +1,5 @@
-"""Candidate object order reads only the selected image's claims."""
+"""Candidate object order: the game reads its own claims, another image its
+reviewed link_order.tsv (its shared units' claims spell game addresses)."""
 import tempfile
 import unittest
 from pathlib import Path
@@ -20,8 +21,10 @@ class FirstClaimedRvaTests(unittest.TestCase):
             obj = Path("build/objdiff/base/SOURCE/kbwin.obj")
             with mock.patch("homm1.core.paths.image_key", return_value="game"):
                 self.assertEqual(link.first_claimed_rva(obj, claims), 0x42ca0)
-            with mock.patch("homm1.core.paths.image_key", return_value="editor"):
-                self.assertEqual(link.first_claimed_rva(obj, claims), 0xcd4e)
+            with mock.patch("homm1.core.paths.image_key", return_value="editor"), \
+                    mock.patch.object(link, "_image_unit_starts",
+                                      return_value={"SOURCE/kbwin": 0xc9a0}):
+                self.assertEqual(link.first_claimed_rva(obj, claims), 0xc9a0)
 
 
 if __name__ == "__main__":

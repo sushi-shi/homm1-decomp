@@ -440,11 +440,13 @@ extern H1_ENUM_STORAGE(ConfigExecutable, i32) gCurExe;
 // level a saved game loads with another player count (REQUEST), every
 // player is set up as human (GAME) and philAI draws its status text.
 // AbsAiPrint forces the MISC_FORCED level for one line; philAI traces events
-// at EVENT and switches to BATTLE tracing on the trace column.
+// at EVENT and switches to BATTLE tracing on the trace column. The editor's
+// eventsManager opens its cell editor from the first level.
 // The level is a rank (a command-line digit tested with <, >= and as a flag),
 // so these are named thresholds of that number, not a closed value domain.
 H1_ENUM_CONST_BEGIN(DebugLevel)
     DEBUG_LEVEL_NONE = 0,
+    EVENTS_CELL_EDIT_DEBUG_LEVEL_MIN = 1,
     FILE_REQUESTER_DEBUG_ALLOW_PLAYER_MISMATCH_MIN = 2,
     GAME_DEBUG_LEVEL_ALL_HUMAN_MIN = 2,
     AI_DEBUG_LEVEL_STATUS_TEXT_MIN = 2,

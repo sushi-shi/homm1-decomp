@@ -13,8 +13,10 @@ homm1 play --window -- ARGS                 # 640x480 Wine desktop window; ARGS 
 
 The runner is `homm1.graph.play`. The generated `source-buka-2003` tree carries
 the same file as `play.py` behind `nix run .#play`, which builds the tree's own
-`build/<locale>/HEROES.EXE` instead of the candidate. Both use the same per-user
-state directory, so a game copy imported by one serves the other.
+`build/<locale>/HEROES.EXE` instead of the candidate, and `nix run .#editor`
+(`play.py --target editor`), which builds and runs the scenario editor
+`build/<locale>/EDITOR.EXE` the same way. All of them use the same per-user
+state directory, so a game copy imported by one serves the others.
 
 `--game` accepts an installed game folder, the CD (a mount or a copy of its
 files), or the CD image (`.iso`) or a `.zip`/`.7z` of either; repeat it to
@@ -26,9 +28,9 @@ Audiere DLLs also against their SHA-256. Nothing is written to the copy.
 
 | Path under `$XDG_DATA_HOME/homm1-buka/` (or `--state`) | Contents |
 | --- | --- |
-| `game/` | The installed game: `DATA`, `ANIM`, `SOUND`, `MAPS`, `GAMES` and the runtime DLLs, copied once and never overwritten (saves and high scores stay here); `HEROES.EXE` is replaced on every launch |
+| `game/` | The installed game: `DATA`, `ANIM`, `SOUND`, `MAPS`, `GAMES` and the runtime DLLs, copied once and never overwritten (saves, edited maps and high scores stay here); `HEROES.EXE` or `EDITOR.EXE` is replaced on every launch |
 | `cd/` | Drive `D:` as a CD-ROM, holding `Tracks/`: the CD music, or links to the installed `SOUND` files when no CD was given |
-| `retail/` | The copy's retail `HEROES.EXE`; the source tree's build takes its icon from it |
+| `retail/` | The copy's retail `HEROES.EXE` and `EDITOR.EXE` (each checked by SHA-256); the source tree's builds take their icons from them |
 | `prefix/` | The game's Wine prefix, separate from the build prefix |
 | `play.json` | The `--game` sources and the last locale played |
 
@@ -55,6 +57,15 @@ What the game needs at run time, all from the source:
   Russian), so the window title and message boxes show its Windows code page
   text. The flake builds the locale archive from the descriptors
   ([localization](localization.md)).
+
+The scenario editor needs the same setup. Its `EarlySetup` (EDITOR.cpp) builds
+`DATA\heroes.agg` from `gDataPath`, reads the same registry key (`ReadPrefs`;
+its window settings are the `HMM1 Editor...` values) and runs the game's
+`SetupCDDrive`, so it also needs `Tracks\02-AudioTrack 02.ogg` on a CD-ROM
+drive: without one it stops with the "insert the CD" message. It loads and
+saves maps in `MAPS\` of the game folder and imports only KERNEL32, USER32,
+GDI32, ADVAPI32, WinG and Audiere. `--window` runs it in the same 640x480
+virtual desktop, which its screen fills.
 
 Full screen, the game asks DirectDraw for 640x480 in 8 bits. When the display
 cannot switch to that mode (an X server without the mode, such as Xvfb at

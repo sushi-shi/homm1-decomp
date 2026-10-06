@@ -1,9 +1,14 @@
 #!/usr/bin/env python3
-"""Set up a Buka 2003 game copy under Wine and run a built HEROES.EXE in it.
+"""Set up a Buka 2003 game copy under Wine and run a built HEROES.EXE or
+EDITOR.EXE in it.
 
 One runner for both trees: `homm1 play` (the matching build's candidate) and
-the generated source tree's `nix run .#play` (its own build.py), which carries
-this file as play.py. It imports nothing beyond the standard library.
+the generated source tree's `nix run .#play` and `nix run .#editor` (its own
+build.py), which carries this file as play.py. It imports nothing beyond the
+standard library. The scenario editor (`--target editor`) shares the game's
+installed folder, CD drive, registry key and prefix: it opens DATA\\HEROES.AGG,
+probes the CD for its first track, reads the same registry key (its own
+`HMM1 Editor...` window settings) and edits the maps in MAPS.
 
 `--game` takes the game copy once: an installed game folder, the CD (a mount
 or a copy of its files), or the CD image (.iso) or a .zip/.7z of either. The
@@ -15,14 +20,16 @@ Nothing is written to the copy.
 The per-user state directory (`$XDG_DATA_HOME/homm1-buka`, or `--state`):
 
     game/      the installed game: DATA, ANIM, SOUND, MAPS and GAMES, the
-               Smacker, Miles and Audiere DLLs, and HEROES.EXE, replaced on
-               every launch. Files are copied once and never overwritten, so
-               saved games and high scores stay here.
+               Smacker, Miles and Audiere DLLs, and HEROES.EXE or EDITOR.EXE,
+               replaced on every launch. Files are copied once and never
+               overwritten, so saved games, edited maps and high scores stay
+               here.
     cd/        drive D:, a CD-ROM holding Tracks/, the CD music. At start-up
                the game looks for Tracks\\02-AudioTrack 02.ogg on a CD-ROM
                drive. Without the CD the tracks are links to the installed
                SOUND files: the same music at the installed quality.
-    retail/    the copy's own HEROES.EXE, from which the build takes its icon.
+    retail/    the copy's own HEROES.EXE and EDITOR.EXE, from which the builds
+               take their icons.
     prefix/    the Wine prefix: D: as a CD-ROM and the game's registry key
                (AppPath, `HMM1 CDDrive`) in the 32-bit view. The game writes
                its own settings there on its first start.
@@ -48,7 +55,15 @@ import tempfile
 import time
 
 STATE_NAME = "homm1-buka"
-EXECUTABLE = "HEROES.EXE"
+#: The programs the runner starts: executable, and the retail file's size and
+#: SHA-256 (only its icon is used).
+PROGRAMS = {
+    "game": {"executable": "HEROES.EXE", "retail": (
+        692297, "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db")},
+    "editor": {"executable": "EDITOR.EXE", "retail": (
+        340031, "103380e9a8e4030ba25a76447bef1d6f3d05c47b0caf2f6748620dc3487f0485")},
+}
+EXECUTABLE = PROGRAMS["game"]["executable"]
 #: The game's HKLM key as the 32-bit game sees it in a 64-bit prefix.
 GAME_KEY = r"Software\Wow6432Node\Buka\3DO\Heroes of Might and Magic Platinum\1.000"
 CD_DRIVE = "d:"
@@ -66,8 +81,6 @@ RUNTIME_DLLS = {
     "MSS32.DLL": (144384, "a2912c7f00475f22e310351cfdf6fa2be3529f3ff1a9c245830d1b7c3486fd6c"),
     "audiere.dll": (475136, "10f1975637690fc1bb051371dfb7bec6c7a7f496e4e363e4dd5cbc8b5db3ebec"),
 }
-#: The retail executable: size, SHA-256. Only its icon is used.
-RETAIL_EXE = (692297, "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db")
 
 #: The installed game's data files and sizes. DATA/ is required; a missing or
 #: different ANIM, SOUND or MAPS file is reported but does not stop the game.
@@ -248,7 +261,7 @@ class Copy:
         self.given = given
         self.install: Path | None = None     # an installed game folder
         self.tracks: Path | None = None      # the CD's Tracks/
-        self.executable: Path | None = None  # its HEROES.EXE
+        self.executables: dict[str, Path] = {}   # its HEROES.EXE and EDITOR.EXE
 
 
 def tool(name: str) -> str:
@@ -333,7 +346,10 @@ def locate(given: Path, work: Path, dry_run: bool) -> Copy:
             install = install_from_cabinet(find_ci(cd, CABINET), work)
     if install is not None:
         copy.install = install
-        copy.executable = find_ci(install, EXECUTABLE)
+        for program, facts in PROGRAMS.items():
+            found = find_ci(install, facts["executable"])
+            if found is not None:
+                copy.executables[program] = found
     for home in (cd, install, install.parent if install else None):
         if home is not None and find_ci(home, "Tracks") is not None:
             copy.tracks = find_ci(home, "Tracks")
@@ -371,18 +387,20 @@ def save_config(state: Path, **values) -> None:
     (state / "play.json").write_text(json.dumps(config, indent=2, ensure_ascii=False) + "\n")
 
 
-def keep_retail(state: Path, executable: Path | None) -> None:
-    if executable is None or executable.stat().st_size != RETAIL_EXE[0] \
-            or sha256(executable) != RETAIL_EXE[1]:
-        return
-    retail = state / "retail" / EXECUTABLE
-    retail.parent.mkdir(parents=True, exist_ok=True)
-    if not retail.exists():
-        shutil.copyfile(executable, retail)
+def keep_retail(state: Path, executables: dict[str, Path]) -> None:
+    """Keep each retail program of the copy (checked by size and SHA-256)."""
+    for program, executable in executables.items():
+        size, digest = PROGRAMS[program]["retail"]
+        if executable.stat().st_size != size or sha256(executable) != digest:
+            continue
+        retail = state / "retail" / PROGRAMS[program]["executable"]
+        retail.parent.mkdir(parents=True, exist_ok=True)
+        if not retail.exists():
+            shutil.copyfile(executable, retail)
 
 
-def retail_executable(state: Path) -> Path | None:
-    retail = state / "retail" / EXECUTABLE
+def retail_executable(state: Path, program: str = "game") -> Path | None:
+    retail = state / "retail" / PROGRAMS[program]["executable"]
     return retail if retail.is_file() else None
 
 
@@ -411,7 +429,7 @@ def import_game(state: Path, given: list[Path], dry_run: bool) -> None:
                             ": pass the game folder, the CD or its image")
         if not dry_run:
             for copy in copies:
-                keep_retail(state, copy.executable)
+                keep_retail(state, copy.executables)
         music = next((c.tracks for c in copies if c.tracks), None)
         if music is not None:
             for problem in check_tracks(music)[:10]:
@@ -548,23 +566,25 @@ def prepare_prefix(state: Path, locale: str, reset: bool, dry_run: bool) -> None
 
 
 def launch_game(state: Path, executable: Path, locale: str, window: bool,
-                extra: list[str], dry_run: bool) -> int:
-    """Install `executable` in the game folder and run it; returns its status."""
+                extra: list[str], dry_run: bool, program: str = "game") -> int:
+    """Install `executable` in the game folder as the program's retail name
+    and run it; returns its status."""
     game = state / "game"
+    name = PROGRAMS[program]["executable"]
     # explorer starts the program only by its full path.
-    command = ["wine", windows_path(game / EXECUTABLE), *extra]
+    command = ["wine", windows_path(game / name), *extra]
     if window:
         command[1:1] = ["explorer", f"/desktop=Heroes,{DESKTOP}"]
     env = wine_env(state, locale)
     if dry_run:
-        say(f"would install {executable} as {game / EXECUTABLE}")
+        say(f"would install {executable} as {game / name}")
         say(f"would run in {game}: {' '.join(command)}"
             + (f" (LC_ALL={env['LC_ALL']})" if "LC_ALL" in env else ""))
         return 0
     for entry in game.iterdir():
-        if entry.name.lower() == EXECUTABLE.lower():
+        if entry.name.lower() == name.lower():
             entry.unlink()
-    shutil.copyfile(executable, game / EXECUTABLE)
+    shutil.copyfile(executable, game / name)
     say(f"running {executable} (md5 {hashlib.md5(executable.read_bytes()).hexdigest()[:12]})"
         + (f" in a {DESKTOP} window" if window else ""))
     started = time.monotonic()
@@ -575,8 +595,8 @@ def launch_game(state: Path, executable: Path, locale: str, window: bool,
     finally:
         stop_wine(env)
     if status and not window and time.monotonic() - started < QUICK_EXIT:
-        # The game stops at start-up when the display cannot switch to 640x480.
-        say(f"the game stopped at start-up (status {status}); if the screen could not "
+        # The program stops at start-up when the display cannot switch to 640x480.
+        say(f"{name} stopped at start-up (status {status}); if the screen could not "
             f"switch to {DESKTOP}, run with --window")
     return status
 
@@ -593,7 +613,7 @@ def add_arguments(parser: argparse.ArgumentParser, *, standalone: bool) -> None:
         parser.add_argument("--locale", choices=sorted(descriptors()) or None,
                             help="program language (default: the last one played, else ru)")
         parser.add_argument("--rebuild", action="store_true",
-                            help="rebuild HEROES.EXE even if the sources did not change")
+                            help="rebuild the program even if the sources did not change")
         parser.add_argument("--jobs", type=int, default=min(8, os.cpu_count() or 1),
                             help="parallel compiler jobs")
     parser.add_argument("--window", action="store_true",
@@ -620,9 +640,11 @@ def state_of(args: argparse.Namespace) -> Path:
     return (args.state or default_state()).expanduser().resolve()
 
 
-def session(args: argparse.Namespace, extra: list[str], build, locale: str = "ru") -> int:
-    """Import the game copy when given, build with `build(retail_exe) -> Path`,
-    prepare the prefix and run. Errors print and return 1."""
+def session(args: argparse.Namespace, extra: list[str], build, locale: str = "ru",
+            program: str = "game") -> int:
+    """Import the game copy when given, build with `build(retail_exe) -> Path`
+    (the program's retail executable, for its icon), prepare the prefix and
+    run the program. Errors print and return 1."""
     state = state_of(args)
     try:
         if args.dry_run:
@@ -636,13 +658,14 @@ def session(args: argparse.Namespace, extra: list[str], build, locale: str = "ru
             say(f"no game imported in {state}; a real run needs --game PATH")
         if installed_game(state) is not None:
             stand_in_tracks(state, args.dry_run)
-        executable = build(retail_executable(state))
+        executable = build(retail_executable(state, program))
         if executable is None:
             return 1
         prepare_prefix(state, locale, args.prefix_reset, args.dry_run)
         if not args.dry_run:
             save_config(state, locale=locale)
-        return launch_game(state, executable, locale, args.window, extra, args.dry_run)
+        return launch_game(state, executable, locale, args.window, extra, args.dry_run,
+                           program)
     except (PlayError, OSError, subprocess.CalledProcessError) as error:
         print(f"[play] {error}", file=sys.stderr)
         return 1
@@ -657,8 +680,9 @@ SOURCE_DIRS = ("src", "include", "vendor", "locales", "imports")
 SOURCE_FILES = ("build.py", "build.json", "catalog.py", "heroes.def")
 
 
-def source_fingerprint(root: Path, locale: str, icon: Path | None) -> str:
-    digest = hashlib.sha256(f"{locale}\0{icon is not None}\0".encode())
+def source_fingerprint(root: Path, locale: str, icon: Path | None,
+                       target: str = "game") -> str:
+    digest = hashlib.sha256(f"{target}\0{locale}\0{icon is not None}\0".encode())
     paths = [root / name for name in SOURCE_FILES]
     for directory in SOURCE_DIRS:
         paths += sorted(p for p in (root / directory).rglob("*") if p.is_file())
@@ -669,12 +693,16 @@ def source_fingerprint(root: Path, locale: str, icon: Path | None) -> str:
 
 
 def launch(argv: list[str] | None = None) -> int:
-    """The source tree's `nix run .#play`: build HEROES.EXE when the sources
-    changed, then set up the game and run it."""
+    """The source tree's `nix run .#play` (and `.#editor`, `--target editor`):
+    build the program when the sources changed, then set up the game and run
+    it."""
     root = Path(__file__).resolve().parent
     parser = argparse.ArgumentParser(
         prog="nix run .#play --", description=__doc__.split("\n")[0],
-        epilog="Arguments after `--` go to HEROES.EXE.")
+        epilog="Arguments after `--` go to the program.")
+    parser.add_argument("--target", choices=sorted(PROGRAMS), default="game",
+                        help="the program to run (default: %(default)s; "
+                             "`nix run .#editor` runs the editor)")
     add_arguments(parser, standalone=True)
     mine, extra = split_argv(argv)
     args = parser.parse_args(mine)
@@ -683,13 +711,14 @@ def launch(argv: list[str] | None = None) -> int:
     locale = args.locale or load_config(state).get("locale") or manifest.get("locale", "ru")
     # A read-only tree (the flake's store copy) builds into the state directory.
     out = root / "build" if os.access(root, os.W_OK) else state / "build"
+    target = args.target
 
     def build(icon: Path | None) -> Path | None:
-        executable = out / locale / manifest["executable"]
-        stamp = out / locale / ".play-fingerprint"
-        fingerprint = source_fingerprint(root, locale, icon)
-        command = [sys.executable, str(root / "build.py"), "--locale", locale,
-                   "--out", str(out), "--jobs", str(args.jobs)]
+        executable = out / locale / manifest["targets"][target]["executable"]
+        stamp = out / locale / f".play-{target}-fingerprint"
+        fingerprint = source_fingerprint(root, locale, icon, target)
+        command = [sys.executable, str(root / "build.py"), "--target", target,
+                   "--locale", locale, "--out", str(out), "--jobs", str(args.jobs)]
         if icon is not None:
             command += ["--icon-from", str(icon)]
         if not args.rebuild and executable.is_file() and stamp.is_file() \
@@ -706,7 +735,7 @@ def launch(argv: list[str] | None = None) -> int:
         stamp.write_text(fingerprint)
         return executable
 
-    return session(args, extra, build, locale)
+    return session(args, extra, build, locale, target)
 
 
 if __name__ == "__main__":

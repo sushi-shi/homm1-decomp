@@ -31,8 +31,8 @@
       };
       # Runs play.py from the checkout it is started in (builds go to its
       # build/), else from this flake's own copy (builds go to the state folder).
-      play = pkgs.writeShellApplication {
-        name = "homm1-play";
+      runner = name: target: pkgs.writeShellApplication {
+        inherit name;
         runtimeInputs = tools;
         text = ''
           export HOMM1_TOOLCHAIN="${environment.HOMM1_TOOLCHAIN}"
@@ -42,18 +42,21 @@
           if [ ! -f "$root/play.py" ] || [ ! -f "$root/build.json" ]; then
             root="${self}"
           fi
-          exec python3 "$root/play.py" "$@"
+          exec python3 "$root/play.py" --target ${target} "$@"
         '';
       };
-      app = {
+      app = name: target: description: {
         type = "app";
-        program = "${play}/bin/homm1-play";
-        meta.description = "Build HEROES.EXE and run it in a prepared Wine prefix";
+        program = "${runner name target}/bin/${name}";
+        meta.description = description;
       };
+      play = app "homm1-play" "game" "Build HEROES.EXE and run it in a prepared Wine prefix";
+      editor = app "homm1-editor" "editor"
+        "Build the scenario editor EDITOR.EXE and run it in the game's Wine prefix";
     in {
       apps.${system} = {
-        play = app;
-        default = app;
+        inherit play editor;
+        default = play;
       };
       devShells.${system}.default = pkgs.mkShell ({
         packages = tools;
