@@ -1,0 +1,5 @@
+# A pointer bitmap of the right size: made into both kinds of cursor.
+bytes 21 00 20 00 20 00
+repeat 512 00 01
+bytes 07
+expect accepted

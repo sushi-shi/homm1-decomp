@@ -18,8 +18,10 @@
 //   6  archive  the payload is the whole archive: its directory, then every
 //               entry looked up, read and loaded as what its contents look
 //               like (ctest loads the shipped archive whole this way)
+//   7  cursor   (MOUSEMGR.cpp) the adventure pointer's first frame, made
+//               into a monochrome and a colour cursor
 //
-// Kinds are taken modulo 7.
+// Kinds are taken modulo 8.
 
 #include "FuzzSupport.h"
 
@@ -34,6 +36,7 @@
 #include <BASE/IconEntry.h>
 #include <BASE/Misc.h>
 #include <BASE/miscwin.h>
+#include <BASE/mouseManager.h>
 #include <BASE/palette.h>
 #include <BASE/resourceManager.h>
 #include <BASE/sample.h>
@@ -54,7 +57,7 @@ namespace {
 
 std::string gRoot;
 
-enum Kind { ICON, BITMAP, TILESET, PALETTE, FONT, SAMPLE, ARCHIVE, KIND_COUNT };
+enum Kind { ICON, BITMAP, TILESET, PALETTE, FONT, SAMPLE, ARCHIVE, CURSOR, KIND_COUNT };
 
 // The largest image the harness allocates for one draw.
 const i32 kMaxPixels = 1 << 22;
@@ -259,6 +262,9 @@ void Exercise(Kind kind, const u8* payload, size_t size) {
         case SAMPLE:
             archive = Archive({{FileId("FUZZ.82M"), body}});
             break;
+        case CURSOR:
+            archive = Archive({{FileId("ADVMBW01.BMP"), body}, {FileId("ADVMCO01.BMP"), body}});
+            break;
         case ARCHIVE:
         default:
             archive = body;
@@ -296,6 +302,15 @@ void Exercise(Kind kind, const u8* payload, size_t size) {
                 break;
             case SAMPLE:
                 fuzzed->GetSample(const_cast<char*>("FUZZ.82M"));
+                break;
+            case CURSOR:
+                for (i32 color = 0; color < 2; color++) {
+                    KBDestroyCursors();
+                    gColorMice = color;
+                    gMouseManager->SetPointer(const_cast<char*>("advmice.mse"), 0);
+                }
+                KBDestroyCursors();
+                gColorMice = 0;
                 break;
             case ARCHIVE:
             default:

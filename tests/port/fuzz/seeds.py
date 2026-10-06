@@ -18,7 +18,7 @@ import sys
 from pathlib import Path
 
 # fuzz_resources' kinds.
-ICON, BITMAP, TILESET, PALETTE, FONT, SAMPLE, ARCHIVE = range(7)
+ICON, BITMAP, TILESET, PALETTE, FONT, SAMPLE, ARCHIVE, CURSOR = range(8)
 
 
 def find(root, *parts):
@@ -149,6 +149,10 @@ def main():
         else:
             prefix = {ICON: "icon", BITMAP: "bitmap", TILESET: "tileset", PALETTE: "palette"}[kind]
             write(resources, f"{prefix}-{file_id:04x}", payload + bytes([kind]))
+            if kind == BITMAP and len(payload) == 6 + 32 * 32 and written.get(CURSOR, 0) < 8:
+                # Pointers are 32 x 32 bitmaps.
+                write(resources, f"cursor-{file_id:04x}", payload + bytes([CURSOR]))
+                written[CURSOR] = written.get(CURSOR, 0) + 1
         written[kind] = written.get(kind, 0) + 1
         if len(payload) < 4096 and len(small) < 6:
             small.append((file_id, payload))
