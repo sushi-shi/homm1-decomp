@@ -27,8 +27,9 @@ H1_ENUM_CONST_BEGIN(EditManagerConstant)
     // Every editor manager's Main (this one and the four tool managers)
     // tests message.type against this mask (key, mouse and widget messages).
     EDIT_MANAGER_DISPATCH_MASK = 0x32f,
-    // m_placedX/m_placedY and the tool managers' last drag cell when there is
-    // none.
+    // A map or view cell coordinate when there is none: m_placedX/m_placedY,
+    // gSelectionX/gSelectionY without a selection, the tool managers' last
+    // drag cell and DrawRulers' cursor off the view.
     EDIT_NO_CELL = -1,
     // A loop index stored past every extent to end a scan after its first
     // match (the object table and map scans).

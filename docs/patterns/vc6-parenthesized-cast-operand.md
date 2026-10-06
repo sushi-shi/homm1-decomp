@@ -51,3 +51,12 @@ eight unparenthesized spellings. It covered `/Od` and `/O1`, `/O2`, `/Ox`,
 `/Og`, `/Ot`, `/Os` and `/Oy`. It also covered `/Ob0` through `/Ob2`, `/Op`,
 `/Za`, `/G5` and `/G6`, calling conventions, `/GX`, `/Gy`, `/Gf` and `/GF`,
 `/QIfdiv`, `/Z7`, `/J`, `/vd0`, `/GZ`, `/Ge` and `/Gs`. None emitted `fmulp`.
+
+## Editor control
+
+`editManager::PlaceTowns` (`EDITOR/MAPOBJ`, editor RVA `0x1262a`, `/Od /Ob1
+/GX /MT /G5`) computes each land region's share as
+`static_cast<float>(regionSizes[slot]) / (static_cast<float>(gLandCellCount))
+* 100.0f`. Without the parentheses, and without the second cast, the divisor
+folds into `fidiv` and the function falls to 99.91%; retail loads the divisor
+with its own `fild` and divides with the popping form.

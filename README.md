@@ -46,8 +46,10 @@ and `include`. Preserve banked matches and the linked-image identity.
   names it, and neither the game nor the editor image reads one. The mouse's
   saved area and the player's unused save span are named from their code
   users, and 20 spans with no user at all are `m_unused*`/`m_padding*`.
-- [ ] Name bare constants: **1,926** open literals (`homm1 verify constants`
-  floor); compiler-proven NULL/bool/enum replacements are at 0.
+- [ ] Name bare constants: **2,254** open literals (`homm1 verify constants`
+  floor, both programs; the editor-only units hold 328, nearly all 0/1 flags
+  waiting for the boolean types); compiler-proven NULL/bool/enum replacements
+  are at 0.
 - [ ] Strict enum view (`/std:c++20`): **60 of 61** units do not compile yet,
   so typed arrays (`H1_ENUM_ARRAY`) and enum destinations are checked only
   where a unit parses.
@@ -59,8 +61,6 @@ and `include`. Preserve banked matches and the linked-image identity.
   retained at **317 sites** (65 of them calls shortened by declared defaults),
   1 rejected by measurement, 77 kept explicit, 5 deferred to typed enum domains
   or another unit's owner.
-- [ ] Editor-only units (`src/EDITOR`): constants, naming review and the
-  debt checklist have not yet been applied to the 143 editor-only functions.
 
 ## Branches
 
