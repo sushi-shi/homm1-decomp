@@ -137,6 +137,21 @@ void font::DrawBoundedString(
                 // searched before the line for a space and, on the first
                 // line, wrote before the text; it drew the line again and
                 // again.
+                if (position > lineStart) {
+                    // The overflowing glyph goes to the next line: the
+                    // alignment is that of the glyphs before it.
+                    baseGlyph = static_cast<u8>(textCopy[position]);
+                    if (baseGlyph < ' '
+                        || (baseGlyph > 0x7f && baseGlyph < CYRILLIC_CAPITAL_A
+                            && baseGlyph != CYRILLIC_SMALL_YO && baseGlyph != CYRILLIC_CAPITAL_YO))
+                        baseGlyph = 0x7f;
+                    else if (baseGlyph > 0x7f)
+                        baseGlyph = RemapCyrillicCharacter(baseGlyph);
+                    baseGlyph -= ' ';
+                    widthUsed -=
+                        frameDirectory[baseGlyph * FONT_GLYPH_ENTRY_WORDS + FONT_GLYPH_WIDTH_WORD]
+                        + FONT_GLYPH_ADVANCE_SPACING;
+                }
                 position = position > lineStart ? position : lineStart + 1;
                 nextStart = position;
             }
