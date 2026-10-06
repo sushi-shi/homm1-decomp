@@ -75,6 +75,8 @@
       });
       # The browser build (nix/wasm.nix).
       wasm = import ./nix/wasm.nix { inherit pkgs; src = self; };
+      # The native port for 64-bit Windows, cross-compiled (nix/windows.nix).
+      windows = import ./nix/windows.nix { inherit pkgs; src = self; };
       app = name: target: description: {
         type = "app";
         program = "${runner name target}/bin/${name}";
@@ -109,11 +111,11 @@
         };
       };
       packages.${system} = {
-        inherit native sanitized;
+        inherit native sanitized windows;
         wasm = wasm.site;
       };
       checks.${system} = {
-        inherit native sanitized;
+        inherit native sanitized windows;
       };
       devShells.${system} = {
         default = pkgs.mkShell ({

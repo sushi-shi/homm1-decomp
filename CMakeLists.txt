@@ -1,8 +1,9 @@
 cmake_minimum_required(VERSION 3.20)
 project(homm1 CXX)
 
-# Native build of the game (and, once its sources are present, the scenario
-# editor) on the SDL3 platform layer. The Visual C++ 6 build (build.py) is
+# Native build of the game and the scenario editor on the SDL3 platform
+# layer, for Linux and (cross-compiled with MinGW-w64, nix/windows.nix)
+# Windows. The Visual C++ 6 build (build.py) is
 # separate and unaffected.
 
 include(CTest)
@@ -159,8 +160,15 @@ target_include_directories(homm1_platform PUBLIC ${CMAKE_SOURCE_DIR}/include)
 target_compile_options(homm1_platform PRIVATE ${HOMM1_SEMANTICS} ${HOMM1_STRICT_WARNINGS}
   ${HOMM1_SANITIZE_FLAGS})
 target_link_options(homm1_platform PUBLIC ${HOMM1_SANITIZE_FLAGS})
-target_compile_definitions(homm1_platform PRIVATE HOMM1_CODEPAGE=${HOMM1_CODEPAGE})
+target_compile_definitions(homm1_platform PRIVATE HOMM1_PORT=1 HOMM1_CODEPAGE=${HOMM1_CODEPAGE})
 target_link_libraries(homm1_platform PUBLIC SDL3::SDL3 PkgConfig::FFMPEG)
+if(WIN32)
+  # MinGW: the C++ runtime is linked in; the programs then need only SDL3,
+  # FFmpeg and the compiler's thread library beside them.
+  target_link_options(homm1_platform PUBLIC -static-libgcc -static-libstdc++)
+  # C99 formatting (%zu, %lld) for the log, as on other hosts.
+  target_compile_definitions(homm1_platform PRIVATE __USE_MINGW_ANSI_STDIO=1)
+endif()
 
 # --------------------------------------------------------------------------
 # The programs: the game (heroes) and the scenario editor (heroes-editor).
@@ -219,7 +227,8 @@ function(homm1_program name target output rc)
 
   set_source_files_properties(${HOMM1_LOCALIZED}/src/PORT/SOURCE/Main.cpp PROPERTIES GENERATED TRUE)
   add_executable(${name} ${HOMM1_LOCALIZED}/src/PORT/SOURCE/Main.cpp)
-  set_target_properties(${name} PROPERTIES OUTPUT_NAME ${output})
+  # A Windows GUI program: no console window (the log is routed in Host.cpp).
+  set_target_properties(${name} PROPERTIES OUTPUT_NAME ${output} WIN32_EXECUTABLE TRUE)
   target_link_libraries(${name} PRIVATE ${name}_units)
   if(EMSCRIPTEN)
     target_link_options(${name} PRIVATE ${HOMM1_WEB_LINK_OPTIONS})

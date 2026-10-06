@@ -29,40 +29,22 @@ let
     installPhase = "cmake --install build";
   };
 
-  # Only what the game plays: Smacker video and audio in .smk files and Ogg
-  # Vorbis music, read from the virtual file system, resampled by
-  # libswresample. No assembly, threads, network or programs.
-  # configure also builds small host tools, hence a host compiler (stdenv).
-  ffmpeg = pkgs.stdenv.mkDerivation {
-    pname = "ffmpeg-minimal-wasm";
-    inherit (pkgs.ffmpeg-headless) version src;
-    nativeBuildInputs = [ emscripten pkgs.python3 pkgs.llvm pkgs.pkg-config ];
+  # Only what the game plays (ffmpeg-minimal.nix, shared with the Windows
+  # build), compiled by Emscripten: no assembly, threads or CPU detection.
+  ffmpeg = (pkgs.callPackage ./ffmpeg-minimal.nix {
+    shared = false;
+    extraConfigureFlags = [
+      "--target-os=none" "--arch=x86_32" "--enable-cross-compile"
+      "--cc=emcc" "--cxx=em++" "--ar=emar" "--ranlib=emranlib" "--nm=llvm-nm"
+      "--disable-asm" "--disable-inline-asm" "--disable-runtime-cpudetect"
+      "--disable-pthreads" "--disable-stripping"
+    ];
+  }).overrideAttrs (old: {
+    pname = "ffmpeg-homm1-wasm";
+    nativeBuildInputs = old.nativeBuildInputs ++ [ emscripten pkgs.python3 pkgs.llvm ];
+    preConfigure = emscriptenSetup;
     dontFixup = true;
-    configurePhase = emscriptenSetup + ''
-      emconfigure ./configure --prefix=$out \
-        --target-os=none --arch=x86_32 --enable-cross-compile \
-        --cc=emcc --cxx=em++ --host-cc=cc --ar=emar --ranlib=emranlib --nm=llvm-nm \
-        --disable-asm --disable-x86asm --disable-inline-asm \
-        --disable-runtime-cpudetect --disable-autodetect --disable-pthreads \
-        --disable-network --disable-programs --disable-doc --disable-debug \
-        --disable-stripping --disable-everything \
-        --disable-avdevice --disable-avfilter --disable-swscale \
-        --enable-avformat --enable-avcodec --enable-swresample \
-        --enable-decoder=smacker,smackaud,vorbis \
-        --enable-demuxer=smacker,ogg --enable-protocol=file \
-        --enable-static --disable-shared
-    '';
-    # configure only warns about unknown component names; insist on each.
-    postConfigure = ''
-      for component in SMACKER_DECODER SMACKAUD_DECODER VORBIS_DECODER \
-          SMACKER_DEMUXER OGG_DEMUXER FILE_PROTOCOL; do
-        grep -q "define CONFIG_$component 1" config_components.h \
-          || { echo "FFmpeg configured without $component"; exit 1; }
-      done
-    '';
-    buildPhase = "make -j$NIX_BUILD_CORES";
-    installPhase = "make install";
-  };
+  });
 
   # The game and the editor, and the page that runs them: the site to serve
   # is $out/share/homm1-web.
