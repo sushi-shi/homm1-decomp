@@ -94,9 +94,9 @@ i16 TerrainStepCost(i8 terrain, i8 diagonal) {
 }
 
 VA(0x00429d50, 0x4e)
-i32 CalcTerrainCost(i32 terrain, i32 diagonal, i32 mobility, i32 waterMode) {
-    if (waterMode == FINDPATH_WATER_MODE)
-        terrain = FINDPATH_WATER_TERRAIN;
+i32 CalcTerrainCost(i32 terrain, i32 diagonal, i32 mobility, i32 heroClass) {
+    if (heroClass == FINDPATH_BARBARIAN_CLASS)
+        terrain = FINDPATH_BARBARIAN_TERRAIN;
     if (diagonal == FINDPATH_STEP_STRAIGHT)
         return giTerrainCost[terrain][diagonal];
     if (mobility >= giTerrainCost[terrain][FINDPATH_STEP_DIAGONAL])

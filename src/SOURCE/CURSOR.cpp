@@ -27,20 +27,20 @@
 // Keys the cycle off the global walk speed and indexes the map directly.
 VA(0x004215c0, 0x143)
 void advManager::StartCursor(i8 direction) {
-    i16 oldDeltaX;
+    i16 deltaX;
     i16 newX;
-    i16 directionY;
+    i16 deltaY;
     i16 newY;
 
     m_cursorDirection = direction;
     m_cursorFrame = GetCursorBaseFrame(direction) + 1;
     m_cursorCycle = gConfig.walkSpeed > WALK_SPEED_FIRST ? 1 : SLOW_CURSOR_CYCLE_START;
-    oldDeltaX = normalDirTable[direction].x;
-    directionY = normalDirTable[direction].y;
+    deltaX = normalDirTable[direction].x;
+    deltaY = normalDirTable[direction].y;
     m_previousCursorMapX = m_cursorMapX;
     m_previousCursorMapY = m_cursorMapY;
-    m_cursorMapX += oldDeltaX;
-    m_cursorMapY += directionY;
+    m_cursorMapX += deltaX;
+    m_cursorMapY += deltaY;
     newX = m_mapOriginX + m_cursorMapX;
     newY = m_mapOriginY + m_cursorMapY;
     m_mapData[newX][newY].m_flags |= MAP_CELL_HERO_CURSOR;
@@ -318,7 +318,7 @@ mapCell* advManager::MoveHero(
     i16 yInc;
     i16 pixelsPerStep;
     hero* champion;
-    i32 nextPy;
+    i32 startY;
     i32 delayNum;
     i16 numSteps;
 
@@ -330,7 +330,7 @@ mapCell* advManager::MoveHero(
     retCell = NULL;
     champion = gpGame->GetHero(gpCurPlayer->m_currentHero);
     posX = champion->m_x;
-    nextPy = champion->m_y;
+    startY = champion->m_y;
     xInc = normalDirTable[direction].x;
     yInc = normalDirTable[direction].y;
     bShowIt = GetMoveShowIt(direction);
@@ -600,7 +600,7 @@ mapCell* advManager::MoveHero(
 movementDone:
     UpdateRadar(1, 1);
     gHeroMoving = 0;
-    if (posX != champion->m_x || nextPy != champion->m_y) {
+    if (posX != champion->m_x || startY != champion->m_y) {
         if (mapExtra[champion->m_x][champion->m_y] & MAP_EXTRA_MONSTER_ADJACENT) {
             if (champion->IsEmbarked())
                 goto adjacentDone;
@@ -720,19 +720,19 @@ i16 advManager::ValidMoveWithEvent(hero* movingHero, i16 direction) {
 // masks directly.
 VA(0x004230f8, 0x24c)
 i16 advManager::ValidMove(i16 direction) {
-    i16 curDirX;
-    i16 downMask;
+    i16 deltaX;
+    i16 southMask;
     mapCell* hereCellItem;
     mapCell* destCell;
-    i16 firstDirY;
+    i16 deltaY;
     i16 north;
     i16 newX;
     i16 newY;
 
-    curDirX = normalDirTable[direction].x;
-    firstDirY = normalDirTable[direction].y;
-    newX = m_mapOriginX + curDirX;
-    newY = m_mapOriginY + firstDirY;
+    deltaX = normalDirTable[direction].x;
+    deltaY = normalDirTable[direction].y;
+    newX = m_mapOriginX + deltaX;
+    newY = m_mapOriginY + deltaY;
     if (newX < -ADVMGR_VIEW_CENTER || newX > MAP_CELL_GRID_SIZE - ADVMGR_VIEW_CENTER - 1)
         return 0;
     if (newY < -ADVMGR_VIEW_CENTER || newY > MAP_CELL_GRID_SIZE - ADVMGR_VIEW_CENTER - 1)
@@ -752,11 +752,11 @@ i16 advManager::ValidMove(i16 direction) {
     }
     hereCellItem = &m_mapData[m_mapOriginX + m_cursorMapX][m_mapOriginY + m_cursorMapY];
     north = (1 << direction) & MAP_DIRECTION_NORTH_MASK;
-    downMask = (1 << direction) & MAP_DIRECTION_SOUTH_MASK;
+    southMask = (1 << direction) & MAP_DIRECTION_SOUTH_MASK;
     if (north && CELL_HAS_NON_SHADOW_OBJECT(hereCellItem)
         && hereCellItem->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_WHIRLPOOL))
         return 0;
-    if (downMask && CELL_HAS_NON_SHADOW_OBJECT(destCell)
+    if (southMask && CELL_HAS_NON_SHADOW_OBJECT(destCell)
         && destCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_WHIRLPOOL))
         return 0;
     return 1;

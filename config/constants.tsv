@@ -82,7 +82,7 @@
 *	*	[01]	call-argument	SetNoDialogMenus(* argument 1	SetNoDialogMenus's menus-enabled flag
 *	*	[01]	call-argument	SetHeroContext(* argument 2	advManager::SetHeroContext's update flag
 *	*	[01]	call-argument	ScreenScroll(* argument 2	advManager::ScreenScroll's update-pointer flag
-*	*	[01]	call-argument	ComboDraw(i32) argument 1	advManager::ComboDraw's update flag
+*	*	[01]	call-argument	ComboDraw(i32) argument 1	advManager::ComboDraw's animate flag
 *	*	[01]	call-argument	SetEnvironmentOrigin(* argument 3	advManager::SetEnvironmentOrigin's stop-sounds flag
 *	*	[01]	call-argument	GetRemoteData(* argument 1	GetRemoteData's remove-from-queue flag
 *	*	[01]	call-argument	TransmitRemoteData(* argument [568]	TransmitRemoteData's reliable / retry-dialog / game-position-destination flags
@@ -431,13 +431,13 @@ src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 store mask	a flag, counter or
 src/SOURCE/PATH.cpp	*	0	trivial-function-literal	0 store frontValid	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 store frontValid	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 equality frontValid	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
-src/SOURCE/PATH.cpp	*	0	trivial-function-literal	0 store iIsMovingDown	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/PATH.cpp	*	0	trivial-function-literal	0 store iLeftFl	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 store iLeftFl	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 store iIsMovingDown	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/PATH.cpp	*	0	trivial-function-literal	0 store isMovingDown	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/PATH.cpp	*	0	trivial-function-literal	0 store goingLeft	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 store goingLeft	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 store isMovingDown	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 bitwise	an odd/even row test or a single low bit
-src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 equality iLeftFl	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
-src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 equality iIsMovingDown	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 equality goingLeft	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 equality isMovingDown	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
 src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 store gRemoteOn	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/REMOTE.cpp	*	1	trivial-function-literal	1 store gInNetSetup	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 store giThisNetPos	a flag, counter or index local/field set to 0 or 1

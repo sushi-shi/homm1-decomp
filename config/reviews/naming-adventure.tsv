@@ -1,0 +1,25 @@
+kind	owner	old	new	evidence
+param	CalcTerrainCost	waterMode	heroClass	every caller (CURSOR MoveHero, ADVMGR ShowRoute, GAME IsMobile, SEARCH SeedPosition) passes hero::m_heroClass; class 1 pays the grass row
+param	searchArray::SeedPosition	costMode	heroClass	advManager and philAI callers pass hero::m_heroClass; forwarded to CalcTerrainCost
+enum	FindPathTerrainConstant	FINDPATH_WATER_MODE	FINDPATH_BARBARIAN_CLASS	compared with the hero class: barbarians (class 1) ignore rough terrain
+enum	FindPathTerrainConstant	FINDPATH_WATER_TERRAIN	FINDPATH_BARBARIAN_TERRAIN	the grass cost row (TERRAIN_GRASS) a barbarian pays everywhere, not water
+local	searchArray::FindNearestObject	directionCosts	directionOccupied	filled by TestPossibleDirections' occupied argument (SeedPosition's s_directionOccupied)
+local	army::GetBestDirection	targetCol/theDstRowPos/sourceColumnCheckNum/curSrcRow	targetColumn/targetRow/srcCol/curSourceRow	hex column/row of target and source; slot order kept by declaration order
+local	army::GetBestDirection	lastFl/iLeftFl/savedMovingUp/iIsMovingDown	isMovingRight/goingLeft/goingUp/isMovingDown	set when the target column/row is right/left/above/below the source
+local	combatManager::DoCompAI	origMasks	flyerMask	holds GetFlyerMask per side
+local	combatManager::DoCompAI	strongerVal	theyOutshoot	set when the enemy's shooting strength beats ours (pairs with ourOutshoot)
+local	advManager::StartCursor	oldDeltaX/directionY	deltaX/deltaY	normalDirTable step of the new direction
+local	advManager::MoveHero	nextPy	startY	the hero's y before the step, compared after the move with posX
+local	advManager::ValidMove	curDirX/firstDirY/downMask	deltaX/deltaY/southMask	direction step and MAP_DIRECTION_SOUTH_MASK test
+member	advManager	m_lastHoverCell	m_hoverCellX	paired with m_hoverCellY, set from the mouse x, added to m_mapOriginX
+member	adventureSoundCell	volume	distance	InsertSound stores the ring distance; it indexes gEnvironmentVolume and stops past ENVIRONMENT_SOUND_MAX_DISTANCE
+enum	AdventureEnvironmentSoundConstant	ENVIRONMENT_SOUND_DEFAULT_VOLUME	ENVIRONMENT_SOUND_FAR_DISTANCE	the distance a slot resets to (beyond MAX_DISTANCE), not a volume
+param	advManager::TownQuickView	(unnamed)	locatorSlot	callers pass the locator slot or QUICK_VIEW_NO_LOCATOR, as HeroQuickView
+param	advManager::ComboDraw(i32)	update	animate	forwarded into ComboDraw(originX, originY, animate)
+local	advManager::HeroQuickView/TownQuickView	row2	bottomRowCount	stack count of the second icon row, pairs with topRow
+local	advManager::SetHeroContext	n/cellPtrItem	index/currCell	locator-slot loop index as in SetTownContext; the hero's own cell
+local	advManager::PuzzleDraw	savedDrawY	rowPixelY	y * CELL_PIXELS; nothing is saved
+local	advManager::ViewWorld	prevHero/prevTilesets/ii/lettersNode/workPosY	currHero/mapTilesets/tileset/lettersIcons/rowPixelY	current hero (CURRENT_HERO flag); tree6/mtn6/town6 icons; the cell's tileset id; letters.icn; row pixel y
+local	advManager::ControlPanel	anyMobilized	heroWasMobilized	m_heroContextLocked saved around DemobilizeCurrHero, as AdvPanel
+local	advManager::SetInitialMapOrigin	ownTownNode	firstTownPointer	the player's first town record, not a list node
+local	advManager::ShowRoute/CheckDimNextHeroBut	buttonFrame/frame	flagCommand	holds WIDGET_COMMAND_SET/CLEAR_FLAGS, not a frame

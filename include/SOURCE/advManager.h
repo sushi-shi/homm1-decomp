@@ -63,7 +63,7 @@ H1_ENUM_CONST_BEGIN(AdventureQuickViewCellConstant)
     QUICK_VIEW_CLEARED = -1
 H1_ENUM_CONST_END(AdventureQuickViewCellConstant)
 
-// m_lastHoverCell/m_hoverCellY before the mouse hovers a view cell.
+// m_hoverCellX/m_hoverCellY before the mouse hovers a view cell.
 H1_ENUM_CONST_BEGIN(AdventureCursorConstant)
     CURSOR_INVALID_POSITION = -1
 H1_ENUM_CONST_END(AdventureCursorConstant)
@@ -196,9 +196,10 @@ H1_ENUM_CONST_END(AdventurePanelButtonConstant)
      (message).id = ADVMGR_PANEL_BUTTON_LAST,                                                      \
      (window)->BroadcastMessage(message))
 
+// m_activeSounds: a playing map sound and its nearest ring distance.
 struct adventureSoundCell {
     i32 soundId;
-    i32 volume;
+    i32 distance;
 };
 
 // Retail constructor, Open and InitMainClasses' 0x260-byte allocation fix
@@ -232,7 +233,7 @@ public:
     i16 m_mapOriginY;
     i16 m_previousOriginX;
     i16 m_previousOriginY;
-    i16 m_lastHoverCell;
+    i16 m_hoverCellX;
     i16 m_hoverCellY;
     i16 m_commandTargetX;
     i16 m_commandTargetY;
@@ -352,7 +353,7 @@ public:
     i8 UpdBottomViewHero(void);
     void HeroQuickView(i8 heroId, i8 locatorSlot, i16 windowX, i16 windowY);
     char* GetArmySizeName(i16 armySize, H1_ENUM_PARAM(ArmySizeNameVariant, i8) grammar);
-    void TownQuickView(i8 townId, i8, i16 windowX, i16 windowY);
+    void TownQuickView(i8 townId, i8 locatorSlot, i16 windowX, i16 windowY);
     void RedrawAdvScreen(i32 update);
     void GiveTakeArtifactStat(class hero* targetHero, i8 artifact, i8 take);
     void DeactivateCurrTown(void);
@@ -367,7 +368,7 @@ public:
     void GrabScreen(void);
     void CheckCastSpell(void);
     i8 ComboDraw(i16 originX, i16 originY, i8 animate);
-    i8 ComboDraw(i32 update);
+    i8 ComboDraw(i32 animate);
     void SetEnvironmentOrigin(i16 originX, i16 originY, i16 stopSounds);
     void CheckLoadSample(i32 index);
     i32 GetSoundId(i32 x, i32 y);
@@ -924,12 +925,13 @@ H1_ENUM_CONST_BEGIN(AdventureStateConstant)
     SCROLL_ICON_FRAME = 4
 H1_ENUM_CONST_END(AdventureStateConstant)
 
-// SetEnvironmentOrigin/InsertSound's looping map sounds: slots reset to the
-// far volume index, two passes (refresh known sounds, then insert new ones)
+// SetEnvironmentOrigin/InsertSound's looping map sounds: a slot's ring
+// distance (adventureSoundCell::distance, indexing gEnvironmentVolume) resets
+// to FAR_DISTANCE, two passes (refresh known sounds, then insert new ones)
 // over rings whose edges span radius * 2 cells, and sounds beyond
 // MAX_DISTANCE stop.
 H1_ENUM_CONST_BEGIN(AdventureEnvironmentSoundConstant)
-    ENVIRONMENT_SOUND_DEFAULT_VOLUME = 127,
+    ENVIRONMENT_SOUND_FAR_DISTANCE = 127,
     ENVIRONMENT_SOUND_MAX_DISTANCE = 5,
     ENVIRONMENT_SOUND_FIRST_LAYER = 1,
     ENVIRONMENT_SOUND_LAYER_COUNT = 2,
