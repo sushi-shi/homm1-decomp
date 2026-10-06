@@ -549,8 +549,8 @@ i16 TownWindowHandler(tag_message& message) {
                         case TOWN_WINDOW_FIRST_BUILDING + 9:
                         case TOWN_WINDOW_FIRST_BUILDING + 10:
                             amount = message.id - TOWN_WINDOW_FIRST_BUILDING;
-                            if (amount >= BUILDING_SLOT_TENT)
-                                amount += BUILDING_SLOT_DWELLING_FIRST - BUILDING_SLOT_TENT;
+                            if (amount >= BUILDING_SLOT_RACE_FIRST)
+                                amount += BUILDING_SLOT_DWELLING_FIRST - BUILDING_SLOT_RACE_FIRST;
                             bit = 1 << amount;
                             has = gTownEdit.record.buildings & bit;
                             if (has)

@@ -34,9 +34,9 @@
 #include <EDITOR/eventsManager.h>
 #include <EDITOR/overlayManager.h>
 #include <EDITOR/terrainManager.h>
+#include <SOURCE/advManager.h>
 #include <SOURCE/dialogTypes.h>
 #include <SOURCE/EVENTS.h>
-#include <SOURCE/advManager.h>
 #include <SOURCE/fileRequester.h>
 #include <SOURCE/game.h>
 #include <SOURCE/gameTypes.h>
@@ -49,8 +49,8 @@
 
 #include <fcntl.h>
 #include <io.h>
-#include <stdio.h>
 #include <stddef.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
