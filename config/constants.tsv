@@ -293,7 +293,7 @@ src/SOURCE/HERO.cpp	*	[01]	call-argument	RestoreCell(* argument 6	game::RestoreC
 src/SOURCE/HERO.cpp	hero::hero	0	trivial-function-literal	0 store*	constructor zero-initialisation
 src/SOURCE/ARMY.cpp	army::army	0	trivial-function-literal	0 store*	constructor zero-initialisation
 src/SOURCE/HEXCELL.cpp	hexcell::hexcell	0	trivial-function-literal	0 store*	constructor zero-initialisation
-src/SOURCE/ARMY.cpp	*	0	trivial-function-literal	0 store kills	a damage/kill accumulator reset
+src/SOURCE/ARMY.cpp	*	0	trivial-function-literal	0 store killed	a damage/kill accumulator reset
 src/SOURCE/FINDPATH.cpp	*	0	trivial-function-literal	0 store low	the binary search's low bound
 src/SOURCE/FINDPATH.cpp	*	0	trivial-function-literal	0 store gSearchLow	the binary search's low bound
 src/SOURCE/DRAWING.cpp	*	0	trivial-function-literal	0 store row	the first grid row
@@ -301,7 +301,7 @@ src/SOURCE/DRAWING.cpp	*	0	trivial-function-literal	0 store m_gridUpdateRow	the 
 src/SOURCE/ARMY.cpp	*	0	trivial-function-literal	0 store m_pathFlag	a cleared per-hex path mark
 src/SOURCE/ARMY.cpp	*	0	trivial-function-literal	0 store m_hitPointsLost	no damage carried on the top creature
 src/SOURCE/HERO.cpp	*	0	trivial-function-literal	0 store m_heroLocatorPage	the hero locator's first page
-src/SOURCE/ARMY.cpp	*	0	trivial-function-literal	0 store oldMode	a saved flag reset
+src/SOURCE/ARMY.cpp	*	0	trivial-function-literal	0 store prevExtendDown	a saved flag reset
 src/SOURCE/ARMY.cpp	*	0	trivial-function-literal	0 array-index m_directions	the path's first step (the one next to the target)
 src/SOURCE/FINDPATH.cpp	*	0	trivial-function-literal	0 array-index m_cells	combat nodes in the first column of m_cells
 src/SOURCE/HERO.cpp	*	0	trivial-function-literal	0 array-index m_name	the name's first character (NUL: empty name)

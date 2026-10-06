@@ -149,7 +149,7 @@ public:
     }
     // --- methods ---
     void InitClean(void);
-    void Init(i8 type, i16 quantity, i8 side, i8 index);
+    void Init(i8 creatureType, i16 quantity, i8 side, i8 index);
     void LoadResources(void);
     void FreeResources(void);
     void DrawToBuffer(i16 x, i16 y);
@@ -165,9 +165,9 @@ public:
     void DoAttack(i32 retaliation);
     void ResetPath(void);
     i16 WalkTo(void);
-    i16 WalkTo(i16 destHex);
+    i16 WalkTo(i16 destination);
     i16 AttackTo(void);
-    i16 AttackTo(i16 destHex);
+    i16 AttackTo(i16 destination);
     void CheckLuck(void);
     void DamageEnemy(
         class army* target,
@@ -181,7 +181,7 @@ public:
     u32 Strength(void);
     void SpellEffect(i16 effect, i32 frameDelay);
     void GoBerserk(void);
-    void MoveAttack(i32 hex, i32 moveOnly);
+    void MoveAttack(i32 destination, i32 moveOnly);
     // Undoes m_spellEffect when it expires.
     void CancelSpell(void);
     i16 CanFit(i16* hex);
@@ -236,7 +236,7 @@ H1_ENUM_CONST_BEGIN(ArmyDrawingConstant)
 H1_ENUM_CONST_END(ArmyDrawingConstant)
 
 H1_ENUM_CONST_BEGIN(ArmyMessageConstant)
-    TARGET_NAME_SIZE = 100
+    ARMY_TARGET_NAME_SIZE = 100
 H1_ENUM_CONST_END(ArmyMessageConstant)
 
 // Creature specials fire on one outcome of SRandom(1, ROLL_MAX): the

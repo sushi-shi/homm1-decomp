@@ -88,3 +88,76 @@ kept	combatManager::Armageddon	dmg	dmg	damage (bucket 8) does not fit [3-6]
 kept	army::FlyTo	colFrom,curRow,headOccupant,tailSlot,k,y1,y2	colFrom,curRow,headOccupant,tailSlot,k,y1,y2	sourceColumn/sourceRow/frontCell/rearCell/step/launchY/landPosY do not fit the [3-4]/[4-4]/[11-12]/[10-11]/[11]/[12]/[13] slots; names are understandable
 kept	army::ValidFlight	n,heldTemp,k,m	n,heldTemp,k,m	n is a direction loop index (direction=7, dir=13 do not fit [14-15]); heldTemp/k/m are dead
 static	SPELLAI file statics	SPELL_AI_PARALYZE_MODIFIER/SPELL_AI_BERSERK_MODIFIER	SPELL_AI_BERSERK_MODIFIER/SPELL_AI_PARALYZE_MODIFIER	RawEffectSpellInfluence reads 0x0048a6dc for SPELL_BERZERKER and 0x0048a6e0 for SPELL_PARALYZE
+param	army::Init	type	creatureType	LoadArmies passes armyGroup m_creatureTypes; stored in m_creatureType
+param	army::WalkTo(i16)	destHex	destination	same concept as FlyTo/ValidFlight(destination)
+param	army::AttackTo(i16)	destHex	destination	same concept as FlyTo(destination)
+param	army::MoveAttack	hex	destination	COMMAND passes giNextActionGridIndex/Extra
+local	army::DrawToBuffer	xPos	effectPosX	x of the effect icon in the EFFECT pose
+local	army::DrawToBuffer	posX	spellMarkerX	x of the spells.icn marker over the stack
+local	army::DrawToBuffer	outlineColorVal	spellOutlineColor	palette index of the good/bad spell outline
+local	army::DrawToBuffer	px	countX	x of the quantity box/count text (countText)
+local	army::Walk	newReverse	backwards	set when the stack faces away from the step and walks backwards
+local	army::Walk	newBaseHex	originalHex	dead store of the starting m_hex (never read); old name said 'new'
+local	army::Walk	loc	rearTemp	temporary hexcell holding the wide stack's rear occupant (pairs with tempCell)
+local	army::Walk	theTargetHex	newHex	adjacent hex the stack moves into
+local	army::Walk	partnerHexVal	destRearIndex	rear (second) hex of a wide stack at the destination
+local	army::Walk	toggleOn	drawRightToLeft	passed to SetGridMode; m_gridMode draws occupants right to left
+local	army::Walk	nextTail	backHexIndex	rear hex of a wide stack (old, then new position)
+local	army::SpecialAttack	hisStack	enemyStack	the shot's target army
+local	army::SpecialAttack	hisCol	targetColumn	target hex % 9
+local	army::SpecialAttack	hisRow	enemyRow	target hex / 9 (targetRow* does not fit the slot)
+local	army::SpecialAttack	frameIndex	missileFrame	frame of the .atk missile drawn in flight
+local	army::DoHydraAttack	newSide	occupantSideIndex	hex occupant side, then the side loop
+local	army::DoHydraAttack	slot	armyIndex	hex occupant index / army loop index
+local	army::DoHydraAttack	targetHexValue	hitHex	adjacent hex struck by the hydra
+local	army::DoHydraAttack	pTarget	struckArmy	Hungarian p; the army struck in that direction
+local	army::DoHydraAttack	curLost	totalDead	sum of killed over all struck stacks
+local	army::DoHydraAttack	newDmg	totalDamageDone	sum of damage over all struck stacks
+local	army::DoHydraAttack	eachArmyRef	currentStack	each stack in the final Stand loop
+local	army::DoAttack	oldMode	prevExtendDown	saved m_extendLimitDown, restored after the message
+local	army::DoAttack	target2Info	rearVictim	breath attack's second (behind) target
+local	army::DoAttack	castOk	specialWorked	set when the cyclops/unicorn special landed; suppresses retaliation
+local	army::DoAttack	targetPtr	struckArmy	primary melee target (consistent with DoHydraAttack)
+local	army::DoAttack	facing	originalFacing	m_facing before turning to attack
+local	army::DoAttack	kills	killed	creatures killed in the primary target
+local	army::DoAttack	way	initialAttackDirection	m_attackDirection at entry, reused for the second strike
+local	army::DoAttack	nextDmg	damageDone	damage reported in the message
+local	army::DoAttack	myDir	savedAttackDirection	attack direction saved around the second strike
+local	army::DoAttack	newKilled	targetKilled	primary target's kills kept across the breath strike
+local	army::DoAttack	nextHex	breathHex	hex behind the target hit by breath
+local	army::CheckLuck	sample	luckSample	shadowed the class name sample
+local	army::DamageEnemy	mainDelta	battleDiff	attack-defense difference indexing gBattleStat
+local	army::DamageEnemy	attBonus	attackAdd	always-zero attack addend
+local	army::DamageEnemy	index	creature	loop over each creature in the stack rolling damage
+local	army::DamageEnemy	theTotal	rolledTotal	float sum of rolled damage before modifiers (needs decl swap with nextDefenseBonus)
+local	army::DamageEnemy	nextDefenseBonus	defenseExtra	always-zero defense addend
+local	army::PowEffect	slot	armyIndex	army index in the side loops
+local	army::PowEffect	armyNum	armySlot	army index in the longest-pow scans
+local	army::PowEffect	theStep	effectFrame	stored into gSpellEffectFrame each frame
+local	army::PowEffect	longest	longestPow	largest m_powFrames over all stacks
+local	army::PowEffect	curSide	stackSide	side loop
+local	army::PowEffect	curArmyPtr	currentArmy	Ptr suffix
+local	army::PowEffect	nextCellHex	vacatedHex	hex(es) of a killed stack whose occupant is cleared
+local	army::SpellEffect	curFrame	effectFrame	stored into gSpellEffectFrame
+local	army::SpellEffect	effectFileIdIndex	iconFileId	MAKEFILEID of the effect icon; compared with gCurLoadedSpellFileId
+local	army::GoBerserk	heading	attackDir	random direction tried for an attack (or a step)
+local	army::GoBerserk	tryCountIndex	tryNumber	dead attempt counter
+local	army::GoBerserk	isFound	targetFound	loop exit flag
+local	army::GoBerserk	targetHexValue	attackHex	ValidAttack's out hex queued as the action hex
+local	army::GoBerserk	target	targetHex	random hex 1..43 for a berserk flyer (was an army-sounding name)
+local	army::MoveAttack	adjHex	neighborHex	GetAdjacentCellIndex result
+local	army::MoveAttack	dirNo	direction	direction loop
+local	army::MoveAttack	meleeMask	baseAttackMask	GetAttackMask(ASSIGNED)
+local	army::MoveAttack	atkMaskNum	enemyAttackMask	GetAttackMask(ENEMY/OCCUPIED)
+local	army::MoveAttack	baseHexVal	attackFromHex	hex the direction is measured from (front or rear half)
+enum	ArmyMessageConstant	TARGET_NAME_SIZE	ARMY_TARGET_NAME_SIZE	unprefixed; ARMY_ prefix like the other army.h constants
+kept	army::Walk	tempCell	tempCell	Walk: accurate enough (temporary hexcell); hexcell decl cannot move (ctor timing)
+kept	army::Walk	moveDist	moveDist	Walk: dead local (=16), no fitting name worth the churn
+kept	army::SpecialAttack	y1/y2	y1/y2	launch/land Y pair; launchY/landPosY don't fit buckets 12/13
+kept	army::SpecialAttack	srcCol/aimRow/targetCol/hitRow	srcCol/aimRow/targetCol/hitRow	inner block: no fitting archerColumn/wallRow set; names readable
+kept	army::DamageEnemy	hurt	hurt	genie halving damage; slot needs bucket 15, no genie*/half* name fits
+kept	army::MoveAttack	cellItem	cellItem	adjacentCell(4) out of [7-8]; no clean fit
+local	army::Walk	col	boundMinX	left edge of the union redraw rectangle (giMinExtentX), not a column
+local	army::Walk	rectMaxX	boundMaxX	right edge of the union redraw rectangle
+local	army::Walk	ourMinY	boundTop	top edge of the union redraw rectangle
+local	army::Walk	ourMaxY	boundBottom	bottom edge of the union redraw rectangle
