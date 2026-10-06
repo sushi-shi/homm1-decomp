@@ -136,7 +136,7 @@ public:
     i16 m_field_0x236;
     i16 m_field_0x238;
     i16 m_field_0x23a;
-    i16 m_keyState[INPUT_SCAN_CODE_CAPACITY];
+    i16 m_scanCodeTable[INPUT_SCAN_CODE_CAPACITY];
     i16 m_field_0x33c;
     i16 m_requestedPriority;
     i16 m_keyCodeType;
@@ -144,14 +144,14 @@ public:
     H1_ENUM_STORAGE(MessageModifier, i16) m_modifiers;
     i16 m_mouseX;
     i16 m_mouseY;
-    i8 m_field_0x34a;
+    i8 m_forceMouseMove;
     i32 m_recordFile;
     i32 m_field_0x34f;
 
     inputManager(void);
     virtual i16 Open(i16 priority) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual i16 Main(tag_message&) OVERRIDE;
+    virtual i16 Main(tag_message& message) OVERRIDE;
     void Flush(void);
     tag_message GetEvent(void);
     void SetBooleanOption(i16 enabled);
@@ -166,7 +166,7 @@ public:
     }
 };
 #pragma pack(pop)
-i32 KeyboardMessageHandler(void*, u32 message, u32, i32 messageData);
-i32 MouseMessageHandler(void*, u32 message, u32, i32 messageData);
+i32 KeyboardMessageHandler(void* window, u32 message, u32 virtualKey, i32 messageData);
+i32 MouseMessageHandler(void* window, u32 message, u32 keyFlags, i32 messageData);
 
 #endif // HOMM1_BASE_INPUTMANAGER_H

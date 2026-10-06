@@ -280,3 +280,51 @@ the `REMOTE.cpp` callers pass between one and three trailing arguments
 depending on the operation. Its leading unused `i32` keeps the `com_sess(i32, i32, ...)`
 calling shape, because retail pushes a zero in front of the operation. No
 function walks its arguments by address.
+
+## Resolved
+
+Categories closed during the game cleanup. Each count is final; a regression
+shows up in the measuring commands above.
+
+- Review game-type `reinterpret_cast`: **10 sites** (from 36): two
+  combat-transfer payload overlays, the 4-byte-aligned receive buffer's record
+  view, the wire packet header and its two CRC byte walks, three palette
+  channel views and one pointer assertion. The icon
+  frame directory, the remote message queue (typed `RemoteMessage` records and
+  payloads), the combat and save transfer buffers, the search occupancy flags,
+  resource reads and pixel buffers are typed. 77 further casts are
+  Win32 API boundaries, including the handle assertions and comparisons.
+  Every remaining cast carries its reason (cast ledger OPEN = 0).
+- Replace manual byte layouts with named types: the font reads
+  `icon::m_frameWords` (**6 sites**). `widths[g * 6 + 2]` is retained because
+  only an `i16` index yields retail's `imul 6`. No literal-index packet stores
+  remain.
+- Negative offsets: **0 sites** (no negative indexing, `this` arithmetic or
+  container-of recovery).
+- Verify-board text debt at **0**: magic case labels, unnamed domain
+  compares, `.cpp`-local enums and views, `.cpp` extern declarations, C-style
+  casts and unexplained casts.
+- Review gotos: **204 statements**, all kept because retail's block layout
+  requires them. Replacing them with `break`, `else if` or nothing breaks an
+  exact match, because VC6 `/Od` emits a `jmp` for every `goto`; each site was
+  also tried as `break` and `continue`, and none compiles identically
+  ([classes](docs/reconstruction-debt.md)).
+- Review dead locals: **116** never-read locals. Each of the 75 without
+  an initializer was removed alone, and every removal changes its function's
+  frame. The 41 with an initializer emit retail stores.
+- Remove dead declarations: **109** declared methods and functions with no
+  definition, call or object symbol in either image are gone (98 more in the
+  combat headers); **2** remain in `combatManager.h`.
+- Review `static_cast`: **245 lines** (from 410). Casts that only hid a
+  wrong declared type are gone, including the `void*` Win32 handles, which are
+  now `STRICT`, and so are the 168 that restated the conversion an assignment,
+  initialization, argument, return or arithmetic operand already performs; the
+  remaining classes are listed in the [debt notes](docs/reconstruction-debt.md).
+- Review unions: **8 definitions**, each one shared storage with typed
+  readers; varargs: **1 function** (`nb_sess`), standard `va_arg` with no
+  argument-address walking.
+- Enum-domain review ([ledger](config/reviews/enum-reuse.tsv),
+  [notes](docs/enum-reuse.md)): **403** starting blocks reviewed (67
+  canonical, 288 retained, 48 merged); **98** members merged into shared
+  domains and **43** unused members retired; **168** cross-domain value
+  collisions remain, each with a reviewed reason.

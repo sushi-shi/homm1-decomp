@@ -1,4 +1,4 @@
-; HoMM1 retail tile renderer.
+; Tile renderer.
 
 .386
 .model flat, C

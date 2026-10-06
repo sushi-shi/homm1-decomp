@@ -20,10 +20,19 @@ border::border(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
 }
 
 VA(0x0047498e, 0x9e)
-border::border(i16 x, i16 y, i16 width, i16 height, i16 id, i16 kind, i16 fillColor, char* name)
+border::border(
+    i16 x,
+    i16 y,
+    i16 width,
+    i16 height,
+    i16 id,
+    i16 kind,
+    i16 fillColor,
+    char* bitmapName
+)
     : widget(x, y, width, height, id, kind) {
-    if (name != NULL)
-        m_background = gResourceManager->GetBitmap(name);
+    if (bitmapName != NULL)
+        m_background = gResourceManager->GetBitmap(bitmapName);
     else
         m_background = NULL;
     m_fillColor = fillColor;
@@ -37,14 +46,14 @@ border::~border(void) {
 
 VA(0x00474a90, 0xe9)
 void border::Read(void) {
-    char name[RESOURCE_NAME_CAPACITY];
+    char bitmapName[RESOURCE_NAME_CAPACITY];
     READ_WIDGET_GEOMETRY(this, gResourceManager);
     m_id = gResourceManager->ReadWord();
     m_kind = gResourceManager->ReadWord();
     if (m_kind == BORDER_BACKGROUND_BITMAP) {
-        gResourceManager->Read13(name);
+        gResourceManager->Read13(bitmapName);
         gResourceManager->SavePosition();
-        m_background = gResourceManager->GetBitmap(name);
+        m_background = gResourceManager->GetBitmap(bitmapName);
         gResourceManager->RestorePosition();
         return;
     }

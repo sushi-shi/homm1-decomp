@@ -55,8 +55,7 @@
 
 // The route-overlay byte at (column, row) of this->m_routeMap, indexed
 // row-major as row * size + column.
-#define ADVMGR_ROUTE_AT(column, row)                                                          \
-    (*(m_routeMap + (column) + (row) * MAP_CELL_GRID_SIZE))
+#define ADVMGR_ROUTE_AT(column, row) (*(m_routeMap + (column) + (row) * MAP_CELL_GRID_SIZE))
 
 // DrawCell's per-call drawing state, kept in module storage.
 DATA(0x004a65c8)
@@ -336,7 +335,7 @@ i16 advManager::Open(i16 id) {
         gGame->ShowComputerScreen();
     gMouseManager->ReallyShowPointer();
     KBChangeMenu(gAdventureMenu);
-    gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, gPalette);
+    gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, gPalette);
     gBottomViewOverride = BOTTOM_VIEW_NONE;
     gConfig.soundVolume = oldVolume;
     SetVolumes(gConfig.soundVolume, gConfig.musicVolume);
@@ -529,18 +528,18 @@ class mapCell* advManager::DoAdvCommand(void) {
             gMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
             gGame->GetHero(gCurPlayerData->m_currentHero)->HeroView(0);
             RedrawAdvScreen(1);
-            gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
+            gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);
             break;
         case ADVMGR_COMMAND_SELECT_HERO:
             SetHeroContext(
-                GetCell(m_mapOriginX + m_hoverCellX, m_mapOriginY + m_hoverCellY)
-                    ->m_objectMetadata,
+                GetCell(m_mapOriginX + m_hoverCellX, m_mapOriginY + m_hoverCellY)->m_objectMetadata,
                 0
             );
             break;
         case ADVMGR_COMMAND_SELECT_TOWN:
-            SetTownContext(GetCell(m_mapOriginX + m_hoverCellX, m_mapOriginY + m_hoverCellY)
-                               ->m_objectMetadata);
+            SetTownContext(
+                GetCell(m_mapOriginX + m_hoverCellX, m_mapOriginY + m_hoverCellY)->m_objectMetadata
+            );
             break;
         case ADVMGR_COMMAND_NONE:
             break;
@@ -1289,7 +1288,7 @@ i32 advManager::ProcessDeSelect(
         case ADVENTURE_CONTROL_OVERVIEW:
             gGame->Overview();
             RedrawAdvScreen(1);
-            gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
+            gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);
             break;
     }
     if (message->id >= BOTTOM_VIEW_DRAW_FIRST_WIDGET
@@ -1506,7 +1505,8 @@ i32 advManager::ProcessHover(struct tag_message* message) {
                            || hoverCell->m_tileIndex >= MAP_CELL_TILES_PER_TERRAIN
                            || hoverCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
                            || hoverCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP)
-                           || hoverCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK))
+                           || hoverCell->m_triggerType
+                                  == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK))
                           && (m_cursorType != ADVMGR_HERO_ICON_BOAT
                               || hoverCell->m_tileIndex < MAP_CELL_TILES_PER_TERRAIN
                               || hoverCell->m_triggerType == MAP_OBJECT_COAST))) {
@@ -1543,7 +1543,7 @@ i32 advManager::ProcessHover(struct tag_message* message) {
                                     gMouseManager->SetPointer(
                                         baseFrame + ADVENTURE_POINTER_DISEMBARK
                                     );
-                                else if (mapExtra[m_commandTargetX][m_commandTargetY]
+                                else if (gMapExtra[m_commandTargetX][m_commandTargetY]
                                          & MAP_EXTRA_MONSTER_ADJACENT)
                                     gMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_ATTACK);
                                 else
@@ -1578,7 +1578,7 @@ i32 advManager::ProcessHover(struct tag_message* message) {
                             default:
                             defaultHover:
                                 trigType = hoverCell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
-                                if ((mapExtra[m_commandTargetX][m_commandTargetY]
+                                if ((gMapExtra[m_commandTargetX][m_commandTargetY]
                                      & MAP_EXTRA_MONSTER_ADJACENT)
                                     && m_cursorType != ADVMGR_HERO_ICON_BOAT
                                     && trigType != MAP_OBJECT_SKELETON
@@ -1638,7 +1638,7 @@ i32 advManager::ProcessHover(struct tag_message* message) {
                                                 );
                                                 break;
                                             default:
-                                                if (mapExtra[m_commandTargetX][m_commandTargetY]
+                                                if (gMapExtra[m_commandTargetX][m_commandTargetY]
                                                     & MAP_EXTRA_MONSTER_ADJACENT)
                                                     gMouseManager->SetPointer(
                                                         baseFrame + ADVENTURE_POINTER_ATTACK
@@ -1696,7 +1696,8 @@ void advManager::UpdateScreen(i8 cursorUpdate, i8 forceUpdate) {
             gTimers[ADVENTURE_FRAME_TIMER_SLOT] = KBTickCount() + TIMER_DELAY;
         return;
     }
-    gMouseManager->SaveAndDraw(gWindowManager->m_screen, m_scrollOffsetX, m_scrollOffsetY, cursorUpdate);
+    gMouseManager
+        ->SaveAndDraw(gWindowManager->m_screen, m_scrollOffsetX, m_scrollOffsetY, cursorUpdate);
     PollSound();
     gScrollX = m_scrollOffsetX;
     gScrollY = m_scrollOffsetY;
@@ -1976,7 +1977,13 @@ void advManager::DrawCell(
             s_drawStoneTile =
                 (mapX + STONE_PATTERN_COORDINATE_SHIFT) % CLOUD_VARIANTS
                 + ((mapY + STONE_PATTERN_COORDINATE_SHIFT) % CLOUD_VARIANTS) * CLOUD_VARIANTS;
-        TileToBitmap(m_stoneTiles, s_drawStoneTile, gWindowManager->m_screen, cellPixelX, cellPixelY);
+        TileToBitmap(
+            m_stoneTiles,
+            s_drawStoneTile,
+            gWindowManager->m_screen,
+            cellPixelX,
+            cellPixelY
+        );
         return;
     } else {
         if (!((!gAllBlack && (gGame->m_mapExtra[mapX][mapY] & gCurWatchPlayerBit))
@@ -2059,7 +2066,13 @@ void advManager::DrawCell(
         s_drawGroundTile = drawnCell->m_flags;
         s_drawGroundTile <<= MAP_CELL_GROUND_FLIP_SHIFT;
         s_drawGroundTile |= drawnCell->m_tileIndex & 0xff;
-        TileToBitmap(m_groundTiles, s_drawGroundTile, gWindowManager->m_screen, cellPixelX, cellPixelY);
+        TileToBitmap(
+            m_groundTiles,
+            s_drawGroundTile,
+            gWindowManager->m_screen,
+            cellPixelX,
+            cellPixelY
+        );
         if (drawnCell->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY) {
             s_drawTileset = drawnCell->m_objectTileset & MAP_CELL_TILESET_MASK;
             if (!drawingPuzzle || s_drawTileset != TILESET_OBJ32_07
@@ -2164,8 +2177,8 @@ void advManager::DrawCell(
             if (drawnCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)) {
                 occupyingHero = gGame->GetHero(drawnCell->m_objectMetadata);
                 playerColor = occupyingHero->IsEmbarked()
-                                     ? PLAYER_COLOR_NONE
-                                     : gGame->m_players[occupyingHero->m_owner].m_color;
+                                  ? PLAYER_COLOR_NONE
+                                  : gGame->m_players[occupyingHero->m_owner].m_color;
                 heroIcon = occupyingHero->IsEmbarked() ? static_cast<i8>(ADVMGR_HERO_ICON_BOAT)
                                                        : occupyingHero->m_heroClass;
                 heroFrame = GetCursorBaseFrame(occupyingHero->m_direction);
@@ -2320,10 +2333,10 @@ mapCell* advManager::GetCell(i16 x, i16 y) {
         return &m_mapData[x][y];
 }
 
-#define minX ourFirstX // frame-slot spelling
+#define minX ourFirstX  // frame-slot spelling
 #define minY realFirstY // frame-slot spelling
-#define maxX curEndX // frame-slot spelling
-#define maxY ourLastY // frame-slot spelling
+#define maxX curEndX    // frame-slot spelling
+#define maxY ourLastY   // frame-slot spelling
 VA(0x00406d7e, 0x4f8)
 void advManager::UpdateRadar(i8 updateScreen, i32 partial) {
     i16 y;
@@ -4077,7 +4090,7 @@ void advManager::SetTownContext(i8 townId) {
     }
     if (wasVisible)
         gMouseManager->ReallyShowPointer();
-    gInputManager->m_field_0x34a = 1;
+    gInputManager->m_forceMouseMove = 1;
     m_hoverCellX = 0;
 }
 
@@ -4147,7 +4160,7 @@ void advManager::SetHeroContext(i8 heroId, i8 update) {
     if (!gHeroMoving) {
         if (wasVisible)
             gMouseManager->ReallyShowPointer();
-        gInputManager->m_field_0x34a = 1;
+        gInputManager->m_forceMouseMove = 1;
         m_hoverCellX = 0;
     }
 }
@@ -4902,14 +4915,14 @@ i16 advManager::ControlPanel(void) {
         message.type = MESSAGE_WIDGET;
         message.id = CONTROL_NEW_GAME;
         message.command = WIDGET_COMMAND_SET_FLAGS;
-        message.value = WIDGET_COMMAND_DIMMED;
+        message.value = WIDGET_FLAGS_ARGUMENT_DIMMED;
         gAdventurePanel->BroadcastMessage(message);
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.value = WIDGET_FLAG_ENABLED;
         gAdventurePanel->BroadcastMessage(message);
         message.id = CONTROL_LOAD_GAME;
         message.command = WIDGET_COMMAND_SET_FLAGS;
-        message.value = WIDGET_COMMAND_DIMMED;
+        message.value = WIDGET_FLAGS_ARGUMENT_DIMMED;
         gAdventurePanel->BroadcastMessage(message);
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.value = WIDGET_FLAG_ENABLED;
@@ -4983,23 +4996,23 @@ void UpdateCPanel(i8 initialDraw) {
     gAdventurePanel->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_TEXT;
     message.id = CONTROL_MUSIC_VOLUME_TEXT;
-    message.text = onOffText[gConfig.musicVolume];
+    message.text = gOnOffText[gConfig.musicVolume];
     gAdventurePanel->BroadcastMessage(message);
     message.id = CONTROL_SOUND_VOLUME_TEXT;
-    message.text = onOffText[gConfig.soundVolume];
+    message.text = gOnOffText[gConfig.soundVolume];
     gAdventurePanel->BroadcastMessage(message);
     message.id = CONTROL_WALK_SPEED_TEXT;
-    message.text = walkSpeedText[gConfig.walkSpeed];
+    message.text = gWalkSpeedText[gConfig.walkSpeed];
     gAdventurePanel->BroadcastMessage(message);
     message.id = CONTROL_MUSIC_SOURCE_TEXT;
     message.text =
-        musicQualityText[gConfig.musicSource ? CPANEL_MUSIC_LABEL_CD : CPANEL_MUSIC_LABEL_LOCAL];
+        gMusicQualityText[gConfig.musicSource ? CPANEL_MUSIC_LABEL_CD : CPANEL_MUSIC_LABEL_LOCAL];
     gAdventurePanel->BroadcastMessage(message);
     message.id = CONTROL_SHOW_ROUTE_TEXT;
-    message.text = onOffText[gConfig.showRoute];
+    message.text = gOnOffText[gConfig.showRoute];
     gAdventurePanel->BroadcastMessage(message);
     message.id = CONTROL_SHOW_ENEMY_MOVES_TEXT;
-    message.text = onOffText[1 - gConfig.blackoutComputer];
+    message.text = gOnOffText[1 - gConfig.blackoutComputer];
     gAdventurePanel->BroadcastMessage(message);
     if (!initialDraw)
         gAdventurePanel->MoveWindow(0, 0);
@@ -5225,7 +5238,7 @@ void advManager::AdvPanel(void) {
             adventurePanel->BroadcastMessage(message);
             message.id = PANEL_SEARCH;
             message.command = WIDGET_COMMAND_SET_FLAGS;
-            message.value = WIDGET_COMMAND_DIMMED;
+            message.value = WIDGET_FLAGS_ARGUMENT_DIMMED;
             adventurePanel->BroadcastMessage(message);
             message.id = PANEL_CAST_SPELL;
             adventurePanel->BroadcastMessage(message);
@@ -5733,8 +5746,8 @@ void advManager::InsertSound(i16 x, i16 y, i16 distance, i8 soundLayer) {
     }
 }
 
-// ADVMGR .bss keeps objects no code references: gThisMaxY, gThisMinY, USMsg,
-// CDMsg and four words that only retail's layout shows.
+// ADVMGR .bss keeps objects no code references: gThisMaxY, gThisMinY, gUSMsg,
+// gCDMsg and four unreferenced words.
 #define gThisMaxY iThisMaxY // spelling fixes .bss order
 DATA(0x004a65a0)
 i32 gThisMaxY;
@@ -5868,11 +5881,12 @@ void advManager::DimensionDoor(void) {
     }
 }
 
-#define USMsg gUSMsgCopy // spelling fixes .bss order
+#define gUSMsg gUSMsgCopy // spelling fixes .bss order
 DATA(0x004a6718)
-struct tag_message USMsg;
+struct tag_message gUSMsg;
+#define gCDMsg CDMsg // spelling fixes .bss order
 DATA(0x004a65b0)
-struct tag_message CDMsg;
+struct tag_message gCDMsg;
 
 VA(0x0040fa50, 0x240)
 void advManager::TownGate(void) {
@@ -5945,8 +5959,8 @@ void advManager::SummonBoat(void) {
         goto summon_done;
     for (iDir = 0; iDir < MAP_DIRECTION_COUNT; iDir++) {
         destinationCell = GetCell(
-            m_mapOriginX + normalDirTable[iDir].x + ADVMGR_VIEW_CENTER,
-            m_mapOriginY + normalDirTable[iDir].y + ADVMGR_VIEW_CENTER
+            m_mapOriginX + gNormalDirTable[iDir].x + ADVMGR_VIEW_CENTER,
+            m_mapOriginY + gNormalDirTable[iDir].y + ADVMGR_VIEW_CENTER
         );
         if (destinationCell->m_objectIndex == MAP_CELL_NO_FRAME
             && destinationCell->m_tileIndex < MAP_CELL_TILES_PER_TERRAIN) {
@@ -6004,8 +6018,8 @@ void advManager::SummonBoat(void) {
                 gWindowManager
                     ->FizzleForward(clipX, clipY, clipWidth, clipHeight, FIZZLE_USE_DEFAULT_DELAY);
             }
-            boatRec->x = m_mapOriginX + normalDirTable[iDir].x + ADVMGR_VIEW_CENTER;
-            boatRec->y = m_mapOriginY + normalDirTable[iDir].y + ADVMGR_VIEW_CENTER;
+            boatRec->x = m_mapOriginX + gNormalDirTable[iDir].x + ADVMGR_VIEW_CENTER;
+            boatRec->y = m_mapOriginY + gNormalDirTable[iDir].y + ADVMGR_VIEW_CENTER;
             boatRec->savedTriggerType = destinationCell->m_triggerType;
             boatRec->savedEventData = destinationCell->m_objectMetadata;
             destinationCell->m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP);
@@ -6077,8 +6091,8 @@ void advManager::ShowRoute(i32 redraw, i32, i32 updateButton) {
             terr = CELL_TERRAIN(GetCell(mapX, mapY));
             remain -=
                 CalcTerrainCost(terr, dir & MAP_DIRECTION_DIAGONAL_BIT, remain, hero->m_heroClass);
-            mapX += normalDirTable[dir].x;
-            mapY += normalDirTable[dir].y;
+            mapX += gNormalDirTable[dir].x;
+            mapY += gNormalDirTable[dir].y;
             if (index == 0) {
                 m_routeMap[mapX + mapY * MAP_CELL_GRID_SIZE] = ROUTE_CELL_DESTINATION;
             } else {
@@ -6157,8 +6171,8 @@ void advManager::CheckDimNextHeroBut(void) {
     i16 flagCommand;
 
     flagCommand = gThisNetHumanPlayer[gCurPlayer] && gCurPlayerData->HasMobileHero()
-                ? static_cast<i16>(WIDGET_COMMAND_CLEAR_FLAGS)
-                : static_cast<i16>(WIDGET_COMMAND_SET_FLAGS);
+                      ? static_cast<i16>(WIDGET_COMMAND_CLEAR_FLAGS)
+                      : static_cast<i16>(WIDGET_COMMAND_SET_FLAGS);
     gWindowManager->BroadcastMessage(
         MESSAGE_WIDGET,
         flagCommand,

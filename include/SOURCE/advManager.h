@@ -288,7 +288,6 @@ public:
     i16 GetCursorBaseFrame(H1_ENUM_PARAM(MapDirection, i16) direction);
     void TurnTo(i8 direction);
     i32 GetMoveShowIt(i8 direction);
-    // HoMM1 retail 0x0043ab9c: byte direction/flags, seven arguments (ret 0x1c).
     class mapCell* MoveHero(
         i8 direction,
         i8 stopAfterMove,
@@ -414,7 +413,6 @@ public:
     );
     i32 GiveRandomArtifact(class hero* eventHero);
     i32 GiveExperience(class hero* eventHero, i32 experience, i8 checkLevel);
-    // HoMM1 retail: byte resource, word amount (ret 0xc).
     void GiveResource(class hero* eventHero, H1_ENUM_PARAM(ResourceType, i8) resource, i16 amount);
     i16 GiveArtifact(class hero* eventHero, H1_ENUM_PARAM(ArtifactType, i8) artifact);
     void RecruitEvent(
@@ -424,7 +422,6 @@ public:
     );
     i8 GhostEvent(class hero* eventHero, class mapCell* cell, i32 textId, i32 x, i32 y);
     void HouseEvent(class hero* eventHero, class mapCell* cell);
-    // HoMM1 retail: nine arguments (ret 0x24), result in AL.
     i8 CombatMonsterEvent(
         class hero* eventHero,
         H1_ENUM_PARAM(CreatureType, i8) monsterType,
@@ -452,7 +449,8 @@ public:
         i32 combatX,
         i32 combatY
     );
-    void ComputerMonsterInteract(class mapCell* cell, class hero* eventHero, i8* removeMonsterObject);
+    void
+    ComputerMonsterInteract(class mapCell* cell, class hero* eventHero, i8* removeMonsterObject);
     i32 DoNetCombat(RemoteMessage* packet);
     i32 DoCombat(
         i32 x,

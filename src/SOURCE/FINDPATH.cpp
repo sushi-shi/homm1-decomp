@@ -76,7 +76,7 @@ i16 searchArray::QuickDistance(i16 x1, i16 y1, i16 x2, i16 y2) {
                                  : xDistance + yDistance / DISTANCE_MINOR_DIVISOR;
 }
 
-// HoMM1-only per-terrain step cost that InitVars tabulates into gTerrainCost
+// Per-terrain step cost that InitVars tabulates into gTerrainCost
 // for both step kinds; a diagonal step costs half as much again.
 VA(0x00429cf0, 0x54)
 i16 TerrainStepCost(i8 terrain, i8 diagonal) {
@@ -114,7 +114,6 @@ i32 CalcTerrainCost(i32 terrain, i32 diagonal, i32 mobility, i32 heroClass) {
     return gTerrainCost[terrain][FINDPATH_STEP_DIAGONAL];
 }
 
-// HoMM1 has no castle moat, so combat paths take no moat slowdown.
 VA(0x00429da0, 0x2cb)
 i16 searchArray::FindCombatPath(i16 sourceHex, i16 targetHex, army* unit, i8 attackPath) {
     i32 bestHex;
@@ -304,8 +303,8 @@ void searchArray::PushPoint(
 
     if (cost > gCurTempMobility && rvFlag2 == 0) {
         gSearchQueueNode->rvFlag2 = 1;
-        gSearchQueueNode->previousX = x - normalDirTable[direction].x;
-        gSearchQueueNode->previousY = y - normalDirTable[direction].y;
+        gSearchQueueNode->previousX = x - gNormalDirTable[direction].x;
+        gSearchQueueNode->previousY = y - gNormalDirTable[direction].y;
     } else {
         gSearchQueueNode->rvFlag2 = rvFlag2;
         gSearchQueueNode->previousX = previousX;
@@ -336,8 +335,8 @@ void searchArray::TestPossibleDirections(
     gSearchCurrentCell = gAdvManager->GetCell(x, y);
 
     for (gSearchDirection = 0; gSearchDirection < MAP_DIRECTION_COUNT; gSearchDirection++) {
-        gSearchNextX = x + normalDirTable[gSearchDirection].x;
-        gSearchNextY = y + normalDirTable[gSearchDirection].y;
+        gSearchNextX = x + gNormalDirTable[gSearchDirection].x;
+        gSearchNextY = y + gNormalDirTable[gSearchDirection].y;
         if (gSearchNextX <= -7 || gSearchNextX >= MAP_CELL_GRID_SIZE || gSearchNextY <= -7
             || gSearchNextY >= MAP_CELL_GRID_SIZE) {
             gSearchTerrain = TERRAIN_INVALID;

@@ -12,7 +12,7 @@ void ClippedMonoIconToBitmap(
     i32 y,
     i32 frame,
     i32 color,
-    i32 mode,
+    i32 offsetMode,
     i32 clipX,
     i32 clipY,
     i32 clipW,
@@ -24,7 +24,7 @@ void ClipIconToBitmap(
     i32 x,
     i32 y,
     i32 frame,
-    i32 mode,
+    i32 offsetMode,
     i32 clipX,
     i32 clipY,
     i32 clipW,
@@ -48,7 +48,7 @@ H1_ENUM_CONST_BEGIN(RandomDecile)
 H1_ENUM_CONST_END(RandomDecile)
 void FadeIn(i32 increment) throw();
 void FadeOut(i32 increment) throw();
-void PostprocessPalette(i8* data);
+void PostprocessPalette(i8* paletteData);
 void BlitBitmapToScreen(
     class bitmap* sourceBitmap,
     i32 sourceX,
@@ -58,11 +58,11 @@ void BlitBitmapToScreen(
     i32 destinationX,
     i32 destinationY
 );
-void PostprocessBitmap(u8*, i32, i32);
+void PostprocessBitmap(u8* pixels, i32 width, i32 height);
 void GrabScreenBitmap(class bitmap* destination, i32 x, i32 y);
 void BitmapToScreen(class bitmap* image);
 i16 AutoInitSVGA(void);
-void PostprocessIcon(class icon*);
+void PostprocessIcon(class icon* loadedIcon);
 
 // BlitBitmapToScreen's enlarged invalid rectangle for a scaled window: a
 // width or height below LOGICAL_SCREEN_WIDTH - 3 grows by four pixels.

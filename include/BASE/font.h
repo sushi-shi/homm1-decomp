@@ -27,15 +27,15 @@ H1_ENUM_CONST_END(FontGlyphConstant)
 class font : public resource {
 public:
     i16 m_height;
-    i16 m_headerWord;
+    i16 m_glyphOffsetY;
     icon* m_glyphIcon;
     // --- constructors ---
     font(i16 id);
     virtual ~font();
     // --- methods ---
     void DrawString(char* text, i16 x, i16 y, i16 color);
-    void DrawBoundedString(char* str, i16 x, i16 y, i16 width, i16 height, i16 color, i16 align);
-    i32 LineLength(char* str, i16 maxW);
+    void DrawBoundedString(char* text, i16 x, i16 y, i16 width, i16 height, i16 color, i16 align);
+    i32 LineLength(char* text, i16 maxWidth);
     i32 LineWidth(char* text);
 };
 #pragma pack(pop)

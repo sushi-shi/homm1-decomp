@@ -42,16 +42,17 @@ static AudiereSampleNode* gSamples;
 DATA(0x004ce108)
 static int gSampleSuspensions;
 
+#define nextNode head // frame-slot spelling
 VA(0x004689a0, 0x162)
 void CleanupSamples() {
     if (gSamples == NULL)
         return;
-    AudiereSampleNode* head = NULL;
+    AudiereSampleNode* nextNode = NULL;
     for (;;) {
         if (!gSamples->stream->isPlaying()) {
-            head = gSamples->next;
+            nextNode = gSamples->next;
             delete gSamples;
-            gSamples = head;
+            gSamples = nextNode;
             if (gSamples == NULL)
                 return;
         } else {
@@ -71,6 +72,7 @@ void CleanupSamples() {
         }
     }
 }
+#undef nextNode
 
 VA(0x00468b02, 0x35)
 AudiereSampleNode* FindSampleNode(sample* resource) {

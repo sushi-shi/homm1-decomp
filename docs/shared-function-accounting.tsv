@@ -252,7 +252,7 @@ editor	0x0001df67	?SetBooleanOption@inputManager@@QAEXF@Z	BASE/INPUTMGR	game	0x0
 editor	0x0001df98	?SetPositiveOption@inputManager@@QAEXF@Z	BASE/INPUTMGR	game	0x0006f008	?SetPositiveOption@inputManager@@QAEXF@Z	BASE/INPUTMGR	shared-unit	compiled from the shared BASE/INPUTMGR source
 editor	0x0001dfc9	?SetMouseCoords@inputManager@@QAEXFF@Z	BASE/INPUTMGR	game	0x0006f039	?SetMouseCoords@inputManager@@QAEXFF@Z	BASE/INPUTMGR	shared-unit	compiled from the shared BASE/INPUTMGR source
 editor	0x0001dff2	?SetKeyCodeType@inputManager@@QAEXF@Z	BASE/INPUTMGR	game	0x0006f062	?SetKeyCodeType@inputManager@@QAEXF@Z	BASE/INPUTMGR	shared-unit	compiled from the shared BASE/INPUTMGR source
-editor	0x0001e015	?TranslateInputCharacterCp1251@@YAXAAUtag_message@@@Z	BASE/INPUTMGR	game	0x0006f085	?TranslateInputCharacterCp1251@@YAXAAUtag_message@@@Z	BASE/INPUTMGR	shared-unit	compiled from the shared BASE/INPUTMGR source
+editor	0x0001e015	?TranslateInputCharacter@@YAXAAUtag_message@@@Z	BASE/INPUTMGR	game	0x0006f085	?TranslateInputCharacter@@YAXAAUtag_message@@@Z	BASE/INPUTMGR	shared-unit	compiled from the shared BASE/INPUTMGR source
 editor	0x0001e049	?AsciiConvert@inputManager@@QAEXAAUtag_message@@@Z	BASE/INPUTMGR	game	0x0006f0b9	?AsciiConvert@inputManager@@QAEXAAUtag_message@@@Z	BASE/INPUTMGR	shared-unit	compiled from the shared BASE/INPUTMGR source
 editor	0x0001e35b	?MakeScanCodeTable@inputManager@@QAEXXZ	BASE/INPUTMGR	game	0x0006f3cb	?MakeScanCodeTable@inputManager@@QAEXXZ	BASE/INPUTMGR	shared-unit	compiled from the shared BASE/INPUTMGR source
 editor	0x0001e800	??0mouseManager@@QAE@XZ	BASE/MOUSEMGR	game	0x0006b510	??0mouseManager@@QAE@XZ	BASE/MOUSEMGR	shared-unit	compiled from the shared BASE/MOUSEMGR source
