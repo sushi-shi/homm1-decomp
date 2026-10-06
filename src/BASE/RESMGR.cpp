@@ -262,7 +262,7 @@ i16 resourceManager::LoadAggregateHeader(char* aggregateName) {
 void resourceManager::PointToFile(i16 fileId) {
     i16 entry;
     if (m_aggregateDir == NULL)
-        ShutDown("File Error: .AGG File not valid");
+        ShutDown(localization::Tr("resource.aggregate.invalid"));
     entry = 0;
     while (entry < m_aggregateEntryCount && m_aggregateDir[entry].id != fileId)
         entry++;

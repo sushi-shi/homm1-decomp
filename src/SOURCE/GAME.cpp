@@ -529,6 +529,33 @@ i16 game::SaveGame(char* filename, b8 generateName) {
     return 1;
 }
 
+// A spell's description; damage and healing spells state what the caster's
+// spell power achieves (per point of spell power without a caster).
+char* game::SpellDescription(i32 spell, hero* caster) {
+    i32 multiplier;
+    i32 power;
+
+    switch (spell) {
+        case SPELL_FIREBALL:
+            multiplier = 10;
+            break;
+        case SPELL_LIGHTNING_BOLT:
+        case SPELL_STORM:
+        case SPELL_METEOR_SHOWER:
+            multiplier = 25;
+            break;
+        case SPELL_RESURRECT:
+        case SPELL_ARMAGEDDON:
+            multiplier = 50;
+            break;
+        default:
+            return gSpellDesc[spell];
+    }
+    power = caster ? caster->m_primaryStats[HERO_PRIMARY_SPELL_POWER] : 1;
+    sprintf(gText, gSpellDesc[spell], power * multiplier);
+    return gText;
+}
+
 // The quick save's file name, as SaveGame generates it: one per campaign,
 // otherwise numbered by the human players still in the game.
 void game::QuickSaveName(char* name) {
@@ -2038,7 +2065,7 @@ i16 ViewSpellsHandler(tag_message& message) {
                                         [gGame->m_viewSpellsTop
                                          + (message.id - SPELL_BOOK_ENTRY_FIRST)];
                             NormalDialog(
-                                gSpellDesc[spell],
+                                gGame->SpellDescription(spell, gGame->m_viewSpellsHero),
                                 NORMAL_DIALOG_TYPE_QUICK_VIEW,
                                 -1,
                                 -1,
@@ -2082,7 +2109,7 @@ i16 ViewSpellsHandler(tag_message& message) {
                                             [gGame->m_viewSpellsTop
                                              + (message.id - SPELL_BOOK_ENTRY_FIRST)];
                                 NormalDialog(
-                                    gSpellDesc[spell],
+                                    gGame->SpellDescription(spell, gGame->m_viewSpellsHero),
                                     NORMAL_DIALOG_TYPE_OK,
                                     -1,
                                     -1,

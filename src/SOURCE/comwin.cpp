@@ -103,23 +103,12 @@ void ShutdownComError(char* function) {
             break;
     }
 
-    sprintf(
-        message,
-        "Communications error on function '%s'\n\nWin95 Error Code: %d\nWin95 Error Meaning: "
-        "%s\n\n",
-        function,
-        errorCode,
-        errorName
-    );
-    strcat(message, "Suggested solutions:");
-    strcat(message, "\n  1) Make sure all cables are firmly connected.");
-    strcat(message, "\n  2) Reboot computer.");
-    strcat(
-        message,
-        "\n  3) Check to make sure you have the correct COM port setting in 'CONFIG'. (The 3rd "
-        "button down on the screen where you choose Host or Guest.)"
-    );
-    strcat(message, "\n  4) Consider lowering the BAUD rate in 'CONFIG' to 19200 or 9600.");
+    sprintf(message, localization::Tr("serial.error.header"), function, errorCode, errorName);
+    strcat(message, localization::Tr("serial.error.solutions"));
+    strcat(message, localization::Tr("serial.error.cables"));
+    strcat(message, localization::Tr("serial.error.reboot"));
+    strcat(message, localization::Tr("serial.error.port"));
+    strcat(message, localization::Tr("serial.error.baud_rate"));
     ShutDown(message);
 }
 
@@ -143,7 +132,7 @@ i16 com_init(u8 portNumber, i32 baudRate, i32 useDtr) {
     gComPorts[slot].handle =
         CreateFileA(portName, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
     if (gComPorts[slot].handle == INVALID_HANDLE_VALUE) {
-        sprintf(gText, "Opening COM%d", portNumber);
+        sprintf(gText, localization::Tr("serial.error.open_port"), portNumber);
         ShutdownComError(gText);
         return -1;
     }
@@ -185,16 +174,16 @@ i16 com_init(u8 portNumber, i32 baudRate, i32 useDtr) {
     state.StopBits = ONESTOPBIT;
     rv = SetupComm(gComPorts[slot].handle, COM_RECEIVE_BUFFER_SIZE, COM_TRANSMIT_BUFFER_SIZE);
     if (!rv)
-        ShutdownComError("Initialize communications paramaters");
+        ShutdownComError(localization::Tr("serial.error.initialize"));
     rv = SetCommState(gComPorts[slot].handle, &state);
     if (!rv)
-        ShutdownComError("Configure communications device");
+        ShutdownComError(localization::Tr("serial.error.configure"));
     portTimeouts.ReadIntervalTimeout = MAXDWORD;
     portTimeouts.ReadTotalTimeoutMultiplier = portTimeouts.ReadTotalTimeoutConstant = 0;
     portTimeouts.WriteTotalTimeoutMultiplier = portTimeouts.WriteTotalTimeoutConstant = 0;
     rv = SetCommTimeouts(gComPorts[slot].handle, &portTimeouts);
     if (!rv)
-        ShutdownComError("Set communications timeouts");
+        ShutdownComError(localization::Tr("serial.error.timeouts"));
     init_anchor(&gComPorts[slot].normalQueue, 1, 0);
     init_anchor(&gComPorts[slot].priorityQueue, 1, 0);
     return slot;
@@ -223,12 +212,12 @@ i16 com_rcv(i16 port, u16 requested, void* buffer) {
     if (gComPorts[port].handle != INVALID_HANDLE_VALUE) {
         success = ClearCommError(gComPorts[port].handle, &err, &status);
         if (!success)
-            ShutdownComError("Clear communications error queue");
+            ShutdownComError(localization::Tr("serial.error.clear_errors"));
         n = requested < status.cbInQue ? requested : status.cbInQue;
         if (n) {
             success = ReadFile(gComPorts[port].handle, buffer, n, &bytesRead, NULL);
             if (!success)
-                ShutdownComError("Read communications data");
+                ShutdownComError(localization::Tr("serial.error.read"));
             return bytesRead;
         }
     }
@@ -243,11 +232,11 @@ i16 com_snd(i16 port, u16 session, u16 length, void* data, i32 priority) {
         if (!length) {
             success = SetCommBreak(gComPorts[port].handle);
             if (!success)
-                ShutdownComError("Set communications break");
+                ShutdownComError(localization::Tr("serial.error.set_break"));
             Sleep(COM_BREAK_DELAY);
             success = ClearCommBreak(gComPorts[port].handle);
             if (!success)
-                ShutdownComError("Clear communications break");
+                ShutdownComError(localization::Tr("serial.error.clear_break"));
             return 0;
         }
         node = static_cast<tag_Node*>(malloc(length + COM_NODE_HEADER_SIZE));
@@ -302,7 +291,7 @@ void comm_wrt_task(void) {
                 NULL
             );
             if (!success)
-                ShutdownComError("Write communications data");
+                ShutdownComError(localization::Tr("serial.error.write"));
             totalWritten += sizeWritten;
         }
         free(packetNode);

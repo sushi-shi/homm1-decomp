@@ -34,20 +34,54 @@ i32 RemapCyrillicCharacter(i32 character) {
     return character - (CYRILLIC_SMALL_A - FONT_CODE_SMALL_A);
 }
 
+// The glyph frame of a Windows-1251 character. Guillemets, the em dash and
+// the numero sign are drawn only by fonts that carry their glyphs; other
+// fonts show an ASCII look-alike. Characters without a glyph show the 0x7f glyph.
+i32 font::GlyphFrame(i32 character) {
+    i32 frame;
+    i32 lookAlike;
+
+    switch (character) {
+        case FONT_CHAR_LEFT_GUILLEMET:
+            frame = FONT_FRAME_LEFT_GUILLEMET;
+            lookAlike = '"';
+            break;
+        case FONT_CHAR_RIGHT_GUILLEMET:
+            frame = FONT_FRAME_RIGHT_GUILLEMET;
+            lookAlike = '"';
+            break;
+        case FONT_CHAR_EM_DASH:
+            frame = FONT_FRAME_EM_DASH;
+            lookAlike = '-';
+            break;
+        case FONT_CHAR_NUMERO:
+            frame = FONT_FRAME_NUMERO;
+            lookAlike = 'N';
+            break;
+        default:
+            frame = -1;
+            lookAlike = character;
+            break;
+    }
+    if (frame >= 0 && frame < m_glyphIcon->m_frameCount)
+        return frame;
+    character = lookAlike;
+    if (character < ' '
+        || (character > FONT_CODE_ASCII_LAST && character < CYRILLIC_CAPITAL_A
+            && character != CYRILLIC_SMALL_YO && character != CYRILLIC_CAPITAL_YO))
+        character = FONT_CODE_UNKNOWN;
+    else if (character > FONT_CODE_ASCII_LAST)
+        character = RemapCyrillicCharacter(character);
+    return character - ' ';
+}
+
 void font::DrawString(char* text, i16 x, i16 y, i16 color) {
     i16* entries = m_glyphIcon->m_frameWords;
     i32 glyph = 0;
     i16 drawX = x;
     i16 index = 0;
     while (text[index] != '\0') {
-        glyph = static_cast<u8>(text[index]);
-        if (glyph < ' '
-            || (glyph > FONT_CODE_ASCII_LAST && glyph < CYRILLIC_CAPITAL_A
-                && glyph != CYRILLIC_SMALL_YO && glyph != CYRILLIC_CAPITAL_YO))
-            glyph = FONT_CODE_UNKNOWN;
-        else if (glyph > FONT_CODE_ASCII_LAST)
-            glyph = RemapCyrillicCharacter(glyph);
-        glyph -= ' ';
+        glyph = GlyphFrame(static_cast<u8>(text[index]));
         if (glyph != FONT_GLYPH_SPACE)
             m_glyphIcon->FillToBuffer(
                 drawX,
@@ -100,14 +134,7 @@ void font::DrawBoundedString(
     drawColor = color;
     while (position < textLen && textCopy[position] != '\0' && lineTop + m_height <= height) {
         while (textCopy[position] != '\0' && textCopy[position] != '\n' && widthUsed <= width) {
-            baseGlyph = static_cast<u8>(textCopy[position]);
-            if (baseGlyph < ' '
-                || (baseGlyph > FONT_CODE_ASCII_LAST && baseGlyph < CYRILLIC_CAPITAL_A
-                    && baseGlyph != CYRILLIC_SMALL_YO && baseGlyph != CYRILLIC_CAPITAL_YO))
-                baseGlyph = FONT_CODE_UNKNOWN;
-            else if (baseGlyph > FONT_CODE_ASCII_LAST)
-                baseGlyph = RemapCyrillicCharacter(baseGlyph);
-            baseGlyph -= ' ';
+            baseGlyph = GlyphFrame(static_cast<u8>(textCopy[position]));
             widthUsed += frameDirectory[baseGlyph * FONT_GLYPH_ENTRY_WORDS + FONT_GLYPH_WIDTH_WORD]
                          + FONT_GLYPH_ADVANCE_SPACING;
             position++;
@@ -115,14 +142,7 @@ void font::DrawBoundedString(
         if (widthUsed > width) {
             position--;
             while (textCopy[position] != ' ' && position >= lineStart) {
-                baseGlyph = static_cast<u8>(textCopy[position]);
-                if (baseGlyph < ' '
-                    || (baseGlyph > FONT_CODE_ASCII_LAST && baseGlyph < CYRILLIC_CAPITAL_A
-                        && baseGlyph != CYRILLIC_SMALL_YO && baseGlyph != CYRILLIC_CAPITAL_YO))
-                    baseGlyph = FONT_CODE_UNKNOWN;
-                else if (baseGlyph > FONT_CODE_ASCII_LAST)
-                    baseGlyph = RemapCyrillicCharacter(baseGlyph);
-                baseGlyph -= ' ';
+                baseGlyph = GlyphFrame(static_cast<u8>(textCopy[position]));
                 widthUsed -=
                     frameDirectory[baseGlyph * FONT_GLYPH_ENTRY_WORDS + FONT_GLYPH_WIDTH_WORD]
                     + FONT_GLYPH_ADVANCE_SPACING;
@@ -176,14 +196,7 @@ i32 font::LineLength(char* text, i16 maxWidth) {
     chars = text;
     while (position < textLen && chars[position] != '\0') {
         while (chars[position] != '\0' && chars[position] != '\n' && widthUsed <= maxWidth) {
-            baseGlyph = static_cast<u8>(chars[position]);
-            if (baseGlyph < ' '
-                || (baseGlyph > FONT_CODE_ASCII_LAST && baseGlyph < CYRILLIC_CAPITAL_A
-                    && baseGlyph != CYRILLIC_SMALL_YO && baseGlyph != CYRILLIC_CAPITAL_YO))
-                baseGlyph = FONT_CODE_UNKNOWN;
-            else if (baseGlyph > FONT_CODE_ASCII_LAST)
-                baseGlyph = RemapCyrillicCharacter(baseGlyph);
-            baseGlyph -= ' ';
+            baseGlyph = GlyphFrame(static_cast<u8>(chars[position]));
             widthUsed += widths[baseGlyph * FONT_GLYPH_ENTRY_WORDS + FONT_GLYPH_WIDTH_WORD]
                          + FONT_GLYPH_ADVANCE_SPACING;
             position++;
@@ -191,14 +204,7 @@ i32 font::LineLength(char* text, i16 maxWidth) {
         if (widthUsed > maxWidth) {
             position--;
             while (chars[position] != ' ' && position >= lineStart) {
-                baseGlyph = static_cast<u8>(chars[position]);
-                if (baseGlyph < ' '
-                    || (baseGlyph > FONT_CODE_ASCII_LAST && baseGlyph < CYRILLIC_CAPITAL_A
-                        && baseGlyph != CYRILLIC_SMALL_YO && baseGlyph != CYRILLIC_CAPITAL_YO))
-                    baseGlyph = FONT_CODE_UNKNOWN;
-                else if (baseGlyph > FONT_CODE_ASCII_LAST)
-                    baseGlyph = RemapCyrillicCharacter(baseGlyph);
-                baseGlyph -= ' ';
+                baseGlyph = GlyphFrame(static_cast<u8>(chars[position]));
                 widthUsed -= widths[baseGlyph * FONT_GLYPH_ENTRY_WORDS + FONT_GLYPH_WIDTH_WORD]
                              + FONT_GLYPH_ADVANCE_SPACING;
                 position--;
@@ -235,14 +241,7 @@ i32 font::LineWidth(char* text) {
     chars = text;
     while (position < textLen && chars[position] != '\0') {
         while (chars[position] != '\0' && chars[position] != '\n') {
-            baseGlyph = static_cast<u8>(chars[position]);
-            if (baseGlyph < ' '
-                || (baseGlyph > FONT_CODE_ASCII_LAST && baseGlyph < CYRILLIC_CAPITAL_A
-                    && baseGlyph != CYRILLIC_SMALL_YO && baseGlyph != CYRILLIC_CAPITAL_YO))
-                baseGlyph = FONT_CODE_UNKNOWN;
-            else if (baseGlyph > FONT_CODE_ASCII_LAST)
-                baseGlyph = RemapCyrillicCharacter(baseGlyph);
-            baseGlyph -= ' ';
+            baseGlyph = GlyphFrame(static_cast<u8>(chars[position]));
             widthUsed += widths[baseGlyph * FONT_GLYPH_ENTRY_WORDS + FONT_GLYPH_WIDTH_WORD]
                          + FONT_GLYPH_ADVANCE_SPACING;
             position++;

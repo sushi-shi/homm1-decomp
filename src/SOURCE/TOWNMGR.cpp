@@ -1813,7 +1813,12 @@ i16 MageGuildHandler(struct tag_message& message) {
                             return MESSAGE_DISPATCH_CONSUME;
                         spellId = gTownManager->m_town->m_mageGuildSpells[spellPosIndex];
                         NormalDialog(
-                            gSpellDesc[spellId],
+                            gGame->SpellDescription(
+                                spellId,
+                                gTownManager->m_town->m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE
+                                    ? gGame->GetHero(gTownManager->m_town->m_occupyingHeroId)
+                                    : NULL
+                            ),
                             quickViewVal ? NORMAL_DIALOG_TYPE_QUICK_VIEW : NORMAL_DIALOG_TYPE_OK,
                             -1,
                             -1,

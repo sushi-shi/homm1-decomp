@@ -78,6 +78,11 @@ msgid "adventure.search.eye_of_goros_found"
 msgstr ""
 
 #: src/SOURCE/ADVMGR.cpp
+#, c-format
+msgid "adventure.search.found_format"
+msgstr ""
+
+#: src/SOURCE/ADVMGR.cpp
 msgid "adventure.search.found_prefix"
 msgstr ""
 
@@ -300,7 +305,17 @@ msgstr ""
 
 #: src/SOURCE/CMBTMGR.cpp
 #, c-format
+msgid "combat.morale.bad_single"
+msgstr ""
+
+#: src/SOURCE/CMBTMGR.cpp
+#, c-format
 msgid "combat.morale.good"
+msgstr ""
+
+#: src/SOURCE/CMBTMGR.cpp
+#, c-format
+msgid "combat.morale.good_single"
 msgstr ""
 
 #: src/SOURCE/EVENTS.cpp
@@ -1076,6 +1091,11 @@ msgid "event.skeleton.treasure"
 msgstr ""
 
 #: src/SOURCE/EVENTS.cpp
+#, c-format
+msgid "event.spell_shrine.format"
+msgstr ""
+
+#: src/SOURCE/EVENTS.cpp
 msgid "event.stronghold.abandoned"
 msgstr ""
 
@@ -1101,6 +1121,11 @@ msgstr ""
 
 #: src/SOURCE/EVENTS.cpp
 msgid "event.stronghold.waiting_ghosts_join"
+msgstr ""
+
+#: src/SOURCE/EVENTS.cpp
+#, c-format
+msgid "event.unknown"
 msgstr ""
 
 #: src/BASE/RESMGR.cpp
@@ -1933,6 +1958,10 @@ msgstr ""
 msgid "resource.MNUTOWN.popup.2"
 msgstr ""
 
+#: src/BASE/RESMGR.cpp
+msgid "resource.aggregate.invalid"
+msgstr ""
+
 #: src/SOURCE/COMMAND.cpp
 msgid "resource.gold.insufficient"
 msgstr ""
@@ -1979,6 +2008,72 @@ msgstr ""
 
 #: src/SOURCE/KB.cpp
 msgid "score.name.prompt"
+msgstr ""
+
+#: src/SOURCE/REMOTE.cpp
+msgid "serial.connect.duplicate_id"
+msgstr ""
+
+#: src/SOURCE/comwin.cpp
+msgid "serial.error.baud_rate"
+msgstr ""
+
+#: src/SOURCE/comwin.cpp
+msgid "serial.error.cables"
+msgstr ""
+
+#: src/SOURCE/comwin.cpp
+msgid "serial.error.clear_break"
+msgstr ""
+
+#: src/SOURCE/comwin.cpp
+msgid "serial.error.clear_errors"
+msgstr ""
+
+#: src/SOURCE/comwin.cpp
+msgid "serial.error.configure"
+msgstr ""
+
+#: src/SOURCE/comwin.cpp
+#, c-format
+msgid "serial.error.header"
+msgstr ""
+
+#: src/SOURCE/comwin.cpp
+msgid "serial.error.initialize"
+msgstr ""
+
+#: src/SOURCE/comwin.cpp
+#, c-format
+msgid "serial.error.open_port"
+msgstr ""
+
+#: src/SOURCE/comwin.cpp
+msgid "serial.error.port"
+msgstr ""
+
+#: src/SOURCE/comwin.cpp
+msgid "serial.error.read"
+msgstr ""
+
+#: src/SOURCE/comwin.cpp
+msgid "serial.error.reboot"
+msgstr ""
+
+#: src/SOURCE/comwin.cpp
+msgid "serial.error.set_break"
+msgstr ""
+
+#: src/SOURCE/comwin.cpp
+msgid "serial.error.solutions"
+msgstr ""
+
+#: src/SOURCE/comwin.cpp
+msgid "serial.error.timeouts"
+msgstr ""
+
+#: src/SOURCE/comwin.cpp
+msgid "serial.error.write"
 msgstr ""
 
 #: src/SOURCE/SETUP.cpp
@@ -3861,6 +3956,7 @@ msgid "table.gEventText.75"
 msgstr ""
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
 msgid "table.gEventText.76"
 msgstr ""
 
@@ -5288,10 +5384,12 @@ msgid "table.gSpeedText.4"
 msgstr ""
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
 msgid "table.gSpellDesc.0"
 msgstr ""
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
 msgid "table.gSpellDesc.1"
 msgstr ""
 
@@ -5304,6 +5402,7 @@ msgid "table.gSpellDesc.3"
 msgstr ""
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
 msgid "table.gSpellDesc.4"
 msgstr ""
 
@@ -5348,14 +5447,17 @@ msgid "table.gSpellDesc.14"
 msgstr ""
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
 msgid "table.gSpellDesc.15"
 msgstr ""
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
 msgid "table.gSpellDesc.16"
 msgstr ""
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
 msgid "table.gSpellDesc.17"
 msgstr ""
 

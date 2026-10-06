@@ -27,7 +27,17 @@ enum FontCharacterCode {
     FONT_CODE_CAPITAL_A = 0x80,
     FONT_CODE_CAPITAL_YO = 0xa0,
     FONT_CODE_SMALL_A = 0xa1,
-    FONT_CODE_SMALL_YO = 0xc1
+    FONT_CODE_SMALL_YO = 0xc1,
+    // Windows-1251 punctuation that newer fonts draw after the Cyrillic
+    // glyphs.
+    FONT_CHAR_EM_DASH = 0x97,
+    FONT_CHAR_LEFT_GUILLEMET = 0xab,
+    FONT_CHAR_NUMERO = 0xb9,
+    FONT_CHAR_RIGHT_GUILLEMET = 0xbb,
+    FONT_FRAME_LEFT_GUILLEMET = 0xa2,
+    FONT_FRAME_RIGHT_GUILLEMET = 0xa3,
+    FONT_FRAME_EM_DASH = 0xa4,
+    FONT_FRAME_NUMERO = 0xa5
 };
 
 #pragma pack(push, 1)
@@ -50,6 +60,7 @@ public:
     );
     i32 LineLength(char* text, i16 maxWidth);
     i32 LineWidth(char* text);
+    i32 GlyphFrame(i32 character);
 };
 #pragma pack(pop)
 #endif

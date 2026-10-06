@@ -77,6 +77,11 @@ msgid "adventure.search.eye_of_goros_found"
 msgstr "After spending many hours digging here, you have uncovered the Eye of Goros!!!!"
 
 #: src/SOURCE/ADVMGR.cpp
+#, c-format
+msgid "adventure.search.found_format"
+msgstr "%s%s"
+
+#: src/SOURCE/ADVMGR.cpp
 msgid "adventure.search.found_prefix"
 msgstr "Congratulations! After spending many hours digging here, you have uncovered the "
 
@@ -299,7 +304,17 @@ msgstr "Low morale causes the %s to freeze in panic."
 
 #: src/SOURCE/CMBTMGR.cpp
 #, c-format
+msgid "combat.morale.bad_single"
+msgstr "Low morale causes the %s to freeze in panic."
+
+#: src/SOURCE/CMBTMGR.cpp
+#, c-format
 msgid "combat.morale.good"
+msgstr "High morale enables the %s to attack again."
+
+#: src/SOURCE/CMBTMGR.cpp
+#, c-format
+msgid "combat.morale.good_single"
 msgstr "High morale enables the %s to attack again."
 
 #: src/SOURCE/EVENTS.cpp
@@ -1075,6 +1090,11 @@ msgid "event.skeleton.treasure"
 msgstr "Treasure"
 
 #: src/SOURCE/EVENTS.cpp
+#, c-format
+msgid "event.spell_shrine.format"
+msgstr "%s'%s'."
+
+#: src/SOURCE/EVENTS.cpp
 msgid "event.stronghold.abandoned"
 msgstr "The stronghold seems abandoned by its owners."
 
@@ -1101,6 +1121,11 @@ msgstr "You've defeated the paladins and freed the evil ghosts they were guardin
 #: src/SOURCE/EVENTS.cpp
 msgid "event.stronghold.waiting_ghosts_join"
 msgstr "Ghosts silently join your cause."
+
+#: src/SOURCE/EVENTS.cpp
+#, c-format
+msgid "event.unknown"
+msgstr "Event ID %d"
 
 #: src/BASE/RESMGR.cpp
 #, c-format
@@ -1932,6 +1957,10 @@ msgstr "&Display"
 msgid "resource.MNUTOWN.popup.2"
 msgstr "&Help"
 
+#: src/BASE/RESMGR.cpp
+msgid "resource.aggregate.invalid"
+msgstr "File Error: .AGG File not valid"
+
 #: src/SOURCE/COMMAND.cpp
 msgid "resource.gold.insufficient"
 msgstr "You don't have enough gold!"
@@ -1979,6 +2008,72 @@ msgstr "Yes"
 #: src/SOURCE/KB.cpp
 msgid "score.name.prompt"
 msgstr "Please enter your name for the high score list."
+
+#: src/SOURCE/REMOTE.cpp
+msgid "serial.connect.duplicate_id"
+msgstr "Duplicate ID Strings!\nSorry Please Try Again\n"
+
+#: src/SOURCE/comwin.cpp
+msgid "serial.error.baud_rate"
+msgstr "\n  4) Consider lowering the BAUD rate in 'CONFIG' to 19200 or 9600."
+
+#: src/SOURCE/comwin.cpp
+msgid "serial.error.cables"
+msgstr "\n  1) Make sure all cables are firmly connected."
+
+#: src/SOURCE/comwin.cpp
+msgid "serial.error.clear_break"
+msgstr "Clear communications break"
+
+#: src/SOURCE/comwin.cpp
+msgid "serial.error.clear_errors"
+msgstr "Clear communications error queue"
+
+#: src/SOURCE/comwin.cpp
+msgid "serial.error.configure"
+msgstr "Configure communications device"
+
+#: src/SOURCE/comwin.cpp
+#, c-format
+msgid "serial.error.header"
+msgstr "Communications error on function '%s'\n\nWin95 Error Code: %d\nWin95 Error Meaning: %s\n\n"
+
+#: src/SOURCE/comwin.cpp
+msgid "serial.error.initialize"
+msgstr "Initialize communications paramaters"
+
+#: src/SOURCE/comwin.cpp
+#, c-format
+msgid "serial.error.open_port"
+msgstr "Opening COM%d"
+
+#: src/SOURCE/comwin.cpp
+msgid "serial.error.port"
+msgstr "\n  3) Check to make sure you have the correct COM port setting in 'CONFIG'. (The 3rd button down on the screen where you choose Host or Guest.)"
+
+#: src/SOURCE/comwin.cpp
+msgid "serial.error.read"
+msgstr "Read communications data"
+
+#: src/SOURCE/comwin.cpp
+msgid "serial.error.reboot"
+msgstr "\n  2) Reboot computer."
+
+#: src/SOURCE/comwin.cpp
+msgid "serial.error.set_break"
+msgstr "Set communications break"
+
+#: src/SOURCE/comwin.cpp
+msgid "serial.error.solutions"
+msgstr "Suggested solutions:"
+
+#: src/SOURCE/comwin.cpp
+msgid "serial.error.timeouts"
+msgstr "Set communications timeouts"
+
+#: src/SOURCE/comwin.cpp
+msgid "serial.error.write"
+msgstr "Write communications data"
 
 #: src/SOURCE/SETUP.cpp
 msgid "setup.modem.initialization_prompt"
@@ -3860,8 +3955,9 @@ msgid "table.gEventText.75"
 msgstr "Skeleton\n\nYou come upon the remains of an unfortunate adventurer.  Searching through the tattered clothing, you find nothing."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
 msgid "table.gEventText.76"
-msgstr "Skeleton\n\nYou come upon the remains of an unfortunate adventurer.  Searching through the tattered clothing, you find"
+msgstr "Skeleton\n\nYou come upon the remains of an unfortunate adventurer.  Searching through the tattered clothing, you find %s"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gExtendedMemoryUnits.0"
@@ -5287,12 +5383,14 @@ msgid "table.gSpeedText.4"
 msgstr "Blazing"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
 msgid "table.gSpellDesc.0"
-msgstr "Fireball\n\nCauses a giant fireball to strike the selected area, damaging all nearby creatures."
+msgstr "Fireball\n\nCauses a giant fireball to strike the selected area, damaging all nearby creatures.\n\nDoes %d points of damage."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
 msgid "table.gSpellDesc.1"
-msgstr "Lightning Bolt\n\nCauses a bolt of electrical energy to strike the selected creature."
+msgstr "Lightning Bolt\n\nCauses a bolt of electrical energy to strike the selected creature.\n\nDoes %d points of damage."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellDesc.2"
@@ -5303,8 +5401,9 @@ msgid "table.gSpellDesc.3"
 msgstr "Cure\n\nRemoves all negative spells cast upon your forces."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
 msgid "table.gSpellDesc.4"
-msgstr "Resurrect\n\nResurrects creatures from a damaged monster group."
+msgstr "Resurrect\n\nResurrects creatures from a damaged monster group.\n\nRestores %d hit points."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellDesc.5"
@@ -5347,16 +5446,19 @@ msgid "table.gSpellDesc.14"
 msgstr "Berserk\n\nCauses a creature to attack its nearest neighbor."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
 msgid "table.gSpellDesc.15"
-msgstr "Armageddon\n\nHoly terror strikes the battlefield, causing severe damage to all creatures."
+msgstr "Armageddon\n\nHoly terror strikes the battlefield, causing severe damage to all creatures.\n\nDoes %d points of damage."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
 msgid "table.gSpellDesc.16"
-msgstr "Elemental Storm\n\nMagical elements pour down on the battlefield, damaging all creatures."
+msgstr "Elemental Storm\n\nMagical elements pour down on the battlefield, damaging all creatures.\n\nDoes %d points of damage."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
 msgid "table.gSpellDesc.17"
-msgstr "Meteor Shower\n\nA rain of rocks strikes an area of the battlefield, damaging all nearby creatures."
+msgstr "Meteor Shower\n\nA rain of rocks strikes an area of the battlefield, damaging all nearby creatures.\n\nDoes %d points of damage."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gSpellDesc.18"

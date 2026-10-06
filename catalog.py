@@ -45,10 +45,12 @@ DESCRIPTOR_PREFIX = 'locale.'
 KEYBOARD_ID = 'locale.keyboard'
 #: Characters the game's text renderer draws besides printable ASCII, by the
 #: descriptor's "glyphs" name. FONT.cpp maps Windows-1251 Cyrillic to the
-#: glyph order of Buka's AGG fonts; every other byte above 0x7F draws blank.
+#: glyph order of Buka's AGG fonts, and guillemets, the em dash and the
+#: numero sign to the Tournament Edition's extra glyphs (ASCII look-alikes
+#: with fonts that lack them); every other byte above 0x7F draws blank.
 GLYPHS = {
     'ascii': '',
-    'cyrillic': ''.join(chr(c) for c in range(0x410, 0x450)) + 'Ёё',
+    'cyrillic': ''.join(chr(c) for c in range(0x410, 0x450)) + 'Ёё«»—№',
 }
 FIXED_WIDTH_NOTE = 'fixed-width character field'
 RESOURCE_LANGUAGE = 'HOMM1_RESOURCE_LANGUAGE'

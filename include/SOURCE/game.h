@@ -362,6 +362,7 @@ public:
     i32 CountObelisksVisitedBy(i8 player);
     void QuickSaveName(char* name);
     void UpgradeOriginalSave(void);
+    char* SpellDescription(i32 spell, class hero* caster);
     void RandomizeHeroPool(void);
     void SetRandomHeroArmies(i16 heroId, i32 strongArmy);
     void ProcessRandomObjects(b32 castlesOnly);
