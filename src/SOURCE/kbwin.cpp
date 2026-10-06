@@ -73,7 +73,7 @@ WinMain(HINSTANCE instance, HINSTANCE previousInstance, char* commandLine, i32 s
 
     memset(gCommandLine, 0, KBWIN_COMMAND_LINE_CLEAR_SIZE);
     strncpy(gCommandLine, commandLine, KBWIN_COMMAND_LINE_LIMIT);
-    if (EarlySetup() == 0)
+    if (EarlySetup() == false)
         return 0;
     if (AppInit(instance, previousInstance, showCommand, commandLine) == 0)
         return 0;
