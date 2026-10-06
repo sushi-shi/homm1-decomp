@@ -1,5 +1,3 @@
-// HoMM1 builds this TU with /O2.
-
 #include <match.h>
 
 #include <SOURCE/advManager.h>
@@ -12,8 +10,8 @@
 #include <SOURCE/playerData.h>
 #include <SOURCE/searchArray.h>
 
-// HoMM1: flood from the hero until a cell carrying the trigger type turns
-// up, then walk the directions back into the path buffer.
+// Floods from the hero until a cell carrying the trigger type turns
+// up, then walks the directions back into the path buffer.
 // No retail code reads this; it holds its retail .bss place.
 DATA(0x004cc878)
 static i32 gSearchDeadInt;
@@ -130,7 +128,7 @@ i32 searchArray::BuildPath(
     return m_pathLength;
 }
 
-// HoMM1 has no roads or pathfinding skill and precomputes the straight and
+// There are no roads or pathfinding skill; this precomputes the straight and
 // diagonal step costs once per node.
 VA(0x00456150, 0x99c)
 void searchArray::SeedPosition(

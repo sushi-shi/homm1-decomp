@@ -829,7 +829,7 @@ void WriteModemPacket(char* buffer, i32 length) {
 }
 
 VA(0x004532e8, 0x1e3)
-// HoMM1 callers pass an eighth flag that maps a game position to its net position.
+// The eighth flag maps a game position to its net position.
 i32 TransmitRemoteData(
     void* data,
     i32 destination,

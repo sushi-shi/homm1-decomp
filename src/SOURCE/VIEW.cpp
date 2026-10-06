@@ -1,5 +1,4 @@
-// HoMM1 VIEW: the combat hero (general) and creature quick views.
-// Retail int3 padding bounds this object at 0x00438310-0x00438bf1.
+// The combat hero (general) and creature quick views.
 
 #include <match.h>
 

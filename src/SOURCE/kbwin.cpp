@@ -132,9 +132,8 @@ BOOL AppInit(HINSTANCE instance, HINSTANCE previousInstance, i32 showCommand, ch
             reinterpret_cast<HBRUSH>(COLOR_WINDOW + 1); // Win32 system-color brush encoding.
         appClass.hInstance = instance;
         appClass.style = KBWIN_CLASS_STYLE;
-        appClass.lpfnWndProc = reinterpret_cast<WNDPROC>(
-            AppWndProc
-        ); // HoMM1 declares the procedure with void* handles.
+        appClass.lpfnWndProc =
+            reinterpret_cast<WNDPROC>(AppWndProc); // AppWndProc takes void* handles.
         appClass.cbWndExtra = 0;
         appClass.cbClsExtra = 0;
         if (RegisterClassA(&appClass) == 0)

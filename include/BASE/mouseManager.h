@@ -58,7 +58,7 @@ public:
     void NewUpdate(i32 force);
     void MouseCoords(i16& x, i16& y);
     void SaveAndDraw(void);
-    // HoMM1 Windows keeps the DOS buffer-pointer hooks as empty stubs.
+    // The buffer-pointer hooks are empty stubs.
     void SaveAndDraw(class bitmap* buffer, i16 x, i16 y, i16 cursorUpdate);
     void RestoreUnderlying(void);
     void ReallyHidePointer(void);

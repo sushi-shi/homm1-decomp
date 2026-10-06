@@ -3,7 +3,7 @@
 
 #include <Domains.h>
 
-// HoMM1 creature order: six per faction, then the four neutral types.
+// Creature order: six per faction, then the four neutral types.
 // armyGroup and army slots mark an empty stack with -1.
 H1_ENUM_BEGIN(CreatureType)
     CREATURE_NONE = -1,
@@ -79,7 +79,7 @@ H1_ENUM_FLAGS_BEGIN(MonsterFlags, i32)
 H1_ENUM_FLAGS_END(MonsterFlags)
 
 #pragma pack(push, 1)
-// HoMM1 monster records are 0x1f bytes: GetMonsterCost reads the cost word at
+// Monster records are 0x1f bytes: GetMonsterCost reads the cost word at
 // +0, retail readers use a dword at +8 and test attribute bits at +0x1b.
 // army::Init copies these 0x13 bytes from record +0xc into each combat stack.
 struct tag_monsterStats {

@@ -5747,7 +5747,7 @@ void advManager::InsertSound(i16 x, i16 y, i16 distance, i8 soundLayer) {
 }
 
 // ADVMGR .bss keeps objects no code references: gThisMaxY, gThisMinY, gUSMsg,
-// gCDMsg and four words that only retail's layout shows.
+// gCDMsg and four unreferenced words.
 #define gThisMaxY iThisMaxY // spelling fixes .bss order
 DATA(0x004a65a0)
 i32 gThisMaxY;

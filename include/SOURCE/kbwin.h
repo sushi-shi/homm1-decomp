@@ -153,7 +153,7 @@ AppAbout(HWND dialog, UINT message, WPARAM messageParam, LPARAM messageData);
 void KBChangeMenu(HMENU menu);
 void ResizeWindow(i32 x, i32 y, i32 width, i32 height);
 void SetMenuStatus(i32 showMenu);
-// HoMM1 window caption helper (retail 0x0045dc1f, cdecl).
+// Sets a window's caption from a text id.
 void SetWinText(class heroWindow* window, i16 id);
 void UpdateDfltMenu(HMENU menu);
 extern i32 gForegroundApp;

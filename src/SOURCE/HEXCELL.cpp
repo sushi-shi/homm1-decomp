@@ -1,4 +1,4 @@
-// Combat hex cells. HoMM1 cells are twelve bytes and draw the castle towers
+// Combat hex cells. Cells are twelve bytes and draw the castle towers
 // and walls themselves.
 
 #include <match.h>

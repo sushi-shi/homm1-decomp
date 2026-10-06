@@ -48,7 +48,7 @@ H1_ENUM_CONST_BEGIN(SearchConstant)
     SEARCH_MAX_COST = 9999
 H1_ENUM_CONST_END(SearchConstant)
 
-// HoMM1 packs the direction nibble under a 12-bit distance in the word at +2
+// Packs the direction nibble under a 12-bit distance in the word at +2
 // (CheckReload shifts it right four; the path builder masks 0xf).
 #pragma pack(push, 1)
 struct searchNode {

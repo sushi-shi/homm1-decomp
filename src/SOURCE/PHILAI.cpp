@@ -144,7 +144,7 @@ static const float AI_ATTENTION_IDENTITY_FLOAT = 1.0f;
 DATA(0x0048a4c4)
 static const float AI_ATTENTION_IDENTITY = 1.0f;
 
-// HoMM1 routes the status-line print through the AI object's debug font.
+// Routes the status-line print through the AI object's debug font.
 VA(0x00447900, 0x14)
 void AiPrint(char* text) {
     gPhilAI->ShowDebugText(text);
@@ -2187,7 +2187,6 @@ float philAI::FutureDeflator(i32* const resources) {
     return value;
 }
 
-// HoMM1 retail returns with ret 0x14: five stack arguments.
 VA(0x0044cd57, 0x638)
 i32 philAI::FightValueOfStack(
     armyGroup* group,
@@ -2810,7 +2809,7 @@ void philAI::ChooseEvaluateBattle(
     }
 }
 
-// HoMM1 treasure-artifact purchase: affordable gold and an artifact worth
+// Treasure-artifact purchase: affordable gold and an artifact worth
 // more than its gold cost.
 VA(0x0044e319, 0x42)
 i32 philAI::ChooseToBuyArtifact(hero* heroPointer, i32 artifact, i32 goldCost) {
@@ -3081,7 +3080,7 @@ i32 philAI::DamageGroup(armyGroup* group, hero* loser, hero* winner, float casua
     }
 }
 
-// HoMM1 primary-stat valuation: the table worth of the new level (capped at
+// Primary-stat valuation: the table worth of the new level (capped at
 // twenty) less that of the old one; used for hero stat gains.
 VA(0x0044ecb0, 0x4f)
 float philAI::StatChangeValue(i32 oldValue, i32 newValue) {

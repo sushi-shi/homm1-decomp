@@ -255,7 +255,7 @@ H1_ENUM_CONST_BEGIN(TownScreenConstant)
     TOWN_BANK_BOX_X = 0x222,
     TOWN_BANK_BOX_Y = 0x100,
     TOWN_EMPTY_HERO_PORTRAIT_FRAME = 8,
-    // strip's type argument (stored in strip::m_stripType, which HoMM1 never
+    // strip's type argument (stored in strip::m_stripType, which nothing
     // reads): the garrison strip with or without a visiting hero and the
     // hero strip.
     TOWN_CREST_FRAME_WITH_HERO = 1,
@@ -312,7 +312,7 @@ public:
     // RecruitHero: the chosen candidate slot (-1 if none) and both candidates.
     i16 m_recruitState;
     hero* m_recruitHeroes[2];
-    // HoMM1 Main tests this additional mask against message.type.
+    // Main tests this additional mask against message.type.
     i16 m_dispatchMask;
     // --- constructors ---
     townManager(void);
@@ -343,7 +343,7 @@ public:
     void SetupThievesGuild(class heroWindow* window, i16 categories);
     void SetupCastle(class heroWindow* window);
     char* GetBuildingName(i16 building);
-    // HoMM1 keeps the thieves-guild helpers as townManager members.
+    // Thieves-guild helpers.
     void GetCategoryStats(i8 category, i32* const stats, i8* const order);
     void SortStats(i32* const stats, i8* const order);
 };

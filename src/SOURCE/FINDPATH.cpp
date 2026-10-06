@@ -76,7 +76,7 @@ i16 searchArray::QuickDistance(i16 x1, i16 y1, i16 x2, i16 y2) {
                                  : xDistance + yDistance / DISTANCE_MINOR_DIVISOR;
 }
 
-// HoMM1-only per-terrain step cost that InitVars tabulates into gTerrainCost
+// Per-terrain step cost that InitVars tabulates into gTerrainCost
 // for both step kinds; a diagonal step costs half as much again.
 VA(0x00429cf0, 0x54)
 i16 TerrainStepCost(i8 terrain, i8 diagonal) {
@@ -114,7 +114,6 @@ i32 CalcTerrainCost(i32 terrain, i32 diagonal, i32 mobility, i32 heroClass) {
     return gTerrainCost[terrain][FINDPATH_STEP_DIAGONAL];
 }
 
-// HoMM1 has no castle moat, so combat paths take no moat slowdown.
 VA(0x00429da0, 0x2cb)
 i16 searchArray::FindCombatPath(i16 sourceHex, i16 targetHex, army* unit, i8 attackPath) {
     i32 bestHex;

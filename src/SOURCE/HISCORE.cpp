@@ -28,7 +28,6 @@ highScoreManager::highScoreManager(void) {
         m_showCampaignScores = !gHighScoreType;
 }
 
-// HoMM1 keeps an empty destructor; it only restores this class's vtable.
 VA(0x0043bddf, 0x14)
 highScoreManager::~highScoreManager() {}
 
