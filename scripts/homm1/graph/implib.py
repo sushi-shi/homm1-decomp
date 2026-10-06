@@ -44,11 +44,12 @@ references them, so no member of theirs is pulled. `_verify_hints` re-reads the
 produced lib's `.idata$6` and fails on any mismatch.
 
 The library's own shape also reaches the image. config/retail/
-import_libraries.tsv records the vendor libraries that retail shows were not
-VC4 import libraries: WING32's was the VC 2.0 (LINK 2.50) format, whose own
-`NULL_IMPORT_DESCRIPTOR` adds a second .idata$3 terminator, and its archive
-members sort after wail32's, which places its ILT/IAT last. Such a library is
-linked with the pinned VC 2.0 LINK and its member headers are renamed.
+import_libraries.tsv records the vendor libraries that retail shows were
+another linker's import format (Buka's mss32 and smackw32 are LINK 3.10 long
+members); such a library is linked with that pinned LINK. The library is kept
+exactly as LINK writes it. LINK names every member after the DLL name it
+records (the stub's /OUT name here, docs/patterns/link310-import-member-names.md),
+and `_verify_members` fails unless each member carries the retail DLL name.
 
 The stub DLL is discarded; only the `.lib` is a build input, and nothing here
 needs the real MSS32/SMACKW32 DLLs (those are runtime-only).
@@ -522,10 +523,10 @@ def _verify_ordinals(lib: Path, want: dict[int, str]) -> None:
 
 
 def lib_shapes() -> dict[str, dict[str, str]]:
-    """{dll: {format, member}} from config/retail/import_libraries.tsv.
+    """{dll: {format}} from config/retail/import_libraries.tsv.
 
-    A vendor library absent from the table takes the pinned VC4 LINK's
-    import format and its default member name (the DLL name).
+    A vendor library absent from the table takes the selected toolchain's
+    import format.
     """
     from homm1.core.paths import RETAIL
     path = RETAIL / "import_libraries.tsv"
@@ -535,13 +536,10 @@ def lib_shapes() -> dict[str, dict[str, str]]:
     for ln in path.read_text().splitlines():
         if not ln or ln.startswith("#") or ln.startswith("dll\t"):
             continue
-        dll, fmt, member = ln.split("\t")[:3]
+        dll, fmt = ln.split("\t")[:2]
         if fmt not in SHAPE_LINKERS:
             raise ToolError(f"import_libraries.tsv {dll}: unknown format {fmt!r}")
-        if not 0 < len(member) < 16 or "/" in member:
-            raise ToolError(f"import_libraries.tsv {dll}: member name "
-                            f"{member!r} does not fit an archive header")
-        out[dll] = {"format": fmt, "member": member}
+        out[dll] = {"format": fmt}
     return out
 
 
@@ -580,26 +578,29 @@ def _shape_linker(fmt: str, dll: str, verbose: bool) -> Path | None:
     return find_ci(toolchain.root(name) / "bin", "link.exe")
 
 
-def _rename_members(lib: Path, member: str) -> None:
-    """Rename every import member of `lib` to `member` (header field only).
+def _verify_members(lib: Path, dll: str) -> None:
+    """Fail unless every import member of `lib` is named after `dll`.
 
-    LINK 3.00 orders the .idata$4/$5 groups by archive member name. Only the
-    16-byte header name changes: symbols, offsets and sizes stay as emitted.
+    LINK writes each member under the DLL name it records for the import
+    (the same string reaches the image's import directory), and the linker
+    that consumes the library orders its .idata$4/$5 groups by member name.
+    The library is never edited: a name LINK did not write is a failed
+    synthesis, not something to patch.
     """
-    data = bytearray(lib.read_bytes())
-    field = (member + "/").ljust(16).encode("ascii")
+    want = f"{dll}/".encode("ascii")
+    data = lib.read_bytes()
     off = 8
-    renamed = 0
+    seen = set()
     while off + 60 <= len(data):
         size = int(data[off + 48:off + 58].decode().strip() or "0")
-        name = bytes(data[off:off + 16]).rstrip()
+        name = data[off:off + 16].rstrip()
         if not name.startswith(b"/"):
-            data[off:off + 16] = field
-            renamed += 1
+            seen.add(name)
         off += 60 + size + (size & 1)
-    if not renamed:
-        raise ToolError(f"{lib.name}: no import member to rename")
-    lib.write_bytes(bytes(data))
+    if seen != {want}:
+        raise ToolError(f"{lib.name}: import members named "
+                        f"{sorted(n.decode('latin-1') for n in seen)}, "
+                        f"not {want.decode()}")
 
 
 def synthesize(dll: str, hints: dict[str, int], out_dir: Path = OUT_DIR,
@@ -610,7 +611,7 @@ def synthesize(dll: str, hints: dict[str, int], out_dir: Path = OUT_DIR,
 
     `decorated` (from `referent_imports`) supplies the reviewed caller-side
     symbol of undecorated and ordinal-only imports. `shape` (from
-    `lib_shapes`) selects the vendor library's import format and member name.
+    `lib_shapes`) selects the vendor library's import format.
     """
     from homm1.tool import cl, link
     from homm1.tool.wine import era_tool
@@ -623,8 +624,10 @@ def synthesize(dll: str, hints: dict[str, int], out_dir: Path = OUT_DIR,
     names = sorted(hints)
     src, obj = out_dir / f"{stem}_stub.c", out_dir / f"{stem}_stub.obj"
     deff = out_dir / f"{stem}_stub.def"
-    lib, stub_dll = out_dir / f"{stem}.lib", out_dir / dll   # /OUT name == the
-    code, entries = stub_source(dll, names, hints, decorated)  # recorded DLL
+    # The stub's /OUT name is the DLL name LINK records, in the import
+    # descriptor and as every archive member's name.
+    lib, stub_dll = out_dir / f"{stem}.lib", out_dir / dll
+    code, entries = stub_source(dll, names, hints, decorated)
     src.write_text(code)
     for f in (obj, stub_dll, deff):
         f.unlink(missing_ok=True)
@@ -641,8 +644,6 @@ def synthesize(dll: str, hints: dict[str, int], out_dir: Path = OUT_DIR,
                f"/OUT:{winepath(stub_dll)}",
                f"/IMPLIB:{winepath(tmp_lib)}", winepath(obj)],
               cwd=out_dir, expect=[tmp_lib], exe=linker)
-    if shape.get("member") and linker is not None:
-        _rename_members(tmp_lib, shape["member"])
     # The stub DLL and its .exp are scaffolding; only the .lib is a build input.
     # link.exe names the .exp after the /IMPLIB path, so the temp lib's name is
     # what it carries - `<stem>.exp` is a file that never existed, and the two
@@ -650,6 +651,7 @@ def synthesize(dll: str, hints: dict[str, int], out_dir: Path = OUT_DIR,
     for f in (stub_dll, tmp_lib.with_suffix(".exp"), out_dir / f"{stem}.exp",
               obj):
         f.unlink(missing_ok=True)
+    _verify_members(tmp_lib, dll)
     _verify_hints(tmp_lib, hints)
     _verify_ordinals(tmp_lib, {k: v for k, v in decorated.items()
                            if isinstance(k, int)})
@@ -661,7 +663,7 @@ def synthesize(dll: str, hints: dict[str, int], out_dir: Path = OUT_DIR,
     tmp_lib.replace(lib)
     if verbose:
         nord = sum(isinstance(k, int) for k in decorated)
-        form = (f", {shape['format']} format, members {shape['member']}"
+        form = (f", {shape['format']} format, members {dll}"
                 if linker is not None else "")
         print(f"[implib] {dll}: {len(names)} named + {nord} ordinal "
               f"import(s) -> {lib} (hints/ordinals verified against retail"

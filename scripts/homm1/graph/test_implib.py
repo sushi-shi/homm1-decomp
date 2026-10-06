@@ -8,10 +8,10 @@ from homm1.graph import implib
 from homm1.tool import ToolError
 
 
-def archive(*members):
+def archive(*members, name='example.dll'):
     result = b'!<arch>\n'
     for member in members:
-        result += (b'member/         ' + b'0           ' + b'0     ' + b'0     '
+        result += (f'{name}/'.ljust(16).encode() + b'0           ' + b'0     ' + b'0     '
                    + b'100644  ' + f'{len(member):<10}'.encode() + b'`\n'
                    + member + (b'\n' if len(member) & 1 else b''))
     return result
@@ -65,6 +65,17 @@ class ImportVerificationTests(unittest.TestCase):
                        short(kind=4), short() + b'garbage'):
             with self.subTest(member=member), self.assertRaises(ToolError):
                 self.verify(member)
+
+    def test_members_must_carry_the_dll_name(self):
+        lib = Path('example.lib')
+        with mock.patch.object(Path, 'read_bytes', return_value=archive(short())):
+            implib._verify_members(lib, 'example.dll')
+            with self.assertRaisesRegex(ToolError, 'not EXAMPLE.DLL/'):
+                implib._verify_members(lib, 'EXAMPLE.DLL')
+        mixed = archive(short()) + archive(short(), name='other.dll')[8:]
+        with mock.patch.object(Path, 'read_bytes', return_value=mixed):
+            with self.assertRaisesRegex(ToolError, 'other.dll/'):
+                implib._verify_members(lib, 'example.dll')
 
     def test_truncated_archive_fails(self):
         with mock.patch.object(Path, 'read_bytes', return_value=archive(short())[:-2]):
@@ -142,8 +153,8 @@ class ShapedLibraryTests(unittest.TestCase):
             lib = Path(tmp) / 'vc41' / 'lib'
             lib.mkdir(parents=True)
             (lib / 'NETAPI32.LIB').write_bytes(b'!<arch>\n')
-            shapes = {'NETAPI32.dll': {'format': 'vc41', 'member': 'NETAPI32.dll'},
-                      'mss32.dll': {'format': 'vc41', 'member': 'mss32.dll'}}
+            shapes = {'NETAPI32.dll': {'format': 'vc41'},
+                      'mss32.dll': {'format': 'vc41'}}
             with mock.patch.object(toolchain, 'verify'), \
                     mock.patch.object(toolchain, 'root',
                                       side_effect=lambda name: Path(tmp) / name):

@@ -6,16 +6,22 @@
 #          terminator;
 #   vc41 = VC4.1 LINK 3.10: the pre-VC5 long import format, one full COFF
 #          member per import, with no @comp.id (Rich prodid 0). When the vc41
-#          toolchain ships `<stem>.lib` itself, that SDK library is linked;
-#          otherwise the library is synthesised with LINK 3.10.
-# `member` is the archive member name. Buka's Rich header counts 179 short
+#          toolchain ships `<stem>.lib` itself, that SDK library is linked
+#          unchanged (NETAPI32); otherwise the library is synthesised with
+#          LINK 3.10 and kept exactly as LINK writes it.
+# LINK names every archive member after the DLL name it records for the
+# import (docs/patterns/link310-import-member-names.md), and the image's
+# linker orders each DLL's .idata$4/$5 group by that name. The stub DLL is
+# linked under the retail DLL name, so its members carry exactly that name;
+# homm1.graph.implib verifies it and edits no byte of the produced library.
+# Buka's Rich header counts 179 short
 # imports (prodid 1), 30 unmarked objects, 11 LINK 5.12.8034 objects (the VC6
 # Platform SDK descriptors: five libraries x 2 + __NULL_IMPORT_DESCRIPTOR)
 # and 2 LINK 6.00.8447 objects (audiere.lib's descriptor pair). Of the 200
 # imports, 21 are therefore long members: WING32's 6 (WinG SDK) plus 15 from
 # exactly three libraries, and with these three rows the candidate's Rich
 # counts, IAT slot order and .idata$6 hints equal retail's.
-dll	format	member	evidence
-mss32.dll	vc41	mss32.dll	Rich: 5 long imports + 2 unmarked descriptors; with VC6 short members the mss32 IAT order reverses
-smackw32.DLL	vc41	smackw32.DLL	Rich: 9 long ordinal imports + 2 unmarked descriptors; the smackw32 IAT order matches only in the long format
-NETAPI32.dll	vc41	NETAPI32.dll	retail Netbios hint 180 is VC4.1 netapi32.lib's (VC6 NETAPI32.LIB gives 211)
+dll	format	evidence
+mss32.dll	vc41	Rich: 5 long imports + 2 unmarked descriptors; with VC6 short members the mss32 IAT order reverses
+smackw32.DLL	vc41	Rich: 9 long ordinal imports + 2 unmarked descriptors; the smackw32 IAT order matches only in the long format
+NETAPI32.dll	vc41	retail Netbios hint 180 is VC4.1 netapi32.lib's (VC6 NETAPI32.LIB gives 211)
