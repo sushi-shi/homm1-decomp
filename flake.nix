@@ -73,6 +73,8 @@
         # reports would be noise; the build sandbox also blocks LeakSanitizer.
         preCheck = "export ASAN_OPTIONS=detect_leaks=0";
       });
+      # The native port for 64-bit Windows, cross-compiled (nix/windows.nix).
+      windows = import ./nix/windows.nix { inherit pkgs; src = self; };
       app = name: target: description: {
         type = "app";
         program = "${runner name target}/bin/${name}";
@@ -97,10 +99,10 @@
         };
       };
       packages.${system} = {
-        inherit native sanitized;
+        inherit native sanitized windows;
       };
       checks.${system} = {
-        inherit native sanitized;
+        inherit native sanitized windows;
       };
       devShells.${system} = {
         default = pkgs.mkShell ({

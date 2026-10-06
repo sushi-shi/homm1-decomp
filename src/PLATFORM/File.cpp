@@ -71,10 +71,10 @@ bool FileExists(const char* path) {
     return true;
 }
 
-#if defined(_WIN32)
+#if defined(_WIN32) && !defined(HOMM1_PORT)
 
-// Windows resolves case and separators itself; the game folder is the current
-// directory unless the port chose another.
+// The Visual C++ 6 build: Windows resolves case and separators itself; the
+// game folder is the current directory unless the host chose another.
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -234,10 +234,12 @@ void FileFindClose(i32 find) {
 
 #else
 
-// POSIX hosts: game paths are matched component by component under the game
-// folder, ignoring ASCII case. "." components and the leading ".\" of the
-// original's path globals are dropped; ".." and absolute game paths are
-// refused, so a game path never leaves the game folder.
+// The native port, on POSIX hosts and on Windows: game paths are matched
+// component by component under the game folder, ignoring ASCII case. "."
+// components and the leading ".\" of the original's path globals are
+// dropped; ".." and drive or absolute game paths are refused, so a game path
+// never leaves the game folder. Host paths are UTF-8; on Windows they go
+// through the wide-character API, so any folder name works.
 
 #include <algorithm>
 #include <cerrno>
@@ -245,10 +247,18 @@ void FileFindClose(i32 find) {
 #include <string>
 #include <vector>
 
-#include <dirent.h>
 #include <fcntl.h>
 #include <sys/stat.h>
+
+#if defined(_WIN32)
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#include <io.h>
+#include <share.h>
+#else
+#include <dirent.h>
 #include <unistd.h>
+#endif
 
 namespace {
 
@@ -265,7 +275,138 @@ bool SameIgnoringCase(const std::string& a, const char* b) {
     return true;
 }
 
-std::vector<std::string> ListDirectory(const std::string& directory) {
+// ---------------------------------------------------------------- host calls
+
+enum HostKind {
+    HOST_MISSING,
+    HOST_FILE,
+    HOST_DIRECTORY
+};
+
+#if defined(_WIN32)
+
+std::wstring Wide(const std::string& text) {
+    if (text.empty())
+        return std::wstring();
+    int length = MultiByteToWideChar(CP_UTF8, 0, text.data(), static_cast<int>(text.size()), nullptr, 0);
+    std::wstring wide(static_cast<size_t>(length), L'\0');
+    MultiByteToWideChar(CP_UTF8, 0, text.data(), static_cast<int>(text.size()), wide.data(), length);
+    return wide;
+}
+
+std::string Narrow(const wchar_t* text) {
+    int length = WideCharToMultiByte(CP_UTF8, 0, text, -1, nullptr, 0, nullptr, nullptr);
+    if (length <= 1)
+        return std::string();
+    std::string narrow(static_cast<size_t>(length - 1), '\0');
+    WideCharToMultiByte(CP_UTF8, 0, text, -1, narrow.data(), length, nullptr, nullptr);
+    return narrow;
+}
+
+// The stored spelling of an existing entry of directory named like
+// component in any case, or empty. Windows matches the case itself.
+std::string HostExactName(const std::string& directory, const std::string& component) {
+    if (component.find_first_of("*?") != std::string::npos)
+        return std::string();
+    WIN32_FIND_DATAW found;
+    HANDLE handle = FindFirstFileW(Wide(directory + "\\" + component).c_str(), &found);
+    if (handle == INVALID_HANDLE_VALUE)
+        return std::string();
+    FindClose(handle);
+    return Narrow(found.cFileName);
+}
+
+HostKind HostStat(const std::string& path) {
+    DWORD attributes = GetFileAttributesW(Wide(path).c_str());
+    if (attributes == INVALID_FILE_ATTRIBUTES)
+        return HOST_MISSING;
+    return (attributes & FILE_ATTRIBUTE_DIRECTORY) != 0 ? HOST_DIRECTORY : HOST_FILE;
+}
+
+std::vector<std::string> HostList(const std::string& directory) {
+    std::vector<std::string> names;
+    WIN32_FIND_DATAW found;
+    HANDLE handle = FindFirstFileW(Wide(directory + "\\*").c_str(), &found);
+    if (handle == INVALID_HANDLE_VALUE)
+        return names;
+    do {
+        if (wcscmp(found.cFileName, L".") != 0 && wcscmp(found.cFileName, L"..") != 0)
+            names.push_back(Narrow(found.cFileName));
+    } while (FindNextFileW(handle, &found));
+    FindClose(handle);
+    return names;
+}
+
+bool HostMakeDirectory(const std::string& path) {
+    return CreateDirectoryW(Wide(path).c_str(), nullptr) || GetLastError() == ERROR_ALREADY_EXISTS;
+}
+
+int HostOpen(const std::string& path, int flags) {
+    int file = -1;
+    if (_wsopen_s(&file, Wide(path).c_str(), flags | _O_BINARY | _O_NOINHERIT, _SH_DENYNO,
+                  _S_IREAD | _S_IWRITE)
+        != 0)
+        return -1;
+    return file;
+}
+
+// Readers keep reading the old file until the new one, complete and flushed,
+// takes its name in one step.
+bool HostReplace(const std::string& path, const void* data, i32 count) {
+    std::wstring target = Wide(path);
+    std::wstring temporary = target + L".partial";
+    HANDLE file = CreateFileW(temporary.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS,
+                              FILE_ATTRIBUTE_NORMAL, nullptr);
+    if (file == INVALID_HANDLE_VALUE)
+        return false;
+    DWORD written = 0;
+    bool ok = count >= 0
+              && (count == 0
+                  || (WriteFile(file, data, static_cast<DWORD>(count), &written, nullptr)
+                      && written == static_cast<DWORD>(count)))
+              && FlushFileBuffers(file);
+    ok = CloseHandle(file) && ok;
+    if (ok)
+        ok = MoveFileExW(temporary.c_str(), target.c_str(),
+                         MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH)
+             != 0;
+    if (!ok)
+        DeleteFileW(temporary.c_str());
+    return ok;
+}
+
+#define HOST_READ _read
+#define HOST_WRITE _write
+#define HOST_CLOSE _close
+#define HOST_SEEK _lseeki64
+
+// A host path (from the command line, the environment or the port) is a
+// drive path "X:\..." or "X:/...", a UNC path "\\server\..." or a path from
+// the current drive's root "/...".
+bool IsHostPath(const char* path) {
+    if (isalpha(static_cast<u8>(path[0])) && path[1] == ':' && (path[2] == '\\' || path[2] == '/'))
+        return true;
+    return path[0] == '/' || (path[0] == '\\' && path[1] == '\\');
+}
+
+#else
+
+HostKind HostStat(const std::string& path) {
+    struct stat info;
+    if (stat(path.c_str(), &info) != 0)
+        return HOST_MISSING;
+    return S_ISDIR(info.st_mode) ? HOST_DIRECTORY : S_ISREG(info.st_mode) ? HOST_FILE : HOST_MISSING;
+}
+
+// The entry of directory spelt exactly like component, or empty.
+std::string HostExactName(const std::string& directory, const std::string& component) {
+    struct stat info;
+    if (stat((directory + "/" + component).c_str(), &info) != 0)
+        return std::string();
+    return component;
+}
+
+std::vector<std::string> HostList(const std::string& directory) {
     std::vector<std::string> names;
     DIR* handle = opendir(directory.c_str());
     if (handle == nullptr)
@@ -275,18 +416,60 @@ std::vector<std::string> ListDirectory(const std::string& directory) {
             names.emplace_back(entry->d_name);
     }
     closedir(handle);
+    return names;
+}
+
+bool HostMakeDirectory(const std::string& path) {
+    return mkdir(path.c_str(), 0755) == 0 || errno == EEXIST;
+}
+
+int HostOpen(const std::string& path, int flags) {
+    return open(path.c_str(), flags | O_CLOEXEC, 0644);
+}
+
+// Readers keep reading the old file until the new one, complete and flushed,
+// takes its name in one step.
+bool HostReplace(const std::string& path, const void* data, i32 count) {
+    std::string temporary = path + ".partial";
+    int file = open(temporary.c_str(), O_WRONLY | O_CREAT | O_TRUNC | O_CLOEXEC, 0644);
+    if (file < 0)
+        return false;
+    bool ok = FileWriteExact(file, data, count) && fsync(file) == 0;
+    ok = close(file) == 0 && ok;
+    if (ok)
+        ok = rename(temporary.c_str(), path.c_str()) == 0;
+    if (!ok)
+        unlink(temporary.c_str());
+    return ok;
+}
+
+#define HOST_READ read
+#define HOST_WRITE write
+#define HOST_CLOSE close
+#define HOST_SEEK lseek
+
+// A host path (from the command line, the environment or the port) starts
+// at the root.
+bool IsHostPath(const char* path) {
+    return path[0] == '/';
+}
+
+#endif
+
+std::vector<std::string> ListDirectory(const std::string& directory) {
+    std::vector<std::string> names = HostList(directory);
     // Directory order is not stable across file systems; the game sees sorted names.
     std::sort(names.begin(), names.end());
     return names;
 }
 
 // The host name of component inside directory: the exact spelling when it
-// exists, else the first case-insensitive match in sorted order, else empty.
+// exists (on Windows, the stored spelling of the case-insensitive match),
+// else the first case-insensitive match in sorted order, else empty.
 std::string FindComponent(const std::string& directory, const std::string& component) {
-    struct stat info;
-    std::string exact = directory + "/" + component;
-    if (stat(exact.c_str(), &info) == 0)
-        return component;
+    std::string exact = HostExactName(directory, component);
+    if (!exact.empty())
+        return exact;
     for (const std::string& name : ListDirectory(directory)) {
         if (SameIgnoringCase(name, component.c_str()))
             return name;
@@ -316,11 +499,11 @@ bool SplitGamePath(const char* path, std::vector<std::string>& components) {
 bool Resolve(const char* path, FileOpenMode mode, std::string& out) {
     if (path == nullptr || path[0] == '\0')
         return false;
-    // A host path (from the command line or the environment) is used as given.
-    if (path[0] == '/') {
+    if (IsHostPath(path)) {
         out = path;
         return true;
     }
+    // A drive letter in a game path ("C:\WINDOWS", "C:FILE") leaves the game folder.
     if (isalpha(static_cast<u8>(path[0])) && path[1] == ':')
         return false;
     std::vector<std::string> components;
@@ -334,7 +517,7 @@ bool Resolve(const char* path, FileOpenMode mode, std::string& out) {
             if (mode != FILE_OPEN_WRITE)
                 return false;
             name = components[i];
-            if (!last && mkdir((resolved + "/" + name).c_str(), 0755) != 0 && errno != EEXIST)
+            if (!last && !HostMakeDirectory(resolved + "/" + name))
                 return false;
         }
         resolved += "/";
@@ -356,7 +539,9 @@ i32 gNextFind = 1;
 
 void FileSetRoot(const char* directory) {
     gRoot = directory != nullptr && directory[0] != '\0' ? directory : ".";
-    while (gRoot.size() > 1 && gRoot.back() == '/')
+    // Trailing separators go, but not the one of a root ("/", "C:\").
+    while (gRoot.size() > 1 && (gRoot.back() == '/' || gRoot.back() == '\\')
+           && !(gRoot.size() == 3 && gRoot[1] == ':'))
         gRoot.pop_back();
 }
 
@@ -379,32 +564,29 @@ i32 FileOpen(const char* path, FileOpenMode mode) {
     std::string resolved;
     if (!Resolve(path, mode, resolved))
         return FILE_INVALID;
+    if (HostStat(resolved) == HOST_DIRECTORY)
+        return FILE_INVALID;
     int flags = O_RDONLY;
     if (mode == FILE_OPEN_WRITE)
         flags = O_WRONLY | O_CREAT | O_TRUNC;
     else if (mode == FILE_OPEN_UPDATE)
         flags = O_RDWR;
-    int file = open(resolved.c_str(), flags | O_CLOEXEC, 0644);
+    int file = HostOpen(resolved, flags);
     if (file < 0)
         return FILE_INVALID;
-    struct stat info;
-    if (fstat(file, &info) != 0 || S_ISDIR(info.st_mode)) {
-        close(file);
-        return FILE_INVALID;
-    }
     return file;
 }
 
 void FileClose(i32 file) {
     if (file != FILE_INVALID)
-        close(file);
+        HOST_CLOSE(file);
 }
 
 i32 FileRead(i32 file, void* buffer, i32 count) {
     if (count < 0)
         return -1;
     for (;;) {
-        ssize_t moved = read(file, buffer, static_cast<size_t>(count));
+        auto moved = HOST_READ(file, buffer, static_cast<unsigned>(count));
         if (moved < 0 && errno == EINTR)
             continue;
         return static_cast<i32>(moved);
@@ -415,7 +597,7 @@ i32 FileWrite(i32 file, const void* buffer, i32 count) {
     if (count < 0)
         return -1;
     for (;;) {
-        ssize_t moved = write(file, buffer, static_cast<size_t>(count));
+        auto moved = HOST_WRITE(file, buffer, static_cast<unsigned>(count));
         if (moved < 0 && errno == EINTR)
             continue;
         return static_cast<i32>(moved);
@@ -424,7 +606,7 @@ i32 FileWrite(i32 file, const void* buffer, i32 count) {
 
 i32 FileSeek(i32 file, i32 offset, FileSeekOrigin origin) {
     int whence = origin == FILE_SEEK_END ? SEEK_END : origin == FILE_SEEK_CUR ? SEEK_CUR : SEEK_SET;
-    off_t position = lseek(file, offset, whence);
+    auto position = HOST_SEEK(file, offset, whence);
     if (position < 0 || position > 0x7fffffff)
         return -1;
     return static_cast<i32>(position);
@@ -438,17 +620,7 @@ bool FileReplace(const char* path, const void* data, i32 count) {
     std::string resolved;
     if (!Resolve(path, FILE_OPEN_WRITE, resolved))
         return false;
-    std::string temporary = resolved + ".partial";
-    int file = open(temporary.c_str(), O_WRONLY | O_CREAT | O_TRUNC | O_CLOEXEC, 0644);
-    if (file < 0)
-        return false;
-    bool ok = FileWriteExact(file, data, count) && fsync(file) == 0;
-    ok = close(file) == 0 && ok;
-    if (ok)
-        ok = rename(temporary.c_str(), resolved.c_str()) == 0;
-    if (!ok)
-        unlink(temporary.c_str());
-    return ok;
+    return HostReplace(resolved, data, count);
 }
 
 i32 FileFindFirst(const char* pattern, FileFindData* data) {
@@ -466,9 +638,8 @@ i32 FileFindFirst(const char* pattern, FileFindData* data) {
         return FILE_INVALID;
     FindState state;
     for (const std::string& name : ListDirectory(directory)) {
-        struct stat info;
-        if (stat((directory + "/" + name).c_str(), &info) == 0 && S_ISREG(info.st_mode)
-            && name.size() < sizeof(data->name) && FileNameMatches(namePattern.c_str(), name.c_str()))
+        if (HostStat(directory + "/" + name) == HOST_FILE && name.size() < sizeof(data->name)
+            && FileNameMatches(namePattern.c_str(), name.c_str()))
             state.names.push_back(name);
     }
     if (state.names.empty())

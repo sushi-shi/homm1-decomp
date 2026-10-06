@@ -3,7 +3,12 @@
 #include <cstdarg>
 #include <cstdio>
 #include <cstdlib>
+#if defined(_WIN32)
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#else
 #include <sys/stat.h>
+#endif
 
 namespace platform {
 
@@ -12,12 +17,37 @@ namespace {
 bool gStarted = false;
 Uint64 gTickBase = 0;
 
+#if defined(_WIN32)
+// The programs are Windows GUI programs, which start without a console. The
+// log goes where the standard error already points (a redirection), else to
+// the console of the command prompt that started the program, else to
+// homm1.log in the settings folder.
+void OpenLog() {
+    HANDLE error = GetStdHandle(STD_ERROR_HANDLE);
+    if (error != nullptr && error != INVALID_HANDLE_VALUE)
+        return;
+    if (AttachConsole(ATTACH_PARENT_PROCESS)) {
+        if (std::freopen("CONOUT$", "w", stderr) != nullptr)
+            return;
+    }
+    std::string path = ConfigDirectory() + "homm1.log";
+    int length = MultiByteToWideChar(CP_UTF8, 0, path.c_str(), -1, nullptr, 0);
+    std::wstring wide(static_cast<size_t>(length > 0 ? length : 1), L'\0');
+    MultiByteToWideChar(CP_UTF8, 0, path.c_str(), -1, wide.data(), length);
+    if (_wfreopen(wide.c_str(), L"w", stderr) != nullptr)
+        std::setvbuf(stderr, nullptr, _IONBF, 0);
+}
+#endif
+
 }  // namespace
 
 bool Startup(const StartupOptions& options) {
     (void)options;
     if (gStarted)
         return true;
+#if defined(_WIN32)
+    OpenLog();
+#endif
     if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS)) {
         Log("SDL_Init failed: %s", SDL_GetError());
         return false;
@@ -44,8 +74,43 @@ std::string ExecutableDirectory() {
     return base != nullptr ? std::string(base) : std::string("./");
 }
 
+namespace {
+
+// $HOMM1_CONFIG (for tests and portable installs), with a trailing separator
+// and created, or empty.
+std::string OverriddenConfigDirectory() {
+    std::string directory = Environment("HOMM1_CONFIG");
+    if (directory.empty())
+        return directory;
+    if (directory.back() != '/' && directory.back() != '\\')
+        directory += '/';
+    SDL_CreateDirectory(directory.c_str());
+    return directory;
+}
+
+}  // namespace
+
+#if defined(_WIN32)
+
+// %APPDATA%\homm1\, created by SDL.
 std::string ConfigDirectory() {
-    std::string directory;
+    std::string overridden = OverriddenConfigDirectory();
+    if (!overridden.empty())
+        return overridden;
+    char* path = SDL_GetPrefPath(nullptr, "homm1");
+    if (path == nullptr)
+        return std::string(".\\");
+    std::string directory = path;
+    SDL_free(path);
+    return directory;
+}
+
+#else
+
+std::string ConfigDirectory() {
+    std::string directory = OverriddenConfigDirectory();
+    if (!directory.empty())
+        return directory;
     std::string xdg = Environment("XDG_CONFIG_HOME");
     std::string home = Environment("HOME");
     if (!xdg.empty())
@@ -63,8 +128,15 @@ std::string ConfigDirectory() {
     return directory;
 }
 
+#endif
+
 std::string Environment(const char* name) {
+#if defined(_WIN32)
+    // SDL keeps a UTF-8 copy of Windows' UTF-16 environment.
+    const char* value = SDL_getenv(name);
+#else
     const char* value = std::getenv(name);
+#endif
     return value != nullptr ? std::string(value) : std::string();
 }
 

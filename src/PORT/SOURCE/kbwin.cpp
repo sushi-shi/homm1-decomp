@@ -33,7 +33,6 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <fstream>
 #include <map>
 #include <sstream>
 #include <string>
@@ -72,9 +71,21 @@ std::string SettingsPath() {
 
 std::map<std::string, std::string> LoadSettings() {
     std::map<std::string, std::string> values;
-    std::ifstream file(SettingsPath());
+    // The path is a host path (UTF-8); the file layer opens it on every host.
+    std::string text;
+    i32 file = FileOpen(SettingsPath().c_str(), FILE_OPEN_READ);
+    if (file != FILE_INVALID) {
+        char buffer[4096];
+        i32 moved;
+        while ((moved = FileRead(file, buffer, sizeof(buffer))) > 0)
+            text.append(buffer, static_cast<size_t>(moved));
+        FileClose(file);
+    }
+    std::istringstream lines(text);
     std::string line;
-    while (std::getline(file, line)) {
+    while (std::getline(lines, line)) {
+        if (!line.empty() && line.back() == '\r')
+            line.pop_back();
         size_t split = line.find('=');
         if (split == std::string::npos || line.empty() || line[0] == '#')
             continue;
@@ -150,7 +161,8 @@ bool ResolvesUnder(const std::string& directory, const char* path) {
 }
 
 // The game folder: --data, $HOMM1_DATA, beside the executable, the current
-// directory, then the folder `nix run .#play` installs to.
+// directory, then the folder `nix run .#play` installs to (on Windows,
+// %LOCALAPPDATA%\homm1-buka\game).
 std::string FindGameRoot(const std::string& requested) {
     std::vector<std::string> candidates;
     if (!requested.empty())
@@ -160,12 +172,18 @@ std::string FindGameRoot(const std::string& requested) {
         candidates.push_back(environment);
     candidates.push_back(platform::ExecutableDirectory());
     candidates.push_back(".");
+#if defined(_WIN32)
+    std::string local = platform::Environment("LOCALAPPDATA");
+    if (!local.empty())
+        candidates.push_back(local + "\\homm1-buka\\game");
+#else
     std::string xdg = platform::Environment("XDG_DATA_HOME");
     std::string home = platform::Environment("HOME");
     if (!xdg.empty())
         candidates.push_back(xdg + "/homm1-buka/game");
     if (!home.empty())
         candidates.push_back(home + "/.local/share/homm1-buka/game");
+#endif
     for (const std::string& candidate : candidates) {
         if (ResolvesUnder(candidate, "DATA\\HEROES.AGG"))
             return candidate;
@@ -532,13 +550,8 @@ void WritePrefs(void) {
     for (const SettingField& field : IntegerSettings())
         text << field.name << '=' << *field.value << '\n';
     text << "HMM1 ModemInitString=" << gConfig.modemInitString << '\n';
-    std::string path = SettingsPath();
-    std::string temporary = path + ".tmp";
-    std::ofstream file(temporary, std::ios::trunc);
-    file << text.str();
-    file.close();
-    if (file)
-        std::rename(temporary.c_str(), path.c_str());
+    std::string contents = text.str();
+    FileReplace(SettingsPath().c_str(), contents.data(), static_cast<i32>(contents.size()));
 }
 
 // ---------------------------------------------------------------- CD

@@ -5,7 +5,6 @@
 #include <cstdlib>
 #include <cstring>
 #include <deque>
-#include <fstream>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -371,16 +370,22 @@ void CaptureMouse(bool capture) {
 // Each line: a millisecond offset from the first event poll, an action and
 // its arguments. Blank lines and lines starting with # are skipped.
 void LoadInputReplay(const char* hostPath) {
-    std::ifstream file(hostPath);
-    if (!file) {
+    // SDL opens UTF-8 host paths on every host.
+    size_t size = 0;
+    void* contents = SDL_LoadFile(hostPath, &size);
+    if (contents == nullptr) {
         Log("cannot read input replay %s", hostPath);
         return;
     }
+    std::istringstream file(std::string(static_cast<const char*>(contents), size));
+    SDL_free(contents);
     std::string text;
     int number = 0;
     u32 previous = 0;
     while (std::getline(file, text)) {
         number++;
+        if (!text.empty() && text.back() == '\r')
+            text.pop_back();
         std::istringstream line(text);
         ReplayAction action;
         action.line = number;
