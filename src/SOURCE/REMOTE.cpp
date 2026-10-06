@@ -916,12 +916,13 @@ RemoteMessage* GetRemoteData(i8 remove) {
     return NULL;
 }
 
+#define queueFull newFull // frame-slot spelling
 VA(0x004535af, 0x46c)
 void PollRemote(void) {
     DATA(0x004cc828)
     static i8 gInTimeoutFail = 0;
-    i8 newControl;
-    i8 newFull;
+    i8 peerHadControl;
+    i8 queueFull;
     i32 i;
     i32 numQueued;
     i32 result;
@@ -935,7 +936,7 @@ void PollRemote(void) {
     if (gInNetSetup)
         return;
     numQueued = 0;
-    newFull = 0;
+    queueFull = 0;
     if (KBTickCount() - gLastHeartbeatSend > 5000) {
         gSendMessage.sender = gThisNetPos;
         gSendMessage.type = REMOTE_MESSAGE_HEARTBEAT;
@@ -953,16 +954,16 @@ void PollRemote(void) {
             gInTimeoutFail = 1;
             if (gHumanPlayer[gCurPlayer]) {
                 if (gCurPlayer == gThisGamePos)
-                    newControl = 0;
+                    peerHadControl = 0;
                 else
-                    newControl = 1;
+                    peerHadControl = 1;
             } else {
                 if (gThisGamePos == gHostGamePos)
-                    newControl = 0;
+                    peerHadControl = 0;
                 else
-                    newControl = 1;
+                    peerHadControl = 1;
             }
-            ReceiveRemotePlayerExit(1 - gThisGamePos, newControl, 0, 1);
+            ReceiveRemotePlayerExit(1 - gThisGamePos, peerHadControl, 0, 1);
         }
     }
     for (i = 0; i < REMOTE_QUEUE_CAPACITY; i++) {
@@ -970,7 +971,7 @@ void PollRemote(void) {
             numQueued++;
     }
     if (numQueued == REMOTE_QUEUE_CAPACITY)
-        newFull = 1;
+        queueFull = 1;
     result = 1;
     while (result) {
     nextIncoming:
@@ -992,7 +993,7 @@ void PollRemote(void) {
                     gCurHourGlassPhase = REMOTE_MESSAGE(gReceiveIn)->command - gCurPlayer * 16;
                 }
                 goto done;
-            } else if (newFull) {
+            } else if (queueFull) {
                 goto done;
             }
             if (REMOTE_MESSAGE(gReceiveIn)->type == REMOTE_MESSAGE_RELIABLE) {
@@ -1031,6 +1032,7 @@ void PollRemote(void) {
     }
 done:;
 }
+#undef queueFull
 
 VA(0x00453a1b, 0x114)
 i32 TransmitAndWait(

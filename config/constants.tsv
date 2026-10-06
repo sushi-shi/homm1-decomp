@@ -490,8 +490,8 @@ src/SOURCE/REMOTE.cpp	*	1	trivial-function-literal	1 store payloadSize	a flag, c
 src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 array-index data	the first or second element of a local buffer, table or slot pair
 src/SOURCE/REMOTE.cpp	*	1	trivial-function-literal	1 store data[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/REMOTE.cpp	*	1	trivial-function-literal	1 store gInTimeoutFail	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 store newControl	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/REMOTE.cpp	*	1	trivial-function-literal	1 store newControl	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 store peerHadControl	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	1	trivial-function-literal	1 store peerHadControl	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/REMOTE.cpp	*	1	trivial-function-literal	1 equality payloadSize	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
 src/SOURCE/REMOTE.cpp	*	1	trivial-function-literal	1 equality data[[][]]	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
 src/SOURCE/REMOTE.cpp	*	1	trivial-function-literal	1 store gRemoteReady	a flag, counter or index local/field set to 0 or 1

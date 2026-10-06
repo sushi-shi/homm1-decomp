@@ -133,3 +133,7 @@ local-aliased	SetupCDDrive	activeKeyVal	key	the registry key handle
 local-aliased	oldmain	gameDone	creditsDone	ends the credits screen loop only
 local-aliased	RecruitHeroHandler	pos	heroSlot	which of the two offered heroes is viewed
 local-aliased	ShowCongrats	ii	labelIndex	the score label row
+local	PollRemote	newControl	peerHadControl	ReceiveRemotePlayerExit's hadControl: the timed-out peer held the turn
+local-aliased	PollRemote	newFull	queueFull	set when all receive-queue slots are taken
+local	NormalDialog	amounts/sizedHeight/resCenterX	labelTexts/imageHeight/imageCenterX	the caption under each image (an amount, spell name or nothing) and the image geometry
+local-aliased	NormalDialog	resWidth/resourcePanel/captionText/msg	imageWidth/imageWidget/labelWidget/message	image widget, its caption widget and the widget message
