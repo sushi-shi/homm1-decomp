@@ -23,6 +23,7 @@
 #include <SOURCE/advManager.h>
 #include <SOURCE/army.h>
 #include <SOURCE/artifactTypes.h>
+#include <SOURCE/campaignTypes.h>
 #include <SOURCE/combatManager.h>
 #include <SOURCE/creatureTypes.h>
 #include <SOURCE/EVENTS.h>
@@ -416,6 +417,34 @@ void StrayTownsUnderMonsters() {
     NewGame("AES31000.MAP");
 }
 
+
+// The campaign's crests were read one entry late: the enemy lord of
+// scenarios 5-8 never got the crest the scenario names.
+void CampaignLordCrest() {
+    i32 savedType = gGame->m_campaignType;
+    i32 savedScenario = gGame->m_campaignScenario;
+    i8 savedCount = gGame->m_playerCount;
+    i16 savedColors[GAME_PLAYER_COUNT];
+    for (int i = 0; i < GAME_PLAYER_COUNT; i++)
+        savedColors[i] = gGame->m_players[i].m_color;
+    bool named = true;
+    for (int scenario = CAMPAIGN_SCENARIO_5; scenario <= CAMPAIGN_SCENARIO_8; scenario++) {
+        gGame->m_campaignType = CAMPAIGN_IRONFIST;
+        gGame->m_campaignScenario = scenario;
+        gGame->m_playerCount = GAME_PLAYER_COUNT;
+        i16 lord = gCampaignScenarios[scenario].playerCrests[0];
+        gGame->m_players[0].m_color = lord == PLAYER_COLOR_BLUE ? PLAYER_COLOR_GREEN : PLAYER_COLOR_BLUE;
+        gGame->RandomizePlayerCrests();
+        named = named && gGame->m_players[1].m_color == lord;
+    }
+    Expect(named, "the enemy lord of campaign scenarios 5-8 has the scenario's crest");
+    gGame->m_campaignType = savedType;
+    gGame->m_campaignScenario = savedScenario;
+    gGame->m_playerCount = savedCount;
+    for (int i = 0; i < GAME_PLAYER_COUNT; i++)
+        gGame->m_players[i].m_color = savedColors[i];
+}
+
 }  // namespace
 
 int main() {
@@ -458,6 +487,7 @@ int main() {
     ComputerCampfireAndFullHero();
     SummonBoatOnTheEdge();
     StrayTownsUnderMonsters();
+    CampaignLordCrest();
     std::string cleanup = "rm -r '" + config + "'";
     if (std::system(cleanup.c_str()) != 0)
         std::fprintf(stderr, "could not remove %s\n", config.c_str());

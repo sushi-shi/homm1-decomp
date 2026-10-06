@@ -5062,6 +5062,7 @@ void game::ShowScenInfo(void) {
 
 void game::RandomizePlayerCrests(void) {
     i32 i;
+    i32 crest;
     i8 taken[PLAYER_COLOR_COUNT];
     taken[PLAYER_COLOR_BLUE] = 0;
     taken[PLAYER_COLOR_GREEN] = 0;
@@ -5069,18 +5070,19 @@ void game::RandomizePlayerCrests(void) {
     taken[PLAYER_COLOR_YELLOW] = 0;
     taken[m_players[0].m_color] = 1;
     for (i = 1; i < m_playerCount; i++) {
-        do {
-            // The table has crests for three players; for the fourth the
-            // original read the next field (the first starting resource, 30
-            // in every scenario), which is no crest, so the crest is random.
-            if (m_campaignType > 0 && i < 3
-                && (gCampaignScenarios[m_campaignScenario].playerCrests[i]) < PLAYER_COLOR_COUNT
-                && gCampaignScenarios[m_campaignScenario].playerCrests[i] >= 0)
-                m_players[i].m_color = (gCampaignScenarios[m_campaignScenario].playerCrests[i]);
-            else
-                m_players[i].m_color = (Random( PLAYER_COLOR_BLUE, PLAYER_COLOR_YELLOW ));
-        } while (taken[m_players[i].m_color] == 1);
-        taken[m_players[i].m_color] = 1;
+        // A campaign scenario names the crests of the players after the
+        // first (the enemy lords'); a crest it leaves open, or one already
+        // taken, is drawn at random.
+        crest = PLAYER_COLOR_NONE;
+        if (m_campaignType > 0 && i - 1 < CAMPAIGN_CREST_COUNT)
+            crest = gCampaignScenarios[m_campaignScenario].playerCrests[i - 1];
+        if (crest < PLAYER_COLOR_BLUE || crest >= PLAYER_COLOR_COUNT || taken[crest] == 1) {
+            do
+                crest = Random(PLAYER_COLOR_BLUE, PLAYER_COLOR_YELLOW);
+            while (taken[crest] == 1);
+        }
+        m_players[i].m_color = crest;
+        taken[crest] = 1;
     }
 }
 
