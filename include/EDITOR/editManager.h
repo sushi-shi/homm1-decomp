@@ -10,6 +10,7 @@
 #include <BASE/baseManager.h>
 #include <Domains.h>
 #include <H1/Macros.h>
+#include <SOURCE/KB.h>
 
 class font;
 class heroWindow;
@@ -40,14 +41,17 @@ struct editMapCell {
     u8 unknown5;
     u8 unknown6;
     u8 unknown7;
-    u8 unknown8;
-    u8 unknown9;
+    // The object on the cell (eventsManager tells towns, monsters and
+    // heroes apart by it).
+    u8 objectType;
+    // A town's or hero's map-extra record index, or a monster count.
+    u8 objectIndex;
 };
 
 // A per-cell word pair the map reset clears.
 struct editMapCellPair {
-    i16 first;
-    i16 second;
+    u16 first;
+    u16 second;
 };
 
 class editManager : public baseManager {
@@ -58,7 +62,8 @@ public:
     // The bottom bar's status text is drawn with this font.
     font* m_statusFont;
     u8 m_unknown3a[0xc8];
-    i8 m_unknown102;
+    // The map view shows 16-pixel cells (28 per side) instead of 32-pixel ones.
+    u8 m_zoomed;
     // clearManager sets it after changing the map.
     i16 m_mapChanged;
     // The map cell of the last placed object (-1: none); the tools reset it
@@ -76,14 +81,19 @@ public:
     editMapCellPair m_cellPairs[EDIT_MANAGER_MAP_SIZE][EDIT_MANAGER_MAP_SIZE];
     u8 m_unknown11c97[0x11b80];
     i32 m_unknown23817;
-    u8 m_unknown2381b[0x1c38];
+    u8 m_unknown2381b[0x3fc];
+    // The map's extra records (towns, heroes), addressed by a cell's
+    // objectIndex.
+    void* m_mapExtra[MAP_EXTRA_RECORD_CAPACITY];
+    u8 m_unknown24013[0x1440];
     // The map cell shown at the view's top-left corner.
     i16 m_viewX;
     i16 m_viewY;
     // The map cell under the cursor.
     i16 m_cursorX;
     i16 m_cursorY;
-    u8 m_unknown2545b[0x10];
+    // The map's four-character file code (MapDetailsDialog edits it).
+    char m_mapCode[0x10];
     i16 m_dispatchMask;
 
     editManager(void);

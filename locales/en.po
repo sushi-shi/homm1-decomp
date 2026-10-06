@@ -342,6 +342,30 @@ msgstr "Heroes requires 256 color mode or higher.\n\nTo change color mode, right
 msgid "editor.clear.options.help"
 msgstr "Provides finer control over which objects are removed."
 
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.cell.unavailable"
+msgstr "Information is available only for cells with heroes, monsters or town and castle gates."
+
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.hero.troop_type.range"
+msgstr "Must be between 0 and 27"
+
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.monster.count.range"
+msgstr "Must be between 0 and 127.  (0 lets the computer choose the number at random.)"
+
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.town.mage_guild.range"
+msgstr "Must be between 1 and 4"
+
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.town.old_editor"
+msgstr "A town placed by the old editor cannot be edited"
+
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.town.troop_type.range"
+msgstr "Must be between 0 and 27"
+
 #: src/SOURCE/kbwin.cpp
 msgid "editor.instance.event_name"
 msgstr "Heroes Editor"

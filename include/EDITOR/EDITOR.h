@@ -61,6 +61,25 @@ H1_ENUM_CONST_END(EditorToolHelpConstant)
 extern char* gTerrainToolHelp[];
 extern char* gClearToolHelp[];
 
+// The random map generator's slider rows.
+H1_ENUM_CONST_BEGIN(EditorGeneratorConstant)
+    EDITOR_GENERATOR_TERRAIN_COUNT = 7,
+    EDITOR_GENERATOR_DENSITY_COUNT = 5
+H1_ENUM_CONST_END(EditorGeneratorConstant)
+
+// The cell an eventsManager dialog edits, and the dialog's window.
+extern struct editMapCell* gEditCell;
+extern class heroWindow* gEditDialog;
+// The edited map's header (difficulty, size, name and description).
+extern struct SMapHeader* gMapHeader;
+// The random map generator's settings (editnew.bin): the share of each
+// terrain and the density of each object class, in percent; whether towns are
+// scattered rather than centred; whether the map is saved unseen.
+extern double gTerrainPercent[EDITOR_GENERATOR_TERRAIN_COUNT];
+extern double gDensityPercent[EDITOR_GENERATOR_DENSITY_COUNT];
+extern i32 gScatterTowns;
+extern i32 gSaveUnseen;
+
 void ShowStatusText(char* text);
 void ClearStatusText(void);
 

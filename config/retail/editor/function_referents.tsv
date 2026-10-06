@@ -34,7 +34,18 @@ rva	name	provenance
 0x00009241	?HandleAppSpecificMenuCommands@@YAHH@Z	callee of placed SOURCE/kbwin body at site 0xd726; game callee 0x4238b
 0x00009278	?EarlyResizeWindow@@YAXHHHH@Z	callee of a body compiled for this image from shared source
 0x0000927d	?UpdateSystemOptionsMenu@@YAXXZ	callee of a body compiled for this image from shared source
+0x000097fb	?EditCell@eventsManager@@QAEXFF@Z	callee of a body compiled for this image from shared source
+0x00009f63	?EditTown@eventsManager@@QAEXFF@Z	callee of a body compiled for this image from shared source
+0x0000a11a	?UpdateTownWindow@eventsManager@@QAEXPAUeditTownExtra@@@Z	callee of a body compiled for this image from shared source
+0x0000a7f4	?EditMonster@eventsManager@@QAEXFF@Z	callee of a body compiled for this image from shared source
+0x0000ab25	?EditHero@eventsManager@@QAEXFF@Z	callee of a body compiled for this image from shared source
+0x0000acad	?UpdateHeroWindow@eventsManager@@QAEXPAUeditHeroExtra@@@Z	callee of a body compiled for this image from shared source
 0x0000b329	?ClearOptionsDialog@@YAHXZ	callee of a body compiled for this image from shared source
+0x0000b460	?UpdateClearWindow@@YAXXZ	callee of a body compiled for this image from shared source
+0x0000b7cc	?UpdateMapDetailsWindow@@YAXXZ	callee of a body compiled for this image from shared source
+0x0000c05e	?UpdateNewMapWindow@@YAXXZ	callee of a body compiled for this image from shared source
+0x0000c17a	?BalanceTerrainPercents@@YAXH@Z	callee of a body compiled for this image from shared source
+0x0000c705	?DragNewMapSlider@@YAXHH@Z	callee of a body compiled for this image from shared source
 0x000192b4	?RandomizeTiles@terrainManager@@QAEXXZ	callee of a body compiled for this image from shared source
 0x00019404	?SelectTerrain@terrainManager@@QAEXF@Z	callee of a body compiled for this image from shared source
 0x0001b320	_CloseHandle@4	FF25 thunk of KERNEL32.DLL!CloseHandle; name of game thunk 0x68616
@@ -164,6 +175,7 @@ rva	name	provenance
 0x00029be5	_toupper	callee of a body compiled for this image from shared source
 0x00029c54	__toupper_lk	masked-exact libcmt.lib:/509 (dna_bands.tsv)
 0x00029d20	_atol	masked-exact libcmt.lib:/152 (dna_bands.tsv)
+0x00029dab	_atoi	callee of a body compiled for this image from shared source
 0x00029db6	__atoi64	masked-exact libcmt.lib:/152 (dna_bands.tsv)
 0x00029e70	_strncpy	game 0x78f60: masked game body 0x78f60 (254 bytes, 1 fields masked) unique at a census start
 0x00029f6e	_srand	callee of placed SOURCE/kbwin body at site 0xce49; game callee 0x78dec

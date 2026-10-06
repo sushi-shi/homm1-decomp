@@ -342,6 +342,30 @@ msgstr "Для героев требуется режим 256 цветов эк�
 msgid "editor.clear.options.help"
 msgstr "Обеспечивает более детальное управление процессом удаления объектов."
 
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.cell.unavailable"
+msgstr "Информация доступна только для клеток с героями, монстрами или ворот городов и замков."
+
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.hero.troop_type.range"
+msgstr "Должно быть между 0 и 27"
+
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.monster.count.range"
+msgstr "Должно быть между 0 и 127.  (0 позволяет компьютеру определить число случайно.)"
+
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.town.mage_guild.range"
+msgstr "Должно быть между 1 и 4"
+
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.town.old_editor"
+msgstr "Невозможно редактировать город созданный старым редактором"
+
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.town.troop_type.range"
+msgstr "Должно быть между 0 и 27"
+
 #: src/SOURCE/kbwin.cpp
 msgid "editor.instance.event_name"
 msgstr "Редактор Героев"
