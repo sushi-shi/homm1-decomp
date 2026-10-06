@@ -179,28 +179,11 @@ public:
     i32 Damage(i32 damage);
     void PowEffect(i8 effect);
     u32 Strength(void);
-    i32 LeaveNoBody(void);
-    void ProcessDeath(i32 immediate);
     void SpellEffect(i16 effect, i32 frameDelay);
-    void CancelSpellType(i32 cancelType);
-    void CancelIndividualSpell(i32 influence);
-    i32 SetSpellInfluence(i32 influence, i32 rounds);
-    void DecrementSpellRounds(void);
     void GoBerserk(void);
     void MoveAttack(i32 hex, i32 moveOnly);
-    float SpellCastWorkChance(i32 spell);
-    i32 SpellCastWorks(i32 spell);
-    void DispelGood(void);
     // Undoes m_spellEffect when it expires.
     void CancelSpell(void);
-    void Cure(i32 amount);
-    i32 MidX(void);
-    i32 MidY(void);
-    i32 TopY(void);
-    i32 RightX(void);
-    i32 LeftX(void);
-    i32 OtherArmyAdjacent(i32 side, i32 index);
-    i32 GetPowBaseY(void);
     i16 CanFit(i16* hex);
     i16 ValidFlight(i16 destination, i8 useDestination);
     i16 FlyTo(void);

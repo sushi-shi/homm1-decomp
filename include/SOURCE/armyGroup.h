@@ -47,8 +47,6 @@ public:
     armyGroup(void);
     // --- methods ---
     void View(i32);
-    i32 HasAllUndead(void);
-    i32 HasSomeUndead(void);
     // HoMM1 retail: hero and town only (ret 8), morale in AX.
     i16 GetMorale(class hero* h, class town* t);
     void Dismiss(i8 slot);

@@ -59,15 +59,11 @@ public:
     // --- methods ---
     void ShowDebugText(char* text);
     void DoAllHeroInteractions(void);
-    void CheckForCreatureUpgrades(void);
     void CheckBuyStuff(void);
     i32 GoodAdjacent(class hero* pHero, i32* direction);
     void CheckReload(class hero* pHero);
     void CheckBerserk(class hero* pHero);
-    void DimensionDoorTo(i32 x, i32 y);
-    i32 DoAnywhereDDoorTownGate(i32 targetValue);
     i8 DoDimensionDoor(class hero* pHero);
-    void SetupRelativeHeroStrengths(void);
     void DoAI(i32 player);
     void GetGameAIVars(void);
     void GetTurnAIVars(i32 player);
@@ -180,26 +176,11 @@ public:
         float& attackerDamage,
         float& defenderDamage
     );
-    void HeroInteractionAtHero(
-        class hero* firstHero,
-        class hero* secondHero,
-        i32 evaluateOnly,
-        i32* value
-    );
     void HeroInteractionAtTown(
         class hero* heroPointer,
         class town* townPointer,
         i32 doInteraction,
         i32* value
-    );
-    void RedistributeTroops(
-        class armyGroup* sourceArmy,
-        class armyGroup* destinationArmy,
-        i32 preserveOne,
-        i32 preferFast,
-        i32 sourceStrength,
-        i32 destinationStrength,
-        i32 transferBudget
     );
     i32 ChooseGoldOrExperience(class hero* thisHero, i32 gold, i32 experience);
     void ChooseEvaluateBattle(
@@ -213,9 +194,7 @@ public:
         i32& outFlag,
         i32& outValue
     );
-    i32 ChooseToFightForArtifact(i32 artifact, i32 monster, i32 quantity);
     i32 ChooseToBuyArtifact(class hero*, i32 artifact, i32 goldCost);
-    i32 NetValueOfArtifact(i32 artifact, i32 goldCost, i32 resourceType, i32 resourceCost);
     i32 ChooseToPayRansomOnHero(class hero*, i32);
     void BuildBuilding(class town* townPointer, i16 building);
     void BuildHero(class town* townPointer, i16 availableHeroIndex);
@@ -227,21 +206,7 @@ public:
     float StatChangeValue(i32 oldValue, i32 newValue);
     void IncrementHourGlass(void);
     void TownEvent(class mapCell* cell, class hero* heroPointer, i32 x, i32 y);
-    i32 ComputeUpgradeValue(i32 baseCreatureType, i32 upgradedCreatureType);
-    i32 ComputeValueOfSS(class hero* heroPointer, i32 skill, i32 level);
-    i32 ComputeValueOfFreeSS(class hero* heroPointer, i32 skill);
-    i32 ManaRefreshValue(class hero* heroPointer, i32 level);
     i32 ValueOfEventAtPosition(class hero* pHero, i16 x, i16 y, i32 immediate, i32* liveChance);
-    i32 EvaluateGenericSite(class mapCell* cell);
-    i32 EvaluateBarrier(class mapCell* cell);
-    i32 EvaluatePassword(class mapCell* cell);
-    i32 EvaluateRecruitSite(class mapCell* cell);
-    i32 EvaluateJail(class mapCell*);
-    i32 EvaluateArtifactEvent(i32 artifact, i32 eventData);
-    i32 EvaluateMineEvent(i32 mineIndex, i32 x, i32 y, i32* liveChance);
-    i32 EvaluateMonsterEvent(i32 monsterType, i32 eventData, i32* liveChance);
-    i32 EvaluateHeroEvent(i32 heroId, i32 x, i32 y, i32 mode, i32* liveChance);
-    i32 EvaluateTownEvent(i32 townId, i32 x, i32 y, i32 mode, i32* liveChance);
 };
 extern i32 costTemp[];
 extern i32 iLastFrameRateTimer;
