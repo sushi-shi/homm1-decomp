@@ -44,6 +44,9 @@ H1_ENUM_CONST_BEGIN(AdventureManagerStorageConstant)
     ADVMGR_BOTTOM_VIEW_FOREGROUND = 1,
     ADVMGR_BOTTOM_VIEW_ICON_FIRST = 2,
     ADVMGR_BOTTOM_VIEW_HERO_TEXT_FIRST = 1,
+    // The other views' secondary slots: the message text, then a count.
+    ADVMGR_BOTTOM_VIEW_TEXT = 0,
+    ADVMGR_BOTTOM_VIEW_COUNT_TEXT = 1,
     ADVMGR_OBJECT_ICON_COUNT = 21,
     ADVMGR_PANEL_ICON_COUNT = 5,
     ADVMGR_ANIMATION_PHASE_COUNT = 4,
@@ -807,6 +810,9 @@ H1_ENUM_CONST_BEGIN(AdventureDrawConstant)
     CELL_PIXEL_SHIFT = 5,
     CELL_LAST_PIXEL = CELL_PIXELS - 1,
     STONE_TILE_NONE = -1,
+    // The off-map row or column just before the map; the one after it is
+    // MAP_CELL_GRID_SIZE.
+    STONE_BORDER_LOW = -1,
     STONE_TILE_TOP_LEFT = 16,
     STONE_TILE_TOP_RIGHT = 17,
     STONE_TILE_BOTTOM_RIGHT = 18,
@@ -883,7 +889,11 @@ H1_ENUM_CONST_BEGIN(AdventureRadarConstant)
     RADAR_SIZE = RADAR_RIGHT - RADAR_LEFT,
     RADAR_CELL_PIXELS = 2,
     RADAR_TERRAIN_SHADE = 3,
-    RADAR_VIEWPORT_COLOR = 0xbe
+    RADAR_VIEWPORT_COLOR = 0xbe,
+    // Unexplored cells fill with colour 0 (black); radar.icn frame 1 is the
+    // viewport box.
+    RADAR_UNEXPLORED_COLOR = 0,
+    RADAR_VIEWPORT_FRAME = 1
 H1_ENUM_CONST_END(AdventureRadarConstant)
 
 // TeleportTo's fizzle (the computed time is not passed on - FizzleForward
@@ -977,7 +987,8 @@ H1_ENUM_CONST_BEGIN(AdventureCheatConstant)
     CHEAT_SPELL_CHARGES = 5,
     CHEAT_MOBILITY = 2999,
     CHEAT_REVEAL_CENTER = 30,
-    CHEAT_REVEAL_RADIUS = 100
+    CHEAT_REVEAL_RADIUS = 100,
+    CHEAT_CREATURE_COUNT = 1
 H1_ENUM_CONST_END(AdventureCheatConstant)
 
 H1_ENUM_CONST_BEGIN(AdventureEnemyTurnViewConstant)
@@ -1052,6 +1063,8 @@ H1_ENUM_CONST_BEGIN(AdventureKingdomViewConstant)
     KINGDOM_VIEW_TEXT_HEIGHT = 12,
     KINGDOM_VIEW_RESOURCE_TEXT_Y = 59,
     KINGDOM_VIEW_TOWN_TEXT_Y = 28,
+    // Gold shares the castles' and villages' row.
+    KINGDOM_VIEW_GOLD_TEXT_Y = KINGDOM_VIEW_TOWN_TEXT_Y,
     KINGDOM_VIEW_WOOD_TEXT_X = 15,
     KINGDOM_VIEW_MERCURY_TEXT_X = 38,
     KINGDOM_VIEW_ORE_TEXT_X = 61,
@@ -1223,7 +1236,9 @@ H1_ENUM_CONST_BEGIN(AdventureTravelSpellConstant)
     TRAVEL_DIALOG_ACCEPT = 1,
     DIMENSION_DOOR_FIRST_BUTTON = ADVENTURE_CONTROL_MAP_VIEW,
     DIMENSION_DOOR_LAST_BUTTON = 11,
-    TOWN_PORTAL_DISTANCE_LIMIT = 1000
+    TOWN_PORTAL_DISTANCE_LIMIT = 1000,
+    // TownGate's nearest-town slot before the search finds one.
+    TOWN_GATE_NO_TOWN = -1
 H1_ENUM_CONST_END(AdventureTravelSpellConstant)
 
 // Moved from CURSOR.cpp.

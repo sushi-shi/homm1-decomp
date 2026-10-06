@@ -6,7 +6,7 @@
 # (tab-separated; every field is an fnmatch glob, `*` matches anything; the
 # first matching row wins): file owner spelling group detail reason.
 # group/detail are the census' review_group/review_context columns.
-#floor	1050
+#floor	819
 *	*	0	trivial-function-literal	0 for-init	a for loop's counter starts at zero
 *	*	0	trivial-function-literal	0 initializer*	an accumulator or counter declared at zero
 *	*	1	trivial-function-literal	1 arithmetic*	a one-step offset: the next index, element or count
@@ -133,7 +133,6 @@ src/*	advManager::UpdBottomView*	*	store	store to [xy]	a screen position in pixe
 src/*	DataEntryWindowHandler	*	store	store to [xy]	a screen position in pixels
 src/*	fileRequester::Update	*	store	store to m_[xy]	a screen position in pixels
 *	*	*	store	store to resWidth	a dialog or bottom-panel column width in pixels
-*	*	*	store	store to rowY[]	a dialog or bottom-panel row y in pixels
 src/SOURCE/ARMY.cpp	*	[01]	trivial-function-literal	[01] return	a zero/one int result: false/true (VC4 has no bool) or an empty path/count
 src/SOURCE/AI.cpp	*	[01]	trivial-function-literal	[01] return	a zero/one int result: false/true (VC4 has no bool) or an empty path/count
 src/SOURCE/FLY.cpp	*	[01]	trivial-function-literal	[01] return	a zero/one int result: false/true (VC4 has no bool) or an empty path/count
@@ -1254,3 +1253,59 @@ src/EDITOR/MAPOBJ.cpp	editManager::PlaceObstacleChains	0	trivial-function-litera
 src/EDITOR/MAPOBJ.cpp	editManager::PlaceResourceSite	1	call-argument	PlaceMineResource(* argument 2	the mine's resource marker stands one column right of the mine
 src/EDITOR/MAPOBJ.cpp	editManager::RemoveSmallRegions	0	trivial-function-literal	0 store searchTop	the region's top row clamped to the map's first row
 src/EDITOR/MAPOBJ.cpp	editManager::RemoveSmallRegions	1	trivial-function-literal	1 store extent	a region's cell count starts with its first cell
+src/SOURCE/ADVMGR.cpp	advManager::advManager	0	trivial-function-literal	0 store *	constructor zero-initialisation (map origin, scroll, animation clocks)
+src/SOURCE/ADVMGR.cpp	advManager::Open	[01]	trivial-function-literal	[01] array-index m_panelBackdrops	the first and second panel backdrops (Open lays out each of the five by hand)
+src/SOURCE/ADVMGR.cpp	*	0	trivial-function-literal	0 store m_activeSoundMask	no environment sound playing (an empty sound-slot bit set)
+src/SOURCE/ADVMGR.cpp	*	[01]	trivial-function-literal	[01] *m_active	baseManager::m_active, an i16 flag: Open sets it, Close clears it, the panel buttons test it
+src/SOURCE/ADVMGR.cpp	advManager::GetCursorSampleSet	1	trivial-function-literal	1 bound sampleSet	any walk speed above the first loads the faster footstep set
+src/SOURCE/ADVMGR.cpp	advManager::DoAdvCommand	0	call-argument	MoveHero(* argument 2	the route's last step (the path is walked from its end), where the hero stops
+src/SOURCE/ADVMGR.cpp	advManager::Main	[01]	trivial-function-literal	[01] *quit	ControlPanel's i16 quit result (1 leaves the adventure loop), stored in an i32 through ProcessDeSelect
+src/SOURCE/ADVMGR.cpp	advManager::Main	[01]	trivial-function-literal	[01] array-index m_playerDead	the debug keys' seats: F3 defeats seats 1-3 (every rival of the first seat), F5 the first seat
+src/SOURCE/ADVMGR.cpp	advManager::Main	*	*	*amount	the digit key's value fed into the cheat sequence
+src/SOURCE/ADVMGR.cpp	*	0	call-argument	ShowCampaignInfo(* argument 3	ShowCampaignInfo's unused third argument
+src/SOURCE/ADVMGR.cpp	*	0	trivial-function-literal	0 array-index m_*Ids	the player's first town or hero
+src/SOURCE/ADVMGR.cpp	advManager::Main	0	trivial-function-literal	0 store townIndex	the first town slot
+src/SOURCE/ADVMGR.cpp	*	[01]	call-argument	NextHero(i32) argument 1	playerData::NextHero's unnamed, unused argument
+src/SOURCE/ADVMGR.cpp	advManager::ProcessSelect	0	trivial-function-literal	0 store iPage	the locator's first page
+src/SOURCE/ADVMGR.cpp	advManager::ProcessSearch	0	call-argument	EventSound(* argument 2	no event data for the dig sound
+src/SOURCE/ADVMGR.cpp	*	0	trivial-function-literal	0 *m_remainingMobility	the hero's movement points used up
+src/SOURCE/ADVMGR.cpp	advManager::ProcessHover	0	trivial-function-literal	0 store *	a pointer position reset to the origin, an empty path, no days of travel
+src/SOURCE/ADVMGR.cpp	advManager::ProcessHover	1	trivial-function-literal	1 bound m_commandTargetY	a town entrance below the map's first row (the town's cell above it is on the map)
+src/SOURCE/ADVMGR.cpp	advManager::UpdateScreen	0	trivial-function-literal	0 store *	the scroll back at rest and the animation clock wrapped to its first step
+src/SOURCE/ADVMGR.cpp	advManager::CompleteDraw	0	trivial-function-literal	0 store m_mapOrigin*	the all-black screen draws from the map origin
+src/SOURCE/ADVMGR.cpp	advManager::*Draw	[01]	trivial-function-literal	1 for-init	the rows after the first, drawn row by row (the first row was drawn alone)
+src/SOURCE/ADVMGR.cpp	advManager::*Draw	[01]	call-argument	DrawCell(* argument [24]	the view's first row, or the row above (drawY - 1, VIEW_CELL_COUNT - 1)
+src/SOURCE/ADVMGR.cpp	advManager::GetCloudLookup	*	trivial-function-literal	*	an unseen neighbour (its watch-player bit clear) and the map's first row/column
+src/SOURCE/ADVMGR.cpp	advManager::DrawCell	0	trivial-function-literal	0 *s_drawCloudFrame	the cloud's first variant frame
+src/SOURCE/ADVMGR.cpp	advManager::DrawCell	1	trivial-function-literal	1 bitwise	an odd map column or row (alternate cloud frames)
+src/SOURCE/ADVMGR.cpp	advManager::DrawCell	0xff	*	operator & m_tileIndex	the ground tile index's low byte
+src/SOURCE/ADVMGR.cpp	advManager::DrawCell	*	call-argument	*IconToBitmap(* argument [4578]	a sprite's pixel position (one pixel above the next cell) or the clip origin at the screen corner
+src/SOURCE/ADVMGR.cpp	advManager::DrawCell	*	trivial-function-literal	*	a hero drawn without a y offset, and the view's edge cells (first column, top two rows) that need clipping
+src/SOURCE/ADVMGR.cpp	advManager::GetCell	0	trivial-function-literal	0 array-index m_mapData	the map's first cell, returned for an off-map coordinate
+src/SOURCE/ADVMGR.cpp	advManager::*Quick*	1	trivial-function-literal	1 store [eoq]*	a retail i16 local (quickInfoShowFlag, enableFlag, on) stored and never read
+src/SOURCE/ADVMGR.cpp	advManager::UpdateRadar	0	*	*	the radar box clamped to the map's first row/column; frame 0 of the radar fill
+src/SOURCE/ADVMGR.cpp	advManager::QuickInfo	200	store	initializer of savedTextLocal	the saved text buffer's extent
+src/SOURCE/ADVMGR.cpp	advManager::UpdateTownLocators	0	trivial-function-literal	0 conditional	the first locator frame for an empty slot
+src/SOURCE/ADVMGR.cpp	advManager::UpdBottomView*	0	trivial-function-literal	0 store *	the hourglass, frame or text row reset to its first value, a counter reset
+src/SOURCE/ADVMGR.cpp	advManager::UpdBottomViewNewTurn	1	trivial-function-literal	1 equality m_*	day 1 of a week, and the very first day (month 1, week 1, day 1) that shows no new-week banner
+src/SOURCE/ADVMGR.cpp	advManager::LoadRemote	1	trivial-function-literal	1 equality m_*	day 1 of a week, and the very first day (month 1, week 1)
+src/SOURCE/ADVMGR.cpp	advManager::*QuickView	*	*	*	the quick views' army-row layout: half the free width centres a row, the 2+3/3+3 row splits, the first slot and the five-stack nudge's first stack
+src/SOURCE/ADVMGR.cpp	advManager::SetTownContext	0	trivial-function-literal	0 store *	the first town slot and a hover cell reset to the origin
+src/SOURCE/ADVMGR.cpp	advManager::SetHeroContext	0	trivial-function-literal	0 store *	the first locator slot and a hover cell reset to the origin
+src/SOURCE/ADVMGR.cpp	*	*	call-argument	RestoreCell(* argument 6	game::RestoreCell's unnamed, unused caller tag
+src/SOURCE/ADVMGR.cpp	advManager::ViewPuzzle	1	trivial-function-literal	1 equality	a coordinate residue of one (mod 3 or mod 2) nudges the puzzle centre
+src/SOURCE/ADVMGR.cpp	advManager::ViewWorld	1	trivial-function-literal	1 bitwise	four ground tiles per ground6.icn frame (1 << VIEW_WORLD_GROUND_TILE_SHIFT)
+src/SOURCE/ADVMGR.cpp	advManager::ControlPanel	[01]	trivial-function-literal	[01] return	ControlPanel's i16 quit result (1 when a new/load/quit command was chosen)
+src/SOURCE/ADVMGR.cpp	SaveGame	*	store	initializer of *	a file mask or extension buffer's extent
+src/SOURCE/ADVMGR.cpp	SaveGame	0	trivial-function-literal	0 store humans	a human-seat counter reset to zero
+src/SOURCE/ADVMGR.cpp	SaveGame	[01]	trivial-function-literal	[01] store success	SaveGame's i8 result, later set from game::SaveGame's i16
+src/SOURCE/ADVMGR.cpp	SaveGame	*	call-argument	fileRequester(* argument [12]	the save requester's window position in pixels
+src/SOURCE/ADVMGR.cpp	DimensionDoorHandler	0	trivial-function-literal	0 store mouse[XY]	a pointer position reset to the origin
+src/SOURCE/ADVMGR.cpp	advManager::ComboDraw	*	*	*	the dirty-cell grid: a neighbour past the view's first row/column, a cleared mark, the first row drawn alone, two rows above the centre for the cursor, an empty update box
+src/SOURCE/ADVMGR.cpp	advManager::SetEnvironmentOrigin	*	*	*	half the sound slots per pass, an empty sound mask, ring distance 0 at the origin, a slot's bit (1 << id) set
+src/SOURCE/ADVMGR.cpp	advManager::InsertSound	1	*	*	a sound slot's bit (1 << id) and the sample's repeat flag
+src/SOURCE/ADVMGR.cpp	advManager::ShowRoute	0	trivial-function-literal	0 equality index	the path's last step (the walk-back starts at the destination)
+src/SOURCE/ADVMGR.cpp	advManager::SetInitialMapOrigin	0	trivial-function-literal	0 store *	the map origin and hover cell reset to the origin
+src/SOURCE/ADVMGR.cpp	*	1	call-argument	CheckDoMain(i32, b32) argument 1	CheckDoMain's unnamed, unused first argument
+src/SOURCE/ADVMGR.cpp	advManager::TrimLoopingSounds	0	trivial-function-literal	0 equality keep[[]]	a looping sample no sound slot uses (a zero use count)
+

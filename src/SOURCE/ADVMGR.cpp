@@ -669,7 +669,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) advManager::Main(struct tag_message& 
                     curHero = gGame->GetHero(gCurPlayerData->m_currentHero);
                 else
                     curHero = NULL;
-                if (gDebugLevel < 1
+                if (gDebugLevel < ADVENTURE_DEBUG_KEYS_LEVEL_MIN
                     && (message.keyCode == INPUT_SCAN_F3 || message.keyCode == INPUT_SCAN_F4
                         || message.keyCode == INPUT_SCAN_F5 || message.keyCode == INPUT_SCAN_F6
                         || message.keyCode == INPUT_SCAN_F7 || message.keyCode == INPUT_SCAN_F8
@@ -709,13 +709,13 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) advManager::Main(struct tag_message& 
                             gGame->GiveArmy(
                                 &curHero->m_army,
                                 CREATURE_DRAGON,
-                                1,
+                                CHEAT_CREATURE_COUNT,
                                 ARMY_GROUP_EMPTY_SLOT
                             );
                             gGame->GiveArmy(
                                 &curHero->m_army,
                                 CREATURE_TROLL,
-                                1,
+                                CHEAT_CREATURE_COUNT,
                                 ARMY_GROUP_EMPTY_SLOT
                             );
                         }
@@ -1961,8 +1961,8 @@ void advManager::DrawCell(
     if (!gAllBlack
         && (mapX < 0 || mapY < 0 || mapX >= MAP_CELL_GRID_SIZE || mapY >= MAP_CELL_GRID_SIZE)) {
         s_drawStoneTile = STONE_TILE_NONE;
-        if (mapX == -1) {
-            if (mapY == -1)
+        if (mapX == STONE_BORDER_LOW) {
+            if (mapY == STONE_BORDER_LOW)
                 s_drawStoneTile = STONE_TILE_TOP_LEFT;
             else if (mapY == MAP_CELL_GRID_SIZE)
                 s_drawStoneTile = STONE_TILE_BOTTOM_LEFT;
@@ -1970,14 +1970,14 @@ void advManager::DrawCell(
                 s_drawStoneTile = ((mapY + STONE_PATTERN_COORDINATE_SHIFT) & CLOUD_VARIANT_MASK)
                                   + STONE_TILE_LEFT_BASE;
         } else if (mapX == MAP_CELL_GRID_SIZE) {
-            if (mapY == -1)
+            if (mapY == STONE_BORDER_LOW)
                 s_drawStoneTile = STONE_TILE_TOP_RIGHT;
             else if (mapY == MAP_CELL_GRID_SIZE)
                 s_drawStoneTile = STONE_TILE_BOTTOM_RIGHT;
             else if (mapY >= 0 && mapY < MAP_CELL_GRID_SIZE)
                 s_drawStoneTile = ((mapY + STONE_PATTERN_COORDINATE_SHIFT) & CLOUD_VARIANT_MASK)
                                   + STONE_TILE_RIGHT_BASE;
-        } else if (mapY == -1) {
+        } else if (mapY == STONE_BORDER_LOW) {
             if (mapX >= 0 && mapX < MAP_CELL_GRID_SIZE)
                 s_drawStoneTile = ((mapX + STONE_PATTERN_COORDINATE_SHIFT) & CLOUD_VARIANT_MASK)
                                   + STONE_TILE_TOP_BASE;
@@ -2410,7 +2410,7 @@ void advManager::UpdateRadar(b8 updateScreen, b32 partial) {
                     x * RADAR_CELL_PIXELS + RADAR_LEFT,
                     y * RADAR_CELL_PIXELS + RADAR_TOP,
                     0,
-                    0,
+                    RADAR_UNEXPLORED_COLOR,
                     ICON_DRAW_NORMAL,
                     ICON_DRAW_OFFSET_FULL
                 );
@@ -2481,7 +2481,7 @@ void advManager::UpdateRadar(b8 updateScreen, b32 partial) {
     m_radarIcon->ClipFillToBuffer(
         m_mapOriginX * RADAR_CELL_PIXELS + RADAR_LEFT,
         m_mapOriginY * RADAR_CELL_PIXELS + RADAR_TOP,
-        1,
+        RADAR_VIEWPORT_FRAME,
         RADAR_VIEWPORT_COLOR,
         ICON_DRAW_NORMAL,
         ICON_DRAW_OFFSET_FULL,
@@ -3081,7 +3081,7 @@ b8 advManager::UpdBottomViewNewTurn(void) {
         localization::Tr("calendar.week.label"),
         gGame->m_week
     );
-    m_bottomViewSecondaryWidgets[0] = new textWidget(
+    m_bottomViewSecondaryWidgets[ADVMGR_BOTTOM_VIEW_TEXT] = new textWidget(
         NEW_TURN_DATE_TEXT_X,
         NEW_TURN_WEEK_TEXT_Y,
         NEW_TURN_DATE_TEXT_WIDTH,
@@ -3092,13 +3092,16 @@ b8 advManager::UpdBottomViewNewTurn(void) {
         BOTTOM_VIEW_TEXT_ID,
         WIDGET_KIND_TEXT
     );
-    if (!m_bottomViewSecondaryWidgets[0])
+    if (!m_bottomViewSecondaryWidgets[ADVMGR_BOTTOM_VIEW_TEXT])
         MemError();
-    m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[0], WINDOW_Z_ORDER_APPEND);
+    m_adventureWindow->AddWidget(
+        m_bottomViewSecondaryWidgets[ADVMGR_BOTTOM_VIEW_TEXT],
+        WINDOW_Z_ORDER_APPEND
+    );
 
     day = static_cast<char*>(malloc(BOTTOM_VIEW_TEXT_BUFFER_SIZE));
     sprintf(day, "%s: %d", localization::Tr("calendar.day.label"), gGame->m_day);
-    m_bottomViewSecondaryWidgets[0] = new textWidget(
+    m_bottomViewSecondaryWidgets[ADVMGR_BOTTOM_VIEW_TEXT] = new textWidget(
         NEW_TURN_DATE_TEXT_X,
         NEW_TURN_DAY_TEXT_Y,
         NEW_TURN_DATE_TEXT_WIDTH,
@@ -3109,9 +3112,12 @@ b8 advManager::UpdBottomViewNewTurn(void) {
         BOTTOM_VIEW_TEXT_ID,
         WIDGET_KIND_TEXT
     );
-    if (!m_bottomViewSecondaryWidgets[0])
+    if (!m_bottomViewSecondaryWidgets[ADVMGR_BOTTOM_VIEW_TEXT])
         MemError();
-    m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[0], WINDOW_Z_ORDER_APPEND);
+    m_adventureWindow->AddWidget(
+        m_bottomViewSecondaryWidgets[ADVMGR_BOTTOM_VIEW_TEXT],
+        WINDOW_Z_ORDER_APPEND
+    );
     return true;
 }
 
@@ -3159,7 +3165,7 @@ b8 advManager::UpdBottomViewResMsg(void) {
     }
     messageText = static_cast<char*>(malloc(strlen(gBottomViewText) + 1));
     sprintf(messageText, gBottomViewText);
-    m_bottomViewSecondaryWidgets[0] = new textWidget(
+    m_bottomViewSecondaryWidgets[ADVMGR_BOTTOM_VIEW_TEXT] = new textWidget(
         BOTTOM_VIEW_PANEL_X,
         textY + RESOURCE_VIEW_TEXT_BASE_Y,
         BOTTOM_VIEW_PANEL_WIDTH,
@@ -3170,9 +3176,12 @@ b8 advManager::UpdBottomViewResMsg(void) {
         BOTTOM_VIEW_TEXT_ID,
         WIDGET_KIND_TEXT
     );
-    if (!m_bottomViewSecondaryWidgets[0])
+    if (!m_bottomViewSecondaryWidgets[ADVMGR_BOTTOM_VIEW_TEXT])
         MemError();
-    m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[0], WINDOW_Z_ORDER_APPEND);
+    m_adventureWindow->AddWidget(
+        m_bottomViewSecondaryWidgets[ADVMGR_BOTTOM_VIEW_TEXT],
+        WINDOW_Z_ORDER_APPEND
+    );
 
     if (gBottomViewResource >= RESOURCE_FIRST) {
         if (gBottomViewResource == RESOURCE_GOLD) {
@@ -3203,7 +3212,7 @@ b8 advManager::UpdBottomViewResMsg(void) {
 
         countText = static_cast<char*>(malloc(BOTTOM_VIEW_COUNT_BUFFER_SIZE));
         sprintf(countText, "%d", gBottomViewResourceQty);
-        m_bottomViewSecondaryWidgets[1] = new textWidget(
+        m_bottomViewSecondaryWidgets[ADVMGR_BOTTOM_VIEW_COUNT_TEXT] = new textWidget(
             RESOURCE_VIEW_COUNT_X,
             RESOURCE_VIEW_COUNT_Y,
             RESOURCE_VIEW_COUNT_WIDTH,
@@ -3214,9 +3223,12 @@ b8 advManager::UpdBottomViewResMsg(void) {
             BOTTOM_VIEW_TEXT_ID_2,
             WIDGET_KIND_TEXT
         );
-        if (!m_bottomViewSecondaryWidgets[1])
+        if (!m_bottomViewSecondaryWidgets[ADVMGR_BOTTOM_VIEW_COUNT_TEXT])
             MemError();
-        m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[1], WINDOW_Z_ORDER_APPEND);
+        m_adventureWindow->AddWidget(
+            m_bottomViewSecondaryWidgets[ADVMGR_BOTTOM_VIEW_COUNT_TEXT],
+            WINDOW_Z_ORDER_APPEND
+        );
     }
     return true;
 }
@@ -3243,7 +3255,7 @@ b8 advManager::UpdBottomViewKingdom(void) {
     rowY[H1_ENUM_ENCODE(ResourceType, RESOURCE_SULFUR)] = KINGDOM_VIEW_RESOURCE_TEXT_Y;
     rowY[H1_ENUM_ENCODE(ResourceType, RESOURCE_CRYSTAL)] = KINGDOM_VIEW_RESOURCE_TEXT_Y;
     rowY[H1_ENUM_ENCODE(ResourceType, RESOURCE_GEMS)] = KINGDOM_VIEW_RESOURCE_TEXT_Y;
-    rowY[6] = 28;
+    rowY[H1_ENUM_ENCODE(ResourceType, RESOURCE_GOLD)] = KINGDOM_VIEW_GOLD_TEXT_Y;
     rowY[KINGDOM_VIEW_CASTLE_ENTRY] = KINGDOM_VIEW_TOWN_TEXT_Y;
     rowY[KINGDOM_VIEW_TOWN_ENTRY] = KINGDOM_VIEW_TOWN_TEXT_Y;
     textX[H1_ENUM_ENCODE(ResourceType, RESOURCE_WOOD)] = KINGDOM_VIEW_WOOD_TEXT_X;
@@ -3399,7 +3411,7 @@ b8 advManager::UpdBottomViewHero(void) {
     heroNameCopy = static_cast<char*>(malloc(9));
     strcpy(heroNameCopy, curHero->m_shortName);
     heroNameCopy[8] = 0;
-    m_bottomViewSecondaryWidgets[0] = new textWidget(
+    m_bottomViewSecondaryWidgets[ADVMGR_BOTTOM_VIEW_TEXT] = new textWidget(
         475,
         418,
         66,
@@ -3410,9 +3422,12 @@ b8 advManager::UpdBottomViewHero(void) {
         BOTTOM_VIEW_TEXT_ID,
         WIDGET_KIND_TEXT
     );
-    if (!m_bottomViewSecondaryWidgets[0])
+    if (!m_bottomViewSecondaryWidgets[ADVMGR_BOTTOM_VIEW_TEXT])
         MemError();
-    m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[0], WINDOW_Z_ORDER_APPEND);
+    m_adventureWindow->AddWidget(
+        m_bottomViewSecondaryWidgets[ADVMGR_BOTTOM_VIEW_TEXT],
+        WINDOW_Z_ORDER_APPEND
+    );
 
     for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
         if (curHero->m_army.m_creatureTypes[j] != CREATURE_NONE)
@@ -6044,7 +6059,7 @@ void advManager::TownGate(void) {
     i32 nearestDistance;
 
     nearestDistance = TOWN_PORTAL_DISTANCE_LIMIT;
-    selectedTown = -1;
+    selectedTown = TOWN_GATE_NO_TOWN;
     targetHero = gGame->GetHero(gCurPlayerData->m_currentHero);
     if (targetHero->IsEmbarked()) {
         NormalDialog(localization::Tr("adventure.town_gate.land_required"), NORMAL_DIALOG_TYPE_OK);
@@ -6060,7 +6075,7 @@ void advManager::TownGate(void) {
             selectedTown = i;
         }
     }
-    if (selectedTown == -1)
+    if (selectedTown == TOWN_GATE_NO_TOWN)
         NormalDialog(localization::Tr("adventure.town_gate.no_town"), NORMAL_DIALOG_TYPE_OK);
     if (gGame->m_castleRecs[gCurPlayerData->m_townIds[selectedTown]].m_occupyingHeroId
         != TOWN_OCCUPYING_HERO_NONE) {
