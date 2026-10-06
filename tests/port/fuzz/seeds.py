@@ -5,7 +5,8 @@
 
 creates OUT/<harness>/ for each harness in tests/port/fuzz: the shipped
 maps, campaign maps, saved games and high score tables (with the byte of
-set-up choices fuzz_map and fuzz_savegame expect after the file), and the
+set-up choices fuzz_map and fuzz_savegame expect after the file), the help
+book if the game data or $HOMM1_HELP has it, and the
 resource archive's entries in fuzz_resources' input format (a kind byte, then
 the payload). Archive entries are classified by their content, since the
 archive stores only name hashes. The seeds are game data: keep them out of the
@@ -157,6 +158,21 @@ def main():
         if len(payload) < 4096 and len(small) < 6:
             small.append((file_id, payload))
     write(resources, "archive-small", archive(small) + bytes([ARCHIVE]))
+    # The help book: HELP\HEROES.HLP in the game data, else $HOMM1_HELP (the
+    # .HLP; its .CNT beside it). fuzz_help takes the help file, the contents
+    # file and the contents file's length.
+    help_file = find(root, "HELP", "HEROES.HLP")
+    if help_file is None and os.environ.get("HOMM1_HELP"):
+        help_file = Path(os.environ["HOMM1_HELP"])
+    if help_file is not None and help_file.is_file():
+        contents = help_file.with_suffix(".CNT")
+        if not contents.is_file():
+            contents = help_file.with_suffix(".cnt")
+        hlp = help_file.read_bytes()
+        cnt = contents.read_bytes() if contents.is_file() else b""
+        write(out / "fuzz_help", "help", hlp + struct.pack("<H", 0xFFFF))
+        if cnt:
+            write(out / "fuzz_help", "help-contents", hlp + cnt + struct.pack("<H", len(cnt)))
     for harness in sorted(os.listdir(out)):
         print(f"{harness}: {len(os.listdir(out / harness))} seeds")
 

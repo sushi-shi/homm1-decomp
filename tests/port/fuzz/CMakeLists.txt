@@ -109,3 +109,7 @@ homm1_fuzz_harness(fuzz_highscore
   SOURCES fuzz_highscore.cpp
   UNITS homm1_units
   SHIPPED "DATA\\*.HS")
+
+# The WinHelp converter on a help file and its contents file.
+homm1_fuzz_harness(fuzz_help
+  SOURCES fuzz_help.cpp)
