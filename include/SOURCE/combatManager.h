@@ -75,7 +75,18 @@ enum CombatDrawStateConstant {
     COMBAT_WALL_DAMAGE_NONE = -1,
     COMBAT_WALL_FRAME_NONE = -1,
     // A wandering monster's cell keeps at most this many survivors.
-    COMBAT_MAP_MONSTER_COUNT_MAX = 127
+    COMBAT_MAP_MONSTER_COUNT_MAX = 127,
+    // One strike deals at most this much damage.
+    COMBAT_DAMAGE_MAX = 32000
+};
+
+// combatManager::ForecastAttack: the damage and kills of an attack, from the
+// weakest to the strongest outcome.
+struct CombatForecast {
+    i32 damageMin;
+    i32 damageMax;
+    i32 killsMin;
+    i32 killsMax;
 };
 
 enum CombatAIConstant {
@@ -199,6 +210,15 @@ public:
     void NoShowCombatLog(char* message);
     void CombatMessage(char* text, b32 updateScreen);
     void CombatMessage(i16 messageType);
+    void EstimateDamage(
+        army* attacker,
+        i32 count,
+        army* target,
+        i32 ranged,
+        i32* damageMin,
+        i32* damageMax
+    );
+    void ForecastAttack(army* attacker, army* target, i32 ranged, struct CombatForecast* forecast);
     void ResetLimitCreature(void);
     void UpdateCombatArea(void);
     void

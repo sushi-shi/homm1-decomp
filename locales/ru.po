@@ -44,6 +44,11 @@ msgid "adventure.quick_info.uncharted"
 msgstr "Неизученная земля"
 
 #: src/SOURCE/ADVMGR.cpp
+#, c-format
+msgid "adventure.quick_info.visited"
+msgstr "\n\n%s\n(Посещено)"
+
+#: src/SOURCE/ADVMGR.cpp
 msgid "adventure.save.success"
 msgstr "Игра успешно сохранена."
 
@@ -204,6 +209,26 @@ msgstr "Потери"
 msgid "combat.confirm.retreat"
 msgstr "Вы действительно хотите отступить?"
 
+#: src/SOURCE/DRAWING.cpp
+#, c-format
+msgid "combat.forecast.damage"
+msgstr "Урон: %d"
+
+#: src/SOURCE/DRAWING.cpp
+#, c-format
+msgid "combat.forecast.damage_range"
+msgstr "Урон: %d - %d"
+
+#: src/SOURCE/DRAWING.cpp
+#, c-format
+msgid "combat.forecast.kills"
+msgstr "Убитых: %d"
+
+#: src/SOURCE/DRAWING.cpp
+#, c-format
+msgid "combat.forecast.kills_range"
+msgstr "Убитых: %d - %d"
+
 #: src/SOURCE/ARMY.cpp
 msgid "combat.fragment.attack"
 msgstr "Атака"
@@ -307,6 +332,11 @@ msgstr "У вас нет героя, чтобы направлять закли�
 #: src/SOURCE/SPELLS.cpp
 msgid "combat.spell.teleport_here"
 msgstr "Переместиться сюда"
+
+#: src/SOURCE/DRAWING.cpp
+#, c-format
+msgid "combat.status.hit_points"
+msgstr "Здоровье: %d (%d)"
 
 #: src/SOURCE/COMMAND.cpp
 #, c-format

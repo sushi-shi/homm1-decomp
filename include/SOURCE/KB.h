@@ -223,6 +223,7 @@ extern b32 gInNewGameSetup;
 void DeleteMainClasses(void);
 extern class highScoreManager* gHighScoreManager;
 void FileError(char* filename);
+void FormatAbbreviatedCount(char* text, i32 value, i32 thousandsFrom);
 void MemError();
 void GetMonsterCost(i32 monster, i32* const cost);
 extern i16 gHeroGoldCost;

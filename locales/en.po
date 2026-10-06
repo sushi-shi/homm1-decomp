@@ -44,6 +44,11 @@ msgid "adventure.quick_info.uncharted"
 msgstr "Uncharted territory"
 
 #: src/SOURCE/ADVMGR.cpp
+#, c-format
+msgid "adventure.quick_info.visited"
+msgstr "\n\n%s\n(Visited)"
+
+#: src/SOURCE/ADVMGR.cpp
 msgid "adventure.save.success"
 msgstr "Game saved successfully."
 
@@ -204,6 +209,26 @@ msgstr "Battlefield Casualties"
 msgid "combat.confirm.retreat"
 msgstr "Are you sure you want to retreat?"
 
+#: src/SOURCE/DRAWING.cpp
+#, c-format
+msgid "combat.forecast.damage"
+msgstr "Damage: %d"
+
+#: src/SOURCE/DRAWING.cpp
+#, c-format
+msgid "combat.forecast.damage_range"
+msgstr "Damage: %d - %d"
+
+#: src/SOURCE/DRAWING.cpp
+#, c-format
+msgid "combat.forecast.kills"
+msgstr "Kills: %d"
+
+#: src/SOURCE/DRAWING.cpp
+#, c-format
+msgid "combat.forecast.kills_range"
+msgstr "Kills: %d - %d"
+
 #: src/SOURCE/ARMY.cpp
 msgid "combat.fragment.attack"
 msgstr "The"
@@ -307,6 +332,11 @@ msgstr "You have no hero to cast a spell."
 #: src/SOURCE/SPELLS.cpp
 msgid "combat.spell.teleport_here"
 msgstr "Teleport Here"
+
+#: src/SOURCE/DRAWING.cpp
+#, c-format
+msgid "combat.status.hit_points"
+msgstr "Hit Points: %d (%d)"
 
 #: src/SOURCE/COMMAND.cpp
 #, c-format

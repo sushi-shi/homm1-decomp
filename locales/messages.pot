@@ -45,6 +45,11 @@ msgid "adventure.quick_info.uncharted"
 msgstr ""
 
 #: src/SOURCE/ADVMGR.cpp
+#, c-format
+msgid "adventure.quick_info.visited"
+msgstr ""
+
+#: src/SOURCE/ADVMGR.cpp
 msgid "adventure.save.success"
 msgstr ""
 
@@ -205,6 +210,26 @@ msgstr ""
 msgid "combat.confirm.retreat"
 msgstr ""
 
+#: src/SOURCE/DRAWING.cpp
+#, c-format
+msgid "combat.forecast.damage"
+msgstr ""
+
+#: src/SOURCE/DRAWING.cpp
+#, c-format
+msgid "combat.forecast.damage_range"
+msgstr ""
+
+#: src/SOURCE/DRAWING.cpp
+#, c-format
+msgid "combat.forecast.kills"
+msgstr ""
+
+#: src/SOURCE/DRAWING.cpp
+#, c-format
+msgid "combat.forecast.kills_range"
+msgstr ""
+
 #: src/SOURCE/ARMY.cpp
 msgid "combat.fragment.attack"
 msgstr ""
@@ -307,6 +332,11 @@ msgstr ""
 
 #: src/SOURCE/SPELLS.cpp
 msgid "combat.spell.teleport_here"
+msgstr ""
+
+#: src/SOURCE/DRAWING.cpp
+#, c-format
+msgid "combat.status.hit_points"
 msgstr ""
 
 #: src/SOURCE/COMMAND.cpp

@@ -2305,6 +2305,17 @@ void FileError(char* filename) {
     ShutDown(message);
 }
 
+// Writes a count for a narrow label: in thousands ("12k") from
+// `thousandsFrom` on, and in millions ("3m") from a million on.
+void FormatAbbreviatedCount(char* text, i32 value, i32 thousandsFrom) {
+    if (value >= 1000000)
+        sprintf(text, "%dm", value / 1000000);
+    else if (value >= thousandsFrom)
+        sprintf(text, "%dk", value / 1000);
+    else
+        sprintf(text, "%d", value);
+}
+
 void ShowCongrats(void) {
     char name[32];
     i32 labelIndex;

@@ -63,11 +63,157 @@ void combatManager::CombatMessage(char* text, b32 updateScreen) {
     gLimitToExtent = prevLimit;
 }
 
+// One strike of `count` attackers: the real damage formula without luck,
+// for the weakest and the strongest roll.
+void combatManager::EstimateDamage(
+    army* attacker,
+    i32 count,
+    army* target,
+    i32 ranged,
+    i32* damageMin,
+    i32* damageMax
+) {
+    i32 defenseModifier;
+    i32 low;
+    i32 high;
+
+    defenseModifier = 0;
+    if (ranged && attacker->ShotCrossesCastleWall(target))
+        defenseModifier = ARMY_CASTLE_WALL_DEFENSE_BONUS;
+    low = attacker->m_stats.damageMin;
+    high = attacker->m_stats.damageMax;
+    if (attacker->m_damageMode == ARMY_DAMAGE_MAXIMUM)
+        low = high;
+    else if (attacker->m_damageMode == ARMY_DAMAGE_MINIMUM)
+        high = low;
+    *damageMin = static_cast<i32>(
+        attacker->ScaleDamage(target, static_cast<float>(count * low), ranged, defenseModifier)
+        + 0.5
+    );
+    *damageMax = static_cast<i32>(
+        attacker->ScaleDamage(target, static_cast<float>(count * high), ranged, defenseModifier)
+        + 0.5
+    );
+    if (*damageMin > COMBAT_DAMAGE_MAX)
+        *damageMin = COMBAT_DAMAGE_MAX;
+    if (*damageMin <= 0)
+        *damageMin = 1;
+    if (*damageMax > COMBAT_DAMAGE_MAX)
+        *damageMax = COMBAT_DAMAGE_MAX;
+    if (*damageMax <= 0)
+        *damageMax = 1;
+}
+
+// Damage taken by a stack as army::Damage applies it: the creatures killed,
+// and the hit points the top creature has lost.
+static i32 ForecastLosses(i32* quantity, i32* hitPointsLost, i32 hitPoints, i32 damage) {
+    i32 killed;
+
+    killed = (damage + *hitPointsLost) / hitPoints;
+    if (killed > *quantity)
+        killed = *quantity;
+    *hitPointsLost = (damage + *hitPointsLost) % hitPoints;
+    *quantity -= killed;
+    return killed;
+}
+
+// The damage and kills of the attack the player is pointing at, from the
+// weakest to the strongest outcome. Elves shoot twice, and wolves and
+// paladins strike twice, the second time with the attackers that survive
+// the retaliation.
+void combatManager::ForecastAttack(
+    army* attacker,
+    army* target,
+    i32 ranged,
+    CombatForecast* forecast
+) {
+    i32 low;
+    i32 high;
+    i32 unused;
+    i32 weakQuantity;
+    i32 weakLost;
+    i32 strongQuantity;
+    i32 strongLost;
+    i32 fewAttackers;
+    i32 manyAttackers;
+    i32 attackerLost;
+    i32 retaliationMin;
+    i32 retaliationMax;
+
+    EstimateDamage(attacker, attacker->m_quantity, target, ranged, &low, &high);
+    forecast->damageMin = low;
+    forecast->damageMax = high;
+    weakQuantity = strongQuantity = target->m_quantity;
+    weakLost = strongLost = target->m_hitPointsLost;
+    forecast->killsMin = ForecastLosses(&weakQuantity, &weakLost, target->m_stats.hitPoints, low);
+    forecast->killsMax =
+        ForecastLosses(&strongQuantity, &strongLost, target->m_stats.hitPoints, high);
+    fewAttackers = manyAttackers = attacker->m_quantity;
+    if (ranged) {
+        if (attacker->m_creatureType != CREATURE_ELF || attacker->m_stats.shots <= 1)
+            return;
+    } else {
+        if (attacker->m_creatureType != CREATURE_WOLF
+            && attacker->m_creatureType != CREATURE_PALADIN)
+            return;
+        if (target->m_spellEffect != SPELL_PARALYZE
+            && (target->m_creatureType == CREATURE_GRIFFIN
+                || !(target->m_stats.attributes & MONSTER_FLAGS_RETALIATED))) {
+            retaliationMin = retaliationMax = 0;
+            if (weakQuantity > 0)
+                EstimateDamage(target, weakQuantity, attacker, 0, &unused, &retaliationMax);
+            if (strongQuantity > 0)
+                EstimateDamage(target, strongQuantity, attacker, 0, &retaliationMin, &unused);
+            attackerLost = attacker->m_hitPointsLost;
+            ForecastLosses(
+                &fewAttackers,
+                &attackerLost,
+                attacker->m_stats.hitPoints,
+                retaliationMax
+            );
+            attackerLost = attacker->m_hitPointsLost;
+            ForecastLosses(
+                &manyAttackers,
+                &attackerLost,
+                attacker->m_stats.hitPoints,
+                retaliationMin
+            );
+        }
+    }
+    if (weakQuantity > 0 && fewAttackers > 0) {
+        EstimateDamage(attacker, fewAttackers, target, ranged, &low, &unused);
+        forecast->damageMin += low;
+        forecast->killsMin +=
+            ForecastLosses(&weakQuantity, &weakLost, target->m_stats.hitPoints, low);
+    }
+    if (strongQuantity > 0 && manyAttackers > 0) {
+        EstimateDamage(attacker, manyAttackers, target, ranged, &unused, &high);
+        forecast->damageMax += high;
+        forecast->killsMax +=
+            ForecastLosses(&strongQuantity, &strongLost, target->m_stats.hitPoints, high);
+    }
+}
+
+// Appends the hit points left on a stack's top creature and its full hit
+// points to gText.
+static void AppendHitPoints(army* stack) {
+    if (gText[0])
+        strcat(gText, "  |  ");
+    sprintf(
+        gText + strlen(gText),
+        localization::Tr("combat.status.hit_points"),
+        stack->m_stats.hitPoints - stack->m_hitPointsLost,
+        stack->m_stats.hitPoints
+    );
+}
+
 void combatManager::CombatMessage(i16 messageType) {
     army* currentArmy;
     army* targetArmy;
+    army* hoveredArmy;
     i16 actingMonsterType;
     i16 targetMonsterType;
+    CombatForecast forecast;
 
     currentArmy = &m_armies[m_currentSide][m_currentArmyIndex];
     actingMonsterType = currentArmy->m_creatureType;
@@ -77,13 +223,20 @@ void combatManager::CombatMessage(i16 messageType) {
         targetArmy = &m_armies[currentArmy->m_targetSide][currentArmy->m_targetIndex];
         targetMonsterType = targetArmy->m_creatureType;
     }
+    hoveredArmy = NULL;
+    if (m_selectedHex >= 0 && m_hexCells[m_selectedHex].m_occupantSide >= 0
+        && m_hexCells[m_selectedHex].m_occupantIndex >= 0)
+        hoveredArmy = &m_armies[m_hexCells[m_selectedHex].m_occupantSide]
+                               [m_hexCells[m_selectedHex].m_occupantIndex];
     switch (messageType) {
         case COMBAT_MESSAGE_COMMAND_DEFAULT:
             if ((currentArmy->m_stats.attributes & MONSTER_FLAGS_SHOOTER)
-                && currentArmy->m_stats.shots == 0 && targetArmy)
+                && currentArmy->m_stats.shots == 0 && (targetArmy || hoveredArmy))
                 strcpy(gText, gCombatMessage[COMBAT_TEXT_NO_SHOTS]);
             else
                 strcpy(gText, gCombatMessage[COMBAT_TEXT_NONE]);
+            if (gConfig.battleMessageFormat != BATTLE_MESSAGE_CLASSIC && hoveredArmy)
+                AppendHitPoints(hoveredArmy);
             break;
         case COMBAT_MESSAGE_COMMAND_MOVE:
             sprintf(gText, gCombatMessage[COMBAT_TEXT_MOVE], gArmyNames[actingMonsterType]);
@@ -92,15 +245,63 @@ void combatManager::CombatMessage(i16 messageType) {
             sprintf(gText, gCombatMessage[COMBAT_TEXT_FLY], gArmyNames[actingMonsterType]);
             break;
         case COMBAT_MESSAGE_COMMAND_ATTACK:
-            sprintf(gText, gCombatMessage[COMBAT_TEXT_ATTACK], gArmyNamesPlural[targetMonsterType]);
-            break;
         case COMBAT_MESSAGE_COMMAND_SHOOT:
-            sprintf(
-                gText,
-                gCombatMessage[COMBAT_TEXT_SHOOT],
-                gArmyNamesPlural[targetMonsterType],
-                currentArmy->m_stats.shots
-            );
+            if (targetArmy && gConfig.battleMessageFormat == BATTLE_MESSAGE_FORECAST) {
+                ForecastAttack(
+                    currentArmy,
+                    targetArmy,
+                    messageType == COMBAT_MESSAGE_COMMAND_SHOOT,
+                    &forecast
+                );
+                gText[0] = 0;
+                AppendHitPoints(targetArmy);
+                strcat(gText, "  |  ");
+                if (forecast.damageMin == forecast.damageMax)
+                    sprintf(
+                        gText + strlen(gText),
+                        localization::Tr("combat.forecast.damage"),
+                        forecast.damageMin
+                    );
+                else
+                    sprintf(
+                        gText + strlen(gText),
+                        localization::Tr("combat.forecast.damage_range"),
+                        forecast.damageMin,
+                        forecast.damageMax
+                    );
+                if (forecast.killsMax > 0) {
+                    strcat(gText, "  |  ");
+                    if (forecast.killsMin == forecast.killsMax)
+                        sprintf(
+                            gText + strlen(gText),
+                            localization::Tr("combat.forecast.kills"),
+                            forecast.killsMin
+                        );
+                    else
+                        sprintf(
+                            gText + strlen(gText),
+                            localization::Tr("combat.forecast.kills_range"),
+                            forecast.killsMin,
+                            forecast.killsMax
+                        );
+                }
+                break;
+            }
+            if (messageType == COMBAT_MESSAGE_COMMAND_ATTACK)
+                sprintf(
+                    gText,
+                    gCombatMessage[COMBAT_TEXT_ATTACK],
+                    gArmyNamesPlural[targetMonsterType]
+                );
+            else
+                sprintf(
+                    gText,
+                    gCombatMessage[COMBAT_TEXT_SHOOT],
+                    gArmyNamesPlural[targetMonsterType],
+                    currentArmy->m_stats.shots
+                );
+            if (targetArmy && gConfig.battleMessageFormat == BATTLE_MESSAGE_CLASSIC_PLUS)
+                AppendHitPoints(targetArmy);
             break;
         case COMBAT_MESSAGE_COMMAND_OPTIONS:
             strcpy(gText, gCombatMessage[COMBAT_TEXT_GENERALS_OPTIONS]);
@@ -111,13 +312,17 @@ void combatManager::CombatMessage(i16 messageType) {
         case COMBAT_MESSAGE_COMMAND_VIEW_INFO:
             actingMonsterType =
                 m_armies[m_currentSide][m_hexCells[m_selectedHex].m_occupantIndex].m_creatureType;
-            if (actingMonsterType >= CREATURE_FIRST)
+            if (actingMonsterType >= CREATURE_FIRST) {
                 sprintf(
                     gText,
                     gCombatMessage[COMBAT_TEXT_VIEW_INFO],
                     gArmyNames[actingMonsterType]
                 );
-            else
+                if (gConfig.battleMessageFormat != BATTLE_MESSAGE_CLASSIC)
+                    AppendHitPoints(
+                        &m_armies[m_currentSide][m_hexCells[m_selectedHex].m_occupantIndex]
+                    );
+            } else
                 sprintf(gText, "");
             break;
     }
