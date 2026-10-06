@@ -24,6 +24,7 @@
 #include <BASE/palette.h>
 #include <BASE/resourceManager.h>
 #include <EDITOR/editManager.h>
+#include <EDITOR/overlayManager.h>
 #include <SOURCE/appMenu.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
@@ -279,7 +280,7 @@ void EarlyResizeWindow(i32, i32, i32, i32) {}
 VA(0x0040927d, 0x5)
 void UpdateSystemOptionsMenu(void) {}
 
-// The tool units' shared state (CLEARMGR, TERRMGR and EDITMGR read it).
+// The tool units' shared state (CLEARMGR, OVERLAY, TERRMGR and EDITMGR read it).
 DATA(0x0043f39c)
 i32 gClearFlags = EDITOR_CLEAR_FLAGS_DEFAULT;
 DATA(0x0043f3a0)
@@ -300,22 +301,53 @@ char* gClearToolHelp[EDITOR_CLEAR_TOOL_HELP_COUNT] = {
     "",
     localization::Tr("editor.clear.options.help")
 };
+DATA(0x0043f73c)
+char* gOverlayToolHelp[EDITOR_OVERLAY_TOOL_HELP_COUNT] = {
+    "",
+    localization::Tr("editor.overlay.selected.help")
+};
+DATA(0x0043f7a8)
+char* gOverlayCategoryNames[OVERLAY_CATEGORY_COUNT] = {
+    localization::Tr("editor.overlay.category.0"),
+    localization::Tr("editor.overlay.category.1"),
+    localization::Tr("editor.overlay.category.2"),
+    localization::Tr("editor.overlay.category.3"),
+    localization::Tr("editor.overlay.category.4"),
+    localization::Tr("editor.overlay.category.5"),
+    localization::Tr("editor.overlay.category.6"),
+    localization::Tr("editor.overlay.category.7"),
+    localization::Tr("editor.overlay.category.8"),
+    localization::Tr("editor.overlay.category.9"),
+    localization::Tr("editor.overlay.category.10")
+};
 DATA(0x00451e9c)
 i32 gSelectionWidth;
 DATA(0x00451f70)
 i32 gSelectionY;
 DATA(0x00451f80)
 i32 gSelectionHeight;
-// The random map generator's settings (EVENTMGR's random map window edits
-// them; MAPOBJ reads them).
+DATA(0x0045245c)
+i16 gNextObjectId;
+DATA(0x004528c8)
+i32 gOverlayCategory;
+DATA(0x004528cc)
+i32 gOverlayShownCategory;
+
+// The random map generator's settings (EVENTMGR's editnew.bin and MAPOBJ).
 DATA(0x0043f3a8)
-double gRandomTerrainPercent[EDITOR_TERRAIN_COUNT] = {30.0, 30.0, 20.0, 0.0, 0.0, 0.0, 20.0};
+double gTerrainPercent[EDITOR_GENERATOR_TERRAIN_COUNT] = {30.0, 30.0, 20.0, 0.0, 0.0, 0.0, 20.0};
 DATA(0x0043f3e0)
-double gRandomMapDensity[RANDOM_MAP_DENSITY_COUNT] = {50.0, 50.0, 50.0, 50.0, 50.0};
+double gDensityPercent[EDITOR_GENERATOR_DENSITY_COUNT] = {50.0, 50.0, 50.0, 50.0, 50.0};
 DATA(0x0043f408)
-i32 gRandomMapClimate = 1;
+i32 gScatterTowns = 1;
+DATA(0x004528e0)
+i32 gSaveUnseen;
+DATA(0x004528e4)
+i32 gGeneratingMaps;
+DATA(0x0045259c)
+i32 gLandCellCount;
 DATA(0x0043f78c)
-char* gEditTerrainNames[EDITOR_TERRAIN_COUNT] = {
+char* gGeneratorTerrainNames[EDITOR_GENERATOR_TERRAIN_COUNT] = {
     localization::Tr("editor.terrain.name.0"),
     localization::Tr("editor.terrain.name.1"),
     localization::Tr("editor.terrain.name.2"),
@@ -324,11 +356,10 @@ char* gEditTerrainNames[EDITOR_TERRAIN_COUNT] = {
     localization::Tr("editor.terrain.name.5"),
     localization::Tr("editor.terrain.name.6")
 };
+// The eventsManager dialogs' edited cell, map header and window.
 DATA(0x00451e98)
-SMapHeader* gpMapHeader;
-DATA(0x0045259c)
-i32 gLandCellCount;
-DATA(0x004528e0)
-i32 gRandomMapPromptSave;
-DATA(0x004528e4)
-i32 gGeneratingMaps;
+SMapHeader* gMapHeader;
+DATA(0x00451f7c)
+heroWindow* gEditDialog;
+DATA(0x0045217c)
+mapCell* gEditCell;

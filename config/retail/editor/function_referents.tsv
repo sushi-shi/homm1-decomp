@@ -11,10 +11,15 @@ rva	name	provenance
 0x000039f0	?PaintGround@editManager@@QAEXFFFFF@Z	callee of a body compiled for this image from shared source
 0x00003bd0	?FillGround@editManager@@QAEXFFFFF@Z	callee of a body compiled for this image from shared source
 0x00003d38	?BlendTerrain@editManager@@QAEXFEEEE@Z	callee of a body compiled for this image from shared source
+0x00006398	?HasObject@editManager@@QAEHH@Z	callee of a body compiled for this image from shared source
+0x00006408	?CountArtifacts@editManager@@QAEHXZ	callee of a body compiled for this image from shared source
+0x000064ad	?CountTowns@editManager@@QAEHXZ	callee of a body compiled for this image from shared source
+0x00006554	?CountMines@editManager@@QAEHXZ	callee of a body compiled for this image from shared source
 0x00006f5b	?SaveMap@editManager@@QAEFPAD@Z	callee of a body compiled for this image from shared source
 0x000078e5	?ClearArea@editManager@@QAEXHHHHGH@Z	callee of a body compiled for this image from shared source
 0x00007de9	?ResetArea@editManager@@QAEXHHHH@Z	callee of a body compiled for this image from shared source
 0x000080fc	?NewMap@editManager@@QAEXH@Z	callee of a body compiled for this image from shared source
+0x0000822b	?ShowStatusWarning@@YAXPAD@Z	callee of a body compiled for this image from shared source
 0x000084a5	_PollSound	callee of placed SOURCE/kbwin body at site 0xd46a; game callee 0x3c7b0
 0x000084aa	?oldmain@@YAHXZ	callee of a body compiled for this image from shared source
 0x000085d1	?DelayTicks@@YAXH@Z	game 0x46370: masked game body 0x46370 (46 bytes, 4 fields masked) unique at a census start
@@ -38,12 +43,30 @@ rva	name	provenance
 0x00009241	?HandleAppSpecificMenuCommands@@YAHH@Z	callee of placed SOURCE/kbwin body at site 0xd726; game callee 0x4238b
 0x00009278	?EarlyResizeWindow@@YAXHHHH@Z	callee of a body compiled for this image from shared source
 0x0000927d	?UpdateSystemOptionsMenu@@YAXXZ	callee of a body compiled for this image from shared source
+0x000097fb	?EditCell@eventsManager@@QAEXFF@Z	callee of a body compiled for this image from shared source
+0x00009f63	?EditTown@eventsManager@@QAEXFF@Z	callee of a body compiled for this image from shared source
+0x0000a11a	?UpdateTownWindow@eventsManager@@QAEXPAUeditTownExtra@@@Z	callee of a body compiled for this image from shared source
+0x0000a7f4	?EditMonster@eventsManager@@QAEXFF@Z	callee of a body compiled for this image from shared source
+0x0000ab25	?EditHero@eventsManager@@QAEXFF@Z	callee of a body compiled for this image from shared source
+0x0000acad	?UpdateHeroWindow@eventsManager@@QAEXPAUeditHeroExtra@@@Z	callee of a body compiled for this image from shared source
 0x0000b329	?ClearOptionsDialog@@YAHXZ	callee of a body compiled for this image from shared source
-0x0000b67a	?EditMapDetails@@YAHH@Z	callee of a body compiled for this image from shared source
-0x0000bcf7	?RandomMapDialog@@YAHXZ	callee of a body compiled for this image from shared source
-0x0000f681	?CanPlaceObject@@YAFPAUeditObject@@FF@Z	callee of a body compiled for this image from shared source
-0x0000fa08	?PlaceObject@@YAHPAUeditObject@@FF@Z	callee of a body compiled for this image from shared source
-0x0001016e	?PlaceObjectOverlay@@YAHPAUeditObject@@FFH@Z	callee of a body compiled for this image from shared source
+0x0000b460	?UpdateClearWindow@@YAXXZ	callee of a body compiled for this image from shared source
+0x0000b67a	?MapDetailsDialog@@YAHH@Z	callee of a body compiled for this image from shared source
+0x0000b7cc	?UpdateMapDetailsWindow@@YAXXZ	callee of a body compiled for this image from shared source
+0x0000bcf7	?NewMapDialog@@YAHXZ	callee of a body compiled for this image from shared source
+0x0000c05e	?UpdateNewMapWindow@@YAXXZ	callee of a body compiled for this image from shared source
+0x0000c17a	?BalanceTerrainPercents@@YAXH@Z	callee of a body compiled for this image from shared source
+0x0000c705	?DragNewMapSlider@@YAXHH@Z	callee of a body compiled for this image from shared source
+0x0000f4f7	?DrawFootprint@overlayManager@@QAEXFFFFFF@Z	callee of a body compiled for this image from shared source
+0x0000f681	?CanPlaceOverlay@@YAFPAUoverlayType@@FF@Z	callee of a body compiled for this image from shared source
+0x0000fa08	?PlaceOverlay@@YAHPAUoverlayType@@FF@Z	callee of a body compiled for this image from shared source
+0x0001016e	?PlaceMineResource@@YAHPAUoverlayType@@FFH@Z	callee of a body compiled for this image from shared source
+0x00010260	?DrawOverlay@overlayManager@@QAEXPAUoverlayType@@FFFFH@Z	callee of a body compiled for this image from shared source
+0x000105b2	?LoadCategory@overlayManager@@QAEFF@Z	callee of a body compiled for this image from shared source
+0x000106f9	?PickOverlay@overlayManager@@QAEFF@Z	callee of a body compiled for this image from shared source
+0x00010c92	?MeasureOverlay@overlayManager@@QAEXPAUoverlayType@@@Z	callee of a body compiled for this image from shared source
+0x00010dc4	?DrawCategoryName@overlayManager@@QAEXH@Z	callee of a body compiled for this image from shared source
+0x00010e33	?DrawSelectedOverlay@overlayManager@@QAEXXZ	callee of a body compiled for this image from shared source
 0x00011365	?HasEnoughCastles@editManager@@QAEHXZ	callee of a body compiled for this image from shared source
 0x0001143a	?PaintRandomTerrain@editManager@@QAEXHHH@Z	callee of a body compiled for this image from shared source
 0x00011a3b	?RemoveSmallRegions@editManager@@QAEXXZ	callee of a body compiled for this image from shared source
@@ -51,8 +74,10 @@ rva	name	provenance
 0x00011f59	?PlaceObstacleChains@editManager@@QAEXHH@Z	callee of a body compiled for this image from shared source
 0x00012327	?PlaceChainLink@editManager@@QAEHPAH0HHD@Z	callee of a body compiled for this image from shared source
 0x0001262a	?PlaceTowns@editManager@@QAEXXZ	callee of a body compiled for this image from shared source
+0x00014576	?PlaceResourceSite@editManager@@QAEXHHH@Z	callee of a body compiled for this image from shared source
 0x00014795	?PlaceRandomObjects@editManager@@QAEXHH@Z	callee of a body compiled for this image from shared source
 0x0001536b	?PlaceTreasures@editManager@@QAEXHH@Z	callee of a body compiled for this image from shared source
+0x0001609d	?ScatterDecorations@editManager@@QAEXXZ	callee of a body compiled for this image from shared source
 0x000192b4	?RandomizeTiles@terrainManager@@QAEXXZ	callee of a body compiled for this image from shared source
 0x00019404	?SelectTerrain@terrainManager@@QAEXF@Z	callee of a body compiled for this image from shared source
 0x0001b320	_CloseHandle@4	FF25 thunk of KERNEL32.DLL!CloseHandle; name of game thunk 0x68616
@@ -182,6 +207,7 @@ rva	name	provenance
 0x00029be5	_toupper	callee of a body compiled for this image from shared source
 0x00029c54	__toupper_lk	masked-exact libcmt.lib:/509 (dna_bands.tsv)
 0x00029d20	_atol	masked-exact libcmt.lib:/152 (dna_bands.tsv)
+0x00029dab	_atoi	callee of a body compiled for this image from shared source
 0x00029db6	__atoi64	masked-exact libcmt.lib:/152 (dna_bands.tsv)
 0x00029e70	_strncpy	game 0x78f60: masked game body 0x78f60 (254 bytes, 1 fields masked) unique at a census start
 0x00029f6e	_srand	callee of placed SOURCE/kbwin body at site 0xce49; game callee 0x78dec

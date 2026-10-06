@@ -13,7 +13,11 @@ struct mapStep {
 };
 
 H1_ENUM_CONST_BEGIN(RandomMapConstant)
-// PaintRandomTerrain's percent that covers the whole map.
+// GenerateRandomMap retries a map without enough castles this often.
+    RANDOM_MAP_ATTEMPTS = 5,
+    // overlayType::terrainMask of an object placeable on every terrain.
+    RANDOM_MAP_ANY_TERRAIN = 0xfe,
+    // PaintRandomTerrain's percent that covers the whole map.
     RANDOM_MAP_FULL_PERCENT = 100,
     // PaintRandomTerrain drifts a seed every eighth step and its walk
     // weights every 64th.
@@ -26,6 +30,27 @@ H1_ENUM_CONST_BEGIN(RandomMapConstant)
     RANDOM_MAP_WARLOCK_CASTLE_FRAME = 94,
     RANDOM_MAP_MIN_CASTLES = 4
 H1_ENUM_CONST_END(RandomMapConstant)
+
+// PlaceResourceSite's kinds (PlaceRandomObjects' Random(0, 6)): kinds from
+// RANDOM_MAP_SITE_FIRST_MINE on are the mines of gMineSiteKinds' resources.
+H1_ENUM_BEGIN(RandomMapSiteKind)
+    RANDOM_MAP_SITE_SAWMILL = 0,
+    RANDOM_MAP_SITE_ALCHEMIST_LAB = 1,
+    RANDOM_MAP_SITE_FIRST_MINE = 2,
+    RANDOM_MAP_SITE_KIND_COUNT = 7
+H1_ENUM_END(RandomMapSiteKind)
+
+// Where PlaceTreasures guards a treasure: the diagonal cell of a corner whose
+// two sides are blocked.
+H1_ENUM_BEGIN(TreasureGuard)
+    TREASURE_UNGUARDED = 0,
+    TREASURE_GUARD_NE = 1,
+    TREASURE_GUARD_SE = 2,
+    TREASURE_GUARD_SW = 3,
+    TREASURE_GUARD_NW = 4,
+    // Layouts above this one place a guard.
+    TREASURE_UNGUARDED_LAST = TREASURE_UNGUARDED
+H1_ENUM_END(TreasureGuard)
 
 // The eight directions a mountain or tree chain runs (gChainSteps): even
 // directions climb two rows per column, odd ones one.

@@ -342,6 +342,30 @@ msgstr "Heroes requires 256 color mode or higher.\n\nTo change color mode, right
 msgid "editor.clear.options.help"
 msgstr "Provides finer control over which objects are removed."
 
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.cell.unavailable"
+msgstr "Information is available only for cells with heroes, monsters or town and castle gates."
+
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.hero.troop_type.range"
+msgstr "Must be between 0 and 27"
+
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.monster.count.range"
+msgstr "Must be between 0 and 127.  (0 lets the computer choose the number at random.)"
+
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.town.mage_guild.range"
+msgstr "Must be between 1 and 4"
+
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.town.old_editor"
+msgstr "A town placed by the old editor cannot be edited"
+
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.town.troop_type.range"
+msgstr "Must be between 0 and 27"
+
 #: src/SOURCE/kbwin.cpp
 msgid "editor.instance.event_name"
 msgstr "Heroes Editor"
@@ -349,6 +373,84 @@ msgstr "Heroes Editor"
 #: src/SOURCE/kbwin.cpp
 msgid "editor.instance.title"
 msgstr "Heroes Editor"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.0"
+msgstr "1 - Water"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.1"
+msgstr "2 - Grass"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.2"
+msgstr "3 - Snow"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.3"
+msgstr "4 - Swamp"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.4"
+msgstr "5 - Lava"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.5"
+msgstr "6 - Desert"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.6"
+msgstr "7 - Dirt"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.7"
+msgstr "8 - Towns"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.8"
+msgstr "9 - Monsters"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.9"
+msgstr "10 - Artifacts"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.10"
+msgstr "11 - Treasures"
+
+#: src/EDITOR/OVERLAY.cpp
+msgid "editor.overlay.limit.artifacts"
+msgstr "The maximum number of artifacts is placed."
+
+#: src/EDITOR/OVERLAY.cpp
+msgid "editor.overlay.limit.dragon_city"
+msgstr "The map already has a Dragon City."
+
+#: src/EDITOR/OVERLAY.cpp
+msgid "editor.overlay.limit.lighthouse"
+msgstr "The map already has a lighthouse."
+
+#: src/EDITOR/OVERLAY.cpp
+#, c-format
+msgid "editor.overlay.limit.mines"
+msgstr "Limit of mines, sawmills and alchemist's labs (%d) reached."
+
+#: src/EDITOR/OVERLAY.cpp
+#, c-format
+msgid "editor.overlay.limit.towns"
+msgstr "Town limit (%d) reached."
+
+#: src/EDITOR/OVERLAY.cpp
+msgid "editor.overlay.place.unsuitable"
+msgstr "Unsuitable location"
+
+#: src/EDITOR/OVERLAY.cpp
+msgid "editor.overlay.resource.unsuitable"
+msgstr "Unsuitable location"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.selected.help"
+msgstr "Selected object."
 
 #: src/EDITOR/MAPOBJ.cpp
 #, c-format

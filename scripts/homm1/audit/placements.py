@@ -29,7 +29,9 @@ image's config/retail directory:
   data_vtables.tsv, data_compgen.tsv   placed provider rows; a vtable of a
                          class only the image defines is named where the
                          image's own masked-identical constructor stores it and
-                         every slot names the claimed method at that address
+                         every slot names the claimed method at that address;
+                         a floating constant an image-only body reads is named
+                         where the retail bytes equal its pool entry
 
 Units are shared when config/units.toml lists the image in their `images`.
 """
@@ -50,6 +52,8 @@ FILL = (0x90, 0xCC)
 #: Literal-pool names derived from the game rva (data_manifest, msvc_names):
 #: they never carry to another image, whose literal pool names its own slots.
 RVA_NAMED = re.compile(r"^\$(?:SG|T)[0-9]+$")
+#: VC6 floating-point pool constants: their names encode their values.
+FP_POOL = re.compile(r"__real@[48]@[0-9a-f]{20}")
 SRC_CHANNELS = ("src", "src_compgen", "src_dyninit", "src_data_compgen")
 
 
@@ -114,7 +118,7 @@ class Placer:
         self.image_sizes: dict[int, int] = {}             # game rva -> this image's size
         self.image_callees: dict[int, set[str]] = {}      # rva -> callee symbol(s)
         self.image_vtables: dict[int, tuple[str, int, str]] = {}  # rva -> (name, size, why)
-        self.compgen_users: dict[int, set[str]] = defaultdict(set)  # game rva -> image units
+        self.image_fppool: dict[int, tuple[str, int, str]] = {}   # rva -> (name, size, owner)
         self.data: dict[int, tuple[int, str]] = {}
         self.problems: list[str] = []
 
@@ -469,6 +473,8 @@ class Placer:
                    for r in read_tsv(frag)[2]
                    if r.get("space") == self.image and r["kind"] == "func"}
         vtables: dict[int, set[tuple[str, int, str]]] = defaultdict(set)
+        fppool: dict[int, set[tuple[str, int]]] = defaultdict(set)
+        fpowners: dict[int, list[str]] = defaultdict(list)
         for unit in sorted(u["unit"] for u in image_units(image=self.image)):
             frag = claims_dir / f"{unit}.tsv"
             obj = image_build(self.image) / "objdiff/base" / f"{unit}.obj"
@@ -516,6 +522,20 @@ class Placer:
                     off = r.site - sym.value
                     addend = struct.unpack_from("<i", body, off)[0]
                     value = struct.unpack_from("<I", retail, off)[0] - 0x400000
+                    if unit in self.image_only and FP_POOL.fullmatch(target.name) \
+                            and target.section > 0 and addend == 0:
+                        # an image-only body's floating constant: named by value,
+                        # wherever the image's own pool entry lies
+                        size = 8 if target.name.startswith("__real@8@") else 4
+                        sec = c.sections[target.section - 1]
+                        payload = c.section_bytes(sec)[target.value:target.value + size]
+                        if self.pe.read(value, size) == payload:
+                            fppool[value].add((target.name, size))
+                            fpowners[value].append(unit)
+                        else:
+                            self.problems.append(f"fp constant 0x{value:x}: retail bytes "
+                                                 f"differ from {target.name}")
+                        continue
                     if b is None:
                         if unit in self.image_only and target.name.startswith("??_7") \
                                 and target.section > 0 and addend == 0:
@@ -524,8 +544,16 @@ class Placer:
                                 vtables[value].add(vt)
                         continue
                     found[b["rva"]].add(value - addend)
-                    if b["channel"] == "data_compgen":
-                        self.compgen_users[b["rva"]].add(unit)
+        order = {r["unit"]: int(r["lo"], 16)
+                 for r in read_tsv(retail_dir(self.image) / "link_order.tsv")[2]}
+        for erva, rows in fppool.items():
+            if len(rows) == 1:
+                name, size = next(iter(rows))
+                # the linker keeps the first contributing object's pool entry
+                owner = min(fpowners[erva], key=lambda u: order.get(u, 1 << 32))
+                self.image_fppool[erva] = (name, size, owner)
+            else:
+                self.problems.append(f"fp constant 0x{erva:x}: image compiles disagree")
         for erva, rows in vtables.items():
             if len(rows) == 1:
                 self.image_vtables[erva] = next(iter(rows))
@@ -560,14 +588,6 @@ class Placer:
         return (vtable.name, size,
                 f"image-only: this image's constructor stores it; its {len(slots)} slot(s) "
                 f"hold the claimed methods")
-
-    def link_units(self) -> list[str]:
-        rows = read_tsv(retail_dir(self.image) / "link_order.tsv")[2]
-        out = []
-        for r in sorted(rows, key=lambda r: int(r["lo"], 16)):
-            if r["unit"] not in out:
-                out.append(r["unit"])
-        return out
 
     def run(self) -> None:
         self.place_functions()
@@ -628,15 +648,6 @@ def write_tables(p: Placer, out: Path | None = None) -> dict:
                 and not RVA_NAMED.match(b["name"]):
             compgen.append([f"0x{erva:08x}", f"0x{b['size']:x}", b["name"], b["unit"],
                             b["kind"] or "common"])
-        elif b["channel"] == "data_compgen" and p.compgen_users.get(grva) \
-                and not RVA_NAMED.match(b["name"]):
-            # A compiler constant the game's owner does not bring: the linker
-            # keeps the COMDAT of the first image unit, in link order, whose
-            # own compile references it.
-            order = {u: i for i, u in enumerate(p.link_units())}
-            owner = min(p.compgen_users[grva], key=lambda u: order.get(u, len(order)))
-            compgen.append([f"0x{erva:08x}", f"0x{b['size']:x}", b["name"], owner,
-                            b["kind"] or "common"])
     write_tsv(out / "data_symbols.tsv", [
         digest_line, "# Reviewed game data names placed by their code users."],
         ["rva", "size", "symbol", "provenance"],
@@ -691,6 +702,8 @@ def write_tables(p: Placer, out: Path | None = None) -> dict:
         starts.setdefault(erva, game_kinds.get(grva, ""))
     for erva in p.image_vtables:
         starts.setdefault(erva, "vtable")
+    for erva in p.image_fppool:
+        starts.setdefault(erva, "fppool")
     # the image's own source data claims (src/<IMAGE>) are starts too
     from homm1.core.paths import image_build
     for frag in sorted((image_build(p.image) / "gen/claims").rglob("*.tsv")):
@@ -717,6 +730,9 @@ def write_tables(p: Placer, out: Path | None = None) -> dict:
     vtables.sort()
     write_tsv(out / "data_vtables.tsv", [digest_line],
               ["rva", "size", "name", "kind", "note"], vtables)
+    compgen += [[f"0x{erva:08x}", f"0x{size:x}", name, owner, "fppool"]
+                for erva, (name, size, owner) in sorted(p.image_fppool.items())]
+    compgen.sort()
     write_tsv(out / "data_compgen.tsv", [digest_line],
               ["rva", "size", "name", "owner", "class"], compgen)
     return {"placements": len(placements), "referents": len(referents),

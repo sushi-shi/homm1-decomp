@@ -59,6 +59,8 @@ H1_ENUM_BEGIN(MapTileset)
     TILESET_OBJ32_07 = 7,
     TILESET_MTN32 = 8,
     TILESET_TREE32 = 9,
+    // Tilesets up to this one hold scenery (objects, mountains, trees).
+    TILESET_SCENERY_LAST = TILESET_TREE32,
     TILESET_TOWN32 = 10,
     TILESET_RSRC32 = 11,
     TILESET_MONS32 = 12,

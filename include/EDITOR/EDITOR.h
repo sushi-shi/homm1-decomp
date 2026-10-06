@@ -6,8 +6,6 @@
 
 #include <Domains.h>
 
-struct SMapHeader;
-
 // The status bar: the bottom 16-pixel row of the 640x480 screen.
 H1_ENUM_CONST_BEGIN(EditorStatusBarConstant)
     EDITOR_STATUS_BAR_X = 0,
@@ -55,45 +53,61 @@ H1_ENUM_BEGIN(ClearToolHelp)
     CLEAR_TOOL_HELP_OPTIONS = 1
 H1_ENUM_END(ClearToolHelp)
 
+H1_ENUM_BEGIN(OverlayToolHelp)
+    OVERLAY_TOOL_HELP_NONE = -1,
+    OVERLAY_TOOL_HELP_SELECTED = 1
+H1_ENUM_END(OverlayToolHelp)
+
 H1_ENUM_CONST_BEGIN(EditorToolHelpConstant)
     EDITOR_TERRAIN_TOOL_HELP_COUNT = 8,
-    EDITOR_CLEAR_TOOL_HELP_COUNT = 2
+    EDITOR_CLEAR_TOOL_HELP_COUNT = 2,
+    EDITOR_OVERLAY_TOOL_HELP_COUNT = 2
 H1_ENUM_CONST_END(EditorToolHelpConstant)
 
 extern char* gTerrainToolHelp[];
 extern char* gClearToolHelp[];
 
-H1_ENUM_CONST_BEGIN(EditorRandomMapConstant)
-    EDITOR_TERRAIN_COUNT = 7,
-    RANDOM_MAP_DENSITY_COUNT = 5,
-    // GenerateRandomMap retries a map without enough castles this often.
-    RANDOM_MAP_ATTEMPTS = 5
-H1_ENUM_CONST_END(EditorRandomMapConstant)
+// The object tool's preview-border help and category names.
+extern char* gOverlayToolHelp[];
+extern char* gOverlayCategoryNames[];
+// The category the object tool places from and the one its panel shows.
+extern i32 gOverlayCategory;
+extern i32 gOverlayShownCategory;
+// The id of the last placed object (editManager::m_cellPairs).
+extern i16 gNextObjectId;
 
-// gRandomMapDensity's settings, 0..100 (50: normal).
-H1_ENUM_BEGIN(RandomMapDensity)
-    RANDOM_MAP_MOUNTAINS = 0,
-    RANDOM_MAP_TREES = 1,
-    RANDOM_MAP_OBJECTS = 2,
-    RANDOM_MAP_TREASURE = 3,
-    RANDOM_MAP_MONSTERS = 4
-H1_ENUM_END(RandomMapDensity)
+// The random map generator's slider rows.
+H1_ENUM_CONST_BEGIN(EditorGeneratorConstant)
+    EDITOR_GENERATOR_TERRAIN_COUNT = 7,
+    EDITOR_GENERATOR_DENSITY_COUNT = 5
+H1_ENUM_CONST_END(EditorGeneratorConstant)
 
-// The random map window's settings: each terrain's share of the map in
-// percent (TerrainType order) and the densities.
-extern double gRandomTerrainPercent[];
-extern double gRandomMapDensity[];
-// Set: snow keeps to the poles and desert and lava to the middle rows.
-extern i32 gRandomMapClimate;
+// The cell an eventsManager dialog edits, and the dialog's window.
+extern class mapCell* gEditCell;
+extern class heroWindow* gEditDialog;
+// The edited map's header (difficulty, size, name and description).
+extern struct SMapHeader* gMapHeader;
+// The random map generator's settings (editnew.bin): the share of each
+// terrain and the density of each object class, in percent; whether towns are
+// scattered rather than centred; whether the map is saved unseen.
+extern double gTerrainPercent[EDITOR_GENERATOR_TERRAIN_COUNT];
+extern double gDensityPercent[EDITOR_GENERATOR_DENSITY_COUNT];
+extern i32 gScatterTowns;
+extern i32 gSaveUnseen;
+// gDensityPercent's rows.
+H1_ENUM_BEGIN(GeneratorDensity)
+    GENERATOR_DENSITY_MOUNTAINS = 0,
+    GENERATOR_DENSITY_TREES = 1,
+    GENERATOR_DENSITY_OBJECTS = 2,
+    GENERATOR_DENSITY_TREASURE = 3,
+    GENERATOR_DENSITY_MONSTERS = 4
+H1_ENUM_END(GeneratorDensity)
 // The terrain names the generator's status line shows.
-extern char* gEditTerrainNames[];
-// The map header the editor edits (EDITMGR's gMapHeader).
-extern SMapHeader* gpMapHeader;
+extern char* gGeneratorTerrainNames[];
 // RemoveSmallRegions counts the map's land cells here.
 extern i32 gLandCellCount;
-// Set by the random map window: offer to save each generated map.
-extern i32 gRandomMapPromptSave;
-// Set while the random-map generator runs: the map view draws clouds only.
+// Set while the generator generates a map to save unseen: the map view draws
+// clouds only.
 extern i32 gGeneratingMaps;
 
 void ShowStatusText(char* text);

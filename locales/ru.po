@@ -342,6 +342,30 @@ msgstr "Для героев требуется режим 256 цветов эк�
 msgid "editor.clear.options.help"
 msgstr "Обеспечивает более детальное управление процессом удаления объектов."
 
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.cell.unavailable"
+msgstr "Информация доступна только для клеток с героями, монстрами или ворот городов и замков."
+
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.hero.troop_type.range"
+msgstr "Должно быть между 0 и 27"
+
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.monster.count.range"
+msgstr "Должно быть между 0 и 127.  (0 позволяет компьютеру определить число случайно.)"
+
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.town.mage_guild.range"
+msgstr "Должно быть между 1 и 4"
+
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.town.old_editor"
+msgstr "Невозможно редактировать город созданный старым редактором"
+
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.town.troop_type.range"
+msgstr "Должно быть между 0 и 27"
+
 #: src/SOURCE/kbwin.cpp
 msgid "editor.instance.event_name"
 msgstr "Редактор Героев"
@@ -349,6 +373,84 @@ msgstr "Редактор Героев"
 #: src/SOURCE/kbwin.cpp
 msgid "editor.instance.title"
 msgstr "Редактор Героев"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.0"
+msgstr "1 - Вода"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.1"
+msgstr "2 - Трава"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.2"
+msgstr "3 - Снег"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.3"
+msgstr "4 - Болота"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.4"
+msgstr "5 - Лава"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.5"
+msgstr "6 - Пустыня"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.6"
+msgstr "7 - Грязь"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.7"
+msgstr "8 - Города"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.8"
+msgstr "9 - Монстры"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.9"
+msgstr "10 - Артефакты"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.10"
+msgstr "11 - Сокровища"
+
+#: src/EDITOR/OVERLAY.cpp
+msgid "editor.overlay.limit.artifacts"
+msgstr "Установлено максимальное количество артефактов."
+
+#: src/EDITOR/OVERLAY.cpp
+msgid "editor.overlay.limit.dragon_city"
+msgstr "На карте уже стоит Драконий город."
+
+#: src/EDITOR/OVERLAY.cpp
+msgid "editor.overlay.limit.lighthouse"
+msgstr "На карте уже стоит маяк."
+
+#: src/EDITOR/OVERLAY.cpp
+#, c-format
+msgid "editor.overlay.limit.mines"
+msgstr "Лимит шахт, мельниц и алхимических лабораторий (%d) достигнут."
+
+#: src/EDITOR/OVERLAY.cpp
+#, c-format
+msgid "editor.overlay.limit.towns"
+msgstr "Лимит городов (%d) достигнут."
+
+#: src/EDITOR/OVERLAY.cpp
+msgid "editor.overlay.place.unsuitable"
+msgstr "Неподходящее место"
+
+#: src/EDITOR/OVERLAY.cpp
+msgid "editor.overlay.resource.unsuitable"
+msgstr "Неподходящее место"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.selected.help"
+msgstr "Выбранный объект."
 
 #: src/EDITOR/MAPOBJ.cpp
 #, c-format
