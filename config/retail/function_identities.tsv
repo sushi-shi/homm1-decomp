@@ -942,7 +942,7 @@ rva	name
 0x0006eea6	?Main@inputManager@@UAEFAAUtag_message@@@Z
 0x0006eeb6	?Flush@inputManager@@QAEXXZ
 0x0006eed9	?GetEvent@inputManager@@QAE?AUtag_message@@XZ
-0x0006f008	?SetPositiveOption@inputManager@@QAEXF@Z
+0x0006f008	?SetMouseSpeedDivisor@inputManager@@QAEXF@Z
 0x0006f062	?SetKeyCodeType@inputManager@@QAEXF@Z
 0x0006f085	?TranslateInputCharacter@@YAXAAUtag_message@@@Z
 0x0006f0b9	?AsciiConvert@inputManager@@QAEXAAUtag_message@@@Z

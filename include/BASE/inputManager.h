@@ -69,20 +69,29 @@ public:
     i16 m_readIndex;
     i16 m_writeIndex;
     i16 m_mouseMessageActive;
-    i16 m_field_0x236;
-    i16 m_field_0x238;
-    i16 m_field_0x23a;
+    // The DOS input manager drives the mouse and keyboard hardware itself;
+    // these fields keep its state. The Windows build only initializes them:
+    // the mouse driver has been reset (Open, Close), the mouse reports
+    // relative motion instead of a position (SetRelativeMouse), and the
+    // divisor of its motion counts (SetMouseSpeedDivisor).
+    i16 m_mouseDriverReady;
+    i16 m_relativeMouse;
+    i16 m_mouseSpeedDivisor;
     i16 m_scanCodeTable[INPUT_SCAN_CODE_CAPACITY];
-    i16 m_field_0x33c;
+    // The DOS keyboard interrupt handler is hooked.
+    i16 m_keyboardHookInstalled;
     i16 m_requestedPriority;
     i16 m_keyCodeType;
-    i16 m_field_0x342;
+    // The DOS keyboard handler sets it on a prefix scan code and copies it into
+    // the next key event; both builds clear it after queueing a key event.
+    i16 m_keyPrefixPending;
     H1_ENUM_STORAGE(MessageModifier, i16) m_modifiers;
     i16 m_mouseX;
     i16 m_mouseY;
     b8 m_forceMouseMove;
     i32 m_recordFile;
-    i32 m_field_0x34f;
+    // Cleared by the constructor; no code of any build reads it.
+    i32 m_unused34f;
 
     inputManager(void);
     virtual H1_ENUM_RETURN(BaseManagerStatus, i16) Open(i16 priority) OVERRIDE;
@@ -90,9 +99,9 @@ public:
     virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(tag_message& message) OVERRIDE;
     void Flush(void);
     tag_message GetEvent(void);
-    void SetBooleanOption(i16 enabled);
+    void SetRelativeMouse(i16 relative);
     void SetMouseCoords(i16 x, i16 y);
-    void SetPositiveOption(i16 value);
+    void SetMouseSpeedDivisor(i16 divisor);
     void SetKeyCodeType(i16 keyCodeType);
     void AsciiConvert(tag_message& event);
     void MakeScanCodeTable(void);

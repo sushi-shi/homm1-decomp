@@ -113,8 +113,8 @@ rva	size	kind	name	unit	channel	game_rva	evidence
 0x0001de36	0x10	func	?Main@inputManager@@UAEFAAUtag_message@@@Z	BASE/INPUTMGR	src	0x0006eea6	masked game body 0x6eea6 (16 bytes) at its unit's block offset, shared by 15 bodies (3 identical occurrence(s))
 0x0001de46	0x23	func	?Flush@inputManager@@QAEXXZ	BASE/INPUTMGR	src	0x0006eeb6	masked game body 0x6eeb6 (35 bytes, 0 fields masked) unique at a census start
 0x0001de69	0xfe	func	?GetEvent@inputManager@@QAE?AUtag_message@@XZ	BASE/INPUTMGR	src	0x0006eed9	masked game body 0x6eed9 (254 bytes, 4 fields masked) unique at a census start
-0x0001df67	0x31	func	?SetBooleanOption@inputManager@@QAEXF@Z	BASE/INPUTMGR	src	0x0006efd7	masked game body 0x6efd7 (49 bytes, 0 fields masked) unique at a census start
-0x0001df98	0x31	func	?SetPositiveOption@inputManager@@QAEXF@Z	BASE/INPUTMGR	src	0x0006f008	masked game body 0x6f008 (49 bytes, 0 fields masked) unique at a census start
+0x0001df67	0x31	func	?SetRelativeMouse@inputManager@@QAEXF@Z	BASE/INPUTMGR	src	0x0006efd7	masked game body 0x6efd7 (49 bytes, 0 fields masked) unique at a census start
+0x0001df98	0x31	func	?SetMouseSpeedDivisor@inputManager@@QAEXF@Z	BASE/INPUTMGR	src	0x0006f008	masked game body 0x6f008 (49 bytes, 0 fields masked) unique at a census start
 0x0001dfc9	0x29	func	?SetMouseCoords@inputManager@@QAEXFF@Z	BASE/INPUTMGR	src	0x0006f039	masked game body 0x6f039 (41 bytes, 0 fields masked) unique at a census start
 0x0001dff2	0x23	func	?SetKeyCodeType@inputManager@@QAEXF@Z	BASE/INPUTMGR	src	0x0006f062	masked game body 0x6f062 (35 bytes, 1 fields masked) unique at a census start
 0x0001e015	0x34	func	?TranslateInputCharacter@@YAXAAUtag_message@@@Z	BASE/INPUTMGR	src	0x0006f085	masked game body 0x6f085 (52 bytes, 1 fields masked) unique at a census start

@@ -52,7 +52,7 @@ army::army(void) {
     gSpellEffectFrame = 0;
     CLEAR_ARMY_TARGET(this);
     m_attackDirection = COMBAT_DIRECTION_INVALID;
-    m_unknown04 = 0;
+    m_unused04 = 0;
     m_moveTargetHex = 0;
 }
 
@@ -82,7 +82,7 @@ void army::Init(
     InitClean();
     m_creatureType = creatureType;
     memcpy(&m_stats, &gMonsterDatabase[creatureType].stats, sizeof(tag_monsterStats));
-    m_unknown29 = 6;
+    m_unused29 = 6;
     m_spellEffect = SPELL_NONE;
     m_spellEndCondition = ARMY_CANCEL_SPELLS_NONE;
     commander = gCombatManager->m_heroes[side];

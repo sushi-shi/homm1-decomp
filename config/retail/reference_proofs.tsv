@@ -11390,7 +11390,7 @@ site_rva	target_rva	symbol
 0x0006e54e	0x00077c4d	??3@YAXPAX@Z
 0x0006eb2e	0x000a1408	$SG660488
 0x0006ed12	0x0008a7a8	??_7inputManager@@6B@
-0x0006ee06	0x0006f008	?SetPositiveOption@inputManager@@QAEXF@Z
+0x0006ee06	0x0006f008	?SetMouseSpeedDivisor@inputManager@@QAEXF@Z
 0x0006ee6e	0x00079fb7	_close
 0x0006eee3	0x0003c7b0	_PollSound
 0x0006eee8	0x000a7b90	?gInputManager@@3PAVinputManager@@A

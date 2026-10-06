@@ -141,3 +141,18 @@ member	font	m_headerWord	m_glyphOffsetY	the font header's second word; DrawStrin
 global	BASE/miscwin	sClipY/sClipLimitY/sClipRowStart/sClipRow/sClipFrameEntry/sClipSource/sClipLimitX/sClipX/sClipRun/sClipInside	gClipY/gClipLimitY/gClipRowStart/gClipRow/gClipFrameEntry/gClipSource/gClipLimitX/gClipX/gClipRun/gClipInside	file statics take the g prefix every other unit uses; storage spellings stay behind aliases
 global	BASE/miscwin	sMiscOldField/sMiscScanTable	gMiscOldField/gMiscScanTable	g prefix; unreferenced objects that hold their .bss places
 global	SOURCE/ADVMGR	USMsg/CDMsg	gUSMsg/gCDMsg	g prefix on the two unreferenced message objects
+member	inputManager	m_field_0x236	m_mouseDriverReady	DOS v1.2 Open resets the INT 33h driver and sets it, Close resets the driver when set; Windows only clears it in the constructor
+member	inputManager	m_field_0x238	m_relativeMouse	DOS GetEvent reads relative mouse motion while it is set and an absolute position otherwise; the same 0/1 setter exists in both builds
+member	inputManager	m_field_0x23a	m_mouseSpeedDivisor	DOS GetEvent divides the mouse motion counts by it; Open and the setter keep it at least 1
+member	inputManager	m_field_0x33c	m_keyboardHookInstalled	DOS Open hooks the INT 9 handler and sets it; the Open failure path and Close restore the vector when set
+member	inputManager	m_field_0x342	m_keyPrefixPending	DOS keyboard handler sets it on a prefix scan code, limits the next key to modifier changes and copies it into the event; both builds clear it after each queued key event
+member	inputManager	m_field_0x34f	m_unused34f	constructor clears it; no reader in the Windows, editor or DOS images
+param	inputManager::SetRelativeMouse	enabled	relative	stores the relative-mouse flag
+method	inputManager	SetBooleanOption	SetRelativeMouse	sets m_relativeMouse (DOS reader: relative motion mode)
+param	inputManager::SetMouseSpeedDivisor	value	divisor	stores the mouse speed divisor
+method	inputManager	SetPositiveOption	SetMouseSpeedDivisor	sets m_mouseSpeedDivisor (DOS reader: the motion count divisor)
+local	inputManager::Open	positiveOption	mouseSpeedDivisor	the divisor Open passes to SetMouseSpeedDivisor
+member	mouseManager	m_unknown51	m_drawIntoScreen	DOS advManager::UpdateScreen sets it around the two-band view copy and the cursor drawing reads it; Windows only clears it in the constructor
+member	mouseManager	m_unused52	m_bandFlushed/m_bandSplitY/m_cursorWidth/m_cursorHeight	DOS UpdateScreen's band flag and split line and the cursor frame size the DOS cursor code reads; no Windows instruction addresses them
+member	heroWindowManager	m_unknown40	m_unused40	constructor clears it; no reader in the Windows, editor or DOS images
+member	heroWindowManager	m_unknown41	m_unused41	constructor clears it; no reader in the Windows, editor or DOS images

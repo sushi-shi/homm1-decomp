@@ -98,7 +98,7 @@ object (`[-N]`, `this - N`, container-of). None remain; the count guards
 against new ones.
 
 **Unknown members.** `m_unknownNN` and `m_field_0xNNN` placeholders keep a
-class layout without a recovered name or type.
+class layout without a recovered name or type. None remain.
 
 Names come from a code user:
 
@@ -106,22 +106,36 @@ Names come from a code user:
   marks; nothing updates them after the constructor.
 - playerData's `m_unusedSaveData` is the span Write zeroes and Read skips.
 
-Spans that no code reads or writes are spelled `m_unused<offset>`, or
-`m_padding<offset>` in recruitUnit. Nineteen
-placeholders remain:
+Several members are only initialized in every reconstructed Windows image
+(the Win95 1.0, 1.1 and 1.2 games, the Buka game and its editor): no
+instruction reads them. The DOS v1.2
+`HEROES.EXE` (Watcom LE; its managers are static objects, the base manager is
+0x1e bytes shorter and has no name) keeps the same layout and still reads
+some of them, so their names come from the DOS code:
 
-- inputManager (seven): written by its constructor, the event queue, the two
-  option setters and advManager's context changes; nothing reads them.
-- army (two), combatManager (four), heroWindowManager (two), town (one) and
-  mouseManager (one): set only by constructors or Init.
-- playerData `m_unknown00`/`m_unknown99`: only copied raw by Write/Read;
-  `m_unknown99[1]` is written twice.
+| Member | DOS reader |
+| --- | --- |
+| inputManager `m_mouseDriverReady` (+0x236) | Open resets the INT 33h driver and installs the event handler when it is clear, then sets it; Close resets the driver |
+| inputManager `m_relativeMouse` (+0x238) | GetEvent reads the motion counters as a relative-motion event while set, as a clamped position otherwise; `SetRelativeMouse` is the same dead 0/1 setter |
+| inputManager `m_mouseSpeedDivisor` (+0x23a) | GetEvent and the move poll divide the motion counts by it; Open and `SetMouseSpeedDivisor` keep it at least 1 |
+| inputManager `m_keyboardHookInstalled` (+0x33c) | Open hooks the INT 9 handler when it is clear; the failure path and Close restore the vector |
+| inputManager `m_keyPrefixPending` (+0x342) | the keyboard handler sets it on a prefix scan code, then handles only modifier changes and copies it into the next event; both builds clear it after a queued key event |
+| mouseManager `m_drawIntoScreen` (+0x51) and the following `m_bandFlushed`, `m_bandSplitY`, `m_cursorWidth`, `m_cursorHeight` | advManager::UpdateScreen copies the view in two bands and sets the flag around it; the cursor code then draws into the screen bitmap and reads the band state and frame size. Windows only clears the flag |
 
-The editor image compiles the same BASE managers, so it was searched too:
-no instruction in `EDITOR.EXE` or `HEROES.EXE` loads `gpInputManager`,
-`gpMouseManager` or `gpWindowManager` and then reads one of these offsets.
-Inventing a meaning for them is not
-evidence, so they stay placeholders until a reader is found.
+Spans that no code of any build reads are spelled `m_unused<offset>`, or
+`m_padding<offset>` in recruitUnit, whether or not a constructor or a save
+routine writes them. Thirteen members recovered from placeholders are of
+this kind, and none has a reader in the Windows, editor or DOS images:
+
+- inputManager `m_unused34f`, heroWindowManager `m_unused40`/`m_unused41`,
+  combatManager `m_unused6d9`/`m_unused6db`/`m_unused6e8`/`m_unused6f9`:
+  constructor stores only;
+- army `m_unused04` (constructor; the DOS army has no target block) and
+  `m_unused29` (Init stores 6 after the copied stats in every build);
+- town `m_unused19`: the constructor clears it and saved games carry it;
+- playerData `m_unused00` (Write and Read copy its 17 bytes raw),
+  `m_unused99` (no access) and `m_unused9a` (saved twice by Write and Read,
+  DOS too).
 
 **`goto`.** A `goto` stays when retail's block layout requires it; it is
 replaced only when a structured form compiles to identical bytes.
@@ -413,3 +427,9 @@ shows up in the measuring commands above.
   sites** (69 of them calls shortened by declared defaults) plus the typed
   enum arrays, 1 rejected by measurement, 78 kept explicit. The editor-only
   units reuse the game's helpers at 83 sites. No family is deferred.
+- Recover unknown members: **0** `m_unknown*`/`m_field_0x*` placeholders
+  (from 18; the earlier count of 19 included an inputManager field already
+  named). Five inputManager members and mouseManager's cursor flag, with the
+  four spans after it, are named from their DOS readers; thirteen members
+  with no reader in any build are `m_unused*`, as are the other spans no code
+  reads.

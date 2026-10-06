@@ -101,8 +101,8 @@ src/BASE/INPUTMGR.cpp	0x6ee42	inputManager::Close	read	event-queue-reset	Uses Re
 src/BASE/INPUTMGR.cpp	0x6eea6	inputManager::Main	read	none	Returns 0.		kept-existing-source	100	100
 src/BASE/INPUTMGR.cpp	0x6eeb6	inputManager::Flush	read	event-queue-reset	Uses ResetEventQueue.		kept-existing-source	100	100
 src/BASE/INPUTMGR.cpp	0x6eed9	inputManager::GetEvent	read	empty-event	Empty-event initializer: HoMM1 has only GetEvent (no PeekEvent), so a single site stays explicit.		kept-existing-source	100	100
-src/BASE/INPUTMGR.cpp	0x6efd7	inputManager::SetBooleanOption	read	none	Flag setter.		kept-existing-source	100	100
-src/BASE/INPUTMGR.cpp	0x6f008	inputManager::SetPositiveOption	read	none	Clamped setter.		kept-existing-source	100	100
+src/BASE/INPUTMGR.cpp	0x6efd7	inputManager::SetRelativeMouse	read	none	Flag setter.		kept-existing-source	100	100
+src/BASE/INPUTMGR.cpp	0x6f008	inputManager::SetMouseSpeedDivisor	read	none	Clamped setter.		kept-existing-source	100	100
 src/BASE/INPUTMGR.cpp	0x6f039	inputManager::SetMouseCoords	read	none	Two stores.		kept-existing-source	100	100
 src/BASE/INPUTMGR.cpp	0x6f062	inputManager::SetKeyCodeType	read	none	Setter plus Flush.		kept-existing-source	100	100
 src/BASE/INPUTMGR.cpp	0x6f085	TranslateInputCharacter	read	none	Table translation; already the helper.		kept-existing-source	100	100

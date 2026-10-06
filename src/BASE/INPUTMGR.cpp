@@ -105,7 +105,7 @@ i32 KeyboardMessageHandler(void* window, u32 message, u32 virtualKey, i32 messag
             gInputManager->m_readIndex++;
             gInputManager->m_readIndex %= INPUT_EVENT_RING_CAPACITY;
         }
-        gInputManager->m_field_0x342 = 0;
+        gInputManager->m_keyPrefixPending = 0;
         if (gWindowManager->m_active == 1) {
             if (event->type == MESSAGE_KEY_DOWN && event->keyCode == INPUT_SCAN_F12
                 && (event->modifiers & MESSAGE_MODIFIER_SHIFT_KEYS))
@@ -201,24 +201,24 @@ inputManager::inputManager(void) {
     m_forceMouseMove = false;
     m_mouseMessageActive = 0;
     m_requestedPriority = 1;
-    m_field_0x33c = 0;
-    m_field_0x236 = 0;
-    m_field_0x238 = 0;
-    m_field_0x23a = 1;
+    m_keyboardHookInstalled = 0;
+    m_mouseDriverReady = 0;
+    m_relativeMouse = 0;
+    m_mouseSpeedDivisor = 1;
     m_keyCodeType = INPUT_KEY_CODE_SCAN;
     m_recordFile = -1;
-    m_field_0x34f = 0;
+    m_unused34f = 0;
 }
 
 VA(0x0046ed9e, 0xa4)
 H1_ENUM_RETURN(BaseManagerStatus, i16) inputManager::Open(i16 priority) {
-    i16 positiveOption = 1;
+    i16 mouseSpeedDivisor = 1;
     memset(m_eventRing, 0, sizeof(m_eventRing));
     ResetEventQueue(this);
     m_requestedPriority = priority;
     m_modifiers = MESSAGE_MODIFIER_NONE;
     MakeScanCodeTable();
-    SetPositiveOption(positiveOption);
+    SetMouseSpeedDivisor(mouseSpeedDivisor);
     m_messageMask = BASE_MANAGER_ACCEPT_MOUSE_MOVE;
     m_priority = BASE_MANAGER_PRIORITY_UNASSIGNED;
     m_active = 1;
@@ -267,27 +267,28 @@ tag_message inputManager::GetEvent(void) {
     return event;
 }
 
-// Descriptive name: the 0/1 counterpart of SetPositiveOption; retail's
-// original method name is not available.
+// Descriptive name from the DOS build, whose event poll reads the mouse's
+// relative motion while the flag is set; retail's name is not available.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0046efd7, 0x31)
-void inputManager::SetBooleanOption(i16 enabled) {
+void inputManager::SetRelativeMouse(i16 relative) {
     tag_message unusedMessage;
 
-    if (enabled)
-        m_field_0x238 = 1;
+    if (relative)
+        m_relativeMouse = 1;
     else
-        m_field_0x238 = 0;
+        m_relativeMouse = 0;
 }
 
-// Descriptive name: retail's original method name is not available.
+// Descriptive name from the DOS build, whose event poll divides the mouse
+// motion counts by this value; retail's name is not available.
 VA(0x0046f008, 0x31)
-void inputManager::SetPositiveOption(i16 value) {
-    if (value > 0)
-        m_field_0x23a = value;
+void inputManager::SetMouseSpeedDivisor(i16 divisor) {
+    if (divisor > 0)
+        m_mouseSpeedDivisor = divisor;
     else
-        m_field_0x23a = 1;
+        m_mouseSpeedDivisor = 1;
 }
 
 // @dead-code

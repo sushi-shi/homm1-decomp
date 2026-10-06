@@ -47,8 +47,10 @@ public:
     heroWindow* m_windowListTail;
     heroWindow* m_focusWindow;
     heroWindow* m_activeWindow;
-    i8 m_unknown40;
-    i8 m_unknown41;
+    // Cleared by the constructor; no code of any build (Windows or DOS) reads
+    // them.
+    i8 m_unused40;
+    i8 m_unused41;
     bitmap* m_screen;
     bitmap* m_fizzleSource;
     bitmap* m_fizzleWork;
