@@ -6378,12 +6378,11 @@ void advManager::LoadRemote(void) {
 }
 
 VA(0x00410e9f, 0x13b)
-char* advManager::CheckHandleNet(void) {
+RemoteMessage* advManager::CheckHandleNet(void) {
     RemoteMessage* receivedPacket;
     i32 exitedFlag;
 
-    // API-forced: GetRemoteData and DoNetCombat pass queue records as char*.
-    receivedPacket = reinterpret_cast<RemoteMessage*>(GetRemoteData(1));
+    receivedPacket = GetRemoteData(1);
     if (receivedPacket && receivedPacket->type == REMOTE_MESSAGE_RELIABLE) {
         switch (receivedPacket->command) {
             case BOX_REMOTE_SAVE:
@@ -6402,11 +6401,9 @@ char* advManager::CheckHandleNet(void) {
                 break;
             case REMOTE_COMMAND_HERO_TOWN_DATA:
                 if (gInCombat)
-                    return reinterpret_cast<char*>(receivedPacket); // API-forced: char* record.
+                    return receivedPacket;
                 else
-                    DoNetCombat(
-                        reinterpret_cast<char*>(receivedPacket)
-                    ); // API-forced: char* record.
+                    DoNetCombat(receivedPacket);
                 break;
             case REMOTE_COMMAND_PLAYER_EXIT:
                 ReceiveRemotePlayerExit(
@@ -6417,7 +6414,7 @@ char* advManager::CheckHandleNet(void) {
                 );
                 break;
             default:
-                return reinterpret_cast<char*>(receivedPacket); // API-forced: char* record.
+                return receivedPacket;
         }
     }
     return NULL;

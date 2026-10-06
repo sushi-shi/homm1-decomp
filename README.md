@@ -42,11 +42,13 @@ Manually maintained cleanup checklist; see the [review rules and measuring
 commands](docs/reconstruction-debt.md). Counts cover `src` and `include` and are
 review inputs, not defect totals. Preserve banked matches.
 
-- [x] Review game-type `reinterpret_cast`: **36 sites** (12 network packet
-  views at the `char*` record APIs and the `EVENTS.h` view macros, 24 other
-  byte/word/integer views). The icon frame directory, the combat and save
-  transfer buffers, resource reads and pixel buffers are typed. 69 further
-  casts are Win32 API boundaries.
+- [x] Review game-type `reinterpret_cast`: **10 sites** (from 36): two
+  combat-transfer payload overlays, the wire packet header and its two CRC
+  byte walks, three palette channel views, the search occupancy byte view and
+  one pointer assertion. The icon frame directory, the remote message queue
+  (typed `RemoteMessage` records and payloads), the combat and save transfer
+  buffers, resource reads and pixel buffers are typed. 77 further casts are
+  Win32 API boundaries, including the handle assertions and comparisons.
   Every remaining cast carries its reason (cast ledger OPEN = 0).
 - [x] Replace manual byte layouts with named types: the font reads
   `icon::m_frameWords` (**6 sites**). `widths[g * 6 + 2]` is retained because
@@ -73,7 +75,7 @@ review inputs, not defect totals. Preserve banked matches.
   now `STRICT`, and so are the 167 that restated the conversion an assignment,
   initialization, argument, return or arithmetic operand already performs; the
   remaining classes are listed in the [debt notes](docs/reconstruction-debt.md).
-- [x] Review unions: **9 definitions**, each one shared storage with typed
+- [x] Review unions: **8 definitions**, each one shared storage with typed
   readers; varargs: **1 function** (`nb_sess`), standard `va_arg` with no
   argument-address walking.
 - [x] Enum-domain review ([ledger](config/reviews/enum-reuse.tsv),
@@ -81,7 +83,7 @@ review inputs, not defect totals. Preserve banked matches.
   canonical, 288 retained, 48 merged); **98** members merged into shared
   domains and **43** unused members retired; **168** cross-domain value
   collisions remain, each with a reviewed reason.
-- [ ] Name bare constants: **1,934** open literals (`homm1 verify constants`
+- [ ] Name bare constants: **1,929** open literals (`homm1 verify constants`
   floor); compiler-proven NULL/bool/enum replacements are at 0.
 - [ ] Strict enum view (`/std:c++20`): **60 of 61** units do not compile yet,
   so typed arrays (`H1_ENUM_ARRAY`) and enum destinations are checked only

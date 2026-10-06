@@ -4138,7 +4138,7 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
     i32 segCountPos;
     i32 mainFile;
     i32 unusedOffset;
-    char* incomingNow;
+    RemoteMessage* incomingNow;
     char ackedArray[500];
     i32 unusedY;
     i32 replyState;
@@ -4245,8 +4245,7 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
                 if (!replyState)
                     ShutDown(NULL);
                 for (entry = 0; entry < sizeVal; entry++) {
-                    if (reinterpret_cast<RemoteMessage*>(incomingNow)->payload.data[entry]
-                        > 0) // API-forced: char* record.
+                    if (incomingNow->payload.data[entry] > 0)
                         ackedArray[entry + block * REMOTE_SAVE_BATCH_SIZE] = 1;
                 }
                 wasFinished = 1;
@@ -4336,8 +4335,7 @@ i32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
             else
                 ShutDown(NULL);
         }
-        receivedPacketObj =
-            reinterpret_cast<RemoteMessage*>(GetRemoteData(1)); // API-forced: char* record.
+        receivedPacketObj = GetRemoteData(1);
         if (receivedPacketObj
             && (receivedPacketObj->type == REMOTE_MESSAGE_RELIABLE
                 || receivedPacketObj->type == REMOTE_MESSAGE_UNRELIABLE)) {

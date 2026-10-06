@@ -19,7 +19,7 @@ start_rva	end_rva	functions	unit	first_evidence	last_evidence
 0x0005a26b	0x0005b759	11	SOURCE/REMOTE	reviewed-order:?MAKEFILEID@@YIKPAD@Z	reviewed-order:strings:?GetDataEntry@@YIXPAD0H0HH@Z
 0x0005b759	0x0005cafe	15	SOURCE/kbwin	?KBChangeMenu@@YIXPAX@Z	?SetMenus@@YIXPAXH@Z
 0x0005cafe	0x0005dee0	13	SOURCE/kbwin	reviewed-order:?MAKEFILEID@@YIKPAD@Z	reviewed-order:?FindLastToken@@YIPADPADD@Z
-0x0005dee0	0x00063750	26	SOURCE/EVENTS	?DoAIEvent@advManager@@QAEXPAVmapCell@@PAVhero@@HH@Z	?ReceiveHeroTownData@advManager@@QAEXPADPAH11PAPAVhero@@PAPAVarmyGroup@@PAPAVtown@@23111PAC55@Z
+0x0005dee0	0x00063750	26	SOURCE/EVENTS	?DoAIEvent@advManager@@QAEXPAVmapCell@@PAVhero@@HH@Z	?ReceiveHeroTownData@advManager@@QAEXPAURemoteMessage@@PAH11PAPAVhero@@PAPAVarmyGroup@@PAPAVtown@@23111PAC55@Z
 0x00063750	0x00064030	8	SOURCE/STRIP	strings:??0strip@@QAE@HHHKHPAVarmyGroup@@HHH@Z	?Update@bankBox@@QAEXH@Z
 0x00064030	0x00064590	7	SOURCE/TOWN	??0town@@QAE@XZ	?XformToCastle@town@@QAEXXZ
 0x00064590	0x00064607	2	SOURCE/NOOPT	source-path:?DelayTil@@YIXPAH@Z	?DelayTil@@YIXPAH@Z

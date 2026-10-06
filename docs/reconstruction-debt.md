@@ -33,29 +33,49 @@ not yet modelled:
   a union of the raw bytes (`m_data`), the leading `IconEntry` directory
   (`m_frames`) and the font code's word view (`m_frameWords`). Its 26 casts are
   gone and the code is unchanged;
-- network packets: `char` buffers viewed as `RemoteMessage`,
-  `combatRemoteMessage`, `heroRemoteMessage` and fragment records.
-  `SendHeroTownData` uses one allocation for the combat record and both hero
-  fragments. It is now a local union of the three typed pointers (combat
-  record, hero fragment, wire bytes), so the frame slot is unchanged.
-  `ReceiveHeroTownData` and `DoCombat` read received records through
-  the `EVENTS_REMOTE_MESSAGE`/`EVENTS_REMOTE_HERO` view macros. The remaining
-  nine casts convert the `char*` that `GetRemoteData`, `CheckHandleNet` and the
-  transmit functions use for queue records; the `char* GetRemoteData(char)`
-  signature fixes that type, so the casts sit at those call sites. A union
-  cannot hold the combat payload because `armyGroup`/`town` members have
-  constructors. `PacketSend` keeps its `char[]` data identity. `TransmitSaveGame` builds its packets in a named
-  `RemotePayload`, the `RemoteMessage` payload union;
+- network packets (resolved): the remote queue hands out typed records.
+  `GetRemoteData` returns `RemoteMessage*` (its output buffer `rcvBufOut` is a
+  `RemoteMessage`), `CheckHandleNet`, `DoNetCombat`, `ReceiveHeroTownData` and
+  `TransmitAndWait`'s response carry `RemoteMessage*`, and `SendRemoteData`,
+  `ReceiveRemoteData`, `EncodePacket` and `DecodePacket` take the
+  `RemoteMessage` they copy to or from the wire. `TransmitRemoteData` and
+  `TransmitAndWait` take `void*` payloads, because they only copy the caller's
+  bytes into the record. The relayed combat action is a `CombatRemoteAction`
+  member of the `RemotePayload` union (it replaced the duplicate
+  `CombatRemotePacket` record), and `ProcessNextAction` builds it in a typed
+  local of the same 16 bytes. 17 casts are gone and every object is identical
+  apart from the changed names. `SendHeroTownData` uses one allocation for the
+  combat record and both hero fragments, through a local union of the two typed
+  pointers (one frame slot, as in retail);
 - resource reads and pixel buffers (resolved): `resourceManager::ReadBlock`
   takes `void*` (it only forwards to `_read`) and `Read13` takes `char*`. The
   widget and font name buffers are `char`. `bitmap::m_pixels` and
   `tileset::m_data` are `u8*`, because they hold palette indices.
   This removed 15 casts, including the fizzle loop's byte views, and the code is
   unchanged;
-- remaining byte, word and integer views. Each one is a different typed read of
-  the same storage. Examples are the palette RGB triples, the search occupancy
-  bytes (filled signed, read zero-extended), handle-to-integer assertions and
-  CRC byte walks.
+- remaining views, each a different typed read of the same storage (10
+  sites, each with its reason at the cast):
+  - `EVENTS_REMOTE_MESSAGE`/`EVENTS_REMOTE_HERO` overlay a received record's
+    payload as the combat record or a hero fragment. `combatRemoteData` holds
+    `armyGroup` and `town` objects, whose constructors keep it out of the
+    `RemotePayload` union (VC6 rejects union members with constructors);
+  - the wire layer frames the `char` packet buffers with `RemotePacketHeader`
+    (`REMOTE_PACKET`) and walks them as unsigned bytes for the CRC. The receive
+    buffer also carries the direct-connect `ID` text, so it stays `char`;
+  - palette channels: `palette::m_data` is `i8` because the fades compare its
+    channels signed; `PostprocessPalette` moves `PaletteColor` triples,
+    `CreateFizzleTables` reads the channels zero-extended as RGB
+    rows, and `ConvertSmackerPalette` scales Smacker's 8-bit channels as `u8`;
+  - the adventure search fills `s_directionOccupied` through
+    `TestPossibleDirections`' `i8*` and reads it back zero-extended;
+  - `DoAdvance`'s win-text assertion passes the pointer to `ProcessAssert`'s
+    `i32` condition, as retail pushes the pointer itself.
+
+Casts whose operand or target is a Win32 type are API boundaries (77 sites):
+`LPBYTE`/`PUCHAR`/`LPBITMAPINFO` buffer arguments, window and dialog
+procedures, `GetProcAddress` results, the handle assertions and the
+`HINSTANCE`/`WPARAM` comparisons (the value itself is the integer retail
+tests), and the NetBIOS name bytes.
 
 The fix is the real type at its owner (a typed member, a packet struct or
 union), not an inline accessor: under `/Od /Ob1` an inlined accessor adds frame
@@ -211,8 +231,8 @@ code are outside the checklist. Declared default arguments (`NormalDialog`,
 without changing code.
 
 **Unions and varargs.** Alternate views and manual argument access are kept only
-where retail evidence requires them. Nine unions remain; the tenth `rg` hit is
-a comment in `ARMY.cpp`. Each one gives two or more readers of the same storage
+where retail evidence requires them. Eight unions remain; the other two `rg`
+hits are comments in `ARMY.cpp` and `EVENTS.h`. Each one gives two or more readers of the same storage
 their own types:
 
 | Union | Readers |
@@ -221,8 +241,7 @@ their own types:
 | `icon` resource data | Raw bytes, the `IconEntry` directory and Buka's font word reads. |
 | `searchNode` tail | The adventure search reads adjacent-monster bytes, and the value search reads signed coordinates. |
 | `tag_Node` payload | The serial payload at +0xa, and the NetBIOS session byte then payload at +0xb. |
-| `CombatRemotePacket` payload | Combat actions or a chat line. |
-| `RemotePayload` | The remote message payload layouts. |
+| `RemotePayload` | The remote message payload layouts: text, the save transfer header and segments, and the relayed combat action. |
 | `advManager::SendHeroTownData` buffer (`EVENTS.cpp`) | The single allocation is filled as the combat record, then as each hero fragment. |
 
 `nb_sess` is the only `va_start` user. It is a standard variadic function:

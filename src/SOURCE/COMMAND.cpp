@@ -38,7 +38,7 @@ VA(0x0041d460, 0x27c)
 i16 combatManager::Main(struct tag_message& message) {
     i32 result = MESSAGE_DISPATCH_CONSUME;
     army* thisArmy;
-    CombatRemotePacket* packet;
+    RemoteMessage* packet;
 
     if (glTimers[COMBAT_FRAME_TIMER_SLOT] < KBTickCount()) {
         PollSound();
@@ -47,17 +47,17 @@ i16 combatManager::Main(struct tag_message& message) {
     CheckCastleAttack();
     if (CheckWin(&message))
         return MESSAGE_DISPATCH_FORWARD;
-    packet = reinterpret_cast<CombatRemotePacket*>(GetRemoteData(1)); // API-forced: char* record.
+    packet = GetRemoteData(1);
     if (packet && packet->type == REMOTE_MESSAGE_RELIABLE) {
         switch (packet->command) {
             case REMOTE_COMMAND_COMBAT_ACTION:
-                giNextAction = packet->nextAction;
-                giNextActionExtra = packet->nextActionExtra;
-                giNextActionGridIndex = packet->nextActionGridIndex;
-                giNextActionGridIndex2 = packet->nextActionGridIndex2;
+                giNextAction = packet->payload.combatAction.nextAction;
+                giNextActionExtra = packet->payload.combatAction.nextActionExtra;
+                giNextActionGridIndex = packet->payload.combatAction.nextActionGridIndex;
+                giNextActionGridIndex2 = packet->payload.combatAction.nextActionGridIndex2;
                 goto processAction;
             case REMOTE_COMMAND_CHAT:
-                PopNetBox(packet->text);
+                PopNetBox(packet->payload.data);
                 break;
         }
     }
@@ -1472,7 +1472,7 @@ void combatManager::ResetMouse(void) {
 // opponent.
 VA(0x004210c0, 0x4c6)
 i16 combatManager::ProcessNextAction(struct tag_message& message) {
-    i32 actionData[4];
+    CombatRemoteAction actionData;
     i32 transmitResult;
     i32 remoteIndex;
     i8 doAdvance;
@@ -1484,12 +1484,12 @@ i16 combatManager::ProcessNextAction(struct tag_message& message) {
         remoteIndex = m_playerId[1 - m_currentSide];
         if (remoteIndex < 0 || !gbHumanPlayer[remoteIndex])
             remoteIndex = giHostGamePos;
-        actionData[0] = giNextAction;
-        actionData[1] = giNextActionExtra;
-        actionData[2] = giNextActionGridIndex;
-        actionData[3] = giNextActionGridIndex2;
+        actionData.nextAction = giNextAction;
+        actionData.nextActionExtra = giNextActionExtra;
+        actionData.nextActionGridIndex = giNextActionGridIndex;
+        actionData.nextActionGridIndex2 = giNextActionGridIndex2;
         transmitResult = TransmitRemoteData(
-            reinterpret_cast<char*>(actionData), // API-forced: TransmitRemoteData takes char*.
+            &actionData,
             remoteIndex,
             sizeof(actionData),
             REMOTE_COMMAND_COMBAT_ACTION,

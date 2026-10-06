@@ -2509,7 +2509,7 @@ void advManager::ComputerMonsterInteract(class mapCell* cell, class hero* eventH
 }
 
 VA(0x00428f98, 0x16f)
-i32 advManager::DoNetCombat(char* packet) {
+i32 advManager::DoNetCombat(RemoteMessage* packet) {
     hero* leader;
     i32 theCellY;
     i32 curPosX;
@@ -2613,7 +2613,7 @@ i32 advManager::DoCombat(
     armyGroup* army1NetRef;
     town* townNetItem;
     i32 senderNum;
-    char* receivedPacket;
+    RemoteMessage* receivedPacket;
     i8 res;
     tag_message message;
     i32 curPlayer;
@@ -2667,7 +2667,7 @@ i32 advManager::DoCombat(
                     );
                     receivedPacket = CheckHandleNet();
                     if (receivedPacket) {
-                        switch (EVENTS_REMOTE_MESSAGE(receivedPacket)->command) {
+                        switch (receivedPacket->command) {
                             case REMOTE_COMMAND_HERO_TOWN_DATA:
                                 ReceiveHeroTownData(
                                     receivedPacket,
@@ -2808,13 +2808,12 @@ void advManager::SendHeroTownData(
     i8 retreatWin,
     i8 combatSurrender
 ) {
-    char* reply;
+    RemoteMessage* reply;
     i32 result;
     // One allocation carries the combat record, then each hero fragment.
     union {
         combatRemoteData* combat;
         combatRemoteHeroFragment* heroFragment;
-        char* bytes;
     } buffer;
 
     buffer.combat = NULL;
@@ -2843,9 +2842,8 @@ void advManager::SendHeroTownData(
     if (combatTown)
         memcpy(&buffer.combat->combatTown, combatTown, sizeof(town));
 
-    // API-forced: TransmitAndWait/TransmitRemoteData take char* payloads.
     result = TransmitAndWait(
-        buffer.bytes,
+        buffer.combat,
         remotePlayer,
         sizeof(combatRemoteData),
         REMOTE_COMMAND_HERO_TOWN_DATA,
@@ -2858,9 +2856,8 @@ void advManager::SendHeroTownData(
     if (firstHero) {
         buffer.heroFragment->fragment = COMBAT_REMOTE_FRAGMENT_FIRST_HERO;
         memcpy(buffer.heroFragment->data, firstHero, sizeof(hero));
-        // API-forced: TransmitRemoteData takes a char* payload.
         result = TransmitRemoteData(
-            buffer.bytes,
+            buffer.heroFragment,
             remotePlayer,
             sizeof(combatRemoteHeroFragment),
             REMOTE_COMMAND_HERO_TOWN_DATA,
@@ -2872,9 +2869,8 @@ void advManager::SendHeroTownData(
     if (secondHero) {
         buffer.heroFragment->fragment = COMBAT_REMOTE_FRAGMENT_SECOND_HERO;
         memcpy(buffer.heroFragment->data, secondHero, sizeof(hero));
-        // API-forced: TransmitRemoteData takes a char* payload.
         result = TransmitRemoteData(
-            buffer.bytes,
+            buffer.heroFragment,
             remotePlayer,
             sizeof(combatRemoteHeroFragment),
             REMOTE_COMMAND_HERO_TOWN_DATA,
@@ -2888,7 +2884,7 @@ void advManager::SendHeroTownData(
 
 VA(0x0042990d, 0x30f)
 void advManager::ReceiveHeroTownData(
-    char* packet,
+    RemoteMessage* packet,
     i32* remotePlayer,
     i32* x,
     i32* y,
@@ -2918,7 +2914,7 @@ void advManager::ReceiveHeroTownData(
     *secondHero = NULL;
     *secondArmy = NULL;
     bFirstHero = hasSecondHero = hasTownOn = 0;
-    *remotePlayer = EVENTS_REMOTE_MESSAGE(packet)->sender;
+    *remotePlayer = packet->sender;
     *x = EVENTS_REMOTE_MESSAGE(packet)->combat.x;
     *y = EVENTS_REMOTE_MESSAGE(packet)->combat.y;
     bFirstHero = EVENTS_REMOTE_MESSAGE(packet)->combat.hasFirstHero;
@@ -2966,8 +2962,8 @@ void advManager::ReceiveHeroTownData(
                 ShutDown(localization::Tr("combat.network.canceled"));
         }
         packet = GetRemoteData(1);
-        if (packet && EVENTS_REMOTE_MESSAGE(packet)->type == REMOTE_MESSAGE_RELIABLE
-            && EVENTS_REMOTE_MESSAGE(packet)->command == REMOTE_COMMAND_HERO_TOWN_DATA) {
+        if (packet && packet->type == REMOTE_MESSAGE_RELIABLE
+            && packet->command == REMOTE_COMMAND_HERO_TOWN_DATA) {
             lastPacketTimeNum = KBTickCount();
             if (EVENTS_REMOTE_HERO(packet)->heroFragment.fragment
                 == COMBAT_REMOTE_FRAGMENT_FIRST_HERO) {

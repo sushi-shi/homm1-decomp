@@ -25,6 +25,7 @@ class sample;
 class tileset;
 class town;
 class widget;
+struct RemoteMessage;
 struct SMapChange;
 struct tag_message;
 
@@ -387,7 +388,7 @@ public:
     i32 MouseInScrollZone(void);
     void SetInitialMapOrigin(void);
     void LoadRemote(void);
-    char* CheckHandleNet(void);
+    RemoteMessage* CheckHandleNet(void);
     i16 CheckHandleNetPlayerWait(struct tag_message& message, i8 doMain);
     void TrimLoopingSounds(i32 maxSamples);
     void DisableButtons(void);
@@ -478,7 +479,7 @@ public:
         i32 combatY
     );
     void ComputerMonsterInteract(class mapCell* cell, class hero* eventHero, i8* handled);
-    i32 DoNetCombat(char* packet);
+    i32 DoNetCombat(RemoteMessage* packet);
     i32 DoCombat(
         i32 x,
         i32 y,
@@ -509,7 +510,7 @@ public:
         i8 combatSurrender
     );
     void ReceiveHeroTownData(
-        char* packet,
+        RemoteMessage* packet,
         i32* remotePlayer,
         i32* x,
         i32* y,
