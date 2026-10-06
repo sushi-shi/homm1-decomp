@@ -403,7 +403,7 @@ void GenerateStandardFileName(char* source, char* destination) {
         strcpy(destination, source);
         return;
     }
-    *ext = 0;
+    *ext = '\0';
     indexOut = 0;
     length = strlen(source);
     for (i = 0; i < length; i++) {
@@ -2343,7 +2343,7 @@ void game::ViewArmy(
     if (theHero)
         stackModifier += theHero->m_primaryStats[HERO_PRIMARY_DEFENSE];
     if (theArmy && theArmy->m_spellEffect == SPELL_PROTECTION)
-        stackModifier += 3;
+        stackModifier += ARMY_PROTECTION_DEFENSE_BONUS;
     if (stackModifier) {
         sprintf(gText, " (%d)", monsterInfoObj->stats.defense + stackModifier);
         strcat(statText, gText);
@@ -2694,7 +2694,9 @@ void game::Overview(void) {
                 ICON_DRAW_NORMAL,
                 ICON_DRAW_OFFSET_FULL
             );
-            if (oldNextType >= 2)
+            // Ore and the rarer resources share the mine picture under a
+            // resource overlay.
+            if (oldNextType >= H1_ENUM_ENCODE(ResourceType, RESOURCE_ORE))
                 ovIconRef->DrawToBuffer(
                     left + spacing * j,
                     289,
@@ -3323,7 +3325,7 @@ void game::SetupTown(i8 townId, b8 aiOwned) {
     i16 dwellingCount;
     char rollList[10];
     i32 n;
-    H1_ENUM_ARRAY(i8, nextUsed, SpellType, SPELL_COUNT);
+    H1_ENUM_ARRAY(b8, nextUsed, SpellType, SPELL_COUNT);
     H1_ENUM_LOCAL(TownType, i8) curTownType;
     H1_ENUM_LOCAL(SpellType, i16) newSpell;
     i16 spellValue;
@@ -3386,7 +3388,7 @@ void game::SetupTown(i8 townId, b8 aiOwned) {
                 spellValue = 1500;
         } while (nextUsed[newSpell] || Random(1, 1500) >= spellValue);
         m_castleRecs[townId].m_mageGuildSpells[n] = newSpell;
-        nextUsed[newSpell] = 1;
+        nextUsed[newSpell] = true;
     }
 }
 
@@ -3405,7 +3407,7 @@ void game::RandomizeMine(i8 x, i8 y) {
     u8 mineFrame;
 
     terrain = gGroundToTerrain[m_map[x][y].m_tileIndex];
-    for (count = 0; count < 30; count++) {
+    for (count = 0; count < RANDOM_MINE_TYPE_ROLLS; count++) {
         switch (terrain) {
             case TERRAIN_GRASS:
             case TERRAIN_DIRT:
@@ -3452,7 +3454,7 @@ void game::RandomizeMine(i8 x, i8 y) {
                 break;
         }
         if (!gMineTypeCount[resType])
-            count = 30;
+            count = RANDOM_MINE_TYPE_ROLLS;
     }
     gMineTypeCount[resType]++;
     switch (resType) {
@@ -3607,18 +3609,20 @@ void game::SetRandomHeroArmies(i16 heroId, i32 strongArmy) {
          {H1_ENUM_ENCODE(CreatureType, CREATURE_GARGOYLE), 2, 4},
          {H1_ENUM_ENCODE(CreatureType, CREATURE_GRIFFIN), 1, 2}}
     };
-    i32 curPresent[RANDOM_HERO_ARMY_OPTION_COUNT];
+    b32 curPresent[RANDOM_HERO_ARMY_OPTION_COUNT];
     i32 i;
     i32 curMax;
     i32 minNum;
 
-    curPresent[0] = 1;
-    curPresent[1] = Random(0, 99) < RANDOM_HERO_FIRST_STACK_CHANCE
-                                        + (strongArmy ? RANDOM_HERO_FIRST_STACK_BONUS_CHANCE : 0);
-    curPresent[2] = Random(0, 99) < RANDOM_HERO_SECOND_STACK_CHANCE
-                                        + (strongArmy ? RANDOM_HERO_SECOND_STACK_BONUS_CHANCE : 0);
-    if (!curPresent[2])
-        curPresent[1] = 1;
+    curPresent[RANDOM_HERO_ARMY_OPTION_SURE] = true;
+    curPresent[RANDOM_HERO_ARMY_OPTION_FIRST_ROLL] =
+        Random(0, 99)
+        < RANDOM_HERO_FIRST_STACK_CHANCE + (strongArmy ? RANDOM_HERO_FIRST_STACK_BONUS_CHANCE : 0);
+    curPresent[RANDOM_HERO_ARMY_OPTION_SECOND_ROLL] =
+        Random(0, 99) < RANDOM_HERO_SECOND_STACK_CHANCE
+                            + (strongArmy ? RANDOM_HERO_SECOND_STACK_BONUS_CHANCE : 0);
+    if (!curPresent[RANDOM_HERO_ARMY_OPTION_SECOND_ROLL])
+        curPresent[RANDOM_HERO_ARMY_OPTION_FIRST_ROLL] = true;
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
         curArmy->m_creatureTypes[i] = CREATURE_NONE;
         curArmy->m_creatureCounts[i] = RANDOM_HERO_EMPTY_COUNT;
@@ -3671,24 +3675,24 @@ void game::ProcessRandomObjects(b32 castlesOnly) {
                         RandomizeTown(x, y, true);
                         break;
                     case MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_MONSTER):
-                        lowFVVal = 80;
-                        highFVNum = 2000;
+                        lowFVVal = RANDOM_MONSTER_ANY_LOW;
+                        highFVNum = RANDOM_MONSTER_ANY_HIGH;
                         goto pickMonster;
                     case MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_MONSTER_WEAK):
-                        lowFVVal = 0;
-                        highFVNum = 400;
+                        lowFVVal = RANDOM_MONSTER_WEAK_LOW;
+                        highFVNum = RANDOM_MONSTER_WEAK_HIGH;
                         goto pickMonster;
                     case MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_MONSTER_MEDIUM):
-                        lowFVVal = 80;
-                        highFVNum = 1000;
+                        lowFVVal = RANDOM_MONSTER_MEDIUM_LOW;
+                        highFVNum = RANDOM_MONSTER_MEDIUM_HIGH;
                         goto pickMonster;
                     case MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_MONSTER_STRONG):
-                        lowFVVal = 500;
-                        highFVNum = 2500;
+                        lowFVVal = RANDOM_MONSTER_STRONG_LOW;
+                        highFVNum = RANDOM_MONSTER_STRONG_HIGH;
                         goto pickMonster;
                     case MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_MONSTER_VERY_STRONG):
-                        lowFVVal = 2000;
-                        highFVNum = 100000;
+                        lowFVVal = RANDOM_MONSTER_VERY_STRONG_LOW;
+                        highFVNum = RANDOM_MONSTER_VERY_STRONG_HIGH;
                         goto pickMonster;
                     pickMonster:
                         cellPtrItem->m_triggerType = MAP_EVENT_TRIGGER(MAP_OBJECT_MONSTER);

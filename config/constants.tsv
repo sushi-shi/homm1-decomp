@@ -6,7 +6,7 @@
 # (tab-separated; every field is an fnmatch glob, `*` matches anything; the
 # first matching row wins): file owner spelling group detail reason.
 # group/detail are the census' review_group/review_context columns.
-#floor	1370
+#floor	1259
 *	*	0	trivial-function-literal	0 for-init	a for loop's counter starts at zero
 *	*	0	trivial-function-literal	0 initializer*	an accumulator or counter declared at zero
 *	*	1	trivial-function-literal	1 arithmetic*	a one-step offset: the next index, element or count
@@ -1185,3 +1185,25 @@ src/SOURCE/TOWNMGR.cpp	townManager::BuyBuild	0	trivial-function-literal	0 store 
 src/SOURCE/TOWNMGR.cpp	townManager::BuyBuild	*	*	*	the build dialog's retail layout: one cost row up to four resources, else 2+3/3+3/3+4; 16-pixel text lines, panel extents and the buybuil3..7.bin sizes; gold's double-width icon
 src/SOURCE/TOWNMGR.cpp	townManager::SetupThievesGuild	*	trivial-function-literal	*	the ranking walk's first tied player and its count of one
 src/SOURCE/TOWNMGR.cpp	townManager::GetCategoryStats	0	trivial-function-literal	0 store *	a per-player counter reset to zero
+src/SOURCE/GAME.cpp	game::SaveGame	0	trivial-function-literal	0 store nHuman	a human-seat counter reset to zero
+src/SOURCE/GAME.cpp	game::SaveGame	0	trivial-function-literal	0 store humans[[]]	a dead seat saved as not human (the saved byte copies gHumanPlayer)
+src/SOURCE/GAME.cpp	*	-1	trivial-function-literal	-1 equality *	the -1 failure result of the CRT open
+src/SOURCE/GAME.cpp	game::NewMap	0	trivial-function-literal	0 store *	the first town name, and a town name marked taken in the Scan table (free entries are GAME_TABLE_FREE)
+src/SOURCE/GAME.cpp	game::RandomizeEvents	1	trivial-function-literal	1 store *	the first obelisk and site id (map ids are 1-based)
+src/SOURCE/GAME.cpp	game::ViewArmy	164	store	store to posY	retail window/screen layout in pixels
+src/SOURCE/GAME.cpp	game::ViewArmy	0	trivial-function-literal	0 store *	no morale without a group; a stat modifier reset to zero
+src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 array-index *	the text's first character, re-cased after formatting
+src/SOURCE/GAME.cpp	*	0	call-argument	Cyrillic*(char) argument 1	the text's first character, re-cased after formatting
+src/SOURCE/GAME.cpp	game::Overview	*	store	store to *	retail window/screen layout in pixels or frames, or a text/row count of this routine
+src/SOURCE/GAME.cpp	game::Overview	0	trivial-function-literal	0 store *	a scan from the first hero class, town type or resource, a counter reset, or frame 0
+src/SOURCE/GAME.cpp	game::ComputeDailyGold	0	trivial-function-literal	0 store dailyGold	a running total reset to zero
+src/SOURCE/GAME.cpp	game::PerDay	0	trivial-function-literal	0 store theProduction	a running total reset to zero
+src/SOURCE/GAME.cpp	game::PerMonth	12	store	initializer of gMonType	the month-of-the-creature table's extent (twelve creatures)
+src/SOURCE/GAME.cpp	game::SetupTown	*	*	* rollList*	the starting dwelling-count roll by decile: seven 1s, two 2s and one 3
+src/SOURCE/GAME.cpp	game::RandomizeMine	*	store	store to mineFrame	a mine object frame in the .icn resource (frames have no names)
+src/SOURCE/GAME.cpp	advManager::FindAdjacentMonster	0	trivial-function-literal	0 store *	the neighbourhood clamped to the map's first row or column
+src/SOURCE/GAME.cpp	*	0	call-argument	CheckDoMain(i32, b32) argument 1	CheckDoMain's unnamed, unused first argument
+src/SOURCE/GAME.cpp	game::*SaveGame	1	trivial-function-literal	1 store *	a save-transfer block marked acknowledged/received (the byte is copied into the reply packet)
+src/SOURCE/GAME.cpp	game::ReceiveSaveGame	0	trivial-function-literal	0 store handleValue	the file handle before the save is written
+src/SOURCE/GAME.cpp	game::CalcDifficultyRating	0	trivial-function-literal	0 compound-assignment	a zero difficulty bonus (easy, no extra rivals, small map), still added
+src/SOURCE/GAME.cpp	game::ShowScenInfo	1	trivial-function-literal	1 equality jj	seat 1, the first opponent row, which shows the host's handicap to a guest

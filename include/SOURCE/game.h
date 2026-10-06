@@ -62,6 +62,23 @@ H1_ENUM_CONST_BEGIN(MineFootprintConstant)
     MINE_FOOTPRINT_HEIGHT = 2
 H1_ENUM_CONST_END(MineFootprintConstant)
 
+// ProcessRandomObjects rerolls a random monster until its fight value lies
+// above its strength's LOW and below its HIGH; RandomizeMine rerolls the mine
+// type up to MINE_TYPE_ROLLS times looking for a resource no mine has yet.
+H1_ENUM_CONST_BEGIN(GameRandomObjectConstant)
+    RANDOM_MONSTER_ANY_LOW = 80,
+    RANDOM_MONSTER_ANY_HIGH = 2000,
+    RANDOM_MONSTER_WEAK_LOW = 0,
+    RANDOM_MONSTER_WEAK_HIGH = 400,
+    RANDOM_MONSTER_MEDIUM_LOW = 80,
+    RANDOM_MONSTER_MEDIUM_HIGH = 1000,
+    RANDOM_MONSTER_STRONG_LOW = 500,
+    RANDOM_MONSTER_STRONG_HIGH = 2500,
+    RANDOM_MONSTER_VERY_STRONG_LOW = 2000,
+    RANDOM_MONSTER_VERY_STRONG_HIGH = 100000,
+    RANDOM_MINE_TYPE_ROLLS = 30
+H1_ENUM_CONST_END(GameRandomObjectConstant)
+
 // Daily income (ComputeDailyGold, PerDay): Dragon City and a gold mine pay
 // 1000 gold, a town 250 and a castle 1000; an ore or wood mine yields two
 // units a day, the other non-gold mines one.
@@ -141,7 +158,9 @@ H1_ENUM_CONST_END(UltimateHintConstant)
 // chance of the second and third table stacks (50/25 percent, +30/+40 for a
 // strong army) and the counts drawn in tenths (min * 10 .. max * 10 + 9).
 // armyTable rows: per hero class three (creature, min, max) options, of
-// which the first two are drawn; unused slots get count -1.
+// which the first two are drawn; unused slots get count -1. The first
+// option is always present, the second rolls FIRST_STACK_CHANCE and the
+// third SECOND_STACK_CHANCE (the second is forced when the third fails).
 H1_ENUM_CONST_BEGIN(GameRandomHeroConstant)
     RANDOM_HERO_NORMAL_ARMY = 0,
     RANDOM_HERO_STRONG_ARMY = 1,
@@ -152,6 +171,9 @@ H1_ENUM_CONST_BEGIN(GameRandomHeroConstant)
     RANDOM_HERO_SECOND_STACK_BONUS_CHANCE = 40,
     RANDOM_HERO_ARMY_SELECTION_COUNT = 2,
     RANDOM_HERO_ARMY_OPTION_COUNT = 3,
+    RANDOM_HERO_ARMY_OPTION_SURE = 0,
+    RANDOM_HERO_ARMY_OPTION_FIRST_ROLL = 1,
+    RANDOM_HERO_ARMY_OPTION_SECOND_ROLL = 2,
     RANDOM_HERO_ARMY_FIELD_COUNT = 3,
     RANDOM_HERO_ARMY_FIELD_CREATURE = 0,
     RANDOM_HERO_ARMY_FIELD_MIN = 1,
