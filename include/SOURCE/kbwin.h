@@ -96,7 +96,7 @@ enum PrefsConstant {
 
 // The edition keeps its preferences apart from the retail game's, one set
 // per language.
-#define PREFS_REGISTRY_KEY localization::Tr("prefs.registry_key")
+#define PREFS_REGISTRY_KEY localization::Tr("te.prefs.registry_key")
 
 extern HINSTANCE gAppInstance;
 extern HANDLE gEventHandle;

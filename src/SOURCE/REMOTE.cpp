@@ -619,7 +619,7 @@ void Connect(void) {
             if (strncmp(gPacket, REMOTE_PROTOCOL_CONNECT_TAG, 2))
                 continue;
             if (!strncmp(gPacket + 2, gModemIdString, 6)) {
-                sprintf(gText, localization::Tr("serial.connect.duplicate_id"));
+                sprintf(gText, localization::Tr("te.serial.connect.duplicate_id"));
                 GOut(gText);
                 RemoteCleanup();
             }
@@ -678,7 +678,7 @@ b32 WaitForDirectConnect(void) {
                 if (strncmp(gPacket, REMOTE_PROTOCOL_CONNECT_TAG, 2))
                     return false;
                 if (!strncmp(gPacket + 2, gModemIdString, 6)) {
-                    sprintf(gText, localization::Tr("serial.connect.duplicate_id"));
+                    sprintf(gText, localization::Tr("te.serial.connect.duplicate_id"));
                     GOut(gText);
                     RemoteCleanup();
                 }

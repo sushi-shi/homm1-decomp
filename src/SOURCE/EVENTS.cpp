@@ -454,13 +454,13 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
             switch (cell->m_objectMetadata) {
                 case STRONGHOLD_GUARDED:
                     NormalDialog(
-                        localization::Tr("event.stronghold.approach"),
+                        localization::Tr("te.event.stronghold.approach"),
                         NORMAL_DIALOG_TYPE_YES_NO
                     );
                     if (gWindowManager->m_dialogResult != NORMAL_DIALOG_CONFIRM)
                         break;
                     NormalDialog(
-                        localization::Tr("event.stronghold.attacked"),
+                        localization::Tr("te.event.stronghold.attacked"),
                         NORMAL_DIALOG_TYPE_OK
                     );
                     if (CombatMonsterEvent(
@@ -482,13 +482,13 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                             .Add(CREATURE_GHOST, STRONGHOLD_GHOST_COUNT, ARMY_GROUP_EMPTY_SLOT);
                         RedrawAdvScreen(true);
                         NormalDialog(
-                            localization::Tr("event.stronghold.ghosts_join"),
+                            localization::Tr("te.event.stronghold.ghosts_join"),
                             NORMAL_DIALOG_TYPE_OK
                         );
                     } else {
                         cell->m_objectMetadata = STRONGHOLD_GHOSTS_WAITING;
                         NormalDialog(
-                            localization::Tr("event.stronghold.ghosts_wait"),
+                            localization::Tr("te.event.stronghold.ghosts_wait"),
                             NORMAL_DIALOG_TYPE_OK
                         );
                     }
@@ -500,19 +500,19 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                             .Add(CREATURE_GHOST, STRONGHOLD_GHOST_COUNT, ARMY_GROUP_EMPTY_SLOT);
                         RedrawAdvScreen(true);
                         NormalDialog(
-                            localization::Tr("event.stronghold.waiting_ghosts_join"),
+                            localization::Tr("te.event.stronghold.waiting_ghosts_join"),
                             NORMAL_DIALOG_TYPE_OK
                         );
                     } else {
                         NormalDialog(
-                            localization::Tr("event.stronghold.ghosts_still_wait"),
+                            localization::Tr("te.event.stronghold.ghosts_still_wait"),
                             NORMAL_DIALOG_TYPE_OK
                         );
                     }
                     break;
                 default:
                     NormalDialog(
-                        localization::Tr("event.stronghold.abandoned"),
+                        localization::Tr("te.event.stronghold.abandoned"),
                         NORMAL_DIALOG_TYPE_OK
                     );
                     break;
@@ -804,7 +804,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
         case MAP_OBJECT_SPELL_SHRINE:
             sprintf(
                 gText,
-                localization::Tr("event.spell_shrine.format"),
+                localization::Tr("te.event.spell_shrine.format"),
                 gEventText[EVENT_TEXT_SPELL_SHRINE],
                 gSpellNames
                     [(cell->m_objectMetadata - MAP_EVENT_SPELL_OFFSET)]
@@ -1461,7 +1461,7 @@ void advManager::EventWindow(
     else if (eventId == EVENT_TEXT_CUSTOM)
         sprintf(eventText, text);
     else
-        sprintf(eventText, localization::Tr("event.unknown"), eventId);
+        sprintf(eventText, localization::Tr("te.event.unknown"), eventId);
     NormalDialog(eventText, buttons, 0x61, -1, type1, value1, type2, value2, showOrText);
 }
 
