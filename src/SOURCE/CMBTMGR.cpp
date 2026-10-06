@@ -550,6 +550,14 @@ i8 combatManager::MoreTreesNear(void) {
     return 0;
 }
 
+// The battle for the Dragon City that ends the campaign.
+i32 combatManager::IsCampaignFinalBattle(void) {
+    return gGame->m_campaignType > 0 && gGame->m_campaignScenario == COMBAT_FINAL_CAMPAIGN_SCENARIO
+           && m_heroes[COMBAT_ATTACKER_SIDE]
+           && m_heroes[COMBAT_ATTACKER_SIDE]->m_x == COMBAT_FINAL_DRAGON_CITY_X
+           && m_heroes[COMBAT_ATTACKER_SIDE]->m_y == COMBAT_FINAL_DRAGON_CITY_Y;
+}
+
 void combatManager::LoadIcons(void) {
     i32 i;
 
@@ -557,8 +565,11 @@ void combatManager::LoadIcons(void) {
         m_combatIcons[i] = NULL;
     m_combatIcons[COMBAT_ICON_SPELLS] = gResourceManager->GetIcon("spells.icn");
     m_backgroundBitmap = gResourceManager->GetBitmap(GetBackgroundName());
-    m_combatIcons[COMBAT_ICON_GROUND] =
-        gResourceManager->GetIcon(gCombatGroundNames[m_terrainType]);
+    if (IsCampaignFinalBattle())
+        m_combatIcons[COMBAT_ICON_GROUND] = gResourceManager->GetIcon("dirt.xtl");
+    else
+        m_combatIcons[COMBAT_ICON_GROUND] =
+            gResourceManager->GetIcon(gCombatGroundNames[m_terrainType]);
     m_combatIcons[COMBAT_ICON_OBSTACLES] =
         gResourceManager->GetIcon(gCombatObstacleNames[m_terrainType]);
     m_combatIcons[COMBAT_ICON_TEXTBAR] = gResourceManager->GetIcon("textbar.icn");

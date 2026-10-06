@@ -67,7 +67,14 @@ enum MapEventRewardConstant {
     GHOST_LARGE_COUNT = 25,
     GHOST_LARGE_GOLD = 5000,
     GHOST_HUGE_COUNT = 50,
-    GHOST_HUGE_GOLD = 2000
+    GHOST_HUGE_GOLD = 2000,
+    // The Paladin stronghold on a megalith: paladins guard it; beaten, the
+    // ghosts they kept join the hero, or wait there until he has room.
+    STRONGHOLD_GUARDED = 0,
+    STRONGHOLD_ABANDONED = 1,
+    STRONGHOLD_GHOSTS_WAITING = 2,
+    STRONGHOLD_PALADIN_COUNT = 10,
+    STRONGHOLD_GHOST_COUNT = 10
 };
 
 enum EventFizzleType {

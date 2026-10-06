@@ -442,6 +442,74 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                     break;
             }
             break;
+        case MAP_OBJECT_MEGALITH:
+            switch (cell->m_objectMetadata) {
+                case STRONGHOLD_GUARDED:
+                    NormalDialog(
+                        localization::Tr("event.stronghold.approach"),
+                        NORMAL_DIALOG_TYPE_YES_NO
+                    );
+                    if (gWindowManager->m_dialogResult != NORMAL_DIALOG_CONFIRM)
+                        break;
+                    NormalDialog(
+                        localization::Tr("event.stronghold.attacked"),
+                        NORMAL_DIALOG_TYPE_OK
+                    );
+                    if (CombatMonsterEvent(
+                            visitingHero,
+                            CREATURE_PALADIN,
+                            STRONGHOLD_PALADIN_COUNT,
+                            cell,
+                            x,
+                            y,
+                            1,
+                            x,
+                            y
+                        )
+                        != COMBAT_RESULT_DEFENDER)
+                        break;
+                    if (visitingHero->m_army.CanJoin(CREATURE_GHOST)) {
+                        cell->m_objectMetadata = STRONGHOLD_ABANDONED;
+                        visitingHero->m_army
+                            .Add(CREATURE_GHOST, STRONGHOLD_GHOST_COUNT, ARMY_GROUP_EMPTY_SLOT);
+                        RedrawAdvScreen(true);
+                        NormalDialog(
+                            localization::Tr("event.stronghold.ghosts_join"),
+                            NORMAL_DIALOG_TYPE_OK
+                        );
+                    } else {
+                        cell->m_objectMetadata = STRONGHOLD_GHOSTS_WAITING;
+                        NormalDialog(
+                            localization::Tr("event.stronghold.ghosts_wait"),
+                            NORMAL_DIALOG_TYPE_OK
+                        );
+                    }
+                    break;
+                case STRONGHOLD_GHOSTS_WAITING:
+                    if (visitingHero->m_army.CanJoin(CREATURE_GHOST)) {
+                        cell->m_objectMetadata = STRONGHOLD_ABANDONED;
+                        visitingHero->m_army
+                            .Add(CREATURE_GHOST, STRONGHOLD_GHOST_COUNT, ARMY_GROUP_EMPTY_SLOT);
+                        RedrawAdvScreen(true);
+                        NormalDialog(
+                            localization::Tr("event.stronghold.waiting_ghosts_join"),
+                            NORMAL_DIALOG_TYPE_OK
+                        );
+                    } else {
+                        NormalDialog(
+                            localization::Tr("event.stronghold.ghosts_still_wait"),
+                            NORMAL_DIALOG_TYPE_OK
+                        );
+                    }
+                    break;
+                default:
+                    NormalDialog(
+                        localization::Tr("event.stronghold.abandoned"),
+                        NORMAL_DIALOG_TYPE_OK
+                    );
+                    break;
+            }
+            break;
         case MAP_OBJECT_CAMPFIRE:
             EventWindow(
                 EVENT_TEXT_CAMPFIRE,

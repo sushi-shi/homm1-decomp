@@ -77,7 +77,12 @@ enum CombatDrawStateConstant {
     // A wandering monster's cell keeps at most this many survivors.
     COMBAT_MAP_MONSTER_COUNT_MAX = 127,
     // One strike deals at most this much damage.
-    COMBAT_DAMAGE_MAX = 32000
+    COMBAT_DAMAGE_MAX = 32000,
+    // The last campaign scenario's Dragon City, whose battle has its own
+    // ground and victory music.
+    COMBAT_FINAL_CAMPAIGN_SCENARIO = 8,
+    COMBAT_FINAL_DRAGON_CITY_X = 41,
+    COMBAT_FINAL_DRAGON_CITY_Y = 37
 };
 
 // combatManager::ForecastAttack: the damage and kills of an attack, from the
@@ -210,6 +215,7 @@ public:
     void NoShowCombatLog(char* message);
     void CombatMessage(char* text, b32 updateScreen);
     void CombatMessage(i16 messageType);
+    i32 IsCampaignFinalBattle(void);
     void EstimateDamage(
         army* attacker,
         i32 count,
