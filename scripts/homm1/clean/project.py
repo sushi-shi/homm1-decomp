@@ -48,7 +48,10 @@ def manifest(files: dict[str, bytes]) -> dict:
     from homm1.graph.link import (BASE_LIBRARY, BASE_LIBRARY_AFTER, BASE_LIBRARY_FROM,
                                   CRT_LIBRARY, CRT_REPLACES, LINK_LIBS)
     config = tomllib.loads(files["config/units.toml"].decode())
-    units = config["unit"]
+    # The game executable links only the units of its own image; editor-only
+    # units (src/EDITOR) stay out of its manifest.
+    from homm1.manifest import DEFAULT_IMAGE, unit_images
+    units = [u for u in config["unit"] if DEFAULT_IMAGE in unit_images(u)]
     keyed = []
     for index, unit in enumerate(units):
         rva = first_function(files, unit)

@@ -50,6 +50,7 @@ CALL_RULES = {
     # Retail-address and delinker metadata: no expansion at all.
     "VA": (2, _drop),
     "VA_DECL": (1, _drop),
+    "VA_AT": (3, _drop),
     "DATA": (1, _drop),
     "VA_COMPGEN": (4, _drop),
     "RVA_DYNINIT": (3, _drop),
