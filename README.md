@@ -9,34 +9,35 @@ not bundled.
 ## Branches
 
 ```text
-decomp-win95-1.0 ---> decomp-win95-1.1 ---> decomp-win95-1.2 ---> decomp-buka-2003
-        |                                                                 |
-        v                                                    +------------+------------+
-source-win95-1.0                                             |                         |
-                                                             v                         v
-                                                     source-buka-2003         classic-buka-2003
-                                                             |
-                                                    +--------+--------+
-                                                    |                 |
-                                                    v                 v
-                                                  port            source-te
-                                                    |
-                                                    v
-                                       port-te (you are here)
+decomp-win95-1.0 -------------------> decomp-win95-1.1
+    |                                    |
+    v                                    v
+source-win95-1.0                     decomp-win95-1.2
+                                         |
+                                         v
+                                     decomp-buka-2003
+                                         |
+                 +-----------------------+---------+
+                 |                                 |
+                 v                                 v
+         source-buka-2003                  classic-buka-2003
+                 |
+      +----------+------------+
+      |                       |
+      v                       v
+  source-te                  port ------------------> port-te (you are here)
 ```
 
-| Branch | Purpose |
-| --- | --- |
-| [decomp-win95-1.0](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.0) | Win95 1.0 `HEROES.EXE` (Feb 1996) |
-| [decomp-win95-1.1](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.1) | Win95 1.1 `HEROES.EXE` (May 1996) |
-| [decomp-win95-1.2](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.2) | Win95 1.2 `HEROESW.EXE` (Aug 1997), VC4.1 |
-| [decomp-buka-2003](https://github.com/sushi-shi/homm1-decomp/tree/decomp-buka-2003) | Buka 2003 game and editor, byte-identical |
-| [source-win95-1.0](https://github.com/sushi-shi/homm1-decomp/tree/source-win95-1.0) | Clean source, Win95 1.0 |
-| [source-buka-2003](https://github.com/sushi-shi/homm1-decomp/tree/source-buka-2003) | Clean source, Buka 2003 (ru/en) |
-| [classic-buka-2003](https://github.com/sushi-shi/homm1-decomp/tree/classic-buka-2003) | Reading view, UTF-8 Russian |
-| [port](https://github.com/sushi-shi/homm1-decomp/tree/port) | Native port: Linux, Windows, browser |
-| [source-te](https://github.com/sushi-shi/homm1-decomp/tree/source-te) | Tournament Edition on the source |
-| [port-te](https://github.com/sushi-shi/homm1-decomp/tree/port-te) | Tournament Edition on the port |
+- [`decomp-win95-1.0`](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.0) — Win95 1.0 `HEROES.EXE` (Feb 1996)
+- [`decomp-win95-1.1`](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.1) — Win95 1.1 `HEROES.EXE` (May 1996)
+- [`decomp-win95-1.2`](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.2) — Win95 1.2 `HEROESW.EXE` (Aug 1997), VC4.1
+- [`source-win95-1.0`](https://github.com/sushi-shi/homm1-decomp/tree/source-win95-1.0) — Clean source, Win95 1.0
+- [`decomp-buka-2003`](https://github.com/sushi-shi/homm1-decomp/tree/decomp-buka-2003) — Buka 2003 game and editor, byte-identical
+- [`source-buka-2003`](https://github.com/sushi-shi/homm1-decomp/tree/source-buka-2003) — Clean source, Buka 2003 (ru/en)
+- [`classic-buka-2003`](https://github.com/sushi-shi/homm1-decomp/tree/classic-buka-2003) — Reading view, UTF-8 Russian
+- [`source-te`](https://github.com/sushi-shi/homm1-decomp/tree/source-te) — Tournament Edition on the source
+- [`port`](https://github.com/sushi-shi/homm1-decomp/tree/port) — Native port: Linux, Windows, browser
+- [`port-te`](https://github.com/sushi-shi/homm1-decomp/tree/port-te) — Tournament Edition on the port
 
 ## Play on Linux
 
@@ -147,8 +148,7 @@ in {
 The 1 GB archive is downloaded into the store once. `system.extraDependencies`
 (`home.extraDependencies` with home-manager) keeps it through garbage
 collection, so a rebuild that imports the game again does not download it
-again. The same archive holds Heroes II for the
-[HoMM2 port](https://github.com/sushi-shi/homm2-decomp/tree/port).
+again.
 
 With home-manager, the same options install the game for one user:
 
@@ -251,7 +251,7 @@ Open [the game](http://localhost:8000/), choose your game folder and press
 into the browser's storage for the page and nothing is uploaded; saved games
 stay there, and clearing the site's data removes them.
 
-## Windows (native exe)
+## Windows (native)
 
 With Nix, on Linux:
 
@@ -280,19 +280,25 @@ CMake downloads SDL and links it in: `build\windows\heroes.exe` and
 `heroes-editor.exe` need no DLL beside them. Settings and the converted help
 are kept in `%APPDATA%\homm1`.
 
-## Multiplayer, help and differences
+## Multiplayer
 
 - Network, modem and direct-connection games run over TCP between the
   native programs, the Windows build and, over a serial line under Wine, the
   retail program: [multiplayer](docs/port/README.md#multiplayer).
-- **Help** opens the game's own help book (`HELP\HEROES.HLP`), converted to a
-  page in your browser: [help](docs/port/README.md#help).
 - Network games need the same version on both sides: the edition's
   protocol refuses the Buka game's.
-- Where the port behaves differently from the original, and why:
-  [docs/port/divergences.md](docs/port/divergences.md); the edition on the
-  native port: [docs/te](docs/te/README.md#the-edition-on-the-native-port-port-te);
-  what porting this code takes: [docs/port/lessons.md](docs/port/lessons.md).
+
+## Documentation
+
+- [Port guide](docs/port/README.md): details, tests and the original's Visual
+  C++ 6 build
+- [Help](docs/port/README.md#help): the game's own help book
+  (`HELP\HEROES.HLP`), converted to a page in your browser
+- [Divergences](docs/port/divergences.md): where the port behaves differently
+  from the original, and why
+- [Lessons](docs/port/lessons.md): what porting this code takes
+- [Tournament Edition](docs/te/README.md): the edition's changes, how each is
+  implemented, and [the edition on the native port](docs/te/README.md#the-edition-on-the-native-port-port-te)
 
 ## License
 
