@@ -1979,6 +1979,11 @@ msgstr "You must have the Heroes Win95 CD in the CD-ROM drive to play \nHeroes o
 msgid "startup.data.missing"
 msgstr "Unable to find the Heroes data files.  Please run the installation program."
 
+#: src/PORT/SOURCE/kbwin.cpp
+#, c-format
+msgid "startup.data.not_found"
+msgstr "The game data was not found. Folders searched:%s\n\nSet HOMM1_DATA to the folder that holds DATA\\HEROES.AGG, or start the program with --data FOLDER."
+
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "startup.directory.invalid"
 msgstr "Unable to change to the Heroes directory.  Please run the installation program."

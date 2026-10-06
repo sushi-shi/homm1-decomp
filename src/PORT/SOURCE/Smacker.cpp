@@ -96,8 +96,10 @@ bool Restart(Smack* smack, Playback& playback) {
 
 extern "C" Smack* SmackOpen(char* name, u32 flags, i32) {
     char resolved[FILE_PATH_CAPACITY];
-    if (!FileResolve(name, FILE_OPEN_READ, resolved, sizeof(resolved)))
+    if (!FileResolve(name, FILE_OPEN_READ, resolved, sizeof(resolved))) {
+        platform::Log("movie %s is not in the game data; skipping it", name);
         return nullptr;
+    }
     auto playback = std::make_unique<Playback>();
     playback->path = resolved;
     playback->withAudio = (flags & SMACK_TRACKS) != 0;

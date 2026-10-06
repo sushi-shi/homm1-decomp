@@ -30,6 +30,12 @@ homm1_test(remote_records_test
 homm1_test(file_test
   SOURCES file_test.cpp)
 
+# Finding the game folder as players set it up: quoted and trailing-separator
+# HOMM1_DATA, the program's folder from anywhere, non-ASCII folders, file
+# names in another case.
+homm1_test(data_root_test
+  SOURCES data_root_test.cpp)
+
 # The portable drawing routines (the Windows build's assembly) on synthetic
 # images in exactly-sized buffers.
 homm1_test(blit_test

@@ -34,6 +34,13 @@ std::string ExecutableDirectory();
 std::string ConfigDirectory();
 // A variable from the environment, or empty.
 std::string Environment(const char* name);
+// A folder or file the player named (an environment variable, --data):
+// surrounding blanks and one pair of surrounding quotes dropped (cmd's
+// `set HOMM1_DATA="C:\Games\Heroes"` keeps the quotes), then trailing
+// separators, except a root's ("/", and on Windows "C:\").
+std::string ConfiguredDirectory(const std::string& value);
+// ConfiguredDirectory of an environment variable; empty when unset.
+std::string EnvironmentDirectory(const char* name);
 
 // ---------------------------------------------------------------- time
 
@@ -53,6 +60,8 @@ std::string ToUtf8(const char* text);
 std::string ToUtf8(const std::string& text, int codepage);
 
 void ShowMessage(const char* title, const char* text);
+// The same for UTF-8 text (host paths in the message).
+void ShowMessageUtf8(const std::string& title, const std::string& text);
 // Shows a local document (an HTML file at hostPath) in the system's browser,
 // or in a new browser tab when the program itself runs in a browser.
 bool OpenDocument(const std::string& hostPath);

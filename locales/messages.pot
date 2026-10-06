@@ -1980,6 +1980,11 @@ msgstr ""
 msgid "startup.data.missing"
 msgstr ""
 
+#: src/PORT/SOURCE/kbwin.cpp
+#, c-format
+msgid "startup.data.not_found"
+msgstr ""
+
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "startup.directory.invalid"
 msgstr ""

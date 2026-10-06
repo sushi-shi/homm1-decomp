@@ -89,7 +89,7 @@ bool Startup(const StartupOptions& options) {
     if (!timeScale.empty())
         gTimeScale = static_cast<u32>(std::max(1ul, std::strtoul(timeScale.c_str(), nullptr, 0)));
     gStarted = true;
-    std::string replay = Environment("HOMM1_INPUT_REPLAY");
+    std::string replay = ConfiguredDirectory(Environment("HOMM1_INPUT_REPLAY"));
     if (!replay.empty())
         LoadInputReplay(replay.c_str());
     return true;
@@ -114,7 +114,7 @@ namespace {
 // $HOMM1_CONFIG (for tests and portable installs), with a trailing separator
 // and created, or empty.
 std::string OverriddenConfigDirectory() {
-    std::string directory = Environment("HOMM1_CONFIG");
+    std::string directory = EnvironmentDirectory("HOMM1_CONFIG");
     if (directory.empty())
         return directory;
     if (directory.back() != '/' && directory.back() != '\\')
@@ -146,8 +146,8 @@ std::string ConfigDirectory() {
     std::string directory = OverriddenConfigDirectory();
     if (!directory.empty())
         return directory;
-    std::string xdg = Environment("XDG_CONFIG_HOME");
-    std::string home = Environment("HOME");
+    std::string xdg = EnvironmentDirectory("XDG_CONFIG_HOME");
+    std::string home = EnvironmentDirectory("HOME");
     if (!xdg.empty())
         directory = xdg + "/homm1/";
     else if (!home.empty())
@@ -204,12 +204,13 @@ void YieldToBrowser() {
 }  // namespace sdl
 
 void ShowMessage(const char* title, const char* text) {
-    std::string utf8Title = ToUtf8(title);
-    std::string utf8Text = ToUtf8(text);
-    Log("%s: %s", utf8Title.c_str(), utf8Text.c_str());
+    ShowMessageUtf8(ToUtf8(title), ToUtf8(text));
+}
+
+void ShowMessageUtf8(const std::string& title, const std::string& text) {
+    Log("%s: %s", title.c_str(), text.c_str());
     if (Environment("HOMM1_NO_DIALOGS").empty())
-        SDL_ShowSimpleMessageBox(
-            SDL_MESSAGEBOX_ERROR, utf8Title.c_str(), utf8Text.c_str(), sdl::Window());
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, title.c_str(), text.c_str(), sdl::Window());
 }
 
 bool OpenDocument(const std::string& hostPath) {

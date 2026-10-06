@@ -18,7 +18,11 @@ cross.stdenv.mkDerivation {
 
   nativeBuildInputs = with cross.buildPackages; [ cmake ninja pkg-config python3 ];
   buildInputs = [ sdl3 ffmpeg ];
-  cmakeFlags = [ "-DCMAKE_BUILD_TYPE=RelWithDebInfo" "-DBUILD_TESTING=OFF" ];
+  cmakeFlags = [ "-DCMAKE_BUILD_TYPE=RelWithDebInfo" "-DBUILD_TESTING=ON" ];
+  # The programs and the path tests that run under Wine (windows-checks.nix);
+  # the other tests are not cross-built here.
+  ninjaFlags = [ "homm1" "homm1_editor" "file_test" "data_root_test" ];
+  outputs = [ "out" "tests" ];
 
   installPhase = ''
     runHook preInstall
@@ -26,6 +30,9 @@ cross.stdenv.mkDerivation {
     install -m755 heroes.exe heroes-editor.exe $out/bin/
     install -m644 ${sdl3.out}/bin/SDL3.dll ${ffmpeg}/bin/*.dll $out/bin/
     install -m644 ${threads}/bin/libmcfgthread-2.dll $out/bin/
+    mkdir -p $tests/bin
+    install -m755 tests/port/file_test.exe tests/port/data_root_test.exe $tests/bin/
+    cp $out/bin/*.dll $tests/bin/
     runHook postInstall
   '';
 
@@ -33,7 +40,7 @@ cross.stdenv.mkDerivation {
   doInstallCheck = true;
   installCheckPhase = ''
     shipped=$(cd $out/bin && ls *.dll | tr 'A-Z' 'a-z')
-    for program in $out/bin/*.exe $out/bin/*.dll; do
+    for program in $out/bin/*.exe $out/bin/*.dll $tests/bin/*.exe; do
       for dll in $(${cross.stdenv.cc.targetPrefix}objdump -p "$program" | sed -n 's/^\s*DLL Name: //p' | tr 'A-Z' 'a-z'); do
         case "$dll" in
           kernel32.dll|user32.dll|gdi32.dll|advapi32.dll|shell32.dll|ole32.dll|oleaut32.dll| \

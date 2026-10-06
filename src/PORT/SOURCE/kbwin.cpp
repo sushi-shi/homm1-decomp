@@ -26,6 +26,7 @@
 #endif
 
 #include <PLATFORM/File.h>
+#include <PLATFORM/GameData.h>
 #include <PLATFORM/Help.h>
 #include <PLATFORM/Net.h>
 #include <PLATFORM/Platform.h>
@@ -153,62 +154,6 @@ std::vector<SettingField> IntegerSettings() {
 
 std::string gCdRoot;
 
-bool ResolvesUnder(const std::string& directory, const char* path) {
-    char resolved[FILE_PATH_CAPACITY];
-    std::string saved = FileRoot();
-    FileSetRoot(directory.c_str());
-    bool found = FileResolve(path, FILE_OPEN_READ, resolved, sizeof(resolved));
-    FileSetRoot(saved.c_str());
-    return found;
-}
-
-// The game folder: --data, $HOMM1_DATA, beside the executable, the current
-// directory, then the folder `nix run .#play` installs to (on Windows,
-// %LOCALAPPDATA%\homm1-buka\game).
-std::string FindGameRoot(const std::string& requested) {
-    std::vector<std::string> candidates;
-    if (!requested.empty())
-        candidates.push_back(requested);
-    std::string environment = platform::Environment("HOMM1_DATA");
-    if (!environment.empty())
-        candidates.push_back(environment);
-    candidates.push_back(platform::ExecutableDirectory());
-    candidates.push_back(".");
-#if defined(_WIN32)
-    std::string local = platform::Environment("LOCALAPPDATA");
-    if (!local.empty())
-        candidates.push_back(local + "\\homm1-buka\\game");
-#else
-    std::string xdg = platform::Environment("XDG_DATA_HOME");
-    std::string home = platform::Environment("HOME");
-    if (!xdg.empty())
-        candidates.push_back(xdg + "/homm1-buka/game");
-    if (!home.empty())
-        candidates.push_back(home + "/.local/share/homm1-buka/game");
-#endif
-    for (const std::string& candidate : candidates) {
-        if (ResolvesUnder(candidate, "DATA\\HEROES.AGG"))
-            return candidate;
-    }
-    return std::string();
-}
-
-// The CD's music tracks: $HOMM1_CD, a "cd" folder beside the game folder
-// (where `nix run .#play` puts it), or the game folder itself.
-std::string FindCdRoot(const std::string& gameRoot) {
-    std::vector<std::string> candidates;
-    std::string environment = platform::Environment("HOMM1_CD");
-    if (!environment.empty())
-        candidates.push_back(environment);
-    candidates.push_back(gameRoot + "/../cd");
-    candidates.push_back(gameRoot);
-    for (const std::string& candidate : candidates) {
-        if (ResolvesUnder(candidate, "TRACKS\\02-AudioTrack 02.ogg"))
-            return candidate;
-    }
-    return std::string();
-}
-
 // ---------------------------------------------------------------- messages
 
 void PostKey(u32 message, const platform::Event& event) {
@@ -315,16 +260,21 @@ bool KBStartHost(const char* dataRoot, const char* gameArguments, i32 fullScreen
     platform::StartupOptions options;
     if (!platform::Startup(options))
         return false;
-    std::string gameRoot = FindGameRoot(dataRoot != NULL ? dataRoot : "");
+    std::vector<std::string> searched;
+    std::string gameRoot = platform::FindGameRoot(dataRoot != NULL ? dataRoot : "", searched);
     if (gameRoot.empty()) {
-        platform::ShowMessage(
-            "Heroes of Might and Magic",
-            "The game data was not found. Pass --data DIR or set HOMM1_DATA to the folder "
-            "holding DATA/HEROES.AGG.");
+        // Every folder tried, one per line, in the message's (UTF-8) text.
+        std::string folders;
+        for (const std::string& folder : searched)
+            folders += "\n    " + folder;
+        std::string format = platform::ToUtf8(localization::Tr("startup.data.not_found"));
+        std::vector<char> text(format.size() + folders.size() + 1);
+        std::snprintf(text.data(), text.size(), format.c_str(), folders.c_str());
+        platform::ShowMessageUtf8(platform::ToUtf8(gTitle), text.data());
         return false;
     }
     FileSetRoot(gameRoot.c_str());
-    gCdRoot = FindCdRoot(gameRoot);
+    gCdRoot = platform::FindCdRoot(gameRoot);
     platform::Log("game data: %s", gameRoot.c_str());
 
     memset(gCommandLine, 0, KBWIN_COMMAND_LINE_CLEAR_SIZE);

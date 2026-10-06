@@ -137,6 +137,8 @@
       wasm = import ./nix/wasm.nix { inherit pkgs; src = self; };
       # The native port for 64-bit Windows, cross-compiled (nix/windows.nix).
       windows = import ./nix/windows.nix { inherit pkgs; src = self; };
+      # Its path tests and a player's start-up under Wine (nix/windows-checks.nix).
+      windowsChecks = import ./nix/windows-checks.nix { inherit pkgs windows; };
       app = name: target: description: {
         type = "app";
         program = "${runner name target}/bin/${name}";
@@ -179,6 +181,11 @@
           program = "${wasm.smoke}/bin/homm1-web-smoke";
           meta.description = "Drive the browser build headless on your game data (--data DIR)";
         };
+        windows-smoke = {
+          type = "app";
+          program = "${windowsChecks.smoke}/bin/homm1-windows-smoke";
+          meta.description = "Start the Windows build under Wine from a player's game folder (HOMM1_DATA=DIR)";
+        };
       };
       packages.${system} = {
         inherit native sanitized windows;
@@ -187,6 +194,7 @@
       };
       checks.${system} = {
         inherit native sanitized windows;
+        windows-tests = windowsChecks.tests;
         launcher = game;
       };
       nixosModules.default = module "nixos";

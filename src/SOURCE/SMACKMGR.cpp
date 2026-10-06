@@ -105,6 +105,13 @@ void SmackMain() {
     soundFlags = gSmackSound ? SMACK_TRACKS : 0;
     preloadFlags = gSmackOptions[gMovieId].preload ? SMACK_PRELOAD_ALL : 0;
     gSmackPrimary = SmackOpen(gText, soundFlags + preloadFlags, SMACK_AUTO_EXTRA);
+    // A movie missing from ANIM (a game folder copied without it) is skipped
+    // as if it had played to its end, so what follows it still runs; the
+    // original went on with no movie and crashed.
+    if (gSmackPrimary == NULL) {
+        gSmackEnded = true;
+        goto closeMovies;
+    }
     SmackToBuffer(
         gSmackPrimary,
         0,
@@ -117,7 +124,7 @@ void SmackMain() {
     if (strlen(gSmackOptions[gMovieId].companionFileName) > 1) {
         sprintf(gText, "%s%s.SMK", gAnimPath, gSmackOptions[gMovieId].companionFileName);
         gSmackCompanion = SmackOpen(gText, soundFlags, SMACK_AUTO_EXTRA);
-        if (gSmackOptions[gMovieId].drawCompanion)
+        if (gSmackOptions[gMovieId].drawCompanion && gSmackCompanion)
             SmackToBuffer(
                 gSmackCompanion,
                 gSmackOptions[gMovieId].companionX,
@@ -251,6 +258,7 @@ void SmackMain() {
     }
     if (gSmackTrackSummary)
         SmackSummary(gSmackPrimary, &gSmackSummary);
+closeMovies:
     CloseSmackers();
     InitAudio();
     memcpy(gPalette->m_data, gSmackSavedPalette, PALETTE_DATA_SIZE);

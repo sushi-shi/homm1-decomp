@@ -79,6 +79,7 @@ commit.
 | Random artifacts beyond the supply | With more random artifact sites than artifacts the draw found none (-1, stored as 255) and the site wrote entry 255 of the 37-entry artifact table (into the boats). | Such a site is left empty. |
 | Site masks | Gazebo sites are numbered from 1 into a 32-bit mask; with 32 or more the shift was 32 or more, which x86 masks. | The mask is written out. Same result. |
 | Computer player: tavern heroes as defenders | Valuing a fight against a hero without an owner read the variable before the human player table. | No owner counts as a computer player. |
+| Missing movies | A movie missing from `ANIM` (a game folder copied without it) was played as a null movie, which crashes on its first use (the native port ended with a segmentation fault). | The movie is skipped as if it had played to its end, so the next one (or the main menu) follows; the native port logs it. |
 
 ## Host differences (native port only)
 

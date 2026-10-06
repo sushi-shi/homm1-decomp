@@ -1979,6 +1979,11 @@ msgstr "У вас должен быть компакт-диск Героев в 
 msgid "startup.data.missing"
 msgstr "Невозможно найти файлы данных Героев.  Пожалуйста, переустановите программу."
 
+#: src/PORT/SOURCE/kbwin.cpp
+#, c-format
+msgid "startup.data.not_found"
+msgstr "Данные игры не найдены. Проверены папки:%s\n\nУкажите папку, в которой находится DATA\\HEROES.AGG, в переменной HOMM1_DATA или запустите программу с параметром --data ПАПКА."
+
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "startup.directory.invalid"
 msgstr "Невозможно изменить директорию. Пожалуйста, переустановите программу."
