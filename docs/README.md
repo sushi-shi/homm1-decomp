@@ -1,6 +1,7 @@
 # Project documentation
 
 - [Matching workflow](tooling.md), [build system](build-system.md),
+  [the scenario editor image](editor.md),
   [command map](tooling-map.md), [repository workflow](workflow.md).
 - [Maintained Win95 1.2 branch](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.2).
 - [Version lineage](versions/README.md): [Win95 1.1](versions/win95-1.1.md),

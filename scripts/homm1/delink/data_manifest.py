@@ -40,15 +40,15 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 from homm1.core import msvc_names
-from homm1.core.paths import BUILD
+from homm1.core.paths import BUILD, IMAGE_BUILD
 from homm1.delink import coffx, eh_band
 from homm1.delink.image import retail
 from homm1.model import Model
 from homm1.retail_labels import fragments
 
-BASE_DIR = BUILD / "objdiff/base"
-OUTPUT = BUILD / "gen/delink_data_manifest.tsv"
-SECTION_OUTPUT = BUILD / "gen/delink_data_section_manifest.tsv"
+BASE_DIR = IMAGE_BUILD / "objdiff/base"
+OUTPUT = IMAGE_BUILD / "gen/delink_data_manifest.tsv"
+SECTION_OUTPUT = IMAGE_BUILD / "gen/delink_data_section_manifest.tsv"
 
 HEADER = ("name", "object", "rva", "size", "storage", "alignment",
           "section_ordinal", "section_offset", "scope", "provenance")
@@ -1379,6 +1379,16 @@ def gap_rows(enrolled, secs):
         starts[w["rva"]].append(w)
         ends[w["rva"] + w["size"]].append(w)
         intervals.add((w["rva"], w["size"]))
+    # Another image is enrolled incrementally: its reviewed data names
+    # (data_symbols.tsv, placed by code users) bound the holes between one
+    # unit's claims, so a gap carve never shadows a known identity.
+    from homm1.core.paths import DEFAULT_IMAGE, RETAIL, image_key
+    if image_key() != DEFAULT_IMAGE and (RETAIL / "data_symbols.tsv").is_file():
+        from homm1.core.tsv import read as read_tsv
+        for r in read_tsv(RETAIL / "data_symbols.tsv")[2]:
+            size = int(r["size"], 0)
+            if size:
+                intervals.add((int(r["rva"], 16), size))
 
     merged = []
     for a, sz in sorted(intervals):

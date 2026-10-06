@@ -1,0 +1,4 @@
+# Delinker-active CRT/SDK providers. DNA identities intentionally stay
+# in config/retail/dna_bands.tsv: enrolling the whole runtime band here
+# changes Vostok's anonymous-module partition.
+rva	name	lib	confidence	source

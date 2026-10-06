@@ -1,0 +1,6 @@
+# EDITOR.EXE CRT code: from the first runtime body after the BASE library's last
+# object (Icon2bc ends at 0x292a4) to the final import-thunk run (0x36df0).
+# Evidence: census.json LIBCMT contributions inside the band; 0x292a4 is the
+# 11-byte `push [esp+4]; call; pop ecx; ret` wrapper called from editor code.
+lo	hi	band
+0x000292a4	0x00036df0	crt

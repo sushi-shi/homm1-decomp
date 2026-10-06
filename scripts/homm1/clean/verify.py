@@ -24,7 +24,8 @@ Four checks, all of which must pass:
   Russian compiler input token for token once its UTF-8 literals are read as
   the Windows-1251 bytes they show (classic_equivalence).
 * The source tree's own build.py, run through its flake (which fetches the
-  hash-pinned toolchain release), must produce HEROES.EXE in both languages.
+  hash-pinned toolchain release), must produce HEROES.EXE in both languages,
+  and its game runner (`nix run .#play`, play.py) must complete a dry run.
 
 Nothing is patched or banked; this proves the generated source compiles to
 the matching program, not a retail match.
@@ -469,7 +470,7 @@ def verify(tree: Path, inputs: dict[str, bytes], variant: str = "source") -> int
             print("[clean] verify: classic: every file equals the source tree's Russian "
                   "compiler input, its UTF-8 literals read as Windows-1251")
     else:
-        status = standalone(tree) or status
+        status = standalone(tree) or play_dry_run(tree, work) or status
     return status
 
 
@@ -661,4 +662,36 @@ def standalone(tree: Path) -> int:
             return 1
         print(f"[clean] verify: standalone: built {exe.relative_to(tree)} "
               f"({exe.stat().st_size:,} B) with the flake's pinned toolchain")
+    return 0
+
+
+def play_dry_run(tree: Path, work: Path) -> int:
+    """Run the tree's game runner through its flake app with --dry-run, in a
+    fresh state directory: it must plan the build, prefix and launch. A game
+    copy named by HOMM1_GAME is checked too."""
+    import os
+    import subprocess
+    from homm1.graph.play import EXECUTABLE
+
+    if not (tree / "play.py").is_file():
+        print("[clean] verify: FAIL: the tree has no play.py", file=sys.stderr)
+        return 1
+    env = {key: value for key, value in os.environ.items()
+           if key not in ("WINEPREFIX", "PYTHONPATH", "HOMM1_TOOLCHAIN", "MSVC_DIR")}
+    state = work / "play-state"
+    command = ["nix", "run", f"path:{tree}#play", "--", "--dry-run", "--state", str(state)]
+    if os.environ.get("HOMM1_GAME"):
+        command += ["--game", os.environ["HOMM1_GAME"]]
+    print(f"[clean] verify: play: nix run path:<tree>#play -- {' '.join(command[4:])}")
+    result = subprocess.run(command, cwd=tree, env=env, capture_output=True, text=True)
+    output = result.stdout + result.stderr
+    expected = ("would create the Wine prefix", "would install", "would run in")
+    missing = [step for step in expected if step not in output]
+    if result.returncode or missing or state.exists():
+        print("\n".join(output.strip().splitlines()[-20:]), file=sys.stderr)
+        print("[clean] verify: FAIL: the tree's game runner dry run "
+              + ("changed its state directory" if state.exists() else "failed"),
+              file=sys.stderr)
+        return 1
+    print(f"[clean] verify: play: the dry run plans the prefix and runs {EXECUTABLE}")
     return 0

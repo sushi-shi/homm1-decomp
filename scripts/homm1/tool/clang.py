@@ -21,9 +21,9 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-from homm1.core.paths import BUILD, INCLUDE, REPO, vendor_include_dirs
+from homm1.core.paths import BUILD, IMAGE_BUILD, INCLUDE, REPO, vendor_include_dirs
 
-COMPDB = BUILD / "clangd/compile_commands.json"
+COMPDB = IMAGE_BUILD / "clangd/compile_commands.json"
 
 TARGET = "i686-pc-windows-msvc"
 MSC_COMPAT = "1000"

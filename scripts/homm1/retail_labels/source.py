@@ -51,7 +51,7 @@ from pathlib import Path
 import struct
 
 from homm1.core import msvc_names
-from homm1.core.paths import BUILD, REPO
+from homm1.core.paths import BUILD, IMAGE_BUILD, REPO, image_key
 from homm1.core.pe import image
 from homm1.core.tsv import write as write_tsv
 from homm1.retail_labels.fragments import FRAGMENTS, HEADER
@@ -61,12 +61,12 @@ from homm1.tool import clang
 #: cl's own objects. Only the DATA_COMPGEN channel reads them (its pin is
 #: proven against the payload cl emitted); every other channel spells its
 #: claims from source.
-BASE_OBJS = BUILD / "objdiff/base"
+BASE_OBJS = IMAGE_BUILD / "objdiff/base"
 
 # Presence test ONLY (never extraction): a TU with no rva.h macro at all is a
 # vendored TU with no claims - skip it.
 ANN_DECL_RE = re.compile(r"^decl-va:(0x[0-9a-fA-F]+)$")
-LABELED_TU_RE = re.compile(r"\b(?:VA_DECL|VA|DATA|VA_COMPGEN|RVA_DYNINIT|DATA_COMPGEN)\s*\(")
+LABELED_TU_RE = re.compile(r"\b(?:VA_DECL|VA_AT|VA|DATA|VA_COMPGEN|RVA_DYNINIT|DATA_COMPGEN)\s*\(")
 DATA_MACRO_RE = re.compile(r"\bDATA\s*\(\s*(0x[0-9a-fA-F]+)\s*\)")
 VA_COMPGEN_RE = re.compile(
     r'\bVA_COMPGEN\s*\(\s*(0x[0-9a-fA-F]+)\s*,\s*'
@@ -75,7 +75,8 @@ VA_COMPGEN_RE = re.compile(
 RVA_DYNINIT_RE = re.compile(
     r"\bRVA_DYNINIT\s*\(\s*(0x[0-9a-fA-F]+)\s*,\s*(0x[0-9a-fA-F]+|\d+)\s*,"
     r"\s*([A-Za-z_][A-Za-z0-9_:<>]*)\s*\)")
-ANN_VA_RE = re.compile(r"^va:(0x[0-9a-fA-F]+)(?:\s+size:(0x[0-9a-fA-F]+|\d+))?$")
+ANN_VA_RE = re.compile(r"^va:(0x[0-9a-fA-F]+)(?:\s+size:(0x[0-9a-fA-F]+|\d+))?"
+                       r"(?:\s+image:(\w+))?$")
 ANN_DATA_RE = re.compile(r"^(data-va|data):(0x[0-9a-fA-F]+)$")
 
 DATA_COMPGEN_RE = re.compile(r"\bDATA_COMPGEN\s*\(")
@@ -92,7 +93,43 @@ FP_POOL_NAME = re.compile(r"^\$T[0-9]+$")
 # @llvm.global.annotations tuple + the @.str constants it references.
 _STR_DEF_RE = re.compile(r'^(@[\w.$"]+)\s*=.*?\bc"((?:[^"\\]|\\.)*)"', re.M)
 _ANN_TUPLE_RE = re.compile(
-    r'\{\s*ptr\s+(@(?:"[^"]+"|[\w.$]+))\s*,\s*ptr\s+(@(?:"[^"]+"|[\w.$]+))\s*,')
+    r'\{\s*ptr\s+(@(?:"[^"]+"|[\w.$]+))\s*,\s*ptr\s+(@(?:"[^"]+"|[\w.$]+))\s*,'
+    r'\s*ptr\s+(@(?:"[^"]+"|[\w.$]+))')
+
+
+def claim_space(path: str | os.PathLike | None) -> str:
+    """The image whose addresses a claim spells: a claim written in
+    src/<IMAGE>/ or include/<IMAGE>/ of a non-game image (src/EDITOR,
+    include/EDITOR) spells that image's addresses; every other claim spells
+    the game's (homm1.core.paths). Shared source therefore always names its
+    game identity; another image reaches it through its placements."""
+    from homm1.core.paths import images
+    if path is None or not os.path.isabs(path):
+        return "game"
+    try:
+        rel = Path(os.path.realpath(path)).relative_to(os.path.realpath(REPO)).parts
+    except ValueError:
+        return "game"
+    return _space_of_parts(rel)
+
+
+def _in_repo(path: str) -> bool:
+    if not os.path.isabs(path):
+        return False            # a #line retail path such as U:\\HMM\\...
+    try:
+        Path(os.path.realpath(path)).relative_to(os.path.realpath(REPO))
+        return True
+    except ValueError:
+        return False
+
+
+def _space_of_parts(rel) -> str:
+    from homm1.core.paths import images
+    if len(rel) > 1 and rel[0] in ("src", "include"):
+        for image in images():
+            if image != "game" and rel[1] == image.upper():
+                return image
+    return "game"
 
 
 def _unescape_ir_cstr(s: str) -> str:
@@ -153,10 +190,14 @@ def ir_claims(ir: str) -> tuple[list[tuple[int, str, int | None]],
     for line in ir.splitlines():
         if "@llvm.global.annotations" not in line:
             continue
-        for sym_ref, str_ref in _ANN_TUPLE_RE.findall(line):
+        for sym_ref, str_ref, file_ref in _ANN_TUPLE_RE.findall(line):
             ann = strings.get(str_ref)
             if ann is None:
                 continue
+            # A #line directive renames the file to a retail path outside
+            # the repository; such a claim takes its TU's space (None here).
+            located = strings.get(file_ref)
+            space = (claim_space(located) if located and _in_repo(located) else None)
             name, decorated = _ir_symbol_name(sym_ref)
             m = ANN_VA_RE.match(ann)
             if m:
@@ -165,7 +206,8 @@ def ir_claims(ir: str) -> tuple[list[tuple[int, str, int | None]],
                     v = m.group(2)
                     size = int(v, 16) if v.lower().startswith("0x") else int(v)
                 funcs.append((int(m.group(1), 16) - image().image_base,
-                              msvc_names.func(name, decorated=decorated), size))
+                              msvc_names.func(name, decorated=decorated), size,
+                              m.group(3) or space))
                 continue
             m = ANN_DATA_RE.match(ann)
             if m:
@@ -173,7 +215,7 @@ def ir_claims(ir: str) -> tuple[list[tuple[int, str, int | None]],
                 rva = address - image().image_base if m.group(1) == "data-va" else address
                 datas.append((rva,
                               msvc_names.data(name, decorated=decorated,
-                                              internal=linkage.get(sym_ref, False))))
+                                              internal=linkage.get(sym_ref, False)), space))
     return funcs, datas
 
 
@@ -487,7 +529,8 @@ def decl_claims(decls: list[dict]) -> tuple[list[tuple[int, str]], list[str]]:
                 continue
             if d["defined"]:
                 continue
-            claim = (int(m.group(1), 16) - image().image_base, msvc_names.func(d["name"], decorated=True))
+            claim = (int(m.group(1), 16) - image().image_base,
+                     msvc_names.func(d["name"], decorated=True), claim_space(d.get("file")))
             if claim not in seen:
                 seen.add(claim)
                 out.append(claim)
@@ -504,9 +547,11 @@ def extract_unit(unit: str, source: str, compdb: dict) -> tuple[list[list[str]],
     cl_flags = compdb.get(os.path.realpath(str(src_path)))
     rows: list[list[str]] = []
 
-    def emit(rva, size, name, kind, channel, qtype=""):
+    main_space = claim_space(src_path)
+
+    def emit(rva, size, name, kind, channel, qtype="", space=None):
         rows.append([f"0x{rva:08x}", f"0x{size:x}" if size is not None else "",
-                     name, kind, channel, qtype])
+                     name, kind, channel, qtype, space or main_space])
 
     # functions via IR
     ir = clang.emit_ir(str(src_path), cl_flags)
@@ -514,8 +559,8 @@ def extract_unit(unit: str, source: str, compdb: dict) -> tuple[list[list[str]],
         return rows, [f"{unit}: clang produced no IR - every VA() label of "
                       f"this TU would silently vanish (FATAL)"]
     ir_funcs, ir_datas = ir_claims(ir)
-    for rva, name, size in ir_funcs:
-        emit(rva, size, name, "func", "src")
+    for rva, name, size, space in ir_funcs:
+        emit(rva, size, name, "func", "src", space=space)
 
     # Function declarations carry identities before their bodies are reconstructed.
     decls = clang.annotated_decls(str(src_path), cl_flags)
@@ -523,13 +568,13 @@ def extract_unit(unit: str, source: str, compdb: dict) -> tuple[list[list[str]],
         return rows, [f"{unit}: libclang could not resolve declaration identities (FATAL)"]
     d_claims, d_problems = decl_claims(decls)
     problems.extend(f"{unit}: {problem} (FATAL)" for problem in d_problems)
-    for rva, name in d_claims:
-        emit(rva, None, name, "func", "src_decl")
+    for rva, name, space in d_claims:
+        emit(rva, None, name, "func", "src_decl", space=space)
 
     # compiler-generated bodies: both their address and source owner are VAs
     blanked = blank_comments(text)
     generated, generated_problems = generated_function_claims(
-        text, {rva for rva, _name, _size in ir_funcs}, image().image_base)
+        text, {rva for rva, _name, _size, _space in ir_funcs}, image().image_base)
     problems.extend(f"{unit}: {problem}" for problem in generated_problems)
     for rva, name, size in generated:
         emit(rva, size or None, name, "func", "src_compgen")
@@ -567,9 +612,9 @@ def extract_unit(unit: str, source: str, compdb: dict) -> tuple[list[list[str]],
                  f["size"] for name, f in facts.items()}
 
         covered = set()
-        for rva, name in ir_datas:
+        for rva, name, space in ir_datas:
             covered.add(rva)
-            emit(rva, sizes.get(name), name, "data", "src")
+            emit(rva, sizes.get(name), name, "data", "src", space=space)
         site_count = len(DATA_MACRO_RE.findall(blanked))
         if site_count > len(covered):
             ast = clang.ast_dump(str(src_path), cl_flags)
@@ -602,6 +647,7 @@ def extract_unit(unit: str, source: str, compdb: dict) -> tuple[list[list[str]],
 
 MACRO_SITE_RE = re.compile(
     r"\b(VA_DECL|VA_COMPGEN|RVA_DYNINIT|DATA_COMPGEN|VA|DATA)\s*\(\s*(0x[0-9a-fA-F]+)")
+VA_AT_SITE_RE = re.compile(r"\bVA_AT\s*\(\s*(\w+)\s*,\s*(0x[0-9a-fA-F]+)")
 
 
 def sweep_sites() -> dict[str, dict[int, str]]:
@@ -620,6 +666,16 @@ def sweep_sites() -> dict[str, dict[int, str]]:
             if path.suffix not in (".cpp", ".h") or path.name == "rva.h":
                 continue
             text = blank_comments(path.read_text(errors="replace"))
+            # VA_AT names the selected image wherever it is written
+            for m in VA_AT_SITE_RE.finditer(text):
+                if m.group(1) == image_key():
+                    lineno = text.count("\n", 0, m.start()) + 1
+                    out.setdefault("VA", {}).setdefault(
+                        int(m.group(2), 16) - image().image_base, []).append(
+                        f"{path.relative_to(REPO)}:{lineno}")
+            # another image's source spells another address space
+            if claim_space(path) != image_key():
+                continue
             for m in MACRO_SITE_RE.finditer(text):        # whole-file: a macro
                 lineno = text.count("\n", 0, m.start()) + 1   # may span lines
                 macro = m.group(1)

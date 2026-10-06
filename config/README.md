@@ -10,7 +10,7 @@ read by the named tooling. Generated state belongs in `build/`.
   `[build.source_roots]` pins the retail compiler paths on drive `F:`.
 - `compare.toml`: comparison mode (`data_matching`). The ledger records its mode.
 - `match_baseline.tsv`: RVA-keyed CUR/MAX/HIST ledger, written only by
-  `homm1 verify bank`.
+  `homm1 verify bank` (`match_baseline.<image>.tsv` for another image).
 - `toolchains.json`: pinned compiler media, components and release hashes
   (`homm1 toolchain`).
 - `heroes.def`: historical stack contract; 1.2 has no exports. The candidate
@@ -30,7 +30,11 @@ read by the named tooling. Generated state belongs in `build/`.
 
 Files at the top of `retail/` describe the pinned Buka 2003 `HEROES.EXE`; a
 second image keeps the same kinds of files in its own subdirectory (for
-example `retail/editor/`). Addresses are image RVAs.
+example `retail/editor/`). Addresses are image RVAs. An image that shares
+units with the game also keeps `placements.tsv`, the game identities its
+shared source spells joined to its own addresses (`homm1 --image editor audit
+placements`); its `link_order.tsv` rows for shared units are derived there and
+its image-only rows are reviewed by hand ([editor](../docs/editor.md)).
 
 - `targets.json`: hashes of the game and editor executables.
 - `functions.tsv`, `data.tsv`: hand-owned `.text`/data start censuses. They

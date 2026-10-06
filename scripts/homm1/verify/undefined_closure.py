@@ -28,14 +28,14 @@ from collections import defaultdict
 from pathlib import Path
 
 from homm1.core.coff import Coff
-from homm1.core.paths import BUILD, CONFIG, REPO
+from homm1.core.paths import BUILD, IMAGE_BUILD, CONFIG, REPO
 
-TARGET = BUILD / "delink/named"
-BASE = BUILD / "objdiff/base"
+TARGET = IMAGE_BUILD / "delink/named"
+BASE = IMAGE_BUILD / "objdiff/base"
 BASELINE = CONFIG / "cleanliness/declared-only-baseline.tsv"
 INCOMPLETE_TYPES = CONFIG / "cleanliness/types.toml"
 REVIEWED_DATA = CONFIG / "retail/data_symbols.tsv"
-LIB_CACHE = BUILD / "gen/lib_symbols.txt"
+LIB_CACHE = IMAGE_BUILD / "gen/lib_symbols.txt"
 
 LIBRARY_CLASSES = {
     "CString", "CObject", "CWnd", "CDialog", "CDC", "CGdiObject", "CFile",

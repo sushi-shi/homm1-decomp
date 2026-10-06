@@ -41,9 +41,9 @@ import json
 import os
 from typing import NamedTuple
 
-from homm1.core.paths import BUILD
+from homm1.core.paths import BUILD, IMAGE_BUILD
 
-CACHE = BUILD / "gen/data_layout.json"
+CACHE = IMAGE_BUILD / "gen/data_layout.json"
 
 #: how deep a member chain is laid out before a leaf becomes opaque
 MAX_DEPTH = 8

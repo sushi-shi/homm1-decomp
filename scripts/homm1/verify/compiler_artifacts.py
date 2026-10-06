@@ -28,7 +28,7 @@ from collections import Counter
 from pathlib import Path
 
 from homm1.core.coff import Coff, IMAGE_SCN_CNT_CODE
-from homm1.core.paths import BUILD
+from homm1.core.paths import BUILD, IMAGE_BUILD
 from homm1.verify.srcscan import blank_comments, rel, source_files
 
 
@@ -157,8 +157,8 @@ def source_findings(files=None, *, placement_allow=PLACEMENT_ALLOW,
 
 def _report_path() -> Path | None:
     for path in (
-        BUILD / "objdiff/compare-new/report.json",
-        BUILD / "objdiff/report.json",
+        IMAGE_BUILD / "objdiff/compare-new/report.json",
+        IMAGE_BUILD / "objdiff/report.json",
     ):
         if path.is_file():
             return path
@@ -168,7 +168,7 @@ def _report_path() -> Path | None:
 def base_only_code() -> list[tuple[str, str]]:
     """Return unique external code definitions absent from objdiff pairing."""
     report = _report_path()
-    base = BUILD / "objdiff/base"
+    base = IMAGE_BUILD / "objdiff/base"
     if report is None or not base.is_dir():
         return []
     data = json.loads(report.read_text())
