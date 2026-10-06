@@ -226,7 +226,7 @@ i32 ClearOptionsDialog(void);
 void UpdateClearWindow(void);
 i16 ClearWindowHandler(tag_message& message);
 // Edits the map header (dtlwind.bin); returns 0 when cancelled.
-i32 MapDetailsDialog(i32);
+i32 MapDetailsDialog(i32 randomMap);
 void UpdateMapDetailsWindow(void);
 i16 MapDetailsWindowHandler(tag_message& message);
 // Sets up the random map generator (editnew.bin); returns 0 when cancelled.

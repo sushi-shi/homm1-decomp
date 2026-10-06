@@ -521,6 +521,56 @@ msgstr "Selected object."
 msgid "editor.quit.confirm"
 msgstr "Do you really want to quit?\n"
 
+#: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.castles.failed"
+msgstr "Cannot place the castles"
+
+#: src/EDITOR/MAPOBJ.cpp
+#, c-format
+msgid "editor.random.saved"
+msgstr "'%s' saved successfully"
+
+#: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.status.castles"
+msgstr "Generating map - placing castles..."
+
+#: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.status.land"
+msgstr "Generating map - analysing the land masses..."
+
+#: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.status.mountains"
+msgstr "Generating map - placing mountains..."
+
+#: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.status.objects"
+msgstr "Generating map - placing objects..."
+
+#: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.status.roads"
+msgstr "Generating map - connecting the castles..."
+
+#: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.status.save_prompt"
+msgstr "Press 'OK' to save the map, 'CANCEL' to discard it."
+
+#: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.status.smoothing"
+msgstr "Generating map - smoothing the land..."
+
+#: src/EDITOR/MAPOBJ.cpp
+#, c-format
+msgid "editor.random.status.terrain"
+msgstr "Generating map - painting terrain - %s"
+
+#: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.status.treasure"
+msgstr "Generating map - placing treasure..."
+
+#: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.status.trees"
+msgstr "Generating map - placing trees..."
+
 #: src/EDITOR/EDITOR.cpp
 msgid "editor.startup.cd.required"
 msgstr "You must have the Heroes CD in the CD drive to use\nthe Heroes of Might and Magic editor.  \n\nPlease insert the CD and try again."
@@ -556,6 +606,34 @@ msgstr "Swamp\n\n Every hero except a barbarian spends 1.5 movement points per s
 #: src/EDITOR/EDITOR.cpp
 msgid "editor.terrain.help.water"
 msgstr "Water\n\nOnly ships can travel here."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.name.0"
+msgstr "Water"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.name.1"
+msgstr "Grass"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.name.2"
+msgstr "Snow"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.name.3"
+msgstr "Swamp"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.name.4"
+msgstr "Lava"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.name.5"
+msgstr "Desert"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.name.6"
+msgstr "Dirt"
 
 #: src/SOURCE/kbwin.cpp
 msgid "editor.window.app_name"
