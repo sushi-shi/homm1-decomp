@@ -58,7 +58,11 @@ HOMM1_DATA=~/.local/share/homm1-buka/game ctest --test-dir build/port-asan --out
 `records_test` checks the file record codecs and, with `HOMM1_DATA`, parses
 and re-encodes every shipped map, campaign map, saved game, high score table
 and the archive directory. `file_test` covers the game path resolver,
-`lzhuf_test` the network save compressor.
+`blit_test` the drawing routines, `lzhuf_test` the network save compressor,
+and `save_roundtrip` (with `HOMM1_DATA` and `xvfb-run`) loads the shipped
+saved game in the program and saves it again, comparing the bytes.
+`nix flake check` builds the native and sanitizer builds and runs their tests
+(without game data).
 `-DHOMM1_SANITIZERS_RECOVER=ON` keeps going after undefined behaviour, to
 survey a whole session.
 

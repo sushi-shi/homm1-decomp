@@ -210,8 +210,15 @@ continuous play.
   -Wsign-conversion -Wshadow -Wold-style-cast -Werror`; game code with the
   defect-class errors (`return-type`, `int-to-pointer-cast`,
   `mismatched-new-delete`) and visible format-security warnings.
-- `ctest` runs `records_test`, `file_test` and the LZHUF round trip; set
-  `HOMM1_DATA` to include the shipped data checks.
+- `ctest` runs `records_test`, `file_test`, `blit_test` (the drawing
+  routines in exactly-sized buffers) and the LZHUF round trip. With
+  `HOMM1_DATA` set it also checks every shipped data file, and
+  `save_roundtrip` loads the shipped saved game in the real program under
+  Xvfb and saves it again: the new file must equal the original byte for byte
+  outside its name field, which also proves that no uninitialized memory
+  reaches a save.
+- `nix flake check` builds the native program and the sanitizer build and
+  runs their tests.
 - Scripted input (`HOMM1_INPUT_REPLAY`) drives the real binary headless, so a
   sanitizer build can be run through menus, a new game and a loaded save
   under Xvfb (`docs/port/README.md`).
