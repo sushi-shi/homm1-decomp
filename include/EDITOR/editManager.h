@@ -226,8 +226,10 @@ H1_ENUM_STEPPED(EditTool)
 
 // IsCleared's mask: a bit per object-tool category (gOverlayCategoryNames):
 // one per terrain (TerrainType) for the terrain objects standing on it, then
-// towns, monsters, artifacts and treasure.
+// towns, monsters, artifacts and treasure. IsCleared answers with the
+// selected bit, or NONE.
 H1_ENUM_FLAGS_BEGIN(EditClearMask, u16)
+    EDIT_CLEAR_NONE = 0,
     EDIT_CLEAR_TOWNS = 0x80,
     EDIT_CLEAR_MONSTERS = 0x100,
     EDIT_CLEAR_ARTIFACTS = 0x200,
@@ -479,8 +481,10 @@ public:
     // Redraws the map view at the current view origin.
     void DrawMap(void);
     void DrawView(i16 viewX, i16 viewY);
-    // Redraws the radar map, the scroll knobs and the rulers.
-    void DrawRadar(i32 unused);
+    // Redraws the radar map, the scroll knobs and the rulers. Every caller
+    // asks for the screen update (true); the radar is always copied to the
+    // screen, so the flag is not read.
+    void DrawRadar(b32 updateScreen);
     void DrawCell(i16 x, i16 y, i16 column, i16 row, u8 layers);
     void ToggleZoom(void);
     void SelectTool(H1_ENUM_PARAM(EditTool, i16) tool);
@@ -547,8 +551,9 @@ public:
     // Lays chains of the tileset's mountains or trees.
     void PlaceObstacleChains(i32 density, H1_ENUM_PARAM(MapTileset, i32) tileset);
     // Places one chain link at (*x, *y) facing `direction` and steps on; a
-    // tree chain keeps to treeFamily (its objects' first letter, 0: any).
-    i32 PlaceChainLink(
+    // tree chain keeps to treeFamily (its objects' first letter, or
+    // RANDOM_MAP_ANY_TREE_FAMILY). False when no link fits.
+    b32 PlaceChainLink(
         i32* x,
         i32* y,
         H1_ENUM_PARAM(ChainDirection, i32) direction,
@@ -572,7 +577,14 @@ public:
 extern editManager* gEditManager;
 extern char* gMapCodeLetters;
 extern i32 gSelectionColor;
+// The edited map's header (gMapHeader points here) is stored in an
+// EDIT_MAP_HEADER_BUFFER_SIZE-byte character buffer rather than an
+// SMapHeader object: retail places it 4-byte aligned, which VC6 never does
+// for a record-typed global. No code reads past the header's first
+// sizeof(SMapHeader) bytes.
 extern char gEditMapHeader[];
+// byte-evidenced: every user views the buffer as the header through this.
+#define EDIT_MAP_HEADER() (reinterpret_cast<SMapHeader*>(gEditMapHeader))
 extern char* gEditErrors[];
 extern i32 gEditErrorCount;
 // Set while the random-map generator lays terrain: SetTileVariant then

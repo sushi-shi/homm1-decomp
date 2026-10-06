@@ -233,8 +233,9 @@ def _inner(job: dict) -> int:
     incs = ["/X", "/I" + project_root + (f"\\{inc}" if inc else ""), *[f"/I{project_root}\\Vendor\\{v}" for v in vendor], "/ID:\\MSDEV\\INCLUDE"]
     argv = ["wine", "D:\\MSDEV\\BIN\\CL.EXE", *incs, *job["flags"], f"/Fo{fo}\\{obj.name}",
             f"{d}\\{rname}"]
-    env = dict(os.environ, WINEPREFIX=str(private),
-               WINEDEBUG=os.environ.get("WINEDEBUG", "fixme-all,err-kerberos"))
+    from homm1.tool.wine import wine_env
+    env = wine_env(dict(os.environ, WINEPREFIX=str(private),
+                        WINEDEBUG=os.environ.get("WINEDEBUG", "fixme-all,err-kerberos")))
     r = subprocess.run(argv, cwd=workdir, env=env, stdin=subprocess.DEVNULL)
     if obj.exists():
         shutil.copyfile(obj, out)

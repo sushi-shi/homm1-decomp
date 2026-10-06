@@ -218,16 +218,17 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) TownWindowHandler(tag_message& messag
 H1_ENUM_RETURN(MessageDispatchResult, i16) MonsterWindowHandler(tag_message& message);
 H1_ENUM_RETURN(MessageDispatchResult, i16) HeroWindowHandler(tag_message& message);
 // Runs the eraser options window (clearwin.bin); on OK with the whole-map
-// toggle set it erases the selected classes everywhere. Returns 1 on OK.
-i32 ClearOptionsDialog(void);
+// toggle set it erases the selected classes everywhere. Returns true on OK.
+b32 ClearOptionsDialog(void);
 void UpdateClearWindow(void);
 H1_ENUM_RETURN(MessageDispatchResult, i16) ClearWindowHandler(tag_message& message);
 // Edits the map header (dtlwind.bin); returns 0 when cancelled.
 i32 MapDetailsDialog(b32 randomMap);
 void UpdateMapDetailsWindow(void);
 H1_ENUM_RETURN(MessageDispatchResult, i16) MapDetailsWindowHandler(tag_message& message);
-// Sets up the random map generator (editnew.bin); returns 0 when cancelled.
-i32 NewMapDialog(void);
+// Sets up the random map generator (editnew.bin); returns false when
+// cancelled.
+b32 NewMapDialog(void);
 void UpdateNewMapWindow(void);
 // After a slider changed terrain changedTerrain, tops grass up to the land
 // minimum. Without one (TERRAIN_INVALID, as the window closes) it scales the
@@ -237,7 +238,7 @@ void BalanceTerrainPercents(H1_ENUM_PARAM(TerrainType, i32) changedTerrain);
 H1_ENUM_RETURN(MessageDispatchResult, i16) NewMapWindowHandler(tag_message& message);
 // Drags a generator slider: a terrain row when terrainRow is set, else a
 // density row.
-void DragNewMapSlider(i32 terrainRow, i32 index);
+void DragNewMapSlider(b32 terrainRow, i32 index);
 
 extern editTownExtra gTownEdit;
 extern editHeroExtra gHeroEdit;

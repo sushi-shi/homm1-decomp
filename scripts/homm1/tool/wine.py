@@ -21,6 +21,22 @@ from homm1.core.paths import msvc_dir
 from homm1.tool import ToolError
 
 
+#: The time zone of every wine process the tooling starts. A wine client that
+#: finds no wineserver for its prefix starts one with its own environment, and
+#: the server's zone is the local time of all its clients: the native C
+#: runtime of the editor's linker converts that local time back with its own
+#: TZ parse (native_crt_linker), so one client started in the host's zone
+#: would move the linked image's timestamps by the host's UTC offset.
+WINE_ZONE = "UTC"
+
+
+def wine_env(env: dict[str, str] | None = None) -> dict[str, str]:
+    """`env` (default: this process's environment) for a wine process: the
+    one place that pins WINE_ZONE for wine, winepath, wineboot and wineserver
+    alike, whichever of them ends up starting the prefix's server."""
+    return {**(os.environ if env is None else env), "TZ": WINE_ZONE}
+
+
 def find_ci(d: Path, name: str) -> Path | None:
     """Case-insensitive lookup (the toolchain mixes CL.EXE / cl.exe case)."""
     if not d.is_dir():
@@ -86,10 +102,8 @@ def winepath(p: Path | str) -> str:
     session inheriting our stderr holds the caller's pipe open forever."""
     exe = require("winepath")
     try:
-        # a winepath that boots the session starts the server in UTC, as
-        # ensure_wineserver does
-        return subprocess.check_output([exe, "-w", str(p)],
-                                       text=True, env={**os.environ, "TZ": "UTC"},
+        return subprocess.check_output([exe, "-w", str(p)], text=True,
+                                       env=wine_env(),
                                        stderr=subprocess.DEVNULL).strip()
     except subprocess.CalledProcessError as e:
         raise ToolError(f"winepath -w {p} failed (rc={e.returncode}) - the "
@@ -100,12 +114,13 @@ def winepath(p: Path | str) -> str:
 def ensure_wineserver() -> None:
     """`wineserver -p60`: keep the server 60s past the last client, so parallel
     `wine cl` invocations under ninja skip the cold start, yet it exits on
-    its own afterwards (bare `-p` persisted forever and leaked). Idempotent.
-    A server this starts keeps UTC: its zone is every wine process's local
-    time, which a native C runtime's time() reads (native_crt_linker)."""
+    its own afterwards (bare `-p` persisted forever and leaked). Idempotent:
+    with a server already running this is a no-op (the new one cannot take
+    the prefix's lock and exits), so it never changes a running server's
+    zone or persistence. A server this starts runs in WINE_ZONE."""
     ws = shutil.which("wineserver")
     if ws:
-        subprocess.run([ws, "-p60"], check=False, env={**os.environ, "TZ": "UTC"},
+        subprocess.run([ws, "-p60"], check=False, env=wine_env(),
                        stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
                        stderr=subprocess.DEVNULL)
 
@@ -132,6 +147,7 @@ def run(argv: list[str], *, cwd: Path | None = None,
     decide the verdict.
     """
     os.environ.setdefault("WINEDEBUG", "fixme-all,err-kerberos")
+    env = wine_env(env)
     ensure_wineserver()
     if timeout is None:
         timeout = float(os.environ.get("HOMM1_WINE_TIMEOUT", "300"))
@@ -171,7 +187,8 @@ def _reg(*args: str, capture: bool = False) -> subprocess.CompletedProcess:
     quiet = {} if capture else {"stdout": subprocess.DEVNULL,
                                 "stderr": subprocess.DEVNULL}
     return subprocess.run([require("wine"), "reg", *args], check=False,
-                          text=True, capture_output=capture, **quiet)
+                          text=True, capture_output=capture, env=wine_env(),
+                          **quiet)
 
 
 def init_prefix(force: bool = False) -> None:
@@ -183,11 +200,13 @@ def init_prefix(force: bool = False) -> None:
     if force or not (prefix / "drive_c").is_dir():
         prefix.mkdir(parents=True, exist_ok=True)
         try:
-            subprocess.run([require("wineboot"), "--init"], check=True)
+            subprocess.run([require("wineboot"), "--init"], check=True,
+                           env=wine_env())
         except subprocess.CalledProcessError as e:
             raise ToolError(f"wineboot --init failed (rc={e.returncode}) for "
                             f"prefix {prefix}") from e
-        subprocess.run([require("wineserver"), "--wait"], check=False)
+        subprocess.run([require("wineserver"), "--wait"], check=False,
+                       env=wine_env())
 
     msvc = toolchain_root()
     vc_bin = winepath(msvc / "bin")
@@ -223,11 +242,16 @@ NATIVE_CRT_LINKER = "LINKNCRT.EXE"
 
 
 def _server_zones(prefix: Path) -> list[str | None]:
-    """The TZ of every running wineserver of `prefix` (None: unset)."""
+    """The TZ of every running wineserver of `prefix` (None: unset). A
+    `wineserver -w`/`-k` invocation shares the name but serves nothing."""
     zones = []
     for proc in Path("/proc").glob("[0-9]*"):
         try:
             if proc.joinpath("comm").read_text().strip() != "wineserver":
+                continue
+            argv = proc.joinpath("cmdline").read_bytes().decode("utf-8", "replace").split("\0")
+            if any(arg in ("-w", "--wait") or arg.startswith(("-k", "--kill"))
+                   for arg in argv[1:]):
                 continue
             env = dict(item.split("=", 1) for item in
                        proc.joinpath("environ").read_bytes().decode("utf-8", "replace")
@@ -251,8 +275,12 @@ def native_crt_linker(runtime: Path) -> Path:
     update that restores wine's placeholder is undone on the next call.
     The wineserver maps the KnownDLLs when it starts, and its time zone is
     the local time the native runtime's time() reads: when the file changed
-    or the running server is not in UTC (the zone ensure_wineserver gives
-    it), the server is let go once its clients finish and a UTC one starts.
+    or a running server is not in WINE_ZONE (one started outside this
+    tooling), that server is let go once its clients finish and one in
+    WINE_ZONE starts. A starting wineserver cannot take over a running one
+    (it fails to lock the prefix and exits) and `wineserver -k` would kill
+    parallel tools, so the only lever is to wait for the running one to exit.
+    The candidate link checks the stamps it produced (graph.link).
     """
     import filecmp
     from homm1.core.paths import BUILD
@@ -267,14 +295,31 @@ def native_crt_linker(runtime: Path) -> Path:
     changed = not (target.is_file() and filecmp.cmp(target, runtime, shallow=False))
     if changed:
         shutil.copyfile(runtime, target)
-    if changed or any(zone != "UTC" for zone in _server_zones(prefix)):
-        # -p0: exit with the last client, never killing a running tool
-        ws = require("wineserver")
-        subprocess.run([ws, "-p0"], check=False, env={**os.environ, "TZ": "UTC"},
-                       stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
-                       stderr=subprocess.DEVNULL)
-        subprocess.run([ws, "-w"], check=False)
-    ensure_wineserver()
+    ws = require("wineserver")
+    wait = float(os.environ.get("HOMM1_WINE_TIMEOUT", "300"))
+
+    def retire(why: str) -> None:
+        try:
+            subprocess.run([ws, "-w"], check=False, env=wine_env(), timeout=wait,
+                           stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
+                           stderr=subprocess.DEVNULL)
+        except subprocess.TimeoutExpired:
+            raise ToolError(f"the wineserver of {prefix} ({why}) still runs after "
+                            f"{wait:.0f}s; stop its clients or run `homm1 tool wine "
+                            "--shutdown`") from None
+
+    if changed:
+        retire("started before the native runtime was installed")
+    for _ in range(3):
+        ensure_wineserver()
+        stray = [zone for zone in _server_zones(prefix) if zone != WINE_ZONE]
+        if not stray:
+            break
+        retire(f"TZ={stray[0]}, not {WINE_ZONE}")
+    else:
+        raise ToolError(f"a wineserver of {prefix} outside TZ={WINE_ZONE} keeps "
+                        "starting: something outside the tooling runs wine on "
+                        "this prefix")
     folder = BUILD / "link" / "native-crt"
     folder.mkdir(parents=True, exist_ok=True)
     for name in ("link.exe", "mspdb60.dll", "msobj10.dll", "msdis110.dll"):

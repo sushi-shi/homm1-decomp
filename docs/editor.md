@@ -176,7 +176,10 @@ banks it). The link line is `graph/link.py`'s `editor` profile:
   editor's is the VC6 runtime's middle-pivot `qsort`
   ([LINK import order](patterns/link6-iat-qsort-runtime.md)). The editor's
   LINK therefore runs against the VC6 SP5 `MSVCRT.DLL` (pinned in
-  `config/toolchains.json`, `linker_runtime_files`).
+  `config/toolchains.json`, `linker_runtime_files`, and carried by the
+  release bundle). That runtime's `time()` reads the wineserver's local
+  time, so every wine process the tooling starts runs in UTC, and a candidate
+  whose link stamps differ from retail's fails its link.
 
 ## Data debt
 
@@ -186,7 +189,7 @@ placeholder at its retail place:
 | Datum | Evidence | Status |
 | --- | --- | --- |
 | `SMapHeader` (shared with the game) | NWC's maps fill ten name and ten description slots (`"??? name"`, `"??? description"`); the editor's format word overwrites the last two bytes of the tenth description | typed: `name[10]`, `description[9]`, `lastDescription`, `format`; slots 8–9 are read by no code of either program |
-| `gEditMapHeader` (0x0045121c) | 4-byte aligned, which VC6 gives no record-typed object; 0x7d0 bytes up to `gEditErrors` | a 2000-byte character buffer viewed as `SMapHeader`; its last 636 bytes (0x00451770-0x004519eb) are unread |
+| `gEditMapHeader` (0x0045121c) | 4-byte aligned, which VC6 gives no record-typed object; 0x7d0 bytes up to `gEditErrors` | a 2000-byte character buffer viewed as `SMapHeader` through `EDIT_MAP_HEADER()`; its last 636 bytes (0x00451770-0x004519eb) are unread |
 | EDITMGR `.data` 0x0043ed9c | EDITMGR's `.data` ends at 0x0043ed9b; EDITOR's `.data` is 8-byte aligned | section alignment, not a datum |
 | `gPickMapNameDummy` (0x00451b84) | Main passes its address as PickMap's file name, which PickMap ignores | `char[4]`; its true extent (1 to 4 bytes) is not established |
 | `editTownExtra::unused14`, `editHeroExtra::unused19` | the dialogs copy and SaveMap writes them; no code reads them, and every shipped map holds zeros there | 50 unread bytes each |
