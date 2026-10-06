@@ -420,8 +420,11 @@ def emit_image_pipeline(w: ninja_syntax.Writer, image: str, scan: Scanner) -> li
                     implicit=ML_MODS + [graph.TOOLCHAIN_ID],
                     variables={"unit": u["unit"], "py": py})
         else:
+            # order-only: a localized unit's format check reads the compdb
+            # and its header mirror, which a fresh tree has not built yet
             w.build(obj, "cl", inputs=u["source"],
                     implicit=headers + CL_MODS + [graph.TOOLCHAIN_ID],
+                    order_only=[P.COMPDB],
                     variables={"unit": u["unit"], "py": py,
                                "cflags": " ".join(u["cflags"])})
         frag = f"{P.CLAIMS_DIR}/{u['unit']}.tsv"
@@ -600,7 +603,7 @@ def emit(out: Path | None = None) -> tuple[int, int]:
                 variables["cflags"] = " ".join(cflags)
             w.build(obj, "cl", inputs=src,
                     implicit=headers + CL_MODS + [graph.TOOLCHAIN_ID],
-                    variables=variables)
+                    order_only=[COMPDB], variables=variables)
         w.newline()
 
         w.comment("=== compdb: units.toml -> the clang-cl compilation db ===")
