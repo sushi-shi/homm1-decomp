@@ -222,17 +222,37 @@ def verify_prefix() -> None:
 NATIVE_CRT_LINKER = "LINKNCRT.EXE"
 
 
+def _server_zones(prefix: Path) -> list[str | None]:
+    """The TZ of every running wineserver of `prefix` (None: unset)."""
+    zones = []
+    for proc in Path("/proc").glob("[0-9]*"):
+        try:
+            if proc.joinpath("comm").read_text().strip() != "wineserver":
+                continue
+            env = dict(item.split("=", 1) for item in
+                       proc.joinpath("environ").read_bytes().decode("utf-8", "replace")
+                       .split("\0") if "=" in item)
+        except OSError:
+            continue
+        theirs = Path(env.get("WINEPREFIX") or Path.home() / ".wine")
+        if theirs.resolve() == prefix.resolve():
+            zones.append(env.get("TZ"))
+    return zones
+
+
 def native_crt_linker(runtime: Path) -> Path:
     """A copy of the era LINK.EXE that imports `runtime` (a native MSVCRT.DLL)
     in place of wine's builtin msvcrt; returns its path.
 
     MSVCRT is a KnownDLL, so wine loads it from the prefix's 32-bit system
     directory, never from the linker's own directory: the native file goes
-    there and an AppDefaults override selects it for NATIVE_CRT_LINKER alone
-    (the wineserver, which maps the KnownDLLs at start and keeps the time
-    zone the native runtime's time() reads, is restarted in UTC).
+    there and an AppDefaults override selects it for NATIVE_CRT_LINKER alone.
     The builtin load order of every other process is unchanged, and a prefix
     update that restores wine's placeholder is undone on the next call.
+    The wineserver maps the KnownDLLs when it starts, and its time zone is
+    the local time the native runtime's time() reads: when the file changed
+    or the running server is not in UTC (the zone ensure_wineserver gives
+    it), the server is let go once its clients finish and a UTC one starts.
     """
     import filecmp
     from homm1.core.paths import BUILD
@@ -244,13 +264,16 @@ def native_crt_linker(runtime: Path) -> Path:
     if not system.is_dir():
         raise ToolError(f"wine prefix {prefix} has no system directory - run `homm1 init`")
     target = system / "msvcrt.dll"
-    if not (target.is_file() and filecmp.cmp(target, runtime, shallow=False)):
+    changed = not (target.is_file() and filecmp.cmp(target, runtime, shallow=False))
+    if changed:
         shutil.copyfile(runtime, target)
-    # The server maps the KnownDLLs when it starts, and its time zone is the
-    # local time a native MSVCRT's time() reads: restart it in UTC, the zone
-    # faked_clock gives the linker.
-    shutdown_wineserver()
-    subprocess.run([require("wineserver"), "-w"], check=False)
+    if changed or any(zone != "UTC" for zone in _server_zones(prefix)):
+        # -p0: exit with the last client, never killing a running tool
+        ws = require("wineserver")
+        subprocess.run([ws, "-p0"], check=False, env={**os.environ, "TZ": "UTC"},
+                       stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
+                       stderr=subprocess.DEVNULL)
+        subprocess.run([ws, "-w"], check=False)
     ensure_wineserver()
     folder = BUILD / "link" / "native-crt"
     folder.mkdir(parents=True, exist_ok=True)
