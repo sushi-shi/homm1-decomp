@@ -704,7 +704,7 @@ void combatManager::CheckApplyGoodMorale(i32 side, i32 index) {
     if (currentArmy->m_quantity <= 1)
         sprintf(
             gText,
-            localization::Tr("combat.morale.good_single"),
+            localization::Tr("te.combat.morale.good_single"),
             gArmyNames[currentArmy->m_creatureType]
         );
     else
@@ -741,7 +741,7 @@ i32 combatManager::CheckApplyBadMorale(i32 side, i32 index) {
     if (currentArmy->m_quantity <= 1)
         sprintf(
             gText,
-            localization::Tr("combat.morale.bad_single"),
+            localization::Tr("te.combat.morale.bad_single"),
             gArmyNames[currentArmy->m_creatureType]
         );
     else

@@ -1364,7 +1364,7 @@ i16 combatManager::DoSurrender(void) {
         offer = localization::Tr("combat.surrender.offer");
     } else {
         speaker = m_heroes[m_currentSide];
-        offer = localization::Tr("combat.surrender.computer_offer");
+        offer = localization::Tr("te.combat.surrender.computer_offer");
     }
     unusedTypeValue = 1;
     unusedResult = 2;

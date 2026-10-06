@@ -301,7 +301,7 @@ void resourceManager::InvalidResource(i16 fileId) {
 void resourceManager::PointToFile(i16 fileId) {
     i16 entry;
     if (m_aggregateDir == NULL)
-        ShutDown(localization::Tr("resource.aggregate.invalid"));
+        ShutDown(localization::Tr("te.resource.aggregate.invalid"));
     entry = 0;
     while (entry < m_aggregateEntryCount && m_aggregateDir[entry].id != fileId)
         entry++;

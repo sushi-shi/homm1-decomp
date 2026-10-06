@@ -93,8 +93,8 @@ enum PrefsConstant {
 // The edition keeps its preferences apart from the retail game's, one set
 // per language: under its own registry key on Windows, in its own settings
 // file natively.
-#define PREFS_REGISTRY_KEY localization::Tr("prefs.registry_key")
-#define PREFS_SETTINGS_FILE localization::Tr("prefs.settings_file")
+#define PREFS_REGISTRY_KEY localization::Tr("te.prefs.registry_key")
+#define PREFS_SETTINGS_FILE localization::Tr("te.prefs.settings_file")
 
 extern char gCommandLine[];
 extern char gAppName[];

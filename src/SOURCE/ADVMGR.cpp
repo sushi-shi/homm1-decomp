@@ -673,7 +673,12 @@ void advManager::ApplyExtendedCheat(i32 code) {
 // F5 saves the game under a fixed name, numbered like the autosave.
 void advManager::QuickSave(void) {
     gGame->SaveGame("QUICKSAVE", true);
-    NormalDialog(localization::Tr("adventure.quick_save.done"), NORMAL_DIALOG_TYPE_OK, 0xb1, 0x50);
+    NormalDialog(
+        localization::Tr("te.adventure.quick_save.done"),
+        NORMAL_DIALOG_TYPE_OK,
+        0xb1,
+        0x50
+    );
 }
 
 // F9 asks to reload the quick save; the game is then reloaded from the main
@@ -684,7 +689,7 @@ b32 advManager::QuickLoad(void) {
     if (gRemoteOn)
         return false;
     NormalDialog(
-        localization::Tr("adventure.quick_load.confirm"),
+        localization::Tr("te.adventure.quick_load.confirm"),
         NORMAL_DIALOG_TYPE_YES_NO,
         0xb1,
         0x50
@@ -695,7 +700,7 @@ b32 advManager::QuickLoad(void) {
     sprintf(path, "%s%s", gGamePath, gLastFilename);
     if (!FileExists(path)) {
         NormalDialog(
-            localization::Tr("adventure.quick_load.missing"),
+            localization::Tr("te.adventure.quick_load.missing"),
             NORMAL_DIALOG_TYPE_OK,
             0xb1,
             0x50
@@ -1530,7 +1535,7 @@ b32 advManager::ProcessSearch(i32 x, i32 y) {
                 EventSound(MAP_OBJECT_ULTIMATE_ARTIFACT, 0);
                 sprintf(
                     gText,
-                    localization::Tr("adventure.search.found_format"),
+                    localization::Tr("te.adventure.search.found_format"),
                     localization::Tr("adventure.search.found_prefix"),
                     gArtifactNames[gGame->m_ultimateArtifactId]
                 );
@@ -2756,8 +2761,9 @@ void advManager::QuickInfo(i16 cellX, i16 cellY) {
                 default:
                     sprintf(
                         gText,
-                        SiteVisited(currentCell) ? localization::Tr("adventure.quick_info.visited")
-                                                 : "\n\n%s",
+                        SiteVisited(currentCell)
+                            ? localization::Tr("te.adventure.quick_info.visited")
+                            : "\n\n%s",
                         QuickInfoObjectName(currentCell->m_triggerType & MAP_TRIGGER_TYPE_MASK)
                     );
                     break;

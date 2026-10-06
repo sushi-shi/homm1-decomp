@@ -438,7 +438,7 @@ i16 fileRequester::Main(tag_message& message) {
                                     && static_cast<u8>(nameBuffer[key]) != '_'
                                     && static_cast<u8>(nameBuffer[key]) != ' '
                                     && !FindToken(
-                                        localization::Tr("file.name.punctuation"),
+                                        localization::Tr("te.file.name.punctuation"),
                                         nameBuffer[key]
                                     ))
                                     nameBuffer[key] = '\0';

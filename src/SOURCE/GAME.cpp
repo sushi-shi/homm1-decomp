@@ -606,7 +606,7 @@ i16 game::LoadGame(char* filename, b32 origData, b32) {
     // A network partner running another version sends a game this one
     // cannot play in step with.
     if (!strcmp(filename, "REMOTE.GAM") && saveFormat != SAVE_FORMAT_CURRENT)
-        ShutDown(localization::Tr("network.version.mismatch"));
+        ShutDown(localization::Tr("te.network.version.mismatch"));
     theLoadHandle.Get(m_mapDescription, sizeof(m_mapDescription));
     theLoadHandle.Get(m_mapSize);
     theLoadHandle.Get(m_mapDifficulty);
