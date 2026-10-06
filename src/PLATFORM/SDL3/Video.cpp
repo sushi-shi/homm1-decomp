@@ -13,6 +13,8 @@ namespace {
 
 constexpr int kWidth = DISPLAY_WIDTH;
 constexpr int kHeight = DISPLAY_HEIGHT;
+// The canvas holds the chrome bar above the game image.
+constexpr int kCanvasHeight = kHeight + CHROME_BAR_MAX;
 // Presentation is coalesced to this interval unless forced: the game copies
 // many small rectangles per frame, the way DirectDraw blits were cheap.
 constexpr u32 kPresentInterval = 8;
@@ -23,7 +25,10 @@ SDL_Texture* gTexture = nullptr;
 bool gFullscreen = false;
 
 std::array<u8, kWidth * kHeight> gIndexed{};
-std::array<u32, kWidth * kHeight> gPixels{};
+std::array<u32, kWidth * kCanvasHeight> gPixels{};
+std::array<u8, kWidth * kCanvasHeight> gChrome{};
+std::array<u8, kWidth * kCanvasHeight> gChromeMask{};
+int gBar = 0;
 std::array<Color, PALETTE_SIZE> gPalette{};
 bool gDirty = false;
 u32 gLastPresent = 0;
@@ -47,8 +52,8 @@ void DrawCursor() {
     if (!gCursorSet || gCursorCount < 0 || !gPointerInside)
         return;
     for (int y = 0; y < CURSOR_SIZE; y++) {
-        int screenY = gPointerY - gCursor.hotY + y;
-        if (screenY < 0 || screenY >= kHeight)
+        int screenY = gPointerY + gBar - gCursor.hotY + y;
+        if (screenY < 0 || screenY >= kHeight + gBar)
             continue;
         for (int x = 0; x < CURSOR_SIZE; x++) {
             int screenX = gPointerX - gCursor.hotX + x;
@@ -85,7 +90,7 @@ int ChooseScale() {
     SDL_Rect bounds;
     if (display == 0 || !SDL_GetDisplayUsableBounds(display, &bounds))
         return 1;
-    int scale = std::min((bounds.w - 32) / kWidth, (bounds.h - 64) / kHeight);
+    int scale = std::min((bounds.w - 32) / kWidth, (bounds.h - 64) / (kHeight + gBar));
     return std::max(1, std::min(scale, 3));
 }
 
@@ -124,9 +129,10 @@ void WindowToDisplay(float windowX, float windowY, int& x, int& y, bool& inside)
         SDL_RenderCoordinatesFromWindow(gRenderer, windowX, windowY, &logicalX, &logicalY);
     x = static_cast<int>(logicalX);
     y = static_cast<int>(logicalY);
-    inside = x >= 0 && y >= 0 && x < kWidth && y < kHeight;
+    y -= gBar;
+    inside = x >= 0 && y >= -gBar && x < kWidth && y < kHeight;
     x = std::clamp(x, 0, kWidth - 1);
-    y = std::clamp(y, 0, kHeight - 1);
+    y = std::clamp(y, -gBar, kHeight - 1);
 }
 
 void MarkDisplayDirty() {
@@ -145,14 +151,15 @@ bool OpenDisplay() {
         scale = std::max(1, std::atoi(requested.c_str()));
     SDL_WindowFlags flags = SDL_WINDOW_RESIZABLE;
     if (!SDL_CreateWindowAndRenderer(
-            defaults.title, kWidth * scale, kHeight * scale, flags, &gWindow, &gRenderer)) {
+            defaults.title, kWidth * scale, (kHeight + gBar) * scale, flags, &gWindow, &gRenderer)) {
         Log("cannot open a window: %s", SDL_GetError());
         return false;
     }
     SDL_SetRenderVSync(gRenderer, 0);
-    SDL_SetRenderLogicalPresentation(gRenderer, kWidth, kHeight, SDL_LOGICAL_PRESENTATION_LETTERBOX);
+    SDL_SetRenderLogicalPresentation(gRenderer, kWidth, kHeight + gBar,
+                                     SDL_LOGICAL_PRESENTATION_LETTERBOX);
     gTexture = SDL_CreateTexture(
-        gRenderer, SDL_PIXELFORMAT_XRGB8888, SDL_TEXTUREACCESS_STREAMING, kWidth, kHeight);
+        gRenderer, SDL_PIXELFORMAT_XRGB8888, SDL_TEXTUREACCESS_STREAMING, kWidth, kCanvasHeight);
     if (gTexture == nullptr) {
         Log("cannot create the display texture: %s", SDL_GetError());
         return false;
@@ -247,14 +254,70 @@ void Present(bool force) {
     std::array<u32, PALETTE_SIZE> lookup;
     for (size_t i = 0; i < lookup.size(); i++)
         lookup[i] = Rgb(gPalette[i]);
-    for (size_t i = 0; i < gIndexed.size(); i++)
-        gPixels[i] = lookup[gIndexed[i]];
+    const size_t barPixels = static_cast<size_t>(gBar * kWidth);
+    for (size_t i = 0; i < barPixels; i++)
+        gPixels[i] = lookup[gChrome[i]];
+    for (size_t i = 0; i < gIndexed.size(); i++) {
+        size_t canvas = barPixels + i;
+        gPixels[canvas] = lookup[gChromeMask[canvas] != 0 ? gChrome[canvas] : gIndexed[i]];
+    }
     DrawCursor();
     SDL_UpdateTexture(gTexture, nullptr, gPixels.data(), kWidth * static_cast<int>(sizeof(u32)));
     SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 255);
     SDL_RenderClear(gRenderer);
-    SDL_RenderTexture(gRenderer, gTexture, nullptr, nullptr);
+    SDL_FRect source = {0, 0, static_cast<float>(kWidth), static_cast<float>(kHeight + gBar)};
+    SDL_RenderTexture(gRenderer, gTexture, &source, nullptr);
     SDL_RenderPresent(gRenderer);
+}
+
+void SetWindowSize(int width, int height) {
+    if (gWindow == nullptr || gFullscreen || width <= 0 || height <= 0)
+        return;
+    SDL_SetWindowSize(gWindow, width, height + gBar * height / kHeight);
+    gDirty = true;
+}
+
+void DesktopSize(int& width, int& height) {
+    SDL_Rect bounds = {0, 0, kWidth, kHeight};
+    SDL_DisplayID display = SDL_GetPrimaryDisplay();
+    if (display != 0)
+        SDL_GetDisplayUsableBounds(display, &bounds);
+    width = bounds.w;
+    height = bounds.h;
+}
+
+void SetChromeBar(int height) {
+    height = std::clamp(height, 0, static_cast<int>(CHROME_BAR_MAX));
+    if (height == gBar)
+        return;
+    int windowWidth = 0;
+    int windowHeight = 0;
+    if (gWindow != nullptr)
+        SDL_GetWindowSize(gWindow, &windowWidth, &windowHeight);
+    int oldBar = gBar;
+    gBar = height;
+    gChromeMask.fill(0);
+    if (gRenderer != nullptr) {
+        SDL_SetRenderLogicalPresentation(gRenderer, kWidth, kHeight + gBar,
+                                         SDL_LOGICAL_PRESENTATION_LETTERBOX);
+        if (!gFullscreen && windowHeight > 0) {
+            int imageHeight = windowHeight * kHeight / (kHeight + oldBar);
+            SDL_SetWindowSize(gWindow, windowWidth, imageHeight + gBar * imageHeight / kHeight);
+        }
+    }
+    gDirty = true;
+}
+
+int ChromeBar() {
+    return gBar;
+}
+
+void UpdateChrome(const u8* pixels, const u8* mask) {
+    size_t count = static_cast<size_t>(kWidth * (kHeight + gBar));
+    std::memcpy(gChrome.data(), pixels, count);
+    std::memcpy(gChromeMask.data(), mask, count);
+    std::fill(gChromeMask.begin() + static_cast<std::ptrdiff_t>(count), gChromeMask.end(), u8{0});
+    gDirty = true;
 }
 
 void SetFullscreen(bool fullscreen) {
@@ -269,8 +332,13 @@ bool Fullscreen() {
 }
 
 void CaptureDisplay(u8* rgb) {
-    for (size_t i = 0; i < gIndexed.size(); i++) {
-        const Color& color = gPalette[gIndexed[i]];
+    const int barPixels = gBar * kWidth;
+    const int count = kWidth * (kHeight + gBar);
+    for (int i = 0; i < count; i++) {
+        u8 index = i < barPixels || gChromeMask[static_cast<size_t>(i)] != 0
+                       ? gChrome[static_cast<size_t>(i)]
+                       : gIndexed[static_cast<size_t>(i - barPixels)];
+        const Color& color = gPalette[index];
         rgb[i * 3] = color.r;
         rgb[i * 3 + 1] = color.g;
         rgb[i * 3 + 2] = color.b;
@@ -278,13 +346,14 @@ void CaptureDisplay(u8* rgb) {
 }
 
 bool SaveDisplayBmp(const char* hostPath) {
-    std::vector<u8> rgb(static_cast<size_t>(kWidth * kHeight * 3));
+    const int height = kHeight + gBar;
+    std::vector<u8> rgb(static_cast<size_t>(kWidth * height * 3));
     CaptureDisplay(rgb.data());
     std::FILE* file = std::fopen(hostPath, "wb");
     if (file == nullptr)
         return false;
     const u32 rowBytes = kWidth * 3;
-    const u32 imageBytes = rowBytes * kHeight;
+    const u32 imageBytes = rowBytes * static_cast<u32>(height);
     u8 header[54] = {'B', 'M'};
     auto put32 = [&header](int offset, u32 value) {
         for (int i = 0; i < 4; i++)
@@ -294,13 +363,13 @@ bool SaveDisplayBmp(const char* hostPath) {
     put32(10, 54);
     put32(14, 40);
     put32(18, kWidth);
-    put32(22, kHeight);
+    put32(22, static_cast<u32>(height));
     header[26] = 1;
     header[28] = 24;
     put32(34, imageBytes);
     bool ok = std::fwrite(header, sizeof(header), 1, file) == 1;
     std::vector<u8> row(rowBytes);
-    for (int y = kHeight - 1; y >= 0 && ok; y--) {
+    for (int y = height - 1; y >= 0 && ok; y--) {
         for (int x = 0; x < kWidth; x++) {
             const u8* source = &rgb[static_cast<size_t>((y * kWidth + x) * 3)];
             row[static_cast<size_t>(x * 3)] = source[2];

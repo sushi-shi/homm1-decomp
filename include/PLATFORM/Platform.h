@@ -98,8 +98,31 @@ void Present(bool force);
 
 void SetFullscreen(bool fullscreen);
 bool Fullscreen();
+// Sizes the window so that the game image shows at width x height (plus the
+// chrome bar, scaled alike). Ignored at full screen.
+void SetWindowSize(int width, int height);
+// The usable desktop size.
+void DesktopSize(int& width, int& height);
 
-// The display image as 24-bit RGB rows (for screenshots and tests).
+// ---------------------------------------------------------------- chrome
+
+// The host's own interface, drawn in the display's palette: a bar of
+// ChromeBar() rows above the game image (the window's menu bar) and panels
+// over it (open menus). Display coordinates stay those of the game image, so
+// the bar has negative y.
+enum ChromeConstant {
+    CHROME_BAR_MAX = 32
+};
+
+void SetChromeBar(int height);
+int ChromeBar();
+// pixels and mask are DISPLAY_WIDTH x (ChromeBar() + DISPLAY_HEIGHT), row 0
+// at the top of the bar; a pixel shows where its mask byte is nonzero.
+void UpdateChrome(const u8* pixels, const u8* mask);
+
+// The window's image - chrome bar, game image and chrome panels - as 24-bit
+// RGB rows, DISPLAY_WIDTH x (ChromeBar() + DISPLAY_HEIGHT) (screenshots and
+// tests).
 void CaptureDisplay(u8* rgb);
 bool SaveDisplayBmp(const char* hostPath);
 
@@ -150,7 +173,7 @@ struct Event {
     Type type = NONE;
     int scanCode = 0;
     bool returnKey = false;  // the main or keypad Enter key
-    int x = 0;  // display coordinates
+    int x = 0;  // display coordinates; y < 0 on the chrome bar
     int y = 0;
     Button button = BUTTON_LEFT;
     bool doubleClick = false;

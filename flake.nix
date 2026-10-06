@@ -61,6 +61,7 @@
         doCheck = true;
         installPhase = ''
           install -Dm755 heroes $out/bin/homm1
+          install -Dm755 heroes-editor $out/bin/homm1-editor
         '';
         meta.mainProgram = "homm1";
       };
@@ -88,6 +89,11 @@
           type = "app";
           program = "${native}/bin/homm1";
           meta.description = "The native game; pass --data DIR or set HOMM1_DATA";
+        };
+        native-editor = {
+          type = "app";
+          program = "${native}/bin/homm1-editor";
+          meta.description = "The native scenario editor; pass --data DIR or set HOMM1_DATA";
         };
       };
       packages.${system} = {

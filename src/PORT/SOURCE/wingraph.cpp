@@ -19,6 +19,8 @@
 
 #include <PLATFORM/Platform.h>
 
+#include "../PortHost.h"
+
 #include <array>
 #include <cstring>
 #include <vector>
@@ -110,6 +112,7 @@ void SetFullScreenStatus(i32 fullScreen) {
         return;
     CURRENT_GRAPHICS_CONFIG.fullScreen = fullScreen;
     platform::SetFullscreen(fullScreen != 0);
+    MenuRefresh();
     WritePrefs();
 }
 

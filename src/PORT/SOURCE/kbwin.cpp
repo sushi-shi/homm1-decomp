@@ -61,16 +61,6 @@ char gCommandLine[KBWIN_COMMAND_LINE_CLEAR_SIZE];
 
 namespace {
 
-// ---------------------------------------------------------------- menus
-
-// The original hung a Windows menu bar off the window: one per screen, with
-// the game's commands and its check marks. The port keeps the same model so
-// that the game's menu logic runs unchanged; no backend draws it yet.
-struct MenuModel {
-    std::string name;
-    std::map<i32, bool> checked;
-};
-
 // ---------------------------------------------------------------- settings
 
 // The original kept its settings in the registry under
@@ -231,6 +221,13 @@ void CloseRequested() {
 }
 
 void Dispatch(const platform::Event& event) {
+    if (MenuHandleEvent(event))
+        return;
+    // The game image ends at the menu bar.
+    if ((event.type == platform::Event::MOUSE_MOVE || event.type == platform::Event::MOUSE_DOWN
+         || event.type == platform::Event::MOUSE_UP)
+        && event.y < 0)
+        return;
     switch (event.type) {
         case platform::Event::QUIT:
             CloseRequested();
@@ -294,23 +291,50 @@ void RunTimer() {
 
 // ---------------------------------------------------------------- entry
 
-int main(int argc, char** argv) {
+bool KBStartHost(const char* dataRoot, const char* gameArguments, i32 fullScreen) {
+    platform::StartupOptions options;
+    if (!platform::Startup(options))
+        return false;
+    std::string gameRoot = FindGameRoot(dataRoot != NULL ? dataRoot : "");
+    if (gameRoot.empty()) {
+        platform::ShowMessage(
+            "Heroes of Might and Magic",
+            "The game data was not found. Pass --data DIR or set HOMM1_DATA to the folder "
+            "holding DATA/HEROES.AGG.");
+        return false;
+    }
+    FileSetRoot(gameRoot.c_str());
+    gCdRoot = FindCdRoot(gameRoot);
+    platform::Log("game data: %s", gameRoot.c_str());
+
+    memset(gCommandLine, 0, KBWIN_COMMAND_LINE_CLEAR_SIZE);
+    strncpy(gCommandLine, gameArguments, KBWIN_COMMAND_LINE_LIMIT);
+    if (EarlySetup() == 0)
+        return false;
+    if (fullScreen >= 0)
+        CURRENT_GRAPHICS_CONFIG.fullScreen = fullScreen;
+    platform::SetFullscreen(CURRENT_GRAPHICS_CONFIG.fullScreen != 0);
+    srand(static_cast<u32>(KBTickCount()));
+    InitGraphics();
+    return true;
+}
+
+i32 KBRunProgram(int argc, char** argv) {
     std::string dataRoot;
     std::string gameArguments;
-    bool forceWindow = false;
-    bool forceFullscreen = false;
+    i32 fullScreen = -1;
     for (int i = 1; i < argc; i++) {
         std::string argument = argv[i];
         if (argument == "--data" && i + 1 < argc) {
             dataRoot = argv[++i];
         } else if (argument == "--window") {
-            forceWindow = true;
+            fullScreen = 0;
         } else if (argument == "--fullscreen") {
-            forceFullscreen = true;
+            fullScreen = 1;
         } else if (argument == "--help") {
             std::printf(
-                "usage: %s [--data DIR] [--window|--fullscreen] [GAME OPTIONS]\n"
-                "GAME OPTIONS are the original's switches, e.g. /I0 to skip the intro.\n",
+                "usage: %s [--data DIR] [--window|--fullscreen] [OPTIONS]\n"
+                "OPTIONS are the original's switches, e.g. /I0 to skip the intro.\n",
                 argv[0]);
             return 0;
         } else {
@@ -319,33 +343,8 @@ int main(int argc, char** argv) {
             gameArguments += argument;
         }
     }
-
-    platform::StartupOptions options;
-    if (!platform::Startup(options))
+    if (!KBStartHost(dataRoot.c_str(), gameArguments.c_str(), fullScreen))
         return 1;
-    std::string gameRoot = FindGameRoot(dataRoot);
-    if (gameRoot.empty()) {
-        platform::ShowMessage(
-            "Heroes of Might and Magic",
-            "The game data was not found. Pass --data DIR or set HOMM1_DATA to the folder "
-            "holding DATA/HEROES.AGG.");
-        return 1;
-    }
-    FileSetRoot(gameRoot.c_str());
-    gCdRoot = FindCdRoot(gameRoot);
-    platform::Log("game data: %s", gameRoot.c_str());
-
-    memset(gCommandLine, 0, KBWIN_COMMAND_LINE_CLEAR_SIZE);
-    strncpy(gCommandLine, gameArguments.c_str(), KBWIN_COMMAND_LINE_LIMIT);
-    if (EarlySetup() == 0)
-        return 0;
-    if (forceWindow)
-        CURRENT_GRAPHICS_CONFIG.fullScreen = 0;
-    if (forceFullscreen)
-        CURRENT_GRAPHICS_CONFIG.fullScreen = 1;
-    platform::SetFullscreen(CURRENT_GRAPHICS_CONFIG.fullScreen != 0);
-    srand(static_cast<u32>(KBTickCount()));
-    InitGraphics();
     oldmain();
     ShutDown(NULL);
     return 0;
@@ -358,6 +357,7 @@ i32 AppIdle(void) {
 }
 
 void AppExit(void) {
+    MenuShutdown();
     CleanUpWinGraphics();
     CleanUpMenus();
     platform::Shutdown();
@@ -398,13 +398,14 @@ void ResizeWindow(i32 x, i32 y, i32 width, i32 height) {
         CURRENT_GRAPHICS_CONFIG.y = y;
     CURRENT_GRAPHICS_CONFIG.width = width;
     CURRENT_GRAPHICS_CONFIG.height = height;
+    platform::SetWindowSize(width, height);
     WritePrefs();
 }
 
 i32 AppMenuCommand(i32 command) {
     switch (command) {
         case KBWIN_MENU_ABOUT:
-            platform::ShowMessage(gTitle, gTitle);
+            platform::ShowMessage(gTitle, MenuAboutText().c_str());
             break;
         case KBWIN_MENU_HELP:
             // The original opened HELP\HEROES.HLP in WinHelp, which current
@@ -438,16 +439,17 @@ i32 AppMenuCommand(i32 command) {
 
 // ---------------------------------------------------------------- menus
 
-void UpdateDfltMenu(KBMenu) {}
-
 void KBChangeMenu(KBMenu menu) {
     if (menu == NULL)
         menu = gCurrentMenu;
     else
         gCurrentMenu = menu;
     gAppMenu = menu;
-    if (CURRENT_GRAPHICS_CONFIG.showMenu && menu != NULL)
+    if (CURRENT_GRAPHICS_CONFIG.showMenu && menu != NULL) {
+        UpdateDfltMenu(menu);
         UpdateAppSpecificMenus(menu);
+    }
+    MenuRefresh();
 }
 
 void SetMenuStatus(i32 showMenu) {
@@ -468,25 +470,6 @@ void SetNoDialogMenus(i32 menusEnabled) {
         return;
     gNoDialogMenusOn = 1 - menusEnabled;
     SetMenus(gAppMenu, menusEnabled);
-}
-
-void SetMenus(KBMenu, i32) {}
-
-KBMenu KBLoadMenu(const char* name) {
-    MenuModel* menu = new MenuModel;
-    menu->name = name;
-    return reinterpret_cast<KBMenu>(menu);
-}
-
-void KBDestroyMenu(KBMenu menu) {
-    delete reinterpret_cast<MenuModel*>(menu);
-}
-
-void KBDetachMenu(void) {}
-
-void KBCheckMenuItem(KBMenu menu, i32 command, i32 checked) {
-    if (menu != NULL)
-        reinterpret_cast<MenuModel*>(menu)->checked[command] = checked != 0;
 }
 
 // ---------------------------------------------------------------- services

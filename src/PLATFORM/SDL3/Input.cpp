@@ -179,7 +179,7 @@ int NamedScanCode(const std::string& name) {
 
 void QueueMouse(Event::Type type, Event::Button button, int x, int y) {
     gReplayX = std::clamp(x, 0, DISPLAY_WIDTH - 1);
-    gReplayY = std::clamp(y, 0, DISPLAY_HEIGHT - 1);
+    gReplayY = std::clamp(y, -ChromeBar(), DISPLAY_HEIGHT - 1);
     sdl::SetPointer(gReplayX, gReplayY, true);
     Event event;
     event.type = type;

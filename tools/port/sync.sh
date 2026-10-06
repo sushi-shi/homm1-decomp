@@ -38,7 +38,7 @@ if ! $build_only; then
     fi
 fi
 
-nix develop -c python3 build.py
+nix develop -c python3 build.py --target all
 nix develop .#port -c cmake -S . -B build/port -G Ninja
 nix develop .#port -c ninja -C build/port
 nix develop .#port -c ctest --test-dir build/port --output-on-failure

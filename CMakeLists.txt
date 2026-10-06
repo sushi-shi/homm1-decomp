@@ -132,51 +132,68 @@ target_compile_definitions(homm1_platform PRIVATE HOMM1_CODEPAGE=${HOMM1_CODEPAG
 target_link_libraries(homm1_platform PUBLIC SDL3::SDL3 PkgConfig::FFMPEG)
 
 # --------------------------------------------------------------------------
-# The game. The Win32-bound units (window and message loop, DirectDraw/WinG,
-# Miles/Audiere sound, NetBIOS and serial transports) and the assembly
-# routines are replaced by the units under src/PORT/.
+# The programs: the game (heroes) and the scenario editor (heroes-editor).
+# Each compiles the units its Visual C++ build lists in build.json, with the
+# Win32-bound units (window and message loop, DirectDraw/WinG, Miles/Audiere
+# sound, NetBIOS and serial transports) and the assembly routines replaced by
+# their counterparts under src/PORT/ (tools/port/units.py).
 # --------------------------------------------------------------------------
 
-file(GLOB HOMM1_GAME_AUTHORED CONFIGURE_DEPENDS
-  ${CMAKE_SOURCE_DIR}/src/BASE/*.cpp
-  ${CMAKE_SOURCE_DIR}/src/SOURCE/*.cpp)
-set(HOMM1_HOST_UNITS
-  ${CMAKE_SOURCE_DIR}/src/BASE/Audio.cpp
-  ${CMAKE_SOURCE_DIR}/src/SOURCE/kbwin.cpp
-  ${CMAKE_SOURCE_DIR}/src/SOURCE/wingraph.cpp
-  ${CMAKE_SOURCE_DIR}/src/SOURCE/netwin.cpp
-  ${CMAKE_SOURCE_DIR}/src/SOURCE/comwin.cpp)
-list(REMOVE_ITEM HOMM1_GAME_AUTHORED ${HOMM1_HOST_UNITS})
-file(GLOB_RECURSE HOMM1_PORT_AUTHORED CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/src/PORT/*.cpp)
-list(APPEND HOMM1_GAME_AUTHORED ${CMAKE_SOURCE_DIR}/vendor/lzhuf/encoder.cpp)
-homm1_localized(HOMM1_GAME_SOURCES ${HOMM1_GAME_AUTHORED})
-homm1_localized(HOMM1_PORT_SOURCES ${HOMM1_PORT_AUTHORED})
-set_source_files_properties(${HOMM1_GAME_SOURCES} ${HOMM1_PORT_SOURCES} PROPERTIES GENERATED TRUE)
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
+  ${CMAKE_SOURCE_DIR}/build.json ${CMAKE_SOURCE_DIR}/tools/port/units.py)
 
-add_library(homm1_game OBJECT ${HOMM1_GAME_SOURCES})
-add_dependencies(homm1_game homm1_localize)
-add_library(homm1_port OBJECT ${HOMM1_PORT_SOURCES})
-add_dependencies(homm1_port homm1_localize)
-
-foreach(target homm1_game homm1_port)
-  target_include_directories(${target} PRIVATE
-    ${HOMM1_LOCALIZED}/include
-    ${HOMM1_LOCALIZED}/vendor/lzhuf)
-  target_compile_definitions(${target} PRIVATE HOMM1_PORT=1)
-  if(NOT WIN32)
-    target_compile_definitions(${target} PRIVATE __cdecl= __stdcall=)
+function(homm1_program name target output rc)
+  execute_process(
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/port/units.py --target ${target}
+    OUTPUT_VARIABLE units RESULT_VARIABLE result OUTPUT_STRIP_TRAILING_WHITESPACE)
+  if(NOT result EQUAL 0)
+    message(FATAL_ERROR "tools/port/units.py --target ${target} failed")
   endif()
-  target_compile_options(${target} PRIVATE
-    ${HOMM1_SEMANTICS} ${HOMM1_SANITIZE_FLAGS}
-    -include ${HOMM1_LOCALIZED}/include/PLATFORM/MsvcRuntime.h)
-  target_link_libraries(${target} PRIVATE homm1_platform)
-endforeach()
-target_compile_options(homm1_game PRIVATE ${HOMM1_GAME_WARNINGS})
-target_compile_options(homm1_port PRIVATE ${HOMM1_GAME_WARNINGS} -Wextra -Wno-unused-parameter)
+  string(REPLACE "\n" ";" units "${units}")
+  set(sources)
+  foreach(unit ${units})
+    list(APPEND sources ${HOMM1_LOCALIZED}/${unit})
+  endforeach()
+  set_source_files_properties(${sources} PROPERTIES GENERATED TRUE)
 
-add_executable(homm1 $<TARGET_OBJECTS:homm1_game> $<TARGET_OBJECTS:homm1_port>)
-set_target_properties(homm1 PROPERTIES OUTPUT_NAME heroes)
-target_link_libraries(homm1 PRIVATE homm1_platform)
+  # The menus and About box from the program's resource script.
+  set(generated ${CMAKE_BINARY_DIR}/generated/${target})
+  set(menus ${generated}/menus_${target}.inc)
+  add_custom_command(
+    OUTPUT ${menus}
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/port/menus.py
+      --rc ${CMAKE_SOURCE_DIR}/${rc} --locale ${HOMM1_LOCALE} --out ${menus}
+    DEPENDS ${CMAKE_SOURCE_DIR}/${rc} ${CMAKE_SOURCE_DIR}/tools/port/menus.py
+      ${CMAKE_SOURCE_DIR}/catalog.py ${CMAKE_SOURCE_DIR}/locales/${HOMM1_LOCALE}.po
+    COMMENT "Generating the ${target} menus"
+    VERBATIM)
+
+  # The program's units without its entry point, for the program and for
+  # tests that drive it.
+  add_library(${name}_units OBJECT ${sources} ${menus})
+  add_dependencies(${name}_units homm1_localize)
+  target_include_directories(${name}_units PUBLIC
+    ${HOMM1_LOCALIZED}/include ${HOMM1_LOCALIZED}/vendor/lzhuf ${generated})
+  target_compile_definitions(${name}_units PUBLIC HOMM1_PORT=1)
+  if(target STREQUAL "editor")
+    target_compile_definitions(${name}_units PUBLIC HOMM1_EDITOR=1)
+  endif()
+  if(NOT WIN32)
+    target_compile_definitions(${name}_units PUBLIC __cdecl= __stdcall=)
+  endif()
+  target_compile_options(${name}_units PUBLIC
+    ${HOMM1_SEMANTICS} ${HOMM1_SANITIZE_FLAGS} ${HOMM1_GAME_WARNINGS}
+    -include ${HOMM1_LOCALIZED}/include/PLATFORM/MsvcRuntime.h)
+  target_link_libraries(${name}_units PUBLIC homm1_platform)
+
+  set_source_files_properties(${HOMM1_LOCALIZED}/src/PORT/SOURCE/Main.cpp PROPERTIES GENERATED TRUE)
+  add_executable(${name} ${HOMM1_LOCALIZED}/src/PORT/SOURCE/Main.cpp)
+  set_target_properties(${name} PROPERTIES OUTPUT_NAME ${output})
+  target_link_libraries(${name} PRIVATE ${name}_units)
+endfunction()
+
+homm1_program(homm1 game heroes src/SOURCE/Heroes.rc)
+homm1_program(homm1_editor editor heroes-editor src/EDITOR/Editor.rc)
 
 # --------------------------------------------------------------------------
 # Tests.

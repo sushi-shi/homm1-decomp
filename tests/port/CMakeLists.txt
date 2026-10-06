@@ -44,3 +44,9 @@ target_include_directories(lzhuf_test PRIVATE ${HOMM1_LOCALIZED}/vendor/lzhuf)
 add_test(NAME save_roundtrip
   COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/save_roundtrip.py $<TARGET_FILE:homm1>)
 set_tests_properties(save_roundtrip PROPERTIES SKIP_RETURN_CODE 77 TIMEOUT 400)
+
+# Every shipped map through the editor's reader and writer (needs HOMM1_DATA).
+add_executable(editor_maps_test editor_maps_test.cpp)
+target_link_libraries(editor_maps_test PRIVATE homm1_editor_units)
+add_test(NAME editor_maps_test COMMAND editor_maps_test)
+set_tests_properties(editor_maps_test PROPERTIES SKIP_RETURN_CODE 77 TIMEOUT 600)
