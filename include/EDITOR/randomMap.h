@@ -21,6 +21,8 @@ H1_ENUM_CONST_BEGIN(MapStepAxis)
     MAP_STEP_Y = 1,
     MAP_STEP_AXES = 2
 H1_ENUM_CONST_END(MapStepAxis)
+// One (x, y) offset of the chain tables.
+typedef i32 MapStepPair[MAP_STEP_AXES];
 
 // A cell of a malloc'ed MAP_CELL_GRID_SIZE x MAP_CELL_GRID_SIZE byte grid:
 // RemoveSmallRegions' visited and region marks, PlaceTowns' region numbers
@@ -112,6 +114,7 @@ H1_ENUM_BEGIN(ChainDirection)
     CHAIN_RIGHTWARD_END = CHAIN_DOWN_LEFT_STEEP,
     CHAIN_DIRECTION_COUNT = 8
 H1_ENUM_END(ChainDirection)
+H1_ENUM_STEPPED(ChainDirection)
 
 // A chain turns a quarter (two directions) clockwise or counterclockwise:
 // gChainTurns' second index (the turn's sideways shift), and what

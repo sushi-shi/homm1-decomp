@@ -150,6 +150,6 @@ public:
 };
 #pragma pack(pop)
 #define gFullySeeded gSearchSeedingComplete // spelling fixes .bss order
-extern i32 gFullySeeded;
+extern b32 gFullySeeded;
 
 #endif // HOMM1_SOURCE_SEARCHARRAY_H

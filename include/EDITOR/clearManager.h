@@ -36,14 +36,15 @@ public:
     // The last map cell a drag step visited.
     i16 m_lastX;
     i16 m_lastY;
-    H1_ENUM_STORAGE(BaseManagerMessageMask, i16) m_dispatchMask;
+    // Main's message.type mask (MessageType bits, as the game's managers).
+    i16 m_dispatchMask;
     // The tool panel's backdrop.
     iconWidget* m_panel;
 
     clearManager(void);
-    virtual i16 Open(i16 priority) OVERRIDE;
+    virtual H1_ENUM_RETURN(BaseManagerStatus, i16) Open(i16 priority) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual i16 Main(tag_message& message) OVERRIDE;
+    virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(tag_message& message) OVERRIDE;
 };
 #pragma pack(pop)
 

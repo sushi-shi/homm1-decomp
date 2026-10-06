@@ -64,12 +64,12 @@ DATA(0x004a6714)
 u16 s_drawGroundTile;
 #define s_drawFlipCloud s_drawCloudMirrored // spelling fixes .bss order
 DATA(0x004a672c)
-i8 s_drawFlipCloud;
+b8 s_drawFlipCloud;
 #define s_drawTileset s_drawCellSet // spelling fixes .bss order
 DATA(0x004a65a4)
 H1_ENUM_STORAGE(MapTileset, u8) s_drawTileset;
 DATA(0x004a65d4)
-i32 s_drawCovered;
+b32 s_drawCovered;
 #define s_drawStoneTile s_drawMapStoneTile // spelling fixes .bss order
 DATA(0x004a65e8)
 i32 s_drawStoneTile;
@@ -317,13 +317,13 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) advManager::Open(i16 id) {
     m_messageTypeMask = MESSAGE_KEY_DOWN | MESSAGE_KEY_UP | MESSAGE_MOUSE_MOVE
                         | MESSAGE_LEFT_BUTTON_DOWN | MESSAGE_RIGHT_BUTTON_DOWN | 0x100
                         | MESSAGE_WIDGET;
-    gMouseManager->NewUpdate(1);
+    gMouseManager->NewUpdate(true);
     oldVolume = gConfig.soundVolume;
     if (gConfig.soundVolume != SOUND_VOLUME_OFF)
         gConfig.soundVolume = SOUND_VOLUME_LAST;
     SetInitialMapOrigin();
     gShowIt = gThisNetHumanPlayer[gCurPlayer];
-    gMouseManager->SetColorMice(0);
+    gMouseManager->SetColorMice(false);
     oldPlayerVal = gCurPlayer;
     savedShowIt = gShowIt;
     gCurPlayer = gCurWatchPlayer;
@@ -968,7 +968,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) advManager::Main(struct tag_message& 
 
 VA(0x00403609, 0x17)
 void advManager::Reseed(i32, i32) {
-    gSeedingValid = 0;
+    gSeedingValid = false;
 }
 
 VA(0x00403620, 0xe55)
@@ -1322,7 +1322,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i32) advManager::ProcessDeSelect(
 }
 
 VA(0x00404621, 0x428)
-i32 advManager::ProcessSearch(i32 x, i32 y) {
+b32 advManager::ProcessSearch(i32 x, i32 y) {
     class sample* sample = NULL;
     hero* hero;
     i32 pl;
@@ -1333,7 +1333,7 @@ i32 advManager::ProcessSearch(i32 x, i32 y) {
     hero = gGame->GetHero(gCurPlayerData->m_currentHero);
     if (hero->m_remainingMobility != hero->m_mobility) {
         NormalDialog(localization::Tr("adventure.search.requires_full_day"), NORMAL_DIALOG_TYPE_OK);
-        return 1;
+        return true;
     }
     MobilizeCurrHero(false);
     CompleteDraw(false);
@@ -1346,11 +1346,11 @@ i32 advManager::ProcessSearch(i32 x, i32 y) {
     if (cellPtr->m_objectIndex != MAP_CELL_NO_FRAME
         || cellPtr->m_overlayIndex != MAP_CELL_NO_FRAME) {
         NormalDialog(localization::Tr("adventure.search.clear_ground"), NORMAL_DIALOG_TYPE_OK);
-        return 1;
+        return true;
     }
     if (cellPtr->m_tileIndex < MAP_CELL_TILES_PER_TERRAIN) {
         NormalDialog(localization::Tr("adventure.search.on_land"), NORMAL_DIALOG_TYPE_OK);
-        return 1;
+        return true;
     }
     if (gHumanPlayer[gCurPlayer])
         sample = LoadPlaySample("DIGSOUND.82M");
@@ -1415,7 +1415,7 @@ i32 advManager::ProcessSearch(i32 x, i32 y) {
     CheckDimHero();
     Reseed(0, 0);
     CheckEndGame(false);
-    return 1;
+    return true;
 }
 
 VA(0x00404a49, 0xae7)
@@ -2004,7 +2004,7 @@ void advManager::DrawCell(
     } else {
         if (!((!gAllBlack && (gGame->m_mapExtra[mapX][mapY] & gCurWatchPlayerBit))
               || drawingPuzzle)) {
-            s_drawCovered = 1;
+            s_drawCovered = true;
             if (gAllBlack)
                 s_drawCloudFrame = 0;
             else
@@ -2021,10 +2021,10 @@ void advManager::DrawCell(
                 return;
             }
             if (s_drawCloudFrame >= CLOUD_FLIPPED_FRAME_BASE) {
-                s_drawFlipCloud = 1;
+                s_drawFlipCloud = true;
                 s_drawCloudFrame -= CLOUD_FLIPPED_FRAME_BASE;
             } else {
-                s_drawFlipCloud = 0;
+                s_drawFlipCloud = false;
             }
             if ((s_drawCloudFrame == CLOUD_X_ALTERNATE_FRAME_1
                  || s_drawCloudFrame == CLOUD_X_ALTERNATE_FRAME_2)
@@ -2033,7 +2033,7 @@ void advManager::DrawCell(
             if (s_drawCloudFrame == CLOUD_Y_ALTERNATE_FRAME && (mapY & 1))
                 s_drawCloudFrame++;
         } else {
-            s_drawCovered = 0;
+            s_drawCovered = false;
         }
     }
     if (drawMask & ADVMGR_DRAW_CLOUD) {
@@ -4157,7 +4157,7 @@ void advManager::SetTownContext(i8 townId) {
     }
     if (wasVisible)
         gMouseManager->ReallyShowPointer();
-    gInputManager->m_forceMouseMove = 1;
+    gInputManager->m_forceMouseMove = true;
     m_hoverCellX = 0;
 }
 
@@ -4229,7 +4229,7 @@ void advManager::SetHeroContext(i8 heroId, b8 update) {
     if (!gHeroMoving) {
         if (wasVisible)
             gMouseManager->ReallyShowPointer();
-        gInputManager->m_forceMouseMove = 1;
+        gInputManager->m_forceMouseMove = true;
         m_hoverCellX = 0;
     }
 }
@@ -5024,9 +5024,9 @@ i16 advManager::ControlPanel(void) {
     gMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
     gameCommand = MAIN_MENU_NO_COMMAND;
     oldSpeedState = gConfig.walkSpeed;
-    gFreshSave = 0;
+    gFreshSave = false;
     heroWasMobilized = m_heroContextLocked;
-    gPrefsChanged = 0;
+    gPrefsChanged = false;
     DemobilizeCurrHero();
     gAdventurePanel = new heroWindow(160, 10, "cpanel.bin");
     if (gAdventurePanel == NULL)
@@ -5173,7 +5173,7 @@ i8 SaveGame(void) {
     res = gExec->DoDialog(newFileReq);
     if (res == DIALOG_BUTTON_2) {
         success = 1;
-        gFreshSave = 1;
+        gFreshSave = true;
         success = gGame->SaveGame(gLastFilename, false);
         if (success)
             NormalDialog(localization::Tr("adventure.save.success"), NORMAL_DIALOG_TYPE_OK, 0xb1);
@@ -5270,20 +5270,20 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) CPanelHandler(struct tag_message& mes
                                 (gConfig.musicVolume + 1) % (SOUND_VOLUME_LAST + 1);
                             SetMusicVolume(gConfig.musicVolume);
                             anyChanged = true;
-                            gPrefsChanged = 1;
+                            gPrefsChanged = true;
                             break;
                         case CONTROL_SOUND_VOLUME:
                             gConfig.soundVolume =
                                 (gConfig.soundVolume + 1) % (SOUND_VOLUME_LAST + 1);
                             SetEffectsVolume(gConfig.soundVolume);
                             anyChanged = true;
-                            gPrefsChanged = 1;
+                            gPrefsChanged = true;
                             break;
                         case CONTROL_WALK_SPEED:
                             ++gConfig.walkSpeed;
                             WALK_SPEED_WRAP(gConfig.walkSpeed);
                             anyChanged = true;
-                            gPrefsChanged = 1;
+                            gPrefsChanged = true;
                             break;
                         case CONTROL_MUSIC_SOURCE:
                             if (H1_ENUM_ENCODE(SoundMusicSource, gConfig.musicSource)) {
@@ -5293,18 +5293,18 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) CPanelHandler(struct tag_message& mes
                             }
                             SetMusicSource(gConfig.musicSource != SOUND_MUSIC_SOURCE_DIGITAL);
                             anyChanged = true;
-                            gPrefsChanged = 1;
+                            gPrefsChanged = true;
                             break;
                         case CONTROL_SHOW_ROUTE:
                             gConfig.showRoute = 1 - gConfig.showRoute;
                             anyChanged = true;
-                            gPrefsChanged = 1;
+                            gPrefsChanged = true;
                             break;
                         case CONTROL_SHOW_ENEMY_MOVES:
                             if (!gRemoteOn) {
                                 gConfig.blackoutComputer = 1 - gConfig.blackoutComputer;
                                 anyChanged = true;
-                                gPrefsChanged = 1;
+                                gPrefsChanged = true;
                             }
                             break;
                     }
@@ -5534,7 +5534,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) DimensionDoorHandler(struct tag_messa
 
 // Returns the redraw flag.
 VA(0x0040e4c1, 0xb48)
-i8 advManager::ComboDraw(i16 originX, i16 originY, b8 animate) {
+b8 advManager::ComboDraw(i16 originX, i16 originY, b8 animate) {
     DATA(0x004a676c)
     static i32 gFrameCount = 0;
     i32 updateCount;
@@ -5544,10 +5544,10 @@ i8 advManager::ComboDraw(i16 originX, i16 originY, b8 animate) {
 
     PollSound();
     if (!gShowIt)
-        return 0;
+        return false;
     if (m_forceCompleteDraw) {
         CompleteDraw(originX, originY, false);
-        return 1;
+        return true;
     }
     if (animate) {
         gFrameCount += gFrameStep;
@@ -5556,7 +5556,7 @@ i8 advManager::ComboDraw(i16 originX, i16 originY, b8 animate) {
             if (gTimers[ADVENTURE_FRAME_TIMER_SLOT] < KBTickCount())
                 gTimers[ADVENTURE_FRAME_TIMER_SLOT] = KBTickCount() + TIMER_DELAY;
             PollSound();
-            return 0;
+            return false;
         } else {
             gFrameCount = 0;
         }
@@ -5764,14 +5764,14 @@ i8 advManager::ComboDraw(i16 originX, i16 originY, b8 animate) {
     if (gLimitUpdMinX > gLimitUpdMaxX || gLimitUpdMinY > gLimitUpdMaxY) {
         gLimitUpdMinX = gLimitUpdMaxX - 1;
         gLimitUpdMinY = gLimitUpdMaxY - 1;
-        return 0;
+        return false;
     }
-    return 1;
+    return true;
 }
 
 // ComboDraw(animate) forwards the current map origin.
 VA(0x0040f009, 0x2f)
-i8 advManager::ComboDraw(b32 animate) {
+b8 advManager::ComboDraw(b32 animate) {
     return ComboDraw(m_mapOriginX, m_mapOriginY, animate);
 }
 
@@ -6502,7 +6502,7 @@ void advManager::CheckScreenScroll(void) {
 }
 
 VA(0x00410aad, 0x79)
-i32 advManager::MouseInScrollZone(void) {
+b32 advManager::MouseInScrollZone(void) {
     i16 mouseX;
     i16 mouseY;
 
@@ -6511,10 +6511,10 @@ i32 advManager::MouseInScrollZone(void) {
         && mouseY < LOGICAL_SCREEN_HEIGHT) {
         if (mouseX < SCROLL_BORDER || mouseX > LOGICAL_SCREEN_WIDTH - SCROLL_BORDER - 1
             || mouseY < SCROLL_BORDER || mouseY > LOGICAL_SCREEN_HEIGHT - SCROLL_BORDER) {
-            return 1;
+            return true;
         }
     }
-    return 0;
+    return false;
 }
 
 VA(0x00410b26, 0x248)
@@ -6796,13 +6796,13 @@ i32 gLimitUpdMaxX;
 DATA(0x004a65e0)
 i32 gLimitUpdMaxY;
 DATA(0x004a65e4)
-i8 gPrefsChanged;
+b8 gPrefsChanged;
 DATA(0x004a6710)
 i32 gLimitUpdMinY;
 DATA(0x004a65ec)
 i8 gComboDraw[17][17];
 DATA(0x004a65cc)
-i8 gFreshSave;
+b8 gFreshSave;
 DATA(0x004a65a8)
 i32 gLastAnimFrame;
 // ADVMGR's ambient-sound volume by distance, on a 0..127 scale. Eight

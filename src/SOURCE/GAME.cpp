@@ -1196,7 +1196,7 @@ void game::NewMap(char* mapName) {
     // A human seat's handicap less one picks its starting resources.
     H1_ENUM_LOCAL(GameDifficulty, i32) curDifficulty;
 
-    gInNewGameSetup = 1;
+    gInNewGameSetup = true;
     gCurPlayer = 0;
     gCurPlayerData = &gGame->m_players[gCurPlayer];
     gCurPlayerBit = 1 << gCurPlayer;
@@ -1381,7 +1381,7 @@ void game::NewMap(char* mapName) {
         GiveTroopsToNeutralTowns();
     SetupAdjacentMons();
     gPhilAI->GetGameAIVars();
-    gInNewGameSetup = 0;
+    gInNewGameSetup = false;
 }
 
 // Groups the multi-cell object triggers 0x34-0x37 and 0x38-0x3c by their
@@ -2435,7 +2435,7 @@ VA(0x00431f0a, 0x17f)
 H1_ENUM_RETURN(MessageDispatchResult, i16) ViewArmyHandler(tag_message& message) {
     i16 frameDelay;
     i16 offset;
-    gDismissArmy = 0;
+    gDismissArmy = false;
     frameDelay = 5;
     if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
@@ -2453,7 +2453,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) ViewArmyHandler(tag_message& message)
                             0x36
                         );
                         if (gWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
-                            gDismissArmy = 1;
+                            gDismissArmy = true;
                             message.command = H1_ENUM_DECODE(
                                 BaseWidgetCommand,
                                 message.id =
@@ -5010,7 +5010,7 @@ H1_ENUM_STORAGE(PlayerColor, i8) gSavedCrest;
 DATA(0x004a6bf0)
 H1_ENUM_STORAGE(GameDifficulty, i8) gSavedDifficulty;
 DATA(0x004a6c0d)
-i8 gDismissArmy;
+b8 gDismissArmy;
 DATA(0x004a6be4)
 heroWindow* gReqExtraWindow;
 DATA(0x004a6bd0)

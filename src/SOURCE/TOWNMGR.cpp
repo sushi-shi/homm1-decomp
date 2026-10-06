@@ -263,7 +263,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) townManager::Open(i16 priority) {
     gWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
     gMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
     gMouseManager->ReallyShowPointer();
-    gMouseManager->NewUpdate(1);
+    gMouseManager->NewUpdate(true);
     KBChangeMenu(gTownMenu);
     gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);
     m_castleDialogActive = false;

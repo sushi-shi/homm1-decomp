@@ -30,7 +30,7 @@ clearManager::clearManager(void) {
 }
 
 VA(0x00401044, 0x188)
-i16 clearManager::Open(i16 priority) {
+H1_ENUM_RETURN(BaseManagerStatus, i16) clearManager::Open(i16 priority) {
     m_panel = new iconWidget(
         EDIT_TOOL_PANEL_X,
         EDIT_TOOL_PANEL_Y,
@@ -80,7 +80,7 @@ void clearManager::Close(void) {
 }
 
 VA(0x00401291, 0x501)
-i16 clearManager::Main(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) clearManager::Main(tag_message& message) {
     i16 newX;
     i16 newY;
     i16 anchorX;
@@ -88,7 +88,7 @@ i16 clearManager::Main(tag_message& message) {
     i16 x;
     i16 y;
     i32 unusedMask;
-    i16 dragMode;
+    H1_ENUM_LOCAL(ClearDragMode, i16) dragMode;
     tag_message event;
 
     if (!(message.type & m_dispatchMask))
@@ -126,7 +126,8 @@ i16 clearManager::Main(tag_message& message) {
                                         m_lastY = y;
                                         switch (dragMode) {
                                             case CLEAR_DRAG_CELLS:
-                                                gEditManager->ClearArea(x, y, 1, 1, gClearFlags, 0);
+                                                gEditManager
+                                                    ->ClearArea(x, y, 1, 1, gClearFlags, false);
                                                 break;
                                             case CLEAR_DRAG_RECTANGLE:
                                                 gSelectionX = x < anchorX ? x : anchorX;
@@ -144,7 +145,8 @@ i16 clearManager::Main(tag_message& message) {
                             }
                             if (dragMode == CLEAR_DRAG_RECTANGLE) {
                                 if (gSelectionX < 0)
-                                    gEditManager->ClearArea(anchorX, anchorY, 1, 1, gClearFlags, 0);
+                                    gEditManager
+                                        ->ClearArea(anchorX, anchorY, 1, 1, gClearFlags, false);
                                 else
                                     gEditManager->ClearArea(
                                         gSelectionX,
@@ -152,7 +154,7 @@ i16 clearManager::Main(tag_message& message) {
                                         gSelectionWidth,
                                         gSelectionHeight,
                                         gClearFlags,
-                                        0
+                                        false
                                     );
                             }
                             gSelectionX = gSelectionY = EDIT_NO_CELL;

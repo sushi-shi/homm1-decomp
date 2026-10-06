@@ -668,9 +668,9 @@ i32 InterpretCommandLine(void) {
     gShowIntro = 1;
     gColorMice = 0;
     gSpecialMouseMasks = 1;
-    gScreenScroll = 1;
+    gScreenScroll = true;
     gLimitPlayer = 0;
-    gBlackoutPlayer = 1;
+    gBlackoutPlayer = true;
     strcpy(gMapName, "AES31000.map");
     strcpy(gFullMapName, localization::Tr("scenario.claw.name"));
     strcpy(gMapDescription, localization::Tr("scenario.claw.description"));
@@ -707,7 +707,7 @@ i32 InterpretCommandLine(void) {
     for (i = 0; i < GAME_PLAYER_COUNT; i++)
         gHumanPlayer[i] = i < gNumHumanPlayers;
     if (gNumHumanPlayers == 1)
-        gBlackoutPlayer = 0;
+        gBlackoutPlayer = false;
     helpRequested = false;
     return 1;
 }
@@ -907,38 +907,38 @@ void GetMonsterCost(H1_ENUM_PARAM(CreatureType, i32) monster, i32* const cost) {
 }
 
 VA(0x0043e49c, 0x104)
-i8 CanBuild(town* townPointer, H1_ENUM_PARAM(BuildingSlotType, i16) building) {
+b8 CanBuild(town* townPointer, H1_ENUM_PARAM(BuildingSlotType, i16) building) {
     mapCell* cell;
     u16 required;
     if (BitTest(gGame->m_townBuiltToday, townPointer->m_id))
-        return 0;
+        return false;
     if (building != BUILDING_SLOT_CASTLE
         && !(townPointer->m_buildings & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_CASTLE)))
-        return 0;
+        return false;
     if (building == BUILDING_SLOT_SHIPYARD) {
         cell = gAdvManager->GetCell(townPointer->m_x - 1, townPointer->m_y + 1);
         if (cell->m_tileIndex < MAP_CELL_TILES_PER_TERRAIN)
-            return 1;
+            return true;
         else
-            return 0;
+            return false;
     }
     if (building == BUILDING_SLOT_MAGE_GUILD
         && townPointer->m_buildState >= TOWN_MAGE_GUILD_COST_LEVEL_LAST)
-        return 0;
+        return false;
     if (building == BUILDING_SLOT_TENT)
-        return 0;
+        return false;
     if (building < BUILDING_SLOT_DWELLING_FIRST)
-        return 1;
+        return true;
     required = gDwellingRequirements
         [H1_ENUM_ENCODE(TownType, townPointer->m_type) * BUILDING_SLOT_DWELLING_COUNT
          + (building - BUILDING_SLOT_DWELLING_FIRST)];
     if ((required & townPointer->m_buildings) == required)
-        return 1;
-    return 0;
+        return true;
+    return false;
 }
 
 VA(0x0043e5a0, 0xb6)
-i8 CanBuy(town* townPointer, H1_ENUM_PARAM(BuildingSlotType, i16) building) {
+b8 CanBuy(town* townPointer, H1_ENUM_PARAM(BuildingSlotType, i16) building) {
     H1_ENUM_ARRAY(i32, cost, ResourceType, RESOURCE_COUNT);
     playerData* player;
     H1_ENUM_LOCAL(ResourceType, i32) resourceIndex;
@@ -955,9 +955,9 @@ i8 CanBuy(town* townPointer, H1_ENUM_PARAM(BuildingSlotType, i16) building) {
     player = &gGame->m_players[gCurPlayer];
     for (resourceIndex = RESOURCE_FIRST; resourceIndex < RESOURCE_COUNT; ++resourceIndex) {
         if (player->m_resources[resourceIndex] < cost[resourceIndex])
-            return 0;
+            return false;
     }
-    return 1;
+    return true;
 }
 
 // Seven neutral value slots come before six per-faction dwellings.
@@ -1404,7 +1404,7 @@ void UpdateNormalDialog(char* text) {
 VA(0x0043f4a2, 0x14d)
 H1_ENUM_RETURN(MessageDispatchResult, i16) WaitHandler(tag_message& message) {
     b8 result = false;
-    gFunctionComplete = 1;
+    gFunctionComplete = true;
     PollSound();
     if (!MusicPlaying())
         PlayMusic(TERRAIN_MUSIC_TRACK(gAdvManager->m_currentTerrain));
@@ -1415,7 +1415,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) WaitHandler(tag_message& message) {
                     case DIALOG_BUTTON_0:
                     case DIALOG_BUTTON_1:
                     case DIALOG_BUTTON_2:
-                        gFunctionComplete = 0;
+                        gFunctionComplete = false;
                         result = true;
                         break;
                 }
@@ -2032,7 +2032,7 @@ void InitVars(void) {
     gPhilAI->m_debugFont = NULL;
     gCombatSurrender = 0;
     gGame->m_dialogAnimationCounter = 0;
-    gInNewGameSetup = 0;
+    gInNewGameSetup = false;
     for (i = 0; i < MAP_CELL_GROUND_TILE_COUNT; i++)
         gGroundToTerrain[i] = H1_ENUM_DECODE(TerrainType, i / MAP_CELL_TILES_PER_TERRAIN);
     for (i = 0; i < FINDPATH_TERRAIN_COUNT; i++) {
@@ -2731,8 +2731,8 @@ i32 MemSize(i32) {
 }
 
 VA(0x004421b0, 0x7)
-i8 CheckMem(void) {
-    return 1;
+b8 CheckMem(void) {
+    return true;
 }
 
 // Towns carry a name index, and campaign maps override one town by position.
@@ -2774,13 +2774,13 @@ VA(0x00442331, 0x5)
 void EarlyShutDownSystem(void) {}
 
 VA(0x00442336, 0x55)
-i32 GameUnsaved(void) {
+b32 GameUnsaved(void) {
     if ((gAdvManager && gAdvManager->m_active == 1)
         || (gCombatManager && gCombatManager->m_active == 1)
         || (gTownManager && gTownManager->m_active == 1))
-        return 1;
+        return true;
     else
-        return 0;
+        return false;
 }
 
 VA(0x0044238b, 0x523)
@@ -4622,7 +4622,7 @@ H1_ENUM_ARRAY_ROWS(i8, gArmyEffected, CombatSide, COMBAT_SIDE_COUNT, ARMY_GROUP_
 DATA(0x004a74c4)
 H1_ENUM_STORAGE(ResourceType, i32) gBottomViewResource;
 DATA(0x004a9408)
-i32 gSeedingValid;
+b32 gSeedingValid;
 DATA(0x004a7ba9)
 i8 gLimitPlayer;
 DATA(0x004a7b90)
@@ -4639,11 +4639,11 @@ resourceManager* gResourceManager;
 DATA(0x004a7fc0)
 u8 gMapExtra[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 DATA(0x004a74cc)
-i32 gSpecialHideCursor;
+b32 gSpecialHideCursor;
 DATA(0x004a74ac)
 class searchArray* gSearchArray;
 DATA(0x004a7b7c)
-i32 gBlackoutPlayer;
+b32 gBlackoutPlayer;
 DATA(0x004a7838)
 char gNetBoxLine[2][60];
 DATA(0x004a7b98)
@@ -4686,7 +4686,7 @@ H1_ENUM_STORAGE(CalendarPeriodType, i8) gWeekType;
 DATA(0x004a7168)
 char gText[768];
 DATA(0x004a74dc)
-i32 gInNewGameSetup;
+b32 gInNewGameSetup;
 DATA(0x004a7830)
 palette* gBufferPalette;
 DATA(0x004a7492)
@@ -4753,7 +4753,7 @@ i32 gThisGamePos;
 DATA(0x004a749c)
 i32 gNumHumanPlayers;
 DATA(0x004a955c)
-i8 gIconClipOn;
+b8 gIconClipOn;
 DATA(0x004a6cc8)
 i32 gMapExtraSizes[255];
 DATA(0x004a95cc)
@@ -4783,7 +4783,7 @@ char gAggPathName[352];
 DATA(0x004a7634)
 class highScoreManager* gHighScoreManager;
 DATA(0x004a70c4)
-i8 gFunctionComplete;
+b8 gFunctionComplete;
 // No retail code reads this; it holds its retail .bss place.
 DATA(0x004a70c8)
 u8 gKBFreeData[156];
@@ -4808,7 +4808,7 @@ i32 gCurWatchPlayer;
 DATA(0x004a9558)
 i32 gBottomViewResourceQty;
 DATA(0x004a74c8)
-i8 gWaitForRemoteReceive;
+b8 gWaitForRemoteReceive;
 DATA(0x004a95d0)
 char gLastMapName[352];
 // No retail code reads this; it holds its retail .bss place.
@@ -4817,7 +4817,7 @@ i32 gExtraKBType;
 DATA(0x004a940c)
 townManager* gTownManager;
 DATA(0x004a782c)
-i8 gScreenScroll;
+b8 gScreenScroll;
 DATA(0x004a7480)
 advManager* gAdvManager;
 DATA(0x004a7bb4)

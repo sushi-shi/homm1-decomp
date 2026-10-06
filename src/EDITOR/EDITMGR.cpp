@@ -93,7 +93,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_MOUNTAINS,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MOUNTAINS),
      {5,
       6,
       MAP_CELL_NO_FRAME,
@@ -123,7 +123,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_MOUNTAINS_2,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MOUNTAINS_2),
      {9,
       10,
       MAP_CELL_NO_FRAME,
@@ -153,7 +153,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_MOUNTAINS_3,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MOUNTAINS_3),
      {MAP_CELL_NO_FRAME,
       16,
       17,
@@ -183,7 +183,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_MOUNTAINS_4,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MOUNTAINS_4),
      {MAP_CELL_NO_FRAME,
       20,
       21,
@@ -213,7 +213,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_MOUNTAINS,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MOUNTAINS),
      {93,
       94,
       MAP_CELL_NO_FRAME,
@@ -243,7 +243,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_MOUNTAINS_2,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MOUNTAINS_2),
      {97,
       98,
       MAP_CELL_NO_FRAME,
@@ -273,7 +273,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_MOUNTAINS_3,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MOUNTAINS_3),
      {MAP_CELL_NO_FRAME,
       104,
       105,
@@ -303,7 +303,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_MOUNTAINS_4,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MOUNTAINS_4),
      {MAP_CELL_NO_FRAME,
       108,
       109,
@@ -333,7 +333,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_MOUNTAINS,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MOUNTAINS),
      {71,
       72,
       MAP_CELL_NO_FRAME,
@@ -363,7 +363,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_MOUNTAINS_2,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MOUNTAINS_2),
      {75,
       76,
       MAP_CELL_NO_FRAME,
@@ -393,7 +393,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_MOUNTAINS_3,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MOUNTAINS_3),
      {MAP_CELL_NO_FRAME,
       82,
       83,
@@ -423,7 +423,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_MOUNTAINS_4,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MOUNTAINS_4),
      {MAP_CELL_NO_FRAME,
       86,
       87,
@@ -453,7 +453,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_MOUNTAINS,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MOUNTAINS),
      {49,
       50,
       MAP_CELL_NO_FRAME,
@@ -483,7 +483,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_MOUNTAINS_2,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MOUNTAINS_2),
      {53,
       54,
       MAP_CELL_NO_FRAME,
@@ -513,7 +513,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_MOUNTAINS_3,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MOUNTAINS_3),
      {MAP_CELL_NO_FRAME,
       60,
       61,
@@ -543,7 +543,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_MOUNTAINS_4,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MOUNTAINS_4),
      {MAP_CELL_NO_FRAME,
       64,
       65,
@@ -573,7 +573,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_MOUNTAINS,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MOUNTAINS),
      {27,
       28,
       MAP_CELL_NO_FRAME,
@@ -603,7 +603,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_MOUNTAINS_2,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MOUNTAINS_2),
      {31,
       32,
       MAP_CELL_NO_FRAME,
@@ -633,7 +633,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_MOUNTAINS_3,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MOUNTAINS_3),
      {MAP_CELL_NO_FRAME,
       38,
       39,
@@ -663,7 +663,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_MOUNTAINS_4,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MOUNTAINS_4),
      {MAP_CELL_NO_FRAME,
       42,
       43,
@@ -693,7 +693,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_MOUNTAINS,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MOUNTAINS),
      {115,
       116,
       MAP_CELL_NO_FRAME,
@@ -723,7 +723,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_MOUNTAINS_2,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MOUNTAINS_2),
      {119,
       120,
       MAP_CELL_NO_FRAME,
@@ -753,7 +753,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_MOUNTAINS_3,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MOUNTAINS_3),
      {MAP_CELL_NO_FRAME,
       126,
       127,
@@ -783,7 +783,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_MOUNTAINS_4,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MOUNTAINS_4),
      {MAP_CELL_NO_FRAME,
       130,
       131,
@@ -813,7 +813,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_TREES,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_TREES),
      {90,
       91,
       MAP_CELL_NO_FRAME,
@@ -843,7 +843,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_TREES_2,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_TREES_2),
      {94,
       95,
       MAP_CELL_NO_FRAME,
@@ -873,7 +873,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_TREES_3,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_TREES_3),
      {MAP_CELL_NO_FRAME,
       79,
       80,
@@ -903,7 +903,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_TREES_4,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_TREES_4),
      {MAP_CELL_NO_FRAME,
       83,
       84,
@@ -933,7 +933,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_TREES_5,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_TREES_5),
      {96,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -963,7 +963,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_TREES_5,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_TREES_5),
      {97,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -993,7 +993,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_TREES,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_TREES),
      {16,
       17,
       MAP_CELL_NO_FRAME,
@@ -1023,7 +1023,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_TREES_2,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_TREES_2),
      {20,
       21,
       MAP_CELL_NO_FRAME,
@@ -1053,7 +1053,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_TREES_3,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_TREES_3),
      {MAP_CELL_NO_FRAME,
       5,
       6,
@@ -1083,7 +1083,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_TREES_4,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_TREES_4),
      {MAP_CELL_NO_FRAME,
       9,
       10,
@@ -1113,7 +1113,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_TREES_5,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_TREES_5),
      {22,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -1143,7 +1143,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_TREES_5,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_TREES_5),
      {23,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -1173,7 +1173,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_TREES_5,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_TREES_5),
      {98,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -1203,7 +1203,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_TREES_5,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_TREES_5),
      {99,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -1233,7 +1233,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_TREES_5,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_TREES_5),
      {100,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -1263,7 +1263,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_TREES,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_TREES),
      {40,
       41,
       MAP_CELL_NO_FRAME,
@@ -1293,7 +1293,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_TREES_2,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_TREES_2),
      {44,
       45,
       MAP_CELL_NO_FRAME,
@@ -1323,7 +1323,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_TREES_3,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_TREES_3),
      {MAP_CELL_NO_FRAME,
       29,
       30,
@@ -1353,7 +1353,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_TREES_4,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_TREES_4),
      {MAP_CELL_NO_FRAME,
       33,
       34,
@@ -1383,7 +1383,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_TREES_5,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_TREES_5),
      {46,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -1413,7 +1413,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_TREES_5,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_TREES_5),
      {47,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -1443,7 +1443,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_TREES_5,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_TREES_5),
      {48,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -1473,7 +1473,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_TREES_5,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_TREES_5),
      {49,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -1503,7 +1503,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_TREES,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_TREES),
      {66,
       67,
       MAP_CELL_NO_FRAME,
@@ -1533,7 +1533,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_TREES_2,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_TREES_2),
      {70,
       71,
       MAP_CELL_NO_FRAME,
@@ -1563,7 +1563,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_TREES_3,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_TREES_3),
      {MAP_CELL_NO_FRAME,
       55,
       56,
@@ -1593,7 +1593,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_TREES_4,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_TREES_4),
      {MAP_CELL_NO_FRAME,
       59,
       60,
@@ -1623,7 +1623,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_TREES_5,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_TREES_5),
      {72,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -1653,7 +1653,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_TREES_5,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_TREES_5),
      {73,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -1683,7 +1683,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0004,
-     MAP_OBJECT_TOWN,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_TOWN),
      {8,
       9,
       10,
@@ -1713,7 +1713,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0004,
-     MAP_OBJECT_TOWN,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_TOWN),
      {20,
       21,
       22,
@@ -1743,7 +1743,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0004,
-     MAP_OBJECT_TOWN,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_TOWN),
      {32,
       33,
       34,
@@ -1773,7 +1773,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0004,
-     MAP_OBJECT_TOWN,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_TOWN),
      {44,
       45,
       46,
@@ -1803,7 +1803,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0004,
-     MAP_OBJECT_TOWN,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_TOWN),
      {56,
       57,
       58,
@@ -1833,7 +1833,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0004,
-     MAP_OBJECT_TOWN,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_TOWN),
      {68,
       69,
       70,
@@ -1863,7 +1863,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0004,
-     MAP_OBJECT_TOWN,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_TOWN),
      {80,
       81,
       82,
@@ -1893,7 +1893,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0004,
-     MAP_OBJECT_TOWN,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_TOWN),
      {92,
       93,
       94,
@@ -1923,7 +1923,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0004,
-     MAP_FILE_OBJECT_RANDOM_CASTLE,
+     MAP_OBJECT_TRIGGER(MAP_FILE_OBJECT_RANDOM_CASTLE),
      {116,
       117,
       118,
@@ -1953,7 +1953,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0004,
-     MAP_FILE_OBJECT_RANDOM_TOWN,
+     MAP_OBJECT_TRIGGER(MAP_FILE_OBJECT_RANDOM_TOWN),
      {104,
       105,
       106,
@@ -1983,7 +1983,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_ALCHEMIST_LAB,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_ALCHEMIST_LAB),
      {43,
       44,
       MAP_CELL_NO_FRAME,
@@ -2013,7 +2013,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_ALCHEMIST_LAB,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_ALCHEMIST_LAB),
      {35,
       36,
       MAP_CELL_NO_FRAME,
@@ -2043,7 +2043,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_ALCHEMIST_LAB,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_ALCHEMIST_LAB),
      {27,
       28,
       MAP_CELL_NO_FRAME,
@@ -2073,7 +2073,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0008,
-     MAP_OBJECT_DRAGON_CITY,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_DRAGON_CITY),
      {MAP_CELL_NO_FRAME,
       58,
       59,
@@ -2103,7 +2103,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0004,
-     MAP_OBJECT_LIGHTHOUSE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_LIGHTHOUSE),
      {68,
       69,
       70,
@@ -2133,7 +2133,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_MINE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MINE),
      {17,
       18,
       MAP_CELL_NO_FRAME,
@@ -2163,7 +2163,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_MINE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MINE),
      {21,
       22,
       MAP_CELL_NO_FRAME,
@@ -2193,7 +2193,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_MINE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MINE),
      {23,
       24,
       MAP_CELL_NO_FRAME,
@@ -2223,7 +2223,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_MINE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MINE),
      {13,
       14,
       MAP_CELL_NO_FRAME,
@@ -2253,7 +2253,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_MINE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MINE),
      {11,
       12,
       MAP_CELL_NO_FRAME,
@@ -2283,7 +2283,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     MAP_OBJECT_MINE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MINE),
      {17,
       18,
       MAP_CELL_NO_FRAME,
@@ -2313,7 +2313,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      1,
      OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     MAP_OBJECT_MINE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MINE),
      {17,
       18,
       MAP_CELL_NO_FRAME,
@@ -2343,7 +2343,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      2,
      OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     MAP_OBJECT_MINE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MINE),
      {17,
       18,
       MAP_CELL_NO_FRAME,
@@ -2373,7 +2373,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      3,
      OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     MAP_OBJECT_MINE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MINE),
      {17,
       18,
       MAP_CELL_NO_FRAME,
@@ -2403,7 +2403,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      4,
      OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     MAP_OBJECT_MINE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MINE),
      {17,
       18,
       MAP_CELL_NO_FRAME,
@@ -2433,7 +2433,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     MAP_OBJECT_MINE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MINE),
      {21,
       22,
       MAP_CELL_NO_FRAME,
@@ -2463,7 +2463,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      1,
      OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     MAP_OBJECT_MINE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MINE),
      {21,
       22,
       MAP_CELL_NO_FRAME,
@@ -2493,7 +2493,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      2,
      OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     MAP_OBJECT_MINE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MINE),
      {21,
       22,
       MAP_CELL_NO_FRAME,
@@ -2523,7 +2523,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      3,
      OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     MAP_OBJECT_MINE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MINE),
      {21,
       22,
       MAP_CELL_NO_FRAME,
@@ -2553,7 +2553,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      4,
      OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     MAP_OBJECT_MINE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MINE),
      {21,
       22,
       MAP_CELL_NO_FRAME,
@@ -2583,7 +2583,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     MAP_OBJECT_MINE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MINE),
      {23,
       24,
       MAP_CELL_NO_FRAME,
@@ -2613,7 +2613,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      1,
      OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     MAP_OBJECT_MINE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MINE),
      {23,
       24,
       MAP_CELL_NO_FRAME,
@@ -2643,7 +2643,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      2,
      OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     MAP_OBJECT_MINE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MINE),
      {23,
       24,
       MAP_CELL_NO_FRAME,
@@ -2673,7 +2673,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      3,
      OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     MAP_OBJECT_MINE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MINE),
      {23,
       24,
       MAP_CELL_NO_FRAME,
@@ -2703,7 +2703,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      4,
      OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     MAP_OBJECT_MINE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MINE),
      {23,
       24,
       MAP_CELL_NO_FRAME,
@@ -2733,7 +2733,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     MAP_OBJECT_MINE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MINE),
      {13,
       14,
       MAP_CELL_NO_FRAME,
@@ -2763,7 +2763,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      1,
      OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     MAP_OBJECT_MINE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MINE),
      {13,
       14,
       MAP_CELL_NO_FRAME,
@@ -2793,7 +2793,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      2,
      OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     MAP_OBJECT_MINE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MINE),
      {13,
       14,
       MAP_CELL_NO_FRAME,
@@ -2823,7 +2823,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      3,
      OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     MAP_OBJECT_MINE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MINE),
      {13,
       14,
       MAP_CELL_NO_FRAME,
@@ -2853,7 +2853,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      4,
      OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     MAP_OBJECT_MINE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MINE),
      {13,
       14,
       MAP_CELL_NO_FRAME,
@@ -2883,7 +2883,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     MAP_OBJECT_MINE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MINE),
      {11,
       12,
       MAP_CELL_NO_FRAME,
@@ -2913,7 +2913,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      1,
      OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     MAP_OBJECT_MINE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MINE),
      {11,
       12,
       MAP_CELL_NO_FRAME,
@@ -2943,7 +2943,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      2,
      OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     MAP_OBJECT_MINE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MINE),
      {11,
       12,
       MAP_CELL_NO_FRAME,
@@ -2973,7 +2973,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      3,
      OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     MAP_OBJECT_MINE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MINE),
      {11,
       12,
       MAP_CELL_NO_FRAME,
@@ -3003,7 +3003,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      4,
      OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     MAP_OBJECT_MINE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MINE),
      {11,
       12,
       MAP_CELL_NO_FRAME,
@@ -3033,7 +3033,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      OVERLAY_TYPE_RESOURCE_MARKER,
      0x0001,
-     MAP_OBJECT_RESOURCE_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_RESOURCE_SHADOW),
      {0,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3063,7 +3063,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      OVERLAY_TYPE_RESOURCE_MARKER,
      0x0001,
-     MAP_OBJECT_RESOURCE_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_RESOURCE_SHADOW),
      {1,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3093,7 +3093,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      OVERLAY_TYPE_RESOURCE_MARKER,
      0x0001,
-     MAP_OBJECT_RESOURCE_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_RESOURCE_SHADOW),
      {2,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3123,7 +3123,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      OVERLAY_TYPE_RESOURCE_MARKER,
      0x0001,
-     MAP_OBJECT_RESOURCE_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_RESOURCE_SHADOW),
      {3,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3153,7 +3153,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      OVERLAY_TYPE_RESOURCE_MARKER,
      0x0001,
-     MAP_OBJECT_RESOURCE_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_RESOURCE_SHADOW),
      {4,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3183,7 +3183,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_RESOURCE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_RESOURCE),
      {61,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3213,7 +3213,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_RESOURCE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_RESOURCE),
      {62,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3243,7 +3243,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_RESOURCE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_RESOURCE),
      {63,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3273,7 +3273,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_RESOURCE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_RESOURCE),
      {64,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3303,7 +3303,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_RESOURCE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_RESOURCE),
      {65,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3333,7 +3333,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_RESOURCE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_RESOURCE),
      {66,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3363,7 +3363,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_RESOURCE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_RESOURCE),
      {67,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3393,7 +3393,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_SAWMILL,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SAWMILL),
      {7,
       8,
       MAP_CELL_NO_FRAME,
@@ -3423,7 +3423,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_FILE_OBJECT_RANDOM_RESOURCE,
+     MAP_OBJECT_TRIGGER(MAP_FILE_OBJECT_RANDOM_RESOURCE),
      {84,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3453,7 +3453,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_MONSTER,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MONSTER),
      {0,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3483,7 +3483,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_MONSTER,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MONSTER),
      {1,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3513,7 +3513,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_MONSTER,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MONSTER),
      {2,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3543,7 +3543,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_MONSTER,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MONSTER),
      {3,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3573,7 +3573,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_MONSTER,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MONSTER),
      {4,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3603,7 +3603,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_MONSTER,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MONSTER),
      {5,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3633,7 +3633,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_MONSTER,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MONSTER),
      {6,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3663,7 +3663,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_MONSTER,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MONSTER),
      {7,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3693,7 +3693,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_MONSTER,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MONSTER),
      {8,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3723,7 +3723,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_MONSTER,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MONSTER),
      {9,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3753,7 +3753,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_MONSTER,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MONSTER),
      {10,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3783,7 +3783,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_MONSTER,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MONSTER),
      {11,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3813,7 +3813,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_MONSTER,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MONSTER),
      {12,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3843,7 +3843,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_MONSTER,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MONSTER),
      {13,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3873,7 +3873,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_MONSTER,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MONSTER),
      {14,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3903,7 +3903,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_MONSTER,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MONSTER),
      {15,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3933,7 +3933,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_MONSTER,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MONSTER),
      {16,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3963,7 +3963,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_MONSTER,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MONSTER),
      {17,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3993,7 +3993,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_MONSTER,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MONSTER),
      {18,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4023,7 +4023,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_MONSTER,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MONSTER),
      {19,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4053,7 +4053,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_MONSTER,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MONSTER),
      {20,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4083,7 +4083,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_MONSTER,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MONSTER),
      {21,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4113,7 +4113,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_MONSTER,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MONSTER),
      {22,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4143,7 +4143,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_MONSTER,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MONSTER),
      {23,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4173,7 +4173,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_MONSTER,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MONSTER),
      {24,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4203,7 +4203,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_MONSTER,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MONSTER),
      {25,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4233,7 +4233,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_MONSTER,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MONSTER),
      {26,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4263,7 +4263,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_MONSTER,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_MONSTER),
      {27,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4293,7 +4293,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_FILE_OBJECT_RANDOM_MONSTER,
+     MAP_OBJECT_TRIGGER(MAP_FILE_OBJECT_RANDOM_MONSTER),
      {28,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4323,7 +4323,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_FILE_OBJECT_RANDOM_MONSTER_WEAK,
+     MAP_OBJECT_TRIGGER(MAP_FILE_OBJECT_RANDOM_MONSTER_WEAK),
      {29,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4353,7 +4353,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_FILE_OBJECT_RANDOM_MONSTER_MEDIUM,
+     MAP_OBJECT_TRIGGER(MAP_FILE_OBJECT_RANDOM_MONSTER_MEDIUM),
      {30,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4383,7 +4383,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_FILE_OBJECT_RANDOM_MONSTER_STRONG,
+     MAP_OBJECT_TRIGGER(MAP_FILE_OBJECT_RANDOM_MONSTER_STRONG),
      {31,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4413,7 +4413,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_FILE_OBJECT_RANDOM_MONSTER_VERY_STRONG,
+     MAP_OBJECT_TRIGGER(MAP_FILE_OBJECT_RANDOM_MONSTER_VERY_STRONG),
      {32,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4443,7 +4443,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_FILE_OBJECT_HERO,
+     MAP_OBJECT_TRIGGER(MAP_FILE_OBJECT_HERO),
      {33,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4473,7 +4473,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_ARTIFACT,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_ARTIFACT),
      {4,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4503,7 +4503,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_ARTIFACT,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_ARTIFACT),
      {5,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4533,7 +4533,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_ARTIFACT,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_ARTIFACT),
      {6,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4563,7 +4563,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_ARTIFACT,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_ARTIFACT),
      {7,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4593,7 +4593,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_ARTIFACT,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_ARTIFACT),
      {8,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4623,7 +4623,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_ARTIFACT,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_ARTIFACT),
      {9,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4653,7 +4653,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_ARTIFACT,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_ARTIFACT),
      {10,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4683,7 +4683,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_ARTIFACT,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_ARTIFACT),
      {11,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4713,7 +4713,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_ARTIFACT,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_ARTIFACT),
      {12,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4743,7 +4743,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_ARTIFACT,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_ARTIFACT),
      {13,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4773,7 +4773,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_ARTIFACT,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_ARTIFACT),
      {14,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4803,7 +4803,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_ARTIFACT,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_ARTIFACT),
      {15,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4833,7 +4833,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_ARTIFACT,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_ARTIFACT),
      {16,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4863,7 +4863,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_ARTIFACT,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_ARTIFACT),
      {17,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4893,7 +4893,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_ARTIFACT,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_ARTIFACT),
      {18,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4923,7 +4923,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_ARTIFACT,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_ARTIFACT),
      {19,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4953,7 +4953,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_ARTIFACT,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_ARTIFACT),
      {20,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4983,7 +4983,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_ARTIFACT,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_ARTIFACT),
      {21,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5013,7 +5013,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_ARTIFACT,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_ARTIFACT),
      {22,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5043,7 +5043,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_ARTIFACT,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_ARTIFACT),
      {23,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5073,7 +5073,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_ARTIFACT,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_ARTIFACT),
      {24,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5103,7 +5103,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_ARTIFACT,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_ARTIFACT),
      {25,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5133,7 +5133,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_ARTIFACT,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_ARTIFACT),
      {26,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5163,7 +5163,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_ARTIFACT,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_ARTIFACT),
      {27,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5193,7 +5193,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_ARTIFACT,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_ARTIFACT),
      {28,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5223,7 +5223,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_ARTIFACT,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_ARTIFACT),
      {29,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5253,7 +5253,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_ARTIFACT,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_ARTIFACT),
      {30,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5283,7 +5283,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_ARTIFACT,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_ARTIFACT),
      {31,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5313,7 +5313,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_ARTIFACT,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_ARTIFACT),
      {32,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5343,7 +5343,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_ARTIFACT,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_ARTIFACT),
      {33,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5373,7 +5373,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_ARTIFACT,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_ARTIFACT),
      {34,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5403,7 +5403,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_ARTIFACT,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_ARTIFACT),
      {35,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5433,7 +5433,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_ARTIFACT,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_ARTIFACT),
      {36,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5463,7 +5463,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_FILE_OBJECT_RANDOM_ARTIFACT,
+     MAP_OBJECT_TRIGGER(MAP_FILE_OBJECT_RANDOM_ARTIFACT),
      {37,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5493,7 +5493,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_BUOY,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_BUOY),
      {7,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5523,7 +5523,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_NOTHING_HERE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_NOTHING_HERE),
      {2,
       3,
       72,
@@ -5553,7 +5553,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_NOTHING_HERE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_NOTHING_HERE),
      {0,
       70,
       MAP_CELL_NO_FRAME,
@@ -5583,7 +5583,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_NOTHING_HERE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_NOTHING_HERE),
      {1,
       71,
       MAP_CELL_NO_FRAME,
@@ -5613,7 +5613,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0003,
-     MAP_OBJECT_SHIPWRECK,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHIPWRECK),
      {14,
       6,
       MAP_CELL_NO_FRAME,
@@ -5643,7 +5643,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x00e0,
-     MAP_OBJECT_WHIRLPOOL,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_WHIRLPOOL),
      {28,
       35,
       42,
@@ -5673,7 +5673,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_SIGNPOST,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SIGNPOST),
      {10,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5703,7 +5703,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {0,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5733,7 +5733,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {1,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5763,7 +5763,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0003,
-     MAP_OBJECT_FAERIE_RING,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_FAERIE_RING),
      {122,
       123,
       MAP_CELL_NO_FRAME,
@@ -5793,7 +5793,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {2,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5823,7 +5823,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {3,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5853,7 +5853,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_GAZEBO,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_GAZEBO),
      {11,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5883,7 +5883,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_STRAW_HUT,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_STRAW_HUT),
      {12,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5913,7 +5913,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_HOUSE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_HOUSE),
      {13,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5943,7 +5943,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_CABIN,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_CABIN),
      {14,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5973,7 +5973,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_NOTHING_HERE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_NOTHING_HERE),
      {52,
       59,
       66,
@@ -6003,7 +6003,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_NOTHING_HERE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_NOTHING_HERE),
      {30,
       31,
       38,
@@ -6033,7 +6033,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0002,
-     MAP_OBJECT_RANKING_SHRINE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_RANKING_SHRINE),
      {21,
       23,
       22,
@@ -6063,7 +6063,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {4,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6093,7 +6093,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {5,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6123,7 +6123,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_OBELISK,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_OBELISK),
      {15,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6153,7 +6153,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {6,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6183,7 +6183,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {7,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6213,7 +6213,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {8,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6243,7 +6243,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {9,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6273,7 +6273,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_ROSEBUSH,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_ROSEBUSH),
      {16,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6303,7 +6303,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_SPELL_SHRINE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SPELL_SHRINE),
      {17,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6333,7 +6333,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_SIGNPOST,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SIGNPOST),
      {3,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6363,7 +6363,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_CAMPFIRE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_CAMPFIRE),
      {15,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6393,7 +6393,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_DWARF_LOG_CABIN,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_DWARF_LOG_CABIN),
      {5,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6423,7 +6423,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_PEASANT_LOG_CABIN,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_PEASANT_LOG_CABIN),
      {22,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6453,7 +6453,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_NOTHING_HERE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_NOTHING_HERE),
      {8,
       9,
       MAP_CELL_NO_FRAME,
@@ -6483,7 +6483,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_NOTHING_HERE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_NOTHING_HERE),
      {10,
       11,
       MAP_CELL_NO_FRAME,
@@ -6513,7 +6513,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_NOTHING_HERE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_NOTHING_HERE),
      {12,
       13,
       14,
@@ -6543,7 +6543,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_OBELISK,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_OBELISK),
      {6,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6573,7 +6573,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {0,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6603,7 +6603,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {1,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6633,7 +6633,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {2,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6663,7 +6663,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_STONE_LITHS,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_STONE_LITHS),
      {7,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6693,7 +6693,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {0,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6723,7 +6723,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_DAEMON_CAVE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_DAEMON_CAVE),
      {9,
       10,
       MAP_CELL_NO_FRAME,
@@ -6753,7 +6753,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0003,
-     MAP_OBJECT_FAERIE_RING,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_FAERIE_RING),
      {13,
       14,
       MAP_CELL_NO_FRAME,
@@ -6783,7 +6783,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_NOTHING_HERE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_NOTHING_HERE),
      {4,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6813,7 +6813,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {1,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6843,7 +6843,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {15,
       16,
       17,
@@ -6873,7 +6873,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {29,
       30,
       31,
@@ -6903,7 +6903,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {5,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6933,7 +6933,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_OBELISK,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_OBELISK),
      {7,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6963,7 +6963,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_SPELL_SHRINE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SPELL_SHRINE),
      {8,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6993,7 +6993,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {2,
       3,
       MAP_CELL_NO_FRAME,
@@ -7023,7 +7023,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_DAEMON_CAVE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_DAEMON_CAVE),
      {13,
       14,
       MAP_CELL_NO_FRAME,
@@ -7053,7 +7053,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {0,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -7083,7 +7083,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {1,
       2,
       3,
@@ -7113,7 +7113,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {7,
       8,
       MAP_CELL_NO_FRAME,
@@ -7143,7 +7143,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_NOTHING_HERE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_NOTHING_HERE),
      {17,
       18,
       19,
@@ -7173,7 +7173,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_NOTHING_HERE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_NOTHING_HERE),
      {23,
       24,
       MAP_CELL_NO_FRAME,
@@ -7203,7 +7203,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_NOTHING_HERE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_NOTHING_HERE),
      {11,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -7233,7 +7233,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_OBELISK,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_OBELISK),
      {12,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -7263,7 +7263,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_NOTHING_HERE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_NOTHING_HERE),
      {39,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -7293,7 +7293,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_NOTHING_HERE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_NOTHING_HERE),
      {27,
       53,
       67,
@@ -7323,7 +7323,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_NOTHING_HERE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_NOTHING_HERE),
      {MAP_CELL_NO_FRAME,
       30,
       31,
@@ -7353,7 +7353,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_NOTHING_HERE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_NOTHING_HERE),
      {MAP_CELL_NO_FRAME,
       36,
       81,
@@ -7383,7 +7383,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_SIGNPOST,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SIGNPOST),
      {3,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -7413,7 +7413,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_DAEMON_CAVE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_DAEMON_CAVE),
      {8,
       9,
       MAP_CELL_NO_FRAME,
@@ -7443,7 +7443,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0002,
-     MAP_OBJECT_SKELETON,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SKELETON),
      {5,
       30,
       MAP_CELL_NO_FRAME,
@@ -7473,7 +7473,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_NOTHING_HERE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_NOTHING_HERE),
      {0,
       1,
       MAP_CELL_NO_FRAME,
@@ -7503,7 +7503,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {2,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -7533,7 +7533,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0006,
-     MAP_OBJECT_OASIS,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_OASIS),
      {12,
       13,
       14,
@@ -7563,7 +7563,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_OBELISK,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_OBELISK),
      {6,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -7593,7 +7593,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0002,
-     MAP_OBJECT_COAST,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST),
      {16,
       17,
       33,
@@ -7623,7 +7623,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0002,
-     MAP_OBJECT_DESERT_TENT,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_DESERT_TENT),
      {18,
       19,
       20,
@@ -7653,7 +7653,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_STONE_LITHS,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_STONE_LITHS),
      {7,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -7683,7 +7683,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {0,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -7713,7 +7713,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {1,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -7743,7 +7743,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0003,
-     MAP_OBJECT_FAERIE_RING,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_FAERIE_RING),
      {15,
       16,
       MAP_CELL_NO_FRAME,
@@ -7773,7 +7773,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {2,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -7803,7 +7803,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {3,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -7833,7 +7833,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {4,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -7863,7 +7863,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_GAZEBO,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_GAZEBO),
      {11,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -7893,7 +7893,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_NOTHING_HERE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_NOTHING_HERE),
      {19,
       20,
       21,
@@ -7923,7 +7923,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_NOTHING_HERE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_NOTHING_HERE),
      {17,
       18,
       MAP_CELL_NO_FRAME,
@@ -7953,7 +7953,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0002,
-     MAP_OBJECT_RANKING_SHRINE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_RANKING_SHRINE),
      {32,
       34,
       33,
@@ -7983,7 +7983,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {5,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8013,7 +8013,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {6,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8043,7 +8043,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_OBELISK,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_OBELISK),
      {12,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8073,7 +8073,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {7,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8103,7 +8103,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {8,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8133,7 +8133,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {9,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8163,7 +8163,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {10,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8193,7 +8193,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_ROSEBUSH,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_ROSEBUSH),
      {13,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8223,7 +8223,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_SPELL_SHRINE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SPELL_SHRINE),
      {14,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8253,7 +8253,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_OAK_TREE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_OAK_TREE),
      {8,
       9,
       MAP_CELL_NO_FRAME,
@@ -8283,7 +8283,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_SIGNPOST,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SIGNPOST),
      {0,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8313,7 +8313,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_TREASURE_CHEST,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_TREASURE_CHEST),
      {3,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8343,7 +8343,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_CAMPFIRE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_CAMPFIRE),
      {42,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8373,7 +8373,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_FOUNTAIN,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_FOUNTAIN),
      {49,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8403,7 +8403,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0002,
-     MAP_OBJECT_GRAVEYARD,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_GRAVEYARD),
      {12,
       13,
       14,
@@ -8433,7 +8433,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_NOTHING_HERE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_NOTHING_HERE),
      {1,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8463,7 +8463,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_ANCIENT_LAMP,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_ANCIENT_LAMP),
      {4,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8493,7 +8493,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0080,
-     MAP_OBJECT_WATERWHEEL,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_WATERWHEEL),
      {63,
       70,
       33,
@@ -8523,7 +8523,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_STATUE,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_STATUE),
      {31,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8553,7 +8553,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {147,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8583,7 +8583,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {148,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8613,7 +8613,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {149,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8643,7 +8643,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {150,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8673,7 +8673,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {151,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8703,7 +8703,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {152,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8733,7 +8733,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {153,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8763,7 +8763,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {MAP_CELL_NO_FRAME,
       154,
       MAP_CELL_NO_FRAME,
@@ -8793,7 +8793,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_SHADOW,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW),
      {161,
       162,
       163,
@@ -8823,7 +8823,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     MAP_OBJECT_TREE_STUMP,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_TREE_STUMP),
      {5,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8853,7 +8853,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     MAP_OBJECT_STONE_LITHS,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_STONE_LITHS),
      {6,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8883,7 +8883,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0007,
-     MAP_OBJECT_WAGON_CAMP,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_WAGON_CAMP),
      {37,
       56,
       38,
@@ -8913,7 +8913,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0002,
-     MAP_OBJECT_WINDMILL,
+     MAP_OBJECT_TRIGGER(MAP_OBJECT_WINDMILL),
      {91,
       98,
       MAP_CELL_NO_FRAME,
@@ -8946,7 +8946,7 @@ char* gEditErrors[EDIT_MANAGER_ERROR_CAPACITY] = {0};
 DATA(0x00451b7c)
 i32 gEditErrorCount = 0;
 DATA(0x00451b80)
-i32 gVaryTiles = 0;
+b32 gVaryTiles = false;
 DATA(0x00451b84)
 char gPickMapNameDummy[4] = "";
 
@@ -8964,7 +8964,7 @@ editManager::editManager(void) {
     SaveUndo();
     gMapHeader = (SMapHeader*)gEditMapHeader;
     m_animationFrame = 0;
-    m_tool = EDIT_MANAGER_NO_TOOL;
+    m_tool = EDIT_TOOL_NONE;
     m_toolManager = NULL;
     m_mapChanged = 0;
     m_placedX = m_placedY = EDIT_NO_CELL;
@@ -8973,17 +8973,21 @@ editManager::editManager(void) {
 }
 
 VA(0x004018db, 0x41)
-void editManager::LoadObjectIcons(i16 tileset, char* largeName, char* smallName) {
+void editManager::LoadObjectIcons(
+    H1_ENUM_PARAM(MapTileset, i16) tileset,
+    char* largeName,
+    char* smallName
+) {
     m_objectIcons[tileset][EDIT_ZOOM_NORMAL] = gResourceManager->GetIcon(largeName);
     m_objectIcons[tileset][EDIT_ZOOM_OUT] = gResourceManager->GetIcon(smallName);
 }
 
 VA(0x0040191c, 0x57a)
-i16 editManager::Open(i16 priority) {
+H1_ENUM_RETURN(BaseManagerStatus, i16) editManager::Open(i16 priority) {
     bitmap* borderImage;
     i32 i;
 
-    NewMap(0);
+    NewMap(false);
     borderImage = gResourceManager->GetBitmap("bordedit.bmp");
     BlitBitmapToScreen(borderImage, 0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT, 0, 0);
     gResourceManager->Dispose(borderImage);
@@ -9047,7 +9051,8 @@ i16 editManager::Open(i16 priority) {
     m_cloudTiles[EDIT_ZOOM_NORMAL] = gResourceManager->GetTileset("clof32.til");
     m_cloudTiles[EDIT_ZOOM_OUT] = gResourceManager->GetTileset("clof16.til");
     for (i = 0; i < EDIT_MANAGER_TILESET_COUNT; i++)
-        m_objectIcons[i][EDIT_ZOOM_NORMAL] = m_objectIcons[i][EDIT_ZOOM_OUT] = NULL;
+        m_objectIcons[H1_ENUM_DECODE(MapTileset, i)][EDIT_ZOOM_NORMAL] =
+            m_objectIcons[H1_ENUM_DECODE(MapTileset, i)][EDIT_ZOOM_OUT] = NULL;
     LoadObjectIcons(TILESET_OBJ32_00, "obj32-00.icn", "obj16-00.icn");
     LoadObjectIcons(TILESET_OBJ32_01, "obj32-01.icn", "obj16-01.icn");
     LoadObjectIcons(TILESET_OBJ32_02, "obj32-02.icn", "obj16-02.icn");
@@ -9070,7 +9075,7 @@ i16 editManager::Open(i16 priority) {
     gMouseManager->SetPointer("editor.mse", EDIT_POINTER_DEFAULT);
     gMouseManager->WarpPointer(LOGICAL_SCREEN_WIDTH / 2, 200);
     gMouseManager->ReallyShowPointer();
-    gMouseManager->NewUpdate(1);
+    gMouseManager->NewUpdate(true);
     m_messageMask = BASE_MANAGER_ACCEPT_EXECUTIVE;
     m_priority = priority;
     m_active = 1;
@@ -9083,9 +9088,9 @@ VA(0x00401e96, 0x11e)
 void editManager::Close(void) {
     i32 i;
 
-    NewMap(0);
+    NewMap(false);
     ClearErrors();
-    SelectTool(EDIT_MANAGER_NO_TOOL);
+    SelectTool(EDIT_TOOL_NONE);
     gWindowManager->RemoveWindow(m_window);
     delete m_window;
     gResourceManager->Dispose(m_groundTiles[EDIT_ZOOM_NORMAL]);
@@ -9093,8 +9098,8 @@ void editManager::Close(void) {
     gResourceManager->Dispose(m_cloudTiles[EDIT_ZOOM_NORMAL]);
     gResourceManager->Dispose(m_cloudTiles[EDIT_ZOOM_OUT]);
     for (i = 0; i < EDIT_MANAGER_TILESET_COUNT; i++) {
-        gResourceManager->Dispose(m_objectIcons[i][EDIT_ZOOM_NORMAL]);
-        gResourceManager->Dispose(m_objectIcons[i][EDIT_ZOOM_OUT]);
+        gResourceManager->Dispose(m_objectIcons[H1_ENUM_DECODE(MapTileset, i)][EDIT_ZOOM_NORMAL]);
+        gResourceManager->Dispose(m_objectIcons[H1_ENUM_DECODE(MapTileset, i)][EDIT_ZOOM_OUT]);
     }
     gResourceManager->Dispose(m_buttons);
     gResourceManager->Dispose(m_statusFont);
@@ -9103,7 +9108,7 @@ void editManager::Close(void) {
 }
 
 VA(0x00401fb4, 0x883)
-i16 editManager::Main(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) editManager::Main(tag_message& message) {
     i32 spare1;
     i32 spare2;
     i32 helpIndex;
@@ -9116,7 +9121,7 @@ i16 editManager::Main(tag_message& message) {
         }
         return MESSAGE_DISPATCH_CONTINUE;
     }
-    helpIndex = EDIT_BUTTON_HELP_NONE;
+    helpIndex = H1_ENUM_ENCODE(EditButtonHelp, EDIT_BUTTON_HELP_NONE);
     switch (message.type) {
         case MESSAGE_WIDGET:
             switch (message.command) {
@@ -9139,7 +9144,7 @@ i16 editManager::Main(tag_message& message) {
                         case EDIT_CONTROL_LOAD:
                             if (!PickMap(gPickMapNameDummy, "map", FILE_REQUESTER_LOAD))
                                 break;
-                            if (!LoadMap(m_mapFileName)) {
+                            if (!H1_ENUM_ENCODE(BaseManagerStatus, LoadMap(m_mapFileName))) {
                                 m_mapChanged = 0;
                                 m_placedX = m_placedY = EDIT_NO_CELL;
                             }
@@ -9150,7 +9155,7 @@ i16 editManager::Main(tag_message& message) {
                             UpdateMapView();
                             break;
                         case EDIT_CONTROL_SAVE:
-                            if (!SaveMap(m_mapFileName)) {
+                            if (!H1_ENUM_ENCODE(BaseManagerStatus, SaveMap(m_mapFileName))) {
                                 sprintf(
                                     gText,
                                     localization::Tr("editor.map.saved"),
@@ -9171,7 +9176,7 @@ i16 editManager::Main(tag_message& message) {
                                 return MESSAGE_DISPATCH_CONSUME;
                             break;
                         case EDIT_CONTROL_MAP_INFO:
-                            MapDetailsDialog(0);
+                            MapDetailsDialog(false);
                             break;
                         case EDIT_CONTROL_RANDOM_MAP:
                             GenerateRandomMap();
@@ -9179,7 +9184,7 @@ i16 editManager::Main(tag_message& message) {
                         case EDIT_CONTROL_NEW:
                             if (Confirm(localization::Tr("editor.map.new.confirm"))) {
                                 ResetArea(0, 0, MAP_CELL_GRID_SIZE, MAP_CELL_GRID_SIZE);
-                                NewMap(0);
+                                NewMap(false);
                                 DrawMap();
                                 UpdateMapView();
                                 DrawRadar(1);
@@ -9224,52 +9229,52 @@ i16 editManager::Main(tag_message& message) {
                 case WIDGET_NOTIFY_RIGHT_CLICK:
                     switch (message.id) {
                         case EDIT_CONTROL_SCROLL_UP:
-                            helpIndex = EDIT_BUTTON_HELP_SCROLL;
+                            helpIndex = H1_ENUM_ENCODE(EditButtonHelp, EDIT_BUTTON_HELP_SCROLL);
                             break;
                         case EDIT_CONTROL_SCROLL_DOWN:
-                            helpIndex = EDIT_BUTTON_HELP_SCROLL;
+                            helpIndex = H1_ENUM_ENCODE(EditButtonHelp, EDIT_BUTTON_HELP_SCROLL);
                             break;
                         case EDIT_CONTROL_SCROLL_RIGHT:
-                            helpIndex = EDIT_BUTTON_HELP_SCROLL;
+                            helpIndex = H1_ENUM_ENCODE(EditButtonHelp, EDIT_BUTTON_HELP_SCROLL);
                             break;
                         case EDIT_CONTROL_SCROLL_LEFT:
-                            helpIndex = EDIT_BUTTON_HELP_SCROLL;
+                            helpIndex = H1_ENUM_ENCODE(EditButtonHelp, EDIT_BUTTON_HELP_SCROLL);
                             break;
                         case EDIT_CONTROL_SCROLL_UP_LEFT:
-                            helpIndex = EDIT_BUTTON_HELP_SCROLL;
+                            helpIndex = H1_ENUM_ENCODE(EditButtonHelp, EDIT_BUTTON_HELP_SCROLL);
                             break;
                         case EDIT_CONTROL_SCROLL_UP_RIGHT:
-                            helpIndex = EDIT_BUTTON_HELP_SCROLL;
+                            helpIndex = H1_ENUM_ENCODE(EditButtonHelp, EDIT_BUTTON_HELP_SCROLL);
                             break;
                         case EDIT_CONTROL_SCROLL_DOWN_LEFT:
-                            helpIndex = EDIT_BUTTON_HELP_SCROLL;
+                            helpIndex = H1_ENUM_ENCODE(EditButtonHelp, EDIT_BUTTON_HELP_SCROLL);
                             break;
                         case EDIT_CONTROL_SCROLL_DOWN_RIGHT:
-                            helpIndex = EDIT_BUTTON_HELP_SCROLL;
+                            helpIndex = H1_ENUM_ENCODE(EditButtonHelp, EDIT_BUTTON_HELP_SCROLL);
                             break;
                         case EDIT_CONTROL_ZOOM:
-                            helpIndex = EDIT_BUTTON_HELP_ZOOM;
+                            helpIndex = H1_ENUM_ENCODE(EditButtonHelp, EDIT_BUTTON_HELP_ZOOM);
                             break;
                         case EDIT_CONTROL_UNDO:
-                            helpIndex = EDIT_BUTTON_HELP_UNDO;
+                            helpIndex = H1_ENUM_ENCODE(EditButtonHelp, EDIT_BUTTON_HELP_UNDO);
                             break;
                         case EDIT_CONTROL_MAP_INFO:
-                            helpIndex = EDIT_BUTTON_HELP_MAP_INFO;
+                            helpIndex = H1_ENUM_ENCODE(EditButtonHelp, EDIT_BUTTON_HELP_MAP_INFO);
                             break;
                         case EDIT_CONTROL_NEW:
-                            helpIndex = EDIT_BUTTON_HELP_NEW;
+                            helpIndex = H1_ENUM_ENCODE(EditButtonHelp, EDIT_BUTTON_HELP_NEW);
                             break;
                         case EDIT_CONTROL_LOAD:
-                            helpIndex = EDIT_BUTTON_HELP_LOAD;
+                            helpIndex = H1_ENUM_ENCODE(EditButtonHelp, EDIT_BUTTON_HELP_LOAD);
                             break;
                         case EDIT_CONTROL_SAVE:
-                            helpIndex = EDIT_BUTTON_HELP_SAVE;
+                            helpIndex = H1_ENUM_ENCODE(EditButtonHelp, EDIT_BUTTON_HELP_SAVE);
                             break;
                         case EDIT_CONTROL_QUIT:
-                            helpIndex = EDIT_BUTTON_HELP_QUIT;
+                            helpIndex = H1_ENUM_ENCODE(EditButtonHelp, EDIT_BUTTON_HELP_QUIT);
                             break;
                         case EDIT_CONTROL_RANDOM_MAP:
-                            helpIndex = EDIT_BUTTON_HELP_RANDOM_MAP;
+                            helpIndex = H1_ENUM_ENCODE(EditButtonHelp, EDIT_BUTTON_HELP_RANDOM_MAP);
                             break;
                     }
                     if (helpIndex >= 0)
@@ -9279,34 +9284,34 @@ i16 editManager::Main(tag_message& message) {
                     if (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
                         switch (message.id) {
                             case EDIT_CONTROL_RADAR:
-                                helpIndex = EDIT_AREA_HELP_RADAR;
+                                helpIndex = H1_ENUM_ENCODE(EditAreaHelp, EDIT_AREA_HELP_RADAR);
                                 break;
                             case EDIT_CONTROL_HORIZONTAL_TRACK:
-                                helpIndex = EDIT_AREA_HELP_SCROLLING;
+                                helpIndex = H1_ENUM_ENCODE(EditAreaHelp, EDIT_AREA_HELP_SCROLLING);
                                 break;
                             case EDIT_CONTROL_HORIZONTAL_KNOB:
-                                helpIndex = EDIT_AREA_HELP_SCROLLING;
+                                helpIndex = H1_ENUM_ENCODE(EditAreaHelp, EDIT_AREA_HELP_SCROLLING);
                                 break;
                             case EDIT_CONTROL_VERTICAL_TRACK:
-                                helpIndex = EDIT_AREA_HELP_SCROLLING;
+                                helpIndex = H1_ENUM_ENCODE(EditAreaHelp, EDIT_AREA_HELP_SCROLLING);
                                 break;
                             case EDIT_CONTROL_VERTICAL_KNOB:
-                                helpIndex = EDIT_AREA_HELP_SCROLLING;
+                                helpIndex = H1_ENUM_ENCODE(EditAreaHelp, EDIT_AREA_HELP_SCROLLING);
                                 break;
                             case EDIT_CONTROL_TERRAIN:
-                                helpIndex = EDIT_AREA_HELP_TERRAIN;
+                                helpIndex = H1_ENUM_ENCODE(EditAreaHelp, EDIT_AREA_HELP_TERRAIN);
                                 break;
                             case EDIT_CONTROL_OBJECTS:
-                                helpIndex = EDIT_AREA_HELP_OBJECTS;
+                                helpIndex = H1_ENUM_ENCODE(EditAreaHelp, EDIT_AREA_HELP_OBJECTS);
                                 break;
                             case EDIT_CONTROL_DETAILS:
-                                helpIndex = EDIT_AREA_HELP_DETAILS;
+                                helpIndex = H1_ENUM_ENCODE(EditAreaHelp, EDIT_AREA_HELP_DETAILS);
                                 break;
                             case EDIT_CONTROL_ERASER:
-                                helpIndex = EDIT_AREA_HELP_ERASER;
+                                helpIndex = H1_ENUM_ENCODE(EditAreaHelp, EDIT_AREA_HELP_ERASER);
                                 break;
                             case EDIT_CONTROL_MAP:
-                                helpIndex = EDIT_AREA_HELP_MAP;
+                                helpIndex = H1_ENUM_ENCODE(EditAreaHelp, EDIT_AREA_HELP_MAP);
                                 break;
                         }
                         if (helpIndex >= 0)
@@ -9337,7 +9342,11 @@ i16 editManager::Main(tag_message& message) {
                     UpdateMapView();
                     break;
                 case INPUT_SCAN_TAB:
-                    SelectTool((m_tool + 1) % EDIT_TOOL_COUNT);
+                    SelectTool(H1_ENUM_DECODE(
+                        EditTool,
+                        (H1_ENUM_ENCODE(EditTool, m_tool) + 1)
+                            % H1_ENUM_ENCODE(EditTool, EDIT_TOOL_COUNT)
+                    ));
                     break;
                 case INPUT_SCAN_ESCAPE:
                     if (Confirm(localization::Tr("editor.quit.confirm")) == 1)
@@ -9385,9 +9394,9 @@ void editManager::DrawRulers(i16 viewX, i16 viewY, i16 cursorX, i16 cursorY) {
         cursorY = EDIT_NO_CELL;
     }
     for (i = 0; i < EDIT_RULER_SLOTS; i++) {
-        if (!m_zoomedOut && (i & 1))
+        if (!H1_ENUM_ENCODE(EditZoom, m_zoomedOut) && (i & 1))
             continue;
-        if (!m_zoomedOut)
+        if (!H1_ENUM_ENCODE(EditZoom, m_zoomedOut))
             m_buttons->DrawToBuffer(
                 i * EDIT_RULER_SLOT_PIXELS + EDIT_VIEW_LEFT,
                 0,
@@ -9403,19 +9412,24 @@ void editManager::DrawRulers(i16 viewX, i16 viewY, i16 cursorX, i16 cursorY) {
                 ICON_DRAW_NORMAL,
                 ICON_DRAW_OFFSET_FULL
             );
-        sprintf(text, "%02d", viewX + i / (m_zoomedOut ? 1 : EDIT_RULER_SLOTS_PER_CELL));
-        if (i / (m_zoomedOut ? 1 : EDIT_RULER_SLOTS_PER_CELL) == cursorX)
+        sprintf(
+            text,
+            "%02d",
+            viewX + i / (H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? 1 : EDIT_RULER_SLOTS_PER_CELL)
+        );
+        if (i / (H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? 1 : EDIT_RULER_SLOTS_PER_CELL) == cursorX)
             color = EDIT_RULER_CURSOR_COLOR;
         else
             color = EDIT_RULER_TEXT_COLOR;
         m_statusFont->DrawString(
             text,
-            i * EDIT_RULER_SLOT_PIXELS + (m_zoomedOut ? 0 : EDIT_RULER_CELL_TEXT_OFFSET)
+            i * EDIT_RULER_SLOT_PIXELS
+                + (H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? 0 : EDIT_RULER_CELL_TEXT_OFFSET)
                 + EDIT_TOP_RULER_TEXT_X,
             EDIT_TOP_RULER_TEXT_Y,
             color
         );
-        if (!m_zoomedOut)
+        if (!H1_ENUM_ENCODE(EditZoom, m_zoomedOut))
             m_buttons->DrawToBuffer(
                 0,
                 i * EDIT_RULER_SLOT_PIXELS + EDIT_VIEW_TOP,
@@ -9431,15 +9445,20 @@ void editManager::DrawRulers(i16 viewX, i16 viewY, i16 cursorX, i16 cursorY) {
                 ICON_DRAW_NORMAL,
                 ICON_DRAW_OFFSET_FULL
             );
-        sprintf(text, "%02d", viewY + i / (m_zoomedOut ? 1 : EDIT_RULER_SLOTS_PER_CELL));
-        if (i / (m_zoomedOut ? 1 : EDIT_RULER_SLOTS_PER_CELL) == cursorY)
+        sprintf(
+            text,
+            "%02d",
+            viewY + i / (H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? 1 : EDIT_RULER_SLOTS_PER_CELL)
+        );
+        if (i / (H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? 1 : EDIT_RULER_SLOTS_PER_CELL) == cursorY)
             color = EDIT_RULER_CURSOR_COLOR;
         else
             color = EDIT_RULER_TEXT_COLOR;
         m_statusFont->DrawString(
             text,
             EDIT_LEFT_RULER_TEXT_X,
-            i * EDIT_RULER_SLOT_PIXELS + (m_zoomedOut ? 0 : EDIT_RULER_CELL_TEXT_OFFSET)
+            i * EDIT_RULER_SLOT_PIXELS
+                + (H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? 0 : EDIT_RULER_CELL_TEXT_OFFSET)
                 + EDIT_LEFT_RULER_TEXT_Y,
             color
         );
@@ -9494,19 +9513,20 @@ void editManager::DrawView(i16 viewX, i16 viewY) {
     i32 cy;
     i32 cellPixels;
     i32 numCells;
-    i32 savedZoom;
+    H1_ENUM_LOCAL(EditZoom, i32) savedZoom;
 
     savedZoom = m_zoomedOut;
     if (gGeneratingMaps)
         m_zoomedOut = EDIT_ZOOM_NORMAL;
-    numCells = m_zoomedOut ? EDIT_VIEW_ZOOMED_CELLS : EDIT_VIEW_CELLS;
+    numCells = H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? EDIT_VIEW_ZOOMED_CELLS : EDIT_VIEW_CELLS;
     for (cy = 0; cy < numCells; cy++)
         for (cx = 0; cx < numCells; cx++)
             DrawCell(viewX + cx, viewY + cy, cx, cy, EDIT_DRAW_ALL);
     m_animationFrame++;
     m_animationFrame %= UPDATE_FRAME_CYCLE;
-    cellPixels = m_zoomedOut ? EDIT_VIEW_ZOOMED_CELL_PIXELS : EDIT_VIEW_CELL_PIXELS;
-    lineWidth = m_zoomedOut ? 1 : EDIT_SELECTION_LINE_WIDTH;
+    cellPixels = H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? EDIT_VIEW_ZOOMED_CELL_PIXELS
+                                                       : EDIT_VIEW_CELL_PIXELS;
+    lineWidth = H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? 1 : EDIT_SELECTION_LINE_WIDTH;
     if (gSelectionX >= 0) {
         gSelectionColor = gMonoColorMap[EDIT_SELECTION_COLOR];
         FillBitmapArea(
@@ -9557,11 +9577,16 @@ void editManager::DrawRadar(i32) {
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             if (m_map.cells[x][y].m_objectIndex != MAP_CELL_NO_FRAME) {
-                switch (m_map.cells[x][y].m_objectTileset & MAP_CELL_TILESET_MASK) {
+                switch (H1_ENUM_DECODE(
+                    MapTileset,
+                    m_map.cells[x][y].m_objectTileset & MAP_CELL_TILESET_MASK
+                )) {
                     case TILESET_MTN32:
                     case TILESET_TREE32:
-                        color = gRadarTerrainColor
-                                    [m_map.cells[x][y].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN]
+                        color = gRadarTerrainColor[H1_ENUM_DECODE(
+                                    TerrainType,
+                                    m_map.cells[x][y].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN
+                                )]
                                 + RADAR_TERRAIN_SHADE;
                         break;
                     case TILESET_TOWN32:
@@ -9571,13 +9596,17 @@ void editManager::DrawRadar(i32) {
                         color = EDIT_RADAR_RESOURCE_COLOR;
                         break;
                     default:
-                        color = gRadarTerrainColor
-                            [m_map.cells[x][y].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN];
+                        color = gRadarTerrainColor[H1_ENUM_DECODE(
+                            TerrainType,
+                            m_map.cells[x][y].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN
+                        )];
                         break;
                 }
             } else {
-                color =
-                    gRadarTerrainColor[m_map.cells[x][y].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN];
+                color = gRadarTerrainColor[H1_ENUM_DECODE(
+                    TerrainType,
+                    m_map.cells[x][y].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN
+                )];
             }
             if (gGeneratingMaps)
                 color = EDIT_RADAR_UNSEEN_COLOR;
@@ -9594,7 +9623,8 @@ void editManager::DrawRadar(i32) {
     buttonsIcon->FillToBuffer(
         m_viewX * RADAR_CELL_PIXELS + RADAR_LEFT,
         m_viewY * RADAR_CELL_PIXELS + RADAR_TOP,
-        m_zoomedOut ? EDIT_FRAME_RADAR_ZOOMED_VIEW : EDIT_FRAME_RADAR_VIEW,
+        H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? EDIT_FRAME_RADAR_ZOOMED_VIEW
+                                              : EDIT_FRAME_RADAR_VIEW,
         RADAR_VIEWPORT_COLOR,
         ICON_DRAW_NORMAL,
         ICON_DRAW_OFFSET_FULL
@@ -9611,17 +9641,21 @@ void editManager::DrawRadar(i32) {
 #define screenY sy // frame-slot spelling
 VA(0x00403183, 0x34b)
 void editManager::DrawCell(i16 x, i16 y, i16 column, i16 row, u8 layers) {
-    u8 tileset;
+    H1_ENUM_LOCAL(MapTileset, u8) tileset;
     u16 groundFrame;
     i16 screenX;
     i16 screenY;
     mapCell* cell;
 
     cell = &m_map.cells[x][y];
-    screenX = column * (m_zoomedOut ? EDIT_VIEW_ZOOMED_CELL_PIXELS : EDIT_VIEW_CELL_PIXELS)
+    screenX = column
+                  * (H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? EDIT_VIEW_ZOOMED_CELL_PIXELS
+                                                           : EDIT_VIEW_CELL_PIXELS)
               + EDIT_VIEW_LEFT;
-    screenY =
-        row * (m_zoomedOut ? EDIT_VIEW_ZOOMED_CELL_PIXELS : EDIT_VIEW_CELL_PIXELS) + EDIT_VIEW_TOP;
+    screenY = row
+                  * (H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? EDIT_VIEW_ZOOMED_CELL_PIXELS
+                                                           : EDIT_VIEW_CELL_PIXELS)
+              + EDIT_VIEW_TOP;
     if (gGeneratingMaps) {
         if (layers & EDIT_DRAW_OVERLAY)
             TileToBitmap(
@@ -9647,7 +9681,7 @@ void editManager::DrawCell(i16 x, i16 y, i16 column, i16 row, u8 layers) {
     }
     if (layers & EDIT_DRAW_OBJECT) {
         if (cell->m_objectIndex != MAP_CELL_NO_FRAME) {
-            tileset = cell->m_objectTileset & MAP_CELL_TILESET_MASK;
+            tileset = H1_ENUM_DECODE(MapTileset, cell->m_objectTileset & MAP_CELL_TILESET_MASK);
             IconToBitmap(
                 m_objectIcons[tileset][m_zoomedOut],
                 gWindowManager->m_screen,
@@ -9678,7 +9712,7 @@ void editManager::DrawCell(i16 x, i16 y, i16 column, i16 row, u8 layers) {
     }
     if (layers & EDIT_DRAW_OVERLAY) {
         if (cell->m_overlayIndex != MAP_CELL_NO_FRAME) {
-            tileset = cell->m_overlayTileset & MAP_CELL_TILESET_MASK;
+            tileset = H1_ENUM_DECODE(MapTileset, cell->m_overlayTileset & MAP_CELL_TILESET_MASK);
             IconToBitmap(
                 m_objectIcons[tileset][m_zoomedOut],
                 gWindowManager->m_screen,
@@ -9706,7 +9740,7 @@ void editManager::DrawCell(i16 x, i16 y, i16 column, i16 row, u8 layers) {
 // in moves it forward by ten.
 VA(0x004034ce, 0x78)
 void editManager::ToggleZoom(void) {
-    if (!m_zoomedOut) {
+    if (!H1_ENUM_ENCODE(EditZoom, m_zoomedOut)) {
         m_zoomedOut = EDIT_ZOOM_OUT;
         Scroll(-10, -10);
     } else {
@@ -9721,8 +9755,8 @@ void editManager::ToggleZoom(void) {
 // The tool buttons show their frame pair from EDIT_FRAME_TOOL_BUTTONS, the
 // second frame for the selected tool.
 VA(0x00403546, 0x29c)
-void editManager::SelectTool(i16 tool) {
-    i32 i;
+void editManager::SelectTool(H1_ENUM_PARAM(EditTool, i16) tool) {
+    H1_ENUM_LOCAL(EditTool, i32) i;
     tag_message msg;
 
     if (m_tool == tool)
@@ -9732,11 +9766,12 @@ void editManager::SelectTool(i16 tool) {
         delete m_toolManager;
         m_toolManager = NULL;
     }
-    for (i = 0; i < EDIT_TOOL_COUNT; i++) {
+    for (i = EDIT_TOOL_TERRAIN; i < EDIT_TOOL_COUNT; i++) {
         msg.type = MESSAGE_WIDGET;
-        msg.id = i + EDIT_CONTROL_TERRAIN;
+        msg.id = H1_ENUM_ENCODE(EditTool, i) + EDIT_CONTROL_TERRAIN;
         msg.command = WIDGET_COMMAND_SET_FRAME;
-        msg.value = (i == tool) + i * EDIT_FRAMES_PER_TOOL_BUTTON + EDIT_FRAME_TOOL_BUTTONS;
+        msg.value = (i == tool) + H1_ENUM_ENCODE(EditTool, i) * EDIT_FRAMES_PER_TOOL_BUTTON
+                    + EDIT_FRAME_TOOL_BUTTONS;
         m_window->BroadcastMessage(msg);
     }
     switch (tool) {
@@ -9754,14 +9789,17 @@ void editManager::SelectTool(i16 tool) {
             break;
     }
     if (m_toolManager) {
-        if (!gExec->AddManager(m_toolManager, BASE_MANAGER_PRIORITY_UNASSIGNED)) {
+        if (!H1_ENUM_ENCODE(
+                BaseManagerStatus,
+                gExec->AddManager(m_toolManager, BASE_MANAGER_PRIORITY_UNASSIGNED)
+            )) {
             m_tool = tool;
         } else {
             m_toolManager = NULL;
-            m_tool = EDIT_MANAGER_NO_TOOL;
+            m_tool = EDIT_TOOL_NONE;
         }
     } else {
-        m_tool = EDIT_MANAGER_NO_TOOL;
+        m_tool = EDIT_TOOL_NONE;
     }
     m_window->DrawWindow();
 }
@@ -9771,13 +9809,21 @@ void editManager::Scroll(i16 dx, i16 dy) {
     m_viewX += dx;
     if (m_viewX < 0)
         m_viewX = 0;
-    if (m_viewX > MAP_CELL_GRID_SIZE - (m_zoomedOut ? EDIT_VIEW_ZOOMED_CELLS : EDIT_VIEW_CELLS))
-        m_viewX = MAP_CELL_GRID_SIZE - (m_zoomedOut ? EDIT_VIEW_ZOOMED_CELLS : EDIT_VIEW_CELLS);
+    if (m_viewX
+        > MAP_CELL_GRID_SIZE
+              - (H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? EDIT_VIEW_ZOOMED_CELLS : EDIT_VIEW_CELLS))
+        m_viewX =
+            MAP_CELL_GRID_SIZE
+            - (H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? EDIT_VIEW_ZOOMED_CELLS : EDIT_VIEW_CELLS);
     m_viewY += dy;
     if (m_viewY < 0)
         m_viewY = 0;
-    if (m_viewY > MAP_CELL_GRID_SIZE - (m_zoomedOut ? EDIT_VIEW_ZOOMED_CELLS : EDIT_VIEW_CELLS))
-        m_viewY = MAP_CELL_GRID_SIZE - (m_zoomedOut ? EDIT_VIEW_ZOOMED_CELLS : EDIT_VIEW_CELLS);
+    if (m_viewY
+        > MAP_CELL_GRID_SIZE
+              - (H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? EDIT_VIEW_ZOOMED_CELLS : EDIT_VIEW_CELLS))
+        m_viewY =
+            MAP_CELL_GRID_SIZE
+            - (H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? EDIT_VIEW_ZOOMED_CELLS : EDIT_VIEW_CELLS);
     DrawView(m_viewX, m_viewY);
     UpdateMapView();
     DrawRadar(1);
@@ -9790,8 +9836,12 @@ void editManager::UpdateKnobs(i16 update) {
     i16 xPos;
     i16 yPos;
 
-    scaleX = 402.0 / (m_zoomedOut ? EDIT_VIEW_ZOOMED_ORIGINS : EDIT_VIEW_ORIGINS);
-    scaleY = 402.0 / (m_zoomedOut ? EDIT_VIEW_ZOOMED_ORIGINS : EDIT_VIEW_ORIGINS);
+    scaleX =
+        402.0
+        / (H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? EDIT_VIEW_ZOOMED_ORIGINS : EDIT_VIEW_ORIGINS);
+    scaleY =
+        402.0
+        / (H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? EDIT_VIEW_ZOOMED_ORIGINS : EDIT_VIEW_ORIGINS);
     xPos = m_viewX * scaleX;
     yPos = m_viewY * scaleY;
     m_horizontalKnob->m_x = xPos + EDIT_KNOB_FIRST;
@@ -9818,7 +9868,7 @@ void editManager::PaintGround(i16 column, i16 row, i16 width, i16 height, i16 te
     startY = m_viewY + row;
     cellPixels =
         m_zoomedOut == EDIT_ZOOM_OUT ? EDIT_VIEW_ZOOMED_CELL_PIXELS : EDIT_VIEW_CELL_PIXELS;
-    gEditManager->ClearArea(startX, startY, width, height, EDIT_CLEAR_ALL, 0);
+    gEditManager->ClearArea(startX, startY, width, height, EDIT_CLEAR_ALL, false);
     for (i = 0; i < width; i++) {
         for (j = 0; j < height; j++) {
             m_map.cells[startX + i][startY + j].m_tileIndex = terrain * MAP_CELL_TILES_PER_TERRAIN;
@@ -9847,7 +9897,7 @@ void editManager::FillGround(i16 x, i16 y, i16 width, i16 height, i16 terrain) {
     i32 i;
     i32 j;
 
-    gEditManager->ClearArea(x, y, width, height, EDIT_CLEAR_ALL, 0);
+    gEditManager->ClearArea(x, y, width, height, EDIT_CLEAR_ALL, false);
     for (i = x; i < x + width; i++) {
         for (j = y; j < y + height; j++) {
             m_map.cells[i][j].m_tileIndex = terrain * MAP_CELL_TILES_PER_TERRAIN + Random(0, 3);
@@ -9873,11 +9923,17 @@ void SetTileVariant(mapCell* cell, i32 firstTile) {
 // not meet at a corner take the other terrain or, with fromUndo, their undo
 // terrain), then gives every other terrain cell its border tile and flips.
 VA(0x00403d38, 0xbdb)
-void editManager::BlendTerrain(i16 terrain, u8, u8 fromUndo, u8 skipBorders, u8 skipFill) {
+void editManager::BlendTerrain(
+    H1_ENUM_PARAM(TerrainType, i16) terrain,
+    u8,
+    u8 fromUndo,
+    u8 skipBorders,
+    u8 skipFill
+) {
     u8 east;
     u8 ne;
     i32 terrainBase;
-    i32 surrounding;
+    H1_ENUM_LOCAL(TerrainType, i32) surrounding;
     u8 nw;
     i16 x;
     u8 se;
@@ -9887,14 +9943,18 @@ void editManager::BlendTerrain(i16 terrain, u8, u8 fromUndo, u8 skipBorders, u8 
     u8 sw;
     u8 west;
     mapCell* cell;
-    i32 thisTerrain;
+    H1_ENUM_LOCAL(TerrainType, i32) thisTerrain;
 
     surrounding = TERRAIN_WATER;
     if (skipFill)
         goto borders;
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
-            if (m_map.cells[x][y].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN == terrain) {
+            if (H1_ENUM_DECODE(
+                    TerrainType,
+                    m_map.cells[x][y].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN
+                )
+                == terrain) {
                 north = south = east = west = nw = ne = sw = se = 0;
                 if (y == 0 || CELL_TERRAIN(&m_map.cells[x][y - 1]) == terrain)
                     north = 1;
@@ -9915,9 +9975,11 @@ void editManager::BlendTerrain(i16 terrain, u8, u8 fromUndo, u8 skipBorders, u8 
                 if (!((north && west) || (north && east) || (south && west) || (south && east))) {
                     if (fromUndo)
                         m_map.cells[x][y].m_tileIndex =
-                            CELL_TERRAIN(&m_undoMap.cells[x][y]) * MAP_CELL_TILES_PER_TERRAIN;
+                            H1_ENUM_ENCODE(TerrainType, CELL_TERRAIN(&m_undoMap.cells[x][y]))
+                            * MAP_CELL_TILES_PER_TERRAIN;
                     else
-                        m_map.cells[x][y].m_tileIndex = surrounding * MAP_CELL_TILES_PER_TERRAIN;
+                        m_map.cells[x][y].m_tileIndex =
+                            H1_ENUM_ENCODE(TerrainType, surrounding) * MAP_CELL_TILES_PER_TERRAIN;
                 }
                 if (x == 0 || y == 0 || CELL_TERRAIN(&m_map.cells[x - 1][y - 1]) == terrain)
                     nw = 1;
@@ -9943,9 +10005,11 @@ void editManager::BlendTerrain(i16 terrain, u8, u8 fromUndo, u8 skipBorders, u8 
                     && !m_map.cells[x][y].m_objectTileset) {
                     if (fromUndo)
                         m_map.cells[x][y].m_tileIndex =
-                            CELL_TERRAIN(&m_undoMap.cells[x][y]) * MAP_CELL_TILES_PER_TERRAIN;
+                            H1_ENUM_ENCODE(TerrainType, CELL_TERRAIN(&m_undoMap.cells[x][y]))
+                            * MAP_CELL_TILES_PER_TERRAIN;
                     else
-                        m_map.cells[x][y].m_tileIndex = surrounding * MAP_CELL_TILES_PER_TERRAIN;
+                        m_map.cells[x][y].m_tileIndex =
+                            H1_ENUM_ENCODE(TerrainType, surrounding) * MAP_CELL_TILES_PER_TERRAIN;
                 }
             }
         }
@@ -9956,8 +10020,9 @@ borders:
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             cell = &m_map.cells[x][y];
-            thisTerrain = cell->m_tileIndex / MAP_CELL_TILES_PER_TERRAIN;
-            terrainBase = thisTerrain * MAP_CELL_TILES_PER_TERRAIN;
+            thisTerrain =
+                H1_ENUM_DECODE(TerrainType, cell->m_tileIndex / MAP_CELL_TILES_PER_TERRAIN);
+            terrainBase = H1_ENUM_ENCODE(TerrainType, thisTerrain) * MAP_CELL_TILES_PER_TERRAIN;
             north = south = east = west = 0;
             if (thisTerrain != TERRAIN_DIRT) {
                 if (y > 0 && CELL_TERRAIN(&m_map.cells[x][y - 1]) != thisTerrain)
@@ -9975,52 +10040,46 @@ borders:
                     if (west) {
                         SetTileVariant(
                             cell,
-                            terrainBase + EDIT_TILE_NORTH_EAST_CORNER * TERRAIN_TILE_VARIANT_COUNT
+                            terrainBase + EDIT_TILE_RUN_FIRST(EDIT_TILE_NORTH_EAST_CORNER)
                         );
                         cell->m_flags |= MAP_CELL_GROUND_FLIP_HORIZONTAL;
                     } else if (east) {
                         SetTileVariant(
                             cell,
-                            terrainBase + EDIT_TILE_NORTH_EAST_CORNER * TERRAIN_TILE_VARIANT_COUNT
+                            terrainBase + EDIT_TILE_RUN_FIRST(EDIT_TILE_NORTH_EAST_CORNER)
                         );
                     } else {
                         SetTileVariant(
                             cell,
-                            terrainBase + EDIT_TILE_NORTH_EDGE * TERRAIN_TILE_VARIANT_COUNT
+                            terrainBase + EDIT_TILE_RUN_FIRST(EDIT_TILE_NORTH_EDGE)
                         );
                     }
                 } else if (south) {
                     if (west) {
                         SetTileVariant(
                             cell,
-                            terrainBase + EDIT_TILE_NORTH_EAST_CORNER * TERRAIN_TILE_VARIANT_COUNT
+                            terrainBase + EDIT_TILE_RUN_FIRST(EDIT_TILE_NORTH_EAST_CORNER)
                         );
                         cell->m_flags |=
                             MAP_CELL_GROUND_FLIP_VERTICAL | MAP_CELL_GROUND_FLIP_HORIZONTAL;
                     } else if (east) {
                         SetTileVariant(
                             cell,
-                            terrainBase + EDIT_TILE_NORTH_EAST_CORNER * TERRAIN_TILE_VARIANT_COUNT
+                            terrainBase + EDIT_TILE_RUN_FIRST(EDIT_TILE_NORTH_EAST_CORNER)
                         );
                         cell->m_flags |= MAP_CELL_GROUND_FLIP_VERTICAL;
                     } else {
                         SetTileVariant(
                             cell,
-                            terrainBase + EDIT_TILE_NORTH_EDGE * TERRAIN_TILE_VARIANT_COUNT
+                            terrainBase + EDIT_TILE_RUN_FIRST(EDIT_TILE_NORTH_EDGE)
                         );
                         cell->m_flags |= MAP_CELL_GROUND_FLIP_VERTICAL;
                     }
                 } else if (west) {
-                    SetTileVariant(
-                        cell,
-                        terrainBase + EDIT_TILE_EAST_EDGE * TERRAIN_TILE_VARIANT_COUNT
-                    );
+                    SetTileVariant(cell, terrainBase + EDIT_TILE_RUN_FIRST(EDIT_TILE_EAST_EDGE));
                     cell->m_flags |= MAP_CELL_GROUND_FLIP_HORIZONTAL;
                 } else if (east) {
-                    SetTileVariant(
-                        cell,
-                        terrainBase + EDIT_TILE_EAST_EDGE * TERRAIN_TILE_VARIANT_COUNT
-                    );
+                    SetTileVariant(cell, terrainBase + EDIT_TILE_RUN_FIRST(EDIT_TILE_EAST_EDGE));
                 }
                 if (!(north | south | east | west)) {
                     if (x > 0 && y > 0 && CELL_TERRAIN(&m_map.cells[x - 1][y - 1]) != thisTerrain)
@@ -10037,33 +10096,29 @@ borders:
                     if (north) {
                         SetTileVariant(
                             cell,
-                            terrainBase
-                                + EDIT_TILE_NORTH_EAST_INNER_CORNER * TERRAIN_TILE_VARIANT_COUNT
+                            terrainBase + EDIT_TILE_RUN_FIRST(EDIT_TILE_NORTH_EAST_INNER_CORNER)
                         );
                         cell->m_flags |= MAP_CELL_GROUND_FLIP_HORIZONTAL;
                     } else if (south) {
                         SetTileVariant(
                             cell,
-                            terrainBase
-                                + EDIT_TILE_NORTH_EAST_INNER_CORNER * TERRAIN_TILE_VARIANT_COUNT
+                            terrainBase + EDIT_TILE_RUN_FIRST(EDIT_TILE_NORTH_EAST_INNER_CORNER)
                         );
                         cell->m_flags |= MAP_CELL_GROUND_FLIP_VERTICAL;
                     } else if (east) {
                         SetTileVariant(
                             cell,
-                            terrainBase
-                                + EDIT_TILE_NORTH_EAST_INNER_CORNER * TERRAIN_TILE_VARIANT_COUNT
+                            terrainBase + EDIT_TILE_RUN_FIRST(EDIT_TILE_NORTH_EAST_INNER_CORNER)
                         );
                     } else if (west) {
                         SetTileVariant(
                             cell,
-                            terrainBase
-                                + EDIT_TILE_NORTH_EAST_INNER_CORNER * TERRAIN_TILE_VARIANT_COUNT
+                            terrainBase + EDIT_TILE_RUN_FIRST(EDIT_TILE_NORTH_EAST_INNER_CORNER)
                         );
                         cell->m_flags |=
                             MAP_CELL_GROUND_FLIP_VERTICAL | MAP_CELL_GROUND_FLIP_HORIZONTAL;
                     } else {
-                        SetTileVariant(cell, terrainBase + EDIT_TILE_PLAIN);
+                        SetTileVariant(cell, terrainBase + EDIT_TILE_RUN_FIRST(EDIT_TILE_PLAIN));
                     }
                 }
             }
@@ -10163,7 +10218,9 @@ void editManager::DoHorizontalKnob(void) {
     i16 newX;
 
     gMouseManager->SetCursorShape(EDIT_CURSOR_HORIZONTAL_DRAG);
-    scale = 402.0 / (m_zoomedOut ? EDIT_VIEW_ZOOMED_ORIGINS : EDIT_VIEW_ORIGINS);
+    scale =
+        402.0
+        / (H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? EDIT_VIEW_ZOOMED_ORIGINS : EDIT_VIEW_ORIGINS);
     gMouseManager->MouseCoords(x, y);
     gInputManager->Flush();
     message.type = MESSAGE_MOUSE_MOVE;
@@ -10187,10 +10244,12 @@ void editManager::DoHorizontalKnob(void) {
             newX = (newX - EDIT_KNOB_FIRST) / scale;
             if (m_viewX != newX) {
                 if (newX
-                    > (m_zoomedOut ? MAP_CELL_GRID_SIZE - EDIT_VIEW_ZOOMED_CELLS
-                                   : MAP_CELL_GRID_SIZE - EDIT_VIEW_CELLS))
-                    newX = m_zoomedOut ? MAP_CELL_GRID_SIZE - EDIT_VIEW_ZOOMED_CELLS
-                                       : MAP_CELL_GRID_SIZE - EDIT_VIEW_CELLS;
+                    > (H1_ENUM_ENCODE(EditZoom, m_zoomedOut)
+                           ? MAP_CELL_GRID_SIZE - EDIT_VIEW_ZOOMED_CELLS
+                           : MAP_CELL_GRID_SIZE - EDIT_VIEW_CELLS))
+                    newX = H1_ENUM_ENCODE(EditZoom, m_zoomedOut)
+                               ? MAP_CELL_GRID_SIZE - EDIT_VIEW_ZOOMED_CELLS
+                               : MAP_CELL_GRID_SIZE - EDIT_VIEW_CELLS;
                 if (newX < 0)
                     newX = 0;
                 m_viewX = newX;
@@ -10217,7 +10276,9 @@ void editManager::DoVerticalKnob(void) {
     i16 newY;
 
     gMouseManager->SetCursorShape(EDIT_CURSOR_VERTICAL_DRAG);
-    scale = 402.0 / (m_zoomedOut ? EDIT_VIEW_ZOOMED_ORIGINS : EDIT_VIEW_ORIGINS);
+    scale =
+        402.0
+        / (H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? EDIT_VIEW_ZOOMED_ORIGINS : EDIT_VIEW_ORIGINS);
     gMouseManager->MouseCoords(x, y);
     gInputManager->Flush();
     message.type = MESSAGE_MOUSE_MOVE;
@@ -10242,10 +10303,12 @@ void editManager::DoVerticalKnob(void) {
             newY = (newY - EDIT_KNOB_FIRST) / scale;
             if (m_viewY != newY) {
                 if (newY
-                    > (m_zoomedOut ? MAP_CELL_GRID_SIZE - EDIT_VIEW_ZOOMED_CELLS
-                                   : MAP_CELL_GRID_SIZE - EDIT_VIEW_CELLS))
-                    newY = m_zoomedOut ? MAP_CELL_GRID_SIZE - EDIT_VIEW_ZOOMED_CELLS
-                                       : MAP_CELL_GRID_SIZE - EDIT_VIEW_CELLS;
+                    > (H1_ENUM_ENCODE(EditZoom, m_zoomedOut)
+                           ? MAP_CELL_GRID_SIZE - EDIT_VIEW_ZOOMED_CELLS
+                           : MAP_CELL_GRID_SIZE - EDIT_VIEW_CELLS))
+                    newY = H1_ENUM_ENCODE(EditZoom, m_zoomedOut)
+                               ? MAP_CELL_GRID_SIZE - EDIT_VIEW_ZOOMED_CELLS
+                               : MAP_CELL_GRID_SIZE - EDIT_VIEW_CELLS;
                 if (newY < 0)
                     newY = 0;
                 m_viewY = newY;
@@ -10269,11 +10332,11 @@ void editManager::SetCellSound(i16 x, i16 y) {
     mapCell* cell;
 
     cell = &m_map.cells[x][y];
-    m_mapSounds[x][y] = MAP_SOUND_NONE;
+    m_mapSounds[x][y] = EDIT_MAP_SOUND_NONE;
     if (cell->m_tileIndex < MAP_CELL_TILES_PER_TERRAIN
         && cell->m_tileIndex > TERRAIN_TILE_VARIANT_COUNT - 1)
         m_mapSounds[x][y] = MAP_SOUND_COAST;
-    switch (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
+    switch (MAP_TRIGGER_OBJECT(cell->m_triggerType)) {
         case MAP_OBJECT_BUOY:
             m_mapSounds[x][y] = MAP_SOUND_BUOY;
             break;
@@ -10328,7 +10391,7 @@ void editManager::SetCellSound(i16 x, i16 y) {
             m_mapSounds[x][y] = MAP_SOUND_SPELL_SHRINE;
             break;
         default:
-            switch (cell->m_objectTileset & MAP_CELL_TILESET_MASK) {
+            switch (H1_ENUM_DECODE(MapTileset, cell->m_objectTileset & MAP_CELL_TILESET_MASK)) {
                 case TILESET_OBJ32_04:
                     if (cell->m_objectIndex == EDIT_SOUND_LAVA_LOOP_5_FRAME)
                         m_mapSounds[x][y] = MAP_SOUND_LOOP_5;
@@ -10371,75 +10434,75 @@ void editManager::SetCoast(i16 x, i16 y) {
     cell = &m_map.cells[x][y];
     if (cell->m_tileIndex > MAP_CELL_TILES_PER_TERRAIN - 1)
         return;
-    switch (cell->m_tileIndex / TERRAIN_TILE_VARIANT_COUNT) {
+    switch (H1_ENUM_DECODE(EditTileRun, cell->m_tileIndex / TERRAIN_TILE_VARIANT_COUNT)) {
         case EDIT_TILE_PLAIN:
             return;
         case EDIT_TILE_NORTH_EDGE:
             if (cell->m_flags & MAP_CELL_GROUND_FLIP_VERTICAL) {
                 if (y < MAP_CELL_GRID_SIZE - 1 && !m_map.cells[x][y + 1].m_triggerType)
-                    m_map.cells[x][y + 1].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x][y + 1].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
             } else {
                 if (y > 0 && !m_map.cells[x][y - 1].m_triggerType)
-                    m_map.cells[x][y - 1].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x][y - 1].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
             }
             break;
         case EDIT_TILE_NORTH_EAST_CORNER:
             if ((cell->m_flags & (MAP_CELL_GROUND_FLIP_VERTICAL | MAP_CELL_GROUND_FLIP_HORIZONTAL))
                 == (MAP_CELL_GROUND_FLIP_VERTICAL | MAP_CELL_GROUND_FLIP_HORIZONTAL)) {
                 if (y < MAP_CELL_GRID_SIZE - 1 && !m_map.cells[x][y + 1].m_triggerType)
-                    m_map.cells[x][y + 1].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x][y + 1].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
                 if (x > 0 && !m_map.cells[x - 1][y].m_triggerType)
-                    m_map.cells[x - 1][y].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x - 1][y].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
                 if (y < MAP_CELL_GRID_SIZE - 1 && x > 0 && !m_map.cells[x - 1][y + 1].m_triggerType)
-                    m_map.cells[x - 1][y + 1].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x - 1][y + 1].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
             } else if (cell->m_flags & MAP_CELL_GROUND_FLIP_HORIZONTAL) {
                 if (y > 0 && !m_map.cells[x][y - 1].m_triggerType)
-                    m_map.cells[x][y - 1].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x][y - 1].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
                 if (x > 0 && !m_map.cells[x - 1][y].m_triggerType)
-                    m_map.cells[x - 1][y].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x - 1][y].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
                 if (y > 0 && x > 0 && !m_map.cells[x - 1][y - 1].m_triggerType)
-                    m_map.cells[x - 1][y - 1].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x - 1][y - 1].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
             } else if (cell->m_flags & MAP_CELL_GROUND_FLIP_VERTICAL) {
                 if (y < MAP_CELL_GRID_SIZE - 1 && !m_map.cells[x][y + 1].m_triggerType)
-                    m_map.cells[x][y + 1].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x][y + 1].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
                 if (x < MAP_CELL_GRID_SIZE - 1 && !m_map.cells[x + 1][y].m_triggerType)
-                    m_map.cells[x + 1][y].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x + 1][y].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
                 if (y < MAP_CELL_GRID_SIZE - 1 && x < MAP_CELL_GRID_SIZE - 1
                     && !m_map.cells[x + 1][y + 1].m_triggerType)
-                    m_map.cells[x + 1][y + 1].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x + 1][y + 1].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
             } else {
                 if (y > 0 && !m_map.cells[x][y - 1].m_triggerType)
-                    m_map.cells[x][y - 1].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x][y - 1].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
                 if (x < MAP_CELL_GRID_SIZE - 1 && !m_map.cells[x + 1][y].m_triggerType)
-                    m_map.cells[x + 1][y].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x + 1][y].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
                 if (y > 0 && x < MAP_CELL_GRID_SIZE - 1 && !m_map.cells[x + 1][y - 1].m_triggerType)
-                    m_map.cells[x + 1][y - 1].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x + 1][y - 1].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
             }
             break;
         case EDIT_TILE_EAST_EDGE:
             if (cell->m_flags & MAP_CELL_GROUND_FLIP_HORIZONTAL) {
                 if (x > 0 && !m_map.cells[x - 1][y].m_triggerType)
-                    m_map.cells[x - 1][y].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x - 1][y].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
             } else {
                 if (x < MAP_CELL_GRID_SIZE - 1 && !m_map.cells[x + 1][y].m_triggerType)
-                    m_map.cells[x + 1][y].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x + 1][y].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
             }
             break;
         case EDIT_TILE_NORTH_EAST_INNER_CORNER:
             if ((cell->m_flags & (MAP_CELL_GROUND_FLIP_VERTICAL | MAP_CELL_GROUND_FLIP_HORIZONTAL))
                 == (MAP_CELL_GROUND_FLIP_VERTICAL | MAP_CELL_GROUND_FLIP_HORIZONTAL)) {
                 if (y < MAP_CELL_GRID_SIZE - 1 && x > 0 && !m_map.cells[x - 1][y + 1].m_triggerType)
-                    m_map.cells[x - 1][y + 1].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x - 1][y + 1].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
             } else if (cell->m_flags & MAP_CELL_GROUND_FLIP_HORIZONTAL) {
                 if (y > 0 && x > 0 && !m_map.cells[x - 1][y - 1].m_triggerType)
-                    m_map.cells[x - 1][y - 1].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x - 1][y - 1].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
             } else if (cell->m_flags & MAP_CELL_GROUND_FLIP_VERTICAL) {
                 if (y < MAP_CELL_GRID_SIZE - 1 && x < MAP_CELL_GRID_SIZE - 1
                     && !m_map.cells[x + 1][y + 1].m_triggerType)
-                    m_map.cells[x + 1][y + 1].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x + 1][y + 1].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
             } else {
                 if (y > 0 && x < MAP_CELL_GRID_SIZE - 1 && !m_map.cells[x + 1][y - 1].m_triggerType)
-                    m_map.cells[x + 1][y - 1].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x + 1][y - 1].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
             }
             break;
     }
@@ -10463,14 +10526,15 @@ void editManager::CheckObjects(void) {
     whirlpools = 0;
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
-            if ((m_map.cells[x][y].m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_STONE_LITHS)
+            if (MAP_TRIGGER_OBJECT(m_map.cells[x][y].m_triggerType) == MAP_OBJECT_STONE_LITHS)
                 lithsSeen++;
             if (x < MAP_CELL_GRID_SIZE - EDIT_WHIRLPOOL_SECOND_CELL_X
                 && y < MAP_CELL_GRID_SIZE - EDIT_WHIRLPOOL_SECOND_CELL_Y
-                && (m_map.cells[x][y].m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_WHIRLPOOL
-                && (m_map.cells[x + EDIT_WHIRLPOOL_SECOND_CELL_X][y + EDIT_WHIRLPOOL_SECOND_CELL_Y]
-                        .m_triggerType
-                    & MAP_TRIGGER_TYPE_MASK)
+                && MAP_TRIGGER_OBJECT(m_map.cells[x][y].m_triggerType) == MAP_OBJECT_WHIRLPOOL
+                && MAP_TRIGGER_OBJECT(m_map
+                                          .cells[x + EDIT_WHIRLPOOL_SECOND_CELL_X]
+                                                [y + EDIT_WHIRLPOOL_SECOND_CELL_Y]
+                                          .m_triggerType)
                        == MAP_OBJECT_WHIRLPOOL)
                 whirlpools++;
         }
@@ -10483,10 +10547,9 @@ void editManager::CheckObjects(void) {
     memset(heroIdUsed, 0, sizeof(heroIdUsed));
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
-            if ((m_map.cells[x][y].m_triggerType
-                     == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_TOWN)
+            if ((m_map.cells[x][y].m_triggerType == MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_TOWN)
                  || m_map.cells[x][y].m_triggerType
-                        == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_CASTLE))
+                        == MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_CASTLE))
                 && x > TOWN_FOOTPRINT_LEFT - 1 && y > TOWN_FOOTPRINT_TOP - 1)
                 ClearArea(
                     x - TOWN_FOOTPRINT_LEFT,
@@ -10494,9 +10557,10 @@ void editManager::CheckObjects(void) {
                     TOWN_FOOTPRINT_WIDTH,
                     1,
                     EDIT_CLEAR_ALL,
-                    0
+                    false
                 );
-            if ((m_map.cells[x][y].m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_FILE_OBJECT_HERO) {
+            if ((m_map.cells[x][y].m_triggerType & MAP_TRIGGER_TYPE_MASK)
+                == MAP_OBJECT_TRIGGER(MAP_FILE_OBJECT_HERO)) {
                 heroRecord =
                     static_cast<mapHeroExtra*>(m_extras[m_map.cells[x][y].m_objectMetadata]);
                 if (++placedHeroes > GAME_HERO_COUNT)
@@ -10520,8 +10584,8 @@ void editManager::UpdateTriggers(void) {
     unused = 0;
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++)
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++)
-            if (m_map.cells[x][y].m_triggerType == MAP_OBJECT_COAST)
-                m_map.cells[x][y].m_triggerType = MAP_OBJECT_NONE;
+            if (m_map.cells[x][y].m_triggerType == MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST))
+                m_map.cells[x][y].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_NONE);
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             cell = &m_map.cells[x][y];
@@ -10532,8 +10596,8 @@ void editManager::UpdateTriggers(void) {
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             cell = &m_map.cells[x][y];
-            if ((cell->m_overlayTileset == TILESET_MTN32
-                 || cell->m_overlayTileset == TILESET_TREE32)
+            if ((H1_ENUM_DECODE(MapTileset, cell->m_overlayTileset) == TILESET_MTN32
+                 || H1_ENUM_DECODE(MapTileset, cell->m_overlayTileset) == TILESET_TREE32)
                 && !cell->m_triggerType) {
                 if (cell->m_secondaryTrigger & MAP_TRIGGER_TYPE_MASK) {
                     cell->m_triggerType = cell->m_secondaryTrigger & MAP_TRIGGER_TYPE_MASK;
@@ -10582,9 +10646,9 @@ i32 editManager::CountArtifacts(void) {
     count = 0;
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++)
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++)
-            if ((m_map.cells[x][y].m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_ARTIFACT
+            if (MAP_TRIGGER_OBJECT(m_map.cells[x][y].m_triggerType) == MAP_OBJECT_ARTIFACT
                 || (m_map.cells[x][y].m_triggerType & MAP_TRIGGER_TYPE_MASK)
-                       == MAP_FILE_OBJECT_RANDOM_ARTIFACT)
+                       == MAP_OBJECT_TRIGGER(MAP_FILE_OBJECT_RANDOM_ARTIFACT))
                 count++;
     return count;
 }
@@ -10600,9 +10664,9 @@ i32 editManager::CountTowns(void) {
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             cell = &m_map.cells[x][y];
-            if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_TOWN)
-                || cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_CASTLE)
-                || cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN))
+            if (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_TOWN)
+                || cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_CASTLE)
+                || cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN))
                 count++;
         }
     }
@@ -10620,10 +10684,10 @@ i32 editManager::CountMines(void) {
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             cell = &m_map.cells[x][y];
-            if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_MINE)
-                || cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SAWMILL)
-                || cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_ALCHEMIST_LAB)
-                || cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_MINE))
+            if (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_MINE)
+                || cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_SAWMILL)
+                || cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_ALCHEMIST_LAB)
+                || cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_MINE))
                 mineTotal++;
         }
     }
@@ -10655,8 +10719,8 @@ void editManager::WriteTowns(i32 file) {
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             cell = &m_map.cells[x][y];
-            if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_CASTLE)
-                || (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)
+            if (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_CASTLE)
+                || (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN)
                     && (cell->m_objectIndex == EDIT_CASTLE_FRAME(TOWN_TYPE_KNIGHT)
                         || cell->m_objectIndex == EDIT_CASTLE_FRAME(TOWN_TYPE_SORCERESS)
                         || cell->m_objectIndex == EDIT_CASTLE_FRAME(TOWN_TYPE_BARBARIAN)
@@ -10679,8 +10743,8 @@ void editManager::WriteTowns(i32 file) {
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             cell = &m_map.cells[x][y];
-            if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_TOWN)
-                || (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)
+            if (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_TOWN)
+                || (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN)
                     && (cell->m_objectIndex == EDIT_TOWN_FRAME(TOWN_TYPE_KNIGHT)
                         || cell->m_objectIndex == EDIT_TOWN_FRAME(TOWN_TYPE_SORCERESS)
                         || cell->m_objectIndex == EDIT_TOWN_FRAME(TOWN_TYPE_BARBARIAN)
@@ -10749,7 +10813,7 @@ void editManager::WriteMines(i32 file) {
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             cell = &m_map.cells[x][y];
-            if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_DRAGON_CITY)) {
+            if (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_DRAGON_CITY)) {
                 cityCount++;
                 cityX = x;
                 cityY = y;
@@ -10759,7 +10823,7 @@ void editManager::WriteMines(i32 file) {
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             cell = &m_map.cells[x][y];
-            if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_LIGHTHOUSE)) {
+            if (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_LIGHTHOUSE)) {
                 lighthouseCount++;
                 lighthouseX = x;
                 lighthouseY = y;
@@ -10770,7 +10834,7 @@ void editManager::WriteMines(i32 file) {
     empty.y = EDIT_MAP_NO_RECORD;
     empty.type = EDIT_MAP_NO_RECORD;
     if (cityX != -1) {
-        type = MAP_OBJECT_DRAGON_CITY;
+        type = MAP_OBJECT_TRIGGER(MAP_OBJECT_DRAGON_CITY);
         write(file, &cityX, 1);
         write(file, &cityY, 1);
         write(file, &type, 1);
@@ -10778,7 +10842,7 @@ void editManager::WriteMines(i32 file) {
         write(file, &empty, sizeof(empty));
     }
     if (lighthouseX != -1) {
-        type = MAP_OBJECT_LIGHTHOUSE;
+        type = MAP_OBJECT_TRIGGER(MAP_OBJECT_LIGHTHOUSE);
         write(file, &lighthouseX, 1);
         write(file, &lighthouseY, 1);
         write(file, &type, 1);
@@ -10793,20 +10857,21 @@ void editManager::WriteMines(i32 file) {
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             cell = &m_map.cells[x][y];
-            if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_MINE)
-                || cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SAWMILL)
-                || cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_ALCHEMIST_LAB)
-                || cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_MINE)) {
-                if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_MINE)) {
+            if (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_MINE)
+                || cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_SAWMILL)
+                || cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_ALCHEMIST_LAB)
+                || cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_MINE)) {
+                if (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_MINE)) {
                     type = EDIT_MAP_RANDOM_MINE_TYPE;
                 } else {
                     markerCell = &m_map.cells[x + 1][y];
                     if (markerCell->m_flags & MAP_CELL_OBJECT_EXTRA)
-                        type = markerCell->m_extraFrame + RESOURCE_ORE;
+                        type =
+                            markerCell->m_extraFrame + H1_ENUM_ENCODE(ResourceType, RESOURCE_ORE);
                     else if (cell->m_objectIndex == EDIT_SAWMILL_FRAME)
-                        type = RESOURCE_WOOD;
+                        type = H1_ENUM_ENCODE(ResourceType, RESOURCE_WOOD);
                     else
-                        type = RESOURCE_MERCURY;
+                        type = H1_ENUM_ENCODE(ResourceType, RESOURCE_MERCURY);
                 }
                 write(file, &x, 1);
                 write(file, &y, 1);
@@ -10840,7 +10905,7 @@ void editManager::WriteArtifacts(i32 file) {
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             cell = &m_map.cells[x][y];
-            if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_ARTIFACT))
+            if (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_ARTIFACT))
                 artifactHolders[cell->m_objectIndex] = GAME_ARTIFACT_ON_MAP;
         }
     }
@@ -10859,7 +10924,7 @@ void editManager::WriteObelisks(i32 file) {
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             cell = &m_map.cells[x][y];
-            if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_OBELISK))
+            if (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_OBELISK))
                 obeliskCount++;
         }
     }
@@ -10876,7 +10941,7 @@ void editManager::WriteObelisks(i32 file) {
 // checks, then shows the checks' messages. Maps in the old format keep the
 // header without its format word and no object owners.
 VA(0x00406f5b, 0x25c)
-i16 editManager::SaveMap(char* name) {
+H1_ENUM_RETURN(BaseManagerStatus, i16) editManager::SaveMap(char* name) {
     char fileName[40];
     i16 width;
     i16 data;
@@ -10937,7 +11002,7 @@ i16 editManager::SaveMap(char* name) {
 // and sound tables are rebuilt on save) and, from the new format on, the
 // object owners.
 VA(0x004071b7, 0x382)
-i16 editManager::LoadMap(char* name) {
+H1_ENUM_RETURN(BaseManagerStatus, i16) editManager::LoadMap(char* name) {
     char fileName[40];
     u8 ignored[5500];
     i16 width;
@@ -10964,13 +11029,13 @@ i16 editManager::LoadMap(char* name) {
         );
         read(handle, &headerId, sizeof(headerId));
     } else {
-        NewMap(0);
+        NewMap(false);
     }
     mapFormat = ((SMapHeader*)gEditMapHeader)->format;
     if (mapFormat >= MAP_HEADER_ID && mapFormat <= MAP_HEADER_ID + EDIT_MAP_FORMAT_RANGE)
-        gNewMapFormat = 1;
+        gNewMapFormat = true;
     else
-        gNewMapFormat = 0;
+        gNewMapFormat = false;
     gMouseManager->SetPointer(EDIT_POINTER_WAIT);
     read(handle, &width, sizeof(width));
     read(handle, &height, sizeof(height));
@@ -11003,16 +11068,16 @@ i16 editManager::LoadMap(char* name) {
 }
 
 VA(0x00407539, 0x12e)
-i16 editManager::PickMap(char*, char*, i16 mode) {
+i16 editManager::PickMap(char*, char*, H1_ENUM_PARAM(FileRequesterMode, i16) mode) {
     fileRequester* requester;
-    i32 picked;
+    b32 picked;
     i16 dialogResult;
 
-    picked = 0;
+    picked = false;
     requester = new fileRequester(160, 40, mode, "*.MAP", ".\\MAPS\\", ".MAP");
     dialogResult = gExec->DoDialog(requester);
     if (dialogResult == FILE_REQUESTER_OK) {
-        picked = 1;
+        picked = true;
         strcpy(m_mapFileName, gLastFilename);
     }
     delete requester;
@@ -11060,15 +11125,21 @@ void editManager::AddError(char* text) {
 // towns, monsters and artifacts by theirs, any other object by the bit of
 // the terrain under it.
 VA(0x004077bc, 0x129)
-i32 editManager::IsCleared(i32 tileset, i32 index, i32 mask, i32 x, i32 y) {
+i32 editManager::IsCleared(
+    H1_ENUM_PARAM(MapTileset, i32) tileset,
+    i32 index,
+    i32 mask,
+    i32 x,
+    i32 y
+) {
     if (tileset <= TILESET_TERRAIN_OBJECT_LAST || tileset == TILESET_RSRC32) {
-        if ((tileset == TILESET_RSRC32 && index == RESOURCE_PILE_OBJECT_BASE + RESOURCE_WOOD)
-            || (tileset == TILESET_RSRC32 && index == RESOURCE_PILE_OBJECT_BASE + RESOURCE_MERCURY)
-            || (tileset == TILESET_RSRC32 && index == RESOURCE_PILE_OBJECT_BASE + RESOURCE_ORE)
-            || (tileset == TILESET_RSRC32 && index == RESOURCE_PILE_OBJECT_BASE + RESOURCE_SULFUR)
-            || (tileset == TILESET_RSRC32 && index == RESOURCE_PILE_OBJECT_BASE + RESOURCE_CRYSTAL)
-            || (tileset == TILESET_RSRC32 && index == RESOURCE_PILE_OBJECT_BASE + RESOURCE_GEMS)
-            || (tileset == TILESET_RSRC32 && index == RESOURCE_PILE_OBJECT_BASE + RESOURCE_GOLD)
+        if ((tileset == TILESET_RSRC32 && index == EDIT_RESOURCE_PILE_FRAME(RESOURCE_WOOD))
+            || (tileset == TILESET_RSRC32 && index == EDIT_RESOURCE_PILE_FRAME(RESOURCE_MERCURY))
+            || (tileset == TILESET_RSRC32 && index == EDIT_RESOURCE_PILE_FRAME(RESOURCE_ORE))
+            || (tileset == TILESET_RSRC32 && index == EDIT_RESOURCE_PILE_FRAME(RESOURCE_SULFUR))
+            || (tileset == TILESET_RSRC32 && index == EDIT_RESOURCE_PILE_FRAME(RESOURCE_CRYSTAL))
+            || (tileset == TILESET_RSRC32 && index == EDIT_RESOURCE_PILE_FRAME(RESOURCE_GEMS))
+            || (tileset == TILESET_RSRC32 && index == EDIT_RESOURCE_PILE_FRAME(RESOURCE_GOLD))
             || (tileset == TILESET_RSRC32 && index == EDIT_TREASURE_CHEST_FRAME)
             || (tileset == TILESET_OBJ32_07 && index == EDIT_TREASURE_OBJECT_FRAME_A)
             || (tileset == TILESET_OBJ32_07 && index == EDIT_TREASURE_OBJECT_FRAME_C)
@@ -11091,13 +11162,13 @@ i32 editManager::IsCleared(i32 tileset, i32 index, i32 mask, i32 x, i32 y) {
 #define cellIds ownerRec   // frame-slot spelling
 #define otherCell thatCell // frame-slot spelling
 VA(0x004078e5, 0x504)
-void editManager::ClearArea(i32 x, i32 y, i32 width, i32 height, u16 mask, i32 secondLayer) {
+void editManager::ClearArea(i32 x, i32 y, i32 width, i32 height, u16 mask, b32 secondLayer) {
     i32 i;
     editMapCellPair* cellIds;
     u16 clearedId;
     i32 j;
     i32 ox;
-    i32 pass;
+    H1_ENUM_LOCAL(EditClearLayer, i32) pass;
     i32 oy;
     mapCell* otherCell;
     i32 blankSlot;
@@ -11114,7 +11185,10 @@ void editManager::ClearArea(i32 x, i32 y, i32 width, i32 height, u16 mask, i32 s
                     continue;
                 if ((pass == EDIT_CLEAR_OBJECT_LAYER
                      && IsCleared(
-                         m_map.cells[i][j].m_objectTileset & MAP_CELL_TILESET_MASK,
+                         H1_ENUM_DECODE(
+                             MapTileset,
+                             m_map.cells[i][j].m_objectTileset & MAP_CELL_TILESET_MASK
+                         ),
                          m_map.cells[i][j].m_objectIndex,
                          mask,
                          i,
@@ -11122,7 +11196,10 @@ void editManager::ClearArea(i32 x, i32 y, i32 width, i32 height, u16 mask, i32 s
                      ))
                     || (pass == EDIT_CLEAR_OVERLAY_LAYER
                         && IsCleared(
-                            m_map.cells[i][j].m_overlayTileset & MAP_CELL_TILESET_MASK,
+                            H1_ENUM_DECODE(
+                                MapTileset,
+                                m_map.cells[i][j].m_overlayTileset & MAP_CELL_TILESET_MASK
+                            ),
                             m_map.cells[i][j].m_overlayIndex,
                             mask,
                             i,
@@ -11144,7 +11221,8 @@ void editManager::ClearArea(i32 x, i32 y, i32 width, i32 height, u16 mask, i32 s
                                         cellIds->objectId = 0;
                                         otherCell->m_objectTileset = 0;
                                         otherCell->m_objectIndex = MAP_CELL_NO_FRAME;
-                                        otherCell->m_triggerType = MAP_OBJECT_NONE;
+                                        otherCell->m_triggerType =
+                                            MAP_OBJECT_TRIGGER(MAP_OBJECT_NONE);
                                         otherCell->m_flags &=
                                             ~(MAP_CELL_OBJECT_ANIMATED | MAP_CELL_OBJECT_EXTRA
                                               | MAP_CELL_OBJECT_SHADOW_ONLY);
@@ -11165,7 +11243,8 @@ void editManager::ClearArea(i32 x, i32 y, i32 width, i32 height, u16 mask, i32 s
                                             ~(MAP_CELL_OVERLAY_ANIMATED | MAP_CELL_OVERLAY_EXTRA);
                                         otherCell->m_secondaryTrigger &= MAP_CELL_SECONDARY_BLOCKED;
                                         if (otherCell->m_objectIndex == MAP_CELL_NO_FRAME)
-                                            otherCell->m_triggerType = MAP_OBJECT_NONE;
+                                            otherCell->m_triggerType =
+                                                MAP_OBJECT_TRIGGER(MAP_OBJECT_NONE);
                                     }
                                 }
                             }
@@ -11178,9 +11257,9 @@ void editManager::ClearArea(i32 x, i32 y, i32 width, i32 height, u16 mask, i32 s
                         m_map.cells[i][j].m_triggerType &=
                             MAP_CELL_GROUND_FLIP_VERTICAL | MAP_CELL_GROUND_FLIP_HORIZONTAL;
                         m_map.cells[i][j].m_extraFrame = 0;
-                        m_map.cells[i][j].m_flags = 0;
+                        m_map.cells[i][j].m_flags = MAP_CELL_FLAGS_NONE;
                         m_map.cells[i][j].m_secondaryTrigger = 0;
-                        m_map.cells[i][j].m_triggerType = MAP_OBJECT_NONE;
+                        m_map.cells[i][j].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_NONE);
                         m_map.cells[i][j].m_objectMetadata = 0;
                     }
                 }
@@ -11206,11 +11285,11 @@ void editManager::ResetArea(i32 x, i32 y, i32 width, i32 height) {
             m_map.cells[i][j].m_objectIndex = MAP_CELL_NO_FRAME;
             m_map.cells[i][j].m_overlayTileset = 0;
             m_map.cells[i][j].m_overlayIndex = MAP_CELL_NO_FRAME;
-            m_map.cells[i][j].m_triggerType = MAP_OBJECT_NONE;
+            m_map.cells[i][j].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_NONE);
             m_map.cells[i][j].m_extraFrame = 0;
-            m_map.cells[i][j].m_flags = 0;
+            m_map.cells[i][j].m_flags = MAP_CELL_FLAGS_NONE;
             m_map.cells[i][j].m_secondaryTrigger = 0;
-            m_map.cells[i][j].m_triggerType = MAP_OBJECT_NONE;
+            m_map.cells[i][j].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_NONE);
             m_map.cells[i][j].m_objectMetadata = 0;
         }
     }
@@ -11250,12 +11329,12 @@ void editManager::FreeMapExtras(void) {
 // A new map is a normal-difficulty medium map with placeholder names and
 // descriptions, named after the next map serial.
 VA(0x004080fc, 0x12f)
-void editManager::NewMap(i32 random) {
+void editManager::NewMap(b32 random) {
     i32 i;
 
     gMapHeader->size = MAP_SIZE_MEDIUM;
     gMapHeader->difficulty = MAP_DIFFICULTY_NORMAL;
-    gNewMapFormat = 1;
+    gNewMapFormat = true;
     gConfig.currentMapOffset++;
     if (gConfig.firstMapOffset + gConfig.currentMapOffset > EDIT_MAP_SERIAL_LIMIT)
         gConfig.currentMapOffset = 0;
@@ -11310,36 +11389,38 @@ void ScatterDetails(void) {
                 && Random(1, 100) <= EDIT_DETAIL_PERCENT) {
                 gNextObjectId++;
                 cellIds->objectId = gNextObjectId;
-                switch (cell->m_tileIndex / MAP_CELL_TILES_PER_TERRAIN) {
+                switch (
+                    H1_ENUM_DECODE(TerrainType, cell->m_tileIndex / MAP_CELL_TILES_PER_TERRAIN)
+                ) {
                     case TERRAIN_GRASS:
-                        cell->m_objectTileset = TILESET_OBJ32_01;
+                        cell->m_objectTileset = H1_ENUM_ENCODE(MapTileset, TILESET_OBJ32_01);
                         cell->m_objectIndex = Random(0, 9);
-                        cell->m_triggerType = MAP_OBJECT_SHADOW;
+                        cell->m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW);
                         break;
                     case TERRAIN_SNOW:
-                        cell->m_objectTileset = TILESET_OBJ32_02;
+                        cell->m_objectTileset = H1_ENUM_ENCODE(MapTileset, TILESET_OBJ32_02);
                         cell->m_objectIndex = Random(0, 2);
-                        cell->m_triggerType = MAP_OBJECT_SHADOW;
+                        cell->m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW);
                         break;
                     case TERRAIN_SWAMP:
-                        cell->m_objectTileset = TILESET_OBJ32_03;
+                        cell->m_objectTileset = H1_ENUM_ENCODE(MapTileset, TILESET_OBJ32_03);
                         cell->m_objectIndex = Random(0, 1);
-                        cell->m_triggerType = MAP_OBJECT_SHADOW;
+                        cell->m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW);
                         break;
                     case TERRAIN_LAVA:
-                        cell->m_objectTileset = TILESET_OBJ32_04;
+                        cell->m_objectTileset = H1_ENUM_ENCODE(MapTileset, TILESET_OBJ32_04);
                         cell->m_objectIndex = EDIT_LAVA_DETAIL_FRAME;
-                        cell->m_triggerType = MAP_OBJECT_SHADOW;
+                        cell->m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW);
                         break;
                     case TERRAIN_DESERT:
-                        cell->m_objectTileset = TILESET_OBJ32_05;
+                        cell->m_objectTileset = H1_ENUM_ENCODE(MapTileset, TILESET_OBJ32_05);
                         cell->m_objectIndex = EDIT_DESERT_DETAIL_FRAME;
-                        cell->m_triggerType = MAP_OBJECT_SHADOW;
+                        cell->m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW);
                         break;
                     case TERRAIN_DIRT:
-                        cell->m_objectTileset = TILESET_OBJ32_06;
+                        cell->m_objectTileset = H1_ENUM_ENCODE(MapTileset, TILESET_OBJ32_06);
                         cell->m_objectIndex = Random(0, 10);
-                        cell->m_triggerType = MAP_OBJECT_SHADOW;
+                        cell->m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW);
                         break;
                 }
             }

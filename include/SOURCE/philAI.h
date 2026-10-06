@@ -20,7 +20,7 @@ void CheckDoMain(i32, b32 doMain);
 #define gDummy iDummy // spelling fixes .bss order
 extern i32 gDummy;
 #define gHeroBuiltThisTurn bHeroBuiltThisTurn // spelling fixes .bss order
-extern i32 gHeroBuiltThisTurn;
+extern b32 gHeroBuiltThisTurn;
 
 // forward declarations:
 class armyGroup;
@@ -67,10 +67,10 @@ public:
     void ShowDebugText(char* text);
     void DoAllHeroInteractions(void);
     void CheckBuyStuff(void);
-    i32 GoodAdjacent(class hero* aiHero, H1_ENUM_PARAM(MapDirection, i32) * direction);
+    b32 GoodAdjacent(class hero* aiHero, H1_ENUM_PARAM(MapDirection, i32) * direction);
     void CheckReload(class hero* aiHero);
     void CheckBerserk(class hero* aiHero);
-    i8 DoDimensionDoor(class hero* aiHero);
+    b8 DoDimensionDoor(class hero* aiHero);
     void DoAI(i32 player);
     void GetGameAIVars(void);
     void GetTurnAIVars(i32 player);
@@ -201,16 +201,16 @@ public:
         i32& canWin,
         i32& rating
     );
-    i32 ChooseToBuyArtifact(
+    b32 ChooseToBuyArtifact(
         class hero* heroPointer,
         H1_ENUM_PARAM(ArtifactType, i32) artifact,
         i32 goldCost
     );
-    i32 ChooseToPayRansomOnHero(class hero* heroPointer, i32 goldCost);
+    b32 ChooseToPayRansomOnHero(class hero* heroPointer, i32 goldCost);
     void BuildBuilding(class town* townPointer, H1_ENUM_PARAM(BuildingSlotType, i16) building);
     void BuildHero(class town* townPointer, i16 availableHeroIndex);
     void BuildCreature(class town* townPointer, i32 dwelling, i32 purchaseCount);
-    i32 CanBuyBHC(struct BHC& purchase);
+    b32 CanBuyBHC(struct BHC& purchase);
     i8 CombatMonsterEvent(
         class hero* heroPointer,
         H1_ENUM_PARAM(CreatureType, i8) monsterType,
@@ -236,12 +236,12 @@ extern H1_ENUM_ARRAY(i32, gCreatureCost, ResourceType, RESOURCE_COUNT);
 extern i32 gLastFrameRateTimer;
 extern i32 gHumanTownConquered;
 #define gBerserk gbBerserk // spelling fixes .bss order
-extern i32 gBerserk;
+extern b32 gBerserk;
 #define gBerserkFactor fBerserkFactor // spelling fixes .bss order
 extern float gBerserkFactor;
 // CheckReload's troop-reload verdict and its reduction factor.
 #define gTroopReload gbTroopReload // spelling fixes .bss order
-extern i32 gTroopReload;
+extern b32 gTroopReload;
 // GetBestBHC's per-player hero ceiling (GetTurnAIVars sets it).
 #define gMaxHeroesForThisPlayer giMaxHeroesForThisPlayer // spelling fixes .bss order
 extern i32 gMaxHeroesForThisPlayer;
@@ -269,11 +269,11 @@ void ResetHeroRVs(b32 resetAll, i32 x, i32 y);
 #define gBestShipyardId giBestShipyardId // spelling fixes .bss order
 extern i8 gBestShipyardId;
 #define gPossibleShipyardFound gbPossibleShipyardFound // spelling fixes .bss order
-extern i8 gPossibleShipyardFound;
+extern b8 gPossibleShipyardFound;
 #define gActualShipyardFound gbActualShipyardFound // spelling fixes .bss order
-extern i8 gActualShipyardFound;
+extern b8 gActualShipyardFound;
 #define gActualBoatFound gbActualBoatFound // spelling fixes .bss order
-extern i8 gActualBoatFound;
+extern b8 gActualBoatFound;
 #define gBestShipyardDist giBestShipyardDist // spelling fixes .bss order
 extern i8 gBestShipyardDist;
 // StrategicValueOfPosition's per-cell cache, hero live chances and the

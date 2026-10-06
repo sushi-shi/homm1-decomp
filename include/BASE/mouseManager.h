@@ -56,7 +56,7 @@ public:
     // CombatManager::ViewSpells passes a sign-extended word frame.
     void SetPointer(char* name, i16 frame);
     void SetPointer(i16 frame);
-    void NewUpdate(i32 force);
+    void NewUpdate(b32 force);
     void MouseCoords(i16& x, i16& y);
     void SaveAndDraw(void);
     // The buffer-pointer hooks are empty stubs.
@@ -76,7 +76,7 @@ public:
     void SetCursorShape(i32 shape);
     // Empty in the Windows build (retail 0x00476e50, `ret 8`).
     void WarpPointer(i16 x, i16 y);
-    void SetColorMice(i32 enabled);
+    void SetColorMice(b32 enabled);
     // Empty unreferenced Windows-build hooks; original names unavailable.
     void UnusedTwoArgumentHook1(i16, i16);
     void UnusedTwoArgumentHook2(i16, i16);

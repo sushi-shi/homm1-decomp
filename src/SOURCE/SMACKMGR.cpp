@@ -52,7 +52,7 @@ static i32 gSmackVolumes[11] = {0, 127, 97, 75, 52, 40, 30, 20, 15, 10, 5};
 DATA(0x004cc8d0)
 H1_ENUM_STORAGE(SmackVideo, i8) gMovieId;
 DATA(0x004cc8d4)
-static i32 gSmackEnded;
+static b32 gSmackEnded;
 DATA(0x004cc8d8)
 static WAVEOUTCAPS gSmackWaveCaps;
 DATA(0x004cc910)
@@ -63,16 +63,16 @@ static i8 gSmackSavedPalette[PALETTE_DATA_SIZE];
 DATA(0x004ccc64)
 static i32 gOldSmackPad;
 DATA(0x004ccc68)
-static i8 gSmackStop;
+static b8 gSmackStop;
 DATA(0x004ccc70)
 static SmackSoundFormat gSmackAudioFormat;
 DATA(0x004ccc80)
 static PCMWAVEFORMAT gSmackPcmFormat;
 DATA(0x004ccc90)
-static i32 gSmackPrevFrame;
+static b32 gSmackPrevFrame;
 #define gSmackSound gSmkSounds // spelling fixes .bss order
 DATA(0x004ccc94)
-static i32 gSmackSound;
+static b32 gSmackSound;
 #define gSmackResource gSmkResource // spelling fixes .bss order
 DATA(0x004ccc98)
 static resource* gSmackResource;
@@ -181,21 +181,21 @@ void SmackMain() {
     b32 primaryOn;
     b32 companionOn;
     i32 unusedTrue = 1;
-    gSmackPrevFrame = 0;
+    gSmackPrevFrame = false;
     i32 unusedPlaybackState = 0;
     i32 unusedTimer;
     i32 unusedKey;
     gSmackFont = gResourceManager->GetFont("bigfont.fnt");
     KBChangeMenu(gDefaultMenu);
     gMouseManager->ReallyHidePointer();
-    gSmackStop = 1;
+    gSmackStop = true;
     memcpy(gSmackSavedPalette, gPalette->m_data, PALETTE_DATA_SIZE);
     ShutdownAudio();
     InitSmackSound();
     if (gNoSound || !gSmackDigDriver || !gConfig.soundVolume) {
-        gSmackSound = 0;
+        gSmackSound = false;
     } else {
-        gSmackSound = 1;
+        gSmackSound = true;
         AIL_set_digital_master_volume(gSmackDigDriver, gSmackVolumes[gConfig.soundVolume]);
         SmackSoundUseMSS(gSmackDigDriver);
     }
@@ -267,7 +267,7 @@ void SmackMain() {
                 else
                     drawLastFrame = 0;
                 DoAdvance(gSmackCompanion, drawLastFrame, false, false, true);
-                gSmackPrevFrame = 1;
+                gSmackPrevFrame = true;
                 while (SmackWait(gSmackCompanion))
                     Process1WindowsMessage();
             } else {
@@ -303,7 +303,7 @@ void SmackMain() {
                     && (gSmackPrimary->FrameNum >= gSmackPrimary->Frames
                         || (gSmackPrimary->FrameNum <= 0 && primaryOn))))) {
             active = false;
-            gSmackEnded = 1;
+            gSmackEnded = true;
         }
     }
     if (gSmackOptions[gMovieId].fadeOut) {
@@ -379,7 +379,7 @@ i32 PlaySmacker(H1_ENUM_PARAM(SmackVideo, i32) smackNumber) {
     i8 savedPalette[PALETTE_DATA_SIZE];
     i32 savedUpdateFlags;
     gInSmacker = true;
-    gSmackEnded = 0;
+    gSmackEnded = false;
     memcpy(savedPalette, gBufferPalette->m_data, PALETTE_DATA_SIZE);
     savedUpdateFlags = gWindowManager->m_updateFlags;
     gWindowManager->m_updateFlags = 0;

@@ -261,7 +261,7 @@ i8 game::SetupGame(b8 newGame) {
     gMapExtendedType = REMOTE_GAME_UNSET;
     gMapBaseType = MULTIPLAYER_BASE_UNSET;
     gNumHumanPlayers = 1;
-    gWaitForRemoteReceive = 0;
+    gWaitForRemoteReceive = false;
     gDirectConnect = 0;
     gInSetupDialog = true;
 
@@ -337,7 +337,7 @@ i8 game::SetupGame(b8 newGame) {
                 RemoteMain(gMapExtendedType);
                 if (gMapExtendedType == REMOTE_GAME_NETWORK_GUEST
                     || gMapExtendedType == REMOTE_GAME_MODEM_GUEST)
-                    gWaitForRemoteReceive = 1;
+                    gWaitForRemoteReceive = true;
                 break;
         }
         gMenuCommand = APP_MENU_NONE;
@@ -378,7 +378,7 @@ i8 game::SetupGame(b8 newGame) {
         RemoteMain(gMapExtendedType);
         if (gMapExtendedType == REMOTE_GAME_NETWORK_GUEST
             || gMapExtendedType == REMOTE_GAME_MODEM_GUEST)
-            gWaitForRemoteReceive = 1;
+            gWaitForRemoteReceive = true;
     }
 
 done:

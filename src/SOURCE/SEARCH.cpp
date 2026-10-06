@@ -174,7 +174,7 @@ void searchArray::SeedPosition(
     static i32 s_currentCost;
 #define s_hasTarget sr_hasTarget // spelling fixes .bss order
     DATA(0x004cc894)
-    static i32 s_hasTarget;
+    static b32 s_hasTarget;
 #define s_currentHero sj_currentHero // spelling fixes .bss order
     DATA(0x004cc850)
     static hero* s_currentHero;
@@ -186,7 +186,7 @@ void searchArray::SeedPosition(
     DATA(0x004cc8b4)
     static u8 s_directionOccupied[H1_ENUM_ENCODE(MapDirection, MAP_DIRECTION_COUNT)];
     DATA(0x004cc880)
-    static i32 s_directionBlocked;
+    static b32 s_directionBlocked;
     DATA(0x004cc868)
     static mapCell* s_targetCell;
 #define s_hasAdjacentMonster sf_hasAdjacentMonster // spelling fixes .bss order
@@ -211,14 +211,14 @@ void searchArray::SeedPosition(
     static i16 s_processedPointCount = 0;
 
     if (!continueSeed) {
-        gFullySeeded = 0;
+        gFullySeeded = false;
         gCurTempMobility = mobility;
         Clear();
         m_specialTargetY = SEARCH_INVALID_COORDINATE;
         m_specialTargetX = SEARCH_INVALID_COORDINATE;
         s_currentCost = 0;
     }
-    gSeedingValid = 1;
+    gSeedingValid = true;
     if (targetX >= 0) {
         if (!(gGame->m_mapExtra[targetX][targetY] & gCurPlayerBit))
             return;
@@ -237,10 +237,10 @@ void searchArray::SeedPosition(
                     return;
             }
         }
-        s_hasTarget = 1;
+        s_hasTarget = true;
         s_bestTargetCost = SEARCH_MAX_COST;
     } else
-        s_hasTarget = 0;
+        s_hasTarget = false;
     if (s_hasTarget && continueSeed) {
         s_currentNode = m_cells[targetX][targetY];
         if (s_currentNode.visited
@@ -430,10 +430,10 @@ void searchArray::SeedPosition(
                         s_adjacentY =
                             s_mapY + gNormalDirTable[H1_ENUM_ENCODE(MapDirection, s_direction)].y;
                         s_targetCell = gAdvManager->GetCell(s_adjacentX, s_adjacentY);
-                        s_directionBlocked = 1;
+                        s_directionBlocked = true;
                         if ((H1_ENUM_BIT(MapDirection, s_direction) & MAP_DIRECTION_SOUTH_MASK)
                             && CELL_HAS_NON_SHADOW_OBJECT(s_targetCell))
-                            s_directionBlocked = 0;
+                            s_directionBlocked = false;
                         if (s_directionBlocked && m_cells[s_adjacentX][s_adjacentY].visited
                             && !(s_targetCell->m_triggerType & MAP_TRIGGER_EVENT)) {
                             s_terrain = CELL_TERRAIN(s_targetCell);
@@ -476,10 +476,10 @@ void searchArray::SeedPosition(
             }
         }
     }
-    gFullySeeded = 1;
+    gFullySeeded = true;
 }
 
 // Buka SEARCH scratch occupies 0x004cc850-0x004cc8c9, including
 // this flag and SeedPosition's zero-initialized point counter.
 DATA(0x004cc8b0)
-i32 gFullySeeded;
+b32 gFullySeeded;

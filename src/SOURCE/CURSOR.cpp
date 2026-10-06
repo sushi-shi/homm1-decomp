@@ -276,13 +276,13 @@ void advManager::TurnTo(H1_ENUM_PARAM(MapDirection, i8) direction) {
 // Reads the current hero itself and tests the watch player's high bit
 // (0x004be7cc) directly in the map-extra grid.
 VA(0x00422023, 0x104)
-i32 advManager::GetMoveShowIt(H1_ENUM_PARAM(MapDirection, i8) direction) {
+b32 advManager::GetMoveShowIt(H1_ENUM_PARAM(MapDirection, i8) direction) {
     i16 dy;
     hero* movingHero;
     i16 dx;
 
     if (gCurPlayerData->CurrentHero() == HERO_ID_NONE)
-        return 0;
+        return false;
     movingHero = gGame->GetHero(gCurPlayerData->m_currentHero);
     dx = gNormalDirTable[H1_ENUM_ENCODE(MapDirection, direction)].x;
     dy = gNormalDirTable[H1_ENUM_ENCODE(MapDirection, direction)].y;
@@ -290,9 +290,9 @@ i32 advManager::GetMoveShowIt(H1_ENUM_PARAM(MapDirection, i8) direction) {
         && ((gGame->m_mapExtra[movingHero->m_x][movingHero->m_y] & gCurWatchPlayerHighBit)
             || (gGame->m_mapExtra[movingHero->m_x + dx][movingHero->m_y + dy]
                 & gCurWatchPlayerHighBit)))
-        return 1;
+        return true;
     else
-        return 0;
+        return false;
 }
 
 // Recomputes the step cost from the hero type and parks the boat on a

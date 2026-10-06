@@ -290,7 +290,7 @@ public:
     void DrawCursor(void);
     i16 GetCursorBaseFrame(H1_ENUM_PARAM(MapDirection, i16) direction);
     void TurnTo(H1_ENUM_PARAM(MapDirection, i8) direction);
-    i32 GetMoveShowIt(H1_ENUM_PARAM(MapDirection, i8) direction);
+    b32 GetMoveShowIt(H1_ENUM_PARAM(MapDirection, i8) direction);
     class mapCell* MoveHero(
         H1_ENUM_PARAM(MapDirection, i8) direction,
         b8 stopAfterMove,
@@ -316,7 +316,7 @@ public:
     void Reseed(i32, i32);
     H1_ENUM_RETURN(MessageDispatchResult, i32) ProcessSelect(struct tag_message* message, class mapCell** eventCell);
     H1_ENUM_RETURN(MessageDispatchResult, i32) ProcessDeSelect(struct tag_message* message, i32* result, class mapCell** eventCell);
-    i32 ProcessSearch(i32 x, i32 y);
+    b32 ProcessSearch(i32 x, i32 y);
     H1_ENUM_RETURN(MessageDispatchResult, i32) ProcessHover(struct tag_message* message);
     void UpdateScreen(i8 cursorUpdate, b8 forceUpdate);
     void CompleteDraw(i16 originX, i16 originY, b32 forceDraw);
@@ -364,8 +364,8 @@ public:
     void CastSpell(H1_ENUM_PARAM(SpellType, i8) spell);
     void GrabScreen(void);
     void CheckCastSpell(void);
-    i8 ComboDraw(i16 originX, i16 originY, b8 animate);
-    i8 ComboDraw(b32 animate);
+    b8 ComboDraw(i16 originX, i16 originY, b8 animate);
+    b8 ComboDraw(b32 animate);
     void SetEnvironmentOrigin(i16 originX, i16 originY, i16 stopSounds);
     void CheckLoadSample(i32 index);
     void InsertSound(i16 x, i16 y, i16 distance, i8 soundLayer);
@@ -381,7 +381,7 @@ public:
     void ForceNewHover(void);
     void ScreenScroll(H1_ENUM_PARAM(MapDirection, i8) direction, b32 updatePointer);
     void CheckScreenScroll(void);
-    i32 MouseInScrollZone(void);
+    b32 MouseInScrollZone(void);
     void SetInitialMapOrigin(void);
     void LoadRemote(void);
     RemoteMessage* CheckHandleNet(void);
@@ -427,7 +427,7 @@ public:
         H1_ENUM_PARAM(CreatureType, i32) creatureType,
         class mapCell* cell
     );
-    i8 GhostEvent(
+    b8 GhostEvent(
         class hero* eventHero,
         class mapCell* cell,
         H1_ENUM_PARAM(MapEventTextId, i32) textId,
@@ -579,9 +579,9 @@ extern i32 gLimitUpdMaxX;
 extern i32 gLimitUpdMaxY;
 extern class heroWindow* gAdventurePanel;
 #define gPrefsChanged bPrefsChanged // spelling fixes .bss order
-extern i8 gPrefsChanged;
+extern b8 gPrefsChanged;
 #define gFreshSave gSaveClean // spelling fixes .bss order
-extern i8 gFreshSave;
+extern b8 gFreshSave;
 // ComboDraw's per-view-cell redraw marks and its animation frame clock.
 #define gComboDraw bComboDraw // spelling fixes .bss order
 extern i8 gComboDraw[][17];

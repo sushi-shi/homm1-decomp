@@ -123,7 +123,7 @@ H1_ENUM_CONST_BEGIN(CombatFlowConstant)
 H1_ENUM_CONST_END(CombatFlowConstant)
 
 // Event-music flag used by the event/audio flow.
-extern i8 gEventMusicPlaying;
+extern b8 gEventMusicPlaying;
 
 // Moved from EVENTS.cpp.
 // advManager::EventWindow's eventId: the gEventText row it prints, or

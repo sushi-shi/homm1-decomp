@@ -66,7 +66,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
     eventKind = MAP_TRIGGER_OBJECT(cell->m_triggerType);
     removeObj = 0;
     fizzleEffect = EVENT_FIZZLE_HERO_LOSS;
-    gEventMusicPlaying = 1;
+    gEventMusicPlaying = true;
     gMouseManager->ReallyHidePointer();
     EventSound(eventKind, cell->m_objectMetadata);
     switch (eventKind) {
@@ -1370,9 +1370,9 @@ void advManager::EventSound(H1_ENUM_PARAM(MapObjectType, i16) eventType, i16 eve
     }
     if (musicTrack != MUSIC_TRACK_NONE) {
         PlayMusic(musicTrack);
-        gEventMusicPlaying = 1;
+        gEventMusicPlaying = true;
     } else {
-        gEventMusicPlaying = 0;
+        gEventMusicPlaying = false;
     }
 }
 
@@ -1490,7 +1490,7 @@ void advManager::RecruitEvent(
 }
 
 VA(0x0042712c, 0x2ac)
-i8 advManager::GhostEvent(
+b8 advManager::GhostEvent(
     class hero* eventHero,
     class mapCell* cell,
     H1_ENUM_PARAM(MapEventTextId, i32) textId,
@@ -1526,7 +1526,7 @@ i8 advManager::GhostEvent(
                 );
                 GiveResource(eventHero, RESOURCE_GOLD, GHOST_SMALL_GOLD);
                 eventHero->CheckLevel();
-                return 1;
+                return true;
             }
             break;
         case GHOST_SITE_MEDIUM:
@@ -1555,7 +1555,7 @@ i8 advManager::GhostEvent(
                 );
                 GiveResource(eventHero, RESOURCE_GOLD, GHOST_MEDIUM_GOLD);
                 eventHero->CheckLevel();
-                return 1;
+                return true;
             }
             break;
         case GHOST_SITE_LARGE:
@@ -1584,7 +1584,7 @@ i8 advManager::GhostEvent(
                 );
                 GiveResource(eventHero, RESOURCE_GOLD, GHOST_LARGE_GOLD);
                 eventHero->CheckLevel();
-                return 1;
+                return true;
             }
             break;
         default:
@@ -1616,11 +1616,11 @@ i8 advManager::GhostEvent(
                     );
                 GiveResource(eventHero, RESOURCE_GOLD, GHOST_HUGE_GOLD);
                 eventHero->CheckLevel();
-                return 1;
+                return true;
             }
             break;
     }
-    return 0;
+    return false;
 }
 
 VA(0x004273d8, 0x103)
@@ -3043,4 +3043,4 @@ void advManager::ReceiveHeroTownData(
 }
 
 DATA(0x004a6acc)
-i8 gEventMusicPlaying;
+b8 gEventMusicPlaying;

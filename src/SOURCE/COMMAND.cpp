@@ -1481,14 +1481,14 @@ void combatManager::GetControl(void) {
         || (!gHumanPlayer[m_playerId[COMBAT_ATTACKER_SIDE]]
             && (gHumanPlayer[m_playerId[COMBAT_ATTACKER_SIDE]]
                 || !m_playerId[COMBAT_DEFENDER_SIDE]))) {
-        gThisNetHasControl = 1;
+        gThisNetHasControl = true;
         goto resetMouse;
     }
     if (m_playerId[m_currentSide] != GAME_PLAYER_NONE && gHumanPlayer[m_playerId[m_currentSide]]
         && !gThisNetHumanPlayer[m_playerId[m_currentSide]])
-        gThisNetHasControl = 0;
+        gThisNetHasControl = false;
     else
-        gThisNetHasControl = 1;
+        gThisNetHasControl = true;
 resetMouse:
     ResetMouse();
 }
@@ -1618,7 +1618,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) combatManager::ProcessNextAction(stru
 
 // COMMAND globals.
 DATA(0x004a6a8c)
-i8 gThisNetHasControl;
+b8 gThisNetHasControl;
 DATA(0x004a6aa4)
 i32 gCurTransferArtifact;
 DATA(0x004a6ab0)

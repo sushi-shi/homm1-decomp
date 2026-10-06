@@ -457,7 +457,7 @@ extern i32 gRemoteDefaultPlayer;
 extern H1_ENUM_STORAGE(ArtifactType, i8) gTransferArtifacts[];
 // Network combat: this machine controls the current side (0x004a4b98).
 #define gThisNetHasControl gbThisNetHasControl // spelling fixes .bss order
-extern i8 gThisNetHasControl;
+extern b8 gThisNetHasControl;
 // gCombatHelp rows ProcessCombatMsg shows when the pointer is off the grid:
 // over the auto-combat strip (left), the skip strip (right), or neither.
 H1_ENUM_BEGIN(CombatHelpText)

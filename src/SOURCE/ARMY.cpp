@@ -186,7 +186,7 @@ void army::DrawToBuffer(i16 x, i16 y) {
                 && (m_hex % COMBAT_GRID_COLUMNS <= 2 || m_hex % COMBAT_GRID_COLUMNS >= 6)
             || !(m_stats.attributes & MONSTER_FLAGS_WIDE)
                    && (m_hex % COMBAT_GRID_COLUMNS <= 1 || m_hex % COMBAT_GRID_COLUMNS >= 7)))
-        gIconClipOn = 1;
+        gIconClipOn = true;
     if (m_walkYStep) {
         y += m_walkYStep * m_animationFrame;
         if (m_animationFrame > 0 && m_animationFrame <= 5)
@@ -416,7 +416,7 @@ void army::DrawToBuffer(i16 x, i16 y) {
             );
             break;
     }
-    gIconClipOn = 0;
+    gIconClipOn = false;
 }
 
 VA(0x00413fd9, 0x55)
@@ -1550,7 +1550,7 @@ void army::DamageEnemy(
     if (!target)
         return;
     rolledTotal = 0;
-    gGenieHalf = 0;
+    gGenieHalf = false;
     for (creature = 0; creature < m_quantity; creature++) {
         switch (m_damageMode) {
             case ARMY_DAMAGE_MAXIMUM:
@@ -1587,7 +1587,7 @@ void army::DamageEnemy(
         && SRandom(1, ARMY_SPECIAL_ROLL_MAX) == ARMY_GENIE_ROLL_HIT) {
         genieDamage = ((target->m_quantity + 1) / 2) * target->m_stats.hitPoints;
         if (genieDamage > damage) {
-            gGenieHalf = 1;
+            gGenieHalf = true;
             damage = genieDamage;
         }
     }
@@ -1967,4 +1967,4 @@ void army::MoveAttack(i32 destination, b32 moveOnly) {
 
 // DamageEnemy sets this byte when the genie halves its target stack.
 DATA(0x004a67d4)
-i8 gGenieHalf;
+b8 gGenieHalf;

@@ -117,7 +117,7 @@ extern i8 gDataEntryTime;
 #define gWaitType giWaitType // spelling fixes .bss order
 extern H1_ENUM_STORAGE(DialogWaitType, i8) gWaitType;
 #define gFunctionComplete gbFunctionComplete // spelling fixes .bss order
-extern i8 gFunctionComplete;
+extern b8 gFunctionComplete;
 // Artifact names (0x00492e60).
 extern H1_ENUM_ARRAY(char*, gArtifactNames, ArtifactType, ARTIFACT_COUNT);
 extern H1_ENUM_ARRAY(char*, gNeutralBuildingNames, BuildingSlotType, BUILDING_SLOT_NEUTRAL_COUNT);
@@ -200,8 +200,8 @@ H1_ENUM_END(TimerSlot)
 extern H1_ENUM_ARRAY(i32, gTimers, TimerSlot, GLOBAL_TIMER_COUNT);
 void EarlyShutDownSystem();
 void QuickViewWait();
-i8 CanBuild(class town* townPointer, H1_ENUM_PARAM(BuildingSlotType, i16) building);
-i8 CanBuy(class town* townPointer, H1_ENUM_PARAM(BuildingSlotType, i16) building);
+b8 CanBuild(class town* townPointer, H1_ENUM_PARAM(BuildingSlotType, i16) building);
+b8 CanBuy(class town* townPointer, H1_ENUM_PARAM(BuildingSlotType, i16) building);
 extern "C" void PollSound();
 void ForcePollSound();
 #ifndef HOMM1_EDITOR
@@ -260,10 +260,10 @@ void AddNetBoxLine(char* text);
 void GOut(char* text);
 extern i32 gShowIntro;
 #define gScreenScroll giScreenScroll // spelling fixes .bss order
-extern i8 gScreenScroll;
+extern b8 gScreenScroll;
 extern char gMapName[];
 #define gBlackoutPlayer gbBlackoutPlayer // spelling fixes .bss order
-extern i32 gBlackoutPlayer;
+extern b32 gBlackoutPlayer;
 extern char gFullMapName[];
 #define gMapDescription gMapDesc // spelling fixes .bss order
 extern char gMapDescription[];
@@ -278,7 +278,7 @@ i32 InterpretCommandLine(void);
 void ClearMapExtra(void);
 H1_ENUM_RETURN(CreatureType, i16) GetMonType(i32 score, H1_ENUM_PARAM(HighScoreType, i32) highScoreType);
 i32 MemSize(i32);
-i8 CheckMem(void);
+b8 CheckMem(void);
 bool IsCDDrive(i32 driveIndex);
 void LoadSystemwideIcons(void);
 void UnloadSystemwideIcons(void);
@@ -305,7 +305,7 @@ extern H1_ENUM_STORAGE(MainMenuControl, i16) gGameCommand;
 extern i8 gCombatSurrender;
 // The new-map builder raises this while it claims towns and mines.
 #define gInNewGameSetup gbInNewGameSetup // spelling fixes .bss order
-extern i32 gInNewGameSetup;
+extern b32 gInNewGameSetup;
 void DeleteMainClasses(void);
 #define gHighScoreManager gpHighScoreManager // spelling fixes .bss order
 extern class highScoreManager* gHighScoreManager;
@@ -420,7 +420,7 @@ struct SPlayerExit {
 extern i32 gComputeExtent;
 extern b32 gCurrArmyDrawn;
 #define gIconClipOn gbIconClipOn // spelling fixes .bss order
-extern i8 gIconClipOn;
+extern b8 gIconClipOn;
 extern i32 gLimitToExtent;
 extern b32 gSaveBiggestExtent;
 #define gMaxExtentX giMaxExtentX // spelling fixes .bss order
@@ -547,7 +547,7 @@ extern char* gStatNames[];
 extern class heroWindow* gHeroScreenWindow;
 extern i8 gHighScoreRank;
 i32 EarlySetup(void);
-i32 GameUnsaved(void);
+b32 GameUnsaved(void);
 extern b8 gFirstTimeThrough;
 extern char gAnimPath[];
 #define gRegAppPath gcRegAppPath // spelling fixes .bss order
@@ -564,7 +564,7 @@ i32 oldmain(void);
 void UpdateAppSpecificMenus(void* menu);
 
 #define gSpecialHideCursor bSpecialHideCursor // spelling fixes .bss order
-extern i32 gSpecialHideCursor;
+extern b32 gSpecialHideCursor;
 extern H1_ENUM_ARRAY(i32, gArtifactBaseRV, ArtifactType, ARTIFACT_REGULAR_END);
 extern b8 gDrawSavedCursor;
 extern H1_ENUM_ARRAY(i8, gSpellAIFlags, SpellType, SPELL_COUNT);
@@ -614,7 +614,7 @@ i8 NetPosToGamePos(i32 netPos);
 b8 WaitForOtherPlayer(void);
 // SeedPosition's seeding state.
 #define gSeedingValid giSeedingValid // spelling fixes .bss order
-extern i32 gSeedingValid;
+extern b32 gSeedingValid;
 // KB-band setup state: the direct-connect flag and the multiplayer game type.
 extern i8 gDirectConnect;
 
@@ -671,7 +671,7 @@ extern b32 gInSetupDialog;
 extern b32 gRemoteReady;
 extern b8 gSkipIntro;
 #define gWaitForRemoteReceive gbWaitForRemoteReceive // spelling fixes .bss order
-extern i8 gWaitForRemoteReceive;
+extern b8 gWaitForRemoteReceive;
 extern char* gCampaignScenarioNames[];
 extern char* gCampaignScenarioText[];
 extern H1_ENUM_STORAGE(PlayerColor, i8) gCampaignSideCrests[][2];

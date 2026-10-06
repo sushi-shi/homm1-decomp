@@ -280,7 +280,7 @@ void mouseManager::ShowColorPointer(void) {}
 // townManager::Open forces a pointer refresh here; the Windows build keeps
 // only the one-argument return.
 VA(0x0046bfe5, 0xd)
-void mouseManager::NewUpdate(i32 force) {}
+void mouseManager::NewUpdate(b32 force) {}
 
 VA(0x0046bff2, 0xd)
 void mouseManager::WarpPointer(i16 x, i16 y) {}
@@ -306,7 +306,7 @@ void mouseManager::SetCursorShape(i32 shape) {}
 
 // advManager::Open passes the colour-pointer preference; Windows ignores it.
 VA(0x0046c06f, 0xd)
-void mouseManager::SetColorMice(i32 enabled) {}
+void mouseManager::SetColorMice(b32 enabled) {}
 
 VA(0x0046c07c, 0x13)
 void mouseManager::HideSystemCursor(void) {

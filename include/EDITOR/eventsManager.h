@@ -18,7 +18,9 @@ class icon;
 class iconWidget;
 struct tag_message;
 
-// SetWinText rows of the editor's dialogs.
+// SetWinText rows of the editor's dialogs: the editor's own rows of the
+// window-text table, so each call converts the row to the WindowTextId that
+// SetWinText takes.
 H1_ENUM_CONST_BEGIN(EventsWindowText)
     EVENTS_WINDOW_TEXT_TOWN = 0x65,
     EVENTS_WINDOW_TEXT_MONSTER = 0x66,
@@ -29,14 +31,14 @@ H1_ENUM_CONST_BEGIN(EventsWindowText)
 H1_ENUM_CONST_END(EventsWindowText)
 
 // The editor dialogs' closing buttons (heroWindowManager::m_dialogResult):
-// cancel keeps the edited record or settings as they were.
-H1_ENUM_BEGIN(EventsDialogButton)
-    EVENTS_DIALOG_CANCEL = DIALOG_BUTTON_1,
-    EVENTS_DIALOG_OK = DIALOG_BUTTON_2
-H1_ENUM_END(EventsDialogButton)
+// cancel keeps the edited record or settings as they were. Widget ids, as
+// DialogButtonId's reserved slots they alias.
+H1_ENUM_ID_BEGIN(EventsDialogButton)
+EVENTS_DIALOG_CANCEL = DIALOG_BUTTON_1, EVENTS_DIALOG_OK =
+                                            DIALOG_BUTTON_2 H1_ENUM_ID_END(EventsDialogButton)
 
-H1_ENUM_CONST_BEGIN(EventsManagerLayout)
-// Every dialog opens at (16, 16).
+                                        H1_ENUM_CONST_BEGIN(EventsManagerLayout)
+                                        // Every dialog opens at (16, 16).
     EVENTS_DIALOG_X = 16,
     EVENTS_DIALOG_Y = 16,
     // Main outlines the hovered cell (overlay.icn) in this palette colour.
@@ -181,7 +183,10 @@ H1_ENUM_CONST_END(NewMapWindowConstant)
 // Closes the running dialog: the dialog manager reads the select command.
 #define FINISH_DIALOG_SELECT(message)                                                              \
     ((message).type = MESSAGE_WIDGET,                                                              \
-     (message).command = (message).id = WIDGET_COMMAND_DIALOG_SELECT)
+     (message).command = H1_ENUM_DECODE(                                                           \
+         BaseWidgetCommand,                                                                        \
+         (message).id = H1_ENUM_ENCODE(BaseWidgetCommand, WIDGET_COMMAND_DIALOG_SELECT)            \
+     ))
 
 #pragma pack(push, 1)
 
@@ -191,12 +196,13 @@ public:
     icon* m_cursorIcon;
     // The tool panel's backdrop.
     iconWidget* m_panel;
-    H1_ENUM_STORAGE(BaseManagerMessageMask, i16) m_dispatchMask;
+    // Main's mask over message.type (EDIT_MANAGER_DISPATCH_MASK).
+    i16 m_dispatchMask;
 
     eventsManager(void);
-    virtual i16 Open(i16 priority) OVERRIDE;
+    virtual H1_ENUM_RETURN(BaseManagerStatus, i16) Open(i16 priority) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual i16 Main(tag_message& message) OVERRIDE;
+    virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(tag_message& message) OVERRIDE;
     // The raw cell editor (debug level 1 and above).
     void EditCell(i16 x, i16 y);
     void EditTown(i16 x, i16 y);
@@ -207,19 +213,19 @@ public:
 };
 #pragma pack(pop)
 
-i16 CellWindowHandler(tag_message& message);
-i16 TownWindowHandler(tag_message& message);
-i16 MonsterWindowHandler(tag_message& message);
-i16 HeroWindowHandler(tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) CellWindowHandler(tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) TownWindowHandler(tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) MonsterWindowHandler(tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) HeroWindowHandler(tag_message& message);
 // Runs the eraser options window (clearwin.bin); on OK with the whole-map
 // toggle set it erases the selected classes everywhere. Returns 1 on OK.
 i32 ClearOptionsDialog(void);
 void UpdateClearWindow(void);
-i16 ClearWindowHandler(tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) ClearWindowHandler(tag_message& message);
 // Edits the map header (dtlwind.bin); returns 0 when cancelled.
-i32 MapDetailsDialog(i32 randomMap);
+i32 MapDetailsDialog(b32 randomMap);
 void UpdateMapDetailsWindow(void);
-i16 MapDetailsWindowHandler(tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) MapDetailsWindowHandler(tag_message& message);
 // Sets up the random map generator (editnew.bin); returns 0 when cancelled.
 i32 NewMapDialog(void);
 void UpdateNewMapWindow(void);
@@ -227,8 +233,8 @@ void UpdateNewMapWindow(void);
 // minimum. Without one (TERRAIN_INVALID, as the window closes) it scales the
 // terrains to 100 percent less the share read at index -1, then caps water
 // and rebalances from it.
-void BalanceTerrainPercents(i32 changedTerrain);
-i16 NewMapWindowHandler(tag_message& message);
+void BalanceTerrainPercents(H1_ENUM_PARAM(TerrainType, i32) changedTerrain);
+H1_ENUM_RETURN(MessageDispatchResult, i16) NewMapWindowHandler(tag_message& message);
 // Drags a generator slider: a terrain row when terrainRow is set, else a
 // density row.
 void DragNewMapSlider(i32 terrainRow, i32 index);

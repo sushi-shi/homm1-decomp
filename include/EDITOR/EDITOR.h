@@ -10,7 +10,7 @@
 // The terrains the terrain tool paints and the generator mixes
 // (TerrainType).
 H1_ENUM_CONST_BEGIN(EditorTerrainConstant)
-    EDITOR_TERRAIN_COUNT = TERRAIN_LAST + 1
+    EDITOR_TERRAIN_COUNT = H1_ENUM_ENCODE(TerrainType, TERRAIN_LAST) + 1
 H1_ENUM_CONST_END(EditorTerrainConstant)
 
 // The status bar: the bottom 16-pixel row of the 640x480 screen.
@@ -28,8 +28,8 @@ H1_ENUM_CONST_BEGIN(EditorStatusBarConstant)
     EDITOR_STATUS_TEXT_KEPT = 0
 H1_ENUM_CONST_END(EditorStatusBarConstant)
 
-extern i8 gCommandLineInterpreted;
-extern i32 gStatusTextShown;
+extern b8 gCommandLineInterpreted;
+extern b32 gStatusTextShown;
 // When the status bar text is cleared (EDITOR_STATUS_TEXT_KEPT: kept until
 // replaced).
 extern i32 gStatusTextClearTime;
@@ -109,11 +109,11 @@ H1_ENUM_CONST_BEGIN(EditorToolHelpConstant)
     EDITOR_AREA_HELP_COUNT = 8
 H1_ENUM_CONST_END(EditorToolHelpConstant)
 
-extern char* gTerrainToolHelp[];
-extern char* gClearToolHelp[];
+extern H1_ENUM_ARRAY(char*, gTerrainToolHelp, TerrainToolHelp, EDITOR_TERRAIN_TOOL_HELP_COUNT);
+extern H1_ENUM_ARRAY(char*, gClearToolHelp, ClearToolHelp, EDITOR_CLEAR_TOOL_HELP_COUNT);
 
 // The object tool's preview-border help and category names.
-extern char* gOverlayToolHelp[];
+extern H1_ENUM_ARRAY(char*, gOverlayToolHelp, OverlayToolHelp, EDITOR_OVERLAY_TOOL_HELP_COUNT);
 extern char* gOverlayCategoryNames[];
 // The category the object tool places from and the one its panel shows.
 extern i32 gOverlayCategory;
@@ -139,7 +139,7 @@ extern struct SMapHeader* gMapHeader;
 // scattered rather than centred; whether the map is saved unseen.
 extern double gTerrainPercent[EDITOR_TERRAIN_COUNT];
 extern double gDensityPercent[EDITOR_GENERATOR_DENSITY_COUNT];
-extern i32 gScatterTowns;
+extern b32 gScatterTowns;
 extern i32 gSaveUnseen;
 // gDensityPercent's rows.
 H1_ENUM_BEGIN(GeneratorDensity)
@@ -156,10 +156,10 @@ extern char* gGeneratorTerrainNames[];
 extern i32 gLandCellCount;
 // Set while the generator works unseen (gSaveUnseen): the map view draws
 // clouds only and the radar black.
-extern i32 gGeneratingMaps;
+extern b32 gGeneratingMaps;
 // Cleared while a map without the editor's format word is loaded: such maps
 // keep no object ids, so the eraser clears whole cells.
-extern i32 gNewMapFormat;
+extern b32 gNewMapFormat;
 // The right-click help of editwind.bin's buttons and areas.
 extern char* gEditButtonHelp[];
 extern char* gEditAreaHelp[];

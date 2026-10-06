@@ -293,7 +293,7 @@ long __stdcall AppWndProc(HWND window, u32 message, u32 messageParam, long messa
             return 0;
         case WM_CLOSE:
             if (window == gAppWindow) {
-                if (GameUnsaved() != 0) {
+                if (GameUnsaved() != false) {
                     NormalDialog(
                         localization::Tr("adventure.confirm_quit"),
                         NORMAL_DIALOG_TYPE_YES_NO

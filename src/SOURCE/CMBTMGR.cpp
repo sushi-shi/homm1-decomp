@@ -204,7 +204,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) combatManager::Open(i16 priority) {
     m_sideRetreated[COMBAT_DEFENDER_SIDE] = 0;
     m_sideRetreated[COMBAT_ATTACKER_SIDE] = 0;
     m_combatResult = COMBAT_RESULT_PENDING;
-    gIconClipOn = 0;
+    gIconClipOn = false;
     m_computeExtent = false;
     m_redrawExtent = false;
     gCurLoadedSpellIcon = NULL;
@@ -236,7 +236,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) combatManager::Open(i16 priority) {
     CombatMessage("", true);
     gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, m_combatPalette);
     gLimitedCombatUpdatePalette = true;
-    gMouseManager->NewUpdate(1);
+    gMouseManager->NewUpdate(true);
     gMouseManager->WarpPointer(
         m_hexCells[m_limitCreatureHex].m_x,
         m_hexCells[m_limitCreatureHex].m_y - 50

@@ -247,7 +247,7 @@ i16 GetAdjacentCellIndexNoArmy(i16 hex, H1_ENUM_PARAM(CombatHexDirection, i16) d
 // unreferenced.
 extern i16 gCurLoadedSpellEffect;
 // DamageEnemy flags a genie halving the target stack.
-extern i8 gGenieHalf;
+extern b8 gGenieHalf;
 // DrawToBuffer's outline colours (palette indices FillToBuffer paints the
 // sprite with): the stack m_limitCreature highlights, a beneficial spell
 // (haste, bless, protection, anti-magic) and any other spell. SpecialAttack

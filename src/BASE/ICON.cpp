@@ -70,7 +70,7 @@ void icon::DrawToBuffer(
         && (gCurrArmyDrawn == false || m_drawLeft > gMaxExtentX || m_drawRight < gMinExtentX
             || m_drawTop > gMaxExtentY || m_drawBottom < gMinExtentY))
         return;
-    if (gIconClipOn != 0) {
+    if (gIconClipOn != false) {
         if (orientation == ICON_DRAW_NORMAL)
             ClippedIconToBitmap(this, gWindowManager->m_screen, x, y, frame, offsetMode);
         else

@@ -34,8 +34,8 @@ terrainManager::terrainManager(void)
 }
 
 VA(0x004184e1, 0x52c)
-i16 terrainManager::Open(i16 priority) {
-    i16 i;
+H1_ENUM_RETURN(BaseManagerStatus, i16) terrainManager::Open(i16 priority) {
+    H1_ENUM_LOCAL(TerrainType, i16) i;
 
     m_panel = new iconWidget(
         EDIT_TOOL_PANEL_X,
@@ -56,7 +56,7 @@ i16 terrainManager::Open(i16 priority) {
         TERRAIN_BUTTON_WIDTH,
         TERRAIN_BUTTON_HEIGHT,
         "terrains.icn",
-        TERRAIN_WATER,
+        H1_ENUM_ENCODE(TerrainType, TERRAIN_WATER),
         ICON_DRAW_NORMAL,
         TERRAIN_BUTTON_WATER,
         ICON_WIDGET_DRAW,
@@ -64,11 +64,11 @@ i16 terrainManager::Open(i16 priority) {
     );
     m_terrainButtons[TERRAIN_GRASS] = new iconWidget(
         TERRAIN_BUTTON_X,
-        TERRAIN_BUTTON_FIRST_Y + TERRAIN_GRASS * TERRAIN_BUTTON_HEIGHT,
+        TERRAIN_BUTTON_FIRST_Y + H1_ENUM_ENCODE(TerrainType, TERRAIN_GRASS) * TERRAIN_BUTTON_HEIGHT,
         TERRAIN_BUTTON_WIDTH,
         TERRAIN_BUTTON_HEIGHT,
         "terrains.icn",
-        TERRAIN_GRASS,
+        H1_ENUM_ENCODE(TerrainType, TERRAIN_GRASS),
         ICON_DRAW_NORMAL,
         TERRAIN_BUTTON_GRASS,
         ICON_WIDGET_DRAW,
@@ -76,11 +76,11 @@ i16 terrainManager::Open(i16 priority) {
     );
     m_terrainButtons[TERRAIN_SNOW] = new iconWidget(
         TERRAIN_BUTTON_X,
-        TERRAIN_BUTTON_FIRST_Y + TERRAIN_SNOW * TERRAIN_BUTTON_HEIGHT,
+        TERRAIN_BUTTON_FIRST_Y + H1_ENUM_ENCODE(TerrainType, TERRAIN_SNOW) * TERRAIN_BUTTON_HEIGHT,
         TERRAIN_BUTTON_WIDTH,
         TERRAIN_BUTTON_HEIGHT,
         "terrains.icn",
-        TERRAIN_SNOW,
+        H1_ENUM_ENCODE(TerrainType, TERRAIN_SNOW),
         ICON_DRAW_NORMAL,
         TERRAIN_BUTTON_SNOW,
         ICON_WIDGET_DRAW,
@@ -88,11 +88,11 @@ i16 terrainManager::Open(i16 priority) {
     );
     m_terrainButtons[TERRAIN_SWAMP] = new iconWidget(
         TERRAIN_BUTTON_X,
-        TERRAIN_BUTTON_FIRST_Y + TERRAIN_SWAMP * TERRAIN_BUTTON_HEIGHT,
+        TERRAIN_BUTTON_FIRST_Y + H1_ENUM_ENCODE(TerrainType, TERRAIN_SWAMP) * TERRAIN_BUTTON_HEIGHT,
         TERRAIN_BUTTON_WIDTH,
         TERRAIN_BUTTON_HEIGHT,
         "terrains.icn",
-        TERRAIN_SWAMP,
+        H1_ENUM_ENCODE(TerrainType, TERRAIN_SWAMP),
         ICON_DRAW_NORMAL,
         TERRAIN_BUTTON_SWAMP,
         ICON_WIDGET_DRAW,
@@ -100,11 +100,11 @@ i16 terrainManager::Open(i16 priority) {
     );
     m_terrainButtons[TERRAIN_LAVA] = new iconWidget(
         TERRAIN_BUTTON_X,
-        TERRAIN_BUTTON_FIRST_Y + TERRAIN_LAVA * TERRAIN_BUTTON_HEIGHT,
+        TERRAIN_BUTTON_FIRST_Y + H1_ENUM_ENCODE(TerrainType, TERRAIN_LAVA) * TERRAIN_BUTTON_HEIGHT,
         TERRAIN_BUTTON_WIDTH,
         TERRAIN_BUTTON_HEIGHT,
         "terrains.icn",
-        TERRAIN_LAVA,
+        H1_ENUM_ENCODE(TerrainType, TERRAIN_LAVA),
         ICON_DRAW_NORMAL,
         TERRAIN_BUTTON_LAVA,
         ICON_WIDGET_DRAW,
@@ -112,11 +112,12 @@ i16 terrainManager::Open(i16 priority) {
     );
     m_terrainButtons[TERRAIN_DESERT] = new iconWidget(
         TERRAIN_BUTTON_X,
-        TERRAIN_BUTTON_FIRST_Y + TERRAIN_DESERT * TERRAIN_BUTTON_HEIGHT,
+        TERRAIN_BUTTON_FIRST_Y
+            + H1_ENUM_ENCODE(TerrainType, TERRAIN_DESERT) * TERRAIN_BUTTON_HEIGHT,
         TERRAIN_BUTTON_WIDTH,
         TERRAIN_BUTTON_HEIGHT,
         "terrains.icn",
-        TERRAIN_DESERT,
+        H1_ENUM_ENCODE(TerrainType, TERRAIN_DESERT),
         ICON_DRAW_NORMAL,
         TERRAIN_BUTTON_DESERT,
         ICON_WIDGET_DRAW,
@@ -124,21 +125,21 @@ i16 terrainManager::Open(i16 priority) {
     );
     m_terrainButtons[TERRAIN_DIRT] = new iconWidget(
         TERRAIN_BUTTON_X,
-        TERRAIN_BUTTON_FIRST_Y + TERRAIN_DIRT * TERRAIN_BUTTON_HEIGHT,
+        TERRAIN_BUTTON_FIRST_Y + H1_ENUM_ENCODE(TerrainType, TERRAIN_DIRT) * TERRAIN_BUTTON_HEIGHT,
         TERRAIN_BUTTON_WIDTH,
         TERRAIN_BUTTON_HEIGHT,
         "terrains.icn",
-        TERRAIN_DIRT,
+        H1_ENUM_ENCODE(TerrainType, TERRAIN_DIRT),
         ICON_DRAW_NORMAL,
         TERRAIN_BUTTON_DIRT,
         ICON_WIDGET_DRAW,
         1
     );
-    for (i = 0; i < EDITOR_TERRAIN_COUNT; i++)
+    for (i = TERRAIN_WATER; i < TERRAIN_COUNT; i++)
         gEditManager->m_window->AddWidget(m_terrainButtons[i], WINDOW_Z_ORDER_APPEND);
     m_highlight = new iconWidget(
         TERRAIN_BUTTON_X,
-        TERRAIN_BUTTON_FIRST_Y + m_terrain * TERRAIN_BUTTON_HEIGHT,
+        TERRAIN_BUTTON_FIRST_Y + H1_ENUM_ENCODE(TerrainType, m_terrain) * TERRAIN_BUTTON_HEIGHT,
         TERRAIN_BUTTON_WIDTH,
         TERRAIN_BUTTON_HEIGHT,
         "terrains.icn",
@@ -170,9 +171,9 @@ i16 terrainManager::Open(i16 priority) {
 
 VA(0x00418a0d, 0x166)
 void terrainManager::Close(void) {
-    i16 i;
+    H1_ENUM_LOCAL(TerrainType, i16) i;
 
-    for (i = 0; i < EDITOR_TERRAIN_COUNT; i++) {
+    for (i = TERRAIN_WATER; i < TERRAIN_COUNT; i++) {
         gEditManager->m_window->RemoveWidget(m_terrainButtons[i]);
         delete m_terrainButtons[i];
     }
@@ -187,19 +188,19 @@ void terrainManager::Close(void) {
 }
 
 VA(0x00418b73, 0x741)
-i16 terrainManager::Main(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) terrainManager::Main(tag_message& message) {
     i16 newX;
     i16 newY;
     i32 tilesHigh;
     i32 tilesWide;
     i16 anchorX;
     tag_message event;
-    i16 ground;
-    i16 dragMode;
+    H1_ENUM_LOCAL(TerrainType, i16) ground;
+    H1_ENUM_LOCAL(TerrainDragMode, i16) dragMode;
     i16 y;
     i16 x;
     i16 anchorY;
-    i32 rightClickHelp;
+    H1_ENUM_LOCAL(TerrainToolHelp, i32) rightClickHelp;
 
     if (!(message.type & m_dispatchMask))
         return MESSAGE_DISPATCH_CONTINUE;
@@ -232,7 +233,7 @@ i16 terrainManager::Main(tag_message& message) {
                                 rightClickHelp = TERRAIN_TOOL_HELP_DIRT;
                                 break;
                         }
-                        if (rightClickHelp >= 0)
+                        if (H1_ENUM_ENCODE(TerrainToolHelp, rightClickHelp) >= 0)
                             NormalDialog(
                                 gTerrainToolHelp[rightClickHelp],
                                 NORMAL_DIALOG_TYPE_QUICK_VIEW
@@ -299,7 +300,7 @@ i16 terrainManager::Main(tag_message& message) {
                                                     y - gEditManager->m_viewY,
                                                     1,
                                                     1,
-                                                    ground
+                                                    H1_ENUM_ENCODE(TerrainType, ground)
                                                 );
                                                 break;
                                             case TERRAIN_DRAG_BRUSH:
@@ -314,7 +315,7 @@ i16 terrainManager::Main(tag_message& message) {
                                                     y - gEditManager->m_viewY,
                                                     tilesWide,
                                                     tilesHigh,
-                                                    ground
+                                                    H1_ENUM_ENCODE(TerrainType, ground)
                                                 );
                                                 break;
                                             case TERRAIN_DRAG_RECTANGLE:
@@ -337,7 +338,7 @@ i16 terrainManager::Main(tag_message& message) {
                                     gSelectionY,
                                     gSelectionWidth,
                                     gSelectionHeight,
-                                    ground
+                                    H1_ENUM_ENCODE(TerrainType, ground)
                                 );
                             gSelectionX = gSelectionY = EDIT_NO_CELL;
                             gEditManager->BlendTerrain(m_terrain, 0, 1, 0, 0);
@@ -386,13 +387,13 @@ i16 terrainManager::Main(tag_message& message) {
 
 VA(0x004192b4, 0x150)
 void terrainManager::RandomizeTiles(void) {
-    i16 i;
+    H1_ENUM_LOCAL(TerrainType, i16) i;
     i16 x;
     i16 y;
     u8 tileTerrain;
     u8 tile;
 
-    for (i = 0; i < EDITOR_TERRAIN_COUNT; i++)
+    for (i = TERRAIN_WATER; i < TERRAIN_COUNT; i++)
         gEditManager->BlendTerrain(i, 1, 1, 0, 0);
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
@@ -408,7 +409,8 @@ void terrainManager::RandomizeTiles(void) {
 VA(0x00419404, 0x47)
 void terrainManager::SelectTerrain(H1_ENUM_PARAM(TerrainType, i16) terrain) {
     m_terrain = terrain;
-    m_highlight->m_y = TERRAIN_BUTTON_FIRST_Y + terrain * TERRAIN_BUTTON_HEIGHT;
+    m_highlight->m_y =
+        TERRAIN_BUTTON_FIRST_Y + H1_ENUM_ENCODE(TerrainType, terrain) * TERRAIN_BUTTON_HEIGHT;
     gEditManager->m_window->DrawWindow();
     gLastTerrain = terrain;
 }

@@ -509,7 +509,7 @@ extern b8 gShowMapInfo;
 extern heroWindow* gReqExtraWindow;
 extern char gCurMapName[];
 #define gDismissArmy gbDismissArmy // spelling fixes .bss order
-extern i8 gDismissArmy;
+extern b8 gDismissArmy;
 
 // Moved from GAME.cpp.
 // newgame.bin widget ids. The opponent toggles are players 1..3 (id - 1);

@@ -190,7 +190,7 @@ public:
 #pragma pack(pop)
 
 // Set while the default extension is a saved-game one (".G??").
-extern i8 gRequestingGames;
+extern b8 gRequestingGames;
 extern char* gFRDummy;
 
 #endif // HOMM1_SOURCE_FILEREQUESTER_H

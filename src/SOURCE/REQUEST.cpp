@@ -97,9 +97,9 @@ fileRequester::fileRequester(
     m_y = y;
     strcpy(m_defaultExtension, defaultExtension);
     if (m_defaultExtension[1] == 'G')
-        gRequestingGames = 1;
+        gRequestingGames = true;
     else
-        gRequestingGames = 0;
+        gRequestingGames = false;
     m_mode = mode;
 
     sprintf(gText, "%s%s", directory, pattern);
@@ -808,4 +808,4 @@ void fileRequester::ShowMapInfo(void) {
 
 // REQUEST owns retail .bss 0x004c5130-0x004c5137.
 DATA(0x004cc82c)
-i8 gRequestingGames;
+b8 gRequestingGames;

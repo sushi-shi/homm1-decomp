@@ -198,7 +198,7 @@ afterMouseCoordinates:
 VA(0x0046ecfe, 0xa0)
 inputManager::inputManager(void) {
     m_active = 0;
-    m_forceMouseMove = 0;
+    m_forceMouseMove = false;
     m_mouseMessageActive = 0;
     m_requestedPriority = 1;
     m_field_0x33c = 0;

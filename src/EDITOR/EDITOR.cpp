@@ -49,7 +49,7 @@
 // the .data order. EDITOR.CPP began as a copy of the game's KB.CPP and keeps
 // its paths, menu table and text tables beside the editor's own.
 DATA(0x0043eda0)
-i16 gRadarTerrainColor[24] = {
+H1_ENUM_ARRAY(i16, gRadarTerrainColor, TerrainType, 24) = {
     82,  99, 7,   180, 26,  123, 55, 0,  16, 48, 98, 160,
     126, 74, 110, 179, 100, 218, 12, 12, 12, 12, 12, 12,
 };
@@ -58,11 +58,11 @@ i16 gVesaMode[6] = {640, 480, 256, 20226, 257, 0};
 DATA(0x0043eddc)
 i32 gShowIt = 1;
 DATA(0x0043ede0)
-i32 gEnlargeScreenBlit = 1;
+b32 gEnlargeScreenBlit = true;
 DATA(0x0043ede4)
-i8 gCommandLineInterpreted = 1;
+b8 gCommandLineInterpreted = true;
 DATA(0x0043ede5)
-i8 gShowMapInfo = 1;
+b8 gShowMapInfo = true;
 // No retail code reads this; it holds its retail .data place.
 DATA(0x0043ede8)
 i32 gUnusedData43ede8 = 1;
@@ -79,9 +79,9 @@ char gGamePath[20] = ".\\GAMES\\";
 DATA(0x0043f380)
 char gMapPath[20] = ".\\MAPS\\";
 DATA(0x0043f394)
-i32 gCurExe = CONFIG_EXECUTABLE_EDITOR;
+H1_ENUM_STORAGE(ConfigExecutable, i32) gCurExe = CONFIG_EXECUTABLE_EDITOR;
 DATA(0x0043f398)
-i32 gNewMapFormat = 1;
+b32 gNewMapFormat = true;
 // The tool units' shared state (CLEARMGR, OVERLAY, TERRMGR and EDITMGR read it).
 DATA(0x0043f39c)
 i32 gClearFlags = EDITOR_CLEAR_FLAGS_DEFAULT;
@@ -93,7 +93,7 @@ double gTerrainPercent[EDITOR_TERRAIN_COUNT] = {30.0, 30.0, 20.0, 0.0, 0.0, 0.0,
 DATA(0x0043f3e0)
 double gDensityPercent[EDITOR_GENERATOR_DENSITY_COUNT] = {50.0, 50.0, 50.0, 50.0, 50.0};
 DATA(0x0043f408)
-i32 gScatterTowns = 1;
+b32 gScatterTowns = true;
 DATA(0x0043f410)
 SMenuEnableStatus gMenuEnableStatus[70] = {
     {0, 0, 0, 0},     {40005, 1, 1, 0}, {40006, 1, 1, 0}, {40007, 1, 1, 0}, {40008, 1, 1, 0},
@@ -151,7 +151,7 @@ WindowTextEntry gWinSetup[WINDOW_TEXT_EDITOR_ENTRY_COUNT] = {
     {1202, EVENTS_WINDOW_TEXT_NEW_MAP},    {1400, EVENTS_WINDOW_TEXT_NEW_MAP},
 };
 DATA(0x0043f714)
-char* gTerrainToolHelp[EDITOR_TERRAIN_TOOL_HELP_COUNT] = {
+H1_ENUM_ARRAY(char*, gTerrainToolHelp, TerrainToolHelp, EDITOR_TERRAIN_TOOL_HELP_COUNT) = {
     "",
     localization::Tr("editor.terrain.help.water"),
     localization::Tr("editor.terrain.help.grass"),
@@ -162,12 +162,12 @@ char* gTerrainToolHelp[EDITOR_TERRAIN_TOOL_HELP_COUNT] = {
     localization::Tr("editor.terrain.help.dirt")
 };
 DATA(0x0043f734)
-char* gClearToolHelp[EDITOR_CLEAR_TOOL_HELP_COUNT] = {
+H1_ENUM_ARRAY(char*, gClearToolHelp, ClearToolHelp, EDITOR_CLEAR_TOOL_HELP_COUNT) = {
     "",
     localization::Tr("editor.clear.options.help")
 };
 DATA(0x0043f73c)
-char* gOverlayToolHelp[EDITOR_OVERLAY_TOOL_HELP_COUNT] = {
+H1_ENUM_ARRAY(char*, gOverlayToolHelp, OverlayToolHelp, EDITOR_OVERLAY_TOOL_HELP_COUNT) = {
     "",
     localization::Tr("editor.overlay.selected.help")
 };
@@ -293,7 +293,7 @@ char* gWinSetupText[WINDOW_TEXT_EDITOR_ENTRY_COUNT] = {
     localization::Tr("editor.table.gWinSetupText.69")
 };
 DATA(0x0043f8ec)
-char* gArtifactNames[38] = {
+H1_ENUM_ARRAY(char*, gArtifactNames, ArtifactType, ARTIFACT_COUNT) = {
     localization::Tr("table.gArtifactNames.0"),  localization::Tr("table.gArtifactNames.1"),
     localization::Tr("table.gArtifactNames.2"),  localization::Tr("table.gArtifactNames.3"),
     localization::Tr("table.gArtifactNames.4"),  localization::Tr("table.gArtifactNames.5"),
@@ -315,7 +315,7 @@ char* gArtifactNames[38] = {
     localization::Tr("table.gArtifactNames.36"), localization::Tr("table.gArtifactNames.37"),
 };
 DATA(0x0043f984)
-char* gArtifactDesc[38] = {
+H1_ENUM_ARRAY(char*, gArtifactDesc, ArtifactType, ARTIFACT_COUNT) = {
     localization::Tr("table.gArtifactDesc.0"),  localization::Tr("table.gArtifactDesc.1"),
     localization::Tr("table.gArtifactDesc.2"),  localization::Tr("table.gArtifactDesc.3"),
     localization::Tr("table.gArtifactDesc.4"),  localization::Tr("table.gArtifactDesc.5"),
@@ -401,7 +401,7 @@ char* gClassNames[4] = {
     localization::Tr("table.gClassNames.3")
 };
 DATA(0x0043faec)
-char* gArmyNames[28] = {
+H1_ENUM_ARRAY(char*, gArmyNames, CreatureType, CREATURE_COUNT) = {
     localization::Tr("table.gArmyNames.0"),  localization::Tr("table.gArmyNames.1"),
     localization::Tr("table.gArmyNames.2"),  localization::Tr("table.gArmyNames.3"),
     localization::Tr("table.gArmyNames.4"),  localization::Tr("table.gArmyNames.5"),
@@ -419,13 +419,14 @@ char* gArmyNames[28] = {
 };
 // Buka separates resource stems from translated creature display names.
 DATA(0x0043fb5c)
-char* gArmySpriteNames[28] = {"peasant", "archer",   "pikeman", "swordsman", "cavalry", "paladin",
-                              "goblin",  "orc",      "wolf",    "ogre",      "troll",   "cyclops",
-                              "sprite",  "dwarf",    "elf",     "druid",     "unicorn", "phoenix",
-                              "centaur", "gargoyle", "griffin", "minotaur",  "hydra",   "dragon",
-                              "rogue",   "nomad",    "ghost",   "genie"};
+H1_ENUM_ARRAY(char*, gArmySpriteNames, CreatureType, CREATURE_COUNT) = {
+    "peasant",  "archer", "pikeman", "swordsman", "cavalry", "paladin",  "goblin",
+    "orc",      "wolf",   "ogre",    "troll",     "cyclops", "sprite",   "dwarf",
+    "elf",      "druid",  "unicorn", "phoenix",   "centaur", "gargoyle", "griffin",
+    "minotaur", "hydra",  "dragon",  "rogue",     "nomad",   "ghost",    "genie"
+};
 DATA(0x0043fbcc)
-char* gArmyNamesPlural[28] = {
+H1_ENUM_ARRAY(char*, gArmyNamesPlural, CreatureType, CREATURE_COUNT) = {
     localization::Tr("table.gArmyNamesPlural.0"),  localization::Tr("table.gArmyNamesPlural.1"),
     localization::Tr("table.gArmyNamesPlural.2"),  localization::Tr("table.gArmyNamesPlural.3"),
     localization::Tr("table.gArmyNamesPlural.4"),  localization::Tr("table.gArmyNamesPlural.5"),
@@ -442,7 +443,7 @@ char* gArmyNamesPlural[28] = {
     localization::Tr("table.gArmyNamesPlural.26"), localization::Tr("table.gArmyNamesPlural.27"),
 };
 DATA(0x0043fc3c)
-char* gSpellNames[29] = {
+H1_ENUM_ARRAY(char*, gSpellNames, SpellType, SPELL_COUNT) = {
     localization::Tr("table.gSpellNames.0"),  localization::Tr("table.gSpellNames.1"),
     localization::Tr("table.gSpellNames.2"),  localization::Tr("table.gSpellNames.3"),
     localization::Tr("table.gSpellNames.4"),  localization::Tr("table.gSpellNames.5"),
@@ -460,7 +461,7 @@ char* gSpellNames[29] = {
     localization::Tr("table.gSpellNames.28"),
 };
 DATA(0x0043fcb0)
-char* gNeutralBuildingNames[7] = {
+H1_ENUM_ARRAY(char*, gNeutralBuildingNames, BuildingSlotType, BUILDING_SLOT_NEUTRAL_COUNT) = {
     localization::Tr("table.gNeutralBuildingNames.0"),
     localization::Tr("table.gNeutralBuildingNames.1"),
     localization::Tr("table.gNeutralBuildingNames.2"),
@@ -485,7 +486,7 @@ char* gDwellingNames[24] = {
     localization::Tr("table.gDwellingNames.22"), localization::Tr("table.gDwellingNames.23"),
 };
 DATA(0x0043fd2c)
-char* gTerrainNames[7] = {
+H1_ENUM_ARRAY(char*, gTerrainNames, TerrainType, TERRAIN_COUNT) = {
     localization::Tr("table.gTerrainNames.0"),
     localization::Tr("table.gTerrainNames.1"),
     localization::Tr("table.gTerrainNames.2"),
@@ -495,7 +496,7 @@ char* gTerrainNames[7] = {
     localization::Tr("table.gTerrainNames.6")
 };
 DATA(0x0043fd48)
-char* gResourceNames[7] = {
+H1_ENUM_ARRAY(char*, gResourceNames, ResourceType, RESOURCE_COUNT) = {
     localization::Tr("table.gResourceNames.0"),
     localization::Tr("table.gResourceNames.1"),
     localization::Tr("table.gResourceNames.2"),
@@ -505,7 +506,7 @@ char* gResourceNames[7] = {
     localization::Tr("table.gResourceNames.6")
 };
 DATA(0x0043fd64)
-char* gMineNames[7] = {
+H1_ENUM_ARRAY(char*, gMineNames, ResourceType, RESOURCE_COUNT) = {
     localization::Tr("table.gMineNames.0"),
     localization::Tr("table.gMineNames.1"),
     localization::Tr("table.gMineNames.2"),
@@ -652,7 +653,7 @@ char* gAPanelHelp[5] = {
     localization::Tr("table.gAPanelHelp.4"),
 };
 DATA(0x00440054)
-char* gInitMenuHelp[5] = {
+H1_ENUM_ARRAY(char*, gInitMenuHelp, MainMenuHelp, MAIN_MENU_HELP_COUNT) = {
     localization::Tr("table.gInitMenuHelp.0"),
     localization::Tr("table.gInitMenuHelp.1"),
     localization::Tr("table.gInitMenuHelp.2"),
@@ -711,7 +712,7 @@ char* walkSpeedText[5] = {
     localization::Tr("table.walkSpeedText.4")
 };
 DATA(0x004400f8)
-char* gColorNames[4] = {
+H1_ENUM_ARRAY(char*, gColorNames, PlayerColor, PLAYER_COLOR_COUNT) = {
     localization::Tr("table.gColorNames.0"),
     localization::Tr("table.gColorNames.1"),
     localization::Tr("table.gColorNames.2"),
@@ -726,7 +727,7 @@ char* gAlignmentNames[5] = {
     localization::Tr("table.gAlignmentNames.4")
 };
 DATA(0x0044011c)
-char* gSpellDesc[29] = {
+H1_ENUM_ARRAY(char*, gSpellDesc, SpellType, SPELL_COUNT) = {
     localization::Tr("table.gSpellDesc.0"),  localization::Tr("table.gSpellDesc.1"),
     localization::Tr("table.gSpellDesc.2"),  localization::Tr("table.gSpellDesc.3"),
     localization::Tr("table.gSpellDesc.4"),  localization::Tr("table.gSpellDesc.5"),
@@ -811,7 +812,7 @@ char* gArmySizeNames[6][2] = {
     {localization::Tr("table.gArmySizeNames.10"), localization::Tr("table.gArmySizeNames.11")},
 };
 DATA(0x00440284)
-char* gHeroScreen[19] = {
+H1_ENUM_ARRAY(char*, gHeroScreen, HeroScreenText, HERO_TEXT_COUNT) = {
     localization::Tr("table.gHeroScreen.0"),  localization::Tr("table.gHeroScreen.1"),
     localization::Tr("table.gHeroScreen.2"),  localization::Tr("table.gHeroScreen.3"),
     localization::Tr("table.gHeroScreen.4"),  localization::Tr("table.gHeroScreen.5"),
@@ -841,7 +842,7 @@ char* gCastleInfo[14] = {
     localization::Tr("table.gCastleInfo.13"),
 };
 DATA(0x00440308)
-char* gLuckInfoText[11] = {
+H1_ENUM_ARRAY(char*, gLuckInfoText, LuckInfoText, LUCK_INFO_COUNT) = {
     localization::Tr("table.gLuckInfoText.0"),
     localization::Tr("table.gLuckInfoText.1"),
     localization::Tr("table.gLuckInfoText.2"),
@@ -871,7 +872,7 @@ char* gPlayerTypeNames[5] = {
     localization::Tr("table.gPlayerTypeNames.4")
 };
 DATA(0x00440358)
-char* gSpellHelp[8] = {
+H1_ENUM_ARRAY(char*, gSpellHelp, SpellHelpText, SPELL_HELP_COUNT) = {
     localization::Tr("table.gSpellHelp.0"),
     localization::Tr("table.gSpellHelp.1"),
     localization::Tr("table.gSpellHelp.2"),
@@ -927,7 +928,7 @@ char* gViewGeneralLabels[6] = {
     localization::Tr("table.gViewGeneralLabels.5"),
 };
 DATA(0x004403f0)
-char* gViewGeneralHelp[6] = {
+H1_ENUM_ARRAY(char*, gViewGeneralHelp, ViewGeneralHoverHelp, GENERAL_HOVER_HELP_COUNT) = {
     localization::Tr("table.gViewGeneralHelp.0"),
     localization::Tr("table.gViewGeneralHelp.1"),
     localization::Tr("table.gViewGeneralHelp.2"),
@@ -948,7 +949,7 @@ char* gCombatMessage[9] = {
     localization::Tr("table.gCombatMessage.8"),
 };
 DATA(0x0044042c)
-char* gHeroLevel[3] = {
+H1_ENUM_ARRAY(char*, gHeroLevel, HeroLevelText, HERO_LEVEL_TEXT_COUNT) = {
     localization::Tr("table.gHeroLevel.0"),
     localization::Tr("table.gHeroLevel.1"),
     localization::Tr("table.gHeroLevel.2")
@@ -1033,7 +1034,7 @@ char* gCPanelHelp[12] = {
     localization::Tr("table.gCPanelHelp.11")
 };
 DATA(0x00440600)
-char* gNewGameHelp[9] = {
+H1_ENUM_ARRAY(char*, gNewGameHelp, NewGameHelp, NEW_GAME_HELP_COUNT) = {
     localization::Tr("table.gNewGameHelp.0"),
     localization::Tr("table.gNewGameHelp.1"),
     localization::Tr("table.gNewGameHelp.2"),
@@ -1045,7 +1046,7 @@ char* gNewGameHelp[9] = {
     localization::Tr("table.gNewGameHelp.8"),
 };
 DATA(0x00440624)
-char* gSetupCampaignGameHelp[5] = {
+H1_ENUM_ARRAY(char*, gSetupCampaignGameHelp, SetupCampaignHelp, SETUP_CAMPAIGN_HELP_COUNT) = {
     localization::Tr("table.gSetupCampaignGameHelp.0"),
     localization::Tr("table.gSetupCampaignGameHelp.1"),
     localization::Tr("table.gSetupCampaignGameHelp.2"),
@@ -1053,7 +1054,7 @@ char* gSetupCampaignGameHelp[5] = {
     localization::Tr("table.gSetupCampaignGameHelp.4"),
 };
 DATA(0x00440638)
-char* gSetupBaudHelp[5] = {
+H1_ENUM_ARRAY(char*, gSetupBaudHelp, SetupBaudHelp, SETUP_BAUD_HELP_COUNT) = {
     localization::Tr("table.gSetupBaudHelp.0"),
     localization::Tr("table.gSetupBaudHelp.1"),
     localization::Tr("table.gSetupBaudHelp.2"),
@@ -1061,7 +1062,7 @@ char* gSetupBaudHelp[5] = {
     localization::Tr("table.gSetupBaudHelp.4"),
 };
 DATA(0x0044064c)
-char* gSetupComPortHelp[5] = {
+H1_ENUM_ARRAY(char*, gSetupComPortHelp, SetupComPortHelp, SETUP_COM_PORT_HELP_COUNT) = {
     localization::Tr("table.gSetupComPortHelp.0"),
     localization::Tr("table.gSetupComPortHelp.1"),
     localization::Tr("table.gSetupComPortHelp.2"),
@@ -1069,7 +1070,7 @@ char* gSetupComPortHelp[5] = {
     localization::Tr("table.gSetupComPortHelp.4"),
 };
 DATA(0x00440660)
-char* gSetupDCBaudHelp[5] = {
+H1_ENUM_ARRAY(char*, gSetupDCBaudHelp, SetupBaudHelp, SETUP_BAUD_HELP_COUNT) = {
     localization::Tr("table.gSetupDCBaudHelp.0"),
     localization::Tr("table.gSetupDCBaudHelp.1"),
     localization::Tr("table.gSetupDCBaudHelp.2"),
@@ -1077,7 +1078,7 @@ char* gSetupDCBaudHelp[5] = {
     localization::Tr("table.gSetupDCBaudHelp.4"),
 };
 DATA(0x00440674)
-char* gSetupDCComPortHelp[5] = {
+H1_ENUM_ARRAY(char*, gSetupDCComPortHelp, SetupComPortHelp, SETUP_COM_PORT_HELP_COUNT) = {
     localization::Tr("table.gSetupDCComPortHelp.0"),
     localization::Tr("table.gSetupDCComPortHelp.1"),
     localization::Tr("table.gSetupDCComPortHelp.2"),
@@ -1085,28 +1086,33 @@ char* gSetupDCComPortHelp[5] = {
     localization::Tr("table.gSetupDCComPortHelp.4"),
 };
 DATA(0x00440688)
-char* gSetupHotSeatGameHelp[4] = {
+H1_ENUM_ARRAY(char*, gSetupHotSeatGameHelp, SetupHotSeatHelp, SETUP_HOT_SEAT_HELP_COUNT) = {
     localization::Tr("table.gSetupHotSeatGameHelp.0"),
     localization::Tr("table.gSetupHotSeatGameHelp.1"),
     localization::Tr("table.gSetupHotSeatGameHelp.2"),
     localization::Tr("table.gSetupHotSeatGameHelp.3"),
 };
 DATA(0x00440698)
-char* gSetupModemGameHelp[4] = {
+H1_ENUM_ARRAY(char*, gSetupModemGameHelp, SetupModemHelp, SETUP_MODEM_HELP_COUNT) = {
     localization::Tr("table.gSetupModemGameHelp.0"),
     localization::Tr("table.gSetupModemGameHelp.1"),
     localization::Tr("table.gSetupModemGameHelp.2"),
     localization::Tr("table.gSetupModemGameHelp.3"),
 };
 DATA(0x004406a8)
-char* gSetupDCGameHelp[4] = {
+H1_ENUM_ARRAY(char*, gSetupDCGameHelp, SetupModemHelp, SETUP_MODEM_HELP_COUNT) = {
     localization::Tr("table.gSetupDCGameHelp.0"),
     localization::Tr("table.gSetupDCGameHelp.1"),
     localization::Tr("table.gSetupDCGameHelp.2"),
     localization::Tr("table.gSetupDCGameHelp.3"),
 };
 DATA(0x004406b8)
-char* gSetupMultiPlayerGameHelp[5] = {
+H1_ENUM_ARRAY(
+    char*,
+    gSetupMultiPlayerGameHelp,
+    SetupMultiPlayerHelp,
+    SETUP_MULTIPLAYER_HELP_COUNT
+) = {
     localization::Tr("table.gSetupMultiPlayerGameHelp.0"),
     localization::Tr("table.gSetupMultiPlayerGameHelp.1"),
     localization::Tr("table.gSetupMultiPlayerGameHelp.2"),
@@ -1114,13 +1120,13 @@ char* gSetupMultiPlayerGameHelp[5] = {
     localization::Tr("table.gSetupMultiPlayerGameHelp.4"),
 };
 DATA(0x004406cc)
-char* gSetupNetworkGameHelp[3] = {
+H1_ENUM_ARRAY(char*, gSetupNetworkGameHelp, SetupNetworkHelp, SETUP_NETWORK_HELP_COUNT) = {
     localization::Tr("table.gSetupNetworkGameHelp.0"),
     localization::Tr("table.gSetupNetworkGameHelp.1"),
     localization::Tr("table.gSetupNetworkGameHelp.2"),
 };
 DATA(0x004406d8)
-char* gSetupGameHelp[4] = {
+H1_ENUM_ARRAY(char*, gSetupGameHelp, SetupGameHelp, SETUP_GAME_HELP_COUNT) = {
     localization::Tr("table.gSetupGameHelp.0"),
     localization::Tr("table.gSetupGameHelp.1"),
     localization::Tr("table.gSetupGameHelp.2"),
@@ -1141,17 +1147,18 @@ char* gBattleResults[11] = {
     localization::Tr("table.gBattleResults.10"),
 };
 DATA(0x00440714)
-char* gNeutralBuildingDescriptions[7] = {
-    localization::Tr("table.gNeutralBuildingDescriptions.0"),
-    localization::Tr("table.gNeutralBuildingDescriptions.1"),
-    localization::Tr("table.gNeutralBuildingDescriptions.2"),
-    localization::Tr("table.gNeutralBuildingDescriptions.3"),
-    localization::Tr("table.gNeutralBuildingDescriptions.4"),
-    localization::Tr("table.gNeutralBuildingDescriptions.5"),
-    localization::Tr("table.gNeutralBuildingDescriptions.6"),
+H1_ENUM_ARRAY(char*, gNeutralBuildingDescriptions, BuildingSlotType, BUILDING_SLOT_NEUTRAL_COUNT) =
+    {
+        localization::Tr("table.gNeutralBuildingDescriptions.0"),
+        localization::Tr("table.gNeutralBuildingDescriptions.1"),
+        localization::Tr("table.gNeutralBuildingDescriptions.2"),
+        localization::Tr("table.gNeutralBuildingDescriptions.3"),
+        localization::Tr("table.gNeutralBuildingDescriptions.4"),
+        localization::Tr("table.gNeutralBuildingDescriptions.5"),
+        localization::Tr("table.gNeutralBuildingDescriptions.6"),
 };
 DATA(0x00440730)
-char* gMoraleInfoText[21] = {
+H1_ENUM_ARRAY(char*, gMoraleInfoText, MoraleInfoText, MORALE_INFO_COUNT) = {
     localization::Tr("table.gMoraleInfoText.0"),  localization::Tr("table.gMoraleInfoText.1"),
     localization::Tr("table.gMoraleInfoText.2"),  localization::Tr("table.gMoraleInfoText.3"),
     localization::Tr("table.gMoraleInfoText.4"),  localization::Tr("table.gMoraleInfoText.5"),
@@ -1165,13 +1172,13 @@ char* gMoraleInfoText[21] = {
     localization::Tr("table.gMoraleInfoText.20"),
 };
 DATA(0x00440784)
-char* gMapSizeNames[3] = {
+H1_ENUM_ARRAY(char*, gMapSizeNames, MapSize, MAP_SIZE_COUNT) = {
     localization::Tr("table.gMapSizeNames.0"),
     localization::Tr("table.gMapSizeNames.1"),
     localization::Tr("table.gMapSizeNames.2"),
 };
 DATA(0x00440790)
-char* gMapDifficultyNames[5] = {
+H1_ENUM_ARRAY(char*, gMapDifficultyNames, MapDifficulty, MAP_DIFFICULTY_COUNT) = {
     localization::Tr("table.gMapDifficultyNames.0"),
     localization::Tr("table.gMapDifficultyNames.1"),
     localization::Tr("table.gMapDifficultyNames.2"),
@@ -1215,7 +1222,7 @@ char* gCampaignScenarioText[9] = {
     localization::Tr("table.gCampaignScenarioText.8"),
 };
 DATA(0x00440810)
-char* gDifficultyNames[4] = {
+H1_ENUM_ARRAY(char*, gDifficultyNames, GameDifficulty, DIFFICULTY_COUNT) = {
     localization::Tr("table.gDifficultyNames.0"),
     localization::Tr("table.gDifficultyNames.1"),
     localization::Tr("table.gDifficultyNames.2"),
@@ -1296,7 +1303,7 @@ i32 gSelectionHeight;
 DATA(0x00451f84)
 i32 gUnusedData451f84;
 DATA(0x00451f88)
-i8 gGroundToTerrain[140];
+H1_ENUM_STORAGE(TerrainType, i8) gGroundToTerrain[140];
 DATA(0x00452014)
 char gLastFilename[FILE_REQUESTER_NAME_SIZE];
 DATA(0x00452174)
@@ -1348,7 +1355,7 @@ i32 gCurWindowsStyleFlags;
 DATA(0x00452704)
 char gRegCDRomPath[352];
 DATA(0x00452864)
-i32 gTimers[GLOBAL_TIMER_COUNT];
+H1_ENUM_ARRAY(i32, gTimers, TimerSlot, GLOBAL_TIMER_COUNT);
 
 // Zero-initialized data follows the uninitialized in definition order.
 DATA(0x0045287c)
@@ -1356,15 +1363,15 @@ char gCurMapName[16] = "";
 DATA(0x0045288c)
 i32 gComputeExtent = 0;
 DATA(0x00452890)
-i32 gCurrArmyDrawn = 0;
+b32 gCurrArmyDrawn = false;
 DATA(0x00452894)
-i8 gIconClipOn = 0;
+b8 gIconClipOn = false;
 DATA(0x00452898)
 i32 gLimitToExtent = 0;
 DATA(0x0045289c)
-i32 gLoadingMonoIcon = 0;
+b32 gLoadingMonoIcon = false;
 DATA(0x004528a0)
-i32 gSaveBiggestExtent = 0;
+b32 gSaveBiggestExtent = false;
 DATA(0x004528a4)
 i32 gColorMice = 0;
 DATA(0x004528a8)
@@ -1390,25 +1397,25 @@ i32 gOverlayCategory = 0;
 DATA(0x004528cc)
 i32 gOverlayShownCategory = 0;
 DATA(0x004528d0)
-i32 gStatusTextShown = 0;
+b32 gStatusTextShown = false;
 DATA(0x004528d4)
-i32 gInDialog = 0;
+b32 gInDialog = false;
 DATA(0x004528d8)
 i32 gMinimized = 0;
 DATA(0x004528dc)
-i32 gInSetupDialog = 0;
+b32 gInSetupDialog = false;
 DATA(0x004528e0)
 i32 gSaveUnseen = 0;
 DATA(0x004528e4)
-i32 gGeneratingMaps = 0;
+b32 gGeneratingMaps = false;
 DATA(0x004528e8)
-i32 gHeroMoving = 0;
+b32 gHeroMoving = false;
 DATA(0x004528ec)
-i32 gInSmacker = 0;
+b32 gInSmacker = false;
 DATA(0x004528f0)
 i32 gStatusTextClearTime = 0;
 DATA(0x004528f4)
-i8 gFirstTimeThrough = 0;
+b8 gFirstTimeThrough = false;
 
 VA(0x004084a0, 0x5)
 void EditorStartupHook(void) {}
@@ -1420,7 +1427,7 @@ VA(0x004084aa, 0x106)
 i32 oldmain(void) {
     palette* editorPalette;
 
-    if (gExec->InitSystem())
+    if (H1_ENUM_ENCODE(BaseManagerStatus, gExec->InitSystem()))
         ShutDown(localization::Tr("editor.startup.initialize.failed"));
     KBChangeMenu(gDefaultMenu);
     editorPalette = gResourceManager->GetPalette("kb.pal");
@@ -1428,7 +1435,10 @@ i32 oldmain(void) {
     gMapX = 0;
     gMapY = 0;
     gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_NORMAL, editorPalette);
-    if (gExec->AddManager(gEditManager, BASE_MANAGER_PRIORITY_UNASSIGNED))
+    if (H1_ENUM_ENCODE(
+            BaseManagerStatus,
+            gExec->AddManager(gEditManager, BASE_MANAGER_PRIORITY_UNASSIGNED)
+        ))
         ShutDown(localization::Tr("startup.manager.failed"));
     gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, editorPalette);
     gExec->MainLoop();
@@ -1499,7 +1509,7 @@ void ShutDown(char* message) {
         SetFullScreenStatus(0);
         MessageBoxA(gAppWindow, buffer, localization::Tr("shutdown.unexpected.title"), MB_ICONHAND);
     }
-    gClosingApp = 1;
+    gClosingApp = true;
     gExec->ShutDownSystem();
     if (gEventHandle) {
         CloseHandle(gEventHandle);
@@ -1533,7 +1543,7 @@ i32 InterpretCommandLine(void) {
             }
         }
     }
-    gCommandLineInterpreted = 1;
+    gCommandLineInterpreted = true;
     return 1;
 }
 
@@ -1592,7 +1602,7 @@ i32 EarlySetup(void) {
     }
     gDefaultMenu = LoadMenuA(gAppInstance, "mnuDflt");
     for (i = 0; i < MAP_CELL_GROUND_TILE_COUNT; i++)
-        gGroundToTerrain[i] = i / MAP_CELL_TILES_PER_TERRAIN;
+        gGroundToTerrain[i] = H1_ENUM_DECODE(TerrainType, i / MAP_CELL_TILES_PER_TERRAIN);
     return 1;
 }
 
@@ -1740,13 +1750,13 @@ void NormalDialog(
         gWindowManager->RemoveWindow(gNormalDialogWindow);
         gMouseManager->ReallyShowPointer();
     } else {
-        gWindowManager->DoDialog(gNormalDialogWindow, EventWindowHandler, 0);
+        gWindowManager->DoDialog(gNormalDialogWindow, EventWindowHandler, false);
     }
     delete gNormalDialogWindow;
 }
 
 VA(0x00408fc5, 0x91)
-i16 EventWindowHandler(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) EventWindowHandler(tag_message& message) {
     if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
             case WIDGET_NOTIFY_DESELECT:
@@ -1791,7 +1801,7 @@ void ShowStatusText(char* text) {
         text = gStatusText;
     else
         strcpy(gStatusText, text);
-    gStatusTextShown = 1;
+    gStatusTextShown = true;
     gStatusTextHoldTime = KBTickCount() + EDITOR_STATUS_TEXT_HOLD_MILLISECONDS;
     FillBitmapArea(
         gWindowManager->m_screen,
@@ -1822,7 +1832,7 @@ VA(0x0040918e, 0x4d)
 void ClearStatusText(void) {
     gStatusTextClearTime = EDITOR_STATUS_TEXT_KEPT;
     if (gStatusTextShown) {
-        gStatusTextShown = 0;
+        gStatusTextShown = false;
         gEditManager->m_window->DrawWindow(0);
         gWindowManager->UpdateScreenRegion(
             EDITOR_STATUS_BAR_X,
@@ -1849,13 +1859,13 @@ void CleanUpMenus(void) {
 VA(0x0040921c, 0x1b)
 void EarlyShutDownSystem(void) {
     if (gEditManager)
-        gEditManager->SelectTool(EDIT_MANAGER_NO_TOOL);
+        gEditManager->SelectTool(EDIT_TOOL_NONE);
 }
 
 // The editor always asks before quitting.
 VA(0x00409237, 0xa)
-i32 GameUnsaved(void) {
-    return 1;
+b32 GameUnsaved(void) {
+    return true;
 }
 
 VA(0x00409241, 0x37)
