@@ -12,9 +12,9 @@ generator resolves each macro to the production expansion the pinned VC6
 compiler already sees and removes the rest.
 
 Two variants come from one snapshot. `source` keeps the catalog references
-(`localization::Tr("id")`) and builds Russian or English with VC6; `classic`
-is the same tree with the Russian text spelled out as readable UTF-8 for
-reading. See docs/clean-source.md.
+(`localization::Tr("id")`) and builds any language of its locales/ catalog
+with VC6; `classic` is the same tree with the retail program's Russian text
+spelled out as readable UTF-8 for reading. See docs/clean-source.md.
 """
 
 from __future__ import annotations
@@ -70,19 +70,28 @@ def snapshot(repo: Path, revision: str = "HEAD", *, working: bool = False
     return commit, files
 
 
-def _units(files: dict[str, bytes]) -> list[dict]:
+def _units(files: dict[str, bytes], *, every_image: bool = False) -> list[dict]:
+    """The game's units (the generated trees build the game only); with
+    `every_image`, also those other images (the editor) link alone."""
     import tomllib
-    return list(tomllib.loads(files["config/units.toml"].decode())["unit"])
+    from homm1.core.paths import DEFAULT_IMAGE
+    from homm1.manifest import unit_images
+    return [u for u in tomllib.loads(files["config/units.toml"].decode())["unit"]
+            if every_image or DEFAULT_IMAGE in unit_images(u)]
 
 
 def selected(files: dict[str, bytes]) -> dict[str, str]:
     """{path: transform} for every file the clean tree carries.
 
-    The tree holds the unit sources, every header, and the resource script.
-    Anything else under src/ fails generation rather than silently vanishing.
+    The tree holds the game's unit sources, every header, and the resource
+    script; units only another image links are left out. Anything else under
+    src/ fails generation rather than silently vanishing.
     """
     chosen = {unit["source"]: "" for unit in _units(files)}
+    other_images = {unit["source"] for unit in _units(files, every_image=True)} - set(chosen)
     for name in files:
+        if name in other_images:
+            continue
         top = name.split("/", 1)[0]
         if top in ("include", "vendor") and name.endswith(".h") \
                 and name not in source.DROP_FILES:
@@ -102,18 +111,20 @@ def selected(files: dict[str, bytes]) -> dict[str, str]:
     return chosen
 
 
-LOCALE_FILES = ("locales/messages.def", "locales/ru.po", "locales/format-variants.json")
+def locale_files(files: dict[str, bytes]) -> dict[str, bytes]:
+    """The snapshot's catalog: locales/messages.pot and each language's .po
+    and .json descriptor."""
+    return {name: data for name, data in files.items()
+            if name.startswith("locales/") and name.count("/") == 1
+            and name.endswith((".pot", ".po", ".json"))}
 
 
 def catalog_of(files: dict[str, bytes]):
     """The snapshot's localization catalog (None without one)."""
     from homm1.graph.catalog import Catalog
-    if "locales/messages.def" not in files:
-        return None
-    variants = files.get("locales/format-variants.json")
-    return Catalog.parse(files["locales/messages.def"].decode("utf-8"),
-                         files["locales/ru.po"].decode("utf-8"),
-                         variants.decode("utf-8") if variants is not None else None)
+    catalog = {name.removeprefix("locales/"): data.decode("utf-8")
+               for name, data in locale_files(files).items()}
+    return Catalog.parse(catalog) if "messages.pot" in catalog else None
 
 
 def generate(files: dict[str, bytes], *, variant: str = "source", control: bool = False
@@ -136,14 +147,20 @@ def generate(files: dict[str, bytes], *, variant: str = "source", control: bool 
         raise ValueError("the classic view needs the snapshot's locales/ catalog")
     output: dict[str, bytes] = {}
     problems: list[str] = []
-    for name, kind in sorted(selected(files).items()):
+    chosen = sorted(selected(files).items())
+    renames = source.aliases(files[name].decode("utf-8") for name, kind in chosen
+                             if kind == "cpp")
+    for name, kind in chosen:
         text = files[name].decode("utf-8")
         try:
-            cleaned = transforms[kind](text, keep_lines=control)
+            if kind == "asm":
+                cleaned = source.clean_asm(text, keep_lines=control, renames=renames)
+            else:
+                cleaned = transforms[kind](text, keep_lines=control)
             if variant == "classic" and kind == "cpp":
-                cleaned = classic.render_cpp(cleaned, catalog)
+                cleaned = classic.render_cpp(cleaned, catalog, retail_locale(files))
             elif variant == "classic" and kind == "rc":
-                cleaned = classic.render_rc(cleaned, catalog)
+                cleaned = classic.render_rc(cleaned, catalog, retail_locale(files))
         except ValueError as error:
             raise ValueError(f"{name}: {error}") from error
         if control:
@@ -160,7 +177,7 @@ def generate(files: dict[str, bytes], *, variant: str = "source", control: bool 
             problems.append(f"{name}: a catalog reference survived the classic rendering")
         output[name] = cleaned.encode("utf-8")
     if variant == "source" and catalog is not None:
-        output.update({name: files[name] for name in LOCALE_FILES if name in files})
+        output.update(locale_files(files))
         output["catalog.py"] = files["scripts/homm1/graph/catalog.py"]
     if control:
         output["build.json"] = json.dumps({"locale": retail_locale(files)}).encode()

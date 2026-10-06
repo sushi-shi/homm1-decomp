@@ -61,8 +61,9 @@ review inputs, not defect totals. Preserve banked matches.
   casts and unexplained casts.
 - [ ] Recover unknown members: **19** `m_unknown*`/`m_field_0x*` placeholders
   remain; each is only ever cleared, initialized or saved, so no code user
-  names it, and neither the game nor the editor image reads one. The mouse's saved area and the player's unused save span are
-  named from their code users, and 20 spans with no user at all are `m_unused*`/`m_padding*`.
+  names it, and neither the game nor the editor image reads one. The mouse's
+  saved area and the player's unused save span are named from their code
+  users, and 20 spans with no user at all are `m_unused*`/`m_padding*`.
 - [x] Review gotos: **204 statements**, all kept because retail's block layout
   requires them. Replacing them with `break`, `else if` or nothing breaks an
   exact match, because VC6 `/Od` emits a `jmp` for every `goto`; each site was

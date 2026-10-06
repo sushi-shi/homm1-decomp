@@ -172,7 +172,7 @@ bodies exact:
   types, and 60 casts are gone. Handle types only change mangling, so the
   claimed names of the retyped globals and of the functions that take them
   (`AppInit`, `AppWndProc`, `AppCommand`, the menu and paint functions) now use
-  the `STRICT` spelling, matching `hwndApp` and the other handle globals.
+  the `STRICT` spelling, matching `gAppWindow` and the other handle globals.
 - Casts to the operand's own type: `u8` map-cell payloads, `u8` hit points and
   a `float` difference.
 - `CONST` enum values converted to `int` or a narrower integer. These enums are

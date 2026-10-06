@@ -49,6 +49,7 @@ def _enum_close(args: list[str]) -> str:
 CALL_RULES = {
     # Retail-address and delinker metadata: no expansion at all.
     "VA": (2, _drop),
+    "VA_AT": (3, _drop),
     "VA_DECL": (1, _drop),
     "VA_AT": (3, _drop),
     "DATA": (1, _drop),
@@ -286,14 +287,50 @@ def blank(text: str) -> str:
                      text.replace(DROPPED, "").replace(COMMENT, "").split("\n"))
 
 
+#: `.bss` layout aliases: `#define <readable> <storage> // spelling fixes .bss
+#: order`. The matching build hashes the storage spelling (VC6 orders `.bss` by
+#: name key); the generated trees do not reproduce that layout, so they drop
+#: the define and keep the readable name the source already spells.
+_ALIAS = re.compile(r"^[ \t]*#[ \t]*define[ \t]+(\w+)[ \t]+(\w+)[ \t]*"
+                    r"//[ \t]*spelling fixes \.bss order[ \t]*$", re.M)
+
+
+def aliases(texts) -> dict[str, str]:
+    """{storage spelling: readable name} over the given source texts."""
+    found: dict[str, str] = {}
+    for text in texts:
+        for readable, storage in _ALIAS.findall(text):
+            found[storage] = readable
+    return found
+
+
+def drop_aliases(text: str) -> str:
+    return _ALIAS.sub(DROPPED, text)
+
+
+def rename_words(text: str, renames: dict[str, str], **kind) -> str:
+    """`text` with each word token in `renames` replaced, outside comments
+    and literals."""
+    if not renames:
+        return text
+    return "".join(renames.get(spelling, spelling) if token == "word" else spelling
+                   for token, spelling in tokens(text, **kind))
+
+
 def clean_cpp(text: str, *, keep_lines: bool = False) -> str:
     """The clean form; `keep_lines` gives the line-preserving control form."""
+    if not keep_lines:
+        text = drop_aliases(text)
     text = rewrite(rewrite_directives(strip_comments(text), keep_lines=keep_lines),
                    keep_lines=keep_lines)
     return blank(text) if keep_lines else tidy(text)
 
 
-def clean_asm(text: str, *, keep_lines: bool = False) -> str:
+def clean_asm(text: str, *, keep_lines: bool = False,
+              renames: dict[str, str] | None = None) -> str:
+    """`renames` maps `.bss` storage spellings to their readable names."""
+    if not keep_lines:
+        text = rename_words(text, renames or {}, asm=True)
     text = strip_comments(text, asm=True)
     return blank(text) if keep_lines else tidy(text)
 

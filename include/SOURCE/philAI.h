@@ -6,15 +6,21 @@
 #include <SOURCE/game.h>
 #include <SOURCE/resourceTypes.h>
 
-extern float gafAITurnCostResource[static_cast<i32>(RESOURCE_COUNT)];
+#define gAITurnCostResource gafAITurnCostResource // spelling fixes .bss order
+extern float gAITurnCostResource[static_cast<i32>(RESOURCE_COUNT)];
 
-extern i8 giBuildShipyard[GAME_PLAYER_COUNT];
-extern i8 giBuildBoat[GAME_PLAYER_COUNT];
-extern i8 giBuildBoatStuffTurn[GAME_PLAYER_COUNT];
+#define gBuildShipyard giBuildShipyard // spelling fixes .bss order
+extern i8 gBuildShipyard[GAME_PLAYER_COUNT];
+#define gBuildBoat giBuildBoat // spelling fixes .bss order
+extern i8 gBuildBoat[GAME_PLAYER_COUNT];
+#define gBuildBoatStuffTurn giBuildBoatStuffTurn // spelling fixes .bss order
+extern i8 gBuildBoatStuffTurn[GAME_PLAYER_COUNT];
 void ShowStatus();
 void CheckDoMain(i32, i32 doMain);
-extern i32 iDummy;
-extern i32 bHeroBuiltThisTurn;
+#define gDummy iDummy // spelling fixes .bss order
+extern i32 gDummy;
+#define gHeroBuiltThisTurn bHeroBuiltThisTurn // spelling fixes .bss order
+extern i32 gHeroBuiltThisTurn;
 
 // forward declarations:
 class armyGroup;
@@ -244,46 +250,63 @@ public:
     i32 EvaluateTownEvent(i32 townId, i32 x, i32 y, i32 mode, i32* liveChance);
 };
 extern i32 costTemp[];
-extern i32 iLastFrameRateTimer;
-extern i32 giHumanTownConquered;
-extern i32 gbBerserk;
-extern float fBerserkFactor;
+#define gLastFrameRateTimer iLastFrameRateTimer // spelling fixes .bss order
+extern i32 gLastFrameRateTimer;
+extern i32 gHumanTownConquered;
+#define gBerserk gbBerserk // spelling fixes .bss order
+extern i32 gBerserk;
+#define gBerserkFactor fBerserkFactor // spelling fixes .bss order
+extern float gBerserkFactor;
 // CheckReload's troop-reload verdict and its reduction factor.
-extern i32 gbTroopReload;
+#define gTroopReload gbTroopReload // spelling fixes .bss order
+extern i32 gTroopReload;
 // GetBestBHC's per-player hero ceiling (GetTurnAIVars sets it).
-extern i32 giMaxHeroesForThisPlayer;
+#define gMaxHeroesForThisPlayer giMaxHeroesForThisPlayer // spelling fixes .bss order
+extern i32 gMaxHeroesForThisPlayer;
 // GetTurnAIVars' per-cell enemy-hero turn distance for mines.
-extern i8 gaiTurnValueOfMine[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
-extern float gfHeroInteractionBonus[];
+extern i8 gTurnValueOfMine[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+#define gHeroInteractionBonus gfHeroInteractionBonus // spelling fixes .bss order
+extern float gHeroInteractionBonus[];
 extern float gAttackHumanBonus;
 extern float gAttackComputerBonus;
 // ValueOfEventAtPosition's event cache, per-resource mine income and the
 // ultimate artifact's average value.
-extern i16 gaiHeroEventStratRVOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+extern i16 gHeroEventStratRVOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 // DoAI's per-turn visit log: up to 30 positions (x, y) a hero has moved
 // from; a target already in it ends the hero's turn.
 H1_ENUM_CONST_BEGIN(AIPlaceVisitConstant)
     ADVMGR_PLACE_VISIT_COUNT = 30,
     ADVMGR_PLACE_COORDINATE_COUNT = 2
 H1_ENUM_CONST_END(AIPlaceVisitConstant)
-extern i32 iPlacesVisited[ADVMGR_PLACE_VISIT_COUNT][ADVMGR_PLACE_COORDINATE_COUNT];
-extern i32 iCurPlaceToVisit;
+#define gPlacesVisited iPlacesVisited // spelling fixes .bss order
+extern i32 gPlacesVisited[ADVMGR_PLACE_VISIT_COUNT][ADVMGR_PLACE_COORDINATE_COUNT];
+#define gCurPlaceToVisit iCurPlaceToVisit // spelling fixes .bss order
+extern i32 gCurPlaceToVisit;
 void ResetHeroRVs(i32 resetAll, i32 x, i32 y);
 // DetermineTargetPosition's shipyard search state.
-extern i8 giBestShipyardId;
-extern i8 gbPossibleShipyardFound;
-extern i8 gbActualShipyardFound;
-extern i8 gbActualBoatFound;
-extern i8 giBestShipyardDist;
+#define gBestShipyardId giBestShipyardId // spelling fixes .bss order
+extern i8 gBestShipyardId;
+#define gPossibleShipyardFound gbPossibleShipyardFound // spelling fixes .bss order
+extern i8 gPossibleShipyardFound;
+#define gActualShipyardFound gbActualShipyardFound // spelling fixes .bss order
+extern i8 gActualShipyardFound;
+#define gActualBoatFound gbActualBoatFound // spelling fixes .bss order
+extern i8 gActualBoatFound;
+#define gBestShipyardDist giBestShipyardDist // spelling fixes .bss order
+extern i8 gBestShipyardDist;
 // StrategicValueOfPosition's per-cell cache, hero live chances and the
 // shared search it borrows unless a nested evaluation already holds it.
-extern i16 gaiHeroStrategicRVOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
-extern i16 gaiLiveChanceOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
-extern i16 gaiHeroLiveChance[];
+#define gHeroStrategicRVOfPos gaiHeroStrategicRVOfPos // spelling fixes .bss order
+extern i16 gHeroStrategicRVOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+#define gLiveChanceOfPos gaiLiveChanceOfPos // spelling fixes .bss order
+extern i16 gLiveChanceOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+#define gHeroLiveChance gaiHeroLiveChance // spelling fixes .bss order
+extern i16 gHeroLiveChance[];
 extern class searchArray SVSearchArray;
-extern float fReduceFactor;
-// The per-cell/per-hero resource-value caches (gaiHeroStrategicRVOfPos,
-// gaiHeroEventStratRVOfPos, gaiHeroLiveChance) hold RV_UNSET until
+#define gReduceFactor fReduceFactor // spelling fixes .bss order
+extern float gReduceFactor;
+// The per-cell/per-hero resource-value caches (gHeroStrategicRVOfPos,
+// gHeroEventStratRVOfPos, gHeroLiveChance) hold RV_UNSET until
 // evaluated; ResetHeroRVs writes it back.
 H1_ENUM_CONST_BEGIN(AIResourceValue)
     RV_UNSET = -32001
@@ -298,17 +321,23 @@ H1_ENUM_END(MapExtraFlag)
 // heroes have stood there and the current/watch players' high bits (all in
 // PHILAI's .bss band), ViewArmy's dismiss flag and the creatures a creature
 // month may feature.
-extern i8 mapVisited[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
-extern u8 giCurPlayerHighBit;
+extern i8 gMapVisitFlags[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+#define gCurPlayerHighBit gCurPlayerTopBit // spelling fixes .bss order
+extern u8 gCurPlayerHighBit;
+#define gCurWatchPlayerHighBit gCurWatchPlayerHighFlag // spelling fixes .bss order
 extern u8 gCurWatchPlayerHighBit;
 void AiPrint(char* text);
 void AbsAiPrint(char* text);
 extern i8 gShowComputerRoute;
-extern u8 giCurWatchPlayerBit;
-extern u8 giCurPlayerBit;
-extern playerData* gpCurPlayer;
-extern i8 giCurPlayer;
-extern i32 giCurTurn;
+#define gCurWatchPlayerBit giCurWatchPlayerBit // spelling fixes .bss order
+extern u8 gCurWatchPlayerBit;
+#define gCurPlayerBit giCurPlayerBit // spelling fixes .bss order
+extern u8 gCurPlayerBit;
+extern playerData* gCurPlayerData;
+#define gCurPlayer giCurPlayer // spelling fixes .bss order
+extern i8 gCurPlayer;
+#define gCurTurn giCurTurn // spelling fixes .bss order
+extern i32 gCurTurn;
 
 // The AI's hourglass: phases 0..LAST, advanced faster with fewer heroes
 // (PHASE_1/3/6 are the steps a two- or three-hero turn skips).

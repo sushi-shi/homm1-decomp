@@ -120,9 +120,11 @@
         touch "$out"
       '';
 
+      # `homm1 play` runs each language under its descriptor's system locale.
       playLocales = pkgs.glibcLocales.override {
         allLocales = false;
-        locales = [ "en_US.UTF-8/UTF-8" "ru_RU.UTF-8/UTF-8" ];
+        locales = map (name: "${(builtins.fromJSON (builtins.readFile (./locales + "/${name}"))).system_locale}/UTF-8")
+          (builtins.filter (pkgs.lib.hasSuffix ".json") (builtins.attrNames (builtins.readDir ./locales)));
       };
 
       python = pkgs.python3.withPackages (ps: [ ps.capstone ps.libclang ]);
@@ -168,7 +170,6 @@
             export HOMM1_FAKETIME_LIB="${pkgs.libfaketime}/lib/libfaketime.so.1"
             export WINEDLLOVERRIDES="mscoree,mshtml="
             export WINEDEBUG="fixme-all"
-            # `homm1 play` runs the Russian program under ru_RU.UTF-8.
             export HOMM1_LOCALE_ARCHIVE="${playLocales}/lib/locale/locale-archive"
           '';
         };

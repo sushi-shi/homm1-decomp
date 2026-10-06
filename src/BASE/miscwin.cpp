@@ -38,17 +38,17 @@ void BlitBitmapToScreen(
     i32 destinationX,
     i32 destinationY
 ) {
-    if (sourceBitmap != gpWindowManager->m_screen) {
+    if (sourceBitmap != gWindowManager->m_screen) {
         for (i32 row = 0; row < height; row++)
             memcpy(
-                gpWindowManager->m_screen->m_pixels + (destinationY + row) * LOGICAL_SCREEN_WIDTH
+                gWindowManager->m_screen->m_pixels + (destinationY + row) * LOGICAL_SCREEN_WIDTH
                     + destinationX,
                 sourceBitmap->m_pixels + (row + sourceY) * sourceBitmap->m_width + sourceX,
                 width
             );
     }
     if (gEnlargeScreenBlit != 0) {
-        if (iMainWinScreenWidth == LOGICAL_SCREEN_WIDTH
+        if (gMainWinScreenWidth == LOGICAL_SCREEN_WIDTH
             && gMainWinScreenHeight == LOGICAL_SCREEN_HEIGHT) {
             if (width < LOGICAL_SCREEN_WIDTH)
                 width++;
@@ -66,19 +66,20 @@ void BlitBitmapToScreen(
         }
     }
     RECT invalidRectangle;
-    invalidRectangle.left = destinationX * iMainWinScreenWidth / LOGICAL_SCREEN_WIDTH;
+    invalidRectangle.left = destinationX * gMainWinScreenWidth / LOGICAL_SCREEN_WIDTH;
     invalidRectangle.top = destinationY * gMainWinScreenHeight / LOGICAL_SCREEN_HEIGHT;
-    invalidRectangle.right = (destinationX + width) * iMainWinScreenWidth / LOGICAL_SCREEN_WIDTH - 1;
+    invalidRectangle.right =
+        (destinationX + width) * gMainWinScreenWidth / LOGICAL_SCREEN_WIDTH - 1;
     invalidRectangle.bottom =
         (destinationY + height) * gMainWinScreenHeight / LOGICAL_SCREEN_HEIGHT - 1;
-    InvalidateRect(hwndApp, &invalidRectangle, FALSE);
-    UpdateWindow(hwndApp);
+    InvalidateRect(gAppWindow, &invalidRectangle, FALSE);
+    UpdateWindow(gAppWindow);
 }
 
 VA(0x0046f9f5, 0x37)
 void GrabScreenBitmap(bitmap* destination, i32 x, i32 y) {
     BlitBitmap(
-        gpWindowManager->m_screen,
+        gWindowManager->m_screen,
         x,
         y,
         destination->m_width,
@@ -97,14 +98,14 @@ void BitmapToScreen(bitmap* image) {
 
 VA(0x0046fa55, 0x50)
 void SetPalette(i8* paletteData, i32 updateDisplay) {
-    memcpy(gpBufferPalette->m_data, paletteData, PALETTE_DATA_SIZE);
+    memcpy(gBufferPalette->m_data, paletteData, PALETTE_DATA_SIZE);
     memcpy(
         gCyclePal,
         paletteData + PALETTE_CYCLE_FIRST * PALETTE_GRAPHICS_CHANNELS,
         sizeof(gCyclePal)
     );
     if (updateDisplay != 0)
-        UpdatePalette(gpBufferPalette->m_data);
+        UpdatePalette(gBufferPalette->m_data);
 }
 
 VA(0x0046faa5, 0x16d)
@@ -123,12 +124,12 @@ void FadeIn(i32 increment) throw() {
         PollSound();
         if (i == PALETTE_FADE_LEVEL_LAST) {
             done = true;
-            UpdatePalette(gpBufferPalette->m_data);
+            UpdatePalette(gBufferPalette->m_data);
         } else {
             threshold = PALETTE_FADE_LEVEL_LAST - i;
             for (j = 0; j < PALETTE_DATA_SIZE; j++) {
-                if (gpBufferPalette->m_data[j] > threshold)
-                    pal->m_data[j] = gpBufferPalette->m_data[j] - threshold;
+                if (gBufferPalette->m_data[j] > threshold)
+                    pal->m_data[j] = gBufferPalette->m_data[j] - threshold;
             }
             UpdatePalette(pal->m_data);
         }
@@ -150,7 +151,7 @@ void FadeOut(i32 increment) throw() {
     done = false;
     if (CURRENT_GRAPHICS_CONFIG.fullScreen == 0)
         increment *= PALETTE_WINDOWED_FADE_SCALE;
-    memcpy(pal->m_data, gpBufferPalette->m_data, PALETTE_DATA_SIZE);
+    memcpy(pal->m_data, gBufferPalette->m_data, PALETTE_DATA_SIZE);
     for (i = 0; i < PALETTE_FADE_LEVEL_END; i += increment) {
     fadeStep:
         PollSound();
@@ -304,20 +305,23 @@ void ClippedMonoIconToBitmap(
 
 // Clipped colour icon blit kept beside the mono path. Retail keeps every
 // working value in file statics, as in the assembly renderers.
+#define sClipY sClipPosY // spelling fixes .bss order
 DATA(0x004cfb50)
 static i32 sClipY;
 DATA(0x004cfb58)
-static i32 sClipBottom;
+static i32 sClipLimitY;
+#define sClipRowStart sClipLeft // spelling fixes .bss order
 DATA(0x004cfbb4)
 static i32 sClipRowStart;
 DATA(0x004cfb64)
 static u8* sClipRow;
 DATA(0x004cfb68)
-static IconEntry* sClipEntry;
+static IconEntry* sClipFrameEntry;
+#define sClipSource sClipSrcPtr // spelling fixes .bss order
 DATA(0x004cfb5c)
 static u8* sClipSource;
 DATA(0x004cfb54)
-static i32 sClipRight;
+static i32 sClipLimitX;
 DATA(0x004cfb60)
 static i32 sClipX;
 DATA(0x004cfb6c)
@@ -338,15 +342,15 @@ void ClipIconToBitmap(
     i32 clipW,
     i32 clipH
 ) {
-    sClipEntry = sourceIcon->m_frames + frame;
-    sClipSource = sourceIcon->m_data + sClipEntry->srcOffset;
-    sClipX = sClipRowStart = x + sClipEntry->x;
-    sClipY = y + sClipEntry->y;
+    sClipFrameEntry = sourceIcon->m_frames + frame;
+    sClipSource = sourceIcon->m_data + sClipFrameEntry->srcOffset;
+    sClipX = sClipRowStart = x + sClipFrameEntry->x;
+    sClipY = y + sClipFrameEntry->y;
     if (ICON_FITS_CLIP(
             sClipRowStart,
             sClipY,
-            sClipEntry->w,
-            sClipEntry->h,
+            sClipFrameEntry->w,
+            sClipFrameEntry->h,
             clipX,
             clipY,
             clipW,
@@ -355,8 +359,8 @@ void ClipIconToBitmap(
         sClipInside = TRUE;
     } else {
         sClipInside = FALSE;
-        sClipRight = clipX + clipW - 1;
-        sClipBottom = clipY + clipH - 1;
+        sClipLimitX = clipX + clipW - 1;
+        sClipLimitY = clipY + clipH - 1;
     }
     sClipRow = destination->m_pixels + sClipY * destination->m_width;
     for (;;) {
@@ -369,15 +373,15 @@ void ClipIconToBitmap(
         } else if (sClipRun != 0) {
             if (sClipInside) {
                 memcpy(sClipRow + sClipX, sClipSource, sClipRun);
-            } else if (sClipY >= clipY && sClipY <= sClipBottom && sClipX + sClipRun >= clipX
-                       && sClipX <= sClipRight) {
+            } else if (sClipY >= clipY && sClipY <= sClipLimitY && sClipX + sClipRun >= clipX
+                       && sClipX <= sClipLimitX) {
                 if (sClipX >= clipX) {
-                    if (sClipX + sClipRun <= sClipRight)
+                    if (sClipX + sClipRun <= sClipLimitX)
                         memcpy(sClipRow + sClipX, sClipSource, sClipRun);
                     else
-                        memcpy(sClipRow + sClipX, sClipSource, sClipRight - sClipX + 1);
+                        memcpy(sClipRow + sClipX, sClipSource, sClipLimitX - sClipX + 1);
                 } else {
-                    if (sClipX + *sClipSource <= sClipRight)
+                    if (sClipX + *sClipSource <= sClipLimitX)
                         memcpy(sClipRow + sClipX, sClipSource, sClipX + sClipRun - clipX);
                     else
                         memcpy(sClipRow + sClipX, sClipSource, clipW);

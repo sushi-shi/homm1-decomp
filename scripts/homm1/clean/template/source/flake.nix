@@ -16,10 +16,12 @@
         tar xf ${release} -C $out
       '';
       wine = pkgs.wineWow64Packages.staging;
-      # The Russian build runs under ru_RU.UTF-8 (its text is Windows-1251).
+      # Each language runs under its descriptor's system locale (ru_RU.UTF-8
+      # for Russian), so Wine shows its text in the language's code page.
       locales = pkgs.glibcLocales.override {
         allLocales = false;
-        locales = [ "en_US.UTF-8/UTF-8" "ru_RU.UTF-8/UTF-8" ];
+        locales = map (name: "${(builtins.fromJSON (builtins.readFile (./locales + "/${name}"))).system_locale}/UTF-8")
+          (builtins.filter (pkgs.lib.hasSuffix ".json") (builtins.attrNames (builtins.readDir ./locales)));
       };
       tools = [ pkgs.python3 wine pkgs.llvm pkgs.p7zip pkgs.unshield ];
       environment = {

@@ -63,6 +63,7 @@ _GATES = {"data-identity": "homm1.verify.data_identity", "enum-reuse": "homm1.ve
           "enum-domains": "homm1.verify.enum_domains",
           "label-style": "homm1.verify.label_style",
           "line-directives": "homm1.verify.line_directives",
+          "localization": "homm1.verify.localization",
           "include-order": "homm1.verify.include_order",
           "unique-names": "homm1.verify.unique_names",
           "library-overlap": "homm1.verify.library_overlap",
