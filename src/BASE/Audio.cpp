@@ -99,13 +99,13 @@ void PlaySample(sample* resource) {
     gSampleBuffer = resource->m_playbackData.data;
     gSampleRate = resource->m_playbackData.sampleRate;
     gSampleFrames = resource->m_playbackData.size;
-    if (resource->m_playbackData.stereo != 0) {
-        gSampleChannels = 2;
+    if (resource->m_playbackData.stereo != SAMPLE_LOAD_MONO) {
+        gSampleChannels = SAMPLE_CHANNEL_COUNT_STEREO;
         gSampleFrames >>= 1;
     } else {
-        gSampleChannels = 1;
+        gSampleChannels = SAMPLE_CHANNEL_COUNT_MONO;
     }
-    if (resource->m_playbackData.sampleFormat != 0) {
+    if (resource->m_playbackData.sampleFormat != SAMPLE_LOAD_FORMAT_8_BIT) {
         gSampleFormat = audiere::SF_S16;
         gSampleFrames >>= 1;
     } else {
@@ -120,7 +120,7 @@ void PlaySample(sample* resource) {
         delete dead;
     } else {
         gSamples->stream->setVolume(ScaleSampleVolume(resource->m_playbackData.volume));
-        gSamples->stream->setRepeat(resource->m_playbackData.repeat != 0 ? true : false);
+        gSamples->stream->setRepeat(resource->m_playbackData.repeat != false ? true : false);
         gSamples->stream->play();
     }
     CleanupSamples();
@@ -211,7 +211,7 @@ static int gMusicSuspensions;
 DATA(0x004a0d70)
 static int gCurrentTrack = -1;
 DATA(0x004a0d74)
-static int gCDTrackMap[100] = {
+static int gCDTrackMap[AUDIO_TRACK_SLOT_COUNT] = {
     2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
     22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, -1, -1, -1, -1, -1, -1, -1,
     35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, -1, -1, -1, -1, -1,
@@ -223,7 +223,7 @@ DATA(0x004cddf0)
 static char gMusicFilename[352];
 #define gMusicPositions gMusicPositionsaat // spelling fixes .bss order
 DATA(0x004cdf74)
-static int gMusicPositions[100];
+static int gMusicPositions[AUDIO_TRACK_SLOT_COUNT];
 #define gMusicSource gMusicSourcejxy // spelling fixes .bss order
 DATA(0x004ce10c)
 static int gMusicSource;
@@ -257,7 +257,7 @@ void PlayMusic(int track) {
         StopMusic();
         return;
     }
-    if (gMusicSource == 0) {
+    if (gMusicSource == H1_ENUM_ENCODE(SoundMusicSource, SOUND_MUSIC_SOURCE_DIGITAL)) {
         sprintf(gMusicFilename, "%sHeroes%02d.ogg", gSoundPath, track);
     } else {
         int discTrack = gCDTrackMap[track];
@@ -319,7 +319,7 @@ void StopMusic() {
         AudiereMusic::channel = NULL;
     }
     AudiereMusic::origin = NULL;
-    gCurrentTrack = -1;
+    gCurrentTrack = H1_ENUM_ENCODE(MusicTrack, MUSIC_TRACK_NONE);
 }
 
 VA(0x004698a6, 0x55)
@@ -338,12 +338,12 @@ void SetMusicSource(int source) {
         AudiereMusic::channel = NULL;
     }
     AudiereMusic::origin = NULL;
-    for (int track = 0; track <= 99; ++track)
+    for (int track = 0; track <= AUDIO_TRACK_SLOT_LAST; ++track)
         gMusicPositions[track] = 0;
     gMusicSource = source;
     if (gCurrentTrack >= 0) {
         int oldTrack = gCurrentTrack;
-        gCurrentTrack = -1;
+        gCurrentTrack = H1_ENUM_ENCODE(MusicTrack, MUSIC_TRACK_NONE);
         PlayMusic(oldTrack);
     }
 }

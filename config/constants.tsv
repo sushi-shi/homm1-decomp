@@ -6,7 +6,7 @@
 # (tab-separated; every field is an fnmatch glob, `*` matches anything; the
 # first matching row wins): file owner spelling group detail reason.
 # group/detail are the census' review_group/review_context columns.
-#floor	1037
+#floor	605
 *	*	0	trivial-function-literal	0 for-init	a for loop's counter starts at zero
 *	*	0	trivial-function-literal	0 initializer*	an accumulator or counter declared at zero
 *	*	1	trivial-function-literal	1 arithmetic*	a one-step offset: the next index, element or count
@@ -62,7 +62,6 @@
 *	*	0x100	bitwise-or-packing	operator |	the input-filter bit 0x100 retail sets in manager message masks (no producer posts it; Buka lacks it too)
 *	*	[01]	call-argument	SetNoDialogMenus(* argument 1	SetNoDialogMenus's menus-enabled flag
 *	*	[01]	call-argument	SetEnvironmentOrigin(* argument 3	advManager::SetEnvironmentOrigin's stop-sounds flag
-*	*	[01]	call-argument	TransmitRemoteData(* argument [568]	TransmitRemoteData's reliable / retry-dialog / game-position-destination flags
 *	*	[01]	call-argument	FightValueOfStack(* argument [34]	philAI::FightValueOfStack's use-hero / use-town flags
 *	*	*	call-argument	DoCombat(* argument 10	the battle's random seed
 *	*	[01]	call-argument	CombatMonsterEvent(* argument 7	advManager::CombatMonsterEvent's hero-defends flag
@@ -423,8 +422,6 @@ src/SOURCE/netwin.cpp	*	0	trivial-function-literal	0 equality gNetbiosAvail	a te
 src/SOURCE/netwin.cpp	*	0	trivial-function-literal	0 store gNetStatus[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/netwin.cpp	*	0	trivial-function-literal	0 store gNbShutdown	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/netwin.cpp	*	0	trivial-function-literal	0 equality length	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
-src/SOURCE/netwin.cpp	*	0	trivial-function-literal	0 store sendComplete	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/netwin.cpp	*	1	trivial-function-literal	1 store sendComplete	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/netwin.cpp	*	0	trivial-function-literal	0 equality memcmp()	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
 src/SOURCE/netwin.cpp	*	0	trivial-function-literal	0 store gNbCallRetries	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/netwin.cpp	*	1	trivial-function-literal	1 condition	an unconditional loop
@@ -526,8 +523,6 @@ src/SOURCE/TOWNMGR.cpp	*	1	trivial-function-literal	1 store m_visible	a boolean 
 src/SOURCE/TOWNMGR.cpp	*	1	trivial-function-literal	1 store sameType	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality AppIdle()	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality AppInit()	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
-src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality KeyboardMessageHandler()	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
-src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality MouseMessageHandler()	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality RegisterClassA()	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality condition	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality fullScreen	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
@@ -845,12 +840,7 @@ src/SOURCE/kbwin.cpp	*	*	call-argument	RegSetValueExA(HKEY, LPCSTR, DWORD, DWORD
 src/SOURCE/wingraph.cpp	*	*	call-argument	SetHWnd(DWORD, HWND) argument *	a Win32/CRT API literal argument (filter 0, reserved 0, flags, sizes)
 src/SOURCE/wingraph.cpp	*	*	call-argument	SetMenuStatus(i32) argument *	a flag, mode or selector argument of a HoMM1 routine without a named domain (draw/update/redraw/give-take flags, transfer options, no-exclusion -1)
 src/SOURCE/wingraph.cpp	*	*	call-argument	GetSystemPaletteEntries(HDC, UINT, UINT, LPPALETTEENTRY) argument *	a Win32/CRT API literal argument (filter 0, reserved 0, flags, sizes)
-src/SOURCE/wingraph.cpp	DDUpdatePalette	*	arithmetic	operator +	retail window/screen layout in pixels or frames, or a text/row count of this routine
 src/SOURCE/wingraph.cpp	*	*	call-argument	PatBlt(HDC, int, int, int, int, DWORD) argument *	a Win32/CRT API literal argument (filter 0, reserved 0, flags, sizes)
-src/SOURCE/wingraph.cpp	WGUpdatePalette	*	bitwise-or-packing	operator << paletteData[[]]	retail window/screen layout in pixels or frames, or a text/row count of this routine
-src/SOURCE/wingraph.cpp	WGUpdatePalette	*	arithmetic	operator +	retail window/screen layout in pixels or frames, or a text/row count of this routine
-src/SOURCE/wingraph.cpp	*	*	call-argument	AnimatePalette(HPALETTE, UINT, UINT, const PALETTEENTRY *) argument *	a Win32/CRT API literal argument (filter 0, reserved 0, flags, sizes)
-src/SOURCE/wingraph.cpp	*	*	call-argument	WinGSetDIBColorTable(HDC, UINT, UINT, const RGBQUAD *) argument *	a Win32/CRT API literal argument (filter 0, reserved 0, flags, sizes)
 src/SOURCE/ADVMGR.cpp	*	[01]	call-argument	ShowRoute(* argument [123]	advManager::ShowRoute's redraw / show / update flags
 src/SOURCE/ADVMGR.cpp	*	[01]	call-argument	Reseed(* argument [12]	advManager::Reseed's flag arguments
 src/SOURCE/ADVMGR.cpp	advManager::Main	*	array-index	array subscript m_playerDead	a player slot the debug keys kill
@@ -1123,7 +1113,6 @@ src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	1.0	call-argument	ChooseEva
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	1	trivial-function-literal	1 conditional	the least distance to another stone lith (whirlpools need more than three cells)
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	200	arithmetic	operator + stayWorth	an AI tuning threshold: the gain a travel gate must beat
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	-9999	store	store to bestExitValue	below every exit's value: the best one found so far
-src/SOURCE/ARMY.cpp	army::LoadResources	0	trivial-function-literal	0 store repeat	SamplePlaybackData::repeat off: the army sample plays once
 src/SOURCE/ARMY.cpp	army::DoAttack	0	trivial-function-literal	0 store damageDone	a sum, score or estimate reset to zero before it accumulates
 src/SOURCE/ARMY.cpp	army::DoAttack	0	*	*Cyrillic*argument 1	the first character of the text, case-converted
 src/SOURCE/ARMY.cpp	army::DoAttack	0	trivial-function-literal	0 array-index gTargetName	the first character of the text, case-converted
@@ -1327,3 +1316,111 @@ src/EDITOR/MAPOBJ.cpp	editManager::PlaceObstacleChains	0	trivial-function-litera
 src/EDITOR/MAPOBJ.cpp	editManager::PlaceResourceSite	1	call-argument	PlaceMineResource(* argument 2	the mine's resource marker stands one column right of the mine
 src/EDITOR/MAPOBJ.cpp	editManager::RemoveSmallRegions	0	trivial-function-literal	0 store searchTop	the region's top row clamped to the map's first row
 src/EDITOR/MAPOBJ.cpp	editManager::RemoveSmallRegions	1	trivial-function-literal	1 store extent	a region's cell count starts with its first cell
+*	*	[01]	trivial-function-literal	[01] *m_active	baseManager::m_active, the managers' 16-bit active word: an i16 flag (b8/b32 are the 8- and 32-bit flag storage), set on Open and tested against 1
+*	*	[01]	trivial-function-literal	[01] *m_updateFlags	heroWindowManager::m_updateFlags, the 16-bit palette-cycling switch: an i16 flag that FadeScreen saves in a byte and ORs back in
+include/SOURCE/KB.h	NormalDialog	0	trivial-function-literal	0 parm_decl	an unused resource quantity: the slot shows no amount
+src/BASE/Audio.cpp	*	0	trivial-function-literal	0 store gMusicPositions*	a track's saved play position back at its start
+src/BASE/BASEMGR.cpp	baseManager::GetInfo	0	trivial-function-literal	0 return	an unknown info selector reads as zero
+src/BASE/BITMAP.cpp	bitmap::bitmap	0	trivial-function-literal	0 store m_*	an empty bitmap's width and height
+src/BASE/*	*	0	trivial-function-literal	0 store m_fillColor	a widget's fill colour defaults to palette index 0
+src/BASE/*	*	0	trivial-function-literal	0 store m_*Frame	a widget's icon frame defaults to the first frame
+src/BASE/ICONWDGT.cpp	iconWidget::iconWidget	0	trivial-function-literal	0 store m_frame	a widget's icon frame defaults to the first frame
+src/BASE/EXEC.cpp	executive::executive	0	trivial-function-literal	0 store m_result	no result until a manager's dialog-select message sets one
+src/BASE/FONT.cpp	*	0	trivial-function-literal	0 store *	a line layout position, width, indent or line bound reset to zero
+src/BASE/ICONWDGT.cpp	iconWidget::Main	0xffff	bitwise-or-packing	operator & value	the message value's low word, the frame number
+src/BASE/INPUTMGR.cpp	*	[01]	trivial-function-literal	[01] store m_requestedPriority	the requested priority cleared on Close and its rank-1 default
+src/BASE/INPUTMGR.cpp	inputManager::GetEvent	0	trivial-function-literal	0 store id	an empty event's widget id
+src/BASE/INPUTMGR.cpp	inputManager::Open	1	trivial-function-literal	1 initializer	SetPositiveOption's default value
+src/BASE/INPUTMGR.cpp	*	[01]	trivial-function-literal	[01] *m_mouseMessageActive	MouseMessageHandler's 16-bit re-entry guard (an i16 flag)
+src/BASE/INPUTMGR.cpp	ResetEventQueue	0	trivial-function-literal	0 store m_*Index	the event ring's read and write indices back at the start
+src/BASE/miscwin.cpp	AutoInitSVGA	0	trivial-function-literal	0 return	the Windows build's SVGA set-up does nothing and reports zero
+src/BASE/miscwin.cpp	ClipIconToBitmap	0	trivial-function-literal	0 equality sClipRun	an empty icon RLE run
+src/BASE/miscwin.cpp	ClippedMonoIconToBitmap	0	trivial-function-literal	0 equality	a mono RLE skip of zero (the row's end command)
+src/BASE/miscwin.cpp	*	0	trivial-function-literal	0 equality fullScreen	the windowed display mode: fullScreen is a 0/1 integer that the F4 key toggles as 1 - fullScreen
+src/BASE/miscwin.cpp	FadeOut	0	trivial-function-literal	0 store m_data[[][]]	a palette channel faded to black
+src/BASE/MOUSEMGR.cpp	mouseManager::mouseManager	0	trivial-function-literal	0 store m_*	a cleared pointer frame, saved screen area or unread byte
+src/BASE/MOUSEMGR.cpp	mouseManager::mouseManager	1	trivial-function-literal	1 store m_cursorReady	the 16-bit pointer-ready flag (an i16 flag)
+src/BASE/MOUSEMGR.cpp	mouseManager::SetPointer	0	trivial-function-literal	0 store bmType	Win32 BITMAP::bmType, which must be zero
+src/BASE/MOUSEMGR.cpp	mouseManager::SetPointer	0	trivial-function-literal	0 store frame	the editor has only the first adventure pointer frame
+src/BASE/MOUSEMGR.cpp	mouseManager::SetPointer	1	trivial-function-literal	1 bitwise	a single mask bit shifted into its pixel's position
+src/BASE/RESMGR.cpp	resourceManager::GetFileSize	0	trivial-function-literal	0 return	no size without an aggregate directory
+src/BASE/RESMGR.cpp	resourceManager::PointToFile	0	trivial-function-literal	0 store entry	the directory scan starts at the first entry
+src/BASE/RESMGR.cpp	resourceManager::resourceManager	0	trivial-function-literal	0 store m_lastFileId	no file read yet
+src/BASE/RESOURCE.cpp	resource::resource	0	trivial-function-literal	0 store m_id	an unnamed resource's id
+src/BASE/SAMPLE.cpp	sample::sample	0x80	arithmetic	compound assignment to data[[][]]	the bias that turns each signed sample byte into Audiere's unsigned 8-bit form
+src/BASE/TEXTNTRY.cpp	*	0	trivial-function-literal	0 store m_*	the cursor, display offset, length or frame reset to the start
+src/BASE/TEXTNTRY.cpp	textEntryWidget::Read	1	trivial-function-literal	1 store m_maxLines	a single-line entry
+src/BASE/TEXTNTRY.cpp	textEntryWidget::Read	1	trivial-function-literal	1 store m_preserveTextOnFocus	the 16-bit keep-text flag the resource also supplies as a word (an i16 flag)
+src/BASE/TEXTNTRY.cpp	*	0	trivial-function-literal	0 * done	the 16-bit loop flag that key handling increments (an i16)
+src/BASE/TEXTNTRY.cpp	textEntryWidget::Main	0	trivial-function-literal	0 array-index m_text	the text's first character (NUL there empties it)
+src/BASE/TEXTNTRY.cpp	textEntryWidget::SetupDisplayString	0	trivial-function-literal	0 equality m_displayOffset	the display scrolled to the start of the text
+src/BASE/TEXTWDGT.cpp	textWidget::textWidget	1	trivial-function-literal	1 store m_color	font colour 1, the default text colour
+src/BASE/WIDGET.cpp	widget::widget	0	trivial-function-literal	0 store m_id	a default-constructed widget's id 0 (the owning window assigns ids)
+src/BASE/WINDOW.cpp	heroWindow::DrawWindow	0	trivial-function-literal	0 equality updateScreen	DrawWindow's 16-bit update flag (an i16 parameter)
+src/BASE/WINDOW.cpp	heroWindow::heroWindow	0	trivial-function-literal	0 * finished	the widget-record loop's 16-bit end flag (an i16)
+src/BASE/WINDOW.cpp	heroWindow::heroWindow	0	trivial-function-literal	0 store m_posY	the full-screen window at the screen origin
+src/BASE/WINDOW.cpp	heroWindow::MoveWindow	0	trivial-function-literal	0 store to[XY]	MoveWindow clamps to the screen's left and top edges
+src/BASE/WINMGR.cpp	CreateFizzleTables	1	call-argument	fwrite(* argument 3	one table of the given byte size
+src/BASE/WINMGR.cpp	heroWindowManager::DoDialog	0	trivial-function-literal	0 equality gDialogNestCount	no dialog open (the outermost dialog switches the menus)
+src/BASE/WINMGR.cpp	heroWindowManager::DoDialog	[01]	trivial-function-literal	[01] * done	DoDialog's 16-bit loop flag (an i16)
+src/BASE/WINMGR.cpp	heroWindowManager::DoDialog	0	trivial-function-literal	0 return	DoDialog's i16 result: callers read m_dialogResult
+src/BASE/WINMGR.cpp	heroWindowManager::UpdateScreenRegion	[01]	trivial-function-literal	[01] store pointerInside	the 16-bit pointer-overlap flag (an i16)
+src/BASE/WINMGR.cpp	heroWindowManager::UpdateHoverWindow	[01]	trivial-function-literal	[01] return	the i16 result: whether the focus window changed
+src/BASE/WINMGR.cpp	heroWindowManager::FizzleForward	0	trivial-function-literal	0 store tickStart	no previous frame time: the first frame does not wait
+src/BASE/WINMGR.cpp	heroWindowManager::heroWindowManager	0	trivial-function-literal	0 store m_*	a cleared screenshot counter or unread byte
+src/SOURCE/kbwin.cpp	SetMenus	[01]	trivial-function-literal	[01] * update	the menu item's update switch, an int also set as 1 - the enable table's flag
+src/SOURCE/kbwin.cpp	SetMenus	0	trivial-function-literal	0 store matchIndex	the first enable-table row when no command matches
+src/SOURCE/kbwin.cpp	SetupCDDrive	0	trivial-function-literal	0 array-index gcRegCDRomPath	the drive letter, the CD path's first character
+src/SOURCE/netwin.cpp	nb_add_name_done	80	store	initializer of buffer	a local message buffer's extent
+src/SOURCE/netwin.cpp	nb_sess	0	trivial-function-literal	0 equality releaseSource	nb_sess's int va_arg flag
+src/SOURCE/REMOTE.cpp	calc_crc	0	trivial-function-literal	0 equality	the data bit under the mask, shifted into the CRC
+src/SOURCE/REQUEST.cpp	fileRequester::DoKnob	0	trivial-function-literal	0 store topRow	the knob clamps to the list's first row
+src/SOURCE/REQUEST.cpp	fileRequester::Main	0	trivial-function-literal	0 array-index nameBuffer	the typed name's first character
+src/SOURCE/REQUEST.cpp	fileRequester::Main	1	trivial-function-literal	1 * pageCount	the scroll gutter has at least one page
+src/SOURCE/REQUEST.cpp	fileRequester::Main	-1	trivial-function-literal	-1 store key	ends the trailing-space scan
+src/SOURCE/REQUEST.cpp	fileRequester::Main	*	arithmetic	operator + firstItemId	the ten file-list row widgets after the first
+src/SOURCE/REQUEST.cpp	fileRequester::Update	1	trivial-function-literal	1 equality savedPlayerCount	a one-player save shows no player count
+src/SOURCE/SMACKMGR.cpp	InitSmackSound	0	call-argument	AIL_waveOutOpen(* argument 3	the first wave-out device
+src/SOURCE/SMACKMGR.cpp	InitSmackSound	0	trivial-function-literal	0 store format	no wave format found yet
+src/SOURCE/SMACKMGR.cpp	SmackMain	0	call-argument	SmackToBuffer(* argument [237]	the movie at the buffer's origin, with no flags
+src/SOURCE/SMACKMGR.cpp	SmackMain	0	trivial-function-literal	0 conditional	no Smacker open flags
+src/SOURCE/SMACKMGR.cpp	SmackMain	1	trivial-function-literal	1 bound Frames	a one-frame movie
+src/SOURCE/SMACKMGR.cpp	SmackMain	1	trivial-function-literal	1 bound strlen()	a movie with a companion file name
+src/SOURCE/wingraph.cpp	*	0	call-argument	*(DWORD, *) argument 1	DirectDraw's reserved flags argument, which must be zero
+src/SOURCE/wingraph.cpp	SetGraphicsType	0	trivial-function-literal	0 equality fullState	the windowed display mode (the saved fullScreen integer)
+src/SOURCE/wingraph.cpp	WGAppPaint	0	trivial-function-literal	0 store *	the client area's origin or an unused local
+src/SOURCE/KB.cpp	AddScoreToHighScore	0	trivial-function-literal	0 return	AddScoreToHighScore's result, which callers ignore
+src/SOURCE/KB.cpp	AddScoreToHighScore	[12]	*	*	the shift down from the next-to-last entry (the last one falls off)
+src/SOURCE/KB.cpp	CanBuy	1	call-argument	GetBuildingCost(* argument 4	the next mage guild level's cost row
+src/SOURCE/KB.cpp	DataEntryWindowHandler	0	trivial-function-literal	0 equality strlen()	an empty text
+src/SOURCE/KB.cpp	DataEntryWindowHandler	1	call-argument	strncpy(* argument 3	room for the terminator
+src/SOURCE/KB.cpp	game::Show*Info	0	trivial-function-literal	0 equality Get*()	a neutral luck or morale sum picks the neutral text
+src/SOURCE/KB.cpp	game::ShowMoraleInfo	0	trivial-function-literal	0 store newFaction	the first faction (an aligned army always replaces it)
+src/SOURCE/KB.cpp	GetMonsterCost	1	trivial-function-literal	1 store cost[[][]]	a one-unit rare-resource cost
+src/SOURCE/KB.cpp	GetMonsterCost	0	trivial-function-literal	0 store cost[[][]]	the cost row cleared
+src/SOURCE/KB.cpp	HandleAppSpecificMenuCommands	0	call-argument	PostMessageA(* argument [34]	WM_CLOSE carries no parameters
+src/SOURCE/KB.cpp	HandleAppSpecificMenuCommands	[01]	trivial-function-literal	[01] return	AppCommand's result: 1 passes an unknown command on, 0 marks it handled
+src/SOURCE/KB.cpp	HandleRemote*Exit	[01]	trivial-function-literal	[01] store gText[[][]]	the player-exit packet's had-control byte
+src/SOURCE/KB.cpp	InitVars	0	trivial-function-literal	0 store m_dialogAnimationCounter	a counter reset to zero
+src/SOURCE/KB.cpp	IsCDDrive	0	trivial-function-literal	0 array-index gText	the drive letter of the root path
+src/SOURCE/KB.cpp	NormalDialog	[01]	trivial-function-literal	[01] array-index resource*	the first and second resource slots
+src/SOURCE/KB.cpp	NormalDialog	0	trivial-function-literal	0 equality index	the first resource slot
+src/SOURCE/KB.cpp	NormalDialog	0	trivial-function-literal	0 equality resourceAmounts[[][]]	a zero amount shows no label
+src/SOURCE/KB.cpp	NormalDialog	0	trivial-function-literal	0 store *	the layout values before the resource pictures are measured
+src/SOURCE/KB.cpp	NormalDialog	*	store	store to imageHeight	the pixel height of the dialog's resource, luck, morale, crest, hero or spell picture
+src/SOURCE/KB.cpp	NormalDialog	4	store	store to iconFrameIndex	surrendr.icn's hero frame (frames have no names)
+src/SOURCE/KB.cpp	NormalDialog	1	trivial-function-literal	1 store rows	a dialog with buttons keeps at least one text row
+src/SOURCE/KB.cpp	NormalDialog	1	trivial-function-literal	1 store showMessageText	an unused 16-bit flag local
+src/SOURCE/KB.cpp	oldmain	*	call-argument	DrawString(* argument [234]	the loading banner's pixel position and font colour
+src/SOURCE/KB.cpp	oldmain	[01]	call-argument	*(*, i32) argument [23]	an argument the callee ignores (an unnamed parameter)
+src/SOURCE/KB.cpp	oldmain	0	call-argument	NextHero(i32) argument 1	an argument the callee ignores (an unnamed parameter)
+src/SOURCE/KB.cpp	oldmain	0	call-argument	SetHeroContext(* argument 1	a new game starts with the first player's next hero
+src/SOURCE/KB.cpp	oldmain	0	trivial-function-literal	0 store gMap[XY]	a new game's map view at the origin until the adventure manager centres it
+src/SOURCE/KB.cpp	oldmain	0	trivial-function-literal	0 return	oldmain's exit code
+src/SOURCE/KB.cpp	ShutDown	0	trivial-function-literal	0 array-index buffer	the message buffer's first character
+src/SOURCE/KB.cpp	UpdateNormalDialog	1	trivial-function-literal	1 initializer	an unused 16-bit local set to 1
+src/SOURCE/KB.cpp	UpdateSystemOptionsMenu	1	call-argument	CheckMenuItem(* argument 3	the enemy-moves item shows the inverse of gConfig.blackoutComputer
+src/SOURCE/KB.cpp	ReceiveRemotePlayerExit	0	*	*CyrillicToUpper*	the text's first letter, capitalised
+src/SOURCE/KB.cpp	ReceiveRemotePlayerExit	0	trivial-function-literal	0 array-index gText	the text's first letter, capitalised
+src/SOURCE/KB.cpp	ShowCongrats	0	*	*	the player name's first letter, capitalised
+src/SOURCE/kbwin.cpp	SetupCDDrive	0	call-argument	DriveSupportsFreeSpaceQuery(char) argument 1	the drive letter, the CD path's first character

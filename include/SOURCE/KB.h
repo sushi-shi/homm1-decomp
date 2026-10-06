@@ -820,7 +820,13 @@ extern H1_ENUM_STORAGE(GameEndSequence, i32) gEndSequence;
 // position HOST; a game position with no network player maps to NONE.
 H1_ENUM_CONST_BEGIN(NetPositionConstant)
     NET_POSITION_NONE = -1,
-    NET_POSITION_HOST = 0
+    NET_POSITION_HOST = 0,
+    // The host sends the game positions to every other position from here.
+    NET_POSITION_FIRST_GUEST = 1,
+    // NetPosToGamePos seats the host at game position 0 and every other
+    // network position at the one opponent's position 1.
+    NET_GAME_POSITION_HOST = 0,
+    NET_GAME_POSITION_GUEST = 1
 H1_ENUM_CONST_END(NetPositionConstant)
 
 // playerData::m_daysLeft: NO_GRACE_PERIOD while the player holds a town;
@@ -883,6 +889,13 @@ H1_ENUM_CONST_BEGIN(ScoreMonsterConstant)
     SCORE_MONSTER_TYPE = 1
 H1_ENUM_CONST_END(ScoreMonsterConstant)
 
+// gNetBoxLine rows: the older chat line above the latest one.
+H1_ENUM_CONST_BEGIN(NetBoxLineSlot)
+    NET_BOX_SLOT_PREVIOUS = 0,
+    NET_BOX_SLOT_LATEST = 1,
+    NET_BOX_SLOT_COUNT = 2
+H1_ENUM_CONST_END(NetBoxLineSlot)
+
 // netbox.bin text widgets: the two scrolled chat lines (gNetBoxLine) and the
 // line being typed.
 H1_ENUM_ID_BEGIN(NetBoxControl)
@@ -907,6 +920,14 @@ CONGRATS_TITLE = 100, CONGRATS_SCORE_LABEL_FIRST = 101, CONGRATS_DAYS = 106,
                           H1_ENUM_CONST_BEGIN(CongratsConstant)
     CONGRATS_SCORE_LABEL_COUNT = 5
 H1_ENUM_CONST_END(CongratsConstant)
+
+// gDataEntryTime counts DataEntryWindowHandler's first messages: the first
+// clicks into the edit field and the second takes its text; later messages
+// are the dialog's own.
+H1_ENUM_CONST_BEGIN(DataEntryStep)
+    DATA_ENTRY_STEP_FOCUS = 0,
+    DATA_ENTRY_STEP_READ = 1
+H1_ENUM_CONST_END(DataEntryStep)
 
 // dataentr.bin widgets: the prompt text and the edit field.
 H1_ENUM_ID_BEGIN(DataEntryControl)

@@ -5891,7 +5891,7 @@ void advManager::InsertSound(i16 x, i16 y, i16 distance, i8 soundLayer) {
         m_activeSounds[slot].distance = distance;
         CheckLoadSample(soundId);
         m_loopingSamples[soundId]->m_playbackData.volume = gEnvironmentVolume[distance];
-        m_loopingSamples[soundId]->m_playbackData.repeat = 1;
+        m_loopingSamples[soundId]->m_playbackData.repeat = true;
         PlaySample(m_loopingSamples[soundId]);
         m_activeSoundMask ^= 1 << m_activeSounds[slot].soundId;
     }

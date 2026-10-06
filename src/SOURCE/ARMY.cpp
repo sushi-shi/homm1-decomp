@@ -137,7 +137,7 @@ void army::LoadResources(void) {
     }
     for (idx = ARMY_SAMPLE_MOVE; idx < ARMY_SAMPLE_COUNT; idx++) {
         if (m_samples[idx]) {
-            m_samples[idx]->m_playbackData.repeat = 0;
+            m_samples[idx]->m_playbackData.repeat = false;
             m_samples[idx]->m_playbackData.volume = SAMPLE_VOLUME_FULL;
         }
     }

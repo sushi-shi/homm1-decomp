@@ -165,7 +165,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) textEntryWidget::Main(tag_message& me
                     m_cursorPosition = strlen(m_text);
                 } else {
                     m_cursorPosition = 0;
-                    m_text[0] = 0;
+                    m_text[0] = '\0';
                 }
                 strcpy(edit, m_text);
                 SetupDisplayString(edit, m_cursorPosition);
@@ -210,10 +210,11 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) textEntryWidget::Main(tag_message& me
                                         if (m_cursorPosition < m_displayOffset)
                                             m_displayOffset = m_cursorPosition;
                                     }
-                                } else if (strlen(edit) + 1 < m_maxLength && event.keyCode != 0) {
+                                } else if (strlen(edit) + 1 < m_maxLength
+                                           && event.keyCode != '\0') {
                                     char typed;
                                     strcpy(copy, edit);
-                                    typed = 0;
+                                    typed = '\0';
                                     if (event.keyCode >= TEXT_ENTRY_EXTENDED_KEY_BASE) {
                                         i32 key =
                                             (event.keyCode & EncodeScanCode(INPUT_SCAN_CODE_MASK))
@@ -253,7 +254,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) textEntryWidget::Main(tag_message& me
                                     } else {
                                         typed = event.keyCode & INPUT_SCAN_CODE_MASK;
                                     }
-                                    if (typed != 0) {
+                                    if (typed != '\0') {
                                         strcpy(swap, m_text);
                                         free(m_text);
                                         m_text = static_cast<char*>(
@@ -261,7 +262,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) textEntryWidget::Main(tag_message& me
                                         );
                                         strcpy(swap, edit);
                                         swap[m_cursorPosition] = typed;
-                                        swap[m_cursorPosition + 1] = 0;
+                                        swap[m_cursorPosition + 1] = '\0';
                                         strcat(swap, edit + m_cursorPosition);
                                         strcpy(edit, swap);
                                         m_cursorPosition++;
@@ -303,7 +304,7 @@ void textEntryWidget::Draw(void) {
         strcpy(display, m_text + m_displayOffset);
         u32 len = strlen(display);
         while (m_font->LineWidth(display) > m_width)
-            display[--len] = 0;
+            display[--len] = '\0';
         m_icon->DrawToBuffer(
             m_owner->m_posX + m_rectX,
             m_owner->m_posY + m_rectY,
@@ -342,14 +343,14 @@ void textEntryWidget::SetupDisplayString(char* source, u16 cursor) {
     if (strlen(source) > cursor)
         strcpy(m_text + cursor + 1, source + cursor);
     else
-        m_text[cursor + 1] = 0;
+        m_text[cursor + 1] = '\0';
     if (m_entryType == TEXT_ENTRY_READ_SCROLLING) {
         changed = true;
         while (changed) {
             changed = false;
             strcpy(display, m_text + m_displayOffset);
             if (m_font->LineWidth(display) > m_width) {
-                display[cursor - m_displayOffset + 1] = 0;
+                display[cursor - m_displayOffset + 1] = '\0';
                 if (m_font->LineWidth(display) > m_width) {
                     m_displayOffset++;
                     changed = true;

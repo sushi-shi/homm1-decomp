@@ -10,7 +10,9 @@ struct tag_message;
 // the list tail. A priority is a rank (the tail's plus one); this is its
 // sentinel, not a value domain.
 H1_ENUM_CONST_BEGIN(BaseManagerPriority)
-    BASE_MANAGER_PRIORITY_UNASSIGNED = -1
+    BASE_MANAGER_PRIORITY_UNASSIGNED = -1,
+    // The rank of the first manager in an empty list.
+    BASE_MANAGER_PRIORITY_FIRST = 0
 H1_ENUM_CONST_END(BaseManagerPriority)
 
 // Manager Open/AddManager status.

@@ -5,6 +5,12 @@
 
 class bitmap;
 
+// The descriptor the runtime's open returns when a file cannot be opened;
+// an unopened descriptor field holds it too.
+H1_ENUM_CONST_BEGIN(FileDescriptorConstant)
+    FILE_DESCRIPTOR_INVALID = -1
+H1_ENUM_CONST_END(FileDescriptorConstant)
+
 // Read or write one whole value of the file's record; the value's
 // own size is the transfer size.
 #define READ_FILE_VALUE(fd, value) read((fd), &(value), sizeof(value))

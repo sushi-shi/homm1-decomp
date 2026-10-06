@@ -252,7 +252,7 @@ b32 EarlySetup(void) {
                 localization::Tr("startup.error.title"),
                 MB_ICONHAND
             );
-            exit(0);
+            exit(EXIT_SUCCESS);
             break;
         case CD_SETUP_NOT_FOUND:
             MessageBoxA(
@@ -261,7 +261,7 @@ b32 EarlySetup(void) {
                 localization::Tr("startup.error.title"),
                 MB_ICONHAND
             );
-            exit(0);
+            exit(EXIT_SUCCESS);
             break;
         case CD_SETUP_NO_APP_PATH:
             MessageBoxA(
@@ -270,7 +270,7 @@ b32 EarlySetup(void) {
                 localization::Tr("startup.error.title"),
                 MB_ICONHAND
             );
-            exit(0);
+            exit(EXIT_SUCCESS);
             break;
         case CD_SETUP_NO_DATA:
             MessageBoxA(
@@ -279,7 +279,7 @@ b32 EarlySetup(void) {
                 localization::Tr("startup.error.title"),
                 MB_ICONHAND
             );
-            exit(0);
+            exit(EXIT_SUCCESS);
             break;
     }
     InitVars();
@@ -483,7 +483,7 @@ i32 oldmain(void) {
             goto processMenuCommand;
         if (!leave) {
             if (gRemoteOn && !gThisNetPos) {
-                netIndex = 0;
+                netIndex = NET_POSITION_HOST;
                 for (gamePlayer = 0; gamePlayer < GAME_PLAYER_COUNT; gamePlayer++) {
                     if (gHumanPlayer[gamePlayer]) {
                         gGamePosToNetPos[gamePlayer] = netIndex;
@@ -496,16 +496,17 @@ i32 oldmain(void) {
                     memcpy(gText, gGamePosToNetPos, GAME_PLAYER_COUNT);
                 gHostGamePos = NetPosToGamePos(NET_POSITION_HOST);
                 gThisGamePos = gHostGamePos;
-                for (gamePlayer = 1; gamePlayer < gNumHumanPlayers; gamePlayer++) {
+                for (gamePlayer = NET_POSITION_FIRST_GUEST; gamePlayer < gNumHumanPlayers;
+                     gamePlayer++) {
                     sendResult = TransmitRemoteData(
                         gText,
                         gamePlayer,
                         4,
                         BOX_REMOTE_SETUP,
                         true,
-                        1,
+                        true,
                         REMOTE_MESSAGE_DEFAULT,
-                        0
+                        false
                     );
                     if (!sendResult)
                         ShutDown(NULL);
@@ -950,7 +951,7 @@ b8 CanBuy(town* townPointer, H1_ENUM_PARAM(BuildingSlotType, i16) building) {
             ? (townPointer->m_buildState < TOWN_MAGE_GUILD_COST_LEVEL_LAST
                    ? townPointer->m_buildState + 1
                    : TOWN_MAGE_GUILD_COST_LEVEL_LAST)
-            : 0
+            : TOWN_MAGE_GUILD_COST_LEVEL_FIRST
     );
     player = &gGame->m_players[gCurPlayer];
     for (resourceIndex = RESOURCE_FIRST; resourceIndex < RESOURCE_COUNT; ++resourceIndex) {
@@ -1697,15 +1698,15 @@ void HandleRemoteDeadPlayerExit(i32 position) {
         RemoteCleanup();
     } else if (gNumHumanPlayers == REMOTE_PLAYER_COUNT) {
         gNumHumanPlayers--;
-        gText[0] = position;
-        gText[1] = 0;
+        gText[REMOTE_PLAYER_EXIT_POSITION] = position;
+        gText[REMOTE_PLAYER_EXIT_HAD_CONTROL] = 0;
         TransmitRemoteData(
             gText,
             REMOTE_BROADCAST_PLAYER,
-            3,
+            REMOTE_PLAYER_EXIT_PAYLOAD_SIZE,
             REMOTE_COMMAND_PLAYER_EXIT,
             false,
-            0,
+            false,
             REMOTE_MESSAGE_RELIABLE
         );
         RemoteCleanup();
@@ -1719,25 +1720,25 @@ void HandleRemoteSuddenExit(void) {
     i32 next;
     if (!gGameInitialized)
         return;
-    gText[0] = gThisGamePos;
+    gText[REMOTE_PLAYER_EXIT_POSITION] = gThisGamePos;
     if (gThisNetHumanPlayer[gCurPlayer]
         || (!gHumanPlayer[gCurPlayer] && gThisGamePos == gHostGamePos)) {
-        gText[1] = 1;
+        gText[REMOTE_PLAYER_EXIT_HAD_CONTROL] = 1;
         next = gCurPlayer;
         next = (next + 1) % gGame->m_playerCount;
         while (!gHumanPlayer[next])
             next = (next + 1) % gGame->m_playerCount;
-        gText[2] = next;
+        gText[REMOTE_PLAYER_EXIT_NEXT_PLAYER] = next;
     } else {
-        gText[1] = 0;
+        gText[REMOTE_PLAYER_EXIT_HAD_CONTROL] = 0;
     }
     TransmitRemoteData(
         gText,
         REMOTE_BROADCAST_PLAYER,
-        3,
+        REMOTE_PLAYER_EXIT_PAYLOAD_SIZE,
         REMOTE_COMMAND_PLAYER_EXIT,
         false,
-        0,
+        false,
         REMOTE_MESSAGE_RELIABLE
     );
 }
@@ -1754,7 +1755,7 @@ void ReceiveRemotePlayerExit(i8 position, i8 hadControl, b8 eliminated, b8 timed
         gEndSequence = GAME_END_LOST;
         return;
     }
-    if (gNumHumanPlayers <= 2) {
+    if (gNumHumanPlayers <= REMOTE_PLAYER_COUNT) {
         gGame->SaveGame(localization::Tr("save.name.player_exit"), true);
         if (eliminated) {
             sprintf(
@@ -2039,8 +2040,8 @@ void InitVars(void) {
         gTerrainCost[i][FINDPATH_STEP_STRAIGHT] = TerrainStepCost(i, FINDPATH_STEP_STRAIGHT);
         gTerrainCost[i][FINDPATH_STEP_DIAGONAL] = TerrainStepCost(i, FINDPATH_STEP_DIAGONAL);
     }
-    strcpy(gNetBoxLine[0], "");
-    strcpy(gNetBoxLine[1], "");
+    strcpy(gNetBoxLine[NET_BOX_SLOT_PREVIOUS], "");
+    strcpy(gNetBoxLine[NET_BOX_SLOT_LATEST], "");
     for (i = 0; i < MAP_EXTRA_RECORD_CAPACITY; i++)
         gMapExtraBlocks[i] = NULL;
     gDefaultMenu = LoadMenuA(gAppInstance, "mnuDflt");
@@ -2201,7 +2202,7 @@ i32 AddScoreToHighScore(
     else
         sprintf(scoreFile, "%sCAMPAIGN.HS", gDataPath);
     file = open(scoreFile, _O_BINARY);
-    if (file == -1)
+    if (file == FILE_DESCRIPTOR_INVALID)
         noScoreFile = true;
     if (noScoreFile) {
         for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++) {
@@ -2235,7 +2236,7 @@ i32 AddScoreToHighScore(
         strcpy(entries[entry].scenarioName, scenarioName);
         entries[entry].score = score;
         file = open(scoreFile, _O_BINARY | _O_TRUNC | _O_CREAT | _O_WRONLY, _S_IWRITE);
-        if (file == -1)
+        if (file == FILE_DESCRIPTOR_INVALID)
             FileError(scoreFile);
         for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++)
             WRITE_FILE_VALUE(file, entries[entry]);
@@ -2268,9 +2269,9 @@ void GOut(char* text) {
 VA(0x004410d6, 0x1b)
 i8 NetPosToGamePos(i32 netPos) {
     if (netPos == NET_POSITION_HOST)
-        return 0;
+        return NET_GAME_POSITION_HOST;
     else if (netPos > NET_POSITION_HOST)
-        return 1;
+        return NET_GAME_POSITION_GUEST;
     return GAME_PLAYER_NONE;
 }
 
@@ -2342,10 +2343,10 @@ void PopNetBox(char* notice) {
     if (!netBox)
         MemError();
     SET_WIDGET_MESSAGE(messageData, WIDGET_COMMAND_SET_TEXT, NET_BOX_LINE_PREVIOUS);
-    messageData.text = gNetBoxLine[0];
+    messageData.text = gNetBoxLine[NET_BOX_SLOT_PREVIOUS];
     netBox->BroadcastMessage(messageData);
     messageData.id = NET_BOX_LINE_LATEST;
-    messageData.text = gNetBoxLine[1];
+    messageData.text = gNetBoxLine[NET_BOX_SLOT_LATEST];
     netBox->BroadcastMessage(messageData);
     gWindowManager->AddWindow(netBox, WINDOW_Z_ORDER_APPEND, 1);
     gMouseManager->ReallyHidePointer();
@@ -2440,10 +2441,10 @@ void PopNetBox(char* notice) {
         if (redrawText) {
             redrawText = false;
             SET_WIDGET_MESSAGE(messageData, WIDGET_COMMAND_SET_TEXT, NET_BOX_LINE_PREVIOUS);
-            messageData.text = gNetBoxLine[0];
+            messageData.text = gNetBoxLine[NET_BOX_SLOT_PREVIOUS];
             netBox->BroadcastMessage(messageData);
             messageData.id = NET_BOX_LINE_LATEST;
-            messageData.text = gNetBoxLine[1];
+            messageData.text = gNetBoxLine[NET_BOX_SLOT_LATEST];
             netBox->BroadcastMessage(messageData);
             netBox->DrawWindow();
             gWindowManager->UpdateScreenRegion(0, 418, 639, 61);
@@ -2486,8 +2487,8 @@ void PopNetBox(char* notice) {
 // The net box holds two uncoloured lines.
 VA(0x004417fc, 0x28)
 void AddNetBoxLine(char* text) {
-    strcpy(gNetBoxLine[0], gNetBoxLine[1]);
-    strcpy(gNetBoxLine[1], text);
+    strcpy(gNetBoxLine[NET_BOX_SLOT_PREVIOUS], gNetBoxLine[NET_BOX_SLOT_LATEST]);
+    strcpy(gNetBoxLine[NET_BOX_SLOT_LATEST], text);
 }
 
 DATA(0x004a9953)
@@ -2504,10 +2505,10 @@ void ShutDown(char* message) {
         return;
     gInShutDown = true;
     gClosingApp = true;
-    buffer[0] = 0;
+    buffer[0] = '\0';
     if (message) {
         strcpy(buffer, message);
-        SetFullScreenStatus(0);
+        SetFullScreenStatus(FALSE);
         MessageBoxA(gAppWindow, buffer, localization::Tr("shutdown.unexpected.title"), MB_ICONHAND);
     }
     CloseSmackers();
@@ -2531,7 +2532,7 @@ void ShutDown(char* message) {
     }
     DeleteMainClasses();
     AppExit();
-    exit(0);
+    exit(EXIT_SUCCESS);
 }
 
 VA(0x00441943, 0x34)
@@ -2652,7 +2653,7 @@ void GetDataEntry(char* prompt, char* destination, i32 maximumLength, char* init
     message.text = textBuffer;
     gDataEntryWindow->BroadcastMessage(message);
     strcpy(destination, textBuffer);
-    gDataEntryTime = 0;
+    gDataEntryTime = DATA_ENTRY_STEP_FOCUS;
     gWindowManager->DoDialog(gDataEntryWindow, DataEntryWindowHandler, false);
     delete gDataEntryWindow;
 }
@@ -2661,7 +2662,7 @@ VA(0x00441f97, 0x1af)
 H1_ENUM_RETURN(MessageDispatchResult, i16) DataEntryWindowHandler(tag_message& message) {
     i16 widgetId = DATA_ENTRY_TEXT;
 
-    if (gDataEntryTime == 0) {
+    if (gDataEntryTime == DATA_ENTRY_STEP_FOCUS) {
         ++gDataEntryTime;
         message.type = MESSAGE_LEFT_BUTTON_DOWN;
         message.x = 0xc3;
@@ -2670,7 +2671,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) DataEntryWindowHandler(tag_message& m
         return MESSAGE_DISPATCH_CONSUME;
     }
 
-    if (gDataEntryTime == 1) {
+    if (gDataEntryTime == DATA_ENTRY_STEP_READ) {
         ++gDataEntryTime;
         goto gotText;
     }
@@ -4645,7 +4646,7 @@ class searchArray* gSearchArray;
 DATA(0x004a7b7c)
 b32 gBlackoutPlayer;
 DATA(0x004a7838)
-char gNetBoxLine[2][60];
+char gNetBoxLine[NET_BOX_SLOT_COUNT][60];
 DATA(0x004a7b98)
 heroWindow* gDataEntryWindow;
 DATA(0x004a74d0)

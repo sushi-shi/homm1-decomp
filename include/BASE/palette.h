@@ -32,4 +32,11 @@ H1_ENUM_CONST_BEGIN(PaletteGraphicsConstant)
     PALETTE_CYCLE_BYTES = PALETTE_CYCLE_COLOR_COUNT * PALETTE_GRAPHICS_CHANNELS
 H1_ENUM_CONST_END(PaletteGraphicsConstant)
 
+// The red, green and blue bytes of one palette entry, in m_data order.
+H1_ENUM_CONST_BEGIN(PaletteChannel)
+    PALETTE_CHANNEL_RED = 0,
+    PALETTE_CHANNEL_GREEN = 1,
+    PALETTE_CHANNEL_BLUE = 2
+H1_ENUM_CONST_END(PaletteChannel)
+
 #endif // HOMM1_BASE_PALETTE_H

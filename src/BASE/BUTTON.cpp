@@ -22,7 +22,7 @@ button::button(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
     m_icon = NULL;
     m_normalFrame = 0;
     m_pressedFrame = 0;
-    m_selectMode = 0;
+    m_selectMode = BUTTON_SELECT_NOTIFY;
     m_hotkey = BUTTON_NO_HOTKEY;
 }
 

@@ -111,7 +111,9 @@ public:
     }
 };
 #pragma pack(pop)
-i32 KeyboardMessageHandler(void* window, u32 message, u32 virtualKey, i32 messageData);
-i32 MouseMessageHandler(void* window, u32 message, u32 keyFlags, i32 messageData);
+// Both return whether the message was left unqueued (the caller then passes it
+// on to the default window procedure).
+b32 KeyboardMessageHandler(void* window, u32 message, u32 virtualKey, i32 messageData);
+b32 MouseMessageHandler(void* window, u32 message, u32 keyFlags, i32 messageData);
 
 #endif // HOMM1_BASE_INPUTMANAGER_H
