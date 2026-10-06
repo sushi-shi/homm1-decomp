@@ -45,6 +45,23 @@ msgid "adventure.quick_info.uncharted"
 msgstr ""
 
 #: src/SOURCE/ADVMGR.cpp
+#, c-format
+msgid "adventure.quick_info.visited"
+msgstr ""
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.quick_load.confirm"
+msgstr ""
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.quick_load.missing"
+msgstr ""
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.quick_save.done"
+msgstr ""
+
+#: src/SOURCE/ADVMGR.cpp
 msgid "adventure.save.success"
 msgstr ""
 
@@ -58,6 +75,11 @@ msgstr ""
 
 #: src/SOURCE/ADVMGR.cpp
 msgid "adventure.search.eye_of_goros_found"
+msgstr ""
+
+#: src/SOURCE/ADVMGR.cpp
+#, c-format
+msgid "adventure.search.found_format"
 msgstr ""
 
 #: src/SOURCE/ADVMGR.cpp
@@ -205,6 +227,26 @@ msgstr ""
 msgid "combat.confirm.retreat"
 msgstr ""
 
+#: src/SOURCE/DRAWING.cpp
+#, c-format
+msgid "combat.forecast.damage"
+msgstr ""
+
+#: src/SOURCE/DRAWING.cpp
+#, c-format
+msgid "combat.forecast.damage_range"
+msgstr ""
+
+#: src/SOURCE/DRAWING.cpp
+#, c-format
+msgid "combat.forecast.kills"
+msgstr ""
+
+#: src/SOURCE/DRAWING.cpp
+#, c-format
+msgid "combat.forecast.kills_range"
+msgstr ""
+
 #: src/SOURCE/ARMY.cpp
 msgid "combat.fragment.attack"
 msgstr ""
@@ -263,7 +305,17 @@ msgstr ""
 
 #: src/SOURCE/CMBTMGR.cpp
 #, c-format
+msgid "combat.morale.bad_single"
+msgstr ""
+
+#: src/SOURCE/CMBTMGR.cpp
+#, c-format
 msgid "combat.morale.good"
+msgstr ""
+
+#: src/SOURCE/CMBTMGR.cpp
+#, c-format
+msgid "combat.morale.good_single"
 msgstr ""
 
 #: src/SOURCE/EVENTS.cpp
@@ -285,6 +337,16 @@ msgstr ""
 
 #: src/SOURCE/EVENTS.cpp
 msgid "combat.network.town"
+msgstr ""
+
+#: src/SOURCE/DRAWING.cpp
+#, c-format
+msgid "combat.shoot.few"
+msgstr ""
+
+#: src/SOURCE/DRAWING.cpp
+#, c-format
+msgid "combat.shoot.one"
 msgstr ""
 
 #: src/SOURCE/COMMAND.cpp
@@ -309,6 +371,16 @@ msgstr ""
 msgid "combat.spell.teleport_here"
 msgstr ""
 
+#: src/SOURCE/DRAWING.cpp
+#, c-format
+msgid "combat.status.hit_points"
+msgstr ""
+
+#: src/SOURCE/COMMAND.cpp
+#, c-format
+msgid "combat.surrender.computer_offer"
+msgstr ""
+
 #: src/SOURCE/COMMAND.cpp
 #, c-format
 msgid "combat.surrender.offer"
@@ -316,6 +388,10 @@ msgstr ""
 
 #: src/SOURCE/CMBTMGR.cpp
 msgid "combat.tower.garrison.damage.prefix"
+msgstr ""
+
+#: src/SOURCE/DRAWING.cpp
+msgid "common.count_forms"
 msgstr ""
 
 #: src/SOURCE/COMMAND.cpp
@@ -1021,7 +1097,49 @@ msgid "event.shrine.rankings"
 msgstr ""
 
 #: src/SOURCE/EVENTS.cpp
+#, c-format
+msgid "event.shrine.spell_format"
+msgstr ""
+
+#: src/SOURCE/EVENTS.cpp
 msgid "event.skeleton.treasure"
+msgstr ""
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.abandoned"
+msgstr ""
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.approach"
+msgstr ""
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.attacked"
+msgstr ""
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.ghosts_join"
+msgstr ""
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.ghosts_still_wait"
+msgstr ""
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.ghosts_wait"
+msgstr ""
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.waiting_ghosts_join"
+msgstr ""
+
+#: src/SOURCE/EVENTS.cpp
+#, c-format
+msgid "event.unknown"
+msgstr ""
+
+#: src/BASE/RESMGR.cpp
+msgid "file.aggregate.invalid"
 msgstr ""
 
 #: src/BASE/RESMGR.cpp
@@ -1041,6 +1159,10 @@ msgstr ""
 
 #: src/SOURCE/REQUEST.cpp
 msgid "file.load.label"
+msgstr ""
+
+#: src/SOURCE/REQUEST.cpp
+msgid "file.name.punctuation"
 msgstr ""
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/GAME.cpp src/SOURCE/KB.cpp
@@ -1111,12 +1233,78 @@ msgstr ""
 msgid "modem.initializing"
 msgstr ""
 
+#: src/SOURCE/comwin.cpp
+msgid "modem.port_error.baud_rate"
+msgstr ""
+
+#: src/SOURCE/comwin.cpp
+msgid "modem.port_error.cables"
+msgstr ""
+
+#: src/SOURCE/comwin.cpp
+msgid "modem.port_error.clear_break"
+msgstr ""
+
+#: src/SOURCE/comwin.cpp
+msgid "modem.port_error.clear_errors"
+msgstr ""
+
+#: src/SOURCE/comwin.cpp
+msgid "modem.port_error.configure"
+msgstr ""
+
+#: src/SOURCE/comwin.cpp
+#, c-format
+msgid "modem.port_error.header"
+msgstr ""
+
+#: src/SOURCE/comwin.cpp
+msgid "modem.port_error.initialize"
+msgstr ""
+
+#: src/SOURCE/comwin.cpp
+#, c-format
+msgid "modem.port_error.open_port"
+msgstr ""
+
+#: src/SOURCE/comwin.cpp
+msgid "modem.port_error.port"
+msgstr ""
+
+#: src/SOURCE/comwin.cpp
+msgid "modem.port_error.read"
+msgstr ""
+
+#: src/SOURCE/comwin.cpp
+msgid "modem.port_error.reboot"
+msgstr ""
+
+#: src/SOURCE/comwin.cpp
+msgid "modem.port_error.set_break"
+msgstr ""
+
+#: src/SOURCE/comwin.cpp
+msgid "modem.port_error.solutions"
+msgstr ""
+
+#: src/SOURCE/comwin.cpp
+msgid "modem.port_error.timeouts"
+msgstr ""
+
+#: src/SOURCE/comwin.cpp
+msgid "modem.port_error.write"
+msgstr ""
+
 #: src/SOURCE/REMOTE.cpp
 msgid "modem.ring.wait"
 msgstr ""
 
 #: src/SOURCE/SETUP.cpp
 msgid "modem.telephone.required"
+msgstr ""
+
+#: src/SOURCE/REMOTE.cpp
+msgid "network.direct.duplicate_id"
 msgstr ""
 
 #: src/SOURCE/REMOTE.cpp
@@ -1183,6 +1371,10 @@ msgstr ""
 
 #: src/SOURCE/KB.cpp
 msgid "network.setup.wait"
+msgstr ""
+
+#: src/SOURCE/GAME.cpp
+msgid "network.version.mismatch"
 msgstr ""
 
 #: src/SOURCE/KB.cpp
@@ -2210,6 +2402,118 @@ msgstr ""
 msgid "table.gArmyNames.27"
 msgstr ""
 
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.0"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.1"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.2"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.3"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.4"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.5"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.6"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.7"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.8"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.9"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.10"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.11"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.12"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.13"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.14"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.15"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.16"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.17"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.18"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.19"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.20"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.21"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.22"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.23"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.24"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.25"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.26"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.27"
+msgstr ""
+
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArmyNamesPlural.0"
 msgstr ""
@@ -3142,6 +3446,22 @@ msgstr ""
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gClassNames.3"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gClassNamesAccusative.0"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gClassNamesAccusative.1"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gClassNamesAccusative.2"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gClassNamesAccusative.3"
 msgstr ""
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
@@ -4141,6 +4461,294 @@ msgstr ""
 msgid "table.gHeroNames.35.1"
 msgstr ""
 
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.0"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.1"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.2"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.3"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.4"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.5"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.6"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.7"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.8"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.9"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.10"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.11"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.12"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.13"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.14"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.15"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.16"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.17"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.18"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.19"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.20"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.21"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.22"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.23"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.24"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.25"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.26"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.27"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.28"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.29"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.30"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.31"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.32"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.33"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.34"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.35"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.0"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.1"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.2"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.3"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.4"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.5"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.6"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.7"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.8"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.9"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.10"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.11"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.12"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.13"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.14"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.15"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.16"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.17"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.18"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.19"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.20"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.21"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.22"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.23"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.24"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.25"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.26"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.27"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.28"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.29"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.30"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.31"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.32"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.33"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.34"
+msgstr ""
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.35"
+msgstr ""
+
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gHeroScreen.0"
 msgstr ""
@@ -4306,6 +4914,10 @@ msgstr ""
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gLuckInfoText.10"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gLuckInfoText.11"
 msgstr ""
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
@@ -6242,626 +6854,6 @@ msgstr ""
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.walkSpeedText.4"
-msgstr ""
-
-#: src/SOURCE/ADVMGR.cpp
-#, c-format
-msgid "te.adventure.quick_info.visited"
-msgstr ""
-
-#: src/SOURCE/ADVMGR.cpp
-msgid "te.adventure.quick_load.confirm"
-msgstr ""
-
-#: src/SOURCE/ADVMGR.cpp
-msgid "te.adventure.quick_load.missing"
-msgstr ""
-
-#: src/SOURCE/ADVMGR.cpp
-msgid "te.adventure.quick_save.done"
-msgstr ""
-
-#: src/SOURCE/ADVMGR.cpp
-#, c-format
-msgid "te.adventure.search.found_format"
-msgstr ""
-
-#: src/SOURCE/DRAWING.cpp
-#, c-format
-msgid "te.combat.forecast.damage"
-msgstr ""
-
-#: src/SOURCE/DRAWING.cpp
-#, c-format
-msgid "te.combat.forecast.damage_range"
-msgstr ""
-
-#: src/SOURCE/DRAWING.cpp
-#, c-format
-msgid "te.combat.forecast.kills"
-msgstr ""
-
-#: src/SOURCE/DRAWING.cpp
-#, c-format
-msgid "te.combat.forecast.kills_range"
-msgstr ""
-
-#: src/SOURCE/CMBTMGR.cpp
-#, c-format
-msgid "te.combat.morale.bad_single"
-msgstr ""
-
-#: src/SOURCE/CMBTMGR.cpp
-#, c-format
-msgid "te.combat.morale.good_single"
-msgstr ""
-
-#: src/SOURCE/DRAWING.cpp
-#, c-format
-msgid "te.combat.shoot.few"
-msgstr ""
-
-#: src/SOURCE/DRAWING.cpp
-#, c-format
-msgid "te.combat.shoot.one"
-msgstr ""
-
-#: src/SOURCE/DRAWING.cpp
-#, c-format
-msgid "te.combat.status.hit_points"
-msgstr ""
-
-#: src/SOURCE/COMMAND.cpp
-#, c-format
-msgid "te.combat.surrender.computer_offer"
-msgstr ""
-
-#: src/SOURCE/EVENTS.cpp
-#, c-format
-msgid "te.event.spell_shrine.format"
-msgstr ""
-
-#: src/SOURCE/EVENTS.cpp
-msgid "te.event.stronghold.abandoned"
-msgstr ""
-
-#: src/SOURCE/EVENTS.cpp
-msgid "te.event.stronghold.approach"
-msgstr ""
-
-#: src/SOURCE/EVENTS.cpp
-msgid "te.event.stronghold.attacked"
-msgstr ""
-
-#: src/SOURCE/EVENTS.cpp
-msgid "te.event.stronghold.ghosts_join"
-msgstr ""
-
-#: src/SOURCE/EVENTS.cpp
-msgid "te.event.stronghold.ghosts_still_wait"
-msgstr ""
-
-#: src/SOURCE/EVENTS.cpp
-msgid "te.event.stronghold.ghosts_wait"
-msgstr ""
-
-#: src/SOURCE/EVENTS.cpp
-msgid "te.event.stronghold.waiting_ghosts_join"
-msgstr ""
-
-#: src/SOURCE/EVENTS.cpp
-#, c-format
-msgid "te.event.unknown"
-msgstr ""
-
-#: src/SOURCE/REQUEST.cpp
-msgid "te.file.name.punctuation"
-msgstr ""
-
-#: src/SOURCE/DRAWING.cpp
-msgid "te.grammar.count_forms"
-msgstr ""
-
-#: src/SOURCE/GAME.cpp
-msgid "te.network.version.mismatch"
-msgstr ""
-
-#: include/SOURCE/kbwin.h
-msgid "te.prefs.registry_key"
-msgstr ""
-
-#: include/SOURCE/kbwin.h
-msgid "te.prefs.settings_file"
-msgstr ""
-
-#: src/BASE/RESMGR.cpp
-msgid "te.resource.aggregate.invalid"
-msgstr ""
-
-#: src/SOURCE/REMOTE.cpp
-msgid "te.serial.connect.duplicate_id"
-msgstr ""
-
-#: src/SOURCE/comwin.cpp
-msgid "te.serial.error.baud_rate"
-msgstr ""
-
-#: src/SOURCE/comwin.cpp
-msgid "te.serial.error.cables"
-msgstr ""
-
-#: src/SOURCE/comwin.cpp
-msgid "te.serial.error.clear_break"
-msgstr ""
-
-#: src/SOURCE/comwin.cpp
-msgid "te.serial.error.clear_errors"
-msgstr ""
-
-#: src/SOURCE/comwin.cpp
-msgid "te.serial.error.configure"
-msgstr ""
-
-#: src/SOURCE/comwin.cpp
-#, c-format
-msgid "te.serial.error.header"
-msgstr ""
-
-#: src/SOURCE/comwin.cpp
-msgid "te.serial.error.initialize"
-msgstr ""
-
-#: src/SOURCE/comwin.cpp
-#, c-format
-msgid "te.serial.error.open_port"
-msgstr ""
-
-#: src/SOURCE/comwin.cpp
-msgid "te.serial.error.port"
-msgstr ""
-
-#: src/SOURCE/comwin.cpp
-msgid "te.serial.error.read"
-msgstr ""
-
-#: src/SOURCE/comwin.cpp
-msgid "te.serial.error.reboot"
-msgstr ""
-
-#: src/SOURCE/comwin.cpp
-msgid "te.serial.error.set_break"
-msgstr ""
-
-#: src/SOURCE/comwin.cpp
-msgid "te.serial.error.solutions"
-msgstr ""
-
-#: src/SOURCE/comwin.cpp
-msgid "te.serial.error.timeouts"
-msgstr ""
-
-#: src/SOURCE/comwin.cpp
-msgid "te.serial.error.write"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.0"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.1"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.2"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.3"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.4"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.5"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.6"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.7"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.8"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.9"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.10"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.11"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.12"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.13"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.14"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.15"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.16"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.17"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.18"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.19"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.20"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.21"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.22"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.23"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.24"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.25"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.26"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.27"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gClassNamesAccusative.0"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gClassNamesAccusative.1"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gClassNamesAccusative.2"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gClassNamesAccusative.3"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.0"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.1"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.2"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.3"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.4"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.5"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.6"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.7"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.8"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.9"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.10"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.11"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.12"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.13"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.14"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.15"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.16"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.17"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.18"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.19"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.20"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.21"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.22"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.23"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.24"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.25"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.26"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.27"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.28"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.29"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.30"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.31"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.32"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.33"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.34"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.35"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.0"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.1"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.2"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.3"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.4"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.5"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.6"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.7"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.8"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.9"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.10"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.11"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.12"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.13"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.14"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.15"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.16"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.17"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.18"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.19"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.20"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.21"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.22"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.23"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.24"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.25"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.26"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.27"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.28"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.29"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.30"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.31"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.32"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.33"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.34"
-msgstr ""
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.35"
-msgstr ""
-
-#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
-msgid "te.table.gLuckInfoText.11"
 msgstr ""
 
 #: src/SOURCE/TOWNMGR.cpp

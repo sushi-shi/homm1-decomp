@@ -9,7 +9,7 @@
 #   locale   the language compiled into the programs (locales/<LANG>.json).
 #   editor   whether to install the scenario editor.
 #   edition  "buka", or "te" for the Tournament Edition (port-te): names the
-#            game in its desktop entry; the editor is the Buka editor in both.
+#            game in its desktop entry.
 #
 # Another edition (Tournament Edition) is another set of programs and its own
 # per-user folder: `stateName` keeps the editions' saved games apart.

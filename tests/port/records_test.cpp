@@ -243,7 +243,7 @@ void CheckSaveFormatTag() {
     WriteSaveHeaderReserved(out, tagged);
     std::vector<u8> expected(SAVE_HEADER_RESERVED_RECORD_SIZE, 0);
     std::memcpy(expected.data(), "H1TE\x01", 5);
-    Expect(SAVE_FORMAT_CURRENT == SAVE_FORMAT_TOURNAMENT_1 && SAVE_FORMAT_TOURNAMENT_1 == 1,
+    Expect(SAVE_FORMAT_CURRENT == SAVE_FORMAT_FLED_STATE && SAVE_FORMAT_FLED_STATE == 1,
            "save format: the edition's version is 1");
     Expect(out.Size() == SAVE_HEADER_RESERVED_RECORD_SIZE
                && std::memcmp(out.Data(), expected.data(), expected.size()) == 0,
@@ -254,7 +254,7 @@ void CheckSaveFormatTag() {
     ReadSaveHeaderReserved(in, decoded);
     Expect(in.Ok() && in.Remaining() == 0
                && std::memcmp(decoded.format.signature, SAVE_FORMAT_SIGNATURE, 4) == 0
-               && decoded.format.version == SAVE_FORMAT_TOURNAMENT_1,
+               && decoded.format.version == SAVE_FORMAT_FLED_STATE,
            "save format tag round trip");
     std::vector<u8> zeros(SAVE_HEADER_RESERVED_RECORD_SIZE, 0);
     RecordReader originalIn(zeros.data(), static_cast<i32>(zeros.size()));

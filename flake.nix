@@ -108,8 +108,8 @@
               default = "te";
               description = ''
                 The edition to install: te (the Tournament Edition, this branch's
-                programs; the editor stays the Buka editor) or buka (the Buka 2003
-                edition, from the port branch's flake).
+                game and editor) or buka (the Buka 2003 edition, from the port
+                branch's flake).
               '';
             };
             game = lib.mkOption {

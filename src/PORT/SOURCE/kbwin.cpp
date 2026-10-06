@@ -65,14 +65,11 @@ namespace {
 
 // ---------------------------------------------------------------- settings
 
-// The original kept its settings in the registry under
-// HKLM\SOFTWARE\Buka\3DO\Heroes of Might and Magic Platinum\1.000, the
-// edition under its own key (PREFS_REGISTRY_KEY). The port keeps the same
-// values, by the same names, in a text file; the edition's file
-// (PREFS_SETTINGS_FILE) is apart from the original game's heroes.cfg, as its
-// key was.
+// The Windows build keeps its settings in the registry, one key per language
+// (PREFS_REGISTRY_KEY). The port keeps the same values, by the same names, in
+// a text file, one per language as the key is (the locale's settings_file).
 std::string SettingsPath() {
-    return platform::ConfigDirectory() + PREFS_SETTINGS_FILE;
+    return platform::ConfigDirectory() + localization::Tr("locale.settings_file");
 }
 
 std::map<std::string, std::string> LoadSettings() {
@@ -150,7 +147,6 @@ std::vector<SettingField> IntegerSettings() {
         {"HMM1 EditorWindowWidth", &gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].width},
         {"HMM1 EditorWindowHeight", &gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].height},
         {"HMM1 EditorFullScreen", &gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].fullScreen},
-        // The edition's options.
         {"HMM1 ShowEnemyMobility", &gConfig.showEnemyMobility},
         {"HMM1 SoftRetreatSurrender", &gConfig.softRetreatSurrender},
         {"HMM1 SlightlyHarderAI", &gConfig.slightlyHarderAI},
@@ -568,8 +564,8 @@ void ReadPrefs(void) {
         WritePrefs();
         return;
     }
-    // Edition values missing from older settings keep their defaults.
-    SetEditionDefaults();
+    // Values missing from older settings keep their defaults.
+    SetGameDefaults();
     for (const SettingField& field : IntegerSettings())
         ReadSetting(values, field.name, *field.value);
     // The game always starts with its menu bar.

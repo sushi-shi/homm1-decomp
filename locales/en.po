@@ -44,6 +44,23 @@ msgid "adventure.quick_info.uncharted"
 msgstr "Uncharted territory"
 
 #: src/SOURCE/ADVMGR.cpp
+#, c-format
+msgid "adventure.quick_info.visited"
+msgstr "\n\n%s\n(Visited)"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.quick_load.confirm"
+msgstr "Are you sure you want to load a quicksave?"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.quick_load.missing"
+msgstr "Quicksave not found."
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.quick_save.done"
+msgstr "Game saved successfully."
+
+#: src/SOURCE/ADVMGR.cpp
 msgid "adventure.save.success"
 msgstr "Game saved successfully."
 
@@ -58,6 +75,11 @@ msgstr "A great tragedy - the enemy has found the Eye of Goros!!!  The people ab
 #: src/SOURCE/ADVMGR.cpp
 msgid "adventure.search.eye_of_goros_found"
 msgstr "After spending many hours digging here, you have uncovered the Eye of Goros!!!!"
+
+#: src/SOURCE/ADVMGR.cpp
+#, c-format
+msgid "adventure.search.found_format"
+msgstr "%s%s"
 
 #: src/SOURCE/ADVMGR.cpp
 msgid "adventure.search.found_prefix"
@@ -204,6 +226,26 @@ msgstr "Battlefield Casualties"
 msgid "combat.confirm.retreat"
 msgstr "Are you sure you want to retreat?"
 
+#: src/SOURCE/DRAWING.cpp
+#, c-format
+msgid "combat.forecast.damage"
+msgstr "Damage: %d"
+
+#: src/SOURCE/DRAWING.cpp
+#, c-format
+msgid "combat.forecast.damage_range"
+msgstr "Damage: %d - %d"
+
+#: src/SOURCE/DRAWING.cpp
+#, c-format
+msgid "combat.forecast.kills"
+msgstr "Kills: %d"
+
+#: src/SOURCE/DRAWING.cpp
+#, c-format
+msgid "combat.forecast.kills_range"
+msgstr "Kills: %d - %d"
+
 #: src/SOURCE/ARMY.cpp
 msgid "combat.fragment.attack"
 msgstr "The"
@@ -262,7 +304,17 @@ msgstr "Low morale causes the %s to freeze in panic."
 
 #: src/SOURCE/CMBTMGR.cpp
 #, c-format
+msgid "combat.morale.bad_single"
+msgstr "Low morale causes the %s to freeze in panic."
+
+#: src/SOURCE/CMBTMGR.cpp
+#, c-format
 msgid "combat.morale.good"
+msgstr "High morale enables the %s to attack again."
+
+#: src/SOURCE/CMBTMGR.cpp
+#, c-format
+msgid "combat.morale.good_single"
 msgstr "High morale enables the %s to attack again."
 
 #: src/SOURCE/EVENTS.cpp
@@ -286,6 +338,16 @@ msgstr "Error receiving data.  Keep trying??"
 msgid "combat.network.town"
 msgstr "Town"
 
+#: src/SOURCE/DRAWING.cpp
+#, c-format
+msgid "combat.shoot.few"
+msgstr "Shoot %s (shots left: %d)"
+
+#: src/SOURCE/DRAWING.cpp
+#, c-format
+msgid "combat.shoot.one"
+msgstr "Shoot %s (shots left: %d)"
+
 #: src/SOURCE/COMMAND.cpp
 msgid "combat.spell.already_cast"
 msgstr "You have already cast a spell this round."
@@ -308,6 +370,16 @@ msgstr "You have no hero to cast a spell."
 msgid "combat.spell.teleport_here"
 msgstr "Teleport Here"
 
+#: src/SOURCE/DRAWING.cpp
+#, c-format
+msgid "combat.status.hit_points"
+msgstr "Hit Points: %d (%d)"
+
+#: src/SOURCE/COMMAND.cpp
+#, c-format
+msgid "combat.surrender.computer_offer"
+msgstr "%s states:\n\n\"Let my troops and me leave in peace, and I will pay you %d gold.\""
+
 #: src/SOURCE/COMMAND.cpp
 #, c-format
 msgid "combat.surrender.offer"
@@ -316,6 +388,10 @@ msgstr "%s states:\n\n\"I will accept your surrender and grant you and your troo
 #: src/SOURCE/CMBTMGR.cpp
 msgid "combat.tower.garrison.damage.prefix"
 msgstr "Garrison does"
+
+#: src/SOURCE/DRAWING.cpp
+msgid "common.count_forms"
+msgstr "2022222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222"
 
 #: src/SOURCE/COMMAND.cpp
 msgid "common.none"
@@ -1020,8 +1096,50 @@ msgid "event.shrine.rankings"
 msgstr "Shrine - Player Rankings"
 
 #: src/SOURCE/EVENTS.cpp
+#, c-format
+msgid "event.shrine.spell_format"
+msgstr "%s'%s'."
+
+#: src/SOURCE/EVENTS.cpp
 msgid "event.skeleton.treasure"
 msgstr "Treasure"
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.abandoned"
+msgstr "The stronghold seems abandoned by its owners."
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.approach"
+msgstr "You see a well-fortified stronghold before you. The bridge is lowered. You knock on the gate, but nobody's answering. Silence.\n\nAre you sure you want to enter?"
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.attacked"
+msgstr "While you are trying to break the gate to get inside the stronghold, you are attacked by furious paladins, shouting something in a language you do not know.  Yet you have a feeling that this is a warning of some sort..."
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.ghosts_join"
+msgstr "You've defeated the paladins and freed the evil ghosts they were guarding.  Strangely, the ghosts silently join your cause."
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.ghosts_still_wait"
+msgstr "Ghosts are still waiting to join your cause, but you don't have a room for them in your army."
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.ghosts_wait"
+msgstr "You've defeated the paladins and freed the evil ghosts they were guarding.  Strangely, the ghosts wished to join your cause once you'll find a room for them in your army."
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.waiting_ghosts_join"
+msgstr "Ghosts silently join your cause."
+
+#: src/SOURCE/EVENTS.cpp
+#, c-format
+msgid "event.unknown"
+msgstr "Event ID %d"
+
+#: src/BASE/RESMGR.cpp
+msgid "file.aggregate.invalid"
+msgstr "File Error: .AGG File not valid"
 
 #: src/BASE/RESMGR.cpp
 #, c-format
@@ -1041,6 +1159,10 @@ msgstr "The game you have chosen only has slots for %d human(s).  You need one w
 #: src/SOURCE/REQUEST.cpp
 msgid "file.load.label"
 msgstr "File to Load:"
+
+#: src/SOURCE/REQUEST.cpp
+msgid "file.name.punctuation"
+msgstr "$%'-_@~`!(){}^#&+,;=[]."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/GAME.cpp src/SOURCE/KB.cpp
 #, c-format
@@ -1110,6 +1232,68 @@ msgstr "Dialing..."
 msgid "modem.initializing"
 msgstr "Initializing modem..."
 
+#: src/SOURCE/comwin.cpp
+msgid "modem.port_error.baud_rate"
+msgstr "\n  4) Consider lowering the BAUD rate in 'CONFIG' to 19200 or 9600."
+
+#: src/SOURCE/comwin.cpp
+msgid "modem.port_error.cables"
+msgstr "\n  1) Make sure all cables are firmly connected."
+
+#: src/SOURCE/comwin.cpp
+msgid "modem.port_error.clear_break"
+msgstr "Clear communications break"
+
+#: src/SOURCE/comwin.cpp
+msgid "modem.port_error.clear_errors"
+msgstr "Clear communications error queue"
+
+#: src/SOURCE/comwin.cpp
+msgid "modem.port_error.configure"
+msgstr "Configure communications device"
+
+#: src/SOURCE/comwin.cpp
+#, c-format
+msgid "modem.port_error.header"
+msgstr "Communications error on function '%s'\n\nWin95 Error Code: %d\nWin95 Error Meaning: %s\n\n"
+
+#: src/SOURCE/comwin.cpp
+msgid "modem.port_error.initialize"
+msgstr "Initialize communications paramaters"
+
+#: src/SOURCE/comwin.cpp
+#, c-format
+msgid "modem.port_error.open_port"
+msgstr "Opening COM%d"
+
+#: src/SOURCE/comwin.cpp
+msgid "modem.port_error.port"
+msgstr "\n  3) Check to make sure you have the correct COM port setting in 'CONFIG'. (The 3rd button down on the screen where you choose Host or Guest.)"
+
+#: src/SOURCE/comwin.cpp
+msgid "modem.port_error.read"
+msgstr "Read communications data"
+
+#: src/SOURCE/comwin.cpp
+msgid "modem.port_error.reboot"
+msgstr "\n  2) Reboot computer."
+
+#: src/SOURCE/comwin.cpp
+msgid "modem.port_error.set_break"
+msgstr "Set communications break"
+
+#: src/SOURCE/comwin.cpp
+msgid "modem.port_error.solutions"
+msgstr "Suggested solutions:"
+
+#: src/SOURCE/comwin.cpp
+msgid "modem.port_error.timeouts"
+msgstr "Set communications timeouts"
+
+#: src/SOURCE/comwin.cpp
+msgid "modem.port_error.write"
+msgstr "Write communications data"
+
 #: src/SOURCE/REMOTE.cpp
 msgid "modem.ring.wait"
 msgstr "Waiting for ring..."
@@ -1117,6 +1301,10 @@ msgstr "Waiting for ring..."
 #: src/SOURCE/SETUP.cpp
 msgid "modem.telephone.required"
 msgstr "Please enter the telephone number."
+
+#: src/SOURCE/REMOTE.cpp
+msgid "network.direct.duplicate_id"
+msgstr "Duplicate ID Strings!\nSorry Please Try Again\n"
 
 #: src/SOURCE/REMOTE.cpp
 msgid "network.direct.wait"
@@ -1183,6 +1371,10 @@ msgstr "Sending Data"
 #: src/SOURCE/KB.cpp
 msgid "network.setup.wait"
 msgstr "Waiting for other remote player to set up game."
+
+#: src/SOURCE/GAME.cpp
+msgid "network.version.mismatch"
+msgstr "The other player is running a different version of Heroes of Might and Magic."
 
 #: src/SOURCE/KB.cpp
 #, c-format
@@ -2209,6 +2401,118 @@ msgstr "ghost"
 msgid "table.gArmyNames.27"
 msgstr "genie"
 
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.0"
+msgstr "peasant"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.1"
+msgstr "archer"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.2"
+msgstr "pikeman"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.3"
+msgstr "swordsman"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.4"
+msgstr "cavalry"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.5"
+msgstr "paladin"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.6"
+msgstr "goblin"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.7"
+msgstr "orc"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.8"
+msgstr "wolf"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.9"
+msgstr "ogre"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.10"
+msgstr "troll"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.11"
+msgstr "cyclops"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.12"
+msgstr "sprite"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.13"
+msgstr "dwarf"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.14"
+msgstr "elf"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.15"
+msgstr "druid"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.16"
+msgstr "unicorn"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.17"
+msgstr "phoenix"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.18"
+msgstr "centaur"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.19"
+msgstr "gargoyle"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.20"
+msgstr "griffin"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.21"
+msgstr "minotaur"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.22"
+msgstr "hydra"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.23"
+msgstr "dragon"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.24"
+msgstr "rogue"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.25"
+msgstr "nomad"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.26"
+msgstr "ghost"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.27"
+msgstr "genie"
+
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArmyNamesPlural.0"
 msgstr "peasants"
@@ -3141,6 +3445,22 @@ msgstr "Sorceress"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gClassNames.3"
+msgstr "Warlock"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gClassNamesAccusative.0"
+msgstr "Knight"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gClassNamesAccusative.1"
+msgstr "Barbarian"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gClassNamesAccusative.2"
+msgstr "Sorceress"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gClassNamesAccusative.3"
 msgstr "Warlock"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
@@ -4140,6 +4460,294 @@ msgstr "Vesper"
 msgid "table.gHeroNames.35.1"
 msgstr "Vesper"
 
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.0"
+msgstr "Lord Kilburn"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.1"
+msgstr "Lord Haart"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.2"
+msgstr "Sir Gallant"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.3"
+msgstr "Arturius"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.4"
+msgstr "Tyro"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.5"
+msgstr "Maximus"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.6"
+msgstr "Ector"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.7"
+msgstr "Dimitri"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.8"
+msgstr "Ambrose"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.9"
+msgstr "Thundax"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.10"
+msgstr "Ergon"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.11"
+msgstr "Kelzen"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.12"
+msgstr "Tsabu"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.13"
+msgstr "Crag Hack"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.14"
+msgstr "Jojosh"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.15"
+msgstr "Atlas"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.16"
+msgstr "Yog"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.17"
+msgstr "Antoine"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.18"
+msgstr "Ariel"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.19"
+msgstr "Vatawna"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.20"
+msgstr "Carlawn"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.21"
+msgstr "Rebecca"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.22"
+msgstr "Luna"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.23"
+msgstr "Astra"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.24"
+msgstr "Natasha"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.25"
+msgstr "Gem"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.26"
+msgstr "Troyan"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.27"
+msgstr "Agar"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.28"
+msgstr "Crodo"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.29"
+msgstr "Falagar"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.30"
+msgstr "Barok"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.31"
+msgstr "Arie"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.32"
+msgstr "Kastore"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.33"
+msgstr "Sandro"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.34"
+msgstr "Wrathmont"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.35"
+msgstr "Vesper"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.0"
+msgstr "Lord Kilburn"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.1"
+msgstr "Lord Haart"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.2"
+msgstr "Sir Gallant"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.3"
+msgstr "Arturius"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.4"
+msgstr "Tyro"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.5"
+msgstr "Maximus"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.6"
+msgstr "Ector"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.7"
+msgstr "Dimitri"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.8"
+msgstr "Ambrose"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.9"
+msgstr "Thundax"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.10"
+msgstr "Ergon"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.11"
+msgstr "Kelzen"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.12"
+msgstr "Tsabu"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.13"
+msgstr "Crag Hack"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.14"
+msgstr "Jojosh"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.15"
+msgstr "Atlas"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.16"
+msgstr "Yog"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.17"
+msgstr "Antoine"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.18"
+msgstr "Ariel"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.19"
+msgstr "Vatawna"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.20"
+msgstr "Carlawn"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.21"
+msgstr "Rebecca"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.22"
+msgstr "Luna"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.23"
+msgstr "Astra"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.24"
+msgstr "Natasha"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.25"
+msgstr "Gem"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.26"
+msgstr "Troyan"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.27"
+msgstr "Agar"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.28"
+msgstr "Crodo"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.29"
+msgstr "Falagar"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.30"
+msgstr "Barok"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.31"
+msgstr "Arie"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.32"
+msgstr "Kastore"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.33"
+msgstr "Sandro"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.34"
+msgstr "Wrathmont"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.35"
+msgstr "Vesper"
+
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gHeroScreen.0"
 msgstr "Kingdom Overview"
@@ -4306,6 +4914,10 @@ msgstr "\nFountain visited +1"
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gLuckInfoText.10"
 msgstr "\nnone"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gLuckInfoText.11"
+msgstr "\nFizbin of Misfortune -3"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gLuckText.0"
@@ -6242,626 +6854,6 @@ msgstr "Gallop"
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.walkSpeedText.4"
 msgstr "Jump"
-
-#: src/SOURCE/ADVMGR.cpp
-#, c-format
-msgid "te.adventure.quick_info.visited"
-msgstr "\n\n%s\n(Visited)"
-
-#: src/SOURCE/ADVMGR.cpp
-msgid "te.adventure.quick_load.confirm"
-msgstr "Are you sure you want to load a quicksave?"
-
-#: src/SOURCE/ADVMGR.cpp
-msgid "te.adventure.quick_load.missing"
-msgstr "Quicksave not found."
-
-#: src/SOURCE/ADVMGR.cpp
-msgid "te.adventure.quick_save.done"
-msgstr "Game saved successfully."
-
-#: src/SOURCE/ADVMGR.cpp
-#, c-format
-msgid "te.adventure.search.found_format"
-msgstr "%s%s"
-
-#: src/SOURCE/DRAWING.cpp
-#, c-format
-msgid "te.combat.forecast.damage"
-msgstr "Damage: %d"
-
-#: src/SOURCE/DRAWING.cpp
-#, c-format
-msgid "te.combat.forecast.damage_range"
-msgstr "Damage: %d - %d"
-
-#: src/SOURCE/DRAWING.cpp
-#, c-format
-msgid "te.combat.forecast.kills"
-msgstr "Kills: %d"
-
-#: src/SOURCE/DRAWING.cpp
-#, c-format
-msgid "te.combat.forecast.kills_range"
-msgstr "Kills: %d - %d"
-
-#: src/SOURCE/CMBTMGR.cpp
-#, c-format
-msgid "te.combat.morale.bad_single"
-msgstr "Low morale causes the %s to freeze in panic."
-
-#: src/SOURCE/CMBTMGR.cpp
-#, c-format
-msgid "te.combat.morale.good_single"
-msgstr "High morale enables the %s to attack again."
-
-#: src/SOURCE/DRAWING.cpp
-#, c-format
-msgid "te.combat.shoot.few"
-msgstr "Shoot %s (shots left: %d)"
-
-#: src/SOURCE/DRAWING.cpp
-#, c-format
-msgid "te.combat.shoot.one"
-msgstr "Shoot %s (shots left: %d)"
-
-#: src/SOURCE/DRAWING.cpp
-#, c-format
-msgid "te.combat.status.hit_points"
-msgstr "Hit Points: %d (%d)"
-
-#: src/SOURCE/COMMAND.cpp
-#, c-format
-msgid "te.combat.surrender.computer_offer"
-msgstr "%s states:\n\n\"Let my troops and me leave in peace, and I will pay you %d gold.\""
-
-#: src/SOURCE/EVENTS.cpp
-#, c-format
-msgid "te.event.spell_shrine.format"
-msgstr "%s'%s'."
-
-#: src/SOURCE/EVENTS.cpp
-msgid "te.event.stronghold.abandoned"
-msgstr "The stronghold seems abandoned by its owners."
-
-#: src/SOURCE/EVENTS.cpp
-msgid "te.event.stronghold.approach"
-msgstr "You see a well-fortified stronghold before you. The bridge is lowered. You knock on the gate, but nobody's answering. Silence.\n\nAre you sure you want to enter?"
-
-#: src/SOURCE/EVENTS.cpp
-msgid "te.event.stronghold.attacked"
-msgstr "While you are trying to break the gate to get inside the stronghold, you are attacked by furious paladins, shouting something in a language you do not know.  Yet you have a feeling that this is a warning of some sort..."
-
-#: src/SOURCE/EVENTS.cpp
-msgid "te.event.stronghold.ghosts_join"
-msgstr "You've defeated the paladins and freed the evil ghosts they were guarding.  Strangely, the ghosts silently join your cause."
-
-#: src/SOURCE/EVENTS.cpp
-msgid "te.event.stronghold.ghosts_still_wait"
-msgstr "Ghosts are still waiting to join your cause, but you don't have a room for them in your army."
-
-#: src/SOURCE/EVENTS.cpp
-msgid "te.event.stronghold.ghosts_wait"
-msgstr "You've defeated the paladins and freed the evil ghosts they were guarding.  Strangely, the ghosts wished to join your cause once you'll find a room for them in your army."
-
-#: src/SOURCE/EVENTS.cpp
-msgid "te.event.stronghold.waiting_ghosts_join"
-msgstr "Ghosts silently join your cause."
-
-#: src/SOURCE/EVENTS.cpp
-#, c-format
-msgid "te.event.unknown"
-msgstr "Event ID %d"
-
-#: src/SOURCE/REQUEST.cpp
-msgid "te.file.name.punctuation"
-msgstr "$%'-_@~`!(){}^#&+,;=[]."
-
-#: src/SOURCE/DRAWING.cpp
-msgid "te.grammar.count_forms"
-msgstr "2022222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222"
-
-#: src/SOURCE/GAME.cpp
-msgid "te.network.version.mismatch"
-msgstr "The other player is running a different version of Heroes of Might and Magic."
-
-#: include/SOURCE/kbwin.h
-msgid "te.prefs.registry_key"
-msgstr "SOFTWARE\\Buka\\3DO\\Heroes of Might and Magic\\HeroesWorld TE\\EN"
-
-#: include/SOURCE/kbwin.h
-msgid "te.prefs.settings_file"
-msgstr "heroes-te-en.cfg"
-
-#: src/BASE/RESMGR.cpp
-msgid "te.resource.aggregate.invalid"
-msgstr "File Error: .AGG File not valid"
-
-#: src/SOURCE/REMOTE.cpp
-msgid "te.serial.connect.duplicate_id"
-msgstr "Duplicate ID Strings!\nSorry Please Try Again\n"
-
-#: src/SOURCE/comwin.cpp
-msgid "te.serial.error.baud_rate"
-msgstr "\n  4) Consider lowering the BAUD rate in 'CONFIG' to 19200 or 9600."
-
-#: src/SOURCE/comwin.cpp
-msgid "te.serial.error.cables"
-msgstr "\n  1) Make sure all cables are firmly connected."
-
-#: src/SOURCE/comwin.cpp
-msgid "te.serial.error.clear_break"
-msgstr "Clear communications break"
-
-#: src/SOURCE/comwin.cpp
-msgid "te.serial.error.clear_errors"
-msgstr "Clear communications error queue"
-
-#: src/SOURCE/comwin.cpp
-msgid "te.serial.error.configure"
-msgstr "Configure communications device"
-
-#: src/SOURCE/comwin.cpp
-#, c-format
-msgid "te.serial.error.header"
-msgstr "Communications error on function '%s'\n\nWin95 Error Code: %d\nWin95 Error Meaning: %s\n\n"
-
-#: src/SOURCE/comwin.cpp
-msgid "te.serial.error.initialize"
-msgstr "Initialize communications paramaters"
-
-#: src/SOURCE/comwin.cpp
-#, c-format
-msgid "te.serial.error.open_port"
-msgstr "Opening COM%d"
-
-#: src/SOURCE/comwin.cpp
-msgid "te.serial.error.port"
-msgstr "\n  3) Check to make sure you have the correct COM port setting in 'CONFIG'. (The 3rd button down on the screen where you choose Host or Guest.)"
-
-#: src/SOURCE/comwin.cpp
-msgid "te.serial.error.read"
-msgstr "Read communications data"
-
-#: src/SOURCE/comwin.cpp
-msgid "te.serial.error.reboot"
-msgstr "\n  2) Reboot computer."
-
-#: src/SOURCE/comwin.cpp
-msgid "te.serial.error.set_break"
-msgstr "Set communications break"
-
-#: src/SOURCE/comwin.cpp
-msgid "te.serial.error.solutions"
-msgstr "Suggested solutions:"
-
-#: src/SOURCE/comwin.cpp
-msgid "te.serial.error.timeouts"
-msgstr "Set communications timeouts"
-
-#: src/SOURCE/comwin.cpp
-msgid "te.serial.error.write"
-msgstr "Write communications data"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.0"
-msgstr "peasant"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.1"
-msgstr "archer"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.2"
-msgstr "pikeman"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.3"
-msgstr "swordsman"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.4"
-msgstr "cavalry"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.5"
-msgstr "paladin"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.6"
-msgstr "goblin"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.7"
-msgstr "orc"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.8"
-msgstr "wolf"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.9"
-msgstr "ogre"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.10"
-msgstr "troll"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.11"
-msgstr "cyclops"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.12"
-msgstr "sprite"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.13"
-msgstr "dwarf"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.14"
-msgstr "elf"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.15"
-msgstr "druid"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.16"
-msgstr "unicorn"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.17"
-msgstr "phoenix"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.18"
-msgstr "centaur"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.19"
-msgstr "gargoyle"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.20"
-msgstr "griffin"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.21"
-msgstr "minotaur"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.22"
-msgstr "hydra"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.23"
-msgstr "dragon"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.24"
-msgstr "rogue"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.25"
-msgstr "nomad"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.26"
-msgstr "ghost"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.27"
-msgstr "genie"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gClassNamesAccusative.0"
-msgstr "Knight"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gClassNamesAccusative.1"
-msgstr "Barbarian"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gClassNamesAccusative.2"
-msgstr "Sorceress"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gClassNamesAccusative.3"
-msgstr "Warlock"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.0"
-msgstr "Lord Kilburn"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.1"
-msgstr "Lord Haart"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.2"
-msgstr "Sir Gallant"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.3"
-msgstr "Arturius"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.4"
-msgstr "Tyro"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.5"
-msgstr "Maximus"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.6"
-msgstr "Ector"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.7"
-msgstr "Dimitri"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.8"
-msgstr "Ambrose"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.9"
-msgstr "Thundax"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.10"
-msgstr "Ergon"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.11"
-msgstr "Kelzen"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.12"
-msgstr "Tsabu"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.13"
-msgstr "Crag Hack"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.14"
-msgstr "Jojosh"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.15"
-msgstr "Atlas"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.16"
-msgstr "Yog"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.17"
-msgstr "Antoine"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.18"
-msgstr "Ariel"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.19"
-msgstr "Vatawna"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.20"
-msgstr "Carlawn"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.21"
-msgstr "Rebecca"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.22"
-msgstr "Luna"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.23"
-msgstr "Astra"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.24"
-msgstr "Natasha"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.25"
-msgstr "Gem"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.26"
-msgstr "Troyan"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.27"
-msgstr "Agar"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.28"
-msgstr "Crodo"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.29"
-msgstr "Falagar"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.30"
-msgstr "Barok"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.31"
-msgstr "Arie"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.32"
-msgstr "Kastore"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.33"
-msgstr "Sandro"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.34"
-msgstr "Wrathmont"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.35"
-msgstr "Vesper"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.0"
-msgstr "Lord Kilburn"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.1"
-msgstr "Lord Haart"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.2"
-msgstr "Sir Gallant"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.3"
-msgstr "Arturius"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.4"
-msgstr "Tyro"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.5"
-msgstr "Maximus"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.6"
-msgstr "Ector"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.7"
-msgstr "Dimitri"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.8"
-msgstr "Ambrose"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.9"
-msgstr "Thundax"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.10"
-msgstr "Ergon"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.11"
-msgstr "Kelzen"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.12"
-msgstr "Tsabu"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.13"
-msgstr "Crag Hack"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.14"
-msgstr "Jojosh"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.15"
-msgstr "Atlas"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.16"
-msgstr "Yog"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.17"
-msgstr "Antoine"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.18"
-msgstr "Ariel"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.19"
-msgstr "Vatawna"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.20"
-msgstr "Carlawn"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.21"
-msgstr "Rebecca"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.22"
-msgstr "Luna"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.23"
-msgstr "Astra"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.24"
-msgstr "Natasha"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.25"
-msgstr "Gem"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.26"
-msgstr "Troyan"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.27"
-msgstr "Agar"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.28"
-msgstr "Crodo"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.29"
-msgstr "Falagar"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.30"
-msgstr "Barok"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.31"
-msgstr "Arie"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.32"
-msgstr "Kastore"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.33"
-msgstr "Sandro"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.34"
-msgstr "Wrathmont"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.35"
-msgstr "Vesper"
-
-#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
-msgid "te.table.gLuckInfoText.11"
-msgstr "\nFizbin of Misfortune -3"
 
 #: src/SOURCE/TOWNMGR.cpp
 msgid "town.boat.unavailable"

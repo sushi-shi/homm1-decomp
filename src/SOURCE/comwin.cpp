@@ -103,12 +103,12 @@ void ShutdownComError(char* function) {
             break;
     }
 
-    sprintf(message, localization::Tr("te.serial.error.header"), function, errorCode, errorName);
-    strcat(message, localization::Tr("te.serial.error.solutions"));
-    strcat(message, localization::Tr("te.serial.error.cables"));
-    strcat(message, localization::Tr("te.serial.error.reboot"));
-    strcat(message, localization::Tr("te.serial.error.port"));
-    strcat(message, localization::Tr("te.serial.error.baud_rate"));
+    sprintf(message, localization::Tr("modem.port_error.header"), function, errorCode, errorName);
+    strcat(message, localization::Tr("modem.port_error.solutions"));
+    strcat(message, localization::Tr("modem.port_error.cables"));
+    strcat(message, localization::Tr("modem.port_error.reboot"));
+    strcat(message, localization::Tr("modem.port_error.port"));
+    strcat(message, localization::Tr("modem.port_error.baud_rate"));
     ShutDown(message);
 }
 
@@ -132,7 +132,7 @@ i16 com_init(u8 portNumber, i32 baudRate, i32 useDtr) {
     gComPorts[slot].handle =
         CreateFileA(portName, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
     if (gComPorts[slot].handle == INVALID_HANDLE_VALUE) {
-        sprintf(gText, localization::Tr("te.serial.error.open_port"), portNumber);
+        sprintf(gText, localization::Tr("modem.port_error.open_port"), portNumber);
         ShutdownComError(gText);
         return -1;
     }
@@ -174,16 +174,16 @@ i16 com_init(u8 portNumber, i32 baudRate, i32 useDtr) {
     state.StopBits = ONESTOPBIT;
     rv = SetupComm(gComPorts[slot].handle, COM_RECEIVE_BUFFER_SIZE, COM_TRANSMIT_BUFFER_SIZE);
     if (!rv)
-        ShutdownComError(localization::Tr("te.serial.error.initialize"));
+        ShutdownComError(localization::Tr("modem.port_error.initialize"));
     rv = SetCommState(gComPorts[slot].handle, &state);
     if (!rv)
-        ShutdownComError(localization::Tr("te.serial.error.configure"));
+        ShutdownComError(localization::Tr("modem.port_error.configure"));
     portTimeouts.ReadIntervalTimeout = MAXDWORD;
     portTimeouts.ReadTotalTimeoutMultiplier = portTimeouts.ReadTotalTimeoutConstant = 0;
     portTimeouts.WriteTotalTimeoutMultiplier = portTimeouts.WriteTotalTimeoutConstant = 0;
     rv = SetCommTimeouts(gComPorts[slot].handle, &portTimeouts);
     if (!rv)
-        ShutdownComError(localization::Tr("te.serial.error.timeouts"));
+        ShutdownComError(localization::Tr("modem.port_error.timeouts"));
     init_anchor(&gComPorts[slot].normalQueue, 1, 0);
     init_anchor(&gComPorts[slot].priorityQueue, 1, 0);
     return slot;
@@ -212,12 +212,12 @@ i16 com_rcv(i16 port, u16 requested, void* buffer) {
     if (gComPorts[port].handle != INVALID_HANDLE_VALUE) {
         success = ClearCommError(gComPorts[port].handle, &err, &status);
         if (!success)
-            ShutdownComError(localization::Tr("te.serial.error.clear_errors"));
+            ShutdownComError(localization::Tr("modem.port_error.clear_errors"));
         n = requested < status.cbInQue ? requested : status.cbInQue;
         if (n) {
             success = ReadFile(gComPorts[port].handle, buffer, n, &bytesRead, NULL);
             if (!success)
-                ShutdownComError(localization::Tr("te.serial.error.read"));
+                ShutdownComError(localization::Tr("modem.port_error.read"));
             return bytesRead;
         }
     }
@@ -232,11 +232,11 @@ i16 com_snd(i16 port, u16 session, u16 length, void* data, i32 priority) {
         if (!length) {
             success = SetCommBreak(gComPorts[port].handle);
             if (!success)
-                ShutdownComError(localization::Tr("te.serial.error.set_break"));
+                ShutdownComError(localization::Tr("modem.port_error.set_break"));
             Sleep(COM_BREAK_DELAY);
             success = ClearCommBreak(gComPorts[port].handle);
             if (!success)
-                ShutdownComError(localization::Tr("te.serial.error.clear_break"));
+                ShutdownComError(localization::Tr("modem.port_error.clear_break"));
             return 0;
         }
         node = static_cast<tag_Node*>(malloc(length + COM_NODE_HEADER_SIZE));
@@ -291,7 +291,7 @@ void comm_wrt_task(void) {
                 NULL
             );
             if (!success)
-                ShutdownComError(localization::Tr("te.serial.error.write"));
+                ShutdownComError(localization::Tr("modem.port_error.write"));
             totalWritten += sizeWritten;
         }
         free(packetNode);

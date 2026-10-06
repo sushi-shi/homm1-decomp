@@ -46,10 +46,6 @@ void SetGameDefaults(void) {
     gConfig.musicSource = SOUND_MUSIC_SOURCE_CD;
     gFirstTimeThrough = true;
     gConfig.walkSpeed = WALK_SPEED_CANTER;
-    SetEditionDefaults();
-}
-
-void SetEditionDefaults(void) {
     gConfig.showEnemyMobility = 0;
     gConfig.softRetreatSurrender = 0;
     gConfig.slightlyHarderAI = 0;

@@ -9,21 +9,34 @@ how it is implemented (`status`, `status_note`).
 ## Layout of the edition's changes
 
 - Source edits live in the function bodies and headers they change; new
-  helpers sit next to the code that uses them. Comments describe behaviour.
-- Text: every string the edition adds has a `te.*` id in
-  `locales/messages.pot`, `locales/en.po` and `locales/ru.po`. Revised
-  wording of existing strings changes their entries in place.
-- Locale data: the Russian keyboard mapping (ё, «», №) is in
-  `locales/ru.json`; the extra glyphs (« » — №) are listed in the Russian
-  glyph set in `catalog.py`, which also keeps the editor's catalog IDs.
-- Options are registry preferences (`ReadPrefs`/`WritePrefs`) under the
-  edition's own key, with the edition's defaults (`SetEditionDefaults`).
+  helpers sit next to the code that uses them. The code reads as the game's
+  own: comments describe behaviour, and nothing is marked as the edition's.
+- Text: every new string has an id in the game's scheme
+  (`combat.forecast.kills`, `table.gHeroNamesAccusative.3`,
+  `modem.port_error.read`, ...) in `locales/messages.pot`, `locales/en.po`
+  and `locales/ru.po`. Revised wording of existing strings changes their
+  entries in place.
+- Locale data: the Russian keyboard mapping (ё, «», №) and the per-language
+  registry key (`registry_key`, read as `localization::Tr("locale.registry_key")`)
+  are in `locales/<lang>.json`; the extra glyphs (« » — №) are listed in
+  the Russian glyph set in `catalog.py`. These descriptor fields are the
+  branch's tooling change.
+- Options are ordinary `configStruct` preferences, read and written by
+  `ReadPrefs`/`WritePrefs` with their defaults in `SetGameDefaults`;
+  `ReadPrefs` starts from those defaults, so values missing from older
+  preferences keep them.
+- The editor (`--target editor`) shares kbwin, REQUEST, Audio and the BASE
+  library with the game, and with them the new behaviour and settings: the
+  registry key, windowed default, message pump, music path and file-name
+  punctuation (catalogue section 8). Assertions stay as in the original
+  source; the edition's disabled `ProcessAssert` (X03) is a build choice,
+  not a source change.
 
 ## Building and playing
 
 ```sh
-nix develop -c python3 build.py --locale ru --icon-from /path/to/HEROES.EXE
-nix develop -c python3 build.py --locale en --icon-from /path/to/HEROES.EXE
+nix develop -c python3 build.py --target all --locale ru --icon-from /path/to/HEROES.EXE
+nix develop -c python3 build.py --target all --locale en --icon-from /path/to/HEROES.EXE
 nix run .#play -- --game /path/to/game-or-cd.iso --state /scratch/te-state --window
 ```
 
@@ -37,6 +50,10 @@ send function keys as raw key codes (XTest) instead.
 often with whole-program renames. Replay the TE commits one by one:
 
 1. Branch from the new export: `git checkout -b te-replay source-buka-2003`.
+   When the export changed little, cherry-pick each commit with diff3
+   conflicts and resolve them token by token (the export's renames and
+   constants on the base side, the commit's change on the other), then go
+   to step 5.
 2. Build an old-to-new identifier map: diff the token streams of every
    source file between the old and the new export; a token that no longer
    exists anywhere in the new tree and is consistently replaced by one name
@@ -51,14 +68,15 @@ often with whole-program renames. Replay the TE commits one by one:
 4. Reformat only the changed lines with the decomp's `.clang-format`
    (`git clang-format --style=file:... HEAD`).
 5. Move the commit's catalog changes into the new `.po` files: new and
-   changed entries for `en` and `ru`, removed entries dropped; then
-   regenerate the template, keeping the editor's IDs whose sources are not
-   in this tree.
+   changed entries for `en` and `ru`, removed entries dropped; then run
+   `python3 catalog.py update`. `catalog.py check` and `update --check`
+   must pass.
 6. Build both locales after every commit; compare each replayed commit with
    the original by the multiset of tokens it adds and removes per file.
    Every difference must be explained by the new base (renamed names,
    removed casts) or by a deliberate adaptation.
-7. Smoke-test with `nix run .#play`: main menu, a new game, F5 and F9.
+7. Smoke-test with `nix run .#play`: main menu, a new game, F5 and F9; and
+   the editor (`--editor`) loading a shipped map with the shared settings.
 
 ## The edition on the native port (port-te)
 
@@ -67,14 +85,14 @@ the editor, multiplayer over TCP, the help viewer) with the edition on top:
 the source-te commits replayed one by one, each followed in its own commit
 message by a "Native port:" paragraph naming what the port needed, then the
 port-te commits of its own and merges of `port`. Build, run and test it as
-`port` (`docs/port/README.md`); the game is the edition, the editor stays
-the Buka editor.
+`port` (`docs/port/README.md`); the game and the editor share the edition's
+behaviour and settings, as on source-te.
 
 ### Installing it with the flake
 
 port-te's flake installs the edition the way the port's installs the game
-(README, "Install with a NixOS flake"): `heroes` runs the Tournament Edition,
-`heroes-editor` the Buka editor. Its saved games, maps and high scores live
+(README, "Install with a NixOS flake"): `heroes` runs the Tournament Edition
+and `heroes-editor` its scenario editor. Its saved games, maps and high scores live
 in `~/.local/share/homm1-te/game` and its settings in
 `~/.config/homm1/heroes-te-LANG.cfg`, apart from a plain installation's
 `homm1` folder and `heroes.cfg`.
@@ -115,12 +133,12 @@ native counterparts carry the same effect:
 | Row | Edition | Native port |
 | --- | --- | --- |
 | X02 | No CD check in `EarlySetup`. | The same shared `EarlySetup`; the port's `SetupCDDrive` is no longer called (the game folder is found before start-up, a missing CD folder falls back per track). |
-| X03 | Assertions compiled out (`H1_ASSERT`, kept by the editor). | The same `kbwin.h`; every native build of the game compiles them out. |
-| X04, PL-CPU-1 | `Sleep(1)` per message-pump pass, 1 ms timer period, blocking `GetMessage` every 127 ms. | `Process1WindowsMessage` sleeps 1 ms per pass (not in the browser, which already yields in the event poll, and not in the editor). SDL3 sets Windows' timer to 1 ms itself (`SDL_HINT_TIMER_RESOLUTION`). The port's pump never blocks in `GetMessage`, so the 127 ms interval has no counterpart; frames are paced by the display (`kPresentInterval`). |
-| X05, PL-FS-1 | Windowed by default, menu bar forced on, full-screen preference read; preferences under `…\HeroesWorld TE\EN` or `\RU`. | Same defaults (`KBCOMMON.cpp`); the settings file is `heroes-te-en.cfg` or `heroes-te-ru.cfg` (catalog entry `te.prefs.settings_file`) in the port's settings folder, apart from the original's `heroes.cfg`, which the editor keeps. The edition's options are stored there by their registry value names. |
+| X03 | The edition's build left `ProcessAssert` empty (a build choice). | Assertions stay as the source has them, natively too. |
+| X04, PL-CPU-1 | `Sleep(1)` per message-pump pass, 1 ms timer period, blocking `GetMessage` every 127 ms. | `Process1WindowsMessage` sleeps 1 ms per pass (not in the browser, which already yields in the event poll). SDL3 sets Windows' timer to 1 ms itself (`SDL_HINT_TIMER_RESOLUTION`). The port's pump never blocks in `GetMessage`, so the 127 ms interval has no counterpart; frames are paced by the display (`kPresentInterval`). |
+| X05, PL-FS-1 | Windowed by default, menu bar forced on, full-screen preference read; preferences under `…\HeroesWorld TE\EN` or `\RU`. | Same defaults (`KBCOMMON.cpp`); the settings file is `heroes-te-en.cfg` or `heroes-te-ru.cfg` (the locale descriptor's `settings_file`, read as `localization::Tr("locale.settings_file")`, beside `registry_key`) in the port's settings folder, apart from the Buka port's `heroes.cfg`. Both programs keep their options there, by their registry value names. |
 | X06, PL-OFF-2 | Videos only with `PlayVideos` (off). | The same shared `PlaySmacker`. |
 | D04, R01 | Loading banner and About box name the edition. | Same catalog texts; the port's About message box shows them, and the game's window takes the catalog title (`window.gTitle`, `platform::SetWindowTitle`). |
-| TE-OPT-6, D03 | Music from the game folder: `Tracks\NN-AudioTrack NN.ogg`, or `Audio\Track NN.flac` with `LosslessAudio`. | `PORT/BASE/Audio.cpp` looks there first (FFmpeg decodes both; the minimal FFmpeg of the Windows and browser builds gains FLAC), then in the port's CD folder, then plays `SOUND`. The browser page puts a chosen `Track NN.flac` into `Audio`. The editor does not look in the game folder. |
+| TE-OPT-6, D03 | Music from the game folder: `Tracks\NN-AudioTrack NN.ogg`, or `Audio\Track NN.flac` with `LosslessAudio`. | `PORT/BASE/Audio.cpp` looks there first (stb_vorbis decodes the Ogg tracks, dr_flac the FLAC ones, `vendor/dr_flac`), then in the port's CD folder, then plays `SOUND`. The browser page puts a chosen `Track NN.flac` into `Audio`. |
 | X01, RT-* | Plugin loader, wrapper, proxies. | Out of scope, as on source-te. |
 
 ### Save format and protocol
@@ -196,8 +214,8 @@ re-derive port-te as a line again:
    and the new port-te commit must be one of those or come from the new
    port.
 4. Rename catalog ids and identifiers as the source-te resync did (its
-   steps 2 and 5 above); keep `te.prefs.settings_file` beside
-   `te.prefs.registry_key`.
+   steps 2 and 5 above); the native settings file stays the locale
+   descriptor's `settings_file`, beside `registry_key`.
 5. After every commit: `nix develop .#port -c ninja -C build/port`. At the
    end, the checks below; then move `port-te` to the new line.
 

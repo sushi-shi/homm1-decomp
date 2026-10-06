@@ -727,7 +727,7 @@ void Connect(void) {
             if (!ReadModemId(idPacket, remoteId, remoteStage))
                 continue;
             if (!strncmp(remoteId, gModemIdString, MODEM_ID_DIGITS)) {
-                sprintf(gText, localization::Tr("te.serial.connect.duplicate_id"));
+                sprintf(gText, localization::Tr("network.direct.duplicate_id"));
                 GOut(gText);
                 RemoteCleanup();
             }
@@ -783,7 +783,7 @@ b32 WaitForDirectConnect(void) {
                 if (!ReadModemId(idPacket, remoteId, remoteStage))
                     return false;
                 if (!strncmp(remoteId, gModemIdString, MODEM_ID_DIGITS)) {
-                    sprintf(gText, localization::Tr("te.serial.connect.duplicate_id"));
+                    sprintf(gText, localization::Tr("network.direct.duplicate_id"));
                     GOut(gText);
                     RemoteCleanup();
                 }

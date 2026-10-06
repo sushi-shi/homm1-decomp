@@ -147,16 +147,15 @@ enum SaveFileConstant {
     SAVE_FILE_RESERVED_SIZE = 0x2c
 };
 
-// Saves written by this edition begin their reserved header block with a
-// signature and a format version; the original game's saves leave it zero
-// and load as SAVE_FORMAT_ORIGINAL.
+// Saves begin their reserved header block with a signature and a format
+// version; older saves leave it zero and load as SAVE_FORMAT_ORIGINAL.
 #define SAVE_FORMAT_SIGNATURE "H1TE"
 enum SaveFormatVersion {
     SAVE_FORMAT_ORIGINAL = 0,
     // hero::m_fledState, live hero::m_cowardice, tavern heroes reserved
     // with HERO_AVAILABILITY_IN_TAVERN.
-    SAVE_FORMAT_TOURNAMENT_1 = 1,
-    SAVE_FORMAT_CURRENT = SAVE_FORMAT_TOURNAMENT_1
+    SAVE_FORMAT_FLED_STATE = 1,
+    SAVE_FORMAT_CURRENT = SAVE_FORMAT_FLED_STATE
 };
 
 struct SaveFormatTag {

@@ -186,8 +186,8 @@ those of the port:
 
 | Area | Edition on Windows | port-te |
 | --- | --- | --- |
-| Settings | Registry key `…\HeroesWorld TE\EN` or `\RU`. | `heroes-te-en.cfg` or `heroes-te-ru.cfg` in the settings folder; the editor keeps `heroes.cfg`. |
-| Idle processor use | `Sleep(1)` per message-pump pass, 1 ms timer period, `GetMessage` every 127 ms. | A 1 ms sleep per pass natively (not in the browser or the editor); SDL's 1 ms timer period on Windows; no blocking `GetMessage`. |
+| Settings | Registry key `…\HeroesWorld TE\EN` or `\RU`. | `heroes-te-en.cfg` or `heroes-te-ru.cfg` in the settings folder, for both programs. |
+| Idle processor use | `Sleep(1)` per message-pump pass, 1 ms timer period, `GetMessage` every 127 ms. | A 1 ms sleep per pass natively (not in the browser); SDL's 1 ms timer period on Windows; no blocking `GetMessage`. |
 | Music | `Tracks\NN-AudioTrack NN.ogg` or `Audio\Track NN.flac` in the game folder. | The same files first, then the port's CD folder, then `SOUND`. |
-| Window title | The wrapper's "Heroes of Might and Magic TE". | The game's catalog title (`window.gTitle`). |
+| Window title | The wrapper's "Heroes of Might and Magic TE". | The program's catalog title (`window.gTitle`, the editor's `editor.window.title`). |
 | Network peers | NetBIOS group `Empire TE1 `, serial tag `TE`, checksum seed. | The same, and the TCP session frame carries the protocol version: other versions are refused. |

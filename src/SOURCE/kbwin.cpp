@@ -587,6 +587,8 @@ void ReadPrefs(void) {
             WritePrefs();
             return;
         }
+        // Values missing from older preferences keep their defaults.
+        SetGameDefaults();
         RegQueryValueExA(
             key,
             "HMM1 MusicVolume",
@@ -605,8 +607,6 @@ void ReadPrefs(void) {
         );
         gConfig.musicVolume = savedMusic;
         gConfig.soundVolume = effectsVolume;
-        // Edition values missing from older preferences keep their defaults.
-        SetEditionDefaults();
         RegQueryValueExA(
             key,
             "HMM1 WalkSpeed",

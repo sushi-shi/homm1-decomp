@@ -293,8 +293,8 @@ enum ConfigConnection {
 };
 
 // gConfig.cheatMode: the adventure-map digit cheats are off, limited to the
-// original map reveal, or extended with the edition's resource, town, hero,
-// creature and artifact codes.
+// map reveal, or extended with the resource, town, hero, creature and
+// artifact codes.
 enum CheatMode {
     CHEAT_MODE_OFF = 0,
     CHEAT_MODE_ORIGINAL = 1,
@@ -302,7 +302,7 @@ enum CheatMode {
 };
 // gConfig.battleMessageFormat: the combat status bar forecasts the damage of
 // an attack or shot, or keeps the classic texts with or without the
-// edition's grammar fixes.
+// grammar fixes.
 enum BattleMessageFormat {
     BATTLE_MESSAGE_FORECAST = 0,
     BATTLE_MESSAGE_CLASSIC_PLUS = 1,
@@ -323,7 +323,6 @@ struct configStruct {
     i32 comPort[CONFIG_CONNECTION_COUNT];
     i32 baudRate[CONFIG_CONNECTION_COUNT];
     char modemInitString[100];
-    // Edition options, stored beside the preferences above.
     i32 showEnemyMobility;
     i32 softRetreatSurrender;
     i32 slightlyHarderAI;

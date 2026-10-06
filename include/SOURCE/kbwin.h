@@ -90,11 +90,8 @@ enum PrefsConstant {
     KBWIN_TIMER_RESOLUTION = 1
 };
 
-// The edition keeps its preferences apart from the retail game's, one set
-// per language: under its own registry key on Windows, in its own settings
-// file natively.
-#define PREFS_REGISTRY_KEY localization::Tr("te.prefs.registry_key")
-#define PREFS_SETTINGS_FILE localization::Tr("te.prefs.settings_file")
+// Preferences are kept per language, under the key the locale names.
+#define PREFS_REGISTRY_KEY localization::Tr("locale.registry_key")
 
 extern char gCommandLine[];
 extern char gAppName[];
@@ -132,7 +129,6 @@ i32 AppMenuCommand(i32 command);
 i32 AppIdle(void);
 void AppExit(void);
 void SetGameDefaults(void);
-void SetEditionDefaults(void);
 void ReadPrefs(void);
 i32 SetupCDDrive(void);
 void KBChangeMenu(KBMenu menu);
@@ -178,13 +174,7 @@ void KBBeep(void);
 extern i32 gMainWinScreenWidth;
 extern i32 gMainWinScreenHeight;
 void ProcessAssert(i32 condition, char* file, i32 line);
-// Release builds compile assertions out; define H1_DEBUG_ASSERTS to report
-// failed assertions through ProcessAssert.
-#ifdef H1_DEBUG_ASSERTS
 #define H1_ASSERT(condition) ProcessAssert((condition), __FILE__, __LINE__)
-#else
-#define H1_ASSERT(condition) ((void)0)
-#endif
 void WritePrefs();
 char* FindToken(char* text, char token);
 

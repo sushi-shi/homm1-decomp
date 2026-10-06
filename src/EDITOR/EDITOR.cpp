@@ -771,7 +771,7 @@ char* gLuckInfoText[LUCK_INFO_COUNT] = {
     localization::Tr("table.gLuckInfoText.8"),
     localization::Tr("table.gLuckInfoText.9"),
     localization::Tr("table.gLuckInfoText.10"),
-    localization::Tr("te.table.gLuckInfoText.11"),
+    localization::Tr("table.gLuckInfoText.11"),
 };
 char* gMemoryErrorTitle = localization::Tr("table.gMemoryErrorTitle.0");
 char* gMemoryRequirements = localization::Tr("table.gMemoryRequirements.0");

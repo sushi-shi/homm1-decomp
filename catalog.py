@@ -8,7 +8,8 @@
                            keyboard table
 
 Every language is a translation; none is the source. IDs named `locale.*` are
-not messages: the descriptor supplies them (`locale.keyboard`).
+not messages: the descriptor supplies them (`locale.keyboard`,
+`locale.registry_key`, `locale.settings_file`).
 
     python3 catalog.py check            validate every language
     python3 catalog.py update [--check] regenerate the template and rewrite
@@ -43,11 +44,17 @@ SOURCE_SUFFIXES = ('.cpp', '.h', '.c', '.hpp', '.inc', '.rc')
 #: IDs a locale descriptor supplies instead of its .po.
 DESCRIPTOR_PREFIX = 'locale.'
 KEYBOARD_ID = 'locale.keyboard'
+#: The registry key the program keeps its preferences under, one per language.
+REGISTRY_KEY_ID = 'locale.registry_key'
+#: The file the native port keeps the same preferences in, one per language.
+SETTINGS_FILE_ID = 'locale.settings_file'
+#: Descriptor fields the source reads as text, by their IDs.
+DESCRIPTOR_TEXT = {REGISTRY_KEY_ID: 'registry_key', SETTINGS_FILE_ID: 'settings_file'}
 #: Characters the game's text renderer draws besides printable ASCII, by the
 #: descriptor's "glyphs" name. FONT.cpp maps Windows-1251 Cyrillic to the
 #: glyph order of Buka's AGG fonts, and guillemets, the em dash and the
-#: numero sign to the Tournament Edition's extra glyphs (ASCII look-alikes
-#: with fonts that lack them); every other byte above 0x7F draws blank.
+#: numero sign to the extra glyphs of newer fonts (ASCII look-alikes with
+#: fonts that lack them); every other byte above 0x7F draws blank.
 GLYPHS = {
     'ascii': '',
     'cyrillic': ''.join(chr(c) for c in range(0x410, 0x450)) + 'Ёё«»—№',
@@ -280,6 +287,10 @@ class Locale:
     glyphs: str
     #: US-layout character -> the character that key types.
     keyboard: dict
+    #: HKEY_LOCAL_MACHINE subkey of the program's preferences.
+    registry_key: str
+    #: File name of the native port's preferences.
+    settings_file: str
     messages: dict
 
     @property
@@ -289,7 +300,8 @@ class Locale:
 
 
 DESCRIPTOR_FIELDS = {'name': str, 'codepage': int, 'resource_language': str,
-                     'system_locale': str, 'glyphs': str, 'keyboard': dict}
+                     'system_locale': str, 'glyphs': str, 'keyboard': dict,
+                     'registry_key': str, 'settings_file': str}
 
 
 def _descriptor(code, text, errors):
@@ -324,6 +336,10 @@ def _descriptor(code, text, errors):
         errors.append(f'{where}: resource_language must be a Windows LANGID such as "0x0409"')
     if not re.fullmatch(r'[a-z]{2,3}_[A-Z]{2}\.UTF-8', data['system_locale']):
         errors.append(f'{where}: system_locale must be a UTF-8 POSIX locale such as "en_US.UTF-8"')
+    if not re.fullmatch(r'SOFTWARE(\\[ -\[\]-~]+)+', data['registry_key']):
+        errors.append(f'{where}: registry_key must be an ASCII key under SOFTWARE')
+    if not re.fullmatch(r'[a-z0-9][a-z0-9._-]*\.cfg', data['settings_file']):
+        errors.append(f'{where}: settings_file must be a lowercase file name ending in .cfg')
     if data['glyphs'] not in GLYPHS:
         errors.append(f'{where}: glyphs must be one of {", ".join(GLYPHS)}')
     keyboard, mapping = data['keyboard'], {}
@@ -344,7 +360,8 @@ def _descriptor(code, text, errors):
     if len(errors) != count:
         return None
     return dict(name=data['name'], codepage=codepage, resource_language=language,
-                system_locale=data['system_locale'], glyphs=data['glyphs'], keyboard=mapping)
+                system_locale=data['system_locale'], glyphs=data['glyphs'], keyboard=mapping,
+                registry_key=data['registry_key'], settings_file=data['settings_file'])
 
 
 def resource_defines(locale):
@@ -420,6 +437,8 @@ class Catalog:
             locale = Locale(code=code, messages=messages, **descriptor)
             cls._check_text(locale, entries, errors)
             messages[KEYBOARD_ID] = locale.keyboard_table
+            for key, name in DESCRIPTOR_TEXT.items():
+                messages[key] = getattr(locale, name)
             locales[code] = locale
         if not locales and not errors:
             errors.append(f'{LOCALES}: no language')
@@ -511,13 +530,13 @@ class Catalog:
         return self.locale(locale).messages
 
     def macro(self, key, *, chars=False):
-        if key not in self.entries and key != KEYBOARD_ID:
+        if key not in self.entries and key != KEYBOARD_ID and key not in DESCRIPTOR_TEXT:
             raise ValueError(f'unknown localization ID: {key}')
         return ('H1C' if chars else 'H1L') + hashlib.sha256(key.encode('ascii')).hexdigest()[:8]
 
     def header(self, locale, *, character_keys=()):
         current = self.locale(locale)
-        keys = sorted(self.entries)
+        keys = sorted([*self.entries, *DESCRIPTOR_TEXT])
         macros = [self.macro(key) for key in [*keys, KEYBOARD_ID]]
         if len(set(macros)) != len(macros):
             raise ValueError('localization macro hash collision')
@@ -698,9 +717,12 @@ def check(root, reference_locale=None):
         errors += [f'{name}:{line}: {message}' for line, message in hidden_text_errors(text)]
         try:
             for _start, _end, key, method in find_calls(text):
-                if key.startswith(DESCRIPTOR_PREFIX) and (key != KEYBOARD_ID or method != 'Chars'):
+                if key.startswith(DESCRIPTOR_PREFIX) and not (
+                        (key == KEYBOARD_ID and method == 'Chars')
+                        or (key in DESCRIPTOR_TEXT and method == 'Tr')):
                     errors.append(f'{name}: {key}: descriptors supply only '
-                                  f'localization::Chars("{KEYBOARD_ID}")')
+                                  f'localization::Chars("{KEYBOARD_ID}") and '
+                                  f'localization::Tr() of {", ".join(sorted(DESCRIPTOR_TEXT))}')
         except ValueError as exc:
             errors.append(f'{name}: {exc}')
     return errors
