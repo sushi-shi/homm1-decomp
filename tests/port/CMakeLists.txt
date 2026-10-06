@@ -52,13 +52,13 @@ homm1_test(lzhuf_test
   GAME_SOURCES ${CMAKE_SOURCE_DIR}/vendor/lzhuf/encoder.cpp ${CMAKE_SOURCE_DIR}/src/PORT/BASE/LZHUFDEC.cpp)
 target_include_directories(lzhuf_test PRIVATE ${HOMM1_LOCALIZED}/vendor/lzhuf)
 
-# Needs the game data and xvfb-run at test time; skipped otherwise.
+# Needs the game data at test time (it runs on SDL's dummy video driver); skipped otherwise.
 add_test(NAME save_roundtrip
   COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/save_roundtrip.py $<TARGET_FILE:homm1>)
 set_tests_properties(save_roundtrip PROPERTIES SKIP_RETURN_CODE 77 TIMEOUT 400)
 
 # A save on a full disk is reported and the game goes on (needs the game data,
-# xvfb-run and /dev/full).
+# /dev/full).
 add_test(NAME save_diskfull
   COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/save_diskfull.py $<TARGET_FILE:homm1>)
 set_tests_properties(save_diskfull PROPERTIES SKIP_RETURN_CODE 77 TIMEOUT 400)

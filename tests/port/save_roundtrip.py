@@ -3,7 +3,7 @@
 
     save_roundtrip.py HEROES_BINARY
 
-Needs $HOMM1_DATA (the game folder) and xvfb-run; without them the test is
+Needs $HOMM1_DATA (the game folder); without it the test is
 skipped (exit 77). The game folder is copied to a temporary folder first.
 A script of clicks (HOMM1_INPUT_REPLAY) opens the load screen, loads
 GAMES\\________.GM1, opens the file options and saves over it. The new file
@@ -43,8 +43,8 @@ def find(directory: Path, name: str) -> Path | None:
 def main() -> int:
     binary = Path(sys.argv[1]).resolve()
     data = os.environ.get("HOMM1_DATA")
-    if not data or shutil.which("xvfb-run") is None:
-        print("skipped: needs HOMM1_DATA and xvfb-run")
+    if not data:
+        print("skipped: needs HOMM1_DATA")
         return 77
     with tempfile.TemporaryDirectory() as scratch:
         root = Path(scratch) / "game"
@@ -55,8 +55,9 @@ def main() -> int:
         replay.write_text(REPLAY)
         environment = dict(os.environ, HOMM1_DATA=str(root), HOMM1_INPUT_REPLAY=str(replay),
                            HOMM1_NO_DIALOGS="1", SDL_AUDIO_DRIVER="dummy",
+                           SDL_VIDEODRIVER="dummy",
                            XDG_CONFIG_HOME=str(Path(scratch) / "config"))
-        result = subprocess.run(["xvfb-run", "-a", "-s", "-screen 0 1024x768x24", str(binary), "/I0"],
+        result = subprocess.run([str(binary), "/I0"],
                                 env=environment, cwd=scratch, timeout=300,
                                 capture_output=True, text=True)
         if result.returncode != 0:

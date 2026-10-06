@@ -264,7 +264,7 @@ single-byte corruption),
 `help_test` the help converter on a synthetic book and thousands of
 damaged copies of it, `help_game_test` (with `$HOMM1_HELP` or
 `HELP/HEROES.HLP` under `HOMM1_DATA`) on the real book,
-`save_roundtrip` (with `HOMM1_DATA` and `xvfb-run`) loads the shipped
+`save_roundtrip` (with `HOMM1_DATA`, headless) loads the shipped
 saved game in the program and saves it again, comparing the bytes, and
 `editor_maps_test` (with `HOMM1_DATA`, headless) loads every shipped map with
 the editor's own reader and saves it with its writer, comparing the bytes

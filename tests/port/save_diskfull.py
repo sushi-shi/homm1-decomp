@@ -3,7 +3,7 @@
 
     save_diskfull.py HEROES_BINARY
 
-Needs $HOMM1_DATA (the game folder) and xvfb-run; without them the test is
+Needs $HOMM1_DATA (the game folder); without it the test is
 skipped (exit 77). The game folder is copied to a temporary folder, and the
 file the save is written to first (GAMES\\________.GM1.partial, see
 FileReplace) is a link to /dev/full, so every write fails with ENOSPC. The
@@ -21,16 +21,18 @@ from pathlib import Path
 
 SAVE = "________.GM1"
 
+# The waits are twice save_roundtrip's: the failed save shows a message box,
+# and a loaded machine (a parallel or sanitized ctest) is slower to show it.
 REPLAY = """\
-3000 click 497 170
-+1500 click 497 104
-+2000 click 468 63
-+1000 click 392 305
-+4500 click 604 378
-+2000 click 252 140
-+2000 click 243 330
-+3000 key return
-+2000 shot {shot}
+6000 click 497 170
++3000 click 497 104
++4000 click 468 63
++2000 click 392 305
++9000 click 604 378
++4000 click 252 140
++4000 click 243 330
++6000 key return
++4000 shot {shot}
 +1000 exit
 """
 
@@ -45,8 +47,8 @@ def find(directory: Path, name: str) -> Path | None:
 def main() -> int:
     binary = Path(sys.argv[1]).resolve()
     data = os.environ.get("HOMM1_DATA")
-    if not data or shutil.which("xvfb-run") is None or not Path("/dev/full").exists():
-        print("skipped: needs HOMM1_DATA, xvfb-run and /dev/full")
+    if not data or not Path("/dev/full").exists():
+        print("skipped: needs HOMM1_DATA and /dev/full")
         return 77
     with tempfile.TemporaryDirectory() as scratch:
         root = Path(scratch) / "game"
@@ -60,8 +62,9 @@ def main() -> int:
         replay.write_text(REPLAY.format(shot=shot))
         environment = dict(os.environ, HOMM1_DATA=str(root), HOMM1_INPUT_REPLAY=str(replay),
                            HOMM1_NO_DIALOGS="1", SDL_AUDIO_DRIVER="dummy",
+                           SDL_VIDEODRIVER="dummy",
                            XDG_CONFIG_HOME=str(Path(scratch) / "config"))
-        result = subprocess.run(["xvfb-run", "-a", "-s", "-screen 0 1024x768x24", str(binary), "/I0"],
+        result = subprocess.run([str(binary), "/I0"],
                                 env=environment, cwd=scratch, timeout=300,
                                 capture_output=True, text=True)
         if result.returncode != 0:
