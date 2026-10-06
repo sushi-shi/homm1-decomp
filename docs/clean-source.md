@@ -141,11 +141,12 @@ editor's profiles and `HOMM1_EDITOR`) against `build/editor/objdiff/base`.
   spellings are read as their readable names. These counters advance with every macro a
   compilation defines, so they shift once the scaffolding headers are gone.
   Every remaining difference is listed, and the command fails unless the
-  differing unit's source uses `H1_ASSERT`, `__FILE__` or `__LINE__`. Without
-  the `#line` pins, those assertions carry their own line numbers and file
-  names. Currently 56 of 68 units are identical. The 12 that differ are the
-  assertion units INPUTMGR, MOUSEMGR, RESMGR, WINMGR, miscwin, EVENTS, NOOPT,
-  PATH, SMACKMGR, TOWNMGR, netwin and wingraph.
+  differing unit's source uses `H1_ASSERT`, `__FILE__` or `__LINE__` or
+  defines a function behind frame-slot aliases. Without the `#line` pins,
+  those assertions carry their own line numbers and file names; without the
+  aliases, the locals take their readable spellings' `/Od` slots. Currently
+  36 of 68 game units and 20 of 39 editor units are identical
+  (`differences.tsv` lists the rest).
 - **Resources.** `Heroes.rc` and `Editor.rc` of the source tree must compile
   to their retail programs' payloads (`homm1.tool.rc`).
 - **Standalone** (source variant). The tree's `build.py --target all` runs
