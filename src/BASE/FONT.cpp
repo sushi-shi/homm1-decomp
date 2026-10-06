@@ -12,18 +12,18 @@
 VA(0x00471dd0, 0xc7)
 font::font(i16 id) : resource(RESOURCE_CATEGORY_FONT, id, RESOURCE_REFERENCE_INITIAL, NULL) {
     char name[RESOURCE_NAME_CAPACITY];
-    gpResourceManager->PointToFile(id);
-    m_height = gpResourceManager->ReadWord();
-    m_headerWord = gpResourceManager->ReadWord();
-    gpResourceManager->Read13(name);
+    gResourceManager->PointToFile(id);
+    m_height = gResourceManager->ReadWord();
+    m_headerWord = gResourceManager->ReadWord();
+    gResourceManager->Read13(name);
     gLoadingMonoIcon = 1;
-    m_glyphIcon = gpResourceManager->GetIcon(name);
+    m_glyphIcon = gResourceManager->GetIcon(name);
     gLoadingMonoIcon = 0;
 }
 
 VA(0x00471e97, 0x5b)
 font::~font(void) {
-    gpResourceManager->Dispose(m_glyphIcon);
+    gResourceManager->Dispose(m_glyphIcon);
 }
 
 // Map CP1251 codes to Buka's font character order.

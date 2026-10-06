@@ -32,7 +32,7 @@ border::border(
 )
     : widget(x, y, width, height, id, kind) {
     if (bitmapName != NULL)
-        m_background = gpResourceManager->GetBitmap(bitmapName);
+        m_background = gResourceManager->GetBitmap(bitmapName);
     else
         m_background = NULL;
     m_fillColor = fillColor;
@@ -41,23 +41,23 @@ border::border(
 VA(0x00474a2c, 0x64)
 border::~border(void) {
     if (m_background)
-        gpResourceManager->Dispose(m_background);
+        gResourceManager->Dispose(m_background);
 }
 
 VA(0x00474a90, 0xe9)
 void border::Read(void) {
     char bitmapName[RESOURCE_NAME_CAPACITY];
-    READ_WIDGET_GEOMETRY(this, gpResourceManager);
-    m_id = gpResourceManager->ReadWord();
-    m_kind = gpResourceManager->ReadWord();
+    READ_WIDGET_GEOMETRY(this, gResourceManager);
+    m_id = gResourceManager->ReadWord();
+    m_kind = gResourceManager->ReadWord();
     if (m_kind == BORDER_BACKGROUND_BITMAP) {
-        gpResourceManager->Read13(bitmapName);
-        gpResourceManager->SavePosition();
-        m_background = gpResourceManager->GetBitmap(bitmapName);
-        gpResourceManager->RestorePosition();
+        gResourceManager->Read13(bitmapName);
+        gResourceManager->SavePosition();
+        m_background = gResourceManager->GetBitmap(bitmapName);
+        gResourceManager->RestorePosition();
         return;
     }
-    m_fillColor = gpResourceManager->ReadWord() & COLOR_INDEX_MASK;
+    m_fillColor = gResourceManager->ReadWord() & COLOR_INDEX_MASK;
     m_background = NULL;
 }
 
@@ -101,7 +101,7 @@ void border::Draw(void) {
     switch (m_kind) {
         case BORDER_BACKGROUND_SOLID:
             FillBitmapArea(
-                gpWindowManager->m_screen,
+                gWindowManager->m_screen,
                 x,
                 y,
                 m_width,
@@ -111,7 +111,7 @@ void border::Draw(void) {
             break;
         case BORDER_BACKGROUND_BITMAP:
             PollSound();
-            BlitBitmap(m_background, 0, 0, m_width, m_height, gpWindowManager->m_screen, x, y);
+            BlitBitmap(m_background, 0, 0, m_width, m_height, gWindowManager->m_screen, x, y);
             PollSound();
             break;
     }

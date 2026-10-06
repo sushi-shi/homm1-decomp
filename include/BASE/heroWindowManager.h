@@ -65,15 +65,15 @@ public:
 // A dialog handler records the selected widget as the dialog result and turns
 // the message into the dialog-select notification.
 #define FINISH_DIALOG_MESSAGE(message)                                                             \
-    (gpWindowManager->m_dialogResult = (message).id,                                               \
+    (gWindowManager->m_dialogResult = (message).id,                                                \
      (message).command = (message).id = WIDGET_COMMAND_DIALOG_SELECT)
 
 // Redraw the inclusive screen rectangle left..right, top..bottom.
 #define UPDATE_INCLUSIVE_REGION(left, top, right, bottom)                                          \
-    (gpWindowManager->UpdateScreenRegion((left), (top), (right) - (left) + 1, (bottom) - (top) + 1))
+    (gWindowManager->UpdateScreenRegion((left), (top), (right) - (left) + 1, (bottom) - (top) + 1))
 extern i8 gCyclePal[PALETTE_CYCLE_BYTES];
 void CycleColors(void);
-extern i8 gWindowFadeSavedUpdate;
+extern i8 gFadeSavedUpdate;
 
 H1_ENUM_BEGIN(WindowFadeMode)
     WINDOW_FADE_IN = 0,

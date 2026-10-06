@@ -44,12 +44,12 @@ static inline void ResetEventQueue(inputManager* manager) {
 
 VA(0x0046e560, 0x464)
 i32 KeyboardMessageHandler(void* window, u32 message, u32 virtualKey, i32 messageData) {
-    if (gpInputManager == NULL)
+    if (gInputManager == NULL)
         return 1;
-    if (gpInputManager->m_active != 1)
+    if (gInputManager->m_active != 1)
         return 1;
 
-    tag_message* event = &gpInputManager->m_eventRing[gpInputManager->m_writeIndex];
+    tag_message* event = &gInputManager->m_eventRing[gInputManager->m_writeIndex];
     event->type = MESSAGE_NONE;
     event->modifiers = MESSAGE_MODIFIER_NONE;
     event->y = 0;
@@ -66,16 +66,16 @@ i32 KeyboardMessageHandler(void* window, u32 message, u32 virtualKey, i32 messag
             event->modifiers = MESSAGE_MODIFIER_NONE;
             switch (event->keyCode) {
                 case INPUT_SCAN_CONTROL:
-                    gpInputManager->m_modifiers |= MESSAGE_MODIFIER_CONTROL;
+                    gInputManager->m_modifiers |= MESSAGE_MODIFIER_CONTROL;
                     break;
                 case INPUT_SCAN_ALT:
-                    gpInputManager->m_modifiers |= MESSAGE_MODIFIER_ALT;
+                    gInputManager->m_modifiers |= MESSAGE_MODIFIER_ALT;
                     break;
                 case INPUT_SCAN_LEFT_SHIFT:
-                    gpInputManager->m_modifiers |= MESSAGE_MODIFIER_LEFT_SHIFT;
+                    gInputManager->m_modifiers |= MESSAGE_MODIFIER_LEFT_SHIFT;
                     break;
                 case INPUT_SCAN_RIGHT_SHIFT:
-                    gpInputManager->m_modifiers |= MESSAGE_MODIFIER_RIGHT_SHIFT;
+                    gInputManager->m_modifiers |= MESSAGE_MODIFIER_RIGHT_SHIFT;
                     break;
             }
             break;
@@ -89,37 +89,37 @@ i32 KeyboardMessageHandler(void* window, u32 message, u32 virtualKey, i32 messag
             event->modifiers = MESSAGE_MODIFIER_NONE;
             switch (event->keyCode) {
                 case INPUT_SCAN_CONTROL:
-                    gpInputManager->m_modifiers &= ~MESSAGE_MODIFIER_CONTROL;
+                    gInputManager->m_modifiers &= ~MESSAGE_MODIFIER_CONTROL;
                     break;
                 case INPUT_SCAN_ALT:
-                    gpInputManager->m_modifiers &= ~MESSAGE_MODIFIER_ALT;
+                    gInputManager->m_modifiers &= ~MESSAGE_MODIFIER_ALT;
                     break;
                 case INPUT_SCAN_LEFT_SHIFT:
-                    gpInputManager->m_modifiers &= ~MESSAGE_MODIFIER_LEFT_SHIFT;
+                    gInputManager->m_modifiers &= ~MESSAGE_MODIFIER_LEFT_SHIFT;
                     break;
                 case INPUT_SCAN_RIGHT_SHIFT:
-                    gpInputManager->m_modifiers &= ~MESSAGE_MODIFIER_RIGHT_SHIFT;
+                    gInputManager->m_modifiers &= ~MESSAGE_MODIFIER_RIGHT_SHIFT;
                     break;
             }
             break;
     }
 
     if (event->type != MESSAGE_NONE) {
-        event->modifiers = gpInputManager->m_modifiers;
-        gpInputManager->m_writeIndex++;
-        gpInputManager->m_writeIndex %= INPUT_EVENT_RING_CAPACITY;
-        if (gpInputManager->m_readIndex == gpInputManager->m_writeIndex) {
-            gpInputManager->m_readIndex++;
-            gpInputManager->m_readIndex %= INPUT_EVENT_RING_CAPACITY;
+        event->modifiers = gInputManager->m_modifiers;
+        gInputManager->m_writeIndex++;
+        gInputManager->m_writeIndex %= INPUT_EVENT_RING_CAPACITY;
+        if (gInputManager->m_readIndex == gInputManager->m_writeIndex) {
+            gInputManager->m_readIndex++;
+            gInputManager->m_readIndex %= INPUT_EVENT_RING_CAPACITY;
         }
-        gpInputManager->m_field_0x342 = 0;
-        if (gpWindowManager->m_active == 1) {
+        gInputManager->m_field_0x342 = 0;
+        if (gWindowManager->m_active == 1) {
             if (event->type == MESSAGE_KEY_DOWN && event->keyCode == INPUT_SCAN_F12
                 && (event->modifiers & MESSAGE_MODIFIER_SHIFT_KEYS))
-                gpWindowManager->ScreenShot();
+                gWindowManager->ScreenShot();
             if (event->type == MESSAGE_KEY_DOWN && event->keyCode == INPUT_SCAN_F1) {
                 SetFullScreenStatus(FALSE);
-                AppCommand(hwndApp, 0, KBWIN_MENU_HELP, 0);
+                AppCommand(gAppWindow, 0, KBWIN_MENU_HELP, 0);
             }
             if (event->type == MESSAGE_KEY_DOWN && event->keyCode == INPUT_SCAN_F4)
                 SetFullScreenStatus(1 - CURRENT_GRAPHICS_CONFIG.fullScreen);
@@ -131,16 +131,16 @@ i32 KeyboardMessageHandler(void* window, u32 message, u32 virtualKey, i32 messag
 VA(0x0046e9c4, 0x33a)
 #line 137 INPUTMGR_CPP_PATH
 i32 MouseMessageHandler(void* window, u32 message, u32 keyFlags, i32 messageData) {
-    if (gpInputManager == NULL)
+    if (gInputManager == NULL)
         return 1;
-    if (gpInputManager->m_active != 1)
+    if (gInputManager->m_active != 1)
         return 1;
-    if (gpInputManager->m_mouseMessageActive != 0)
+    if (gInputManager->m_mouseMessageActive != 0)
         return 1;
-    gpInputManager->m_mouseMessageActive = 1;
+    gInputManager->m_mouseMessageActive = 1;
 
     i32 captureReleased;
-    tag_message* event = &gpInputManager->m_eventRing[gpInputManager->m_writeIndex];
+    tag_message* event = &gInputManager->m_eventRing[gInputManager->m_writeIndex];
     event->modifiers = MESSAGE_MODIFIER_NONE;
     event->y = 0;
     event->x = 0;
@@ -155,11 +155,11 @@ i32 MouseMessageHandler(void* window, u32 message, u32 keyFlags, i32 messageData
             goto mouseCoordinates;
         case WM_LBUTTONDOWN:
             event->type = MESSAGE_LEFT_BUTTON_DOWN;
-            SetCapture(hwndApp);
+            SetCapture(gAppWindow);
             goto mouseCoordinates;
         case WM_RBUTTONDOWN:
             event->type = MESSAGE_RIGHT_BUTTON_DOWN;
-            SetCapture(hwndApp);
+            SetCapture(gAppWindow);
             goto mouseCoordinates;
         case WM_RBUTTONDBLCLK:
             event->type = MESSAGE_RIGHT_BUTTON_DOWN;
@@ -174,31 +174,31 @@ i32 MouseMessageHandler(void* window, u32 message, u32 keyFlags, i32 messageData
 
         mouseCoordinates:
 #line 191
-            H1_ASSERT(gMainWinScreenHeight > 0 && iMainWinScreenWidth > 0);
+            H1_ASSERT(gMainWinScreenHeight > 0 && gMainWinScreenWidth > 0);
             event->x = CLIENT_TO_GAME_X(LOWORD(messageData));
             event->y = CLIENT_TO_GAME_Y(HIWORD(messageData));
     }
 
 mouseMoveCursorCheck:
-    if (message == WM_MOUSEMOVE && gpMouseManager != NULL) {
+    if (message == WM_MOUSEMOVE && gMouseManager != NULL) {
         if (event->x > INPUT_CURSOR_INTERIOR_X_MIN && event->x < INPUT_CURSOR_INTERIOR_X_MAX
             && event->y > INPUT_CURSOR_INTERIOR_Y_MIN && event->y < INPUT_CURSOR_INTERIOR_Y_MAX)
-            gpMouseManager->SetPointer(MOUSE_KEEP_CURRENT_FRAME);
+            gMouseManager->SetPointer(MOUSE_KEEP_CURRENT_FRAME);
     }
 
 afterMouseCoordinates:
     event->modifiers = MESSAGE_MODIFIER_NONE;
     if (event->type != MESSAGE_NONE) {
-        event->modifiers = gpInputManager->m_modifiers;
-        gpInputManager->m_writeIndex++;
-        gpInputManager->m_writeIndex %= INPUT_EVENT_RING_CAPACITY;
-        if (gpInputManager->m_readIndex == gpInputManager->m_writeIndex) {
-            gpInputManager->m_readIndex++;
-            gpInputManager->m_readIndex %= INPUT_EVENT_RING_CAPACITY;
+        event->modifiers = gInputManager->m_modifiers;
+        gInputManager->m_writeIndex++;
+        gInputManager->m_writeIndex %= INPUT_EVENT_RING_CAPACITY;
+        if (gInputManager->m_readIndex == gInputManager->m_writeIndex) {
+            gInputManager->m_readIndex++;
+            gInputManager->m_readIndex %= INPUT_EVENT_RING_CAPACITY;
         }
     }
 
-    gpInputManager->m_mouseMessageActive = 0;
+    gInputManager->m_mouseMessageActive = 0;
     return event->type == MESSAGE_NONE;
 }
 
@@ -258,7 +258,7 @@ VA(0x0046eed9, 0xfe)
 tag_message inputManager::GetEvent(void) {
     tag_message event;
     PollSound();
-    if (gpInputManager->m_active != 1 || m_readIndex == m_writeIndex) {
+    if (gInputManager->m_active != 1 || m_readIndex == m_writeIndex) {
         event.type = MESSAGE_NONE;
         event.id = 0;
         event.command = event.id;

@@ -50,9 +50,9 @@ SSmackOptions SmackOptions[6] = {
 DATA(0x0049f8f4)
 static i32 gSmackVolumes[11] = {0, 127, 97, 75, 52, 40, 30, 20, 15, 10, 5};
 DATA(0x004cc8d0)
-i8 gSmackNum;
+i8 gMovieId;
 DATA(0x004cc8d4)
-static i32 gSmackCompleted;
+static i32 gSmackEnded;
 DATA(0x004cc8d8)
 static WAVEOUTCAPS gSmackWaveCaps;
 DATA(0x004cc910)
@@ -60,70 +60,73 @@ static SmackSum gSmackSummary;
 DATA(0x004cc964)
 static i8 gSmackSavedPalette[PALETTE_DATA_SIZE];
 DATA(0x004ccc68)
-static i8 gSmackMainDone;
+static i8 gSmackStop;
 DATA(0x004ccc70)
-static SmackSoundFormat gSmackSoundFormat;
+static SmackSoundFormat gSmackAudioFormat;
 DATA(0x004ccc80)
-static PCMWAVEFORMAT gSmackWaveFormat;
+static PCMWAVEFORMAT gSmackPcmFormat;
 DATA(0x004ccc90)
-static i32 gSmackLastFramePlayed;
+static i32 gSmackPrevFrame;
+#define gSmackSound gSmkSounds // spelling fixes .bss order
 DATA(0x004ccc94)
 static i32 gSmackSound;
+#define gSmackResource gSmkResource // spelling fixes .bss order
 DATA(0x004ccc98)
 static resource* gSmackResource;
 DATA(0x004ccc9c)
 static font* gSmackFont;
 DATA(0x004ccca0)
-static HDIGDRIVER gSmackDriver;
+static HDIGDRIVER gSmackDigDriver;
 DATA(0x004ccca4)
-static i32 gSmackCollectSummary;
+static i32 gSmackTrackSummary;
 DATA(0x004ccca8)
 static Smack* gSmackPrimary;
+#define gSmackCompanion gSmackSecond // spelling fixes .bss order
 DATA(0x004cccac)
 static Smack* gSmackCompanion;
 
 VA(0x00458240, 0x18f)
 void InitSmackSound() {
-    if (gSmackDriver)
+    if (gSmackDigDriver)
         return;
     if (!waveOutGetNumDevs())
         return;
     if (waveOutGetDevCaps(0, &gSmackWaveCaps, sizeof(gSmackWaveCaps)))
         return;
-    gSmackSoundFormat.format = 0;
+    gSmackAudioFormat.format = 0;
     for (u32 i = 0; i < 12; ++i) {
         if (gSmackWaveCaps.dwFormats & gSmackSoundFormats[i].format) {
-            gSmackSoundFormat.format = gSmackSoundFormats[i].format;
-            gSmackSoundFormat.channels = gSmackSoundFormats[i].channels;
-            gSmackSoundFormat.samplesPerSecond = gSmackSoundFormats[i].samplesPerSecond;
-            gSmackSoundFormat.bitsPerSample = gSmackSoundFormats[i].bitsPerSample;
+            gSmackAudioFormat.format = gSmackSoundFormats[i].format;
+            gSmackAudioFormat.channels = gSmackSoundFormats[i].channels;
+            gSmackAudioFormat.samplesPerSecond = gSmackSoundFormats[i].samplesPerSecond;
+            gSmackAudioFormat.bitsPerSample = gSmackSoundFormats[i].bitsPerSample;
             break;
         }
     }
-    if (!gSmackSoundFormat.format) {
-        gSmackSoundFormat.channels = 1;
-        gSmackSoundFormat.samplesPerSecond = 22050;
-        gSmackSoundFormat.bitsPerSample = 8;
+    if (!gSmackAudioFormat.format) {
+        gSmackAudioFormat.channels = 1;
+        gSmackAudioFormat.samplesPerSecond = 22050;
+        gSmackAudioFormat.bitsPerSample = 8;
     }
     AIL_startup();
-    gSmackWaveFormat.wf.wFormatTag = WAVE_FORMAT_PCM;
-    gSmackWaveFormat.wf.nChannels = gSmackSoundFormat.channels;
-    gSmackWaveFormat.wf.nSamplesPerSec = gSmackSoundFormat.samplesPerSecond;
-    gSmackWaveFormat.wf.nAvgBytesPerSec = gSmackSoundFormat.samplesPerSecond
-                                          * (gSmackSoundFormat.bitsPerSample / 8)
-                                          * gSmackSoundFormat.channels;
-    gSmackWaveFormat.wf.nBlockAlign =
-        (gSmackSoundFormat.bitsPerSample / 8) * gSmackSoundFormat.channels;
-    gSmackWaveFormat.wBitsPerSample = gSmackSoundFormat.bitsPerSample;
-    if (AIL_waveOutOpen(&gSmackDriver, NULL, 0, &gSmackWaveFormat.wf))
-        gSmackDriver = NULL;
+    gSmackPcmFormat.wf.wFormatTag = WAVE_FORMAT_PCM;
+    gSmackPcmFormat.wf.nChannels = gSmackAudioFormat.channels;
+    gSmackPcmFormat.wf.nSamplesPerSec = gSmackAudioFormat.samplesPerSecond;
+    gSmackPcmFormat.wf.nAvgBytesPerSec = gSmackAudioFormat.samplesPerSecond
+                                         * (gSmackAudioFormat.bitsPerSample / 8)
+                                         * gSmackAudioFormat.channels;
+    gSmackPcmFormat.wf.nBlockAlign =
+        (gSmackAudioFormat.bitsPerSample / 8) * gSmackAudioFormat.channels;
+    gSmackPcmFormat.wBitsPerSample = gSmackAudioFormat.bitsPerSample;
+    if (AIL_waveOutOpen(&gSmackDigDriver, NULL, 0, &gSmackPcmFormat.wf))
+        gSmackDigDriver = NULL;
 }
 
 VA(0x004583cf, 0x2a)
 void ShutdownSmackSound() {
-    if (gSmackDriver) {
-        AIL_waveOutClose(gSmackDriver);
-        gSmackDriver = NULL;
+    if (gSmackDigDriver) {
+        AIL_waveOutClose(gSmackDigDriver);
+        gSmackDigDriver = NULL;
         AIL_shutdown();
     }
 }
@@ -146,14 +149,14 @@ void DoAdvance(Smack* smack, i32 drawFrame, i32 advanceFrame, i32 updatePalette,
     SmackDoFrame(smack);
     if (drawFrame) {
         while (SmackToBufferRect(smack, SMACK_SURFACE_SLOW)) {
-            if (gSmackNum == SMACK_WIN2 && smack->FrameNum >= 22) {
+            if (gMovieId == SMACK_WIN2 && smack->FrameNum >= 22) {
                 // language-forced: the assertion tests the pointer as an integer.
 #line 178 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\SMACKMGR.CPP"
-                H1_ASSERT(reinterpret_cast<i32>(gcWinText));
-                gSmackFont->DrawBoundedString(gcWinText, 32, 342, 320, 106, 4, FONT_ALIGN_CENTER);
+                H1_ASSERT(reinterpret_cast<i32>(gWinText));
+                gSmackFont->DrawBoundedString(gWinText, 32, 342, 320, 106, 4, FONT_ALIGN_CENTER);
             }
             BlitBitmapToScreen(
-                gpWindowManager->m_screen,
+                gWindowManager->m_screen,
                 smack->LastRectx,
                 smack->LastRecty,
                 smack->LastRectw,
@@ -175,27 +178,27 @@ void SmackMain() {
     i32 primaryOn;
     i32 companionOn;
     i32 unusedTrue = 1;
-    gSmackLastFramePlayed = 0;
+    gSmackPrevFrame = 0;
     i32 unusedPlaybackState = 0;
     i32 unusedTimer;
     i32 unusedKey;
-    gSmackFont = gpResourceManager->GetFont("bigfont.fnt");
-    KBChangeMenu(hmnuDflt);
-    gpMouseManager->ReallyHidePointer();
-    gSmackMainDone = 1;
+    gSmackFont = gResourceManager->GetFont("bigfont.fnt");
+    KBChangeMenu(gDefaultMenu);
+    gMouseManager->ReallyHidePointer();
+    gSmackStop = 1;
     memcpy(gSmackSavedPalette, gPalette->m_data, PALETTE_DATA_SIZE);
     ShutdownAudio();
     InitSmackSound();
-    if (gbNoSound || !gSmackDriver || !gConfig.soundVolume) {
+    if (gNoSound || !gSmackDigDriver || !gConfig.soundVolume) {
         gSmackSound = 0;
     } else {
         gSmackSound = 1;
-        AIL_set_digital_master_volume(gSmackDriver, gSmackVolumes[gConfig.soundVolume]);
-        SmackSoundUseMSS(gSmackDriver);
+        AIL_set_digital_master_volume(gSmackDigDriver, gSmackVolumes[gConfig.soundVolume]);
+        SmackSoundUseMSS(gSmackDigDriver);
     }
-    sprintf(gText, "%s%s.SMK", gAnimPath, SmackOptions[gSmackNum].fileName);
+    sprintf(gText, "%s%s.SMK", gAnimPath, SmackOptions[gMovieId].fileName);
     soundFlags = gSmackSound ? SMACK_TRACKS : 0;
-    preloadFlags = SmackOptions[gSmackNum].preload ? SMACK_PRELOAD_ALL : 0;
+    preloadFlags = SmackOptions[gMovieId].preload ? SMACK_PRELOAD_ALL : 0;
     gSmackPrimary = SmackOpen(gText, soundFlags + preloadFlags, SMACK_AUTO_EXTRA);
     SmackToBuffer(
         gSmackPrimary,
@@ -203,26 +206,26 @@ void SmackMain() {
         0,
         LOGICAL_SCREEN_WIDTH,
         LOGICAL_SCREEN_HEIGHT,
-        gpWindowManager->m_screen->m_pixels,
+        gWindowManager->m_screen->m_pixels,
         0
     );
-    if (strlen(SmackOptions[gSmackNum].companionFileName) > 1) {
-        sprintf(gText, "%s%s.SMK", gAnimPath, SmackOptions[gSmackNum].companionFileName);
+    if (strlen(SmackOptions[gMovieId].companionFileName) > 1) {
+        sprintf(gText, "%s%s.SMK", gAnimPath, SmackOptions[gMovieId].companionFileName);
         gSmackCompanion = SmackOpen(gText, soundFlags, SMACK_AUTO_EXTRA);
-        if (SmackOptions[gSmackNum].drawCompanion)
+        if (SmackOptions[gMovieId].drawCompanion)
             SmackToBuffer(
                 gSmackCompanion,
-                SmackOptions[gSmackNum].companionX,
-                SmackOptions[gSmackNum].companionY,
+                SmackOptions[gMovieId].companionX,
+                SmackOptions[gMovieId].companionY,
                 LOGICAL_SCREEN_WIDTH,
                 LOGICAL_SCREEN_HEIGHT,
-                gpWindowManager->m_screen->m_pixels,
+                gWindowManager->m_screen->m_pixels,
                 0
             );
     }
-    FillBitmapArea(gpWindowManager->m_screen, 0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT, 0);
+    FillBitmapArea(gWindowManager->m_screen, 0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT, 0);
     BlitBitmapToScreen(
-        gpWindowManager->m_screen,
+        gWindowManager->m_screen,
         0,
         0,
         LOGICAL_SCREEN_WIDTH,
@@ -230,19 +233,19 @@ void SmackMain() {
         0,
         0
     );
-    if (SmackOptions[gSmackNum].fadeIn)
-        gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_NORMAL, NULL);
+    if (SmackOptions[gMovieId].fadeIn)
+        gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_NORMAL, NULL);
     active = 1;
     primaryOn = 0;
     companionOn = 0;
     while (active) {
         if (!SmackWait(gSmackPrimary)) {
             if (!primaryOn || gSmackPrimary->Frames > 1)
-                DoAdvance(gSmackPrimary, 1, 1, primaryOn || !SmackOptions[gSmackNum].fadeIn, 0);
+                DoAdvance(gSmackPrimary, 1, 1, primaryOn || !SmackOptions[gMovieId].fadeIn, 0);
             if (gSmackPrimary->FrameNum > 0 || gSmackPrimary->Frames <= 1) {
-                if (!primaryOn && SmackOptions[gSmackNum].fadeIn) {
-                    memcpy(gpBufferPalette->m_data, gPalette->m_data, PALETTE_DATA_SIZE);
-                    gpWindowManager->FadeScreen(WINDOW_FADE_IN, 4, NULL);
+                if (!primaryOn && SmackOptions[gMovieId].fadeIn) {
+                    memcpy(gBufferPalette->m_data, gPalette->m_data, PALETTE_DATA_SIZE);
+                    gWindowManager->FadeScreen(WINDOW_FADE_IN, 4, NULL);
                 }
                 primaryOn = 1;
             }
@@ -250,23 +253,23 @@ void SmackMain() {
         if (gSmackCompanion && primaryOn && !SmackWait(gSmackCompanion)) {
             if (companionOn && gSmackCompanion->FrameNum == gSmackCompanion->Frames - 1) {
                 i32 drawLastFrame;
-                if (SmackOptions[gSmackNum].drawCompanion)
+                if (SmackOptions[gMovieId].drawCompanion)
                     drawLastFrame = 1;
                 else
                     drawLastFrame = 0;
                 DoAdvance(gSmackCompanion, drawLastFrame, 0, 0, 1);
-                gSmackLastFramePlayed = 1;
+                gSmackPrevFrame = 1;
                 while (SmackWait(gSmackCompanion))
                     Process1WindowsMessage();
             } else {
-                DoAdvance(gSmackCompanion, SmackOptions[gSmackNum].drawCompanion, 1, 0, 1);
+                DoAdvance(gSmackCompanion, SmackOptions[gMovieId].drawCompanion, 1, 0, 1);
             }
             if (gSmackCompanion && gSmackCompanion->FrameNum > 0)
                 companionOn = 1;
         }
         Process1WindowsMessage();
         tag_message message;
-        message = gpInputManager->GetEvent();
+        message = gInputManager->GetEvent();
         switch (message.type) {
             case MESSAGE_KEY_DOWN:
                 if (message.keyCode == INPUT_SCAN_F4)
@@ -276,8 +279,8 @@ void SmackMain() {
                 active = 0;
                 continue;
         }
-        if (!SmackOptions[gSmackNum].waitForInput
-            && (gSmackLastFramePlayed
+        if (!SmackOptions[gMovieId].waitForInput
+            && (gSmackPrevFrame
                 || (gSmackCompanion
                     && (gSmackCompanion->FrameNum >= gSmackCompanion->Frames
                         || (gSmackCompanion->FrameNum <= 0 && companionOn)))
@@ -285,14 +288,14 @@ void SmackMain() {
                     && (gSmackPrimary->FrameNum >= gSmackPrimary->Frames
                         || (gSmackPrimary->FrameNum <= 0 && primaryOn))))) {
             active = 0;
-            gSmackCompleted = 1;
+            gSmackEnded = 1;
         }
     }
-    if (SmackOptions[gSmackNum].fadeOut) {
-        memcpy(gpBufferPalette->m_data, gPalette->m_data, PALETTE_DATA_SIZE);
-        gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, NULL);
+    if (SmackOptions[gMovieId].fadeOut) {
+        memcpy(gBufferPalette->m_data, gPalette->m_data, PALETTE_DATA_SIZE);
+        gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, NULL);
         FillBitmapArea(
-            gpWindowManager->m_screen,
+            gWindowManager->m_screen,
             0,
             0,
             LOGICAL_SCREEN_WIDTH,
@@ -300,7 +303,7 @@ void SmackMain() {
             0
         );
         BlitBitmapToScreen(
-            gpWindowManager->m_screen,
+            gWindowManager->m_screen,
             0,
             0,
             LOGICAL_SCREEN_WIDTH,
@@ -308,11 +311,11 @@ void SmackMain() {
             0,
             0
         );
-    } else if (!gSmackCompleted) {
-        memcpy(gpBufferPalette->m_data, gPalette->m_data, PALETTE_DATA_SIZE);
-        gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_NORMAL, NULL);
+    } else if (!gSmackEnded) {
+        memcpy(gBufferPalette->m_data, gPalette->m_data, PALETTE_DATA_SIZE);
+        gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_NORMAL, NULL);
         FillBitmapArea(
-            gpWindowManager->m_screen,
+            gWindowManager->m_screen,
             0,
             0,
             LOGICAL_SCREEN_WIDTH,
@@ -320,7 +323,7 @@ void SmackMain() {
             0
         );
         BlitBitmapToScreen(
-            gpWindowManager->m_screen,
+            gWindowManager->m_screen,
             0,
             0,
             LOGICAL_SCREEN_WIDTH,
@@ -329,18 +332,18 @@ void SmackMain() {
             0
         );
     }
-    if (gSmackCollectSummary)
+    if (gSmackTrackSummary)
         SmackSummary(gSmackPrimary, &gSmackSummary);
     CloseSmackers();
     InitAudio();
     memcpy(gPalette->m_data, gSmackSavedPalette, PALETTE_DATA_SIZE);
     UpdatePalette(gPalette->m_data);
-    gpMouseManager->ReallyShowPointer();
+    gMouseManager->ReallyShowPointer();
     if (gSmackResource)
-        gpResourceManager->Dispose(gSmackResource);
+        gResourceManager->Dispose(gSmackResource);
     gSmackResource = NULL;
     if (gSmackFont) {
-        gpResourceManager->Dispose(gSmackFont);
+        gResourceManager->Dispose(gSmackFont);
         gSmackFont = NULL;
     }
 }
@@ -361,15 +364,15 @@ i32 PlaySmacker(H1_ENUM_PARAM(SmackVideo, i32) smackNumber) {
     i8 savedPalette[PALETTE_DATA_SIZE];
     i32 savedUpdateFlags;
     gInSmacker = 1;
-    gSmackCompleted = 0;
-    memcpy(savedPalette, gpBufferPalette->m_data, PALETTE_DATA_SIZE);
-    savedUpdateFlags = gpWindowManager->m_updateFlags;
-    gpWindowManager->m_updateFlags = 0;
+    gSmackEnded = 0;
+    memcpy(savedPalette, gBufferPalette->m_data, PALETTE_DATA_SIZE);
+    savedUpdateFlags = gWindowManager->m_updateFlags;
+    gWindowManager->m_updateFlags = 0;
     StopMusic();
-    gSmackNum = smackNumber;
+    gMovieId = smackNumber;
     SmackMain();
-    memcpy(gpBufferPalette->m_data, savedPalette, PALETTE_DATA_SIZE);
-    gpWindowManager->m_updateFlags = savedUpdateFlags;
+    memcpy(gBufferPalette->m_data, savedPalette, PALETTE_DATA_SIZE);
+    gWindowManager->m_updateFlags = savedUpdateFlags;
     gInSmacker = 0;
-    return gSmackCompleted;
+    return gSmackEnded;
 }

@@ -93,7 +93,7 @@ public:
 };
 #pragma pack(pop)
 
-// giHighScoreType and AddScoreToHighScore/GetMonType's score table: campaign
+// gHighScoreType and AddScoreToHighScore/GetMonType's score table: campaign
 // scores (CAMPAIGN.HS, fewest days first; gScoreCampaignMon) or standard
 // scores (STANDARD.HS, highest first; gScoreMon). highScoreManager shows the
 // matching list.

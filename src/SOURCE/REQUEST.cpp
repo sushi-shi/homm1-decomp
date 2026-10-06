@@ -192,7 +192,7 @@ fileRequester::fileRequester(
         }
     }
 
-    KBChangeMenu(hmnuDflt);
+    KBChangeMenu(gDefaultMenu);
     m_acceptMask = FILE_REQUESTER_DISPATCH_MASK;
     m_result = FILE_REQUESTER_MAP_INFO_NONE;
 }
@@ -215,7 +215,7 @@ void fileRequester::Close(void) {
         delete[] m_mapNames;
     if (m_mapInfo)
         delete[] m_mapInfo;
-    gpWindowManager->RemoveWindow(m_window);
+    gWindowManager->RemoveWindow(m_window);
     delete m_window;
     m_active = 0;
 }
@@ -266,7 +266,7 @@ i16 fileRequester::Open(i16 priority) {
     if (m_mode == FILE_REQUESTER_SAVE) {
         enableOk = 1;
         const i16 textEntryId = FILE_REQUESTER_FILENAME_ENTRY;
-        strcpy(m_filename, gpGame->m_saveName);
+        strcpy(m_filename, gGame->m_saveName);
         extensionStart = FindLastToken(m_filename, '.');
         if (extensionStart)
             *extensionStart = 0;
@@ -280,7 +280,7 @@ i16 fileRequester::Open(i16 priority) {
         for (i = 0; i < m_fileCount; i++) {
             if (!strcmpi(m_fileNames[i].text, m_filename)
                 && m_extensions[i].text[FILE_REQUESTER_EXTENSION_PLAYER_DIGIT] - '0'
-                       == giNumHumanPlayers)
+                       == gNumHumanPlayers)
                 m_selectedIndex = i;
         }
     } else {
@@ -306,9 +306,9 @@ i16 fileRequester::Open(i16 priority) {
     Update(0);
 #ifndef HOMM1_EDITOR
     if (gShowMapInfo)
-        gpWindowManager->AddWindow(gReqExtraWindow, WINDOW_Z_ORDER_APPEND, 1);
+        gWindowManager->AddWindow(gReqExtraWindow, WINDOW_Z_ORDER_APPEND, 1);
 #endif
-    gpWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, 1);
+    gWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, 1);
     SetOK(enableOk);
     UpdateMapInfo();
     m_messageMask = BASE_MANAGER_ACCEPT_EXECUTIVE;
@@ -474,7 +474,7 @@ i16 fileRequester::Main(tag_message& message) {
                             if (pageCount < 1)
                                 pageCount = 1;
                             stepSize = FILE_REQUESTER_GUTTER_STEPS / pageCount;
-                            gpMouseManager->MouseCoords(ptrX, ptrY);
+                            gMouseManager->MouseCoords(ptrX, ptrY);
                             ptrY -= m_y + FILE_REQUESTER_GUTTER_TOP;
                             ptrY -= FILE_REQUESTER_SCROLL_KNOB_HALF_HEIGHT;
                             firstShown = ptrY * FILE_REQUESTER_GUTTER_SCALE / stepSize;
@@ -528,21 +528,21 @@ i16 fileRequester::Main(tag_message& message) {
         if (gCampaignChoice <= 0 && m_mode == FILE_REQUESTER_LOAD && m_selectedIndex >= 0
             && gRequestingGames && message.value != FILE_REQUESTER_CANCEL) {
             key = m_extensions[m_selectedIndex].text[FILE_REQUESTER_EXTENSION_PLAYER_DIGIT] - '0';
-            if (key < giNumHumanPlayers
-                && giDebugLevel < FILE_REQUESTER_DEBUG_ALLOW_PLAYER_MISMATCH_MIN) {
-                sprintf(gText, localization::Tr("file.humans.minimum"), key, giNumHumanPlayers);
+            if (key < gNumHumanPlayers
+                && gDebugLevel < FILE_REQUESTER_DEBUG_ALLOW_PLAYER_MISMATCH_MIN) {
+                sprintf(gText, localization::Tr("file.humans.minimum"), key, gNumHumanPlayers);
                 NormalDialog(gText, NORMAL_DIALOG_TYPE_OK);
                 handled = 0;
             }
-            if (key > giNumHumanPlayers) {
+            if (key > gNumHumanPlayers) {
                 sprintf(
                     gText,
                     localization::Tr("file.humans.computer"),
                     key,
-                    key - giNumHumanPlayers
+                    key - gNumHumanPlayers
                 );
                 NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO);
-                if (gpWindowManager->m_dialogResult != NORMAL_DIALOG_CONFIRM)
+                if (gWindowManager->m_dialogResult != NORMAL_DIALOG_CONFIRM)
                     handled = 0;
             }
         }
@@ -583,20 +583,20 @@ void fileRequester::DoKnob(void) {
     i16 grabPointerY;
     i16 grabOffset;
 
-    gpMouseManager->SetCursorShape(4);
+    gMouseManager->SetCursorShape(4);
     lastTop = m_topIndex;
     scale = 156.0 / (m_fileCount - FILE_REQUESTER_LAST_ROW_OFFSET);
-    gpMouseManager->MouseCoords(x, grabPointerY);
+    gMouseManager->MouseCoords(x, grabPointerY);
     grabOffset = grabPointerY - m_scrollKnob->m_y;
-    gpInputManager->Flush();
-    event = gpInputManager->GetEvent();
+    gInputManager->Flush();
+    event = gInputManager->GetEvent();
     while (event.type != MESSAGE_LEFT_BUTTON_UP && event.type != MESSAGE_RIGHT_BUTTON_UP) {
         if (event.type == MESSAGE_MOUSE_MOVE) {
             if (event.y < grabOffset + FILE_REQUESTER_GUTTER_TOP)
                 event.y = grabOffset + FILE_REQUESTER_GUTTER_TOP;
             if (event.y > grabOffset + FILE_REQUESTER_GUTTER_BOTTOM)
                 event.y = grabOffset + FILE_REQUESTER_GUTTER_BOTTOM;
-            gpMouseManager->Main(event);
+            gMouseManager->Main(event);
             m_scrollKnob->m_y = event.y - grabOffset;
             if (m_fileCount > FILE_REQUESTER_VISIBLE_ROWS) {
                 topRow = static_cast<i16>((m_scrollKnob->m_y - FILE_REQUESTER_GUTTER_TOP) / scale);
@@ -618,9 +618,9 @@ void fileRequester::DoKnob(void) {
             }
         }
         Process1WindowsMessage();
-        event = gpInputManager->GetEvent();
+        event = gInputManager->GetEvent();
     }
-    gpMouseManager->SetCursorShape(6);
+    gMouseManager->SetCursorShape(6);
     m_scrollKnob->m_flags &= ~WIDGET_FLAG_SELECTED;
     Update(1);
 }
@@ -647,7 +647,7 @@ void fileRequester::Update(i8 drawWindow) {
     i16 y;
 
     message.type = MESSAGE_WIDGET;
-    bigFont = gpResourceManager->GetFont("bigfont.fnt");
+    bigFont = gResourceManager->GetFont("bigfont.fnt");
     for (y = 0; y < FILE_REQUESTER_VISIBLE_ROWS; y++) {
         message.id = y + firstIdIdx;
         if (m_topIndex + y >= m_fileCount) {
@@ -724,7 +724,7 @@ void fileRequester::Update(i8 drawWindow) {
     }
     if (drawWindow)
         m_window->DrawWindow();
-    gpResourceManager->Dispose(bigFont);
+    gResourceManager->Dispose(bigFont);
 }
 
 VA(0x00455aa0, 0x59)

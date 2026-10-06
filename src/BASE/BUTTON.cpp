@@ -43,7 +43,7 @@ button::button(
     i16 kind
 )
     : widget(x, y, width, height, id, kind) {
-    m_icon = gpResourceManager->GetIcon(iconId);
+    m_icon = gResourceManager->GetIcon(iconId);
     m_normalFrame = normalFrame;
     m_pressedFrame = pressedFrame;
     m_selectMode = selectMode;
@@ -67,7 +67,7 @@ button::button(
     i16 kind
 )
     : widget(x, y, width, height, id, kind) {
-    m_icon = gpResourceManager->GetIcon(iconName);
+    m_icon = gResourceManager->GetIcon(iconName);
     m_normalFrame = normalFrame;
     m_pressedFrame = pressedFrame;
     m_selectMode = selectMode;
@@ -77,22 +77,22 @@ button::button(
 VA(0x00476e34, 0xfb)
 void button::Read(void) {
     char iconName[RESOURCE_NAME_CAPACITY];
-    READ_WIDGET_GEOMETRY(this, gpResourceManager);
-    gpResourceManager->Read13(iconName);
-    gpResourceManager->SavePosition();
-    m_icon = gpResourceManager->GetIcon(iconName);
-    gpResourceManager->RestorePosition();
-    m_normalFrame = gpResourceManager->ReadWord();
-    m_pressedFrame = gpResourceManager->ReadWord();
-    m_selectMode = gpResourceManager->ReadWord();
-    m_hotkey = gpResourceManager->ReadWord();
-    m_id = gpResourceManager->ReadWord();
-    m_kind = gpResourceManager->ReadWord();
+    READ_WIDGET_GEOMETRY(this, gResourceManager);
+    gResourceManager->Read13(iconName);
+    gResourceManager->SavePosition();
+    m_icon = gResourceManager->GetIcon(iconName);
+    gResourceManager->RestorePosition();
+    m_normalFrame = gResourceManager->ReadWord();
+    m_pressedFrame = gResourceManager->ReadWord();
+    m_selectMode = gResourceManager->ReadWord();
+    m_hotkey = gResourceManager->ReadWord();
+    m_id = gResourceManager->ReadWord();
+    m_kind = gResourceManager->ReadWord();
 }
 
 VA(0x00476f2f, 0x5b)
 button::~button(void) {
-    gpResourceManager->Dispose(m_icon);
+    gResourceManager->Dispose(m_icon);
 }
 
 VA(0x00476f8a, 0x415)
@@ -100,7 +100,7 @@ i16 button::Main(tag_message& message) {
     i16 x;
     i16 y;
     if (m_kind == WIDGET_KIND_AUTO_REPEAT && (m_flags & WIDGET_FLAG_SELECTED)
-        && glTimers[GLOBAL_BUTTON_REPEAT_TIMER_SLOT] < KBTickCount())
+        && gTimers[GLOBAL_BUTTON_REPEAT_TIMER_SLOT] < KBTickCount())
         return Deselect(message);
     if (!(m_flags & WIDGET_FLAG_ENABLED)) {
         if (message.type == MESSAGE_WIDGET)
@@ -134,7 +134,7 @@ i16 button::Main(tag_message& message) {
                 Select(message);
                 while (message.type != MESSAGE_LEFT_BUTTON_UP
                        && message.type != MESSAGE_RIGHT_BUTTON_UP) {
-                    gpMouseManager->Main(message);
+                    gMouseManager->Main(message);
                     if (message.type == MESSAGE_MOUSE_MOVE) {
                         x = message.x - m_owner->m_posX;
                         y = message.y - m_owner->m_posY;
@@ -146,7 +146,7 @@ i16 button::Main(tag_message& message) {
                         }
                     }
                     Process1WindowsMessage();
-                    message = gpInputManager->GetEvent();
+                    message = gInputManager->GetEvent();
                 }
                 return Deselect(message);
             }
@@ -168,7 +168,7 @@ i16 button::Select(tag_message& message) {
     i16 x = m_owner->m_posX + m_x;
     i16 y = m_owner->m_posY + m_y;
     m_icon->DrawToBuffer(x, y, m_pressedFrame, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
-    gpWindowManager->UpdateScreenRegion(x, y, m_width, m_height);
+    gWindowManager->UpdateScreenRegion(x, y, m_width, m_height);
     m_flags |= WIDGET_FLAG_SELECTED;
     message.type = MESSAGE_WIDGET;
     message.id = m_id;
@@ -176,7 +176,7 @@ i16 button::Select(tag_message& message) {
         message.command = WIDGET_COMMAND_DIALOG_SELECT;
     else
         message.command = WIDGET_NOTIFY_SELECT;
-    glTimers[GLOBAL_BUTTON_REPEAT_TIMER_SLOT] = KBTickCount() + BUTTON_REPEAT_DELAY_TICKS;
+    gTimers[GLOBAL_BUTTON_REPEAT_TIMER_SLOT] = KBTickCount() + BUTTON_REPEAT_DELAY_TICKS;
     gLeftRightSave = message.modifiers & MESSAGE_MODIFIER_BUTTON_MASK;
     return MESSAGE_DISPATCH_FORWARD;
 }
@@ -187,7 +187,7 @@ i16 button::Deselect(tag_message& message) {
         return MESSAGE_DISPATCH_CONTINUE;
     m_flags &= ~WIDGET_FLAG_SELECTED;
     Draw();
-    gpWindowManager
+    gWindowManager
         ->UpdateScreenRegion(m_owner->m_posX + m_x, m_owner->m_posY + m_y, m_width, m_height);
     SET_WIDGET_MESSAGE(message, WIDGET_NOTIFY_DESELECT, m_id);
     message.modifiers = gLeftRightSave;

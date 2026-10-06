@@ -82,7 +82,7 @@ H1_ENUM_CONST_BEGIN(NormalDialogLayout)
     NORMAL_DIALOG_BUTTON_FLAGS = 6
 H1_ENUM_CONST_END(NormalDialogLayout)
 
-// giWaitType: which poll WaitHandler runs while a wait dialog is up
+// gWaitType: which poll WaitHandler runs while a wait dialog is up
 // (WaitForOtherPlayer, WaitForGuest, WaitForHost, InitNetGuest, InitNetHost,
 // GUIModemCommandExec, GUIModemResponseExec, WaitForDirectConnect).
 H1_ENUM_BEGIN(DialogWaitType)

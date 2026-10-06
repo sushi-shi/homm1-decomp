@@ -46,7 +46,7 @@ static char s_pendingArmyName[1024];
 DATA(0x004cd0bc)
 static char s_armyCommandText[1024];
 DATA(0x004cd4bc)
-static char s_dwellingArmyName[1024];
+static char s_dwellingArmyLabel[1024];
 
 // #line restores the original source file and line numbers of the asserts.
 
@@ -66,19 +66,19 @@ townObject::townObject(char* name) {
     m_border = NULL;
     m_visible = 1;
     sprintf(fileNameText, "%s.tod", name);
-    id = gpResourceManager->MakeId(fileNameText);
-    gpResourceManager->PointToFile(id);
-    m_animationFrameCount = gpResourceManager->ReadByte();
-    x = gpResourceManager->ReadWord();
-    y = gpResourceManager->ReadWord();
-    w = gpResourceManager->ReadWord();
-    h = gpResourceManager->ReadWord();
-    id = gpResourceManager->ReadWord();
+    id = gResourceManager->MakeId(fileNameText);
+    gResourceManager->PointToFile(id);
+    m_animationFrameCount = gResourceManager->ReadByte();
+    x = gResourceManager->ReadWord();
+    y = gResourceManager->ReadWord();
+    w = gResourceManager->ReadWord();
+    h = gResourceManager->ReadWord();
+    id = gResourceManager->ReadWord();
     m_buildingId = id;
     sprintf(fileNameText, "%s.icn", name);
-    m_icon = gpResourceManager->GetIcon(fileNameText);
+    m_icon = gResourceManager->GetIcon(fileNameText);
     if (id == BUILDING_SLOT_MAGE_GUILD) {
-        h = gpTownManager->m_town->m_buildState * TOWN_MAGE_GUILD_LEVEL_HEIGHT
+        h = gTownManager->m_town->m_buildState * TOWN_MAGE_GUILD_LEVEL_HEIGHT
             + TOWN_MAGE_GUILD_BASE_HEIGHT;
         y = TOWN_MAGE_GUILD_BOTTOM_Y - h;
     }
@@ -93,7 +93,7 @@ VA(0x0045f053, 0x56)
 townObject::~townObject() {
     if (m_border != NULL)
         delete m_border;
-    gpResourceManager->Dispose(m_icon);
+    gResourceManager->Dispose(m_icon);
 }
 
 // Draws the base frame, then the castle's mage-guild levels and the
@@ -106,7 +106,7 @@ void townObject::Draw(i8 advanceAnimation) {
         return;
     m_icon->DrawToBuffer(0, 0, 0, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
     if (m_buildingId == BUILDING_SLOT_MAGE_GUILD) {
-        for (level = 0; level < gpTownManager->m_town->m_buildState; level++)
+        for (level = 0; level < gTownManager->m_town->m_buildState; level++)
             m_icon->DrawToBuffer(
                 0,
                 0,
@@ -117,7 +117,7 @@ void townObject::Draw(i8 advanceAnimation) {
         m_icon->DrawToBuffer(
             0,
             0,
-            gpTownManager->m_town->m_buildState * TOWN_MAGE_GUILD_LEVEL_FRAME_STRIDE + 1,
+            gTownManager->m_town->m_buildState * TOWN_MAGE_GUILD_LEVEL_FRAME_STRIDE + 1,
             ICON_DRAW_NORMAL,
             ICON_DRAW_OFFSET_FULL
         );
@@ -152,7 +152,7 @@ i16 townManager::Open(i16 id) {
     i16 i;
     i8 buildId;
 
-    gpGame->CheckHeroConsistency();
+    gGame->CheckHeroConsistency();
     PlayMusic(townTheme[m_town->m_type] + MUSIC_TRACK_TOWN_FIRST);
     PollSound();
     m_townWindow = new heroWindow(0, 0, "townwind.bin");
@@ -167,7 +167,7 @@ i16 townManager::Open(i16 id) {
     message.text = gText;
     m_townWindow->BroadcastMessage(message);
     sprintf(gText, "townbkg%d.bmp", m_town->m_type);
-    m_backgroundBitmap = gpResourceManager->GetBitmap(gText);
+    m_backgroundBitmap = gResourceManager->GetBitmap(gText);
     m_townObjectCount = 0;
     for (i = 0; i < TOWN_MANAGER_OBJECT_CAPACITY; i++) {
         buildId = gTownObjectType[m_town->m_type][i];
@@ -199,12 +199,12 @@ i16 townManager::Open(i16 id) {
             m_townObjectCount++;
         }
     }
-    glTimers[TOWN_FRAME_TIMER_SLOT] = KBTickCount() + TOWN_REDRAW_INTERVAL;
-    gpWindowManager->AddWindow(m_townWindow, 0, 1);
-    crestFrame = gpCurPlayer->m_color;
+    gTimers[TOWN_FRAME_TIMER_SLOT] = KBTickCount() + TOWN_REDRAW_INTERVAL;
+    gWindowManager->AddWindow(m_townWindow, 0, 1);
+    crestFrame = gCurPlayerData->m_color;
     if (m_town->m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE) {
         crestFrame *= HERO_CLASS_COUNT;
-        crestFrame += gpGame->GetHero(m_town->m_occupyingHeroId)->m_heroClass;
+        crestFrame += gGame->GetHero(m_town->m_occupyingHeroId)->m_heroClass;
     } else
         crestFrame += TOWN_CREST_NO_HERO_OFFSET;
     sprintf(gText, "crst%04d.icn", crestFrame);
@@ -214,7 +214,7 @@ i16 townManager::Open(i16 id) {
         m_town->m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE
             ? static_cast<i8>(TOWN_CREST_FRAME_WITHOUT_HERO)
             : static_cast<i8>(TOWN_CREST_FRAME_WITH_HERO),
-        gpResourceManager->MakeId(gText),
+        gResourceManager->MakeId(gText),
         0,
         &m_town->m_army,
         TOWN_GARRISON_FIRST_CONTROL,
@@ -223,14 +223,14 @@ i16 townManager::Open(i16 id) {
     if (m_garrisonStrip == NULL)
         MemError();
     if (m_town->m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE) {
-        sprintf(gText, "port%04d.icn", gpGame->GetHero(m_town->m_occupyingHeroId)->m_portrait);
+        sprintf(gText, "port%04d.icn", gGame->GetHero(m_town->m_occupyingHeroId)->m_portrait);
         m_heroStrip = new strip(
             0,
             TOWN_HERO_STRIP_Y,
             TOWN_HERO_STRIP_FRAME_COUNT,
-            gpResourceManager->MakeId(gText),
+            gResourceManager->MakeId(gText),
             0,
-            &gpGame->GetHero(m_town->m_occupyingHeroId)->m_army,
+            &gGame->GetHero(m_town->m_occupyingHeroId)->m_army,
             TOWN_HERO_FIRST_CONTROL,
             1
         );
@@ -243,7 +243,7 @@ i16 townManager::Open(i16 id) {
             0,
             TOWN_HERO_STRIP_Y,
             TOWN_HERO_STRIP_FRAME_COUNT,
-            gpResourceManager->MakeId("strip.icn"),
+            gResourceManager->MakeId("strip.icn"),
             TOWN_EMPTY_HERO_PORTRAIT_FRAME,
             NULL,
             -1,
@@ -252,18 +252,18 @@ i16 townManager::Open(i16 id) {
         if (m_heroStrip == NULL)
             MemError();
     }
-    m_bankBox = new bankBox(TOWN_BANK_BOX_X, TOWN_BANK_BOX_Y, gpCurPlayer);
+    m_bankBox = new bankBox(TOWN_BANK_BOX_X, TOWN_BANK_BOX_Y, gCurPlayerData);
     if (m_bankBox == NULL)
         MemError();
     m_selectedStrip = m_swapStrip = m_pendingStrip = NULL;
     m_selectedArmySlot = m_swapArmySlot = m_pendingArmySlot = STRIP_SLOT_NONE;
     DrawTown(0, 0);
-    gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
-    gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
-    gpMouseManager->ReallyShowPointer();
-    gpMouseManager->NewUpdate(1);
-    KBChangeMenu(hmnuTown);
-    gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);
+    gWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
+    gMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
+    gMouseManager->ReallyShowPointer();
+    gMouseManager->NewUpdate(1);
+    KBChangeMenu(gTownMenu);
+    gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);
     m_castleDialogActive = 0;
     m_recruitResult = 0;
     m_lastHoverId = WINDOW_MANAGER_NO_HOVER_WIDGET;
@@ -287,12 +287,12 @@ void townManager::Close(void) {
         m_townWindow->RemoveWidget(m_townObjects[index]->m_border);
         delete m_townObjects[index];
     }
-    gpResourceManager->Dispose(m_backgroundBitmap);
-    gpWindowManager->RemoveWindow(m_townWindow);
+    gResourceManager->Dispose(m_backgroundBitmap);
+    gWindowManager->RemoveWindow(m_townWindow);
     delete m_townWindow;
     StopMusic();
-    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, NULL);
-    gpMouseManager->SetPointer(MOUSE_INVALID_CURSOR_FRAME);
+    gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, NULL);
+    gMouseManager->SetPointer(MOUSE_INVALID_CURSOR_FRAME);
     m_active = 0;
 }
 
@@ -502,11 +502,11 @@ void townManager::SetCommandAndText(struct tag_message& message) {
         case BUILDING_SLOT_DWELLING_5:
         case BUILDING_SLOT_DWELLING_6:
             strcpy(
-                s_dwellingArmyName,
+                s_dwellingArmyLabel,
                 gArmyNamesPlural[gDwellingType[m_town->m_type][id - BUILDING_SLOT_DWELLING_FIRST]]
             );
-            s_dwellingArmyName[0] = CyrillicToLower(s_dwellingArmyName[0]);
-            sprintf(m_statusText, gTownCommand[TOWN_TEXT_DWELLING], s_dwellingArmyName);
+            s_dwellingArmyLabel[0] = CyrillicToLower(s_dwellingArmyLabel[0]);
+            sprintf(m_statusText, gTownCommand[TOWN_TEXT_DWELLING], s_dwellingArmyLabel);
             break;
     }
     ShowText(m_statusText);
@@ -520,7 +520,7 @@ void townManager::ShowText(char*) {
     message.text = m_statusText;
     m_townWindow->BroadcastMessage(message);
     m_townWindow->DrawWindow(0, TOWN_STATUS_TEXT_CONTROL - 2, TOWN_STATUS_TEXT_CONTROL);
-    gpWindowManager->UpdateScreenRegion(
+    gWindowManager->UpdateScreenRegion(
         0,
         TOWN_STATUS_REGION_Y,
         TOWN_STATUS_REGION_WIDTH,
@@ -543,9 +543,9 @@ i16 townManager::Main(struct tag_message& message) {
         rightButton = 1;
     else
         rightButton = 0;
-    if (glTimers[TOWN_FRAME_TIMER_SLOT] < KBTickCount()) {
+    if (gTimers[TOWN_FRAME_TIMER_SLOT] < KBTickCount()) {
         DrawTown(1, 1);
-        glTimers[TOWN_FRAME_TIMER_SLOT] = KBTickCount() + TOWN_REDRAW_INTERVAL;
+        gTimers[TOWN_FRAME_TIMER_SLOT] = KBTickCount() + TOWN_REDRAW_INTERVAL;
     }
     if ((message.type & m_dispatchMask) == 0) {
         if (message.type) {
@@ -569,13 +569,13 @@ i16 townManager::Main(struct tag_message& message) {
                                 QuickViewRecruit(m_town, message.id - BUILDING_SLOT_DWELLING_FIRST);
                                 break;
                             }
-                            gpMouseManager->ReallyHidePointer();
+                            gMouseManager->ReallyHidePointer();
                             DrawTown(1, 1);
                             recruitMgr =
                                 new recruitUnit(m_town, message.id - BUILDING_SLOT_DWELLING_FIRST);
                             if (recruitMgr == NULL)
                                 MemError();
-                            gpExec->DoDialog(recruitMgr);
+                            gExec->DoDialog(recruitMgr);
                             delete recruitMgr;
                             break;
                         case BUILDING_SLOT_MAGE_GUILD:
@@ -584,7 +584,7 @@ i16 townManager::Main(struct tag_message& message) {
                         case BUILDING_SLOT_CASTLE:
                             if (rightButton)
                                 break;
-                            gpWindowManager->BroadcastMessage(
+                            gWindowManager->BroadcastMessage(
                                 MESSAGE_WIDGET,
                                 WIDGET_COMMAND_SET_FLAGS,
                                 TOWN_CLOSE_CONTROL,
@@ -599,25 +599,25 @@ i16 townManager::Main(struct tag_message& message) {
                             );
                             if (m_coverWindow == NULL)
                                 MemError();
-                            gpWindowManager->AddWindow(m_coverWindow, WINDOW_Z_ORDER_APPEND, 1);
+                            gWindowManager->AddWindow(m_coverWindow, WINDOW_Z_ORDER_APPEND, 1);
                             m_heroWindow0 = NULL;
                             switch (message.id) {
                                 case BUILDING_SLOT_CASTLE:
-                                    gpWindowManager->SaveFizzleSource(0, 0x100, 0x228, 0xcc);
+                                    gWindowManager->SaveFizzleSource(0, 0x100, 0x228, 0xcc);
                                     m_heroWindow0 = new heroWindow(0, 0, "caslwind.bin");
                                     if (m_heroWindow0 == NULL)
                                         MemError();
                                     SetWinText(m_heroWindow0, WINDOW_TEXT_CASTLE);
                                     SetupCastle(m_heroWindow0);
                                     m_castleDialogActive = 1;
-                                    gpWindowManager->DoDialog(m_heroWindow0, CastleHandler, 0);
+                                    gWindowManager->DoDialog(m_heroWindow0, CastleHandler, 0);
                                     m_castleDialogActive = 0;
                                     break;
                                 case BUILDING_SLOT_MAGE_GUILD:
                                     if (m_town->m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE
-                                        && !gpGame->GetHero(m_town->m_occupyingHeroId)
+                                        && !gGame->GetHero(m_town->m_occupyingHeroId)
                                                 ->HasArtifact(ARTIFACT_MAGIC_BOOK)) {
-                                        if (gpGame->GetHero(m_town->m_occupyingHeroId)
+                                        if (gGame->GetHero(m_town->m_occupyingHeroId)
                                                 ->NumArtifacts()
                                             == HERO_ARTIFACT_SLOT_COUNT)
                                             NormalDialog(
@@ -630,9 +630,9 @@ i16 townManager::Main(struct tag_message& message) {
                                             if (m_heroWindow0 == NULL)
                                                 MemError();
                                             SetWinText(m_heroWindow0, WINDOW_TEXT_BUY_SPELL_BOOK);
-                                            if (gpGame
+                                            if (gGame
                                                     ->m_players
-                                                        [gpGame->GetHero(m_town->m_occupyingHeroId)
+                                                        [gGame->GetHero(m_town->m_occupyingHeroId)
                                                              ->m_owner]
                                                     .m_resources[RESOURCE_GOLD]
                                                 < TOWN_SPELL_BOOK_COST) {
@@ -647,18 +647,17 @@ i16 townManager::Main(struct tag_message& message) {
                                                 message.value = WIDGET_FLAG_ENABLED;
                                                 m_heroWindow0->BroadcastMessage(message);
                                             }
-                                            gpWindowManager->DoDialog(
+                                            gWindowManager->DoDialog(
                                                 m_heroWindow0,
                                                 TrueFalseDialogHandler,
                                                 0
                                             );
-                                            if (gpWindowManager->m_dialogResult
-                                                == DIALOG_BUTTON_2) {
-                                                gpAdvManager->GiveArtifact(
-                                                    gpGame->GetHero(m_town->m_occupyingHeroId),
+                                            if (gWindowManager->m_dialogResult == DIALOG_BUTTON_2) {
+                                                gAdvManager->GiveArtifact(
+                                                    gGame->GetHero(m_town->m_occupyingHeroId),
                                                     ARTIFACT_MAGIC_BOOK
                                                 );
-                                                gpCurPlayer->m_resources[RESOURCE_GOLD] -=
+                                                gCurPlayerData->m_resources[RESOURCE_GOLD] -=
                                                     TOWN_SPELL_BOOK_COST;
                                                 m_bankBox->Update();
                                                 m_townWindow->DrawWindow();
@@ -671,7 +670,7 @@ i16 townManager::Main(struct tag_message& message) {
                                             MemError();
                                         SetWinText(m_heroWindow0, WINDOW_TEXT_MAGE_GUILD);
                                         SetupMage(m_heroWindow0);
-                                        gpWindowManager
+                                        gWindowManager
                                             ->DoDialog(m_heroWindow0, MageGuildHandler, 0);
                                     }
                                     m_town->GiveSpells();
@@ -681,7 +680,7 @@ i16 townManager::Main(struct tag_message& message) {
                                     if (m_heroWindow0 == NULL)
                                         MemError();
                                     SetupWell(m_heroWindow0);
-                                    gpWindowManager
+                                    gWindowManager
                                         ->DoDialog(m_heroWindow0, TrueFalseDialogHandler, 0);
                                     break;
                                 case BUILDING_SLOT_THIEVES_GUILD:
@@ -690,13 +689,13 @@ i16 townManager::Main(struct tag_message& message) {
                                         MemError();
                                     SetWinText(m_heroWindow0, WINDOW_TEXT_THIEVES_GUILD);
                                     SetupThievesGuild(m_heroWindow0, THIEVES_CATEGORIES_BY_GUILDS);
-                                    gpWindowManager
+                                    gWindowManager
                                         ->DoDialog(m_heroWindow0, TrueFalseDialogHandler, 0);
                                     break;
                             }
                             if (m_heroWindow0 != NULL)
                                 delete m_heroWindow0;
-                            gpWindowManager->RemoveWindow(m_coverWindow);
+                            gWindowManager->RemoveWindow(m_coverWindow);
                             delete m_coverWindow;
                             if (m_selectedBuilding != TOWN_BUILDING_NONE)
                                 BuildObj(m_selectedBuilding);
@@ -705,9 +704,9 @@ i16 townManager::Main(struct tag_message& message) {
                                 i32 i;
                                 i32 width;
 
-                                gpMouseManager->ReallyHidePointer();
+                                gMouseManager->ReallyHidePointer();
                                 res = LoadPlaySample("buildtwn.82M");
-                                visitingHero = gpGame->GetHero(m_town->m_occupyingHeroId);
+                                visitingHero = gGame->GetHero(m_town->m_occupyingHeroId);
                                 width = 0;
                                 for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
                                     if (visitingHero->m_army.m_creatureTypes[i] != CREATURE_NONE)
@@ -715,7 +714,7 @@ i16 townManager::Main(struct tag_message& message) {
                                 }
                                 width = width * 88 + 0x70;
                                 DrawTown(1, 1);
-                                gpWindowManager->FizzleForward(
+                                gWindowManager->FizzleForward(
                                     0,
                                     0x100,
                                     width,
@@ -724,10 +723,10 @@ i16 townManager::Main(struct tag_message& message) {
                                 );
                                 WaitSample(res);
                                 m_recruitResult = 0;
-                                gpMouseManager->ReallyShowPointer();
+                                gMouseManager->ReallyShowPointer();
                             }
-                            gpWindowManager->ReleaseFizzleSource();
-                            gpWindowManager->BroadcastMessage(
+                            gWindowManager->ReleaseFizzleSource();
+                            gWindowManager->BroadcastMessage(
                                 MESSAGE_WIDGET,
                                 WIDGET_COMMAND_CLEAR_FLAGS,
                                 TOWN_CLOSE_CONTROL,
@@ -754,25 +753,25 @@ i16 townManager::Main(struct tag_message& message) {
                         case BUILDING_SLOT_SHIPYARD:
                             if (rightButton)
                                 break;
-                            gpWindowManager->BroadcastMessage(
+                            gWindowManager->BroadcastMessage(
                                 MESSAGE_WIDGET,
                                 WIDGET_COMMAND_SET_FLAGS,
                                 TOWN_CLOSE_CONTROL,
                                 WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED
                             );
-                            if (gpGame->GetBoatsBuilt() < GAME_BOAT_COUNT
-                                && gpAdvManager->GetCell(m_town->m_x - 1, m_town->m_y + 1)
+                            if (gGame->GetBoatsBuilt() < GAME_BOAT_COUNT
+                                && gAdvManager->GetCell(m_town->m_x - 1, m_town->m_y + 1)
                                            ->m_triggerType
                                        == MAP_OBJECT_NONE
-                                && gpAdvManager->m_cursorMapX != m_town->m_x - 1
-                                && gpAdvManager->m_cursorMapY != m_town->m_y + 1) {
+                                && gAdvManager->m_cursorMapX != m_town->m_x - 1
+                                && gAdvManager->m_cursorMapY != m_town->m_y + 1) {
                                 m_heroWindow0 = new heroWindow(0xb1, 0x14, "shipwind.bin");
                                 if (m_heroWindow0 == NULL)
                                     MemError();
                                 SetWinText(m_heroWindow0, WINDOW_TEXT_SHIPYARD);
-                                if (gpGame->m_players[giCurPlayer].m_resources[RESOURCE_GOLD]
+                                if (gGame->m_players[gCurPlayer].m_resources[RESOURCE_GOLD]
                                         < TOWN_BOAT_GOLD_COST
-                                    || gpGame->m_players[giCurPlayer].m_resources[RESOURCE_WOOD]
+                                    || gGame->m_players[gCurPlayer].m_resources[RESOURCE_WOOD]
                                            < TOWN_BOAT_WOOD_COST) {
                                     SET_WIDGET_MESSAGE(
                                         message,
@@ -785,15 +784,15 @@ i16 townManager::Main(struct tag_message& message) {
                                     message.value = WIDGET_FLAG_ENABLED;
                                     m_heroWindow0->BroadcastMessage(message);
                                 }
-                                gpWindowManager->DoDialog(m_heroWindow0, TrueFalseDialogHandler, 0);
+                                gWindowManager->DoDialog(m_heroWindow0, TrueFalseDialogHandler, 0);
                                 delete m_heroWindow0;
-                                if (gpWindowManager->m_dialogResult == DIALOG_BUTTON_2) {
-                                    if (gpGame->CreateBoat(m_town->m_x - 1, m_town->m_y + 1)
+                                if (gWindowManager->m_dialogResult == DIALOG_BUTTON_2) {
+                                    if (gGame->CreateBoat(m_town->m_x - 1, m_town->m_y + 1)
                                         != GAME_TABLE_FREE) {
                                         res = LoadPlaySample("buildtwn.82M");
-                                        gpGame->m_players[giCurPlayer].m_resources[RESOURCE_GOLD] -=
+                                        gGame->m_players[gCurPlayer].m_resources[RESOURCE_GOLD] -=
                                             TOWN_BOAT_GOLD_COST;
-                                        gpGame->m_players[giCurPlayer].m_resources[RESOURCE_WOOD] -=
+                                        gGame->m_players[gCurPlayer].m_resources[RESOURCE_WOOD] -=
                                             TOWN_BOAT_WOOD_COST;
                                         m_bankBox->Update();
                                         WaitSample(res);
@@ -806,7 +805,7 @@ i16 townManager::Main(struct tag_message& message) {
                                     0xd0,
                                     0x28
                                 );
-                            gpWindowManager->BroadcastMessage(
+                            gWindowManager->BroadcastMessage(
                                 MESSAGE_WIDGET,
                                 WIDGET_COMMAND_CLEAR_FLAGS,
                                 TOWN_CLOSE_CONTROL,
@@ -840,9 +839,9 @@ i16 townManager::Main(struct tag_message& message) {
                                     && m_selectedStrip->m_army->m_creatureTypes[m_selectedArmySlot]
                                            != CREATURE_NONE) {
                                     viewHero = m_selectedStrip == m_heroStrip
-                                                   ? gpGame->GetHero(m_town->m_occupyingHeroId)
+                                                   ? gGame->GetHero(m_town->m_occupyingHeroId)
                                                    : NULL;
-                                    gpGame->ViewArmy(
+                                    gGame->ViewArmy(
                                         TOWN_ARMY_VIEW_X,
                                         TOWN_ARMY_VIEW_Y,
                                         m_selectedStrip->m_army
@@ -933,8 +932,8 @@ void townManager::DoCommand(i8 command) {
             break;
         case TOWN_ARMY_COMMAND_VIEW:
             viewedHero =
-                m_selectedStrip == m_heroStrip ? gpGame->GetHero(m_town->m_occupyingHeroId) : NULL;
-            gpGame->ViewArmy(
+                m_selectedStrip == m_heroStrip ? gGame->GetHero(m_town->m_occupyingHeroId) : NULL;
+            gGame->ViewArmy(
                 TOWN_ARMY_VIEW_X,
                 TOWN_ARMY_VIEW_Y,
                 m_selectedStrip->m_army->m_creatureTypes[m_selectedArmySlot],
@@ -949,7 +948,7 @@ void townManager::DoCommand(i8 command) {
                 NULL,
                 m_selectedStrip->m_army
             );
-            if (gpWindowManager->m_dialogResult == DIALOG_BUTTON_2) {
+            if (gWindowManager->m_dialogResult == DIALOG_BUTTON_2) {
                 m_selectedStrip->m_army->m_creatureTypes[m_selectedArmySlot] = CREATURE_NONE;
                 m_selectedStrip->m_army->m_creatureCounts[m_selectedArmySlot] = 0;
             }
@@ -1001,15 +1000,15 @@ void townManager::DoCommand(i8 command) {
             ResetStrips();
             break;
         case TOWN_ARMY_COMMAND_VIEW_HERO:
-            visitor = gpGame->GetHero(m_town->m_occupyingHeroId);
+            visitor = gGame->GetHero(m_town->m_occupyingHeroId);
             visitor->HeroView(1);
             RedrawTownScreen();
-            gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);
+            gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);
             break;
         case TOWN_ARMY_COMMAND_GARRISON:
-            gpGame->Overview();
+            gGame->Overview();
             RedrawTownScreen();
-            gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);
+            gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);
             break;
         case TOWN_ARMY_COMMAND_SPLIT:
             SplitArmy();
@@ -1031,7 +1030,7 @@ void townManager::RedrawTownScreen(void) {
     message.text = m_statusText;
     m_townWindow->BroadcastMessage(message);
     m_townWindow->DrawWindow(0);
-    gpWindowManager->UpdateScreenRegion(0, 0x100, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
+    gWindowManager->UpdateScreenRegion(0, 0x100, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
     m_bankBox->Update();
 }
 
@@ -1068,9 +1067,9 @@ void townManager::SplitArmy(void) {
     message.id = TOWN_SPLIT_SETUP_AMOUNT_CONTROL;
     message.text = gText;
     m_heroWindow1->BroadcastMessage(message);
-    gpWindowManager->DoDialog(m_heroWindow1, SplitArmyHandler, 0);
+    gWindowManager->DoDialog(m_heroWindow1, SplitArmyHandler, 0);
     delete m_heroWindow1;
-    if (gpWindowManager->m_dialogResult == DIALOG_BUTTON_2) {
+    if (gWindowManager->m_dialogResult == DIALOG_BUTTON_2) {
         theMerge = 0;
         for (n = 0; n < ARMY_GROUP_SLOT_COUNT; n++) {
             if (m_pendingStrip->m_army->m_creatureTypes[n]
@@ -1099,7 +1098,7 @@ void townManager::ShiftQualChange(void) {
     if (m_swapStrip != m_pendingStrip
         && (m_command == TOWN_ARMY_COMMAND_NONE || m_command == TOWN_ARMY_COMMAND_SPLIT
             || m_command == TOWN_ARMY_COMMAND_MERGE || m_command == TOWN_ARMY_COMMAND_SWAP))
-        SetArmyCommand(gpInputManager->GetModifiers() & TOWN_SHIFT_QUALIFIER_MASK);
+        SetArmyCommand(gInputManager->GetModifiers() & TOWN_SHIFT_QUALIFIER_MASK);
     SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, TOWN_STATUS_TEXT_CONTROL);
     message.text = m_statusText;
     m_townWindow->BroadcastMessage(message);
@@ -1144,12 +1143,12 @@ void townManager::DrawTown(i8 updateScreen, i32 drawFlags) {
     for (index = 0; index < m_townObjectCount; index++)
         m_townObjects[index]->Draw(drawFlags);
     m_townWindow->DrawWindow(0, TOWN_REDRAW_FIRST_CONTROL, TOWN_REDRAW_LAST_CONTROL);
-    gpMouseManager->MouseCoords(x, y);
+    gMouseManager->MouseCoords(x, y);
     if (y < TOWN_VIEWPORT_HEIGHT)
-        gpMouseManager->SaveAndDraw(gpWindowManager->m_screen, 0, 0, 1);
+        gMouseManager->SaveAndDraw(gWindowManager->m_screen, 0, 0, 1);
     if (updateScreen)
         BlitBitmapToScreen(
-            gpWindowManager->m_screen,
+            gWindowManager->m_screen,
             0,
             0,
             TOWN_VIEWPORT_WIDTH,
@@ -1158,7 +1157,7 @@ void townManager::DrawTown(i8 updateScreen, i32 drawFlags) {
             0
         );
     if (y < TOWN_VIEWPORT_HEIGHT)
-        gpMouseManager->RestoreUnderlying();
+        gMouseManager->RestoreUnderlying();
 }
 
 // Reads the mage/neutral/dwelling cost tables with asserts, sizes resource
@@ -1218,7 +1217,7 @@ i16 townManager::BuyBuild(i16 building, i8 cannotBuy, i8 quickView) {
             building - BUILDING_SLOT_DWELLING_FIRST + m_town->m_type * TOWN_DWELLINGS_PER_FACTION;
     if (building == BUILDING_SLOT_MAGE_GUILD) {
         if (m_town->m_buildings & (1 << BUILDING_SLOT_MAGE_GUILD))
-            guildRank = gpTownManager->m_town->m_buildState + 1;
+            guildRank = gTownManager->m_town->m_buildState + 1;
         else
             guildRank = 0;
         if (guildRank > TOWN_MAGE_GUILD_COST_LEVEL_LAST)
@@ -1315,9 +1314,9 @@ i16 townManager::BuyBuild(i16 building, i8 cannotBuy, i8 quickView) {
         }
     }
     strcat(infoBuffer, "\n ");
-    lineFont = gpResourceManager->GetFont("bigfont.fnt");
+    lineFont = gResourceManager->GetFont("bigfont.fnt");
     lineTotal = lineFont->LineLength(infoBuffer, 0xee);
-    gpResourceManager->Dispose(lineFont);
+    gResourceManager->Dispose(lineFont);
     originY = 0x97;
     panelExtent = originY;
     panelExtent += lineTotal << 4;
@@ -1340,7 +1339,7 @@ i16 townManager::BuyBuild(i16 building, i8 cannotBuy, i8 quickView) {
     SET_WIDGET_MESSAGE(msg, WIDGET_COMMAND_SET_FRAME, BUY_BUILD_ICON_CONTROL);
     msg.value = building < BUILDING_SLOT_RACE_FIRST
                     ? building + 1
-                    : (gpTownManager->m_town->m_type + 1) * 7 + building - 6;
+                    : (gTownManager->m_town->m_type + 1) * 7 + building - 6;
     panel->BroadcastMessage(msg);
     if (building == BUILDING_SLOT_MAGE_GUILD)
         sprintf(gText, localization::Tr("town.build.mage_guild_level"), guildRank + 1);
@@ -1424,7 +1423,7 @@ i16 townManager::BuyBuild(i16 building, i8 cannotBuy, i8 quickView) {
         }
     }
     if (!quickView)
-        gpWindowManager->BroadcastMessage(
+        gWindowManager->BroadcastMessage(
             MESSAGE_WIDGET,
             WIDGET_COMMAND_SET_FLAGS,
             TOWN_CLOSE_CONTROL,
@@ -1444,11 +1443,11 @@ i16 townManager::BuyBuild(i16 building, i8 cannotBuy, i8 quickView) {
         msg.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
         msg.id = 0;
         panel->BroadcastMessage(msg);
-        gpMouseManager->ReallyHidePointer();
-        gpWindowManager->AddWindow(panel, WINDOW_Z_ORDER_APPEND, 1);
+        gMouseManager->ReallyHidePointer();
+        gWindowManager->AddWindow(panel, WINDOW_Z_ORDER_APPEND, 1);
         QuickViewWait();
-        gpWindowManager->RemoveWindow(panel);
-        gpMouseManager->ReallyShowPointer();
+        gWindowManager->RemoveWindow(panel);
+        gMouseManager->ReallyShowPointer();
     } else {
         if (cannotBuy) {
             msg.command = WIDGET_COMMAND_CLEAR_FLAGS;
@@ -1460,15 +1459,15 @@ i16 townManager::BuyBuild(i16 building, i8 cannotBuy, i8 quickView) {
             msg.value = WIDGET_FLAGS_ARGUMENT_DIMMED;
             panel->BroadcastMessage(msg);
         }
-        gpWindowManager->DoDialog(panel, TrueFalseDialogHandler, 0);
-        if (gpWindowManager->m_dialogResult == DIALOG_BUTTON_2) {
+        gWindowManager->DoDialog(panel, TrueFalseDialogHandler, 0);
+        if (gWindowManager->m_dialogResult == DIALOG_BUTTON_2) {
             m_selectedBuilding = building;
             for (i = 0; i < requiredCount; i++)
-                gpCurPlayer->m_resources[resourceTypes[i]] -= buildCosts[i];
+                gCurPlayerData->m_resources[resourceTypes[i]] -= buildCosts[i];
         }
     }
     if (!quickView)
-        gpWindowManager->BroadcastMessage(
+        gWindowManager->BroadcastMessage(
             MESSAGE_WIDGET,
             WIDGET_COMMAND_CLEAR_FLAGS,
             TOWN_CLOSE_CONTROL,
@@ -1478,7 +1477,7 @@ i16 townManager::BuyBuild(i16 building, i8 cannotBuy, i8 quickView) {
     if (quickView)
         return 0;
     else
-        return gpWindowManager->m_dialogResult == DIALOG_BUTTON_2;
+        return gWindowManager->m_dialogResult == DIALOG_BUTTON_2;
 }
 
 // Fizzles a fixed per-building rectangle.
@@ -1487,7 +1486,7 @@ void townManager::BuildObj(i16 building) {
     i16 i;
     class sample* sample;
 
-    gpMouseManager->ReallyHidePointer();
+    gMouseManager->ReallyHidePointer();
     DrawTown(1, 1);
     if (building == BUILDING_SLOT_MAGE_GUILD) {
         if (m_town->m_buildings & (1 << BUILDING_SLOT_MAGE_GUILD))
@@ -1515,7 +1514,7 @@ void townManager::BuildObj(i16 building) {
             }
         }
     }
-    gpWindowManager->SaveFizzleSource(
+    gWindowManager->SaveFizzleSource(
         gTownBuildingExtents[m_town->m_type][building].x,
         gTownBuildingExtents[m_town->m_type][building].y,
         gTownBuildingExtents[m_town->m_type][building].width,
@@ -1523,7 +1522,7 @@ void townManager::BuildObj(i16 building) {
     );
     DrawTown(0, 1);
     sample = LoadPlaySample("buildtwn.82M");
-    gpWindowManager->FizzleForward(
+    gWindowManager->FizzleForward(
         gTownBuildingExtents[m_town->m_type][building].x,
         gTownBuildingExtents[m_town->m_type][building].y,
         gTownBuildingExtents[m_town->m_type][building].width,
@@ -1534,14 +1533,14 @@ void townManager::BuildObj(i16 building) {
     m_selectedBuilding = TOWN_BUILDING_NONE;
     m_bankBox->Update();
     m_townWindow->DrawWindow();
-    gpMouseManager->ReallyShowPointer();
-    gpWindowManager->BroadcastMessage(
+    gMouseManager->ReallyShowPointer();
+    gWindowManager->BroadcastMessage(
         MESSAGE_WIDGET,
         WIDGET_COMMAND_CLEAR_FLAGS,
         DIALOG_BUTTON_0,
         WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED
     );
-    BitSet(gpGame->m_townBuiltToday, m_town->m_id);
+    BitSet(gGame->m_townBuiltToday, m_town->m_id);
     m_town->GiveSpells();
 }
 
@@ -1622,9 +1621,9 @@ void townManager::SetupCastle(class heroWindow* window) {
             window->BroadcastMessage(msg);
         }
     }
-    if (gpCurPlayer->m_resources[RESOURCE_GOLD] < gHeroGoldCost)
+    if (gCurPlayerData->m_resources[RESOURCE_GOLD] < gHeroGoldCost)
         stateFrame = TOWN_CASTLE_FRAME_CANNOT_AFFORD;
-    else if (gpCurPlayer->m_heroCount == PLAYER_HERO_CAPACITY
+    else if (gCurPlayerData->m_heroCount == PLAYER_HERO_CAPACITY
              || m_town->m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE)
         stateFrame = TOWN_CASTLE_FRAME_CANNOT_BUILD;
     else if (m_recruitResult)
@@ -1813,7 +1812,7 @@ i16 MageGuildHandler(struct tag_message& message) {
                     case TOWN_MAGE_FIRST_ICON_CONTROL + 8:
                         spellPosIndex = message.id - TOWN_MAGE_FIRST_ICON_CONTROL;
                     showSpell:
-                        theMageLevel = gpTownManager->m_town->m_buildState;
+                        theMageLevel = gTownManager->m_town->m_buildState;
                         if ((theMageLevel == MAGE_GUILD_STATE_LEVEL_1
                              && spellPosIndex > MAGE_GUILD_LEVEL_1_LAST_SLOT)
                             || (theMageLevel == MAGE_GUILD_STATE_LEVEL_2
@@ -1821,7 +1820,7 @@ i16 MageGuildHandler(struct tag_message& message) {
                             || (theMageLevel == MAGE_GUILD_STATE_LEVEL_3
                                 && spellPosIndex > MAGE_GUILD_LEVEL_3_LAST_SLOT))
                             return MESSAGE_DISPATCH_CONSUME;
-                        spellId = gpTownManager->m_town->m_mageGuildSpells[spellPosIndex];
+                        spellId = gTownManager->m_town->m_mageGuildSpells[spellPosIndex];
                         NormalDialog(
                             gSpellDesc[spellId],
                             quickViewVal ? NORMAL_DIALOG_TYPE_QUICK_VIEW : NORMAL_DIALOG_TYPE_OK,
@@ -1862,7 +1861,7 @@ void townManager::SetupThievesGuild(class heroWindow* window, i16 categories) {
     i16 isTied;
 
     if (categories == THIEVES_CATEGORIES_BY_GUILDS) {
-        numThieves = gpGame->GetNumThievesGuilds(giCurPlayer);
+        numThieves = gGame->GetNumThievesGuilds(gCurPlayer);
         if (numThieves >= 4)
             categories = THIEVES_CATEGORY_COUNT;
         else if (numThieves == THIEVES_GUILDS_THREE)
@@ -1880,10 +1879,10 @@ void townManager::SetupThievesGuild(class heroWindow* window, i16 categories) {
         firstPlayer = 0;
         realHi = 0;
         for (bestRank = 0; bestRank < THIEVES_RANK_COUNT; bestRank++) {
-            if (firstPlayer == gpGame->m_playerCount - gpGame->m_deadPlayerCount)
+            if (firstPlayer == gGame->m_playerCount - gGame->m_deadPlayerCount)
                 break;
             isTied = 1;
-            while (realHi + 1 < gpGame->m_playerCount
+            while (realHi + 1 < gGame->m_playerCount
                    && savedTotals[realHi + 1] == savedTotals[realHi]) {
                 isTied++;
                 realHi++;
@@ -1897,7 +1896,7 @@ void townManager::SetupThievesGuild(class heroWindow* window, i16 categories) {
                     THIEVES_RANK_ICON_WIDTH,
                     THIEVES_RANK_ICON_HEIGHT,
                     "townwind.icn",
-                    gpGame->m_players[baseRanking[newPos]].m_color + THIEVES_FLAG_FRAME_BASE,
+                    gGame->m_players[baseRanking[newPos]].m_color + THIEVES_FLAG_FRAME_BASE,
                     ICON_DRAW_NORMAL,
                     WIDGET_ID_NONE,
                     ICON_WIDGET_DRAW,
@@ -1926,18 +1925,18 @@ void townManager::GetCategoryStats(i8 category, i32* const stats, i8* const orde
     hero* playerHeroData;
     town* townItem;
 
-    for (player = 0; player < gpGame->m_playerCount; player++) {
+    for (player = 0; player < gGame->m_playerCount; player++) {
         firstNumTowns = 0;
         numCastles = 0;
         order[player] = player;
-        if (gpGame->m_playerDead[player]) {
+        if (gGame->m_playerDead[player]) {
             stats[player] = TOWN_THIEVES_DEAD_PLAYER_STAT;
         } else {
             switch (category) {
                 case THIEVES_CATEGORY_TOWNS:
                     for (townIndex = 0; townIndex < GAME_TOWN_COUNT; townIndex++) {
-                        if (gpGame->m_castleRecs[townIndex].m_owner == player
-                            && (gpGame->m_castleRecs[townIndex].m_buildings
+                        if (gGame->m_castleRecs[townIndex].m_owner == player
+                            && (gGame->m_castleRecs[townIndex].m_buildings
                                 & (1 << BUILDING_SLOT_TENT)))
                             firstNumTowns++;
                     }
@@ -1945,44 +1944,43 @@ void townManager::GetCategoryStats(i8 category, i32* const stats, i8* const orde
                     break;
                 case THIEVES_CATEGORY_CASTLES:
                     for (townIndex = 0; townIndex < GAME_TOWN_COUNT; townIndex++) {
-                        if (gpGame->m_castleRecs[townIndex].m_owner == player
-                            && (gpGame->m_castleRecs[townIndex].m_buildings
+                        if (gGame->m_castleRecs[townIndex].m_owner == player
+                            && (gGame->m_castleRecs[townIndex].m_buildings
                                 & (1 << BUILDING_SLOT_CASTLE)))
                             numCastles++;
                     }
                     stats[player] = numCastles;
                     break;
                 case THIEVES_CATEGORY_HEROES:
-                    stats[player] = gpGame->m_players[player].m_heroCount;
+                    stats[player] = gGame->m_players[player].m_heroCount;
                     break;
                 case THIEVES_CATEGORY_GOLD:
-                    stats[player] = gpGame->m_players[player].m_resources[RESOURCE_GOLD];
+                    stats[player] = gGame->m_players[player].m_resources[RESOURCE_GOLD];
                     break;
                 case THIEVES_CATEGORY_WOOD_AND_ORE:
-                    stats[player] = gpGame->m_players[player].m_resources[RESOURCE_WOOD]
-                                    + gpGame->m_players[player].m_resources[RESOURCE_CRYSTAL]
-                                    + gpGame->m_players[player].m_resources[RESOURCE_ORE];
+                    stats[player] = gGame->m_players[player].m_resources[RESOURCE_WOOD]
+                                    + gGame->m_players[player].m_resources[RESOURCE_CRYSTAL]
+                                    + gGame->m_players[player].m_resources[RESOURCE_ORE];
                     break;
                 case THIEVES_CATEGORY_RARE_RESOURCES:
-                    stats[player] = gpGame->m_players[player].m_resources[RESOURCE_GEMS]
-                                    + gpGame->m_players[player].m_resources[RESOURCE_SULFUR]
-                                    + gpGame->m_players[player].m_resources[RESOURCE_MERCURY];
+                    stats[player] = gGame->m_players[player].m_resources[RESOURCE_GEMS]
+                                    + gGame->m_players[player].m_resources[RESOURCE_SULFUR]
+                                    + gGame->m_players[player].m_resources[RESOURCE_MERCURY];
                     break;
                 case THIEVES_CATEGORY_OBELISKS:
-                    stats[player] = gpGame->m_players[player].CountVisitedObelisks();
+                    stats[player] = gGame->m_players[player].CountVisitedObelisks();
                     break;
                 case THIEVES_CATEGORY_ARMY_STRENGTH:
                     strengthValue = 0;
-                    for (index = 0; index < gpGame->m_players[player].m_heroCount; index++) {
-                        playerHeroData = gpGame->GetPlayerHero(player, index);
+                    for (index = 0; index < gGame->m_players[player].m_heroCount; index++) {
+                        playerHeroData = gGame->GetPlayerHero(player, index);
                         strengthValue +=
-                            gpPhilAI->FightValueOfStack(&playerHeroData->m_army, playerHeroData, 0);
+                            gPhilAI->FightValueOfStack(&playerHeroData->m_army, playerHeroData, 0);
                     }
-                    for (index = 0; index < gpGame->m_players[player].m_townCount; index++) {
-                        townItem = gpGame->GetPlayerTown(player, index);
+                    for (index = 0; index < gGame->m_players[player].m_townCount; index++) {
+                        townItem = gGame->GetPlayerTown(player, index);
                         if (townItem->HasGarrison())
-                            strengthValue +=
-                                gpPhilAI->FightValueOfStack(&townItem->m_army, NULL, 0);
+                            strengthValue += gPhilAI->FightValueOfStack(&townItem->m_army, NULL, 0);
                     }
                     stats[player] = strengthValue;
                     break;
@@ -1998,8 +1996,8 @@ void townManager::SortStats(i32* const stats, i8* const order) {
     i16 secondPlayer;
     i8 temporaryOrder;
 
-    for (firstPlayer = 0; firstPlayer < gpGame->m_playerCount - 1; firstPlayer++) {
-        for (secondPlayer = firstPlayer + 1; secondPlayer < gpGame->m_playerCount; secondPlayer++) {
+    for (firstPlayer = 0; firstPlayer < gGame->m_playerCount - 1; firstPlayer++) {
+        for (secondPlayer = firstPlayer + 1; secondPlayer < gGame->m_playerCount; secondPlayer++) {
             if (stats[secondPlayer] > stats[firstPlayer]) {
                 tempStat = stats[firstPlayer];
                 stats[firstPlayer] = stats[secondPlayer];
@@ -2036,9 +2034,9 @@ i8 townManager::RecruitHero(i8 cannotRecruit) {
     if (m_heroWindow1 == NULL)
         MemError();
     SetWinText(m_heroWindow1, WINDOW_TEXT_RECRUIT_HERO);
-    m_recruitHeroes[0] = gpGame->GetHero(gpCurPlayer->m_availableHeroIds[0]);
-    m_recruitHeroes[1] = gpGame->GetHero(gpCurPlayer->m_availableHeroIds[1]);
-    m_recruitHeroes[0]->m_owner = m_recruitHeroes[1]->m_owner = giCurPlayer;
+    m_recruitHeroes[0] = gGame->GetHero(gCurPlayerData->m_availableHeroIds[0]);
+    m_recruitHeroes[1] = gGame->GetHero(gCurPlayerData->m_availableHeroIds[1]);
+    m_recruitHeroes[0]->m_owner = m_recruitHeroes[1]->m_owner = gCurPlayer;
     evtCopy.type = MESSAGE_WIDGET;
     if (cannotRecruit) {
         evtCopy.command = WIDGET_COMMAND_CLEAR_FLAGS;
@@ -2067,23 +2065,23 @@ i8 townManager::RecruitHero(i8 cannotRecruit) {
     m_heroWindow1->BroadcastMessage(evtCopy);
     m_recruitState = RECRUIT_HERO_NONE;
     if (cannotRecruit) {
-        gpMouseManager->ReallyHidePointer();
-        gpWindowManager->AddWindow(m_heroWindow1, WINDOW_Z_ORDER_APPEND, 1);
+        gMouseManager->ReallyHidePointer();
+        gWindowManager->AddWindow(m_heroWindow1, WINDOW_Z_ORDER_APPEND, 1);
         QuickViewWait();
-        gpWindowManager->RemoveWindow(m_heroWindow1);
-        gpMouseManager->ReallyShowPointer();
+        gWindowManager->RemoveWindow(m_heroWindow1);
+        gMouseManager->ReallyShowPointer();
     } else
-        gpWindowManager->DoDialog(m_heroWindow1, RecruitHeroHandler, 0);
+        gWindowManager->DoDialog(m_heroWindow1, RecruitHeroHandler, 0);
     delete m_heroWindow1;
     if (m_recruitState != RECRUIT_HERO_NONE) {
         i32 newHeroClass;
         i16 townY;
         i16 townX;
 
-        gpCurPlayer->m_resources[RESOURCE_GOLD] -= gHeroGoldCost;
-        gpCurPlayer->m_heroIds[gpCurPlayer->m_heroCount] =
-            gpCurPlayer->m_availableHeroIds[m_recruitState];
-        gpCurPlayer->m_heroCount++;
+        gCurPlayerData->m_resources[RESOURCE_GOLD] -= gHeroGoldCost;
+        gCurPlayerData->m_heroIds[gCurPlayerData->m_heroCount] =
+            gCurPlayerData->m_availableHeroIds[m_recruitState];
+        gCurPlayerData->m_heroCount++;
         townX = m_town->m_x;
         townY = m_town->m_y;
         m_recruitHeroes[m_recruitState]->m_x = townX;
@@ -2094,20 +2092,21 @@ i8 townManager::RecruitHero(i8 cannotRecruit) {
             m_recruitHeroes[m_recruitState]->CalcMobility();
         m_recruitHeroes[m_recruitState]->m_mobility =
             m_recruitHeroes[m_recruitState]->m_remainingMobility;
-        m_recruitHeroes[m_recruitState]->m_locationType = gpGame->m_map[townX][townY].m_triggerType;
+        m_recruitHeroes[m_recruitState]->m_locationType = gGame->m_map[townX][townY].m_triggerType;
         m_recruitHeroes[m_recruitState]->m_occupiedTown =
-            gpGame->m_map[townX][townY].m_objectMetadata;
-        gpGame->m_map[townX][townY].m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO);
-        gpGame->m_map[townX][townY].m_objectMetadata =
-            gpCurPlayer->m_availableHeroIds[m_recruitState];
+            gGame->m_map[townX][townY].m_objectMetadata;
+        gGame->m_map[townX][townY].m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO);
+        gGame->m_map[townX][townY].m_objectMetadata =
+            gCurPlayerData->m_availableHeroIds[m_recruitState];
         m_recruitResult = 1;
         m_town->m_occupyingHeroId = m_recruitHeroes[m_recruitState]->m_id;
-        gpGame->m_availableHeroes[gpCurPlayer->m_availableHeroIds[m_recruitState]] = giCurPlayer;
+        gGame->m_availableHeroes[gCurPlayerData->m_availableHeroIds[m_recruitState]] = gCurPlayer;
         delete m_garrisonStrip;
         sprintf(
             gText,
             "crst%04d.icn",
-            gpCurPlayer->Color() * HERO_CLASS_COUNT + m_recruitHeroes[m_recruitState]->m_heroClass
+            gCurPlayerData->Color() * HERO_CLASS_COUNT
+                + m_recruitHeroes[m_recruitState]->m_heroClass
         );
         m_garrisonStrip = new strip(
             0,
@@ -2115,7 +2114,7 @@ i8 townManager::RecruitHero(i8 cannotRecruit) {
             m_town->m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE
                 ? static_cast<i8>(TOWN_CREST_FRAME_WITHOUT_HERO)
                 : static_cast<i8>(TOWN_CREST_FRAME_WITH_HERO),
-            gpResourceManager->MakeId(gText),
+            gResourceManager->MakeId(gText),
             0,
             &m_town->m_army,
             TOWN_GARRISON_FIRST_CONTROL,
@@ -2129,7 +2128,7 @@ i8 townManager::RecruitHero(i8 cannotRecruit) {
             0,
             TOWN_HERO_STRIP_Y,
             TOWN_HERO_STRIP_FRAME_COUNT,
-            gpResourceManager->MakeId(gText),
+            gResourceManager->MakeId(gText),
             0,
             &m_recruitHeroes[m_recruitState]->m_army,
             TOWN_HERO_FIRST_CONTROL,
@@ -2139,10 +2138,11 @@ i8 townManager::RecruitHero(i8 cannotRecruit) {
             MemError();
         if (m_town->m_buildings & (1 << BUILDING_SLOT_MAGE_GUILD))
             m_town->GiveSpells();
-        newHeroClass = gpCurPlayer->m_availableHeroIds[1 - m_recruitState] / HERO_PER_CLASS_COUNT;
+        newHeroClass =
+            gCurPlayerData->m_availableHeroIds[1 - m_recruitState] / HERO_PER_CLASS_COUNT;
         newHeroClass = (newHeroClass + Random(1, 3)) % HERO_CLASS_COUNT;
-        gpCurPlayer->m_availableHeroIds[m_recruitState] = gpGame->GetNewHeroId(newHeroClass);
-        gpGame->m_availableHeroes[gpCurPlayer->m_availableHeroIds[m_recruitState]] =
+        gCurPlayerData->m_availableHeroIds[m_recruitState] = gGame->GetNewHeroId(newHeroClass);
+        gGame->m_availableHeroes[gCurPlayerData->m_availableHeroIds[m_recruitState]] =
             HERO_AVAILABILITY_RETREATED;
     } else {
         if (m_castleDialogActive)
@@ -2151,7 +2151,7 @@ i8 townManager::RecruitHero(i8 cannotRecruit) {
             m_heroWindow0->DrawWindow();
     }
     m_bankBox->Update();
-    gpWindowManager->BroadcastMessage(
+    gWindowManager->BroadcastMessage(
         MESSAGE_WIDGET,
         WIDGET_COMMAND_CLEAR_FLAGS,
         TOWN_CLOSE_CONTROL,
@@ -2159,8 +2159,8 @@ i8 townManager::RecruitHero(i8 cannotRecruit) {
     );
     m_recruitHeroes[0]->m_owner = m_recruitHeroes[1]->m_owner = GAME_PLAYER_NONE;
     if (m_recruitState != RECRUIT_HERO_NONE)
-        m_recruitHeroes[m_recruitState]->m_owner = giCurPlayer;
-    return gpWindowManager->m_dialogResult != DIALOG_BUTTON_1;
+        m_recruitHeroes[m_recruitState]->m_owner = gCurPlayer;
+    return gWindowManager->m_dialogResult != DIALOG_BUTTON_1;
 }
 
 // Animates frames 1-8 of control 2.
@@ -2186,14 +2186,14 @@ i16 TavernHandler(struct tag_message& message) {
                 break;
         }
     }
-    if (glTimers[TOWN_FRAME_TIMER_SLOT] < KBTickCount()) {
+    if (gTimers[TOWN_FRAME_TIMER_SLOT] < KBTickCount()) {
         SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_FRAME, TOWN_TAVERN_ANIMATION_CONTROL);
-        ++gpGame->m_viewArmyResult;
-        message.value = gpGame->m_viewArmyResult % TOWN_TAVERN_ANIMATION_FRAME_COUNT
+        ++gGame->m_viewArmyResult;
+        message.value = gGame->m_viewArmyResult % TOWN_TAVERN_ANIMATION_FRAME_COUNT
                         + TOWN_TAVERN_FIRST_ANIMATION_FRAME;
-        gpTownManager->m_heroWindow0->BroadcastMessage(message);
-        gpTownManager->m_heroWindow0->MoveWindow(0, 0);
-        glTimers[TOWN_FRAME_TIMER_SLOT] = KBTickCount() + TOWN_TAVERN_ANIMATION_DELAY;
+        gTownManager->m_heroWindow0->BroadcastMessage(message);
+        gTownManager->m_heroWindow0->MoveWindow(0, 0);
+        gTimers[TOWN_FRAME_TIMER_SLOT] = KBTickCount() + TOWN_TAVERN_ANIMATION_DELAY;
     }
     return MESSAGE_DISPATCH_CONSUME;
 }
@@ -2206,7 +2206,7 @@ void townManager::DoTavern(void) {
         MemError();
     SetWinText(m_heroWindow0, WINDOW_TEXT_TAVERN);
     PlayMusic(MUSIC_TRACK_TAVERN);
-    gpWindowManager->DoDialog(m_heroWindow0, TavernHandler, 0);
+    gWindowManager->DoDialog(m_heroWindow0, TavernHandler, 0);
     delete m_heroWindow0;
     PlayMusic(townTheme[m_town->m_type] + MUSIC_TRACK_TOWN_FIRST);
 }
@@ -2222,31 +2222,30 @@ i16 CastleHandler(struct tag_message& message) {
     if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
             case WIDGET_COMMAND_HOVER:
-                if (gpTownManager->m_lastHoverId == message.id)
+                if (gTownManager->m_lastHoverId == message.id)
                     break;
-                gpTownManager->m_lastHoverId = message.id;
+                gTownManager->m_lastHoverId = message.id;
                 switch (message.id) {
                     case BUILDING_SLOT_MAGE_GUILD:
-                        if (!(gpTownManager->m_buildableBuildings & (1 << message.id)))
+                        if (!(gTownManager->m_buildableBuildings & (1 << message.id)))
                             sprintf(
                                 gText,
                                 gCastleInfo[TOWN_CASTLE_INFO_CANNOT_BUILD],
-                                gpTownManager->GetBuildingName(message.id)
+                                gTownManager->GetBuildingName(message.id)
                             );
-                        else if (!(gpTownManager->m_affordableBuildings & (1 << message.id)))
+                        else if (!(gTownManager->m_affordableBuildings & (1 << message.id)))
                             sprintf(
                                 gText,
                                 gCastleInfo[TOWN_CASTLE_INFO_CANNOT_AFFORD],
-                                gpTownManager->GetBuildingName(message.id)
+                                gTownManager->GetBuildingName(message.id)
                             );
                         else {
-                            if (!(gpTownManager->m_town->m_buildings
+                            if (!(gTownManager->m_town->m_buildings
                                   & (1 << BUILDING_SLOT_MAGE_GUILD)))
                                 objNum = TOWN_CASTLE_INFO_BUILD_MAGE_GUILD;
-                            else if (gpTownManager->m_town->m_buildState
-                                     == MAGE_GUILD_STATE_LEVEL_4)
+                            else if (gTownManager->m_town->m_buildState == MAGE_GUILD_STATE_LEVEL_4)
                                 objNum = TOWN_CASTLE_INFO_MAGE_GUILD_MAX_LEVEL;
-                            else if (!CanBuy(gpTownManager->m_town, BUILDING_SLOT_MAGE_GUILD))
+                            else if (!CanBuy(gTownManager->m_town, BUILDING_SLOT_MAGE_GUILD))
                                 objNum = TOWN_CASTLE_INFO_CANNOT_AFFORD_MAGE_LEVEL;
                             else
                                 objNum = TOWN_CASTLE_INFO_ADD_MAGE_GUILD_LEVEL;
@@ -2263,41 +2262,41 @@ i16 CastleHandler(struct tag_message& message) {
                     case BUILDING_SLOT_DWELLING_4:
                     case BUILDING_SLOT_DWELLING_5:
                     case BUILDING_SLOT_DWELLING_6:
-                        if (gpTownManager->m_town->m_buildings & (1 << message.id))
+                        if (gTownManager->m_town->m_buildings & (1 << message.id))
                             sprintf(
                                 gText,
                                 gCastleInfo[TOWN_CASTLE_INFO_ALREADY_BUILT],
-                                gpTownManager->GetBuildingName(message.id)
+                                gTownManager->GetBuildingName(message.id)
                             );
-                        else if (!(gpTownManager->m_buildableBuildings & (1 << message.id)))
+                        else if (!(gTownManager->m_buildableBuildings & (1 << message.id)))
                             sprintf(
                                 gText,
                                 gCastleInfo[TOWN_CASTLE_INFO_CANNOT_BUILD],
-                                gpTownManager->GetBuildingName(message.id)
+                                gTownManager->GetBuildingName(message.id)
                             );
-                        else if (!(gpTownManager->m_affordableBuildings & (1 << message.id)))
+                        else if (!(gTownManager->m_affordableBuildings & (1 << message.id)))
                             sprintf(
                                 gText,
                                 gCastleInfo[TOWN_CASTLE_INFO_CANNOT_AFFORD],
-                                gpTownManager->GetBuildingName(message.id)
+                                gTownManager->GetBuildingName(message.id)
                             );
                         else
                             sprintf(
                                 gText,
                                 gCastleInfo[TOWN_CASTLE_INFO_BUILD],
-                                gpTownManager->GetBuildingName(message.id)
+                                gTownManager->GetBuildingName(message.id)
                             );
                         break;
                     case TOWN_CASTLE_HERO_CONTROL:
-                        if (gpCurPlayer->m_resources[RESOURCE_GOLD] < gHeroGoldCost)
+                        if (gCurPlayerData->m_resources[RESOURCE_GOLD] < gHeroGoldCost)
                             strcpy(gText, gCastleInfo[TOWN_CASTLE_INFO_CANNOT_AFFORD_HERO]);
-                        else if (gpCurPlayer->m_heroCount == PLAYER_HERO_CAPACITY)
+                        else if (gCurPlayerData->m_heroCount == PLAYER_HERO_CAPACITY)
                             sprintf(
                                 gText,
                                 gCastleInfo[TOWN_CASTLE_INFO_TOO_MANY_HEROES],
                                 PLAYER_HERO_CAPACITY
                             );
-                        else if (gpTownManager->m_town->m_occupyingHeroId
+                        else if (gTownManager->m_town->m_occupyingHeroId
                                  != TOWN_OCCUPYING_HERO_NONE)
                             strcpy(gText, gCastleInfo[TOWN_CASTLE_INFO_TOWN_OCCUPIED]);
                         else
@@ -2313,13 +2312,13 @@ i16 CastleHandler(struct tag_message& message) {
                 message.command = WIDGET_COMMAND_SET_TEXT;
                 message.id = TOWN_CASTLE_STATUS_TEXT_CONTROL;
                 message.text = gText;
-                gpTownManager->m_heroWindow0->BroadcastMessage(message);
-                gpTownManager->m_heroWindow0->DrawWindow(
+                gTownManager->m_heroWindow0->BroadcastMessage(message);
+                gTownManager->m_heroWindow0->DrawWindow(
                     0,
                     TOWN_CASTLE_STATUS_FIRST_CONTROL,
                     TOWN_CASTLE_STATUS_TEXT_CONTROL
                 );
-                gpWindowManager->UpdateScreenRegion(
+                gWindowManager->UpdateScreenRegion(
                     TOWN_CASTLE_STATUS_X,
                     TOWN_CASTLE_STATUS_Y,
                     TOWN_CASTLE_STATUS_WIDTH,
@@ -2331,8 +2330,8 @@ i16 CastleHandler(struct tag_message& message) {
                 switch (message.id) {
                     case BUILDING_SLOT_MAGE_GUILD:
                         if (!baseQuick
-                            && (gpTownManager->m_town->m_buildState == MAGE_GUILD_STATE_LEVEL_4
-                                || !(gpTownManager->m_buildableBuildings & (1 << message.id))))
+                            && (gTownManager->m_town->m_buildState == MAGE_GUILD_STATE_LEVEL_4
+                                || !(gTownManager->m_buildableBuildings & (1 << message.id))))
                             break;
                         else
                             goto buy_building;
@@ -2347,29 +2346,29 @@ i16 CastleHandler(struct tag_message& message) {
                     case BUILDING_SLOT_DWELLING_5:
                     case BUILDING_SLOT_DWELLING_6:
                         if (!baseQuick
-                            && ((gpTownManager->m_town->m_buildings & (1 << message.id))
-                                || !(gpTownManager->m_buildableBuildings & (1 << message.id))))
+                            && ((gTownManager->m_town->m_buildings & (1 << message.id))
+                                || !(gTownManager->m_buildableBuildings & (1 << message.id))))
                             break;
                     buy_building:
-                        for (objNum = 0; objNum < gpTownManager->m_townObjectCount; objNum++) {
-                            if (gpTownManager->m_townObjects[objNum]->m_buildingId == message.id)
+                        for (objNum = 0; objNum < gTownManager->m_townObjectCount; objNum++) {
+                            if (gTownManager->m_townObjects[objNum]->m_buildingId == message.id)
                                 break;
                         }
-                        result = gpTownManager->BuyBuild(
+                        result = gTownManager->BuyBuild(
                             message.id,
-                            (gpTownManager->m_affordableBuildings & (1 << message.id)) == 0,
+                            (gTownManager->m_affordableBuildings & (1 << message.id)) == 0,
                             baseQuick
                         );
                         break;
                     case TOWN_CASTLE_HERO_CONTROL:
                         if (baseQuick)
-                            gpTownManager->RecruitHero(1);
-                        else if (!gpTownManager->m_recruitResult
-                                 && gpCurPlayer->m_resources[RESOURCE_GOLD] >= gHeroGoldCost
-                                 && gpCurPlayer->m_heroCount < PLAYER_HERO_CAPACITY
-                                 && gpTownManager->m_town->m_occupyingHeroId
+                            gTownManager->RecruitHero(1);
+                        else if (!gTownManager->m_recruitResult
+                                 && gCurPlayerData->m_resources[RESOURCE_GOLD] >= gHeroGoldCost
+                                 && gCurPlayerData->m_heroCount < PLAYER_HERO_CAPACITY
+                                 && gTownManager->m_town->m_occupyingHeroId
                                         == TOWN_OCCUPYING_HERO_NONE)
-                            result = gpTownManager->RecruitHero(0);
+                            result = gTownManager->RecruitHero(0);
                         break;
                     default:
                         break;
@@ -2401,23 +2400,23 @@ i16 SplitArmyHandler(struct tag_message& message) {
             case WIDGET_NOTIFY_SELECT:
                 switch (message.id) {
                     case TOWN_SPLIT_INCREASE_CONTROL:
-                        ++gpTownManager->m_splitAmount;
-                        if (gpTownManager->m_splitAmount >= gpTownManager->m_splitMaximum)
-                            gpTownManager->m_splitAmount = gpTownManager->m_splitMaximum - 1;
+                        ++gTownManager->m_splitAmount;
+                        if (gTownManager->m_splitAmount >= gTownManager->m_splitMaximum)
+                            gTownManager->m_splitAmount = gTownManager->m_splitMaximum - 1;
                         goto update_amount;
                     case TOWN_SPLIT_DECREASE_CONTROL:
-                        --gpTownManager->m_splitAmount;
-                        if (gpTownManager->m_splitAmount < 0)
-                            gpTownManager->m_splitAmount = 0;
+                        --gTownManager->m_splitAmount;
+                        if (gTownManager->m_splitAmount < 0)
+                            gTownManager->m_splitAmount = 0;
                         goto update_amount;
                     case TOWN_SPLIT_AMOUNT_CONTROL:
                         message.command = WIDGET_COMMAND_GET_TEXT;
-                        gpTownManager->m_heroWindow1->BroadcastMessage(message);
-                        gpTownManager->m_splitAmount = atoi(message.text);
-                        if (gpTownManager->m_splitAmount < 0)
-                            gpTownManager->m_splitAmount = 0;
-                        if (gpTownManager->m_splitAmount >= gpTownManager->m_splitMaximum)
-                            gpTownManager->m_splitAmount = gpTownManager->m_splitMaximum - 1;
+                        gTownManager->m_heroWindow1->BroadcastMessage(message);
+                        gTownManager->m_splitAmount = atoi(message.text);
+                        if (gTownManager->m_splitAmount < 0)
+                            gTownManager->m_splitAmount = 0;
+                        if (gTownManager->m_splitAmount >= gTownManager->m_splitMaximum)
+                            gTownManager->m_splitAmount = gTownManager->m_splitMaximum - 1;
                         goto update_amount;
                 }
                 break;
@@ -2425,15 +2424,15 @@ i16 SplitArmyHandler(struct tag_message& message) {
                 switch (message.id) {
                     case DIALOG_BUTTON_0:
                     case DIALOG_BUTTON_1:
-                        gpTownManager->m_splitAmount = 0;
-                        gpWindowManager->m_dialogResult = message.id;
+                        gTownManager->m_splitAmount = 0;
+                        gWindowManager->m_dialogResult = message.id;
                         handled = 1;
                         break;
                     case DIALOG_BUTTON_2:
-                        if (gpTownManager->m_splitAmount == 0)
-                            gpWindowManager->m_dialogResult = DIALOG_BUTTON_1;
+                        if (gTownManager->m_splitAmount == 0)
+                            gWindowManager->m_dialogResult = DIALOG_BUTTON_1;
                         else
-                            gpWindowManager->m_dialogResult = DIALOG_BUTTON_2;
+                            gWindowManager->m_dialogResult = DIALOG_BUTTON_2;
                         handled = 1;
                         break;
                 }
@@ -2450,11 +2449,11 @@ i16 SplitArmyHandler(struct tag_message& message) {
     return MESSAGE_DISPATCH_CONSUME;
 
 update_amount:
-    sprintf(gText, "%d", gpTownManager->m_splitAmount);
+    sprintf(gText, "%d", gTownManager->m_splitAmount);
     SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, TOWN_SPLIT_AMOUNT_CONTROL);
     message.text = gText;
-    gpTownManager->m_heroWindow1->BroadcastMessage(message);
-    gpTownManager->m_heroWindow1->DrawWindow();
+    gTownManager->m_heroWindow1->BroadcastMessage(message);
+    gTownManager->m_heroWindow1->DrawWindow();
     return MESSAGE_DISPATCH_CONSUME;
 }
 // TOWNMGR's .rdata: Open's per-type town-object layout.

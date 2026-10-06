@@ -35,7 +35,7 @@ iconWidget::iconWidget(
     i16 fillColor
 )
     : widget(x, y, width, height, id, kind) {
-    m_icon = gpResourceManager->GetIcon(iconId);
+    m_icon = gResourceManager->GetIcon(iconId);
     m_frame = frame;
     m_fillColor = fillColor;
     m_orientation = orientation;
@@ -56,7 +56,7 @@ iconWidget::iconWidget(
     i16 fillColor
 )
     : widget(x, y, width, height, id, kind) {
-    m_icon = gpResourceManager->GetIcon(iconName);
+    m_icon = gResourceManager->GetIcon(iconName);
     m_frame = frame;
     m_fillColor = fillColor;
     m_orientation = orientation;
@@ -65,21 +65,21 @@ iconWidget::iconWidget(
 VA(0x0046e041, 0xf9)
 void iconWidget::Read(void) {
     char iconName[RESOURCE_NAME_CAPACITY];
-    READ_WIDGET_GEOMETRY(this, gpResourceManager);
-    gpResourceManager->Read13(iconName);
-    gpResourceManager->SavePosition();
-    m_icon = gpResourceManager->GetIcon(iconName);
-    gpResourceManager->RestorePosition();
-    m_frame = gpResourceManager->ReadWord();
-    m_orientation = gpResourceManager->ReadWord() & ICON_WIDGET_ORIENTATION_MASK;
-    m_id = gpResourceManager->ReadWord();
-    m_kind = gpResourceManager->ReadWord();
-    m_fillColor = gpResourceManager->ReadWord() & COLOR_INDEX_MASK;
+    READ_WIDGET_GEOMETRY(this, gResourceManager);
+    gResourceManager->Read13(iconName);
+    gResourceManager->SavePosition();
+    m_icon = gResourceManager->GetIcon(iconName);
+    gResourceManager->RestorePosition();
+    m_frame = gResourceManager->ReadWord();
+    m_orientation = gResourceManager->ReadWord() & ICON_WIDGET_ORIENTATION_MASK;
+    m_id = gResourceManager->ReadWord();
+    m_kind = gResourceManager->ReadWord();
+    m_fillColor = gResourceManager->ReadWord() & COLOR_INDEX_MASK;
 }
 
 VA(0x0046e13a, 0x5b)
 iconWidget::~iconWidget(void) {
-    gpResourceManager->Dispose(m_icon);
+    gResourceManager->Dispose(m_icon);
 }
 
 VA(0x0046e195, 0x2a4)
@@ -97,8 +97,8 @@ i16 iconWidget::Main(tag_message& message) {
                 case WIDGET_COMMAND_SET_ICON:
                     if (message.id == m_id) {
                         if (m_icon != NULL) {
-                            gpResourceManager->Dispose(m_icon);
-                            m_icon = gpResourceManager->GetIcon(message.text);
+                            gResourceManager->Dispose(m_icon);
+                            m_icon = gResourceManager->GetIcon(message.text);
                         }
                         return MESSAGE_DISPATCH_CONSUME;
                     }

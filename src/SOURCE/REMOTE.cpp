@@ -80,7 +80,7 @@ void RemoteMain(i32 gameMode) {
 
     gInNetSetup = 1;
     memset(rcvBuf, 0, sizeof(rcvBuf));
-    memset(iLastIds, 0, 30);
+    memset(gLastIds, 0, 30);
     GameMode = gameMode;
     switch (gameMode) {
         case REMOTE_GAME_NETWORK_HOST:
@@ -90,10 +90,10 @@ void RemoteMain(i32 gameMode) {
             nbnet_init();
             break;
         case REMOTE_GAME_MODEM_HOST:
-            giThisNetPos = 0;
+            gThisNetPos = 0;
             goto modemStart;
         case REMOTE_GAME_MODEM_GUEST:
-            giThisNetPos = 1;
+            gThisNetPos = 1;
         modemStart:
             gRemoteOn = 1;
             gNumNetGuests = 1;
@@ -121,10 +121,10 @@ void RemoteMain(i32 gameMode) {
             }
             if (gDirectConnect) {
                 WFDCStage = 0;
-                giWaitType = DIALOG_WAIT_DIRECT_CONNECT;
+                gWaitType = DIALOG_WAIT_DIRECT_CONNECT;
                 strcpy(directConnectMessage, localization::Tr("network.direct.wait"));
                 NormalDialog(directConnectMessage, NORMAL_DIALOG_TYPE_WAIT_CANCEL);
-                if (!gbFunctionComplete)
+                if (!gFunctionComplete)
                     ShutDown(NULL);
             } else {
                 Connect();
@@ -132,8 +132,8 @@ void RemoteMain(i32 gameMode) {
             break;
     }
     gRemoteOn = 1;
-    giNumHumanPlayers = gNumNetGuests + 1;
-    gIDCtr = (giThisNetPos + gNetNameIndex * 400 + 1) * 100000000;
+    gNumHumanPlayers = gNumNetGuests + 1;
+    gIDCtr = (gThisNetPos + gNetNameIndex * 400 + 1) * 100000000;
     gInNetSetup = 0;
 }
 
@@ -194,7 +194,7 @@ i32 DecodePacket(u8* data, i32 source) {
     if (REMOTE_PACKET(packet)->source != source && source != REMOTE_BROADCAST_PLAYER) {
         return 0;
     }
-    if (REMOTE_PACKET(packet)->destination != giThisNetPos
+    if (REMOTE_PACKET(packet)->destination != gThisNetPos
         && REMOTE_PACKET(packet)->destination != REMOTE_BROADCAST_PLAYER) {
         return 0;
     }
@@ -219,15 +219,15 @@ i32 SendRemoteData(u8* dataToSend, u8*, i32 destination, i32 length) {
     u8 remotePacket[REMOTE_MESSAGE_SIZE];
 
     out = 1;
-    if (iMPBaseType == MULTIPLAYER_BASE_NETWORK) {
+    if (gMapBaseType == MULTIPLAYER_BASE_NETWORK) {
         if (GameMode == REMOTE_GAME_NETWORK_HOST)
             destination = gNetNameIndex + 1;
         else
             destination = 0;
     } else if (destination == REMOTE_BROADCAST_PLAYER) {
-        destination = 1 - giThisNetPos;
+        destination = 1 - gThisNetPos;
     }
-    size = EncodePacket(dataToSend, giThisNetPos, destination, length);
+    size = EncodePacket(dataToSend, gThisNetPos, destination, length);
     switch (GameMode) {
         case REMOTE_GAME_NETWORK_HOST:
         case REMOTE_GAME_NETWORK_GUEST:
@@ -278,6 +278,27 @@ i32 ReceiveRemoteData(u8*, u8* data, i32 decodeType) {
     return result;
 }
 
+DATA(0x004cc7f0)
+i32 gIDCtr = 0;
+DATA(0x004cc800)
+i32 packetlen = 0;
+DATA(0x004cc804)
+i32 inescape = 0;
+DATA(0x004cc808)
+i32 newpacket = 0;
+DATA(0x004cc80c)
+i32 gInOrderCtr = 0;
+DATA(0x004cc810)
+i32 gCurLastID = 0;
+DATA(0x004cc814)
+u8 GameMode = 0;
+DATA(0x004cc815)
+u8 gPacketSequence = 0;
+DATA(0x004cc818)
+i32 gLastHeartbeatSend = 0;
+DATA(0x004cc81c)
+i8 gInNetSetup = 0;
+
 VA(0x00452137, 0x16d)
 i8 InitNetHost(void) {
     DATA(0x004cc81d)
@@ -292,7 +313,7 @@ i8 InitNetHost(void) {
             } else {
                 gInitNetHostStatus++;
                 gRemoteOn = 1;
-                giThisNetPos = 0;
+                gThisNetPos = 0;
             }
             break;
         case NET_HOST_INIT_CHECK_NAME:
@@ -335,7 +356,7 @@ i8 InitNetGuest(void) {
                 ShutDown(localization::Tr("network.netbios.missing"));
             } else {
                 gRemoteOn = 1;
-                giThisNetPos = 1;
+                gThisNetPos = 1;
                 gInitNetGuestStatus++;
             }
             break;
@@ -346,7 +367,7 @@ i8 InitNetGuest(void) {
                 gInitNetGuestStatus++;
             break;
         case NET_GUEST_INIT_REGISTER_NAME:
-            sprintf(gText, "HGUEST%d", giThisNetPos);
+            sprintf(gText, "HGUEST%d", gThisNetPos);
             if (nb_sess(0, NETBIOS_SESSION_REGISTER, gText) == 0)
                 gInitNetGuestStatus++;
             else
@@ -357,8 +378,8 @@ i8 InitNetGuest(void) {
             unregistered = !(status & NETBIOS_SESSION_NAME_REGISTERED);
             if (unregistered) {
                 if (status & NETBIOS_SESSION_ERROR) {
-                    giThisNetPos++;
-                    if (giThisNetPos > REMOTE_NET_NAME_LAST) {
+                    gThisNetPos++;
+                    if (gThisNetPos > REMOTE_NET_NAME_LAST) {
                         sprintf(gText, localization::Tr("network.initialize.slots_full"));
                         ShutDown(gText);
                     } else {
@@ -378,6 +399,11 @@ i8 InitNetGuest(void) {
     }
     return 0;
 }
+
+DATA(0x004cc81e)
+i8 gInitNetGuestStatus = 0;
+DATA(0x004cc81f)
+i8 gWaitForHostStatus = 0;
 
 VA(0x0045247d, 0x75)
 i8 WaitForHost(void) {
@@ -440,30 +466,30 @@ i32 nbnet_init(void) {
     gNumNetGuests = 0;
     switch (GameMode) {
         case REMOTE_GAME_NETWORK_HOST:
-            giWaitType = DIALOG_WAIT_NETBIOS_INIT_HOST;
+            gWaitType = DIALOG_WAIT_NETBIOS_INIT_HOST;
             sprintf(gText, localization::Tr("network.initialize.wait"));
             NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL);
-            if (!gbFunctionComplete)
+            if (!gFunctionComplete)
                 ShutDown(NULL);
-            giWaitType = DIALOG_WAIT_NETBIOS_GUEST;
+            gWaitType = DIALOG_WAIT_NETBIOS_GUEST;
             sprintf(gText, localization::Tr("network.guest.wait"));
             NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL);
-            if (!gbFunctionComplete)
+            if (!gFunctionComplete)
                 ShutDown(NULL);
             buffer[0] = gNumNetGuests;
             while (nb_snd(0, gNetNameIndex + 1, 3, buffer, 0))
                 PollSound();
             break;
         case REMOTE_GAME_NETWORK_GUEST:
-            giWaitType = DIALOG_WAIT_NETBIOS_INIT_GUEST;
+            gWaitType = DIALOG_WAIT_NETBIOS_INIT_GUEST;
             sprintf(gText, localization::Tr("network.initialize.wait"));
             NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL);
-            if (!gbFunctionComplete)
+            if (!gFunctionComplete)
                 ShutDown(NULL);
-            giWaitType = DIALOG_WAIT_NETBIOS_HOST;
+            gWaitType = DIALOG_WAIT_NETBIOS_HOST;
             sprintf(gText, localization::Tr("network.host.wait"));
             NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL);
-            if (!gbFunctionComplete)
+            if (!gFunctionComplete)
                 ShutDown(NULL);
             break;
     }
@@ -500,7 +526,7 @@ void ModemSetup(void) {
 VA(0x0045283e, 0x95)
 i32 Dial(void) {
     char dialCommand[40];
-    iLastDialPos = 0;
+    gLastDialPos = 0;
     sprintf(dialCommand, "ATDT%s", numbuf);
     sprintf(gText, "%s %s", localization::Tr("modem.dialing"), numbuf);
     GUIModemCommand(gText, dialCommand);
@@ -521,26 +547,26 @@ i32 Wait(void) {
 
 VA(0x0045291e, 0x62)
 void GUIModemCommand(char* message, char* command) {
-    iLastActionTime = 0;
-    iModemCommandPos = 0;
-    giWaitType = DIALOG_WAIT_MODEM_COMMAND;
-    strcpy(cModemCommand, command);
+    gLastActionTime = 0;
+    gModemCommandPos = 0;
+    gWaitType = DIALOG_WAIT_MODEM_COMMAND;
+    strcpy(gModemCommand, command);
     NormalDialog(message, NORMAL_DIALOG_TYPE_WAIT_CANCEL);
-    if (!gbFunctionComplete)
+    if (!gFunctionComplete)
         ShutDown(NULL);
 }
 
 VA(0x00452980, 0x7f)
 i8 GUIModemCommandExec(void) {
     i32 commandLength;
-    if (KBTickCount() < iLastActionTime + 250)
+    if (KBTickCount() < gLastActionTime + 250)
         return 0;
 
-    iLastActionTime = KBTickCount();
-    commandLength = strlen(cModemCommand);
-    if (iModemCommandPos < commandLength) {
-        write_buffer(cModemCommand + iModemCommandPos, 1);
-        ++iModemCommandPos;
+    gLastActionTime = KBTickCount();
+    commandLength = strlen(gModemCommand);
+    if (gModemCommandPos < commandLength) {
+        write_buffer(gModemCommand + gModemCommandPos, 1);
+        ++gModemCommandPos;
         return 0;
     } else {
         write_buffer("\r", 1);
@@ -565,9 +591,9 @@ i8 GUIModemResponse(char* message, char* response) {
     memset(GUIMRresponse, 0, 80);
     GUIMRrespptr = 0;
     strcpy(GUIMRresp, response);
-    giWaitType = DIALOG_WAIT_MODEM_RESPONSE;
+    gWaitType = DIALOG_WAIT_MODEM_RESPONSE;
     NormalDialog(message, NORMAL_DIALOG_TYPE_WAIT_CANCEL);
-    if (!gbFunctionComplete)
+    if (!gFunctionComplete)
         ShutDown(NULL);
     return 0;
 }
@@ -818,11 +844,11 @@ i32 TransmitRemoteData(
     if (!gRemoteOn || gInNetSetup)
         return 1;
     if (gamePosDestination && destination != REMOTE_BROADCAST_PLAYER)
-        destination = gbGamePosToNetPos[destination];
+        destination = gGamePosToNetPos[destination];
     result = 0;
     tries = 0;
     gIDCtr++;
-    msg.sender = giThisNetPos;
+    msg.sender = gThisNetPos;
     msg.id = gIDCtr;
     if (messageType != REMOTE_MESSAGE_DEFAULT)
         msg.type = messageType;
@@ -856,7 +882,7 @@ i32 TransmitRemoteData(
         }
         if (allowRetryDialog && tries == REMOTE_RETRY_COUNT && result == 0) {
             NormalDialog(localization::Tr("network.send.retry"), NORMAL_DIALOG_TYPE_YES_NO);
-            if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
+            if (gWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
                 tries = -1;
         }
         tries++;
@@ -875,8 +901,8 @@ char* GetRemoteData(i8 remove) {
     oldestOrder = 999999999;
     selected = -1;
     for (queueIndex = 0; queueIndex < REMOTE_QUEUE_CAPACITY; queueIndex++) {
-        if (rcvBuf[queueIndex].type && iInOrder[queueIndex] < oldestOrder) {
-            oldestOrder = iInOrder[queueIndex];
+        if (rcvBuf[queueIndex].type && gInOrder[queueIndex] < oldestOrder) {
+            oldestOrder = gInOrder[queueIndex];
             selected = queueIndex;
         }
     }
@@ -902,46 +928,46 @@ void PollRemote(void) {
 
     if (!gRemoteOn)
         return;
-    if (iMPBaseType == MULTIPLAYER_BASE_MODEM)
+    if (gMapBaseType == MULTIPLAYER_BASE_MODEM)
         comm_wrt_task();
-    else if (iMPBaseType == MULTIPLAYER_BASE_NETWORK)
+    else if (gMapBaseType == MULTIPLAYER_BASE_NETWORK)
         nb_thr_ctl();
     if (gInNetSetup)
         return;
     numQueued = 0;
     newFull = 0;
     if (KBTickCount() - gLastHeartbeatSend > 5000) {
-        sndBuf.sender = giThisNetPos;
+        sndBuf.sender = gThisNetPos;
         sndBuf.type = REMOTE_MESSAGE_HEARTBEAT;
         sndBuf.payloadSize = 1;
-        sndBuf.command = (giCurPlayer << 4) + gCurHourGlassPhase;
+        sndBuf.command = (gCurPlayer << 4) + gCurHourGlassPhase;
         sndBuf.payload.data[0] = 1;
         SendRemoteData(
             reinterpret_cast<u8*>(&sndBuf), // API-forced: SendRemoteData takes wire bytes.
             NULL,
-            1 - giThisNetPos,
+            1 - gThisNetPos,
             REMOTE_MESSAGE_HEADER_SIZE + 1
         ); // API-forced: wire bytes.
         gLastHeartbeatSend = KBTickCount();
     }
     if (KBTickCount() > gLastHeartbeatReceive + 60000 && !gInTimeoutFail) {
         NormalDialog(localization::Tr("network.peer.wait"), NORMAL_DIALOG_TYPE_YES_NO);
-        if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
+        if (gWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
             gLastHeartbeatReceive = KBTickCount();
         } else {
             gInTimeoutFail = 1;
-            if (gbHumanPlayer[giCurPlayer]) {
-                if (giCurPlayer == giThisGamePos)
+            if (gHumanPlayer[gCurPlayer]) {
+                if (gCurPlayer == gThisGamePos)
                     newControl = 0;
                 else
                     newControl = 1;
             } else {
-                if (giThisGamePos == giHostGamePos)
+                if (gThisGamePos == gHostGamePos)
                     newControl = 0;
                 else
                     newControl = 1;
             }
-            ReceiveRemotePlayerExit(1 - giThisGamePos, newControl, 0, 1);
+            ReceiveRemotePlayerExit(1 - gThisGamePos, newControl, 0, 1);
         }
     }
     for (i = 0; i < REMOTE_QUEUE_CAPACITY; i++) {
@@ -958,7 +984,7 @@ void PollRemote(void) {
             reinterpret_cast<u8*>(&rcvBufIn), // API-forced: ReceiveRemoteData takes wire bytes.
             REMOTE_BROADCAST_PLAYER
         ); // API-forced: wire bytes.
-        if (result && rcvBufIn.sender != giThisNetPos) {
+        if (result && rcvBufIn.sender != gThisNetPos) {
             if (rcvBufIn.type == REMOTE_MESSAGE_CONFIRM) {
                 gLastConfirm = rcvBufIn.id;
                 goto done;
@@ -967,17 +993,17 @@ void PollRemote(void) {
                     gRemoteReady = 1;
                 gLastHeartbeatReceive = KBTickCount();
                 gHeartbeatSeen = 1;
-                if (giThisGamePos != giHostGamePos && giCurPlayer != giThisGamePos
-                    && gpAdvManager->m_active == 1 && rcvBufIn.command / 16 != giThisGamePos) {
-                    giCurPlayer = rcvBufIn.command / 16;
-                    gCurHourGlassPhase = rcvBufIn.command - giCurPlayer * 16;
+                if (gThisGamePos != gHostGamePos && gCurPlayer != gThisGamePos
+                    && gAdvManager->m_active == 1 && rcvBufIn.command / 16 != gThisGamePos) {
+                    gCurPlayer = rcvBufIn.command / 16;
+                    gCurHourGlassPhase = rcvBufIn.command - gCurPlayer * 16;
                 }
                 goto done;
             } else if (newFull) {
                 goto done;
             }
             if (rcvBufIn.type == REMOTE_MESSAGE_RELIABLE) {
-                sndBuf.sender = giThisNetPos;
+                sndBuf.sender = gThisNetPos;
                 sndBuf.id = rcvBufIn.id;
                 sndBuf.type = REMOTE_MESSAGE_CONFIRM;
                 sndBuf.payloadSize = 0;
@@ -993,15 +1019,15 @@ void PollRemote(void) {
                     goto nextIncoming;
             }
             for (i = 0; i < REMOTE_RECENT_ID_COUNT; i++) {
-                if (iLastIds[i] == rcvBufIn.id)
+                if (gLastIds[i] == rcvBufIn.id)
                     goto nextIncoming;
             }
             for (i = 0; i < REMOTE_QUEUE_CAPACITY; i++) {
                 if (!rcvBuf[i].type) {
-                    iInOrder[i] = gInOrderCtr++;
+                    gInOrder[i] = gInOrderCtr++;
                     memcpy(&rcvBuf[i], &rcvBufIn, REMOTE_MESSAGE_SIZE);
                     numQueued++;
-                    iLastIds[gCurLastID] = rcvBufIn.id;
+                    gLastIds[gCurLastID] = rcvBufIn.id;
                     gCurLastID = (gCurLastID + 1) % REMOTE_RECENT_ID_COUNT;
                     if (numQueued == REMOTE_QUEUE_CAPACITY)
                         goto done;
@@ -1038,7 +1064,7 @@ i32 TransmitAndWait(
     while (!complete) {
         if (clock + REMOTE_WAIT_TIMEOUT < KBTickCount()) {
             NormalDialog(localization::Tr("network.send.retry"), NORMAL_DIALOG_TYPE_YES_NO);
-            if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
+            if (gWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                 clock = KBTickCount();
             } else {
                 result = 0;
@@ -1065,28 +1091,10 @@ DATA(0x0049f04c)
 i32 gUnusedRemoteValue1 = -1;
 DATA(0x0049f050)
 i32 gUnusedRemoteValue2 = -1;
-DATA(0x004cc7f0)
-i32 gIDCtr = 0;
 DATA(0x0049f054)
 i32 gBaudBits = 8;
-DATA(0x004cc800)
-i32 packetlen = 0;
-DATA(0x004cc804)
-i32 inescape = 0;
-DATA(0x004cc808)
-i32 newpacket = 0;
-DATA(0x004cc80c)
-i32 gInOrderCtr = 0;
 DATA(0x0049f058)
 i32 gLastConfirm = -1;
-DATA(0x004cc810)
-i32 gCurLastID = 0;
-DATA(0x004cc814)
-u8 GameMode = 0;
-DATA(0x004cc815)
-u8 gPacketSequence = 0;
-DATA(0x004cc818)
-i32 gLastHeartbeatSend = 0;
 DATA(0x0049f05c)
 i32 gLastHeartbeatReceive = 1999999999;
 // Serial-link choices kept from the modem setup; no retail code reads them.
@@ -1097,12 +1105,6 @@ i32 gComIrqs[7] = {1, 2, 3, 4, 5, 7, 9};
 // No retail code reads this value.
 DATA(0x0049f098)
 i32 gUnusedRemoteValue3 = -1;
-DATA(0x004cc81c)
-i8 gInNetSetup = 0;
-DATA(0x004cc81e)
-i8 gInitNetGuestStatus = 0;
-DATA(0x004cc81f)
-i8 gWaitForHostStatus = 0;
 DATA(0x004cc7e8)
 char idstr[8];
 DATA(0x004cc6e8)
@@ -1110,7 +1112,7 @@ char rcvBufOut[REMOTE_MESSAGE_SIZE];
 DATA(0x004cb40c)
 i32 GUIMRc;
 DATA(0x004cb3e0)
-i32 iModemCommandPos;
+i32 gModemCommandPos;
 DATA(0x004cb3d8)
 i32 GUIMRrespptr;
 DATA(0x004ca28c)
@@ -1118,7 +1120,7 @@ i32 localstage;
 DATA(0x004ca1a0)
 char numbuf[40];
 DATA(0x004cc670)
-i32 iLastIds[REMOTE_RECENT_ID_COUNT];
+i32 gLastIds[REMOTE_RECENT_ID_COUNT];
 DATA(0x004cb510)
 i32 WFDCStage;
 DATA(0x004ca29c)
@@ -1128,13 +1130,13 @@ char PacketSend[256];
 DATA(0x004ca298)
 i32 stime;
 DATA(0x004cb3f0)
-i32 iInOrder[REMOTE_QUEUE_CAPACITY];
+i32 gInOrder[REMOTE_QUEUE_CAPACITY];
 DATA(0x004cb410)
 RemoteMessage sndBuf;
 DATA(0x004ca264)
-char cModemCommand[40];
+char gModemCommand[40];
 DATA(0x004ca294)
-i32 iLastDialPos;
+i32 gLastDialPos;
 DATA(0x004cb3dc)
 i32 remotestage;
 DATA(0x004cb3e4)
@@ -1148,7 +1150,7 @@ inque_t inque;
 DATA(0x004cb2d8)
 char packet[256];
 DATA(0x004cb3ec)
-i32 iLastActionTime;
+i32 gLastActionTime;
 DATA(0x004cb664)
 RemoteMessage rcvBufIn;
 DATA(0x004cb514)

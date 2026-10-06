@@ -25,7 +25,7 @@ highScoreManager::highScoreManager(void) {
         m_animationFrames[rank] = Random(0, HIGH_SCORE_ANIMATION_FRAME_COUNT - 1);
     m_showCampaignScores = 0;
     if (gShowHighScore)
-        m_showCampaignScores = !giHighScoreType;
+        m_showCampaignScores = !gHighScoreType;
 }
 
 // HoMM1 keeps an empty destructor; it only restores this class's vtable.
@@ -34,29 +34,29 @@ highScoreManager::~highScoreManager() {}
 
 VA(0x0043bdf3, 0x144)
 i16 highScoreManager::Open(i16 priority) {
-    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, NULL);
+    gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, NULL);
     sprintf(gText, "hiscore.bmp");
-    gpResourceManager->GetBackdrop(gText, gpWindowManager->m_screen);
+    gResourceManager->GetBackdrop(gText, gWindowManager->m_screen);
     m_window = new heroWindow(0, 0, "hiscore.bin");
     if (m_window == NULL)
         MemError();
     Update();
-    gpWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, 1);
+    gWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, 1);
     m_messageMask = BASE_MANAGER_ACCEPT_EXECUTIVE;
     m_priority = priority;
     m_active = 1;
     strcpy(m_name, "highScoreManager");
-    KBChangeMenu(hmnuDflt);
-    gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);
-    glTimers[HIGH_SCORE_TIMER_SLOT] = KBTickCount() + HIGH_SCORE_ANIMATION_DELAY;
+    KBChangeMenu(gDefaultMenu);
+    gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);
+    gTimers[HIGH_SCORE_TIMER_SLOT] = KBTickCount() + HIGH_SCORE_ANIMATION_DELAY;
     return static_cast<i16>(BASE_MANAGER_SUCCESS);
 }
 
 // The window owner is at +0x59, active at +0x2e.
 VA(0x0043bf37, 0x4e)
 void highScoreManager::Close(void) {
-    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, NULL);
-    gpWindowManager->RemoveWindow(m_window);
+    gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, NULL);
+    gWindowManager->RemoveWindow(m_window);
     delete m_window;
     m_active = 0;
 }
@@ -71,8 +71,8 @@ i16 highScoreManager::Main(struct tag_message& message) {
     if (gShowHighScore != 0)
         gShowHighScore = 0;
 
-    if (glTimers[HIGH_SCORE_TIMER_SLOT] < KBTickCount()) {
-        glTimers[HIGH_SCORE_TIMER_SLOT] = KBTickCount() + HIGH_SCORE_ANIMATION_DELAY;
+    if (gTimers[HIGH_SCORE_TIMER_SLOT] < KBTickCount()) {
+        gTimers[HIGH_SCORE_TIMER_SLOT] = KBTickCount() + HIGH_SCORE_ANIMATION_DELAY;
         for (rank = 0; rank < HIGH_SCORE_DISPLAY_ENTRY_COUNT; rank++) {
             m_animationFrames[rank] =
                 (m_animationFrames[rank] + 1) % HIGH_SCORE_ANIMATION_FRAME_COUNT;
@@ -84,7 +84,7 @@ i16 highScoreManager::Main(struct tag_message& message) {
             m_window->BroadcastMessage(windowMessage);
         }
         m_window->DrawWindow(0, HIGH_SCORE_ANIMATED_WIDGET_FIRST, HIGH_SCORE_ANIMATED_WIDGET_LAST);
-        gpWindowManager->UpdateScreenRegion(
+        gWindowManager->UpdateScreenRegion(
             HIGH_SCORE_UPDATE_X,
             HIGH_SCORE_UPDATE_Y,
             HIGH_SCORE_UPDATE_WIDTH,
@@ -154,7 +154,7 @@ void highScoreManager::Update(void) {
         noScoreFile = 1;
 
     sprintf(gText, "hiscore.bmp");
-    gpResourceManager->GetBackdrop(gText, gpWindowManager->m_screen);
+    gResourceManager->GetBackdrop(gText, gWindowManager->m_screen);
 
     hsMessage.type = MESSAGE_WIDGET;
     hsMessage.id = HIGH_SCORE_TITLE_WIDGET;
@@ -240,8 +240,8 @@ void highScoreManager::Update(void) {
         m_window->BroadcastMessage(hsMessage);
 
         if (gHighScoreRank == rank) {
-            if ((m_showCampaignScores && !giHighScoreType)
-                || (!m_showCampaignScores && giHighScoreType)) {
+            if ((m_showCampaignScores && !gHighScoreType)
+                || (!m_showCampaignScores && gHighScoreType)) {
                 hsMessage.command = WIDGET_COMMAND_SET_COLOR;
                 hsMessage.value = HIGH_SCORE_HIGHLIGHT_COLOR;
             } else {

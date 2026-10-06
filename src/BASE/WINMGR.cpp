@@ -33,13 +33,13 @@ VA(0x00469fb0, 0x19c)
 void CycleColors(void) {
     i8 savedColor[PALETTE_GRAPHICS_CHANNELS];
 
-    if (gpWindowManager == NULL)
+    if (gWindowManager == NULL)
         return;
-    if (gpBufferPalette == NULL)
+    if (gBufferPalette == NULL)
         return;
-    if (gpWindowManager->m_active != 1)
+    if (gWindowManager->m_active != 1)
         return;
-    if (gpWindowManager->m_updateFlags == 0)
+    if (gWindowManager->m_updateFlags == 0)
         return;
 
     memcpy(savedColor, gCyclePal + 0, PALETTE_GRAPHICS_CHANNELS);
@@ -83,11 +83,11 @@ void CycleColors(void) {
     memcpy(gCyclePal + 26 * PALETTE_GRAPHICS_CHANNELS, savedColor, PALETTE_GRAPHICS_CHANNELS);
 
     memcpy(
-        gpBufferPalette->m_data + PALETTE_CYCLE_FIRST * PALETTE_GRAPHICS_CHANNELS,
+        gBufferPalette->m_data + PALETTE_CYCLE_FIRST * PALETTE_GRAPHICS_CHANNELS,
         gCyclePal,
         PALETTE_CYCLE_BYTES
     );
-    UpdatePalette(gpBufferPalette->m_data);
+    UpdatePalette(gBufferPalette->m_data);
 }
 
 VA(0x0046a14c, 0x9f)
@@ -287,15 +287,15 @@ i16 heroWindowManager::DoDialog(heroWindow* window, i16 (*handler)(tag_message&)
     if (window != NULL)
         AddWindow(window, WINDOW_Z_ORDER_APPEND, 1);
     if (fade != 0)
-        gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, gPalette);
-    gpInputManager->Flush();
+        gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, gPalette);
+    gInputManager->Flush();
     m_dialogResult = WINDOW_MANAGER_NO_DIALOG_RESULT;
     done = 0;
     while (done == 0) {
         PollSound();
         Process1WindowsMessage();
-        message = gpInputManager->GetEvent();
-        gpMouseManager->Main(message);
+        message = gInputManager->GetEvent();
+        gMouseManager->Main(message);
         if (window != NULL) {
             result = window->BroadcastMessage(message);
             if (result == MESSAGE_DISPATCH_FORWARD && message.type == MESSAGE_WIDGET
@@ -312,7 +312,7 @@ i16 heroWindowManager::DoDialog(heroWindow* window, i16 (*handler)(tag_message&)
     if (done != 0) {
         if (window != NULL)
             RemoveWindow(window);
-        gpInputManager->Flush();
+        gInputManager->Flush();
     }
     gInDialog = 0;
     gDialogNestCount--;
@@ -329,7 +329,7 @@ void heroWindowManager::UpdateScreen(void) {
     PollSound();
     BitmapToScreen(m_screen);
     PollSound();
-    gpMouseManager->ShowColorPointer();
+    gMouseManager->ShowColorPointer();
 }
 
 // Hides the software pointer only when it overlaps the updated region.
@@ -339,14 +339,14 @@ void heroWindowManager::UpdateScreenRegion(i16 x, i16 y, i16 width, i16 height) 
     i16 pointerInside;
     i16 mousePosX, mouseY;
 
-    left = x - gpMouseManager->m_savedUnderlying->m_width;
-    topVal = y - gpMouseManager->m_savedUnderlying->m_height;
+    left = x - gMouseManager->m_savedUnderlying->m_width;
+    topVal = y - gMouseManager->m_savedUnderlying->m_height;
     right = x + width;
     curBottom = y + height;
-    mousePosX = gpMouseManager->m_mouseX;
-    mouseY = gpMouseManager->m_mouseY;
+    mousePosX = gMouseManager->m_mouseX;
+    mouseY = gMouseManager->m_mouseY;
     pointerInside = 0;
-    if (gpMouseManager->IsVis()) {
+    if (gMouseManager->IsVis()) {
         if (mousePosX < left || mousePosX > right)
             pointerInside = 0;
         else if (mouseY < topVal || mouseY > curBottom)
@@ -356,10 +356,10 @@ void heroWindowManager::UpdateScreenRegion(i16 x, i16 y, i16 width, i16 height) 
     }
     PollSound();
     if (pointerInside)
-        gpMouseManager->HideColorPointer();
+        gMouseManager->HideColorPointer();
     BlitBitmapToScreen(m_screen, x, y, width, height, x, y);
     if (pointerInside)
-        gpMouseManager->ShowColorPointer();
+        gMouseManager->ShowColorPointer();
     PollSound();
 }
 
@@ -388,11 +388,11 @@ void heroWindowManager::FadeScreen(i16 direction, i16 increment, palette* curren
             i8 saved = m_updateFlags;
             m_updateFlags = 0;
             FadeIn(increment);
-            m_updateFlags = saved | gWindowFadeSavedUpdate;
+            m_updateFlags = saved | gFadeSavedUpdate;
             break;
         }
         case WINDOW_FADE_OUT:
-            gWindowFadeSavedUpdate = m_updateFlags;
+            gFadeSavedUpdate = m_updateFlags;
             m_updateFlags = 0;
             FadeOut(increment);
             break;
@@ -407,7 +407,7 @@ void heroWindowManager::ScreenShot(void) {
     GrabScreenBitmap(m_screen, 0, 0);
     m_screen->Write(filename);
     m_screenshotIndex++;
-    gpInputManager->Flush();
+    gInputManager->Flush();
 }
 
 // Descriptive name: this retail hook is empty and is called on Open failure
@@ -417,12 +417,12 @@ void heroWindowManager::Cleanup(void) {}
 
 VA(0x0046abe6, 0xf3)
 void heroWindowManager::SaveFizzleSource(i16 x, i16 y, i16 width, i16 height) {
-    if (bShowIt == 0)
+    if (gShowIt == 0)
         return;
     if (m_fizzleSource != NULL)
         delete m_fizzleSource;
     m_fizzleSource = new bitmap(BITMAP_TYPE_NONE, width, height);
-    BlitBitmap(gpWindowManager->m_screen, x, y, width, height, m_fizzleSource, 0, 0);
+    BlitBitmap(gWindowManager->m_screen, x, y, width, height, m_fizzleSource, 0, 0);
 }
 
 // One colour pair's interpolated channels in CreateFizzleTables' flat tables.
@@ -455,7 +455,7 @@ void CreateFizzleTables(void) {
     float* blend;
 
     // byte-evidenced: retail reads the i8 palette channels zero-extended, as RGB rows.
-    paletteColors = reinterpret_cast<u8(*)[PALETTE_GRAPHICS_CHANNELS]>(gpBufferPalette->m_data);
+    paletteColors = reinterpret_cast<u8(*)[PALETTE_GRAPHICS_CHANNELS]>(gBufferPalette->m_data);
     rgbCube = static_cast<u8(*)[PALETTE_CUBE_LEVELS][PALETTE_CUBE_LEVELS]>(
         malloc(PALETTE_CUBE_LEVELS * PALETTE_CUBE_LEVELS * PALETTE_CUBE_LEVELS)
     );
@@ -522,22 +522,22 @@ void heroWindowManager::FizzleForward(i16 x, i16 y, i16 width, i16 height, i32 d
     i32 sourceX;
     i8* ccycleBuf;
     i32 saveFlags;
-    if (bShowIt == 0)
+    if (gShowIt == 0)
         return;
     gEnlargeScreenBlit = 0;
     tickStart = 0;
-    saveFlags = gpWindowManager->m_updateFlags;
-    gpWindowManager->m_updateFlags = 0;
+    saveFlags = gWindowManager->m_updateFlags;
+    gWindowManager->m_updateFlags = 0;
     if (delay == FIZZLE_USE_DEFAULT_DELAY)
         delay = FIZZLE_DEFAULT_DELAY;
     m_fizzleWork = new bitmap(BITMAP_TYPE_NONE, width, height);
     ccycleBuf = static_cast<i8*>(malloc(FIZZLE_CYCLE_TABLE_BYTES));
-    BlitBitmap(gpWindowManager->m_screen, x, y, width, height, m_fizzleWork, 0, 0);
+    BlitBitmap(gWindowManager->m_screen, x, y, width, height, m_fizzleWork, 0, 0);
 
     for (frame = 0; frame < CYCLE_FRAME_COUNT; frame++) {
         sprintf(gText, "CCYCLE%02d.BIN", frame);
-        gpResourceManager->PointToFile(gpResourceManager->MakeId(gText));
-        gpResourceManager->ReadBlock(ccycleBuf, FIZZLE_CYCLE_TABLE_BYTES);
+        gResourceManager->PointToFile(gResourceManager->MakeId(gText));
+        gResourceManager->ReadBlock(ccycleBuf, FIZZLE_CYCLE_TABLE_BYTES);
         for (sourceY = y; sourceY < y + height; sourceY++) {
             savePixel = m_fizzleSource->m_pixels + (sourceY - y) * m_fizzleSource->m_width;
             workPixel = m_fizzleWork->m_pixels + (sourceY - y) * width;
@@ -560,7 +560,7 @@ void heroWindowManager::FizzleForward(i16 x, i16 y, i16 width, i16 height, i32 d
     DelayTilMilli(tickStart + delay);
     BlitBitmapToScreen(m_fizzleWork, 0, 0, width, height, x, y);
     gEnlargeScreenBlit = 1;
-    gpWindowManager->m_updateFlags = saveFlags;
+    gWindowManager->m_updateFlags = saveFlags;
     delete m_fizzleSource;
     m_fizzleSource = NULL;
     delete m_fizzleWork;
@@ -578,6 +578,6 @@ void heroWindowManager::ReleaseFizzleSource(void) {
 // Window-manager data, initialized from retail .data (0x004a0870..) and
 // zero-filled storage (0x004cac20..).
 DATA(0x004ce110)
-i8 gWindowFadeSavedUpdate;
+i8 gFadeSavedUpdate;
 DATA(0x004ce114)
 i8 gCyclePal[PALETTE_CYCLE_BYTES];
