@@ -93,4 +93,8 @@ struct tag_message {
 #define IS_WIDGET_SELECTION_NOTIFICATION(command)                                                  \
     ((command) == WIDGET_NOTIFY_SELECT || (command) == WIDGET_NOTIFY_RIGHT_CLICK)
 
+// Either mouse button was released: the drag and press loops wait for it.
+#define IS_BUTTON_RELEASE_MESSAGE(type)                                                            \
+    ((type) == MESSAGE_LEFT_BUTTON_UP || (type) == MESSAGE_RIGHT_BUTTON_UP)
+
 #endif

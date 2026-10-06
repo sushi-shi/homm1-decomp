@@ -2167,7 +2167,7 @@ i8 WaitForOtherPlayer(void) {
     i32 result = 0;
     RemoteMessage* received;
     PollSound();
-    received = reinterpret_cast<RemoteMessage*>(GetRemoteData(1)); // API-forced: char* record.
+    received = GetRemoteData(1);
     if (received && received->type == REMOTE_MESSAGE_RELIABLE) {
         switch (received->command) {
             case BOX_REMOTE_SETUP:
@@ -2185,7 +2185,7 @@ i8 WaitForOtherPlayer(void) {
 
 VA(0x004411a2, 0x65a)
 void PopNetBox(char* notice) {
-    char* dataObj;
+    RemoteMessage* dataObj;
     i32 myBaseId;
     i8 savedShowIt;
     i32 heightValue;
@@ -2247,18 +2247,13 @@ void PopNetBox(char* notice) {
         PollSound();
         dataObj = GetRemoteData(0);
         if (dataObj) {
-            // API-forced: GetRemoteData returns queue records as char*.
-            if (reinterpret_cast<RemoteMessage*>(dataObj)->type != REMOTE_MESSAGE_RELIABLE) {
+            if (dataObj->type != REMOTE_MESSAGE_RELIABLE) {
                 dataObj = GetRemoteData(1);
             } else {
-                switch (
-                    reinterpret_cast<RemoteMessage*>(dataObj)->command
-                ) { // API-forced: char* record.
+                switch (dataObj->command) {
                     case REMOTE_COMMAND_CHAT:
                         dataObj = GetRemoteData(1);
-                        AddNetBoxLine(
-                            reinterpret_cast<RemoteMessage*>(dataObj)->payload.data
-                        ); // API-forced: char* record.
+                        AddNetBoxLine(dataObj->payload.data);
                         redrawText = 1;
                         if (noticeStamp)
                             noticeStamp = KBTickCount();

@@ -132,8 +132,7 @@ i16 button::Main(tag_message& message) {
                 if (m_kind != WIDGET_KIND_TRACK_PRESS)
                     return Select(message);
                 Select(message);
-                while (message.type != MESSAGE_LEFT_BUTTON_UP
-                       && message.type != MESSAGE_RIGHT_BUTTON_UP) {
+                while (!IS_BUTTON_RELEASE_MESSAGE(message.type)) {
                     gMouseManager->Main(message);
                     if (message.type == MESSAGE_MOUSE_MOVE) {
                         x = message.x - m_owner->m_posX;

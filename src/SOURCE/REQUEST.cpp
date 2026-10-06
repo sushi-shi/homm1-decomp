@@ -178,8 +178,8 @@ fileRequester::fileRequester(
                 FileError(fullFileName);
             READ_FILE_VALUE(file, headerData);
             if (headerData.id == MAP_HEADER_ID) {
-                strcpy(m_mapNames[entryIndex].text, headerData.name);
-                strcpy(m_mapInfo[entryIndex].description, headerData.description);
+                strcpy(m_mapNames[entryIndex].text, headerData.name[0]);
+                strcpy(m_mapInfo[entryIndex].description, headerData.description[0]);
                 m_mapInfo[entryIndex].difficulty = headerData.difficulty;
                 m_mapInfo[entryIndex].size = headerData.size;
             } else {
@@ -590,7 +590,7 @@ void fileRequester::DoKnob(void) {
     grabOffset = grabPointerY - m_scrollKnob->m_y;
     gInputManager->Flush();
     event = gInputManager->GetEvent();
-    while (event.type != MESSAGE_LEFT_BUTTON_UP && event.type != MESSAGE_RIGHT_BUTTON_UP) {
+    while (!IS_BUTTON_RELEASE_MESSAGE(event.type)) {
         if (event.type == MESSAGE_MOUSE_MOVE) {
             if (event.y < grabOffset + FILE_REQUESTER_GUTTER_TOP)
                 event.y = grabOffset + FILE_REQUESTER_GUTTER_TOP;
@@ -599,7 +599,7 @@ void fileRequester::DoKnob(void) {
             gMouseManager->Main(event);
             m_scrollKnob->m_y = event.y - grabOffset;
             if (m_fileCount > FILE_REQUESTER_VISIBLE_ROWS) {
-                topRow = static_cast<i16>((m_scrollKnob->m_y - FILE_REQUESTER_GUTTER_TOP) / scale);
+                topRow = (m_scrollKnob->m_y - FILE_REQUESTER_GUTTER_TOP) / scale;
                 if (topRow != lastTop) {
                     if (topRow > m_fileCount - FILE_REQUESTER_VISIBLE_ROWS)
                         topRow = m_fileCount - FILE_REQUESTER_VISIBLE_ROWS;

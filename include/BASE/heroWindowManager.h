@@ -45,7 +45,6 @@ public:
     virtual i16 Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
     i16 UpdateHoverWindow(i16 x, i16 y);
-    i16 ConvertToHover(struct tag_message& message);
     i16 BroadcastMessage(i16 type, i16 command, i16 widgetId, i16 value);
     void AddWindow(class heroWindow* window, i16 zOrder, i8 updateScreen);
     void RemoveWindow(class heroWindow* window);

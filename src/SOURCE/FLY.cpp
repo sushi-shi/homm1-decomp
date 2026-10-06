@@ -22,11 +22,11 @@
 // does not fit facing forward moves its hex to the other side.
 VA(0x0042a6a0, 0x200)
 i16 army::CanFit(i16* hex) {
-    hexcell* mapCell;
+    hexcell* adjacentCell;
     i16 candidateHex;
 
     candidateHex = *hex;
-    mapCell = NULL;
+    adjacentCell = NULL;
     if (!ValidHex(candidateHex) || candidateHex % COMBAT_GRID_COLUMNS == 0
         || candidateHex % COMBAT_GRID_COLUMNS == COMBAT_GRID_LAST_COLUMN)
         return 0;
@@ -40,15 +40,15 @@ i16 army::CanFit(i16* hex) {
                                           : static_cast<i8>(COMBAT_DIRECTION_WEST)
         );
         if (ValidHex(candidateHex))
-            mapCell = &gCombatManager->m_hexCells[candidateHex];
+            adjacentCell = &gCombatManager->m_hexCells[candidateHex];
         if (ValidHex(candidateHex)
-            && (mapCell->m_occupantSide == COMBAT_SIDE_NONE
+            && (adjacentCell->m_occupantSide == COMBAT_SIDE_NONE
                 || HEX_HAS_OCCUPANT(
-                    *mapCell,
+                    *adjacentCell,
                     gCombatManager->m_currentSide,
                     gCombatManager->m_currentArmyIndex
                 ))
-            && mapCell->m_obstacleIndex == COMBAT_OBSTACLE_NONE) {
+            && adjacentCell->m_obstacleIndex == COMBAT_OBSTACLE_NONE) {
             return 1;
         } else {
             candidateHex = GetAdjacentCellIndex(
@@ -57,16 +57,16 @@ i16 army::CanFit(i16* hex) {
                                               : static_cast<i8>(COMBAT_DIRECTION_EAST)
             );
             if (ValidHex(candidateHex))
-                mapCell = &gCombatManager->m_hexCells[candidateHex];
+                adjacentCell = &gCombatManager->m_hexCells[candidateHex];
             else
                 return 0;
-            if ((mapCell->m_occupantSide == COMBAT_SIDE_NONE
+            if ((adjacentCell->m_occupantSide == COMBAT_SIDE_NONE
                  || HEX_HAS_OCCUPANT(
-                     *mapCell,
+                     *adjacentCell,
                      gCombatManager->m_currentSide,
                      gCombatManager->m_currentArmyIndex
                  ))
-                && mapCell->m_obstacleIndex == COMBAT_OBSTACLE_NONE) {
+                && adjacentCell->m_obstacleIndex == COMBAT_OBSTACLE_NONE) {
                 *hex = candidateHex;
                 return 1;
             } else {
@@ -78,22 +78,22 @@ i16 army::CanFit(i16* hex) {
     }
 }
 
-// A flag takes the destination as the enemy hex, and CanFit moves the
+// A non-zero path mode takes the destination as the enemy hex, and CanFit moves the
 // landing hex in place.
 VA(0x0042a8a0, 0x3f0)
-i16 army::ValidFlight(i16 destination, i8 useDestination) {
-    i16 directionMask;
+i16 army::ValidFlight(i16 destination, i8 pathMode) {
+    i16 enemyHex;
     i16 heldTemp;
-    i16 hitHex;
-    i16 attackDirectionsNum;
-    i16 nextHexValue;
+    i16 attackHex;
+    i16 attackDirectionsMask;
+    i16 adjacentHex;
     i16 k;
-    i8 orient;
+    i8 landingDirection;
     i16 m;
-    army* oldOpponent;
-    i16 destHexNo;
+    army* enemyStack;
+    i16 directionMask;
     i16 n;
-    i8 curAttackDirection;
+    i8 bestAttackDirection;
 
     if (!ValidHex(destination))
         return 0;
@@ -106,69 +106,69 @@ i16 army::ValidFlight(i16 destination, i8 useDestination) {
             return 0;
         }
     }
-    oldOpponent = &gCombatManager->m_armies[m_targetSide][m_targetIndex];
-    if (useDestination)
-        destHexNo = destination;
+    enemyStack = &gCombatManager->m_armies[m_targetSide][m_targetIndex];
+    if (pathMode)
+        enemyHex = destination;
     else
-        destHexNo = oldOpponent->m_hex;
-    if (!ValidHex(destHexNo))
+        enemyHex = enemyStack->m_hex;
+    if (!ValidHex(enemyHex))
         return 0;
-    attackDirectionsNum = GetAttackMask(m_hex, ARMY_ATTACK_TARGET_ASSIGNED, ARMY_HEX_INVALID);
-    while (attackDirectionsNum != COMBAT_ALL_DIRECTIONS_BLOCKED) {
-        curAttackDirection = GetBestDirection(m_hex, destHexNo, attackDirectionsNum);
+    attackDirectionsMask = GetAttackMask(m_hex, ARMY_ATTACK_TARGET_ASSIGNED, ARMY_HEX_INVALID);
+    while (attackDirectionsMask != COMBAT_ALL_DIRECTIONS_BLOCKED) {
+        bestAttackDirection = GetBestDirection(m_hex, enemyHex, attackDirectionsMask);
         if (ValidAttack(
                 m_hex,
-                curAttackDirection,
+                bestAttackDirection,
                 ARMY_ATTACK_TARGET_ASSIGNED,
                 ARMY_HEX_INVALID,
-                &hitHex
+                &attackHex
             )) {
-            m_attackDirection = curAttackDirection;
+            m_attackDirection = bestAttackDirection;
             m_moveTargetHex = m_hex;
             return 1;
         } else {
-            attackDirectionsNum |= 1 << curAttackDirection;
+            attackDirectionsMask |= 1 << bestAttackDirection;
         }
     }
     directionMask = 0;
-    if ((oldOpponent->m_stats.attributes & MONSTER_FLAGS_WIDE) && !useDestination) {
-        destHexNo += oldOpponent->m_facing == ARMY_FACING_RIGHT ? 1 : -1;
-        directionMask = oldOpponent->m_facing == ARMY_FACING_RIGHT ? COMBAT_DIRECTION_BIT_WEST
-                                                                   : COMBAT_DIRECTION_BIT_EAST;
+    if ((enemyStack->m_stats.attributes & MONSTER_FLAGS_WIDE) && !pathMode) {
+        enemyHex += enemyStack->m_facing == ARMY_FACING_RIGHT ? 1 : -1;
+        directionMask = enemyStack->m_facing == ARMY_FACING_RIGHT ? COMBAT_DIRECTION_BIT_WEST
+                                                                  : COMBAT_DIRECTION_BIT_EAST;
     }
     while (directionMask != (1 << COMBAT_DIRECTION_ADJACENT_COUNT) - 1) {
-        orient = GetBestDirection(destHexNo, m_hex, directionMask);
-        nextHexValue = GetAdjacentCellIndex(destHexNo, orient);
-        if (ValidHex(nextHexValue) && CanFit(&nextHexValue)) {
-            m_moveTargetHex = nextHexValue;
+        landingDirection = GetBestDirection(enemyHex, m_hex, directionMask);
+        adjacentHex = GetAdjacentCellIndex(enemyHex, landingDirection);
+        if (ValidHex(adjacentHex) && CanFit(&adjacentHex)) {
+            m_moveTargetHex = adjacentHex;
             if (!(m_stats.attributes & MONSTER_FLAGS_WIDE)) {
-                m_attackDirection = OppositeDirection(orient);
+                m_attackDirection = OppositeDirection(landingDirection);
             } else {
-                attackDirectionsNum =
+                attackDirectionsMask =
                     ~GetAttackMask(m_moveTargetHex, ARMY_ATTACK_TARGET_ASSIGNED, ARMY_HEX_INVALID);
                 for (n = 0; n < COMBAT_DIRECTION_COUNT; n++) {
-                    if (attackDirectionsNum & (1 << n))
+                    if (attackDirectionsMask & (1 << n))
                         m_attackDirection = n;
                 }
             }
             return 1;
         } else {
-            directionMask |= 1 << orient;
+            directionMask |= 1 << landingDirection;
         }
     }
-    if ((oldOpponent->m_stats.attributes & MONSTER_FLAGS_WIDE) && !useDestination) {
-        destHexNo += oldOpponent->m_facing == ARMY_FACING_RIGHT ? -1 : 1;
-        directionMask = oldOpponent->m_facing == ARMY_FACING_RIGHT ? COMBAT_DIRECTION_BIT_EAST
-                                                                   : COMBAT_DIRECTION_BIT_WEST;
+    if ((enemyStack->m_stats.attributes & MONSTER_FLAGS_WIDE) && !pathMode) {
+        enemyHex += enemyStack->m_facing == ARMY_FACING_RIGHT ? -1 : 1;
+        directionMask = enemyStack->m_facing == ARMY_FACING_RIGHT ? COMBAT_DIRECTION_BIT_EAST
+                                                                  : COMBAT_DIRECTION_BIT_WEST;
         while (directionMask != (1 << COMBAT_DIRECTION_ADJACENT_COUNT) - 1) {
-            orient = GetBestDirection(destHexNo, m_hex, directionMask);
-            nextHexValue = GetAdjacentCellIndex(destHexNo, orient);
-            if (ValidHex(nextHexValue) && CanFit(&nextHexValue)) {
-                m_moveTargetHex = nextHexValue;
-                m_attackDirection = GetBestDirection(m_moveTargetHex, destHexNo, 0);
+            landingDirection = GetBestDirection(enemyHex, m_hex, directionMask);
+            adjacentHex = GetAdjacentCellIndex(enemyHex, landingDirection);
+            if (ValidHex(adjacentHex) && CanFit(&adjacentHex)) {
+                m_moveTargetHex = adjacentHex;
+                m_attackDirection = GetBestDirection(m_moveTargetHex, enemyHex, 0);
                 return 1;
             } else {
-                directionMask |= 1 << orient;
+                directionMask |= 1 << landingDirection;
             }
         }
     }
@@ -186,12 +186,12 @@ i16 army::FlyTo(void) {
 // grid axis, the rounding remainder split over the two ends.
 VA(0x0042acac, 0x70c)
 i16 army::FlyTo(i16 destination) {
+    i32 boxRightX;
     i8 colFrom;
     i8 flyBackwards;
-    i32 oldX;
-    i32 oldY;
+    i32 boxTop;
     i8 curRow;
-    i32 oldMaxExtentX;
+    i32 boxLeft;
     i16 gainX;
     i16 inFlightX;
     i16 gainY;
@@ -212,7 +212,7 @@ i16 army::FlyTo(i16 destination) {
     i16 startY;
     i16 landPosX;
     i16 y2;
-    i32 maxY;
+    i32 boxBottom;
 
     if (!ValidHex(destination))
         return 0;
@@ -286,15 +286,15 @@ i16 army::FlyTo(i16 destination) {
                 gMaxExtentX - gMinExtentX + 1,
                 gMaxExtentY - gMinExtentY + 1
             );
-            oldX = gMinExtentX;
-            oldY = gMinExtentY;
-            oldMaxExtentX = gMaxExtentX;
-            maxY = gMaxExtentY;
+            boxLeft = gMinExtentX;
+            boxTop = gMinExtentY;
+            boxRightX = gMaxExtentX;
+            boxBottom = gMaxExtentY;
         } else {
-            oldX = 0;
-            oldY = 0;
-            oldMaxExtentX = LOGICAL_SCREEN_WIDTH - 1;
-            maxY = COMBAT_VIEW_HEIGHT - 1;
+            boxLeft = 0;
+            boxTop = 0;
+            boxRightX = LOGICAL_SCREEN_WIDTH - 1;
+            boxBottom = COMBAT_VIEW_HEIGHT - 1;
         }
         gMinExtentY = COMBAT_EXTENT_MIN_START;
         gMinExtentX = gMinExtentY;
@@ -313,17 +313,17 @@ i16 army::FlyTo(i16 destination) {
             gMaxExtentX = LOGICAL_SCREEN_WIDTH - 1;
         if (gMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
             gMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
-        if (gMinExtentX < oldX)
-            oldX = gMinExtentX;
-        if (gMinExtentY < oldY)
-            oldY = gMinExtentY;
-        if (gMaxExtentX > oldMaxExtentX)
-            oldMaxExtentX = gMaxExtentX;
-        if (gMaxExtentY > maxY)
-            maxY = gMaxExtentY;
+        if (gMinExtentX < boxLeft)
+            boxLeft = gMinExtentX;
+        if (gMinExtentY < boxTop)
+            boxTop = gMinExtentY;
+        if (gMaxExtentX > boxRightX)
+            boxRightX = gMaxExtentX;
+        if (gMaxExtentY > boxBottom)
+            boxBottom = gMaxExtentY;
         DelayTil(&gTimers[COMBAT_FRAME_TIMER_SLOT]);
         gTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
-        UPDATE_INCLUSIVE_REGION(oldX, oldY, oldMaxExtentX, maxY);
+        UPDATE_INCLUSIVE_REGION(boxLeft, boxTop, boxRightX, boxBottom);
         m_animationFrame += flyBackwards == 1 ? -1 : 1;
         if (m_animationFrame > 5)
             m_animationFrame = 0;

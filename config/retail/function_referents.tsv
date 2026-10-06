@@ -76,7 +76,7 @@ rva	name	provenance
 0x00010aad	?MouseInScrollZone@advManager@@QAEHXZ	Buka input-handler instruction/CFG review: 0x548d
 0x00010b26	?SetInitialMapOrigin@advManager@@QAEXXZ	Buka scroll/network/border instruction/CFG/EH review: complete scroll/network/border review
 0x00010d6e	?LoadRemote@advManager@@QAEXXZ	Buka scroll/network/border instruction/CFG/EH review: complete scroll/network/border review, 0x10f4c
-0x00010e9f	?CheckHandleNet@advManager@@QAEPADXZ	Buka Main complete instruction/CFG correspondence: 0x2a34
+0x00010e9f	?CheckHandleNet@advManager@@QAEPAURemoteMessage@@XZ	Buka Main complete instruction/CFG correspondence: 0x2a34
 0x00010fda	?CheckHandleNetPlayerWait@advManager@@QAEFAAUtag_message@@C@Z	Buka Main complete instruction/CFG correspondence: 0x2a54
 0x0001107c	?TrimLoopingSounds@advManager@@QAEXH@Z	Buka control-panel instruction/CFG/EH review: 0xd2ff
 0x0001121e	?DisableButtons@advManager@@QAEXXZ	Buka control-panel instruction/CFG/EH review: 0xd7fa
@@ -213,7 +213,7 @@ rva	name	provenance
 0x00023707	?CombatMessage@combatManager@@QAEXPADH@Z	Buka combat message/hydra review: 0x158d6
 0x000237b4	?CombatMessage@combatManager@@QAEXF@Z	Buka TU-order, instruction/call or constructor-vtable identity review (identity only, strict body/reference comparison unchanged).
 0x00023a3a	?ResetLimitCreature@combatManager@@QAEXXZ	Buka combat message/hydra review: 0x15500, 0x15906
-0x00023acc	?SetGridMode@combatManager@@QAEXC@Z	Buka army drawing/movement instruction and CFG review: 0x143d4, 0x1407c
+0x00023acc	?SetDrawRightToLeft@combatManager@@QAEXC@Z	Buka army drawing/movement instruction and CFG review: 0x143d4, 0x1407c
 0x00023ae5	?UpdateCombatArea@combatManager@@QAEXXZ	Buka TU-order, instruction/call or constructor-vtable identity review (identity only, strict body/reference comparison unchanged).
 0x00023bab	?DrawBackground@combatManager@@QAEXXZ	Buka TU-order, instruction/call or constructor-vtable identity review (identity only, strict body/reference comparison unchanged).
 0x00023d6c	?DrawFrame@combatManager@@QAEXC@Z	Buka army drawing/movement instruction and CFG review: 0x14024, 0x14435, 0x14654
@@ -239,10 +239,10 @@ rva	name	provenance
 0x00027cdd	?DoAIEvent@advManager@@QAEXPAVmapCell@@PAVhero@@HH@Z	Buka TU-order, instruction/call or constructor-vtable identity review (identity only, strict body/reference comparison unchanged).
 0x00028ce2	?PlayerMonsterInteract@advManager@@QAEXPAVmapCell@@0PAVhero@@PACHHCHH@Z	Buka TU-order, instruction/call or constructor-vtable identity review (identity only, strict body/reference comparison unchanged).
 0x00028e5f	?ComputerMonsterInteract@advManager@@QAEXPAVmapCell@@PAVhero@@PAC@Z	Buka TU-order, instruction/call or constructor-vtable identity review (identity only, strict body/reference comparison unchanged).
-0x00028f98	?DoNetCombat@advManager@@QAEHPAD@Z	Buka scroll/network/border instruction/CFG/EH review: 0x10f7b
+0x00028f98	?DoNetCombat@advManager@@QAEHPAURemoteMessage@@@Z	Buka scroll/network/border instruction/CFG/EH review: 0x10f7b
 0x00029107	?DoCombat@advManager@@QAEHHHPAVhero@@PAVarmyGroup@@PAVtown@@01HHHC@Z	Buka TU-order, instruction/call or constructor-vtable identity review (identity only, strict body/reference comparison unchanged).
 0x0002968b	?SendHeroTownData@advManager@@QAEXHHPAVhero@@PAVarmyGroup@@PAVtown@@01HHHCCCC@Z	Complete instruction body, reference-site shape and injective stack-byte correspondence
-0x0002990d	?ReceiveHeroTownData@advManager@@QAEXPADPAH11PAPAVhero@@PAPAVarmyGroup@@PAPAVtown@@23111PAC55@Z	Buka TU-order, instruction/call or constructor-vtable identity review (identity only, strict body/reference comparison unchanged).
+0x0002990d	?ReceiveHeroTownData@advManager@@QAEXPAURemoteMessage@@PAH11PAPAVhero@@PAPAVarmyGroup@@PAPAVtown@@23111PAC55@Z	Buka TU-order, instruction/call or constructor-vtable identity review (identity only, strict body/reference comparison unchanged).
 0x00029c60	??0searchArray@@QAE@XZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency
 0x00029c70	?Clear@searchArray@@QAEXXZ	Buka exact pathfinding instruction correspondence: 0x55e6a, 0x56175
 0x00029ca0	?QuickDistance@searchArray@@QAEFFFFF@Z	Buka combat-AI instruction/CFG/EH review: 0x12a24
@@ -251,7 +251,7 @@ rva	name	provenance
 0x00029da0	?FindCombatPath@searchArray@@QAEFFFPAVarmy@@C@Z	Buka combat-AI instruction/CFG/EH review: 0x13030, 0x131c6, 0x13238
 0x0002a070	?PushCombatPoint@searchArray@@QAEXFFGG@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency
 0x0002a1a0	?PushPoint@searchArray@@QAEXFFGGGCCCCCCC@Z	Buka exact pathfinding instruction correspondence: 0x55e95, 0x55fbf, 0x562b7, 0x567d7, 0x56a97
-0x0002a440	?TestPossibleDirections@searchArray@@QAEXFFQAC0FH@Z	Buka exact pathfinding instruction correspondence: 0x55f47, 0x565ef
+0x0002a440	?TestPossibleDirections@searchArray@@QAEXFFQACQAEFH@Z	Buka exact pathfinding instruction correspondence: 0x55f47, 0x565ef
 0x0002a6a0	?CanFit@army@@QAEFPAF@Z	Buka TU-order, instruction/call or constructor-vtable identity review (identity only, strict body/reference comparison unchanged).
 0x0002a8a0	?ValidFlight@army@@QAEFFC@Z	Buka army effects/movement complete instruction and CFG review: 0x1806b, 0x18249, 0x18429
 0x0002ac90	?FlyTo@army@@QAEFXZ	Buka TU-order, instruction/call or constructor-vtable identity review (identity only, strict body/reference comparison unchanged).
@@ -576,10 +576,10 @@ rva	name	provenance
 0x00051b2f	?RemoteMain@@YAXH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency
 0x00051d50	?UnloadRemoteDriver@@YAXF@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency
 0x00051d83	?calc_crc@@YAXPAGPAEH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency
-0x00051e2e	?EncodePacket@@YAHPAECCH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency
-0x00051ea9	?DecodePacket@@YAHPAEH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency
-0x00051f5b	?SendRemoteData@@YAHPAE0HH@Z	Buka TU-order, instruction/call or constructor-vtable identity review (identity only, strict body/reference comparison unchanged).
-0x0005206a	?ReceiveRemoteData@@YAHPAE0H@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency
+0x00051e2e	?EncodePacket@@YAHPAURemoteMessage@@CCH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency
+0x00051ea9	?DecodePacket@@YAHPAURemoteMessage@@H@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency
+0x00051f5b	?SendRemoteData@@YAHPAURemoteMessage@@PAEHH@Z	Buka TU-order, instruction/call or constructor-vtable identity review (identity only, strict body/reference comparison unchanged).
+0x0005206a	?ReceiveRemoteData@@YAHPAEPAURemoteMessage@@H@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency
 0x00052137	?InitNetHost@@YACXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency
 0x000522a4	?InitNetGuest@@YACXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency
 0x0005247d	?WaitForHost@@YACXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency
@@ -600,10 +600,10 @@ rva	name	provenance
 0x00052e5f	?WaitForDirectConnect@@YAHXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency
 0x00053122	?ReadPacket@@YADXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency
 0x00053206	?WriteModemPacket@@YAXPADH@Z	Buka TU-order, instruction/call or constructor-vtable identity review (identity only, strict body/reference comparison unchanged).
-0x000532e8	?TransmitRemoteData@@YAHPADHHCCCCC@Z	Buka TU-order, instruction/call or constructor-vtable identity review (identity only, strict body/reference comparison unchanged).
-0x000534cb	?GetRemoteData@@YAPADC@Z	Buka scroll/network/border instruction/CFG/EH review: 0x10eab
+0x000532e8	?TransmitRemoteData@@YAHPAXHHCCCCC@Z	Buka TU-order, instruction/call or constructor-vtable identity review (identity only, strict body/reference comparison unchanged).
+0x000534cb	?GetRemoteData@@YAPAURemoteMessage@@C@Z	Buka scroll/network/border instruction/CFG/EH review: 0x10eab
 0x000535af	?PollRemote@@YAXXZ	Buka TU-order, instruction/call or constructor-vtable identity review (identity only, strict body/reference comparison unchanged).
-0x00053a1b	?TransmitAndWait@@YAHPADHHCCPAPAD@Z	Buka TU-order, instruction/call or constructor-vtable identity review (identity only, strict body/reference comparison unchanged).
+0x00053a1b	?TransmitAndWait@@YAHPAXHHCCPAPAURemoteMessage@@@Z	Buka TU-order, instruction/call or constructor-vtable identity review (identity only, strict body/reference comparison unchanged).
 0x00053b70	?ShowThisMap@@YAHPAD@Z	Buka TU-order, instruction/call or constructor-vtable identity review (identity only, strict body/reference comparison unchanged).
 0x00053b7a	??0fileRequester@@QAE@FFFPBD00@Z	Buka control-panel instruction/CFG/EH review: 0xd8e0
 0x00054354	??1fileRequester@@QAE@XZ	Buka control-panel instruction/CFG/EH review: 0xd98b

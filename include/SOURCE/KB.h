@@ -208,7 +208,7 @@ inline char CyrillicToUpper(char c) {
     if (static_cast<u8>(c) >= CYRILLIC_SMALL_A && static_cast<u8>(c) <= CYRILLIC_SMALL_YA)
         return static_cast<u8>(c) - CYRILLIC_CASE_OFFSET;
     if (static_cast<u8>(c) == CYRILLIC_SMALL_YO)
-        return static_cast<char>(CYRILLIC_CAPITAL_YO);
+        return CYRILLIC_CAPITAL_YO;
     return c;
 }
 
@@ -218,7 +218,7 @@ inline char CyrillicToLower(char c) {
     if (static_cast<u8>(c) >= CYRILLIC_CAPITAL_A && static_cast<u8>(c) <= CYRILLIC_CAPITAL_YA)
         return static_cast<u8>(c) + CYRILLIC_CASE_OFFSET;
     if (static_cast<u8>(c) == CYRILLIC_CAPITAL_YO)
-        return static_cast<char>(CYRILLIC_SMALL_YO);
+        return CYRILLIC_SMALL_YO;
     return c;
 }
 i16 NullHandler(struct tag_message& message);

@@ -53,8 +53,6 @@ its image-only rows are reviewed by hand ([editor](../docs/editor.md)).
   changes delinker ownership.
 - `dna_bands.tsv`: executable DNA census against the VC6 libraries
   (`homm1 audit dna-bands`, `verify.universe`).
-- `unit_spans.tsv`: retail RVA ranges assigned to source units, read by the
-  DNA census.
 - `function_identities.tsv`, `reference_proofs.tsv`: reviewed function
   identities and (site, target, symbol) reference proofs for the
   `homm1 compare --baseline` reference audit.

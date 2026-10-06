@@ -320,7 +320,7 @@ void inputManager::AsciiConvert(tag_message& event) {
 
     if ((event.modifiers & MESSAGE_MODIFIER_SHIFT_KEYS) == 0 && event.keyCode > 'A' - 1
         && event.keyCode < 'Z' + 1)
-        event.keyCode = static_cast<u8>(CyrillicToLower(static_cast<char>(event.keyCode)));
+        event.keyCode = static_cast<u8>(CyrillicToLower(event.keyCode));
 
     if ((event.modifiers & MESSAGE_MODIFIER_SHIFT_KEYS) != 0) {
         switch (event.keyCode) {

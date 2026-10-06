@@ -50,7 +50,7 @@ H1_ENUM_BEGIN(AIPurchaseType)
 H1_ENUM_END(AIPurchaseType)
 
 struct BHC {
-    town* pTown;
+    town* townPointer;
     i32 type;
     i32 what;
     i32 num;
@@ -65,21 +65,17 @@ public:
     // --- methods ---
     void ShowDebugText(char* text);
     void DoAllHeroInteractions(void);
-    void CheckForCreatureUpgrades(void);
     void CheckBuyStuff(void);
-    i32 GoodAdjacent(class hero* pHero, i32* direction);
-    void CheckReload(class hero* pHero);
-    void CheckBerserk(class hero* pHero);
-    void DimensionDoorTo(i32 x, i32 y);
-    i32 DoAnywhereDDoorTownGate(i32 targetValue);
-    i8 DoDimensionDoor(class hero* pHero);
-    void SetupRelativeHeroStrengths(void);
+    i32 GoodAdjacent(class hero* aiHero, i32* direction);
+    void CheckReload(class hero* aiHero);
+    void CheckBerserk(class hero* aiHero);
+    i8 DoDimensionDoor(class hero* aiHero);
     void DoAI(i32 player);
     void GetGameAIVars(void);
     void GetTurnAIVars(i32 player);
-    void GetBestBHC(i32, struct BHC& best);
+    void GetBestBHC(i32 player, struct BHC& best);
     class hero* DetermineHeroToMove(i32 player);
-    void DetermineTargetPosition(class hero* pHero, i8& targetX, i8& targetY, i16 mobility);
+    void DetermineTargetPosition(class hero* aiHero, i8& targetX, i8& targetY, i16 mobility);
     void ProbableOutcomeOfBattle(
         class armyGroup* attacker,
         class hero* attackerHero,
@@ -92,8 +88,8 @@ public:
         float& winChance,
         i32& attackerLoss,
         i32& defenderLoss,
-        i32& attackerRemaining,
-        i32& defenderRemaining,
+        i32& expectedAttackerLoss,
+        i32& expectedDefenderLoss,
         i32& outcomeValue
     );
     float GetOddsOfWinning(i32);
@@ -123,22 +119,22 @@ public:
     );
     void GetBestHero(class town* townPointer, struct BHC& best, float& bestValue);
     void LikelihoodOfEnemyAttacking(
-        class town*,
-        class hero*,
-        float& chanceA,
-        float& chanceB,
-        i32& nAttack,
-        i32& nValue,
-        i32& nWeeks,
-        float& fOut
+        class town* townPointer,
+        class hero* heroPointer,
+        float& attackChance,
+        float& lossRisk,
+        i32& attackStrength,
+        i32& weightedAttack,
+        i32& attackWeeks,
+        float& dangerRating
     );
-    i32 MeanRVOfUnexploredTerritory(i32);
+    i32 MeanRVOfUnexploredTerritory(i32 player);
     void GetGameAttentionValue(i32 player);
     void GetTurnAttentionValue(i32 player);
     i32 RVConversion(i32* const resources);
     float TurnsToBuy(i32* const resources);
     i32 RVOfPosition(
-        class hero* pHero,
+        class hero* aiHero,
         i16 x,
         i16 y,
         i8 hasEvent,
@@ -150,7 +146,7 @@ public:
         i32 eventMode
     );
     i32 StrategicValueOfPosition(
-        class hero* pHero,
+        class hero* aiHero,
         i16 targetX,
         i16 targetY,
         i8 immediate,
@@ -163,12 +159,12 @@ public:
     i32 FightValueOfStack(
         class armyGroup* group,
         class hero* heroPointer,
-        i32 useHero,
+        i32 useAdjustedFightValue,
         i8 useTown = 0,
         i8 townId = 0
     );
     void EvaluateOneTimeCreaturePurchase(
-        class hero* pHero,
+        class hero* aiHero,
         i32 creature,
         i32 availableCount,
         i32 useAvailableCount,
@@ -183,31 +179,16 @@ public:
         class hero* defenderHero,
         i8 townBattle,
         i8 townId,
-        float& attackerDamage,
-        float& defenderDamage
-    );
-    void HeroInteractionAtHero(
-        class hero* firstHero,
-        class hero* secondHero,
-        i32 evaluateOnly,
-        i32* value
+        float& attackerCasualtyFraction,
+        float& defenderCasualtyFraction
     );
     void HeroInteractionAtTown(
         class hero* heroPointer,
         class town* townPointer,
-        i32 doInteraction,
+        i32 evaluateOnly,
         i32* value
     );
-    void RedistributeTroops(
-        class armyGroup* sourceArmy,
-        class armyGroup* destinationArmy,
-        i32 preserveOne,
-        i32 preferFast,
-        i32 sourceStrength,
-        i32 destinationStrength,
-        i32 transferBudget
-    );
-    i32 ChooseGoldOrExperience(class hero* thisHero, i32 gold, i32 experience);
+    i32 ChooseGoldOrExperience(class hero* heroPointer, i32 gold, i32 experience);
     void ChooseEvaluateBattle(
         class armyGroup* attackerArmy,
         class hero* attackerHero,
@@ -216,40 +197,35 @@ public:
         i32 isCastle,
         i32 castleId,
         i32 rewardValue,
-        i32& outFlag,
-        i32& outValue
+        i32& canWin,
+        i32& rating
     );
-    i32 ChooseToFightForArtifact(i32 artifact, i32 monster, i32 quantity);
-    i32 ChooseToBuyArtifact(class hero*, i32 artifact, i32 goldCost);
-    i32 NetValueOfArtifact(i32 artifact, i32 goldCost, i32 resourceType, i32 resourceCost);
-    i32 ChooseToPayRansomOnHero(class hero*, i32);
+    i32 ChooseToBuyArtifact(class hero* heroPointer, i32 artifact, i32 goldCost);
+    i32 ChooseToPayRansomOnHero(class hero* heroPointer, i32 goldCost);
     void BuildBuilding(class town* townPointer, i16 building);
     void BuildHero(class town* townPointer, i16 availableHeroIndex);
     void BuildCreature(class town* townPointer, i32 dwelling, i32 purchaseCount);
     i32 CanBuyBHC(struct BHC& purchase);
-    i8 CombatMonsterEvent(class hero* h, i8 monType, i32* pCount, class mapCell*);
+    i8 CombatMonsterEvent(
+        class hero* heroPointer,
+        i8 monsterType,
+        i32* monsterCount,
+        class mapCell* cell
+    );
     void FightEvent(class hero* heroPointer, class mapCell* cell);
-    i32 DamageGroup(class armyGroup* ag, class hero* loser, class hero*, float dmg);
+    i32 DamageGroup(
+        class armyGroup* group,
+        class hero* loser,
+        class hero* winner,
+        float casualtyFraction
+    );
     float StatChangeValue(i32 oldValue, i32 newValue);
     void IncrementHourGlass(void);
     void TownEvent(class mapCell* cell, class hero* heroPointer, i32 x, i32 y);
-    i32 ComputeUpgradeValue(i32 baseCreatureType, i32 upgradedCreatureType);
-    i32 ComputeValueOfSS(class hero* heroPointer, i32 skill, i32 level);
-    i32 ComputeValueOfFreeSS(class hero* heroPointer, i32 skill);
-    i32 ManaRefreshValue(class hero* heroPointer, i32 level);
-    i32 ValueOfEventAtPosition(class hero* pHero, i16 x, i16 y, i32 immediate, i32* liveChance);
-    i32 EvaluateGenericSite(class mapCell* cell);
-    i32 EvaluateBarrier(class mapCell* cell);
-    i32 EvaluatePassword(class mapCell* cell);
-    i32 EvaluateRecruitSite(class mapCell* cell);
-    i32 EvaluateJail(class mapCell*);
-    i32 EvaluateArtifactEvent(i32 artifact, i32 eventData);
-    i32 EvaluateMineEvent(i32 mineIndex, i32 x, i32 y, i32* liveChance);
-    i32 EvaluateMonsterEvent(i32 monsterType, i32 eventData, i32* liveChance);
-    i32 EvaluateHeroEvent(i32 heroId, i32 x, i32 y, i32 mode, i32* liveChance);
-    i32 EvaluateTownEvent(i32 townId, i32 x, i32 y, i32 mode, i32* liveChance);
+    i32 ValueOfEventAtPosition(class hero* aiHero, i16 x, i16 y, i32 immediate, i32* liveChance);
 };
-extern i32 costTemp[];
+#define gCreatureCost costTemp // spelling fixes .bss order
+extern i32 gCreatureCost[];
 #define gLastFrameRateTimer iLastFrameRateTimer // spelling fixes .bss order
 extern i32 gLastFrameRateTimer;
 extern i32 gHumanTownConquered;
@@ -275,11 +251,11 @@ extern i16 gHeroEventStratRVOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 // DoAI's per-turn visit log: up to 30 positions (x, y) a hero has moved
 // from; a target already in it ends the hero's turn.
 H1_ENUM_CONST_BEGIN(AIPlaceVisitConstant)
-    ADVMGR_PLACE_VISIT_COUNT = 30,
-    ADVMGR_PLACE_COORDINATE_COUNT = 2
+    AI_PLACE_VISIT_COUNT = 30,
+    AI_PLACE_COORDINATE_COUNT = 2
 H1_ENUM_CONST_END(AIPlaceVisitConstant)
 #define gPlacesVisited iPlacesVisited // spelling fixes .bss order
-extern i32 gPlacesVisited[ADVMGR_PLACE_VISIT_COUNT][ADVMGR_PLACE_COORDINATE_COUNT];
+extern i32 gPlacesVisited[AI_PLACE_VISIT_COUNT][AI_PLACE_COORDINATE_COUNT];
 #define gCurPlaceToVisit iCurPlaceToVisit // spelling fixes .bss order
 extern i32 gCurPlaceToVisit;
 void ResetHeroRVs(i32 resetAll, i32 x, i32 y);
@@ -302,7 +278,8 @@ extern i16 gHeroStrategicRVOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 extern i16 gLiveChanceOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 #define gHeroLiveChance gaiHeroLiveChance // spelling fixes .bss order
 extern i16 gHeroLiveChance[];
-extern class searchArray SVSearchArray;
+#define gStrategicSearchArray SVSearchArray // spelling fixes .bss order
+extern class searchArray gStrategicSearchArray;
 #define gReduceFactor fReduceFactor // spelling fixes .bss order
 extern float gReduceFactor;
 // The per-cell/per-hero resource-value caches (gHeroStrategicRVOfPos,

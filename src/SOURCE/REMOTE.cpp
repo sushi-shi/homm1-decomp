@@ -167,7 +167,7 @@ void calc_crc(u16* crc, u8* data, i32 length) {
 }
 
 VA(0x00451e2e, 0x7b)
-i32 EncodePacket(u8* data, i8 source, i8 destination, i32 length) {
+i32 EncodePacket(RemoteMessage* data, i8 source, i8 destination, i32 length) {
     u16 crc;
 
     REMOTE_PACKET(gPacketSend)->source = source;
@@ -184,7 +184,7 @@ i32 EncodePacket(u8* data, i8 source, i8 destination, i32 length) {
 }
 
 VA(0x00451ea9, 0xb2)
-i32 DecodePacket(u8* data, i32 source) {
+i32 DecodePacket(RemoteMessage* data, i32 source) {
     u16 computedCrc;
     u16 crc;
     i32 i;
@@ -211,7 +211,7 @@ i32 DecodePacket(u8* data, i32 source) {
 }
 
 VA(0x00451f5b, 0x10f)
-i32 SendRemoteData(u8* dataToSend, u8*, i32 destination, i32 length) {
+i32 SendRemoteData(RemoteMessage* dataToSend, u8*, i32 destination, i32 length) {
     i32 size;
     i32 out;
     i32 retry;
@@ -250,7 +250,7 @@ finished:
 }
 
 VA(0x0045206a, 0xcd)
-i32 ReceiveRemoteData(u8*, u8* data, i32 source) {
+i32 ReceiveRemoteData(u8*, RemoteMessage* data, i32 source) {
     i32 receiveResult;
     i32 result;
 
@@ -613,7 +613,7 @@ i8 GUIModemResponseExec(void) {
         goto compareResponse;
     }
     if (gModemResponseChar >= ' ') {
-        gModemResponseLine[gModemResponseLength] = static_cast<char>(gModemResponseChar);
+        gModemResponseLine[gModemResponseLength] = gModemResponseChar;
         ++gModemResponseLength;
     }
     return 0;
@@ -792,7 +792,7 @@ readPacketStart:
         }
         if (gModemPacketLength >= MODEM_PACKET_MAX_LENGTH)
             goto readPacketStart;
-        gPacket[gModemPacketLength] = static_cast<char>(input);
+        gPacket[gModemPacketLength] = input;
         ++gModemPacketLength;
     } while (1);
 }
@@ -829,7 +829,7 @@ void WriteModemPacket(char* buffer, i32 length) {
 VA(0x004532e8, 0x1e3)
 // HoMM1 callers pass an eighth flag that maps a game position to its net position.
 i32 TransmitRemoteData(
-    char* data,
+    void* data,
     i32 destination,
     i32 length,
     i8 command,
@@ -862,12 +862,7 @@ i32 TransmitRemoteData(
     if (length > 0)
         memcpy(msg.payload.data, data, length);
     while (result == 0 && tries <= REMOTE_RETRY_COUNT) {
-        result = SendRemoteData(
-            reinterpret_cast<u8*>(&msg), // API-forced: SendRemoteData takes wire bytes.
-            NULL,
-            destination,
-            length + REMOTE_MESSAGE_HEADER_SIZE
-        );
+        result = SendRemoteData(&msg, NULL, destination, length + REMOTE_MESSAGE_HEADER_SIZE);
         if (!reliable && result) {
             return 1;
         } else if (result) {
@@ -894,7 +889,7 @@ i32 TransmitRemoteData(
 }
 
 VA(0x004534cb, 0xe4)
-char* GetRemoteData(i8 remove) {
+RemoteMessage* GetRemoteData(i8 remove) {
     i32 oldestOrder;
     i32 queueIndex;
     i32 selected;
@@ -910,11 +905,11 @@ char* GetRemoteData(i8 remove) {
         }
     }
     if (selected >= 0) {
-        memcpy(gReceiveOut, &gReceiveQueue[selected], REMOTE_MESSAGE_SIZE);
+        memcpy(&gReceiveOut, &gReceiveQueue[selected], REMOTE_MESSAGE_SIZE);
         if (remove)
             gReceiveQueue[selected].type = REMOTE_MESSAGE_NONE;
         gReceiveQueue[selected].sender = NetPosToGamePos(gReceiveQueue[selected].sender);
-        return gReceiveOut;
+        return &gReceiveOut;
     }
     return NULL;
 }
@@ -945,12 +940,7 @@ void PollRemote(void) {
         gSendMessage.payloadSize = 1;
         gSendMessage.command = (gCurPlayer << 4) + gCurHourGlassPhase;
         gSendMessage.payload.data[0] = 1;
-        SendRemoteData(
-            reinterpret_cast<u8*>(&gSendMessage), // API-forced: SendRemoteData takes wire bytes.
-            NULL,
-            1 - gThisNetPos,
-            REMOTE_MESSAGE_HEADER_SIZE + 1
-        ); // API-forced: wire bytes.
+        SendRemoteData(&gSendMessage, NULL, 1 - gThisNetPos, REMOTE_MESSAGE_HEADER_SIZE + 1);
         gLastHeartbeatSend = KBTickCount();
     }
     if (KBTickCount() > gLastHeartbeatReceive + 60000 && !gInTimeoutFail) {
@@ -982,11 +972,7 @@ void PollRemote(void) {
     result = 1;
     while (result) {
     nextIncoming:
-        result = ReceiveRemoteData(
-            NULL,
-            reinterpret_cast<u8*>(gReceiveIn), // API-forced: ReceiveRemoteData takes wire bytes.
-            REMOTE_BROADCAST_PLAYER
-        ); // API-forced: wire bytes.
+        result = ReceiveRemoteData(NULL, REMOTE_MESSAGE(gReceiveIn), REMOTE_BROADCAST_PLAYER);
         if (result && REMOTE_MESSAGE(gReceiveIn)->sender != gThisNetPos) {
             if (REMOTE_MESSAGE(gReceiveIn)->type == REMOTE_MESSAGE_CONFIRM) {
                 gLastConfirm = REMOTE_MESSAGE(gReceiveIn)->id;
@@ -1013,12 +999,11 @@ void PollRemote(void) {
                 gSendMessage.type = REMOTE_MESSAGE_CONFIRM;
                 gSendMessage.payloadSize = 0;
                 SendRemoteData(
-                    // API-forced: SendRemoteData takes wire bytes.
-                    reinterpret_cast<u8*>(&gSendMessage),
+                    &gSendMessage,
                     NULL,
                     REMOTE_MESSAGE(gReceiveIn)->sender,
                     REMOTE_MESSAGE_HEADER_SIZE
-                ); // API-forced: wire bytes.
+                );
             }
             for (i = 0; i < REMOTE_QUEUE_CAPACITY; i++) {
                 if (gReceiveQueue[i].type && gReceiveQueue[i].id == REMOTE_MESSAGE(gReceiveIn)->id)
@@ -1047,12 +1032,12 @@ done:;
 
 VA(0x00453a1b, 0x114)
 i32 TransmitAndWait(
-    char* bytes,
+    void* bytes,
     i32 destination,
     i32 length,
     i8 command,
     i8 responseCommand,
-    char** response
+    RemoteMessage** response
 ) {
     i32 result;
     i32 clock;
@@ -1078,13 +1063,12 @@ i32 TransmitAndWait(
             }
         }
         ForcePollSound();
-        receivedData =
-            reinterpret_cast<RemoteMessage*>(GetRemoteData(1)); // API-forced: char* record.
+        receivedData = GetRemoteData(1);
         if (receivedData && receivedData->type == REMOTE_MESSAGE_RELIABLE
             && receivedData->command == responseCommand)
             complete = 1;
     }
-    *response = reinterpret_cast<char*>(receivedData); // API-forced: char* record.
+    *response = receivedData;
 transmitComplete:
     return result;
 }
@@ -1114,7 +1098,7 @@ i32 gUnusedRemoteValue3 = -1;
 DATA(0x004cc7e8)
 char gModemIdString[8];
 DATA(0x004cc6e8)
-char gReceiveOut[REMOTE_MESSAGE_SIZE];
+RemoteMessage gReceiveOut;
 DATA(0x004cb40c)
 i32 gModemResponseChar;
 DATA(0x004cb3e0)

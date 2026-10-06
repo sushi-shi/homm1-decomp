@@ -1,0 +1,531 @@
+kind	owner	old	new	evidence
+local	combatManager::ValidSpellTarget	newHex	destHex	teleport destination hex tested with CanFit; slot set validated
+local	combatManager::CastSpell	destination	targetTailHex	rear hex of a wide target at the teleport landing; quantity before resurrection; spell%02d sample (removes class-name shadow); set validated
+local	combatManager::CastSpell	quantity	quantityBefore	rear hex of a wide target at the teleport landing; quantity before resurrection; spell%02d sample (removes class-name shadow); set validated
+local	combatManager::CastSpell	sample	spellSound	rear hex of a wide target at the teleport landing; quantity before resurrection; spell%02d sample (removes class-name shadow); set validated
+local	combatManager::CastMassSpell	curLast	lastSide	side loop bounds; MAKEFILEID result; set validated
+local	combatManager::CastMassSpell	team	firstSide	side loop bounds; MAKEFILEID result; set validated
+local	combatManager::CastMassSpell	fileIdNo	effectFile	side loop bounds; MAKEFILEID result; set validated
+local	combatManager::CancelSideSpells	curArmy	target	stack loop; set validated
+local	combatManager::CancelSideSpells	ii	armyIndex	stack loop; set validated
+local	combatManager::Fireball	prevDmg	baseDamage	damage dealt, not a previous value; set validated
+local	combatManager::Fireball	curArmyPtr	target	damage dealt, not a previous value; set validated
+local	combatManager::Fireball	adjHexes	affectedHexes	damage dealt, not a previous value; set validated
+local	combatManager::MeteorShower	prevDmg	baseDamage	j is the meteor.icn frame; set validated
+local	combatManager::MeteorShower	curArmyPtr	target	j is the meteor.icn frame; set validated
+local	combatManager::MeteorShower	adjHexes	affectedHexes	j is the meteor.icn frame; set validated
+local	combatManager::MeteorShower	j	frame	j is the meteor.icn frame; set validated
+local	combatManager::ElementalStorm	prevDamage	damage	five passes of storm.icn frames; set validated (reorder)
+local	combatManager::ElementalStorm	indexNum	armyIdx	five passes of storm.icn frames; set validated (reorder)
+local	combatManager::ElementalStorm	curArmyPtr	target	five passes of storm.icn frames; set validated (reorder)
+local	combatManager::ElementalStorm	oldCycle	stormRound	five passes of storm.icn frames; set validated (reorder)
+local	combatManager::ElementalStorm	frm	frame	five passes of storm.icn frames; set validated (reorder)
+local	combatManager::ElementalStorm	sideIdxNo	side	five passes of storm.icn frames; set validated (reorder)
+local	combatManager::ElementalStorm	hit	anyAffected	five passes of storm.icn frames; set validated (reorder)
+local	combatManager::Armageddon	sideIdxNo	combatSideIndex	kb.pal copy faded to red; jx indexes palette colors; set validated (reorder)
+local	combatManager::Armageddon	index	armyIdx	kb.pal copy faded to red; jx indexes palette colors; set validated (reorder)
+local	combatManager::Armageddon	palDataEntry	paletteBytes	kb.pal copy faded to red; jx indexes palette colors; set validated (reorder)
+local	combatManager::Armageddon	curArmy	stack	kb.pal copy faded to red; jx indexes palette colors; set validated (reorder)
+local	combatManager::Armageddon	jx	color	kb.pal copy faded to red; jx indexes palette colors; set validated (reorder)
+local	combatManager::Armageddon	workPalItem	effectPalette	kb.pal copy faded to red; jx indexes palette colors; set validated (reorder)
+local	combatManager::Armageddon	curPal	gamePal	kb.pal copy faded to red; jx indexes palette colors; set validated (reorder)
+local	combatManager::DoSpellAI	selectedSpellVal	chosenSpell	entry indexes hero spell slots; set validated (reorder)
+local	combatManager::DoSpellAI	bestEffectVal	bestValue	entry indexes hero spell slots; set validated (reorder)
+local	combatManager::DoSpellAI	spellEffect	effect	entry indexes hero spell slots; set validated (reorder)
+local	combatManager::DoSpellAI	entry	slot	entry indexes hero spell slots; set validated (reorder)
+local	combatManager::DoSpellAI	candHex	hex	entry indexes hero spell slots; set validated (reorder)
+local	combatManager::DetermineEffectOfSpell	owner	side	owner is the side whose stacks are scanned; set validated
+local	combatManager::DetermineEffectOfSpell	curHexVal	hex	owner is the side whose stacks are scanned; set validated
+local	combatManager::DetermineEffectOfSpell	spellEffect	effect	owner is the side whose stacks are scanned; set validated
+local	combatManager::DetermineEffectOfSpell	targetPtr	targetCreature	owner is the side whose stacks are scanned; set validated
+local	combatManager::ClearEffects	idx	armyIndex	gArmyEffected[side][armyIndex]; validated
+local	combatManager::EffectSpellCure	curSide	sideIndex	sums of harmful/beneficial effect values; 'quantity' holds quantity*fightValue, not a quantity; set validated (reorder)
+local	combatManager::EffectSpellCure	prevNegEffect	negTotal	sums of harmful/beneficial effect values; 'quantity' holds quantity*fightValue, not a quantity; set validated (reorder)
+local	combatManager::EffectSpellCure	posEffect	posTotal	sums of harmful/beneficial effect values; 'quantity' holds quantity*fightValue, not a quantity; set validated (reorder)
+local	combatManager::EffectSpellCure	quantity	armyWorth	sums of harmful/beneficial effect values; 'quantity' holds quantity*fightValue, not a quantity; set validated (reorder)
+local	combatManager::EffectSpellCure	entry	stackNum	sums of harmful/beneficial effect values; 'quantity' holds quantity*fightValue, not a quantity; set validated (reorder)
+local	combatManager::EffectSpellCure	armyPtr	creature	sums of harmful/beneficial effect values; 'quantity' holds quantity*fightValue, not a quantity; set validated (reorder)
+local	combatManager::EffectSpellDamage	unusedTotal	leftDamage	unusedTotal is used: damage left over after whole kills; facing counts adjacent directions 0..5; killed vs killed+wounded value; set validated (reorder)
+local	combatManager::EffectSpellDamage	fightValue	killedValue	unusedTotal is used: damage left over after whole kills; facing counts adjacent directions 0..5; killed vs killed+wounded value; set validated (reorder)
+local	combatManager::EffectSpellDamage	facing	neighborIndex	unusedTotal is used: damage left over after whole kills; facing counts adjacent directions 0..5; killed vs killed+wounded value; set validated (reorder)
+local	combatManager::EffectSpellDamage	partValue	damagedValue	unusedTotal is used: damage left over after whole kills; facing counts adjacent directions 0..5; killed vs killed+wounded value; set validated (reorder)
+local	army::CanFit	mapCell	adjacentCell	combat hexcell next to the hex (GetAdjacentCellIndex), not a map cell; local shadowed class mapCell; validated
+local	army::ValidFlight	oldOpponent	enemyStack	mask of blocked attack directions; GetBestDirection results; set validated (reorder)
+local	army::ValidFlight	destHexNo	enemyHex	mask of blocked attack directions; GetBestDirection results; set validated (reorder)
+local	army::ValidFlight	attackDirectionsNum	attackDirectionsMask	mask of blocked attack directions; GetBestDirection results; set validated (reorder)
+local	army::ValidFlight	curAttackDirection	bestAttackDirection	mask of blocked attack directions; GetBestDirection results; set validated (reorder)
+local	army::ValidFlight	orient	landingDirection	mask of blocked attack directions; GetBestDirection results; set validated (reorder)
+local	army::ValidFlight	nextHexValue	adjacentHex	mask of blocked attack directions; GetBestDirection results; set validated (reorder)
+local	army::ValidFlight	hitHex	attackHex	mask of blocked attack directions; GetBestDirection results; set validated (reorder)
+local	army::FlyTo	oldX	boxLeft	union redraw box of previous and current extents, not 'old' values; set validated
+local	army::FlyTo	oldY	boxTop	union redraw box of previous and current extents, not 'old' values; set validated
+local	army::FlyTo	oldMaxExtentX	boxRightX	union redraw box of previous and current extents, not 'old' values; set validated
+local	army::FlyTo	maxY	boxBottom	union redraw box of previous and current extents, not 'old' values; set validated
+local	hexcell::DrawOccupant	frame	occupantFacing	holds occupant->m_facing; validated
+local	hexcell::DrawWall	lastFlip	level	lastFlip is DrawTower's 'level' mirror flag (castleSide[attacker]); levelValue is m_wallDamage frame; set validated (reorder)
+local	hexcell::DrawWall	levelValue	rubbleFrame	lastFlip is DrawTower's 'level' mirror flag (castleSide[attacker]); levelValue is m_wallDamage frame; set validated (reorder)
+local	armyGroup::IsHomogeneous	numCreatureTypes	numTypeRuns	counts type changes between occupied slots, not distinct types; validated (initializers, no reorder)
+local	armyGroup::IsHomogeneous	prev	prevType	counts type changes between occupied slots, not distinct types; validated (initializers, no reorder)
+param	army::ValidFlight	useDestination	pathMode	callers pass ARMY_PATH_ANY_TARGET_HEX (PATH.h); matches ValidPath/FindPath pathMode; update include/SOURCE/army.h decl
+param	combatManager::EffectSpellCure	cure	cureOnly	1 drops beneficial effects (Cure); same flag as CastMassSpell/CancelSideSpells cureOnly; update combatManager.h decl
+param	armyGroup::GetMorale	h	armyHero	all callers pass the group's hero; update armyGroup.h
+param	armyGroup::GetMorale	t	occupiedTown	town whose tavern adds morale (combat town / castle); update armyGroup.h
+param	armyGroup::IsHomogeneous	countRaces	alignmentMode	compared with ARMY_GROUP_EMPTY_SLOT (-1), not a boolean; update armyGroup.h
+param	armyGroup::DamageGroup	damagePercent	casualtyFraction	value is a 0..1 fraction (*100 for the roll, <0.999, >=1.0); update armyGroup.h
+param	strip::strip	portraitId	portraitIconId	callers pass gpResourceManager->MakeId(...) icon id; update strip.h
+member	hexcell	m_occupantFrame	m_occupantFootprintHalf	holds ARMY_FACING_LEFT/RIGHT marking which half of a two-hex stack the cell holds (GenerateMap, CastSpell teleport); DrawOccupant skips the half equal to the facing; uses in CMBTMGR/SPELLS/HEXCELL
+member	hexcell	m_obstacleType	m_obstacleIcon	stores a CombatIconSlot (COMBAT_ICON_CASTLE / COMBAT_ICON_OBSTACLES) that DrawObstacle tests; pairs with m_groundIcon; writers in CMBTMGR GenerateMap
+enum	HexcellConstant	HEXCELL_OCCUPANT_FRAME_NONE	HEXCELL_FOOTPRINT_HALF_NONE	sentinel of m_occupantFootprintHalf for one-hex stacks
+static	SPELLAI file static (0x0048a6ec)	SPELL_AI_STONESKIN_MODIFIER	SPELL_AI_PROTECTION_MODIFIER	only reader is RawEffectSpellInfluence SPELL_PROTECTION; the game has no stoneskin spell
+static	SPELLAI file static (0x0048a6f0)	SPELL_AI_SHIELD_MODIFIER	SPELL_AI_ANTI_MAGIC_MODIFIER	only reader is RawEffectSpellInfluence SPELL_ANTI_MAGIC; the game has no shield spell
+kept	hexcell::DrawTower	level	level	it is the castle mirror flag
+kept	combatManager::DetermineEffectOfSpell	bDone	bDone	no bucket-3..4 'done' spelling reads well (done=7)
+kept	combatManager::DoSpellAI	bestHexWork	bestHexWork	bestHex is the out-param name elsewhere; no fit for bestTargetHex
+kept	combatManager::Fireball	xPos,hit	xPos,hit	x / anyAffected do not fit slots [0-1]/[0-0]
+kept	combatManager::MeteorShower	hit,rockIcon	hit,rockIcon	anyAffected/meteorIcon do not fit [0-1]
+kept	combatManager::CastSpell	targetCreature,armySide,occupantIndex,teleported	targetCreature,armySide,occupantIndex,teleported	acceptable; target/targetSide/targetIndex/teleportArmy do not fit
+kept	combatManager::Armageddon	dmg	dmg	damage (bucket 8) does not fit [3-6]
+kept	army::FlyTo	colFrom,curRow,headOccupant,tailSlot,k,y1,y2	colFrom,curRow,headOccupant,tailSlot,k,y1,y2	sourceColumn/sourceRow/frontCell/rearCell/step/launchY/landPosY do not fit the [3-4]/[4-4]/[11-12]/[10-11]/[11]/[12]/[13] slots; names are understandable
+kept	army::ValidFlight	n,heldTemp,k,m	n,heldTemp,k,m	n is a direction loop index (direction=7, dir=13 do not fit [14-15]); heldTemp/k/m are dead
+static	SPELLAI file statics	SPELL_AI_PARALYZE_MODIFIER/SPELL_AI_BERSERK_MODIFIER	SPELL_AI_BERSERK_MODIFIER/SPELL_AI_PARALYZE_MODIFIER	RawEffectSpellInfluence reads 0x0048a6dc for SPELL_BERZERKER and 0x0048a6e0 for SPELL_PARALYZE
+param	army::Init	type	creatureType	LoadArmies passes armyGroup m_creatureTypes; stored in m_creatureType
+param	army::WalkTo(i16)	destHex	destination	same concept as FlyTo/ValidFlight(destination)
+param	army::AttackTo(i16)	destHex	destination	same concept as FlyTo(destination)
+param	army::MoveAttack	hex	destination	COMMAND passes giNextActionGridIndex/Extra
+local	army::DrawToBuffer	xPos	effectPosX	x of the effect icon in the EFFECT pose
+local	army::DrawToBuffer	posX	spellMarkerX	x of the spells.icn marker over the stack
+local	army::DrawToBuffer	outlineColorVal	spellOutlineColor	palette index of the good/bad spell outline
+local	army::DrawToBuffer	px	countX	x of the quantity box/count text (countText)
+local	army::Walk	newReverse	backwards	set when the stack faces away from the step and walks backwards
+local	army::Walk	newBaseHex	originalHex	dead store of the starting m_hex (never read); old name said 'new'
+local	army::Walk	loc	rearTemp	temporary hexcell holding the wide stack's rear occupant (pairs with tempCell)
+local	army::Walk	theTargetHex	newHex	adjacent hex the stack moves into
+local	army::Walk	partnerHexVal	destRearIndex	rear (second) hex of a wide stack at the destination
+local	army::Walk	toggleOn	drawRightToLeft	passed to SetGridMode; m_gridMode draws occupants right to left
+local	army::Walk	nextTail	backHexIndex	rear hex of a wide stack (old, then new position)
+local	army::SpecialAttack	hisStack	enemyStack	the shot's target army
+local	army::SpecialAttack	hisCol	targetColumn	target hex % 9
+local	army::SpecialAttack	hisRow	enemyRow	target hex / 9 (targetRow* does not fit the slot)
+local	army::SpecialAttack	frameIndex	missileFrame	frame of the .atk missile drawn in flight
+local	army::DoHydraAttack	newSide	occupantSideIndex	hex occupant side, then the side loop
+local	army::DoHydraAttack	slot	armyIndex	hex occupant index / army loop index
+local	army::DoHydraAttack	targetHexValue	hitHex	adjacent hex struck by the hydra
+local	army::DoHydraAttack	pTarget	struckArmy	Hungarian p; the army struck in that direction
+local	army::DoHydraAttack	curLost	totalDead	sum of killed over all struck stacks
+local	army::DoHydraAttack	newDmg	totalDamageDone	sum of damage over all struck stacks
+local	army::DoHydraAttack	eachArmyRef	currentStack	each stack in the final Stand loop
+local	army::DoAttack	oldMode	prevExtendDown	saved m_extendLimitDown, restored after the message
+local	army::DoAttack	target2Info	rearVictim	breath attack's second (behind) target
+local	army::DoAttack	castOk	specialWorked	set when the cyclops/unicorn special landed; suppresses retaliation
+local	army::DoAttack	targetPtr	struckArmy	primary melee target (consistent with DoHydraAttack)
+local	army::DoAttack	facing	originalFacing	m_facing before turning to attack
+local	army::DoAttack	kills	killed	creatures killed in the primary target
+local	army::DoAttack	way	initialAttackDirection	m_attackDirection at entry, reused for the second strike
+local	army::DoAttack	nextDmg	damageDone	damage reported in the message
+local	army::DoAttack	myDir	savedAttackDirection	attack direction saved around the second strike
+local	army::DoAttack	newKilled	targetKilled	primary target's kills kept across the breath strike
+local	army::DoAttack	nextHex	breathHex	hex behind the target hit by breath
+local	army::CheckLuck	sample	luckSample	shadowed the class name sample
+local	army::DamageEnemy	mainDelta	battleDiff	attack-defense difference indexing gBattleStat
+local	army::DamageEnemy	attBonus	attackAdd	always-zero attack addend
+local	army::DamageEnemy	index	creature	loop over each creature in the stack rolling damage
+local	army::DamageEnemy	theTotal	rolledTotal	float sum of rolled damage before modifiers (needs decl swap with nextDefenseBonus)
+local	army::DamageEnemy	nextDefenseBonus	defenseExtra	always-zero defense addend
+local	army::PowEffect	slot	armyIndex	army index in the side loops
+local	army::PowEffect	armyNum	armySlot	army index in the longest-pow scans
+local	army::PowEffect	theStep	effectFrame	stored into gSpellEffectFrame each frame
+local	army::PowEffect	longest	longestPow	largest m_powFrames over all stacks
+local	army::PowEffect	curSide	stackSide	side loop
+local	army::PowEffect	curArmyPtr	currentArmy	Ptr suffix
+local	army::PowEffect	nextCellHex	vacatedHex	hex(es) of a killed stack whose occupant is cleared
+local	army::SpellEffect	curFrame	effectFrame	stored into gSpellEffectFrame
+local	army::SpellEffect	effectFileIdIndex	iconFileId	MAKEFILEID of the effect icon; compared with gCurLoadedSpellFileId
+local	army::GoBerserk	heading	attackDir	random direction tried for an attack (or a step)
+local	army::GoBerserk	tryCountIndex	tryNumber	dead attempt counter
+local	army::GoBerserk	isFound	targetFound	loop exit flag
+local	army::GoBerserk	targetHexValue	attackHex	ValidAttack's out hex queued as the action hex
+local	army::GoBerserk	target	targetHex	random hex 1..43 for a berserk flyer (was an army-sounding name)
+local	army::MoveAttack	adjHex	neighborHex	GetAdjacentCellIndex result
+local	army::MoveAttack	dirNo	direction	direction loop
+local	army::MoveAttack	meleeMask	baseAttackMask	GetAttackMask(ASSIGNED)
+local	army::MoveAttack	atkMaskNum	enemyAttackMask	GetAttackMask(ENEMY/OCCUPIED)
+local	army::MoveAttack	baseHexVal	attackFromHex	hex the direction is measured from (front or rear half)
+enum	ArmyMessageConstant	TARGET_NAME_SIZE	ARMY_TARGET_NAME_SIZE	unprefixed; ARMY_ prefix like the other army.h constants
+kept	army::Walk	tempCell	tempCell	Walk: accurate enough (temporary hexcell); hexcell decl cannot move (ctor timing)
+kept	army::Walk	moveDist	moveDist	Walk: dead local (=16), no fitting name worth the churn
+kept	army::SpecialAttack	y1/y2	y1/y2	launch/land Y pair; launchY/landPosY don't fit buckets 12/13
+kept	army::SpecialAttack	srcCol/aimRow/targetCol/hitRow	srcCol/aimRow/targetCol/hitRow	inner block: no fitting archerColumn/wallRow set; names readable
+kept	army::DamageEnemy	hurt	hurt	genie halving damage; slot needs bucket 15, no genie*/half* name fits
+kept	army::MoveAttack	cellItem	cellItem	adjacentCell(4) out of [7-8]; no clean fit
+local	army::Walk	col	boundMinX	left edge of the union redraw rectangle (giMinExtentX), not a column
+local	army::Walk	rectMaxX	boundMaxX	right edge of the union redraw rectangle
+local	army::Walk	ourMinY	boundTop	top edge of the union redraw rectangle
+local	army::Walk	ourMaxY	boundBottom	bottom edge of the union redraw rectangle
+local	combatManager::Close	survivor	monsterSide	side whose group count refills the wandering-monster cell (defender w/o player -> side 0)
+kept	combatManager::Close	ii	ii	used for side and slot loops; i/index/side do not fit slot range [0-6]
+local	combatManager::MoreTreesNear	posX	originX	copy of m_combatX, origin of the survey; reorder needed
+local	combatManager::MoreTreesNear	homeY	originY	copy of m_combatY, origin of the survey
+local	combatManager::MoreTreesNear	curNumMountains	mountainCount	count of mountain cells
+local	combatManager::MoreTreesNear	numTrees	treeCount	count of tree cells
+local	combatManager::MoreTreesNear	tile	cell	mapCell* from GetCell
+local	combatManager::MoreTreesNear	lastTypeTable	nearbyTypeGrid	per ring/direction: 0 mountain, 1 tree, -1 none; nothing 'last' about it
+local	combatManager::MoreTreesNear	n	dir	MAP direction index into normalDirTable
+kept	combatManager::MoreTreesNear	pass	pass	ring radius; 'radius' conflicts with originY bucket order
+local	combatManager::CheckApplyGoodMorale	theGroup	group	the side's armyGroup; drop 'the' prefix
+local	combatManager::CheckApplyGoodMorale	activeArmyRef	currentArmy	&m_armies[side][index], the acting stack; same name as COMMAND/DRAWING
+local	combatManager::CheckApplyGoodMorale	moraleVal	moraleLevel	armyGroup::GetMorale result
+kept	combatManager::CheckApplyGoodMorale	sample	sample	only 'sample' fits slot range [0-11] among morale-sound names
+local	combatManager::CheckApplyBadMorale	theGroup	group	the side's armyGroup; drop 'the' prefix
+local	combatManager::CheckApplyBadMorale	activeArmyRef	currentArmy	&m_armies[side][index], the acting stack; same name as COMMAND/DRAWING
+local	combatManager::CheckApplyBadMorale	moraleVal	moraleLevel	armyGroup::GetMorale result
+kept	combatManager::CheckApplyBadMorale	sample	sample	only 'sample' fits slot range [0-11] among morale-sound names
+local	combatManager::GetNextArmy	oldSpeed	speedLevelIndex	loop 0..4 over speed levels; pass 0 takes only high-morale stacks, later passes lower m_currentSpeed - not a saved speed
+local	combatManager::GetNextArmy	theArmy	checkArmy	the stack being tested for eligibility
+local	combatManager::GetNextArmy	counterValue	armyCounter	army index within stackSide; becomes m_currentArmyIndex
+local	combatManager::GetNextArmy	bSkip	skip	Hungarian b-prefix; skip flag
+kept	combatManager::GetNextArmy	temp	temp	unused dead local
+local	combatManager::ExperienceValueOfStack	num	sideExperience	experience the side's losses (lost HP) plus a hero are worth
+local	combatManager::CatAttack	prevFrm	frameIndex	boulder spin frame 0..2 drawn each step, not a previous frame
+local	combatManager::CatAttack	dxVal	xDelta	x pixels the boulder moves per step
+local	combatManager::CatAttack	localDy	yDelta	y step unit of the boulder (scaled per step on the arc)
+local	combatManager::CatAttack	curTgtX	endX	x of the targeted wall hex: end of the flight
+local	combatManager::CatAttack	posY	endY	y of the targeted wall hex minus a row: end of the flight
+local	combatManager::CatAttack	ourY	yPos	boulder's current y (pairs with xPos)
+local	combatManager::CatAttack	summitXValue	topPosX	x of the arc's top: halfway between start and target
+local	combatManager::CatAttack	newY	topPosY	y of the arc's top (25 or row*20+25); not a 'new' y
+local	combatManager::CatAttack	activeForce	collapseChance	SRandom(0,150) (-15 for a computer attacker); below 30 the wall piece collapses
+local	combatManager::CatAttack	theLeft	anyStanding	set when any wall piece in the castle column still stands
+local	combatManager::CatAttack	nextCol	castleColumn	the wall column for the side (5 or 3); not a 'next' column
+local	combatManager::CatAttack	boulderRef	boulderIcon	icon* boulder.icn
+kept	combatManager::CatAttack	sampleInfo	sampleInfo	'sample' collides with the class name; other sound names miss slot range [0-1]
+local	combatManager::Main	thisArmy	currentArmy	&m_armies[m_currentSide][m_currentArmyIndex]; same name as the other combat handlers
+local	combatManager::SetCombatDirections	owner	enemySide	the current stack's m_targetSide, restored at the end; not an owner
+local	combatManager::SetCombatDirections	mainTarget	enemyArmy	&m_armies[enemySide][targetIndex], the stack being attacked
+local	combatManager::SetCombatDirections	curArmyPtr	currentArmy	acting stack
+local	combatManager::SetCombatDirections	keptReachable	pathValid	per direction: the attacker can stand there and reach it; nothing is 'kept'
+local	combatManager::SetCombatDirections	myRear	behindHexes	per direction: the wide attacker's second (rear) hex
+local	combatManager::SetCombatDirections	wasMapped	approachDir	opposite of the attack direction: the pointer sector block it fills
+local	combatManager::SetCombatDirections	outDir	attackDirection	direction value written into m_directionMap, wide-adjusted
+local	combatManager::SetCombatDirections	bestBefore	previousSector	(sector + 23) % 24, the neighbour sector to copy from
+local	combatManager::SetCombatDirections	oldUnset	remainingSectors	count of sectors still -1 after a fill pass
+local	combatManager::CheckSetMouseDirection	myDistY	yPos	pointer y relative to the hex centre; pairs with xPos
+local	combatManager::CheckSetMouseDirection	direction	directionCopy	the unadjusted attack direction kept to test the wide directions later
+local	combatManager::CheckSetMouseDirection	alternate	alternateDirection	second-choice neighbour when the first hex is not standable
+local	combatManager::CheckSetMouseDirection	curArmyRef	movingUnit	acting stack; currentArmy/actingArmy miss the slot range
+local	combatManager::CheckSetMouseDirection	targetObj	enemyArmy	the (unused) target stack
+local	combatManager::CheckSetMouseDirection	backHexVal	rearHex	rear hex of a wide attacker at the destination
+kept	combatManager::CheckSetMouseDirection	slot	slot	pointer sector 0..23; 'sector' misses bucket 4
+local	combatManager::ProcessCombatMsg	selectedHexVal	hoverGridIndex	GetGridIndex of the hovered pointer position
+local	combatManager::GetCommand	oldArmy	attackingStack	the current stack whose target is set; nothing 'old'
+kept	combatManager::GetCommand	indexNum	indexNum	occupant army index; targetIndex/occupantIndex miss bucket 15
+local	combatManager::ShowDeadArmies	casualtyTypeStr	deadMonsters	i32 creature types of the lost stacks, not strings
+local	combatManager::ShowDeadArmies	theIconSpacing	iconDeltaX	x step between casualty icons
+local	combatManager::ShowDeadArmies	rowYVal	sectionPosY	y of the side's casualty heading/row
+kept	combatManager::ShowDeadArmies	team	team	side loop; side misses bucket range [4-5] under initializer-pinned order
+local	combatManager::DoLoseWindow	party	losingParty	side whose loss is shown to the local human
+local	combatManager::DoLoseWindow	packet	msg	tag_message used for the text broadcast and the event loop, not a net packet
+local	combatManager::DoLoseWindow	newBmp	scrollBitmap	losecmbt.bmp, the scrolling backdrop
+local	combatManager::DoLoseWindow	bestOffset	scrollX	x offset into the backdrop, +2 per frame, wraps at 0x1a0
+local	combatManager::DoLoseWindow	res	dispatchResult	heroWindowManager::Main result
+local	combatManager::DoLoseWindow	delayVal	delay	dead: frame delay 0xb4
+local	combatManager::DoLoseWindow	lAnimY	animationY	dead: animation box y; Hungarian l-prefix
+local	combatManager::DoLoseWindow	sx	animationX	dead: animation box x
+local	combatManager::DoLoseWindow	curWalkX	walkPosX	dead: walker x 0x6f
+local	combatManager::DoLoseWindow	curUnusedWalkY	walkY	dead: walker y 0x8a
+local	combatManager::DoLoseWindow	iAreaWidthVal	areaWidth	dead: blit width 0xdf; Hungarian i-prefix
+local	combatManager::DoLoseWindow	blitHeightVal	animHeight	dead: blit height 0x7d
+kept	combatManager::DoLoseWindow	nextWidth	nextWidth	dead 0x280 (backdrop width); bitmapWidth/screenWidth miss the slot range
+kept	combatManager::DoLoseWindow	walkFrameNum	walkFrameNum	walkFrame misses bucket 5
+local	combatManager::DoSurrender	win	window	surrendr.bin heroWindow
+local	combatManager::DrawFrame	curCol	col	grid column of the stack / drawing loop column; Hungarian cur-prefix
+local	combatManager::DrawFrame	savedDrawn	anyLimited	set when any stack is marked in m_limitCreatureCount; nothing is saved or drawn
+local	combatManager::DrawFrame	boxTopNum	armyTop	top of the stack's redraw box (row*80, raised for luck/morale effects and cavalry)
+local	combatManager::DrawFrame	boxBottomValue	armyBottom	bottom of the stack's redraw box
+local	combatManager::DrawFrame	theLeft	armyLeft	left of the stack's redraw box
+local	combatManager::DrawFrame	sideDeltaVal	rearDelta	column offset of a wide stack's second hex (-1 defender, +1 attacker)
+kept	combatManager::DrawFrame	selBoxRight	selBoxRight	right edge of the box; armyRight misses bucket range [2-3]
+member	combatManager	m_sideDefeated	m_sideSurrendered	only ACTION_SURRENDER sets it (ProcessNextAction); IsWinner reads it as the other side surrendering
+member	combatManager	m_humanSide	m_humanPlayerSide	SetupCombat copies gbHumanPlayer[m_playerId[side]]
+member	combatManager	m_heroType	m_heroClass	SetupCombat copies hero::m_heroClass; DrawFrame uses it as the tent frame (class and class+8)
+enum	CombatDrawStateConstant	COMBAT_HERO_TYPE_NONE	COMBAT_HERO_CLASS_NONE	sentinel of m_heroClass (follows the member rename)
+member	combatManager	m_gridMode	m_drawRightToLeft	DrawFrame: 0 draws each row's occupants left to right, 1 right to left; it has nothing to do with a grid overlay
+param	combatManager::SetGridMode	mode	rightToLeft	stored into m_drawRightToLeft (also DRAWING.cpp definition)
+member	combatManager	m_catapultTarget	m_catapultTargetRow	row (0..4) of the castle-wall hex the catapult hits; CatAttack indexes m_hexCells[row*9 + column]
+param	combatManager::CombineGroups	from	sourceGroup	armyGroup moved from->to
+param	combatManager::CombineGroups	to	targetGroup	usage
+function	combatManager	SetGridMode	SetDrawRightToLeft	stores the flag DrawFrame uses to draw each row's occupants right to left; no grid mode
+local	AbsAiPrint	saved	savedDebugLevel	holds giDebugLevel across the forced print
+local	philAI::DoAllHeroInteractions	pTown	townPointer	no Hungarian; philAI's town-parameter name
+param	philAI::GoodAdjacent	pHero	aiHero	DoAI passes the hero it is moving (gpCurAIHero role)
+local	philAI::GoodAdjacent	idx	heading	map direction index into normalDirTable
+local	philAI::GoodAdjacent	x	cellX	adjacent cell x
+local	philAI::GoodAdjacent	y	cellY	adjacent cell y
+local	philAI::GoodAdjacent	num	eventValue	ValueOfEventAtPosition result
+local	philAI::GoodAdjacent	maxValueVal	bestEventValue	running best event value (starts 100)
+local	philAI::GoodAdjacent	iChance	chance	ValueOfEventAtPosition success chance; no Hungarian
+param	philAI::CheckReload	pHero	aiHero	DoAI passes the hero it is moving
+local	philAI::CheckReload	tile	cell	map cell of a reachable square
+local	philAI::CheckReload	enemy	armyFightValue	fight value of a town (own or enemy) or enemy hero army
+local	philAI::CheckReload	isAlly	friendlySupportSum	float sum of own towns' surplus strength, not a flag
+param	philAI::CheckBerserk	pHero	aiHero	DoAI passes the hero it is moving
+local	philAI::CheckBerserk	enemy	enemyStrength	enemy town/hero fight value
+local	philAI::CheckBerserk	theBest	strongest	strongest enemy fight value found
+local	philAI::CheckBerserk	val	ownFightValue	the moving hero's own fight value
+kept	philAI::CheckBerserk	theHero	theHero	enemy hero on the cell; no enemy-hero spelling fits bucket 14-15 after cell(14) with initialized decls (no reorder)
+param	philAI::DoDimensionDoor	pHero	aiHero	DoAI passes the hero it is moving
+local	philAI::DoDimensionDoor	x	cellX	walked path cell x
+local	philAI::DoDimensionDoor	y	cellY	walked path cell y
+local	philAI::DoDimensionDoor	i	pathIndex	index into gpSearchArray->m_directions
+local	philAI::DoDimensionDoor	len	skippedCount	path steps the door jump saves (len <= 4 refuses)
+local	philAI::DoAI	bestDirection	adjacentDirection	GoodAdjacent's chosen adjacent direction
+local	philAI::DoAI	oldX	stopPosX	MoveHero eventX out-param (cell where the move stopped)
+local	philAI::DoAI	ourY	stopPosY	MoveHero eventY out-param
+local	philAI::DoAI	minRV	minValue	mobility+42 scaled by difficulty; same role as minimumValue in the shared AI
+local	philAI::DoAI	savedAiHero	movingHero	the hero DetermineHeroToMove returned (not a saved copy)
+local	philAI::DoAI	origStep	stepQuota	steps allowed before re-targeting (5, 15 at sea, scaled)
+local	philAI::DoAI	baseSteps	stepCount	steps taken this leg
+local	philAI::DoAI	code	exhaustedMobility	MoveHero outOfMobility out-param
+local	philAI::DoAI	moveInterrupt	nearMonster	MoveHero adjacentMonster out-param
+kept	philAI::DoAI	nextOldShowIt	nextOldShowIt	saved bShowIt; savedShowIt does not fit with the set
+kept	philAI::DoAI	newDummyValue	newDummyValue	dead slot
+kept	philAI::DoAI	flagsState	flagsState	dead slot
+kept	philAI::DoAI	tempArrayData	tempArrayData	dead slot
+param	philAI::DetermineTargetPosition	pHero	aiHero	DoAI passes the hero it is moving
+local	philAI::DetermineTargetPosition	selCnt	rowCounter	per-row spacing counter
+local	philAI::DetermineTargetPosition	validFlag	good	cell worth scoring
+local	philAI::DetermineTargetPosition	curSpacing	gridStep	sampling step mobility/6
+local	philAI::DetermineTargetPosition	oldX	searchX	map column loop (was named old)
+local	philAI::DetermineTargetPosition	y	searchY	map row loop
+local	philAI::DetermineTargetPosition	entry	heroIndex	index into gpCurPlayer->m_heroIds
+local	philAI::DetermineTargetPosition	mainValue	posValue	RVOfPosition score of the cell
+local	philAI::DetermineTargetPosition	lastType	ground	terrain of the hero's cell
+local	philAI::DetermineTargetPosition	colPhase	colCounter	per-column spacing counter
+local	philAI::DetermineTargetPosition	theBestRV	maxRV	best position value so far
+kept	philAI::DetermineTargetPosition	thisCellRec	thisCellRec	scanned cell; cell/cellRec do not fit with the set
+local	philAI::GetTurnAIVars	oldX	nearX	map column within 10 of an enemy hero (was named old)
+local	philAI::GetTurnAIVars	entry	heroIndex	index into the other player's m_heroIds
+local	philAI::GetTurnAIVars	artTotal	artifactValueSum	sum of gArtifactBaseRV
+local	philAI::GetTurnAIVars	mineTotal	turnDistance	enemy-hero turn distance stored in gaiTurnValueOfMine
+kept	philAI::GetTurnAIVars	xPosVal	xPosVal	enemy hero x; no x/y name pair fits buckets 15/15
+kept	philAI::GetTurnAIVars	theYPos	theYPos	enemy hero y; same
+kept	philAI::GetTurnAIVars	basePlayer	basePlayer	other player's playerData; no fitting name in bucket 0
+kept	philAI::GetTurnAIVars	indexNum	indexNum	player index; no fitting name in 14-15
+kept	philAI::GetTurnAIVars	townPtr	townPtr	bucket 0-1 range, townPointer=12
+kept	philAI::GetTurnAIVars	fightVal	fightVal	float fight value; no fit
+param	philAI::GetBestBHC	(unnamed i32)	player	CheckBuyStuff passes giCurPlayer; unused
+local	philAI::GetBestBHC	total	totalStrength	sum of town fight values
+local	philAI::GetBestBHC	ideal	idealStrength	per-town target strength
+local	philAI::GetBestBHC	curMeanStrength	avgStrength	totalStrength / totalWeights
+local	philAI::GetBestBHC	newFValue	bhcValue	candidate purchase value (out of GetBest*)
+local	philAI::GetBestBHC	thisStrengths	townStrength	per-town fight value + 400
+local	philAI::GetBestBHC	newValue	topVal	best purchase value so far
+param	philAI::ProbableOutcomeOfBattle	attackerRemaining	expectedAttackerLoss	computed as loss*win + (1-win)*raw (an expected loss, not survivors); negated into outcomeValue
+param	philAI::ProbableOutcomeOfBattle	defenderRemaining	expectedDefenderLoss	same for the defender; added to outcomeValue as the attacker's gain
+local	philAI::ProbableOutcomeOfBattle	artsD	defArts	defender artifact RV sum (pairs attArts)
+local	philAI::ProbableOutcomeOfBattle	defendingArmyValue	defenderFight	defender adjusted fight value
+local	philAI::ProbableOutcomeOfBattle	attArmy	attFight	attacker adjusted fight value (float, not an army)
+local	philAI::ProbableOutcomeOfBattle	theExp	experience	ExperienceValueOfStack of the defender
+local	philAI::ProbableOutcomeOfBattle	curFactorValue	lossWeight	attention-weight multiplier on the expected losses
+local	philAI::ProbableOutcomeOfBattle	power	powCurve	exponent of the strength ratio (2.75 / 2.0)
+local	philAI::ProbableOutcomeOfBattle	attackStrengthValue	attStr	difficulty-scaled attacker strength
+local	philAI::ProbableOutcomeOfBattle	rawFightArray	rawFight	unadjusted fight values per side
+kept	philAI::ProbableOutcomeOfBattle	curDefStr	curDefStr	no defender-strength spelling fits 8-9
+kept	philAI::ProbableOutcomeOfBattle	defP	defP	defender pow() term; no fit
+kept	philAI::ProbableOutcomeOfBattle	slotNum	slotNum	artifact slot loop
+local	philAI::ValueOfBuyingBuilding	nextBenefit	score	the building's benefit being scaled
+local	philAI::ValueOfBuyingBuilding	theSlots	filledStackCount	count of garrison slots with creatures
+local	philAI::ValueOfBuyingBuilding	idx	level	dwelling level loop
+local	philAI::ValueOfBuyingBuilding	factionIdIndex	factionId	town m_type
+local	philAI::ValueOfBuyingBuilding	attackOddsVal	enemyAttackChance	LikelihoodOfEnemyAttacking attackChance out
+local	philAI::ValueOfBuyingBuilding	jj	i	plain slot/dwelling loop
+local	philAI::ValueOfBuyingBuilding	totalEnemyStrength	townLossRisk	LikelihoodOfEnemyAttacking lossRisk out (0.6), not a strength
+local	philAI::ValueOfBuyingBuilding	creatureLocatedOk	creaturePresent	garrison already holds the dwelling's creature
+local	philAI::ValueOfBuyingBuilding	selTurns	enemyStrength	attackStrength out (3000), not turns
+local	philAI::ValueOfBuyingBuilding	num	weightedAttack	attackStrength * attackChance out
+local	philAI::ValueOfBuyingBuilding	currentCreatureTypeNum	dwellingCreature	gDwellingType of the level
+local	philAI::ValueOfBuyingBuilding	theAttackWeek	attackWeeks	weeks-until-attack out (6)
+local	philAI::ValueOfBuyingBuilding	nextHighestDwellingId	lastDwellingIndex	highest owned dwelling level
+local	philAI::ValueOfBuyingBuilding	selLevel	castleTier	dwellingsOwned factor for the castle benefit
+param	philAI::LikelihoodOfEnemyAttacking	(unnamed town*)	townPointer	callers pass the town being valued
+param	philAI::LikelihoodOfEnemyAttacking	(unnamed hero*)	heroPointer	callers pass NULL or the hero
+param	philAI::LikelihoodOfEnemyAttacking	chanceA	attackChance	0.15, chance an enemy attacks
+param	philAI::LikelihoodOfEnemyAttacking	chanceB	lossRisk	0.6, chance the attack succeeds (danger = attackChance*lossRisk)
+param	philAI::LikelihoodOfEnemyAttacking	nAttack	attackStrength	3000 attacking strength
+param	philAI::LikelihoodOfEnemyAttacking	nValue	weightedAttack	attackStrength * attackChance
+param	philAI::LikelihoodOfEnemyAttacking	nWeeks	attackWeeks	6 weeks
+param	philAI::LikelihoodOfEnemyAttacking	fOut	dangerRating	attackChance * lossRisk; callers name it dangerRating
+local	philAI::GetBestBuilding	quantity	buildingBenefitCost	ValueOfBuyingBuilding benefitCost out; not a quantity
+local	philAI::GetBestBuilding	bestCost	bestBenefitCost	benefitCost of the chosen building
+local	philAI::GetBestBuilding	points	maxScore	best jittered score
+local	philAI::GetBestBuilding	curRv	resourceValue	ValueOfBuyingBuilding resourceValue out
+local	philAI::ValueOfBuyingCreature	creatRVVal	creatureRV	value of the purchased creatures
+local	philAI::ValueOfBuyingCreature	baseCost	buyCost	GetMonsterCost per-unit cost
+local	philAI::ValueOfBuyingCreature	attackChanceValue	attackOdds	LikelihoodOfEnemyAttacking attackChance out
+local	philAI::ValueOfBuyingCreature	rvCost	costRV	RVConversion of the purchase cost
+local	philAI::ValueOfBuyingCreature	prevStrength	lossOdds	lossRisk out (0.6), not a previous strength
+local	philAI::ValueOfBuyingCreature	savedTurns	attackStrength	attackStrength out (3000), not turns
+local	philAI::ValueOfBuyingCreature	firstFactor	dangerFactor	dangerRating + 0.96, cubed
+local	philAI::ValueOfBuyingCreature	pointsValue	weightedAttack	weightedAttack out
+local	philAI::ValueOfBuyingCreature	nWeeks	weekCount	attackWeeks out
+local	philAI::ValueOfBuyingCreature	archers	breathStacks	counts MONSTER_FLAGS_BREATH_ATTACK stacks (bit 8), not shooters
+local	philAI::ValueOfBuyingCreature	activeSlotNum	townSlot	garrison slot loop
+kept	philAI::ValueOfBuyingCreature	n	n	occupant army slot loop; no fitting slot name in 13-15
+local	philAI::GetBestCreature	bestCostVal	bestRaw	benefitCost of the best dwelling before jitter
+local	philAI::GetBestCreature	bestBuyValue	bestNumber	creature count for the chosen dwelling, not a value
+local	philAI::GetBestCreature	baseDwelling	bestDwelling	chosen dwelling level
+local	philAI::GetBestCreature	curDwelling	dwelling	dwelling level loop
+local	philAI::GetBestCreature	numUnits	count	CreaturesToBuy result
+local	philAI::GetBestCreature	iArmy	armyIndex	garrison slot loop; no Hungarian
+local	philAI::GetBestCreature	prevWorth	rawBenefitCost	ValueOfBuyingCreature benefitCost out
+local	philAI::GetBestCreature	curMon	creature	gDwellingType creature
+local	philAI::GetBestCreature	points	maxScore	best jittered score
+local	philAI::GetBestCreature	rand	randomScore	jittered score; shadowed rand()
+local	philAI::GetBestCreature	canAddSet	canAdd	garrison has a matching or empty slot
+local	philAI::GetBestCreature	curRv	resourceValue	ValueOfBuyingCreature resourceValue out
+local	philAI::CreaturesToBuy(town*,i32)	nGarrison	availableCount	dwelling stock passed as availableCount
+local	philAI::MaxBuyableCreatures	resourceIndex	affordable	holds resources/cost (affordable count), not an index; i is the resource index
+local	philAI::ValueOfBuyingHero	costRVVal	costRV	RVConversion of the 2500-gold hire cost
+local	philAI::ValueOfBuyingHero	tmpNum	unusedChance	StrategicValueOfPosition liveChance out, ignored
+local	philAI::GetBestHero	bestCostVal	bestRaw	benefitCost of the chosen hero before jitter
+local	philAI::GetBestHero	curHero	availableIndex	index into m_availableHeroIds
+local	philAI::GetBestHero	prevWorth	rawBenefitCost	ValueOfBuyingHero benefitCost out
+local	philAI::GetBestHero	points	maxScore	best jittered score
+local	philAI::GetBestHero	adjusted	randomScore	jittered benefitCost
+local	philAI::GetBestHero	availHero	candidate	hero offered for hire
+kept	philAI::GetBestHero	activeCostVal	activeCostVal	ValueOfBuyingHero resourceValue out; no value spelling fits 14-15
+local	philAI::TurnsToBuy	fTurns	turnCount	turns of income for one resource; no Hungarian
+param	philAI::RVOfPosition	pHero	aiHero	DetermineTargetPosition passes the moving hero
+local	philAI::RVOfPosition	xPos	monsterX	FindAdjacentMonster x out
+local	philAI::RVOfPosition	posY	monsterY	FindAdjacentMonster y out
+local	philAI::RVOfPosition	estTurnsVal	journeyTurns	search distance / mobility, scaled
+local	philAI::RVOfPosition	iMonsterChance	guardEventChance	adjacent guard's ValueOfEventAtPosition chance
+local	philAI::RVOfPosition	adjacentEventChance	followChance	live chance at the strategic follow-on position
+local	philAI::RVOfPosition	chanceVal	targetOdds	target cell event chance
+local	philAI::RVOfPosition	curLocType	triggerObjectType	trigger & MAP_TRIGGER_TYPE_MASK
+local	philAI::RVOfPosition	oldChance	primaryEventChance	chance of the path event (hasEvent)
+local	philAI::RVOfPosition	savedValue	followWorth	StrategicValueOfPosition at strategicX/Y
+local	philAI::RVOfPosition	num	startStrategicValue	strategic value at the hero's own cell (unused)
+local	philAI::RVOfPosition	newHeroLiveChance	originSurvival	live chance at the hero's own cell
+local	philAI::RVOfPosition	newCurTriggerType	triggerType	target cell m_triggerType
+local	philAI::RVOfPosition	oldDelta	positionStrategicValue	strategic value at the target
+local	philAI::RVOfPosition	oldVal	targetEventValue	event value at the target/guard
+local	philAI::RVOfPosition	activeChance	destinationSafety	live chance at the target
+param	philAI::StrategicValueOfPosition	pHero	aiHero	the hero whose position is valued
+local	philAI::StrategicValueOfPosition	curTerrain	terrain	terrain at another hero's destination
+local	philAI::StrategicValueOfPosition	newSeedRange	seedLimit	SeedPosition range 60/36
+local	philAI::StrategicValueOfPosition	oldX	searchX	search grid column (was named old)
+local	philAI::StrategicValueOfPosition	thisY	searchY	search grid row
+local	philAI::StrategicValueOfPosition	myValue	strategicWorth	accumulated strategic value returned
+local	philAI::StrategicValueOfPosition	theSearch	ownSearch	searchArray allocated when SVSearchArray is busy
+local	philAI::StrategicValueOfPosition	prevHeroNo	heroNum	index into gpCurPlayer->m_heroIds
+local	philAI::StrategicValueOfPosition	curReach	reach	enemy hero mobility
+local	philAI::StrategicValueOfPosition	searchData	activeSearchArray	the search in use (own or SVSearchArray)
+local	philAI::StrategicValueOfPosition	nGap	gap	distance between destinations; no Hungarian
+local	philAI::StrategicValueOfPosition	baseTerrainNum	targetTerrain	terrain at the target
+kept	philAI::StrategicValueOfPosition	nextExtra2	nextExtra2	dead slot
+param	philAI::FightValueOfStack	useHero	useAdjustedFightValue	also gates the quantity curve, not only the hero bonuses (all callers pass 0/1 for raw/adjusted)
+local	philAI::FightValueOfStack	theArmyWorth	armyValue	running army fight value returned
+local	philAI::FightValueOfStack	worthValue	stackWorth	one stack's fight value
+local	philAI::FightValueOfStack	curTotal	magicTotal	summed spell scores
+local	philAI::FightValueOfStack	baseSlot	slot	army/building/spell slot loop
+local	philAI::FightValueOfStack	quantityMod	countMod	stack-size curve
+local	philAI::FightValueOfStack	curArrows	keepArrows	castle archer count (5 + dwellings*4 + buildings)
+local	philAI::FightValueOfStack	pTown	castle	the defending town (no Hungarian)
+local	philAI::FightValueOfStack	theValue	bestScore	best single spell score
+local	philAI::FightValueOfStack	newLuck	heroLuck	GetLuck result
+local	philAI::FightValueOfStack	savedMod	spellMultiplier	0.25/0.5/1.0 by spell power
+local	philAI::FightValueOfStack	nextStats	combatStatSum	attack+defense+20 clamped, gStatPower index
+kept	philAI::TurnValueOfObelisk	ai	ai	playerAIData* local; playerAI/aiData do not fit, playerAIData is the type name
+param	philAI::EvaluateOneTimeCreaturePurchase	pHero	aiHero	the computer hero offered the creatures (EVENTS passes eventHero)
+local	philAI::EvaluateOneTimeCreaturePurchase	num	purchasedValue	fight value of the purchased creatures
+local	philAI::EvaluateOneTimeCreaturePurchase	n	index	army slot loop
+param	philAI::QuickCombat	attackerDamage	attackerCasualtyFraction	fraction of the attacker's army killed (1.0 = destroyed), handed to DamageGroup
+param	philAI::QuickCombat	defenderDamage	defenderCasualtyFraction	same for the defender
+local	philAI::QuickCombat	resValue	result	ProbableOutcomeOfBattle outcomeValue out (unused)
+local	philAI::QuickCombat	newWinner	army	winning army group (unused)
+local	philAI::QuickCombat	newRnd	roll	Random(0,100)/100
+local	philAI::QuickCombat	theDefenderExp	defExp	defender experience value
+local	philAI::QuickCombat	win	attackerWin	1 when the attacker wins
+local	philAI::QuickCombat	aDeadNum	attackerLossValue	attackerLoss out
+local	philAI::QuickCombat	fracLostVal	lostFraction	winner's casualty fraction
+local	philAI::QuickCombat	dDead	defenderLossValue	defenderLoss out
+local	philAI::QuickCombat	curWinChance	attackerChance	attacker win chance out
+local	philAI::QuickCombat	curWChance	victorChance	the winner's own win chance
+local	philAI::QuickCombat	aLeftNum	expectedAttackLosses	expectedAttackerLoss out (not survivors)
+local	philAI::QuickCombat	dLeft	expectedDefenseLosses	expectedDefenderLoss out (not survivors)
+param	philAI::HeroInteractionAtTown	doInteraction	evaluateOnly	inverted: nonzero only values the visit (shipyard bookkeeping, AddSpell checkOnly, returns transferRating); 0 (DoAllHeroInteractions, TownEvent) buys the book and moves troops; ValueOfEventAtPosition passes 1
+local	philAI::HeroInteractionAtTown	stackCount	heroTroops	sums the hero's creature counts, not stacks
+local	philAI::HeroInteractionAtTown	battlePower	heroArmyValue	hero army fight value (pairs townFV)
+local	philAI::HeroInteractionAtTown	otherIndex	moveToHero	1 when the garrison share exceeds the target, troops move town->hero
+kept	philAI::HeroInteractionAtTown	myTargetShare	myTargetShare	bucket-9 cluster; no target-share spelling in bucket 9
+param	philAI::ChooseGoldOrExperience	thisHero	heroPointer	the hero choosing (EVENTS passes eventHero); philAI's hero-parameter name
+local	philAI::ChooseEvaluateBattle	chance	winChance	ProbableOutcomeOfBattle winChance out
+local	philAI::ChooseEvaluateBattle	curA	attackLossValue	attackerLoss out
+local	philAI::ChooseEvaluateBattle	curB	defenseLossValue	defenderLoss out
+local	philAI::ChooseEvaluateBattle	leftA	expectedAttackLosses	expectedAttackerLoss out (not survivors)
+local	philAI::ChooseEvaluateBattle	leftB	expectedDefenseLosses	expectedDefenderLoss out
+local	philAI::ChooseEvaluateBattle	rating	netValue	outcomeValue plus reward
+param	philAI::ChooseToBuyArtifact	(unnamed hero*)	heroPointer	EVENTS passes eventHero
+param	philAI::ChooseToPayRansomOnHero	(unnamed hero*)	heroPointer	EVENTS passes eventHero
+param	philAI::ChooseToPayRansomOnHero	(unnamed i32)	goldCost	EVENTS passes DAEMON_GOLD
+param	philAI::CombatMonsterEvent	h	heroPointer	the computer hero fighting; philAI's hero-parameter name
+param	philAI::CombatMonsterEvent	monType	monsterType	creature type of the guards
+param	philAI::CombatMonsterEvent	pCount	monsterCount	in/out guard count; no Hungarian
+param	philAI::CombatMonsterEvent	(unnamed mapCell*)	cell	EVENTS passes the event cell
+local	philAI::CombatMonsterEvent	casualtyRatio	heroCasualtyFraction	QuickCombat attacker casualty out
+local	philAI::CombatMonsterEvent	fLoss	guardLosses	QuickCombat defender casualty out; no Hungarian
+local	philAI::CombatMonsterEvent	newCount	remaining	surviving guards
+local	philAI::FightEvent	localWon	heroVictory	QuickCombat result
+local	philAI::FightEvent	defenderLoss	heroCasualtyFraction	receives QuickCombat's attacker fraction (names were swapped)
+local	philAI::FightEvent	attackerLoss	ghostLossFraction	receives the defender (ghost) fraction
+local	philAI::FightEvent	curGuards	ghostCounts	ghosts per stack by site size
+local	philAI::FightEvent	bit	canFight	ChooseEvaluateBattle canWin out
+kept	philAI::FightEvent	theWorth	theWorth	netValue out; bucket 15 has no fitting name
+kept	philAI::FightEvent	activeRewardValue	activeRewardValue	site reward; bucket 15
+local	philAI::TownEvent	quickResult	heroVictory	QuickCombat result
+local	philAI::TownEvent	townPointerPtr	targetCastle	town on the cell (Ptr suffix junk)
+local	philAI::TownEvent	defenderLoss	heroCasualtyFraction	receives QuickCombat's attacker fraction (names were swapped)
+local	philAI::TownEvent	attackerLoss	garrisonCasualtyFraction	receives the garrison fraction
+local	philAI::TownEvent	savedOwner	savedPlayer	saved giCurPlayer (unused)
+local	philAI::TownEvent	firstOutcome	combatResult	DoCombat result
+local	philAI::TownEvent	theHero	defenderHero	hero garrisoned in the town
+param	philAI::DamageGroup	ag	group	army group damaged
+param	philAI::DamageGroup	dmg	casualtyFraction	fraction killed; >= 0.99 destroys
+param	philAI::DamageGroup	(unnamed hero*)	winner	callers pass the other side's hero
+local	philAI::CanBuyBHC	j	creature	holds the dwelling's creature type, not an index
+member	BHC	pTown	townPointer	no Hungarian; matches philAI's townPointer parameters (struct field, all uses in PHILAI)
+param	philAI::ValueOfEventAtPosition	pHero	aiHero	the computer hero evaluating the event
+local	philAI::ValueOfEventAtPosition	newPrize5	captureValue	dragon city capture reward
+local	philAI::ValueOfEventAtPosition	gateX1Val	twinX	column of a candidate twin gate/whirlpool
+local	philAI::ValueOfEventAtPosition	gateY28Val	twinY	row of a candidate twin gate
+local	philAI::ValueOfEventAtPosition	origExitRV5	gateStrategicValue	StrategicValueOfPosition at the candidate, *0.85
+local	philAI::ValueOfEventAtPosition	bBattleWon9	dragonBattle	ChooseEvaluateBattle canWin out (dragon city)
+local	philAI::ValueOfEventAtPosition	guardCount1Value	ghostCount	ghosts per stack by site size
+local	philAI::ValueOfEventAtPosition	loc	candidateCell	cell scanned for a matching gate
+local	philAI::ValueOfEventAtPosition	chosenExitY27Value	bestGateY	row of the best exit
+local	philAI::ValueOfEventAtPosition	prevChosenExitX0	bestGateX	column of the best exit
+local	philAI::ValueOfEventAtPosition	nextGoldCost	lootGold	graveyard/shipwreck gold reward
+local	philAI::ValueOfEventAtPosition	lastPositionValue	stayWorth	strategic value of staying at the hero's cell
+local	philAI::ValueOfEventAtPosition	won9Requested	shouldBattle	ChooseEvaluateBattle canWin out (ghost sites)
+local	philAI::ValueOfEventAtPosition	origBestRV	bestExitValue	best exit value so far
+kept	philAI::ValueOfEventAtPosition	theList	theList	windmill resource array; no fitting bucket-13 name
+kept	philAI::ValueOfEventAtPosition	theArmySlot2	theArmySlot2	replacementSlot out; bucket 13 forced
+kept	philAI::ValueOfEventAtPosition	tempChance	tempChance	ignored liveChance; unusedChance breaks order with the set
+param	philAI	(unnamed i32 in MeanRVOfUnexploredTerritory)	player	GetTurnAIVars passes player
+enum	AIPlaceVisitConstant	ADVMGR_PLACE_VISIT_COUNT	AI_PLACE_VISIT_COUNT	declared in philAI.h for DoAI's iPlacesVisited; ADVMGR_ prefix is the other game's header (update enum-reuse.tsv row 347)
+enum	AIPlaceVisitConstant	ADVMGR_PLACE_COORDINATE_COUNT	AI_PLACE_COORDINATE_COUNT	same
+param	philAI::ChooseEvaluateBattle	outFlag	canWin	1 when the rated outcome plus reward is positive
+param	philAI::ChooseEvaluateBattle	outValue	rating	the positive rating handed back to the caller
+global	PHILAI	gAttackerRemaining	gExpectedAttackerLoss	receives ProbableOutcomeOfBattle's expected attacker loss (alias keeps the storage spelling)
+global	PHILAI	gDefenderRemaining	gExpectedDefenderLoss	receives ProbableOutcomeOfBattle's expected defender loss
+global	PHILAI	gArtifactChoice1	gArtifactPickupValue	ValueOfEventAtPosition: worth of an unguarded artifact (ARTIFACT_EVENT_MODE_PICKUP)
+global	PHILAI	gArtifactChoice2	gArtifactGuardedValue	worth of an artifact guarded by rogues: battle outcome plus win-weighted value (MODE_GUARDED)
+global	PHILAI	gArtifactChoice3	gArtifactPurchaseValue	worth less the 2000 gold price (MODE_GOLD)
+global	PHILAI	costTemp	gCreatureCost	GetMonsterCost fills it with the creature's resource cost; alias keeps .bss order
+global	PHILAI	SVSearchArray	gStrategicSearchArray	StrategicValueOfPosition's shared searchArray; alias keeps .bss order
+static	combatManager::HandleCastSpell	indexToCastOn	gSpellTargetHex	hex under the spell pointer queued as the cast target; alias keeps .data order
+global	CMBTMGR	gSeed	gSavedSeed	SetupCombat saves the adventure random seed, GenerateMap restores it; alias keeps the symbol
+param	army::FindPath	(unnamed)	speed	every caller passes m_stats.speed; unused
+param	combatManager::DoCompAI	(unnamed)	side	CheckGetAIMove passes m_currentSide; unused
+param	combatManager::UpdateGrid	(unnamed)	attributes	every caller passes the stack's m_stats.attributes (UpdateGridForMove forwards its own); unused
+param	combatManager::NoShowCombatLog	(unnamed)	message	the combat log line it would show; empty body

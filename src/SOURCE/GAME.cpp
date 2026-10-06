@@ -212,13 +212,12 @@ void ComputeUALoc(i32 player) {
                 y = PLAYER_ULTIMATE_HINT_NONE;
                 heading = 0;
                 triesCount = 0;
-                while (
-                    !(x >= 0 && x < MAP_CELL_GRID_SIZE && y >= 0 && y < MAP_CELL_GRID_SIZE
-                      && gGame->m_map[x][y].m_triggerType == MAP_OBJECT_NONE
-                      && gGame->m_map[x][y].m_objectIndex == MAP_CELL_NO_FRAME
-                      && gGame->m_map[x][y].m_overlayIndex == MAP_CELL_NO_FRAME
-                      && gGame->m_map[x][y].m_tileIndex >= MAP_CELL_TILES_PER_TERRAIN)
-                ) {
+                while (!(
+                    MAP_CELL_IN_BOUNDS(x, y) && gGame->m_map[x][y].m_triggerType == MAP_OBJECT_NONE
+                    && gGame->m_map[x][y].m_objectIndex == MAP_CELL_NO_FRAME
+                    && gGame->m_map[x][y].m_overlayIndex == MAP_CELL_NO_FRAME
+                    && gGame->m_map[x][y].m_tileIndex >= MAP_CELL_TILES_PER_TERRAIN
+                )) {
                     triesCount++;
                     heading = 0;
                     while (heading == 0)
@@ -4152,7 +4151,7 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
     i32 totalSegments;
     i32 mainFile;
     i32 unusedOffset;
-    char* incomingNow;
+    RemoteMessage* incomingNow;
     char ackedArray[500];
     i32 unusedY;
     i32 replyState;
@@ -4181,7 +4180,7 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
     sprintf(curPathname, "%s%s", gDataPath, "REMOTE.GAM");
     dataSize = FileSize(curPathname);
     sendPacket = static_cast<RemotePayload*>(malloc(REMOTE_MESSAGE_SIZE));
-    if (!gMapBaseType || (gMapBaseType == MULTIPLAYER_BASE_NETWORK && gRemoteReady))
+    if (REMOTE_SAVE_ENCODED())
         mainOutData = static_cast<char*>(malloc(dataSize));
     dataObj = static_cast<char*>(malloc(dataSize));
     mainFile = open(curPathname, O_BINARY);
@@ -4193,7 +4192,7 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
     {
         read(mainFile, dataObj, dataSize);
         close(mainFile);
-        if (!gMapBaseType || (gMapBaseType == MULTIPLAYER_BASE_NETWORK && gRemoteReady))
+        if (REMOTE_SAVE_ENCODED())
             dataSize = EncodeData(mainOutData, dataObj, dataSize);
         else
             mainOutData = dataObj;
@@ -4230,7 +4229,7 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
                             length = dataSize - entry * REMOTE_SAVE_SEGMENT_SIZE;
                         else
                             length = REMOTE_SAVE_SEGMENT_SIZE;
-                        sendPacket->segment.index = static_cast<i16>(entry);
+                        sendPacket->segment.index = entry;
                         memcpy(
                             sendPacket->segment.data,
                             mainOutData + entry * REMOTE_SAVE_SEGMENT_SIZE,
@@ -4247,7 +4246,7 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
                             ShutDown(NULL);
                     }
                 }
-                sendPacket->segment.index = static_cast<i16>(block * REMOTE_SAVE_BATCH_SIZE);
+                sendPacket->segment.index = block * REMOTE_SAVE_BATCH_SIZE;
                 replyState = TransmitAndWait(
                     sendPacket->data,
                     remotePlayer,
@@ -4259,8 +4258,7 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
                 if (!replyState)
                     ShutDown(NULL);
                 for (entry = 0; entry < segmentsInBlock; entry++) {
-                    if (reinterpret_cast<RemoteMessage*>(incomingNow)->payload.data[entry]
-                        > 0) // API-forced: char* record.
+                    if (incomingNow->payload.data[entry] > 0)
                         ackedArray[entry + block * REMOTE_SAVE_BATCH_SIZE] = 1;
                 }
                 wasFinished = 1;
@@ -4280,7 +4278,7 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
 
 cleanup:
     free(sendPacket);
-    if (!gMapBaseType || (gMapBaseType == MULTIPLAYER_BASE_NETWORK && gRemoteReady))
+    if (REMOTE_SAVE_ENCODED())
         free(mainOutData);
     free(dataObj);
     AiPrint("Transmit End");
@@ -4332,7 +4330,7 @@ i32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
     if (!curRet)
         ShutDown(NULL);
     memset(myGotIt, 0, sizeof(myGotIt));
-    if (!gMapBaseType || (gMapBaseType == MULTIPLAYER_BASE_NETWORK && gRemoteReady))
+    if (REMOTE_SAVE_ENCODED())
         decodedData = static_cast<char*>(malloc(REMOTE_SAVE_DECODE_BUFFER_SIZE));
     sendPacket = static_cast<char*>(malloc(REMOTE_MESSAGE_SIZE));
     curInData = static_cast<char*>(malloc(dataSize + REMOTE_SAVE_BUFFER_EXTRA));
@@ -4350,8 +4348,7 @@ i32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
             else
                 ShutDown(NULL);
         }
-        receivedPacketObj =
-            reinterpret_cast<RemoteMessage*>(GetRemoteData(1)); // API-forced: char* record.
+        receivedPacketObj = GetRemoteData(1);
         if (receivedPacketObj
             && (receivedPacketObj->type == REMOTE_MESSAGE_RELIABLE
                 || receivedPacketObj->type == REMOTE_MESSAGE_UNRELIABLE)) {
@@ -4386,7 +4383,7 @@ i32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
             }
         }
     }
-    if (!gMapBaseType || (gMapBaseType == MULTIPLAYER_BASE_NETWORK && gRemoteReady))
+    if (REMOTE_SAVE_ENCODED())
         dataSize = DecodeData(decodedData, curInData);
     else
         decodedData = curInData;
@@ -4399,7 +4396,7 @@ i32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
     okay = 1;
     free(sendPacket);
     free(curInData);
-    if (!gMapBaseType || (gMapBaseType == MULTIPLAYER_BASE_NETWORK && gRemoteReady))
+    if (REMOTE_SAVE_ENCODED())
         free(decodedData);
     AiPrint("Receive End");
     if (gAdvManager->m_active == 1) {

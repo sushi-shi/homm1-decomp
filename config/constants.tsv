@@ -6,7 +6,7 @@
 # (tab-separated; every field is an fnmatch glob, `*` matches anything; the
 # first matching row wins): file owner spelling group detail reason.
 # group/detail are the census' review_group/review_context columns.
-#floor	1934
+#floor	1926
 *	*	0	trivial-function-literal	0 for-init	a for loop's counter starts at zero
 *	*	0	trivial-function-literal	0 initializer*	an accumulator or counter declared at zero
 *	*	1	trivial-function-literal	1 arithmetic*	a one-step offset: the next index, element or count
@@ -97,7 +97,7 @@
 *	*	[01]	call-argument	ViewArmy(class army *, i32, i32) argument [23]	combatManager::ViewArmy's view flags
 *	*	[01]	call-argument	MoveAttack(* argument 2	army::MoveAttack's move-only flag
 *	*	[01]	call-argument	GetNextArmy(* argument 1	combatManager::GetNextArmy's check-morale flag
-*	*	[01]	call-argument	SetGridMode(* argument 1	combatManager::SetGridMode's grid flag
+*	*	[01]	call-argument	SetDrawRightToLeft(* argument 1	combatManager::SetDrawRightToLeft's right-to-left draw flag
 *	*	[01]	call-argument	UpdateGrid(* argument 2	combatManager::UpdateGrid's redraw flag
 *	*	[01]	call-argument	CastMassSpell(* argument 2	combatManager::CastMassSpell's cure-only flag
 *	*	[01]	call-argument	CastSpell(* argument 3	combatManager::CastSpell's flag argument
@@ -293,7 +293,7 @@ src/SOURCE/HERO.cpp	*	[01]	call-argument	RestoreCell(* argument 6	game::RestoreC
 src/SOURCE/HERO.cpp	hero::hero	0	trivial-function-literal	0 store*	constructor zero-initialisation
 src/SOURCE/ARMY.cpp	army::army	0	trivial-function-literal	0 store*	constructor zero-initialisation
 src/SOURCE/HEXCELL.cpp	hexcell::hexcell	0	trivial-function-literal	0 store*	constructor zero-initialisation
-src/SOURCE/ARMY.cpp	*	0	trivial-function-literal	0 store kills	a damage/kill accumulator reset
+src/SOURCE/ARMY.cpp	*	0	trivial-function-literal	0 store killed	a damage/kill accumulator reset
 src/SOURCE/FINDPATH.cpp	*	0	trivial-function-literal	0 store low	the binary search's low bound
 src/SOURCE/FINDPATH.cpp	*	0	trivial-function-literal	0 store gSearchLow	the binary search's low bound
 src/SOURCE/DRAWING.cpp	*	0	trivial-function-literal	0 store row	the first grid row
@@ -301,7 +301,7 @@ src/SOURCE/DRAWING.cpp	*	0	trivial-function-literal	0 store m_gridUpdateRow	the 
 src/SOURCE/ARMY.cpp	*	0	trivial-function-literal	0 store m_pathFlag	a cleared per-hex path mark
 src/SOURCE/ARMY.cpp	*	0	trivial-function-literal	0 store m_hitPointsLost	no damage carried on the top creature
 src/SOURCE/HERO.cpp	*	0	trivial-function-literal	0 store m_heroLocatorPage	the hero locator's first page
-src/SOURCE/ARMY.cpp	*	0	trivial-function-literal	0 store oldMode	a saved flag reset
+src/SOURCE/ARMY.cpp	*	0	trivial-function-literal	0 store prevExtendDown	a saved flag reset
 src/SOURCE/ARMY.cpp	*	0	trivial-function-literal	0 array-index m_directions	the path's first step (the one next to the target)
 src/SOURCE/FINDPATH.cpp	*	0	trivial-function-literal	0 array-index m_cells	combat nodes in the first column of m_cells
 src/SOURCE/HERO.cpp	*	0	trivial-function-literal	0 array-index m_name	the name's first character (NUL: empty name)
@@ -319,7 +319,7 @@ src/SOURCE/SPELLS.cpp	*	4	arithmetic	operator % SRandom()	the dwarves' magic-res
 src/SOURCE/ARMY.cpp	*	*	*	* store gMonoIconSkip	gMonoIconSkip writes; retail never reads the variable
 src/SOURCE/SWAPMGR.cpp	*	*	*	store to gMonoIconSkip	gMonoIconSkip writes; retail never reads the variable
 src/SOURCE/SWAPMGR.cpp	*	*	*	* store gMonoIconSkip	gMonoIconSkip writes; retail never reads the variable
-src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_gridMode	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_drawRightToLeft	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	-1	trivial-function-literal	-1 store m_unknown6f9	an index, position or timer local/field reset to -1 (none yet)
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_limitCreatureHex	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_limitCreature	a flag, counter or index local/field set to 0 or 1
@@ -329,7 +329,7 @@ src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_unknown6e8	a flag,
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_unknown6db	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_castleSide[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_combatWindowOpen	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_humanSide[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_humanPlayerSide[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store m_catapultAttacksRemaining[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store m_keepAttacksRemaining[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_visitingHeroPresent[[][]]	a flag, counter or index local/field set to 0 or 1
@@ -344,7 +344,7 @@ src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_redrawExtent	a fla
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store gEffectFileId	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store gbRetreatWin	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store gbCombatSurrender	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_sideDefeated[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_sideSurrendered[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store m_limitCreature	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store m_combatWindowOpen	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store gLimitedCombatUpdatePalette	a flag, counter or index local/field set to 0 or 1
@@ -363,7 +363,6 @@ src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_groundFrame	a flag
 src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store m_groundFrame	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_pathFlag	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_obstacleIndex	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store numTrees	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_numArmies[[][]]	a flag, counter or index local/field set to 0 or 1
@@ -373,8 +372,8 @@ src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store gInHighMoraleBonus	a
 src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store gInHighMoraleBonus	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 bound m_quantity	a bound at one (the last remaining item, more than one)
 src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 equality SRandom()	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
-src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store bSkip	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store bSkip	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store skip	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store skip	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store isWinner	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store isWinner	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store giMinExtentX	a flag, counter or index local/field set to 0 or 1
@@ -424,7 +423,7 @@ src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 store gbThisNetHasControl	
 src/SOURCE/COMMAND.cpp	*	0	trivial-function-literal	0 store gbThisNetHasControl	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 store m_sideRetreated[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 store gbCombatSurrender	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 store m_sideDefeated[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 store m_sideSurrendered[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/PATH.cpp	*	0	trivial-function-literal	0 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
 src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
 src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 store mask	a flag, counter or index local/field set to 0 or 1
@@ -527,15 +526,14 @@ src/SOURCE/SPELLAI.cpp	*	1	trivial-function-literal	1 store gSpellAIEffectShift	
 src/SOURCE/SPELLAI.cpp	*	0	trivial-function-literal	0 store gSpellAIEffectShift	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/SPELLAI.cpp	*	1	trivial-function-literal	1 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
 src/SOURCE/SPELLAI.cpp	*	0	trivial-function-literal	0 store bDone	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/SPELLAI.cpp	*	0	trivial-function-literal	0 store spellEffect	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/SPELLAI.cpp	*	1	trivial-function-literal	1 store bDone	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/SPELLAI.cpp	*	0	trivial-function-literal	0 store effect	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLAI.cpp	*	1	trivial-function-literal	1 store bDone	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/SPELLAI.cpp	*	0	trivial-function-literal	0 store gArmyEffected[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/SPELLAI.cpp	*	0	trivial-function-literal	0 equality	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
-src/SOURCE/SPELLAI.cpp	*	0	trivial-function-literal	0 store posEffect	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/SPELLAI.cpp	*	1	trivial-function-literal	1 equality cure	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/SPELLAI.cpp	*	0	trivial-function-literal	0 store posTotal	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLAI.cpp	*	1	trivial-function-literal	1 equality cureOnly	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
 src/SOURCE/SPELLAI.cpp	*	0	trivial-function-literal	0 store stacksKilled[[][]]	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/SPELLAI.cpp	*	0	trivial-function-literal	0 store partValue[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLAI.cpp	*	0	trivial-function-literal	0 store damagedValue[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/SPELLAI.cpp	*	1	trivial-function-literal	1 store gArmyEffected[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/SPELLS.cpp	*	1	trivial-function-literal	1 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
 src/SOURCE/SPELLS.cpp	*	0	trivial-function-literal	0 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
@@ -551,11 +549,13 @@ src/SOURCE/SPELLS.cpp	*	1	trivial-function-literal	1 store m_animationFrame	a fl
 src/SOURCE/SPELLS.cpp	*	0	trivial-function-literal	0 store m_redrawExtent	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/SPELLS.cpp	*	1	trivial-function-literal	1 equality cureOnly	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
 src/SOURCE/SPELLS.cpp	*	0	trivial-function-literal	0 store m_gridUpdateRow	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/SPELLS.cpp	*	0	trivial-function-literal	0 array-index adjHexes	the first or second element of a local buffer, table or slot pair
+src/SOURCE/SPELLS.cpp	*	0	trivial-function-literal	0 array-index affectedHexes	the first or second element of a local buffer, table or slot pair
 src/SOURCE/SPELLS.cpp	*	0	trivial-function-literal	0 store hit	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLS.cpp	*	0	trivial-function-literal	0 store anyAffected	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/SPELLS.cpp	*	1	trivial-function-literal	1 equality	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
 src/SOURCE/SPELLS.cpp	*	1	trivial-function-literal	1 store gArmyEffected[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/SPELLS.cpp	*	1	trivial-function-literal	1 store hit	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLS.cpp	*	1	trivial-function-literal	1 store anyAffected	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/SPELLS.cpp	*	0	trivial-function-literal	0 store m_updateFlags	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/SPELLS.cpp	*	1	trivial-function-literal	1 store m_updateFlags	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/VIEW.cpp	*	0	trivial-function-literal	0 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
@@ -1105,7 +1105,7 @@ src/SOURCE/KB.cpp	NormalDialog	*	arithmetic	*	the dialog layout arithmetic (halv
 src/SOURCE/KB.cpp	ShowCongrats	100	arithmetic	operator /	a percentage scale
 src/SOURCE/PHILAI.cpp	CheckDoMain	*	arithmetic	operator + iLastFrameRateTimer	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::CheckBuyStuff	*	comparison-or-bound	operator < m_resources[[][]]	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::GoodAdjacent	*	comparison-or-bound	operator > iChance	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
+src/SOURCE/PHILAI.cpp	philAI::GoodAdjacent	*	comparison-or-bound	operator > chance	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::CheckReload	*	store	store to fReduceFactor	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::CheckReload	*	store	store to enemyPressure	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::CheckReload	*	comparison-or-bound	operator < heroFightValue	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
@@ -1114,7 +1114,7 @@ src/SOURCE/PHILAI.cpp	philAI::CheckReload	*	arithmetic	operator [*] heroFightVal
 src/SOURCE/PHILAI.cpp	philAI::CheckReload	*	arithmetic	operator + m_mobility	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::CheckReload	*	arithmetic	operator + distance	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::CheckBerserk	*	store	store to fBerserkFactor	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::CheckBerserk	*	arithmetic	operator [*] enemy	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
+src/SOURCE/PHILAI.cpp	philAI::CheckBerserk	*	arithmetic	operator [*] enemyStrength	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::DoDimensionDoor	*	comparison-or-bound	operator < m_remainingMobility	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::DoDimensionDoor	*	comparison-or-bound	operator <= abs()	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::DoAI	*	arithmetic	operator + m_mobility	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
@@ -1143,32 +1143,32 @@ src/SOURCE/PHILAI.cpp	philAI::DetermineTargetPosition	*	comparison-or-bound	oper
 src/SOURCE/PHILAI.cpp	philAI::DetermineTargetPosition	*	comparison-or-bound	operator > giCurTurn	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::DetermineTargetPosition	*	arithmetic	operator [*] m_income[[][]]	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::DetermineTargetPosition	*	arithmetic	operator +	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::ProbableOutcomeOfBattle	*	store	store to power	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
+src/SOURCE/PHILAI.cpp	philAI::ProbableOutcomeOfBattle	*	store	store to powCurve	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::ProbableOutcomeOfBattle	*	store	store to winChance	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::ProbableOutcomeOfBattle	*	arithmetic	operator + attArts	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::ProbableOutcomeOfBattle	*	arithmetic	operator + artsD	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
+src/SOURCE/PHILAI.cpp	philAI::ProbableOutcomeOfBattle	*	arithmetic	operator + defArts	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::GetOddsOfWinning	*	return	return value	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::GetBestBuilding	*	store	store to bestCost	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
+src/SOURCE/PHILAI.cpp	philAI::GetBestBuilding	*	store	store to bestBenefitCost	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::GetBestBuilding	*	arithmetic	operator + Random()	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::GetBestCreature	*	arithmetic	operator + Random()	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::ValueOfBuyingHero	*	store	store to heroCost[[][]]	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::ValueOfBuyingHero	*	arithmetic	operator + m_experience	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::ValueOfBuyingHero	*	arithmetic	operator / m_experience	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::ValueOfBuyingHero	*	arithmetic	compound assignment to heroRV	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::LikelihoodOfEnemyAttacking	*	store	store to chanceA	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::LikelihoodOfEnemyAttacking	*	store	store to chanceB	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::LikelihoodOfEnemyAttacking	*	store	store to nAttack	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::LikelihoodOfEnemyAttacking	*	store	store to nWeeks	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
+src/SOURCE/PHILAI.cpp	philAI::LikelihoodOfEnemyAttacking	*	store	store to attackChance	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
+src/SOURCE/PHILAI.cpp	philAI::LikelihoodOfEnemyAttacking	*	store	store to lossRisk	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
+src/SOURCE/PHILAI.cpp	philAI::LikelihoodOfEnemyAttacking	*	store	store to attackStrength	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
+src/SOURCE/PHILAI.cpp	philAI::LikelihoodOfEnemyAttacking	*	store	store to attackWeeks	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::GetTurnAttentionValue	*	store	store to gameWeightA	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::GetTurnAttentionValue	*	store	store to gameWeightB	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::GetTurnAttentionValue	*	store	store to gameRemainder	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::GetTurnAttentionValue	*	comparison-or-bound	operator < giCurTurn	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::TurnsToBuy	*	store	store to fTurns	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::RVOfPosition	*	store	store to iMonsterChance	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
+src/SOURCE/PHILAI.cpp	philAI::TurnsToBuy	*	store	store to turnCount	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
+src/SOURCE/PHILAI.cpp	philAI::RVOfPosition	*	store	store to guardEventChance	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::RVOfPosition	*	arithmetic	operator /	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::RVOfPosition	*	arithmetic	compound assignment to totalValue	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::StrategicValueOfPosition	*	store	store to liveChance	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::StrategicValueOfPosition	*	store	store to newSeedRange	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
+src/SOURCE/PHILAI.cpp	philAI::StrategicValueOfPosition	*	store	store to seedLimit	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::StrategicValueOfPosition	*	comparison-or-bound	operator < gaiHeroLiveChance[[][]]	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::StrategicValueOfPosition	*	comparison-or-bound	operator <= distance	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::StrategicValueOfPosition	*	arithmetic	operator - gaiHeroLiveChance[[][]]	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
@@ -1179,25 +1179,25 @@ src/SOURCE/PHILAI.cpp	philAI::StrategicValueOfPosition	*	comparison-or-bound	ope
 src/SOURCE/PHILAI.cpp	philAI::StrategicValueOfPosition	*	arithmetic	operator - distance	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::StrategicValueOfPosition	*	arithmetic	operator [*]	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::StrategicValueOfPosition	*	bitwise-or-packing	operator >>	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::StrategicValueOfPosition	*	comparison-or-bound	operator < nGap	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::StrategicValueOfPosition	*	arithmetic	operator - nGap	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::StrategicValueOfPosition	*	comparison-or-bound	operator > myValue	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::StrategicValueOfPosition	*	store	store to myValue	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
+src/SOURCE/PHILAI.cpp	philAI::StrategicValueOfPosition	*	comparison-or-bound	operator < gap	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
+src/SOURCE/PHILAI.cpp	philAI::StrategicValueOfPosition	*	arithmetic	operator - gap	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
+src/SOURCE/PHILAI.cpp	philAI::StrategicValueOfPosition	*	comparison-or-bound	operator > strategicWorth	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
+src/SOURCE/PHILAI.cpp	philAI::StrategicValueOfPosition	*	store	store to strategicWorth	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::ValueOfTown	*	arithmetic	compound assignment to sum	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::TurnCostResource	*	arithmetic	operator [*] m_income[[][]]	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::TurnValueOfObelisk	*	arithmetic	operator / gArtifactBaseRV[[][]]	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::TurnValueOfObelisk	*	return	return value	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::TurnValueOfObelisk	*	arithmetic	operator [*] each	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::FightValueOfStack	*	comparison-or-bound	operator > m_creatureCounts[[][]]	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::FightValueOfStack	*	store	store to quantityMod	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
+src/SOURCE/PHILAI.cpp	philAI::FightValueOfStack	*	store	store to countMod	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::FightValueOfStack	*	arithmetic	operator +	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::FightValueOfStack	*	arithmetic	operator + morale	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::FightValueOfStack	*	arithmetic	operator /	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::FightValueOfStack	*	array-index	array subscript gBattleStat	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::FightValueOfStack	*	array-index	array subscript gSpellCastNumMod	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::EvaluateOneTimeCreaturePurchase	*	store	store to leastStackValue	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::QuickCombat	*	store	store to defenderDamage	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::QuickCombat	*	store	store to attackerDamage	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
+src/SOURCE/PHILAI.cpp	philAI::QuickCombat	*	store	store to defenderCasualtyFraction	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
+src/SOURCE/PHILAI.cpp	philAI::QuickCombat	*	store	store to attackerCasualtyFraction	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	*	comparison-or-bound	operator >= m_resources[[][]]	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	*	arithmetic	compound assignment to m_resources[[][]]	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	*	comparison-or-bound	operator > statSum	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)

@@ -68,7 +68,6 @@ public:
     i32 IsVis(void) {
         return m_pointerFlags & 1;
     }
-    void CheckUpdateMousePos(void);
     // Empty in the Windows build (retail 0x00476e20, `ret 8`).
     void MovePointer(i16 x, i16 y);
     // Empty in the Windows build (retail 0x00473410, `ret 4`); the locator

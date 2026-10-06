@@ -64,7 +64,7 @@ i32 combatManager::AICheckRetreat(void) {
                     thatArmy->m_creatureCounts[armyIndex] = m_armies[owner][armyIndex].m_quantity;
                 else
                     thatArmy->m_creatureCounts[armyIndex] =
-                        static_cast<i16>(m_armies[owner][armyIndex].m_quantity * 1.2);
+                        m_armies[owner][armyIndex].m_quantity * 1.2;
             } else {
                 thatArmy->m_creatureTypes[armyIndex] = CREATURE_NONE;
                 thatArmy->m_creatureCounts[armyIndex] = 0;
@@ -72,12 +72,11 @@ i32 combatManager::AICheckRetreat(void) {
         }
         theForces[owner] = gPhilAI->FightValueOfStack(thatArmy, curLeader, 1);
         if (m_combatTowns[owner])
-            theForces[owner] = static_cast<i32>(theForces[owner] * 1.1);
+            theForces[owner] = theForces[owner] * 1.1;
         artifactTotals[owner] = 0;
         if (curLeader) {
             for (armyIndex = 0; armyIndex < HERO_ARTIFACT_SLOT_COUNT; armyIndex++) {
-                if (curLeader->m_artifacts[armyIndex] >= 0
-                    && curLeader->m_artifacts[armyIndex] < ARTIFACT_REGULAR_END)
+                if (ARTIFACT_HAS_BASE_VALUE(curLeader->m_artifacts[armyIndex]))
                     artifactTotals[owner] += gArtifactBaseRV[curLeader->m_artifacts[armyIndex]];
             }
         }
@@ -126,7 +125,7 @@ i32 combatManager::AICheckRetreat(void) {
 // target class, walkers otherwise close in; a castle attacker steps toward
 // the gate. The chosen move is nudged onto a free hex next to an enemy.
 VA(0x00411d88, 0x872)
-void combatManager::DoCompAI(i8) {
+void combatManager::DoCompAI(i8 side) {
     i8 theyOutshoot;
     i16 mainShooters[COMBAT_SIDE_COUNT];
     i32 newStrengths[COMBAT_SIDE_COUNT];

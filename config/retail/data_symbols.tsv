@@ -225,7 +225,7 @@ rva	size	symbol	provenance
 0x0008a6d0	4	_SPELL_AI_SLOW_MODIFIER	Buka typed payload, unique anchored code uses and disjoint data owners
 0x0008a6e4	4	_SPELL_AI_HASTE_MODIFIER	Buka typed payload, unique anchored code uses and disjoint data owners
 0x0008a6e8	4	_SPELL_AI_BLESS_MODIFIER	Buka typed payload, unique anchored code uses and disjoint data owners
-0x0008a6ec	4	_SPELL_AI_STONESKIN_MODIFIER	Buka typed payload, unique anchored code uses and disjoint data owners
+0x0008a6ec	4	_SPELL_AI_PROTECTION_MODIFIER	Buka typed payload, unique anchored code uses and disjoint data owners
 0x0008a70c	64	?gTownObjectType@@3QAY0BA@$$CBCA	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000a01a8	1028	?gLogicalPalette@@3UWingPalette@@A	Buka typed payload, unique anchored code uses and disjoint data owners
 0x0009f97c	1	_?indexToCastOn@?1??HandleCastSpell@@YAFAAUtag_message@@@Z@4CA	Buka typed payload, unique anchored code uses and disjoint data owners
@@ -353,9 +353,9 @@ rva	size	symbol	provenance
 0x000cccb0	4	?gSpellAITargetSide@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x0008a6d4	4	_SPELL_AI_BLIND_MODIFIER	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x0008a6d8	4	_SPELL_AI_CURSE_MODIFIER	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x0008a6dc	4	_SPELL_AI_PARALYZE_MODIFIER	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x0008a6e0	4	_SPELL_AI_BERSERK_MODIFIER	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x0008a6f0	4	_SPELL_AI_SHIELD_MODIFIER	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
+0x0008a6dc	4	_SPELL_AI_BERSERK_MODIFIER	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
+0x0008a6e0	4	_SPELL_AI_PARALYZE_MODIFIER	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
+0x0008a6f0	4	_SPELL_AI_ANTI_MAGIC_MODIFIER	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000d7f60	4	?gLeftRightSave@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000bb138	4	?gItemPurchaseScore@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000b2210	4	?gEventTownScore@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls

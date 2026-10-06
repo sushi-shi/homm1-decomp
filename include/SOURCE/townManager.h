@@ -321,13 +321,9 @@ public:
     virtual void Close(void) OVERRIDE;
     virtual i16 Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
-    void SetupExtraStuff(void);
     void SetTown(town* value) {
         m_town = value;
     }
-    void ChangeTown(void);
-    void SetupTown(void);
-    void UnloadTown(void);
     void SetArmyCommand(i16 qualifier);
     void SetCommandAndText(struct tag_message& message);
     void ShowText(char*);
