@@ -330,6 +330,7 @@ bool Translate(const SDL_Event& source, Event& event) {
 }  // namespace
 
 bool PollEvent(Event& event, u32 timeoutMilliseconds) {
+    sdl::YieldToBrowser();
     PumpReplay();
     if (!gPending.empty()) {
         event = gPending.front();

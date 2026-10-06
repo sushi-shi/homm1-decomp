@@ -5,6 +5,10 @@
 #include <cstdlib>
 #include <sys/stat.h>
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
+
 namespace platform {
 
 namespace {
@@ -74,8 +78,27 @@ u32 Ticks() {
 }
 
 void Sleep(u32 milliseconds) {
+    // SDL_Delay returns to the browser while it waits (ASYNCIFY).
     SDL_Delay(milliseconds);
 }
+
+namespace sdl {
+
+void YieldToBrowser() {
+#ifdef __EMSCRIPTEN__
+    // A frame at 60 Hz.
+    constexpr u32 kYieldInterval = 16;
+    static u32 gLastYield = 0;
+    u32 now = Ticks();
+    if (now - gLastYield < kYieldInterval)
+        return;
+    Present(true);
+    emscripten_sleep(0);
+    gLastYield = Ticks();
+#endif
+}
+
+}  // namespace sdl
 
 void ShowMessage(const char* title, const char* text) {
     std::string utf8Title = ToUtf8(title);

@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Heroes of Might and Magic</title>
+<link rel="stylesheet" href="homm1.css">
+</head>
+<body>
+<header>
+  <h1>Heroes of Might and Magic</h1>
+  <nav>
+    <a id="link-game" href="?">Game</a>
+    <a id="link-editor" href="?program=editor">Scenario editor</a>
+  </nav>
+</header>
+
+<main>
+  <section id="setup" hidden>
+    <p id="status">Loading the program...</p>
+
+    <div id="import">
+      <p>
+        The program needs the game files of the Buka edition: the game folder
+        holding <code>DATA</code>, <code>MAPS</code>, <code>GAMES</code>,
+        <code>SOUND</code> and <code>ANIM</code>. Choose that folder, or a
+        folder above it that also holds the CD's <code>Tracks</code> music and
+        the <code>HEROES.HLP</code> help file. The files are copied into this
+        browser's storage for this site and never leave your computer.
+      </p>
+      <label class="button">
+        Choose a folder...
+        <input id="pick-folder" type="file" webkitdirectory directory multiple>
+      </label>
+      <label class="button secondary">
+        Add single files...
+        <input id="pick-files" type="file" multiple>
+      </label>
+      <p id="progress" hidden></p>
+    </div>
+
+    <div id="ready" hidden>
+      <button id="play" type="button">Play</button>
+      <button id="forget" type="button" class="secondary">Remove the stored files</button>
+      <details id="saves-box">
+        <summary>Saved games and maps</summary>
+        <p>Games and maps you save are kept in this browser. Download a copy
+        to keep it elsewhere.</p>
+        <ul id="saves"></ul>
+      </details>
+    </div>
+  </section>
+
+  <section id="screen" hidden>
+    <canvas id="canvas" tabindex="-1" oncontextmenu="event.preventDefault()"></canvas>
+    <p id="ended" hidden></p>
+  </section>
+
+  <p id="popup" hidden></p>
+
+  <details id="console">
+    <summary>Program log</summary>
+    <pre id="log"></pre>
+  </details>
+</main>
+
+<script src="homm1.js"></script>
+</body>
+</html>

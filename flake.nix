@@ -73,6 +73,8 @@
         # reports would be noise; the build sandbox also blocks LeakSanitizer.
         preCheck = "export ASAN_OPTIONS=detect_leaks=0";
       });
+      # The browser build (nix/wasm.nix).
+      wasm = import ./nix/wasm.nix { inherit pkgs; src = self; };
       app = name: target: description: {
         type = "app";
         program = "${runner name target}/bin/${name}";
@@ -95,9 +97,20 @@
           program = "${native}/bin/homm1-editor";
           meta.description = "The native scenario editor; pass --data DIR or set HOMM1_DATA";
         };
+        web = {
+          type = "app";
+          program = "${wasm.serve}/bin/homm1-web";
+          meta.description = "Serve the browser build on http://127.0.0.1:8000/ (or the port given)";
+        };
+        web-smoke = {
+          type = "app";
+          program = "${wasm.smoke}/bin/homm1-web-smoke";
+          meta.description = "Drive the browser build headless on your game data (--data DIR)";
+        };
       };
       packages.${system} = {
         inherit native sanitized;
+        wasm = wasm.site;
       };
       checks.${system} = {
         inherit native sanitized;
