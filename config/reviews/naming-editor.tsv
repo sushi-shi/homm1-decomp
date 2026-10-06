@@ -26,3 +26,4 @@ enum	ExtraWindowConstant	EXTRA_WINDOW_NEUTRAL_OWNER	EXTRA_WINDOW_FIRST_PLAYER	ow
 enum	CellWindowConstant	CELL_WINDOW_OBJECT_FLAG	CELL_WINDOW_EVENT_TOGGLE	the toggle flips m_triggerType's MAP_TRIGGER_EVENT bit
 enum	EventsDialogButton	DIALOG_BUTTON_1/DIALOG_BUTTON_2	EVENTS_DIALOG_CANCEL/EVENTS_DIALOG_OK	slot 1 restores the cell or keeps the record (NewMapDialog returns 0), slot 2 applies (ClearOptionsDialog erases)
 global	EditCell	giDebugLevel	gDebugLevel	the readable name of KB.h's aliased global (the storage spelling was written out)
+member	editManager	m_lastCommandId	m_lastHoverId	written only by the clear, terrain and object tools' WIDGET_COMMAND_HOVER cases, which return early when the hovered widget (other than the map) repeats it; eventsManager keeps the same test in its own gEventsLastHoverId

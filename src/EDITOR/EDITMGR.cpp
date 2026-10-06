@@ -8933,7 +8933,7 @@ editManager::editManager(void) {
     m_viewY = 0;
     m_cursorX = 0;
     m_cursorY = 0;
-    m_lastCommandId = WIDGET_ID_NONE;
+    m_lastHoverId = WIDGET_ID_NONE;
     m_dispatchMask = EDIT_MANAGER_DISPATCH_MASK;
     gNextObjectId = 1;
     m_zoomedOut = EDIT_ZOOM_OUT;
@@ -10428,8 +10428,9 @@ void editManager::SetCoast(i16 x, i16 y) {
     }
 }
 
-// Save checks: stone liths and whirlpools come in pairs; a random town keeps
-// its approach clear; every placed hero gets a distinct hero id.
+// Save checks: stone liths and whirlpools come in pairs; the top row of a
+// random town's footprint is cleared; every placed hero gets a distinct hero
+// id.
 VA(0x00405ebf, 0x28b)
 void editManager::CheckObjects(void) {
     i32 whirlpools;

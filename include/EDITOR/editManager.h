@@ -421,8 +421,10 @@ public:
     i16 m_placedY;
     // The object tool clears it when it places an object (-1 at start).
     i16 m_placedState;
-    // The widget id of the last tool command (-1 none).
-    i16 m_lastCommandId;
+    // The widget the tool managers last handled a hover for (WIDGET_ID_NONE
+    // at start): a repeated hover over another widget than the map is
+    // ignored.
+    i16 m_lastHoverId;
     // The object animation frame DrawCell adds (0..5).
     i16 m_animationFrame;
     // The executive manager of the selected tool.

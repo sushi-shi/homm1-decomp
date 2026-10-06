@@ -246,7 +246,7 @@ i16 overlayManager::Main(tag_message& message) {
                         }
                         return MESSAGE_DISPATCH_CONSUME;
                     }
-                    gEditManager->m_lastCommandId = message.id;
+                    gEditManager->m_lastHoverId = message.id;
                     switch (message.id) {
                         case EDIT_CONTROL_MAP:
                             gMouseManager->MouseCoords(cellX, cellY);

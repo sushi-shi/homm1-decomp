@@ -180,10 +180,9 @@ i16 clearManager::Main(tag_message& message) {
                         );
                     break;
                 case WIDGET_COMMAND_HOVER:
-                    if (message.id != EDIT_CONTROL_MAP
-                        && message.id == gEditManager->m_lastCommandId)
+                    if (message.id != EDIT_CONTROL_MAP && message.id == gEditManager->m_lastHoverId)
                         return MESSAGE_DISPATCH_CONSUME;
-                    gEditManager->m_lastCommandId = message.id;
+                    gEditManager->m_lastHoverId = message.id;
                     switch (message.id) {
                         case EDIT_CONTROL_MAP:
                             gMouseManager->MouseCoords(newX, newY);
