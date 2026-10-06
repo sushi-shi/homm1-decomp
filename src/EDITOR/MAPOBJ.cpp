@@ -1366,7 +1366,7 @@ void editManager::PlaceTreasures(i32 density, i32 strength) {
             bounty = &gOverlayTypes[k];
         if (!strcmpi(gOverlayTypes[k].name, "chest   "))
             chest = &gOverlayTypes[k];
-        if (!strcmpi(gOverlayTypes[k].name, "genieLamp    "))
+        if (!strcmpi(gOverlayTypes[k].name, "lamp    "))
             genieLamp = &gOverlayTypes[k];
         if (!strcmpi(gOverlayTypes[k].name, "firemult"))
             bonfire = &gOverlayTypes[k];
