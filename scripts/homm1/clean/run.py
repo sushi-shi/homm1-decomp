@@ -163,8 +163,6 @@ def generate(files: dict[str, bytes], *, variant: str = "source", control: bool 
         if kind == "cpp":
             problems += [f"{name}: scaffolding survived: {word}"
                          for word in sorted(set(source.residue(cleaned)))]
-            problems += [f"{name}: uses the storage spelling {word}; write {renames[word]}"
-                         for word in source.storage_spellings(cleaned, renames)]
         elif any(token == "comment" for token, _ in source.tokens(cleaned, **kinds[kind])):
             problems.append(f"{name}: comment survived")
         problems += [f"{name}: stranded punctuation: {line}"

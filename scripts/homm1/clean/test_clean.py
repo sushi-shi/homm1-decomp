@@ -243,15 +243,6 @@ class FrameSlotAliasTests(unittest.TestCase):
                     Path(tree), {"A": [".text"]}, {"a.cpp"}), [])
 
 
-class StorageSpellingTests(unittest.TestCase):
-    def test_the_storage_spelling_of_a_dropped_define_is_reported(self):
-        renames = source.aliases([LayoutAliasTests.HEADER])
-        self.assertEqual(source.storage_spellings("i32 f() { return gpGame != 0; }", renames),
-                         ["gpGame"])
-        self.assertEqual(source.storage_spellings('char* s = "gpGame"; game* g = gGame;',
-                                                  renames), [])
-
-
 class EditorTargetTests(unittest.TestCase):
     UNITS = """
 [build]

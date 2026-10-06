@@ -56,8 +56,6 @@ Generation fails in any of these cases:
 - a frame-slot alias is not `#undef`'d right after its function, brackets
   more than one definition, or its readable name also spells a parameter,
   member or qualified name there (or its storage spelling appears there);
-- a source spells the storage name of a `.bss` alias, which exists only
-  through the dropped define;
 - `src/` holds a file that no rule covers;
 - in the classic view, a catalog reference survives.
 
