@@ -64,6 +64,13 @@ void army::InitClean(void) {
     m_standIcon = NULL;
 }
 
+// The commander's skill adds to the creature's; the byte the stack keeps it
+// in holds no more than ARMY_STAT_MAX.
+static i8 AddCommanderStat(i8 creatureStat, i8 heroStat) {
+    i32 total = creatureStat + heroStat;
+    return total > ARMY_STAT_MAX ? ARMY_STAT_MAX : total;
+}
+
 void army::Init(
     i8 creatureType,
     i16 quantity,
@@ -80,8 +87,10 @@ void army::Init(
     m_spellEndCondition = ARMY_CANCEL_SPELLS_NONE;
     commander = gCombatManager->m_heroes[side];
     if (commander) {
-        m_stats.attack += commander->m_primaryStats[HERO_PRIMARY_ATTACK];
-        m_stats.defense += commander->m_primaryStats[HERO_PRIMARY_DEFENSE];
+        m_stats.attack =
+            AddCommanderStat(m_stats.attack, commander->m_primaryStats[HERO_PRIMARY_ATTACK]);
+        m_stats.defense =
+            AddCommanderStat(m_stats.defense, commander->m_primaryStats[HERO_PRIMARY_DEFENSE]);
     }
     m_facing = (side ^ 1);
     m_walkYStep = 0;
@@ -1753,7 +1762,7 @@ void army::GoBerserk(void) {
     targetFound = 0;
     attackDir = COMBAT_DIRECTION_NORTHEAST;
     tryNumber = 0;
-    while (!targetFound) {
+    while (!targetFound && tryNumber < ARMY_BERSERK_TRIES) {
         attackMask = GetAttackMask(m_hex, ARMY_ATTACK_TARGET_OCCUPIED, ARMY_HEX_INVALID);
         if (attackMask != COMBAT_ALL_DIRECTIONS_BLOCKED) {
             while (!targetFound) {
@@ -1788,11 +1797,14 @@ void army::GoBerserk(void) {
             if (ValidMove(attackDir)) {
                 SET_NEXT_COMBAT_MOVE(m_hex);
                 gNextActionGridIndex = GetAdjacentCellIndex(gNextActionGridIndex, attackDir);
+                targetFound++;
             }
-            targetFound++;
         }
         tryNumber++;
     }
+    // With nothing to attack and nowhere to go the stack waits out its turn.
+    if (!targetFound)
+        gNextAction = ACTION_SKIP_TURN;
 }
 
 void army::MoveAttack(i32 destination, b32 moveOnly) {

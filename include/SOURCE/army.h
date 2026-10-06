@@ -49,7 +49,11 @@ enum ArmyCombatConstant {
     ARMY_CASTLE_WALL_DEFENSE_BONUS = 4,
     // The battlefield count label shows thousands ("2k") from here on.
     ARMY_COUNT_THOUSANDS = 1000,
-    ARMY_PROTECTION_DEFENSE_BONUS = 3
+    ARMY_PROTECTION_DEFENSE_BONUS = 3,
+    // Attack and defense with the commander's skill are kept in one byte.
+    ARMY_STAT_MAX = 127,
+    // Random choices a berserk stack makes before it gives up its turn.
+    ARMY_BERSERK_TRIES = 1000
 };
 
 enum ArmyLuck {
