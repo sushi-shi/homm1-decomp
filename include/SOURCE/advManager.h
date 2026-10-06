@@ -368,7 +368,7 @@ public:
         i32 value2,
         i32 showOrText
     );
-    i32 GiveRandomArtifact(class hero* eventHero);
+    i32 GiveRandomArtifact(class mapCell* cell, class hero* eventHero);
     i32 GiveExperience(class hero* eventHero, i32 experience, b8 checkLevel);
     void GiveResource(class hero* eventHero, i8 resource, i16 amount);
     i16 GiveArtifact(class hero* eventHero, i8 artifact);

@@ -2934,7 +2934,7 @@ void philAI::FightEvent(hero* heroPointer, mapCell* cell) {
                     break;
                 case GHOST_SITE_HUGE:
                     gAdvManager->GiveResource(heroPointer, RESOURCE_GOLD, GHOST_HUGE_GOLD);
-                    gAdvManager->GiveRandomArtifact(heroPointer);
+                    gAdvManager->GiveRandomArtifact(cell, heroPointer);
                     break;
             }
             cell->m_objectMetadata = GHOST_SITE_EMPTY;
