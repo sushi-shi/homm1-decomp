@@ -5,6 +5,8 @@
 #include <BASE/message.h>
 #include <Domains.h>
 #include <H1/Macros.h>
+#include <SOURCE/creatureTypes.h>
+#include <SOURCE/resourceTypes.h>
 
 // forward declarations:
 class armyGroup;
@@ -23,10 +25,10 @@ H1_ENUM_END(RecruitSourceType)
 class recruitUnit : public baseManager {
 public:
     H1_ENUM_STORAGE(RecruitSourceType, i8) m_sourceType;
-    i8 m_creatureType;
+    H1_ENUM_STORAGE(CreatureType, i8) m_creatureType;
     char m_padding32[4];
     i32 m_goldCost;
-    i8 m_resourceType;
+    H1_ENUM_STORAGE(ResourceType, i8) m_resourceType;
     i16 m_resourceCost;
     heroWindow* m_window;
     char m_padding41[4];
@@ -42,7 +44,11 @@ public:
     // RecruitEvent allocates 0x5c bytes.
     char m_padding5a[2];
     // --- constructors ---
-    recruitUnit(class armyGroup* army, i8 creatureType, i16* available);
+    recruitUnit(
+        class armyGroup* army,
+        H1_ENUM_PARAM(CreatureType, i8) creatureType,
+        i16* available
+    );
     recruitUnit(class town* townData, i8 dwelling);
     // --- virtual methods (vtable order) ---
     virtual H1_ENUM_RETURN(BaseManagerStatus, i16) Open(i16 priority) OVERRIDE;
@@ -55,9 +61,9 @@ public:
 
 void SetupRecruitWin(
     class heroWindow* window,
-    i32 creatureType,
+    H1_ENUM_PARAM(CreatureType, i32) creatureType,
     i32 goldCost,
-    i32 resourceType,
+    H1_ENUM_PARAM(ResourceType, i32) resourceType,
     i32 resourceCost,
     i32 available
 );

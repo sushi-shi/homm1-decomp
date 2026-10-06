@@ -17,7 +17,7 @@ void SetVolumes(int effects, int music);
 
 bool ShouldRepeatMusic(int track);
 void PlayMusic(H1_ENUM_PARAM(MusicTrack, int) track);
-int GetCurrentTrack();
+H1_ENUM_RETURN(MusicTrack, int) GetCurrentTrack();
 void StopMusic();
 void UpdateMusicVolume();
 void SetMusicSource(int source);

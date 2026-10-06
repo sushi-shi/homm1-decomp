@@ -15,6 +15,8 @@ H1_ENUM_END(SoundMusicSource)
 // level-up and congratulations screens.
 H1_ENUM_BEGIN(MusicTrack)
     MUSIC_TRACK_NONE = -1,
+    // The first track (a saved track to restore is >= FIRST).
+    MUSIC_TRACK_FIRST = 0,
     // One past the seven terrain themes.
     MUSIC_TRACK_TERRAIN_END = 7,
     MUSIC_TRACK_DAEMON_CAVE = 7,
@@ -64,5 +66,6 @@ H1_ENUM_BEGIN(MusicTrack)
     MUSIC_TRACK_BATTLE_4 = 0x35,
     MUSIC_TRACK_CONGRATULATIONS = 0x36
 H1_ENUM_END(MusicTrack)
+H1_ENUM_STEPPED(MusicTrack)
 
 #endif

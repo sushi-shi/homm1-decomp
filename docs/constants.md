@@ -44,6 +44,14 @@ operand truthiness (`while (1)`, `!0`, `x && 1`) is not a boolean
 destination. Win32 `BOOL` stays `TRUE`/`FALSE`. The rules below apply to VC4
 targets.
 
+A flag stored in an integer keeps the integer's width: `b8` and `b32`
+(`include/H1/Ints.h`) are the 8- and 32-bit storage of a genuine boolean
+(only 0/1, tested for truth, set from comparisons). The retail view is the
+plain integer, so codegen is that of the integer flag (C++ `bool` would
+normalize stores); the strict view is a wrapper that converts only to and
+from `bool`. A `0`/`1` stored to, passed as, returned as or compared with a
+`b8`/`b32` declaration is proven `false`/`true`.
+
 ### VC4 booleans
 
 VC4 has no `bool`, `true` or `false` (C2065). Clang's C++ `bool` contexts
@@ -61,6 +69,11 @@ an unscoped (`FLAGS`/`CONST`) domain is proven as its unique enumerator. A
 literal that meets an `enum class` domain is a strict-view error; such units
 fall back to the retail view, are counted in the output (`-v` lists them), and
 the error is itself the site to name.
+
+`homm1 verify strict-view` (run by `homm1 build verify`) parses every unit of
+every image's compile database in the strict view with `clang-cl /Zs` and
+fails when the distinct error count rises above `config/strict_view.floor`
+(`--update-floor` lowers it, `--unit TEXT --list` shows one unit's errors).
 
 ## Typed enum arrays
 

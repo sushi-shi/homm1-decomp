@@ -4,8 +4,8 @@
 #include <Domains.h>
 #include <H1/Macros.h>
 
-// strip window layout and strip.icn frames; the faction background is
-// type / 6 + 3.
+// strip window layout and strip.icn frames; the faction background is the
+// creature's race (CREATURE_FACTION) + FACTION_FRAME_OFFSET.
 H1_ENUM_CONST_BEGIN(StripConstant)
     STRIP_WINDOW_WIDTH = 0x228,
     STRIP_WINDOW_HEIGHT = 0x69,
@@ -25,7 +25,6 @@ H1_ENUM_CONST_BEGIN(StripConstant)
     STRIP_SELECTED_FRAME = 1,
     STRIP_EMPTY_FRAME = 2,
     STRIP_FACTION_FRAME_OFFSET = 3,
-    STRIP_CREATURES_PER_FACTION = 6,
     // m_selectedSlot (and the town/swap managers' selected army slots) with
     // no slot picked.
     STRIP_SLOT_NONE = -1

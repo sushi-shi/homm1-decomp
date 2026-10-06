@@ -66,7 +66,8 @@ H1_ENUM_CONST_END(MapHeaderConstant)
 H1_ENUM_BEGIN(MapSize)
     MAP_SIZE_SMALL = 0,
     MAP_SIZE_MEDIUM = 1,
-    MAP_SIZE_LARGE = 2
+    MAP_SIZE_LARGE = 2,
+    MAP_SIZE_COUNT = 3
 H1_ENUM_END(MapSize)
 
 // SMapHeader::difficulty, gMapDifficulty and game::m_mapDifficulty: retail
@@ -77,7 +78,8 @@ H1_ENUM_BEGIN(MapDifficulty)
     MAP_DIFFICULTY_NORMAL = 1,
     MAP_DIFFICULTY_TOUGH = 2,
     MAP_DIFFICULTY_IMPOSSIBLE = 3,
-    MAP_DIFFICULTY_FORGET_IT = 4
+    MAP_DIFFICULTY_FORGET_IT = 4,
+    MAP_DIFFICULTY_COUNT = 5
 H1_ENUM_END(MapDifficulty)
 
 // request.bin widget ids: the scroll arrows, gutter and knob, the ten list
@@ -118,8 +120,8 @@ struct FileRequesterExtension {
 // description into one 103-byte record per listed map.
 #pragma pack(push, 1)
 struct FileRequesterMapInfo {
-    i8 difficulty;
-    i8 size;
+    H1_ENUM_STORAGE(MapDifficulty, i8) difficulty;
+    H1_ENUM_STORAGE(MapSize, i8) size;
     char description[FILE_REQUESTER_MAP_DESCRIPTION_SIZE];
 };
 
@@ -127,8 +129,8 @@ struct FileRequesterMapInfo {
 // map; the name and description offsets are fixed by the constructor.
 struct SMapHeader {
     i16 id;
-    i8 difficulty;
-    i8 size;
+    H1_ENUM_STORAGE(MapDifficulty, i8) difficulty;
+    H1_ENUM_STORAGE(MapSize, i8) size;
     char name[0x96];
     char description[0x4ba];
 };

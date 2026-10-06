@@ -92,7 +92,8 @@ public:
 // the message into the dialog-select notification.
 #define FINISH_DIALOG_MESSAGE(message)                                                             \
     (gpWindowManager->m_dialogResult = (message).id,                                               \
-     (message).command = (message).id = WIDGET_COMMAND_DIALOG_SELECT)
+     (message).command = H1_ENUM_DECODE(                                                           \
+         BaseWidgetCommand, (message).id = H1_ENUM_ENCODE(BaseWidgetCommand, WIDGET_COMMAND_DIALOG_SELECT)))
 
 // Redraw the inclusive screen rectangle left..right, top..bottom.
 #define UPDATE_INCLUSIVE_REGION(left, top, right, bottom)                                          \

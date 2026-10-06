@@ -49,7 +49,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) highScoreManager::Open(i16 id) {
     KBChangeMenu(hmnuDflt);
     gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
     glTimers[HIGH_SCORE_TIMER_SLOT] = KBTickCount() + HIGH_SCORE_ANIMATION_DELAY;
-    return static_cast<i16>(BASE_MANAGER_SUCCESS);
+    return H1_ENUM_CAST(BaseManagerStatus, i16, BASE_MANAGER_SUCCESS);
 }
 
 // The window owner is at +0x59, active at +0x2e.
@@ -79,7 +79,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) highScoreManager::Main(struct tag_mes
             windowMessage.type = MESSAGE_WIDGET;
             windowMessage.id = entry + HIGH_SCORE_FIRST_MONSTER_WIDGET;
             windowMessage.command = WIDGET_COMMAND_SET_FRAME;
-            windowMessage.value = m_monsterTypes[entry] * HIGH_SCORE_MONSTER_FRAME_STRIDE
+            windowMessage.value = H1_ENUM_ENCODE(CreatureType, m_monsterTypes[entry]) * HIGH_SCORE_MONSTER_FRAME_STRIDE
                                   + m_animationFrames[entry] / HIGH_SCORE_ANIMATION_FRAME_DIVISOR;
             m_window->BroadcastMessage(windowMessage);
         }
@@ -159,14 +159,18 @@ void highScoreManager::Update(void) {
     hsMessage.type = MESSAGE_WIDGET;
     hsMessage.id = HIGH_SCORE_TITLE_WIDGET;
     hsMessage.command = WIDGET_COMMAND_SET_FRAME;
-    hsMessage.value =
-        m_showCampaignScores ? HIGH_SCORE_CAMPAIGN_TITLE_FRAME : HIGH_SCORE_STANDARD_TITLE_FRAME;
+    hsMessage.value = H1_ENUM_ENCODE(
+        HighScoreTitleFrame,
+        m_showCampaignScores ? HIGH_SCORE_CAMPAIGN_TITLE_FRAME : HIGH_SCORE_STANDARD_TITLE_FRAME
+    );
     m_window->BroadcastMessage(hsMessage);
 
     hsMessage.id = HIGH_SCORE_SUBTITLE_WIDGET;
     hsMessage.command = WIDGET_COMMAND_SET_FRAME;
-    hsMessage.value =
-        m_showCampaignScores ? HIGH_SCORE_CAMPAIGN_SUBTITLE_FRAME : HIGH_SCORE_STANDARD_SUBTITLE_FRAME;
+    hsMessage.value = H1_ENUM_ENCODE(
+        HighScoreTitleFrame,
+        m_showCampaignScores ? HIGH_SCORE_CAMPAIGN_SUBTITLE_FRAME : HIGH_SCORE_STANDARD_SUBTITLE_FRAME
+    );
     m_window->BroadcastMessage(hsMessage);
 
     hsMessage.id = m_showCampaignScores ? HIGH_SCORE_CAMPAIGN_BUTTON : HIGH_SCORE_STANDARD_BUTTON;
@@ -186,13 +190,13 @@ void highScoreManager::Update(void) {
             READ_FILE_VALUE(inputFile, highScore);
 
         if (highScore.score == HIGH_SCORE_EMPTY) {
-            m_monsterTypes[rank] = 0;
+            m_monsterTypes[rank] = CREATURE_PEASANT;
             sprintf(gText, "");
         } else {
             m_monsterTypes[rank] = GetMonType(
                 highScore.score,
-                m_showCampaignScores ? static_cast<i8>(HIGH_SCORE_TYPE_CAMPAIGN)
-                                     : static_cast<i8>(HIGH_SCORE_TYPE_STANDARD)
+                m_showCampaignScores ? H1_ENUM_CAST(HighScoreType, i8, HIGH_SCORE_TYPE_CAMPAIGN)
+                                     : H1_ENUM_CAST(HighScoreType, i8, HIGH_SCORE_TYPE_STANDARD)
             );
         }
 
@@ -205,7 +209,7 @@ void highScoreManager::Update(void) {
             m_animationFrames[rank] = (m_animationFrames[rank] + 1) % HIGH_SCORE_ANIMATION_FRAME_COUNT;
             hsMessage.id = rank + HIGH_SCORE_FIRST_MONSTER_WIDGET;
             hsMessage.command = WIDGET_COMMAND_SET_FRAME;
-            hsMessage.value = m_monsterTypes[rank] * HIGH_SCORE_MONSTER_FRAME_STRIDE
+            hsMessage.value = H1_ENUM_ENCODE(CreatureType, m_monsterTypes[rank]) * HIGH_SCORE_MONSTER_FRAME_STRIDE
                             + m_animationFrames[rank] / HIGH_SCORE_ANIMATION_FRAME_DIVISOR;
             m_window->BroadcastMessage(hsMessage);
         }

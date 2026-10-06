@@ -104,7 +104,7 @@ void combatManager::SetupCombat(
     i32 combatY,
     i32 randomSeed
 ) {
-    i32 i;
+    H1_ENUM_LOCAL(CombatSide, i32) i;
 
     gSeed = randomSeed;
     SRand(combatX * 100 + combatY);
@@ -130,7 +130,7 @@ void combatManager::SetupCombat(
     } else {
         m_playerId[COMBAT_DEFENDER_SIDE] = GAME_PLAYER_NONE;
     }
-    for (i = 0; i < COMBAT_SIDE_COUNT; i++) {
+    for (i = COMBAT_SIDE_FIRST; i < COMBAT_SIDE_COUNT; i++) {
         if (m_playerId[i] >= 0)
             m_humanSide[i] = gbHumanPlayer[m_playerId[i]];
         else
@@ -155,7 +155,8 @@ void combatManager::SetupCombat(
             m_visitingHeroPresent[COMBAT_DEFENDER_SIDE] = 0;
         }
         m_castleSide[COMBAT_DEFENDER_SIDE] =
-            (defenderTown->m_buildings & (1 << BUILDING_SLOT_CASTLE)) ? 1 : 0;
+            (defenderTown->m_buildings & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_CASTLE)) ? 1
+                                                                                              : 0;
         m_combatTowns[COMBAT_DEFENDER_SIDE] = defenderTown;
         m_originalCombatTown = defenderTown;
     } else {
@@ -169,9 +170,9 @@ void combatManager::SetupCombat(
 // fade-in and a random combat theme.
 VA(0x00419118, 0x401)
 H1_ENUM_RETURN(BaseManagerStatus, i16) combatManager::Open(i16 priority) {
-    i32 song;
+    H1_ENUM_LOCAL(MusicTrack, i32) song;
     class sample* sample;
-    i32 musicList[4];
+    H1_ENUM_LOCAL(MusicTrack, i32) musicList[4];
 
     m_messageTypeMask = MESSAGE_KEY_DOWN | MESSAGE_KEY_UP | MESSAGE_MOUSE_MOVE
                         | MESSAGE_LEFT_BUTTON_DOWN | MESSAGE_RIGHT_BUTTON_DOWN | 0x100
@@ -260,8 +261,9 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) combatManager::Open(i16 priority) {
 // it.
 VA(0x00419519, 0x211)
 void combatManager::Close(void) {
-    i32 ii;
-    i32 survivor;
+    // The side whose army group Close updates, then the slot it counts.
+    H1_ENUM_SHARED(CombatSide, i32) ii;
+    H1_ENUM_LOCAL(CombatSide, i32) survivor;
 
     StopMusic();
     if (m_restoreSampleSuspension) {
@@ -270,7 +272,7 @@ void combatManager::Close(void) {
     }
     if (m_restoreMusicSuspension) {
         m_restoreMusicSuspension = false;
-        if (m_savedMusicTrack >= 0)
+        if (m_savedMusicTrack >= MUSIC_TRACK_FIRST)
             PlayMusic(m_savedMusicTrack);
         SuspendMusic();
         m_savedMusicTrack = MUSIC_TRACK_NONE;
@@ -279,11 +281,12 @@ void combatManager::Close(void) {
     gLimitedCombatUpdatePalette = 0;
     gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
     delete m_backgroundBuffer;
-    for (ii = 0; ii < COMBAT_SIDE_COUNT; ii++)
+    for (ii = COMBAT_SIDE_FIRST; ii < COMBAT_SIDE_COUNT; ii++)
         UpdateArmyGroup(ii);
     if (m_battlefieldCell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_MONSTER)) {
-        survivor = m_playerId[COMBAT_DEFENDER_SIDE] != GAME_PLAYER_NONE ? static_cast<i8>(1)
-                                                                        : static_cast<i8>(0);
+        survivor = m_playerId[COMBAT_DEFENDER_SIDE] != GAME_PLAYER_NONE
+                       ? H1_ENUM_CAST(CombatSide, i8, COMBAT_ATTACKER_SIDE)
+                       : H1_ENUM_CAST(CombatSide, i8, COMBAT_DEFENDER_SIDE);
         m_battlefieldCell->m_objectMetadata = 0;
         for (ii = 0; ii < ARMY_GROUP_SLOT_COUNT; ii++) {
             if (m_armyGroups[survivor]->m_creatureTypes[ii] != CREATURE_NONE)
@@ -305,7 +308,7 @@ void combatManager::Close(void) {
 // Copy surviving counts back into the side's army group; a dead stack
 // empties its slot.
 VA(0x0041972a, 0x13b)
-void combatManager::UpdateArmyGroup(i8 side) {
+void combatManager::UpdateArmyGroup(H1_ENUM_PARAM(CombatSide, i8) side) {
     i16 i;
     i16 j;
 
@@ -448,11 +451,13 @@ void combatManager::GenerateMap(void) {
                 y = SRandom(0, 4);
             }
             m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_obstacleType = COMBAT_ICON_OBSTACLES;
-            m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_obstacleIndex = SRandom(0, 2);
+            m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_obstacleIndex =
+                H1_ENUM_DECODE(CombatObstacleIndex, SRandom(0, 2));
             if ((m_terrainType == TERRAIN_WATER || m_terrainType == TERRAIN_LAVA)
                 && m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_obstacleIndex
                        == COMBAT_OBSTACLE_LAND_ONLY_FRAME)
-                m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_obstacleIndex = 0;
+                m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_obstacleIndex =
+                    COMBAT_OBSTACLE_FIRST_FRAME;
         }
     }
     m_currentSide = COMBAT_DEFENDER_SIDE;
@@ -466,7 +471,7 @@ void combatManager::GenerateMap(void) {
 VA(0x00419ffc, 0x127)
 char* combatManager::GetBackgroundName(void) {
     DATA(0x0048f064)
-    static char* gCombatBkgNames[COMBAT_BACKGROUND_COUNT] = {
+    static H1_ENUM_ARRAY(char*, gCombatBkgNames, CombatBackground, COMBAT_BACKGROUND_COUNT) = {
         "frstwgrs.bkg",
         "mtnwgrsf.bkg",
         "snowfrst.bkg",
@@ -522,24 +527,25 @@ i8 combatManager::MoreTreesNear(void) {
     i32 xPos;
     i16 pass;
     i16 posX;
-    i8 lastTypeTable[3][MAP_DIRECTION_COUNT];
+    H1_ENUM_ARRAY(i8, lastTypeTable[3], MapDirection, MAP_DIRECTION_COUNT);
     i16 curNumMountains;
     i16 numTrees;
     mapCell* tile;
     i16 homeY;
-    u8 nearbyTileset;
-    i16 n;
+    H1_ENUM_LOCAL(MapTileset, u8) nearbyTileset;
+    H1_ENUM_LOCAL(MapDirection, i16) n;
 
     memset(lastTypeTable, -1, sizeof(lastTypeTable));
     posX = m_combatX;
     homeY = m_combatY;
     for (pass = 0; pass < 3; pass++) {
-        for (n = 0; n < MAP_DIRECTION_COUNT; n++) {
-            xPos = posX + normalDirTable[n].x * pass;
-            yPos = homeY + normalDirTable[n].y * pass;
+        for (n = MAP_DIRECTION_FIRST; n < MAP_DIRECTION_COUNT; n++) {
+            xPos = posX + normalDirTable[H1_ENUM_ENCODE(MapDirection, n)].x * pass;
+            yPos = homeY + normalDirTable[H1_ENUM_ENCODE(MapDirection, n)].y * pass;
             if (xPos >= 0 && xPos < MAP_CELL_GRID_SIZE && yPos >= 0 && yPos < MAP_CELL_GRID_SIZE) {
                 tile = gpAdvManager->GetCell(xPos, yPos);
-                nearbyTileset = tile->m_objectTileset & MAP_CELL_TILESET_MASK;
+                nearbyTileset =
+                    H1_ENUM_DECODE(MapTileset, tile->m_objectTileset & MAP_CELL_TILESET_MASK);
                 if (nearbyTileset == TILESET_MTN32)
                     lastTypeTable[pass][n] = 0;
                 else if (nearbyTileset == TILESET_TREE32)
@@ -550,7 +556,7 @@ i8 combatManager::MoreTreesNear(void) {
     numTrees = 0;
     curNumMountains = 0;
     for (pass = 0; pass < 3; pass++) {
-        for (n = 0; n < MAP_DIRECTION_COUNT; n++) {
+        for (n = MAP_DIRECTION_FIRST; n < MAP_DIRECTION_COUNT; n++) {
             if (lastTypeTable[pass][n] == 0)
                 curNumMountains++;
             if (lastTypeTable[pass][n] == 1)
@@ -564,9 +570,9 @@ i8 combatManager::MoreTreesNear(void) {
 
 VA(0x0041a2f8, 0x1c4)
 void combatManager::LoadIcons(void) {
-    i32 i;
+    H1_ENUM_LOCAL(CombatIconSlot, i32) i;
 
-    for (i = 0; i < COMBAT_ICON_COUNT; i++)
+    for (i = COMBAT_ICON_GROUND; i < COMBAT_ICON_COUNT; i++)
         m_combatIcons[i] = NULL;
     m_combatIcons[COMBAT_ICON_SPELLS] = gpResourceManager->GetIcon("spells.icn");
     m_backgroundBitmap = gpResourceManager->GetBitmap(GetBackgroundName());
@@ -582,22 +588,30 @@ void combatManager::LoadIcons(void) {
         sprintf(
             gText,
             "castle%02d.icn",
-            m_combatTowns
-                [m_castleSide[COMBAT_ATTACKER_SIDE] == 1 ? static_cast<i8>(COMBAT_ATTACKER_SIDE)
-                                                         : static_cast<i8>(COMBAT_DEFENDER_SIDE)]
-                    ->m_type
+            H1_ENUM_ENCODE(
+                TownType,
+                m_combatTowns
+                    [m_castleSide[COMBAT_ATTACKER_SIDE] == 1
+                         ? H1_ENUM_CAST(CombatSide, i8, COMBAT_ATTACKER_SIDE)
+                         : H1_ENUM_CAST(CombatSide, i8, COMBAT_DEFENDER_SIDE)]
+                        ->m_type
+            )
         );
         m_combatIcons[COMBAT_ICON_CASTLE] = gpResourceManager->GetIcon(gText);
-        sprintf(gText, "keep%02d.icn", m_combatTowns[COMBAT_DEFENDER_SIDE]->m_type);
+        sprintf(
+            gText,
+            "keep%02d.icn",
+            H1_ENUM_ENCODE(TownType, m_combatTowns[COMBAT_DEFENDER_SIDE]->m_type)
+        );
         m_combatIcons[COMBAT_ICON_KEEP] = gpResourceManager->GetIcon(gText);
     }
 }
 
 VA(0x0041a4bc, 0x6c)
 void combatManager::FreeIcons(void) {
-    i16 i;
+    H1_ENUM_LOCAL(CombatIconSlot, i16) i;
 
-    for (i = 0; i < COMBAT_ICON_COUNT; i++) {
+    for (i = COMBAT_ICON_GROUND; i < COMBAT_ICON_COUNT; i++) {
         if (m_combatIcons[i])
             gpResourceManager->Dispose(m_combatIcons[i]);
     }
@@ -607,17 +621,17 @@ void combatManager::FreeIcons(void) {
 // LoadArmies places stacks itself after Init.
 VA(0x0041a528, 0x25f)
 void combatManager::LoadArmies(void) {
-    i16 j;
+    H1_ENUM_LOCAL(CombatSide, i16) j;
     i16 i;
 
     m_numArmies[COMBAT_ATTACKER_SIDE] = m_numArmies[COMBAT_DEFENDER_SIDE] = 0;
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
-        for (j = 0; j < COMBAT_SIDE_COUNT; j++) {
+        for (j = COMBAT_SIDE_FIRST; j < COMBAT_SIDE_COUNT; j++) {
             m_armies[j][i].m_quantity = 0;
             m_armies[j][i].m_creatureType = CREATURE_NONE;
         }
     }
-    for (j = 0; j < COMBAT_SIDE_COUNT; j++) {
+    for (j = COMBAT_SIDE_FIRST; j < COMBAT_SIDE_COUNT; j++) {
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++)
             m_armies[j][i].InitClean();
     }
@@ -693,13 +707,13 @@ i16 combatManager::GetGridIndex(i16 x, i16 y) {
 
 // CheckApplyGoodMorale rolls the group's morale.
 VA(0x0041a8f6, 0x1a5)
-void combatManager::CheckApplyGoodMorale(i32 side, i32 index) {
+void combatManager::CheckApplyGoodMorale(H1_ENUM_PARAM(CombatSide, i32) side, i32 index) {
     armyGroup* theGroup;
     army* activeArmyRef;
     class sample* sample;
     i32 moraleVal;
 
-    if (side < 0 || index < 0)
+    if (side < COMBAT_SIDE_FIRST || index < 0)
         return;
     if (gInHighMoraleBonus) {
         gInHighMoraleBonus = 0;
@@ -739,13 +753,13 @@ void combatManager::CheckApplyGoodMorale(i32 side, i32 index) {
 
 // A computer side skips one bad-morale roll in four.
 VA(0x0041aa9b, 0x173)
-i32 combatManager::CheckApplyBadMorale(i32 side, i32 index) {
+i32 combatManager::CheckApplyBadMorale(H1_ENUM_PARAM(CombatSide, i32) side, i32 index) {
     armyGroup* theGroup;
     army* activeArmyRef;
     class sample* sample;
     i32 moraleVal;
 
-    if (side < 0 || index < 0)
+    if (side < COMBAT_SIDE_FIRST || index < 0)
         return 0;
     theGroup = m_armyGroups[side];
     activeArmyRef = &m_armies[side][index];
@@ -782,23 +796,23 @@ VA(0x0041ac0e, 0x1d9)
 i8 combatManager::GetNextArmy(i32 checkMorale) {
     army* theArmy;
     i8 oldSpeed;
-    i32 sideIter;
+    H1_ENUM_LOCAL(CombatSide, i32) sideIter;
     i16 temp;
     i8 counterValue;
-    i8 stackSide;
+    H1_ENUM_LOCAL(CombatSide, i8) stackSide;
     i32 bSkip;
 
     stackSide = m_currentSide;
     for (oldSpeed = 0; oldSpeed < 5; oldSpeed++) {
-        for (sideIter = 0; sideIter < COMBAT_SIDE_COUNT; sideIter++) {
-            stackSide ^= 1;
+        for (sideIter = COMBAT_SIDE_FIRST; sideIter < COMBAT_SIDE_COUNT; sideIter++) {
+            COMBAT_SWITCH_SIDE(stackSide);
             for (counterValue = 0; counterValue < m_numArmies[stackSide]; counterValue++) {
                 bSkip = 0;
                 theArmy = &m_armies[stackSide][counterValue];
                 if ((theArmy->m_stats.attributes & (MONSTER_FLAGS_DEAD | MONSTER_FLAGS_TURN_SPENT))
                     || theArmy->m_spellEffect == SPELL_PARALYZE
                     || theArmy->m_spellEffect == SPELL_BLIND
-                    || (theArmy->m_stats.speed != m_currentSpeed
+                    || (H1_ENUM_DECODE(CreatureSpeed, theArmy->m_stats.speed) != m_currentSpeed
                         && !(theArmy->m_stats.attributes & MONSTER_FLAGS_HIGH_MORALE)))
                     bSkip = 1;
                 if (!bSkip && !oldSpeed
@@ -818,7 +832,7 @@ i8 combatManager::GetNextArmy(i32 checkMorale) {
         }
         if (oldSpeed) {
             m_currentSpeed--;
-            if (!m_currentSpeed)
+            if (!H1_ENUM_ENCODE(CreatureSpeed, m_currentSpeed))
                 m_currentSpeed = CREATURE_SPEED_BLAZING;
         }
     }
@@ -836,7 +850,7 @@ i8 combatManager::IsWinner(H1_ENUM_PARAM(CombatSide, i8) side) {
         return 1;
     if (m_sideRetreated[COMBAT_OPPOSING_SIDE(side)])
         return 1;
-    side ^= 1;
+    COMBAT_SWITCH_SIDE(side);
     isWinner = 1;
     for (i = 0; i < m_numArmies[side]; i++) {
         if (!(m_armies[side][i].m_stats.attributes & MONSTER_FLAGS_DEAD))
@@ -849,7 +863,7 @@ i8 combatManager::IsWinner(H1_ENUM_PARAM(CombatSide, i8) side) {
 // a random standing wall piece; a breach roll knocks it down, otherwise
 // the piece is damaged.
 VA(0x0041ae9c, 0xcf2)
-void combatManager::CatAttack(i8 side) {
+void combatManager::CatAttack(H1_ENUM_PARAM(CombatSide, i8) side) {
     i16 dxVal;
     icon* boulderRef;
     i16 summitXValue;
@@ -1301,7 +1315,7 @@ void combatManager::KeepAttack(void) {
             localization::Tr("combat.fragment.damage_points")
         );
     gpCombatManager->CombatMessage(gText, 1);
-    hisStack->PowEffect(hisStack->m_stats.powEffect);
+    hisStack->PowEffect(H1_ENUM_DECODE(CombatPowEffect, hisStack->m_stats.powEffect));
     if (!(hisStack->m_stats.attributes & MONSTER_FLAGS_DEAD))
         hisStack->Stand(0);
     WaitSample(sample);
@@ -1313,7 +1327,7 @@ void combatManager::KeepAttack(void) {
 // ExperienceValueOfStack: fight value of the side's losses, plus 500 for a
 // defeated hero.
 VA(0x0041c6b4, 0xec)
-i32 combatManager::ExperienceValueOfStack(i8 side) {
+i32 combatManager::ExperienceValueOfStack(H1_ENUM_PARAM(CombatSide, i8) side) {
     i32 i;
     i32 num;
 
@@ -1331,9 +1345,9 @@ i32 combatManager::ExperienceValueOfStack(i8 side) {
 VA(0x0041c7a0, 0x5f)
 void combatManager::ResetHitByCreature(void) {
     i32 j;
-    i32 i;
+    H1_ENUM_LOCAL(CombatSide, i32) i;
 
-    for (i = 0; i < COMBAT_SIDE_COUNT; i++) {
+    for (i = COMBAT_SIDE_FIRST; i < COMBAT_SIDE_COUNT; i++) {
         for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++)
             m_armies[i][j].m_hitByCreature = 0;
     }

@@ -75,7 +75,7 @@ i32 FileSize(char* filename) {
 }
 
 VA(0x00451b2f, 0x221)
-void RemoteMain(i32 gameMode) {
+void RemoteMain(H1_ENUM_PARAM(RemoteGameMode, i32) gameMode) {
     char directConnectMessage[164];
 
     gInNetSetup = 1;
@@ -101,7 +101,7 @@ void RemoteMain(i32 gameMode) {
             inque.readPosition = 0;
             outque.writePosition = 0;
             outque.readPosition = 0;
-            gBaudBits = CBR_115200 / gConfig.baudRate[gDirectConnect];
+            gBaudBits = CBR_115200 / gConfig.baudRate[H1_ENUM_DECODE(ConfigConnection, gDirectConnect)];
             ModemSetup();
             switch (gameMode) {
                 case REMOTE_GAME_MODEM_HOST:
@@ -477,10 +477,10 @@ void ModemSetup(void) {
     i32 resetAttempt;
     i32 i;
 
-    com_init(gConfig.comPort[gDirectConnect], COM_BAUD_19200, 0);
+    com_init(gConfig.comPort[H1_ENUM_DECODE(ConfigConnection, gDirectConnect)], COM_BAUD_19200, 0);
     if (!gDirectConnect) {
         for (resetAttempt = 0; resetAttempt < 2; resetAttempt++) {
-            if (gConfig.comPort[gDirectConnect] >= 1)
+            if (gConfig.comPort[H1_ENUM_DECODE(ConfigConnection, gDirectConnect)] >= 1)
                 sprintf(command, gConfig.modemInitString);
             else
                 sprintf(command, "ATZ");
@@ -750,14 +750,14 @@ readPacketStart:
             return 0;
         if (inescape) {
             inescape = 0;
-            if (input == MODEM_PACKET_END) {
+            if (H1_ENUM_DECODE(ModemPacketControl, input) == MODEM_PACKET_END) {
                 newpacket = 1;
                 return 1;
-            } else if (input == MODEM_PACKET_START) {
+            } else if (H1_ENUM_DECODE(ModemPacketControl, input) == MODEM_PACKET_START) {
                 newpacket = 1;
                 goto readPacketStart;
             }
-        } else if (input == MODEM_PACKET_ESCAPE) {
+        } else if (H1_ENUM_DECODE(ModemPacketControl, input) == MODEM_PACKET_ESCAPE) {
             inescape = 1;
             goto readNextByte;
         }
@@ -776,22 +776,22 @@ void WriteModemPacket(char* buffer, i32 length) {
     if (length > MODEM_PACKET_MAX_LENGTH)
         return;
 
-    encoded[encodedPosition] = MODEM_PACKET_ESCAPE;
+    encoded[encodedPosition] = H1_ENUM_ENCODE(ModemPacketControl, MODEM_PACKET_ESCAPE);
     ++encodedPosition;
-    encoded[encodedPosition] = MODEM_PACKET_START;
+    encoded[encodedPosition] = H1_ENUM_ENCODE(ModemPacketControl, MODEM_PACKET_START);
     ++encodedPosition;
     while (length--) {
-        if (*buffer == MODEM_PACKET_ESCAPE) {
-            encoded[encodedPosition] = MODEM_PACKET_ESCAPE;
+        if (H1_ENUM_DECODE(ModemPacketControl, *buffer) == MODEM_PACKET_ESCAPE) {
+            encoded[encodedPosition] = H1_ENUM_ENCODE(ModemPacketControl, MODEM_PACKET_ESCAPE);
             ++encodedPosition;
         }
         encoded[encodedPosition] = *buffer;
         ++encodedPosition;
         ++buffer;
     }
-    encoded[encodedPosition] = MODEM_PACKET_ESCAPE;
+    encoded[encodedPosition] = H1_ENUM_ENCODE(ModemPacketControl, MODEM_PACKET_ESCAPE);
     ++encodedPosition;
-    encoded[encodedPosition] = MODEM_PACKET_END;
+    encoded[encodedPosition] = H1_ENUM_ENCODE(ModemPacketControl, MODEM_PACKET_END);
     ++encodedPosition;
     while (write_buffer(encoded, encodedPosition) == 0)
         ForcePollSound();
@@ -875,7 +875,7 @@ char* GetRemoteData(i8 remove) {
     oldestOrder = 999999999;
     selected = -1;
     for (queueIndex = 0; queueIndex < REMOTE_QUEUE_CAPACITY; queueIndex++) {
-        if (rcvBuf[queueIndex].type && iInOrder[queueIndex] < oldestOrder) {
+        if (H1_ENUM_ENCODE(RemoteMessageType, rcvBuf[queueIndex].type) && iInOrder[queueIndex] < oldestOrder) {
             oldestOrder = iInOrder[queueIndex];
             selected = queueIndex;
         }
@@ -945,7 +945,7 @@ void PollRemote(void) {
         }
     }
     for (i = 0; i < REMOTE_QUEUE_CAPACITY; i++) {
-        if (rcvBuf[i].type)
+        if (H1_ENUM_ENCODE(RemoteMessageType, rcvBuf[i].type))
             numQueued++;
     }
     if (numQueued == REMOTE_QUEUE_CAPACITY)
@@ -989,7 +989,7 @@ void PollRemote(void) {
                 ); // API-forced: wire bytes.
             }
             for (i = 0; i < REMOTE_QUEUE_CAPACITY; i++) {
-                if (rcvBuf[i].type && rcvBuf[i].id == rcvBufIn.id)
+                if (H1_ENUM_ENCODE(RemoteMessageType, rcvBuf[i].type) && rcvBuf[i].id == rcvBufIn.id)
                     goto nextIncoming;
             }
             for (i = 0; i < REMOTE_RECENT_ID_COUNT; i++) {
@@ -997,7 +997,7 @@ void PollRemote(void) {
                     goto nextIncoming;
             }
             for (i = 0; i < REMOTE_QUEUE_CAPACITY; i++) {
-                if (!rcvBuf[i].type) {
+                if (!H1_ENUM_ENCODE(RemoteMessageType, rcvBuf[i].type)) {
                     iInOrder[i] = gInOrderCtr++;
                     memcpy(&rcvBuf[i], &rcvBufIn, REMOTE_MESSAGE_SIZE);
                     numQueued++;
@@ -1082,7 +1082,7 @@ i32 gLastConfirm = -1;
 DATA(0x004cc810)
 i32 gCurLastID = 0;
 DATA(0x004cc814)
-u8 GameMode = 0;
+H1_ENUM_STORAGE(RemoteGameMode, u8) GameMode = REMOTE_GAME_NONE;
 DATA(0x004cc815)
 u8 gPacketSequence = 0;
 DATA(0x004cc818)

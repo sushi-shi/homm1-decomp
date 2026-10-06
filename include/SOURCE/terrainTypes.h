@@ -22,5 +22,18 @@ H1_ENUM_BEGIN(TerrainType)
     TERRAIN_WATER_LAST = TERRAIN_WATER,
     TERRAIN_COUNT = 7
 H1_ENUM_END(TerrainType)
+H1_ENUM_STEPPED(TerrainType)
+
+// A cell of terrain t is land: every terrain but water, which the retail
+// code tests as the zero terrain number (PerMonth's creature spawns,
+// SeedPosition's water target).
+#if H1_STRICT_DOMAINS
+inline bool TerrainIsLand(TerrainType t) {
+    return t != TERRAIN_WATER;
+}
+#define TERRAIN_IS_LAND(t) TerrainIsLand(t)
+#else
+#define TERRAIN_IS_LAND(t) (t)
+#endif
 
 #endif // HOMM1_SOURCE_TERRAINTYPES_H

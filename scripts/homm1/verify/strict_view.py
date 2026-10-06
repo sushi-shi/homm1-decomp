@@ -59,12 +59,14 @@ _LOCATION = re.compile(r"^(?P<path>.*?)\((?P<line>\d+),(?P<column>\d+)\) ?: erro
 _SEGMENTS: dict[str, list[tuple[int, int, int, str]]] = {}
 
 
-def _segments(source: Path) -> list[tuple[int, int, int, str]]:
+def _segments(source: Path) -> list[tuple[int, int, int, str, bool]]:
     """(first physical line, last physical line, logical first line, logical
-    file basename) for each `#line` region of a source file."""
+    file basename, whether clang reports the physical path) for each `#line`
+    region of a source file. Until a `#line` names a file, clang keeps the
+    physical path; after one, it reports the retail path it names."""
     key = str(source)
     if key not in _SEGMENTS:
-        out, name = [], source.name.lower()
+        out, name, physical = [], source.name.lower(), True
         start, logical = 1, 1
         try:
             lines = source.read_text(errors="replace").split("\n")
@@ -73,16 +75,17 @@ def _segments(source: Path) -> list[tuple[int, int, int, str]]:
         for index, text in enumerate(lines, 1):
             match = _LINE.match(text)
             if match:
-                out.append((start, index - 1, logical, name))
+                out.append((start, index - 1, logical, name, physical))
                 start, logical = index + 1, int(match.group(1))
                 spelled = match.group(2)
                 if spelled and spelled.startswith('"'):
                     name = re.split(r"[\\/]+", spelled.strip('"'))[-1].lower()
+                    physical = False
                 elif spelled:
                     # A path macro (INPUTMGR_CPP_PATH) names the unit's own
                     # retail file.
-                    name = source.name.lower()
-        out.append((start, len(lines), logical, name))
+                    name, physical = source.name.lower(), False
+        out.append((start, len(lines), logical, name, physical))
         _SEGMENTS[key] = out
     return _SEGMENTS[key]
 
@@ -95,24 +98,26 @@ def _repo_location(line: str, unit: Path) -> str:
         return line
     path, number = match.group("path"), int(match.group("line"))
     candidate = Path(path)
-    if candidate.is_file() and not _segments(candidate.resolve())[1:]:
+    on_disk = candidate.is_file()
+    if on_disk and not _segments(candidate.resolve())[1:]:
         try:
             path = str(candidate.resolve().relative_to(REPO))
         except ValueError:
             pass
         return f"{path}({number},{match.group('column')}): error: {match.group('message')}"
     base = re.split(r"[\\/]+", path)[-1].lower()
-    sources = [candidate.resolve()] if candidate.is_file() else []
+    sources = [candidate.resolve()] if on_disk else []
     sources += [unit] + sorted((REPO / "src").rglob(unit.name))
     for source in sources:
-        for first, last, logical, name in _segments(source):
-            if name == base and logical <= number <= logical + (last - first):
-                physical = first + number - logical
+        for first, last, logical, name, physical in _segments(source):
+            if (physical == on_disk and name == base
+                    and logical <= number <= logical + (last - first)):
+                shown_line = first + number - logical
                 try:
                     shown = str(source.relative_to(REPO))
                 except ValueError:
                     shown = str(source)
-                return (f"{shown}({physical},{match.group('column')}): error: "
+                return (f"{shown}({shown_line},{match.group('column')}): error: "
                         f"{match.group('message')}")
     return line
 

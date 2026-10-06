@@ -6,6 +6,7 @@
 #include <BASE/message.h>
 #include <Domains.h>
 #include <H1/Macros.h>
+#include <SOURCE/town.h>
 
 // forward declarations:
 class bankBox;
@@ -66,6 +67,7 @@ H1_ENUM_BEGIN(TownCommandText)
     TOWN_TEXT_DWELLING = 21,
     TOWN_TEXT_COUNT = 22
 H1_ENUM_END(TownCommandText)
+H1_ENUM_STEPPED(TownCommandText)
 extern H1_ENUM_ARRAY(char*, gTownCommand, TownCommandText, TOWN_TEXT_COUNT);
 
 H1_ENUM_ID_BEGIN(TownControl)
@@ -82,14 +84,13 @@ H1_ENUM_ID_BEGIN(TownControl)
 H1_ENUM_ID_END(TownControl)
 
 // Town objects: gTownObjectType's empty entry and a .tod without a border
-// widget are NONE, as is townManager::m_selectedBuilding with no building
-// picked. gTownObjectNames holds the neutral objects, the four town-type
+// widget are NONE (m_selectedBuilding's empty value is BUILDING_SLOT_NONE).
+// gTownObjectNames holds the neutral objects, the four town-type
 // prefixes, then the faction-object suffixes (index type + TOWN_TYPE_COUNT).
 // The mage guild's border grows 20 pixels a level above 0x61, bottom 0x99;
 // its level frames come in pairs.
 H1_ENUM_CONST_BEGIN(TownObjectConstant)
     TOWN_OBJECT_NONE = -1,
-    TOWN_BUILDING_NONE = -1,
     TOWN_MAGE_GUILD_LEVEL_HEIGHT = 20,
     TOWN_MAGE_GUILD_BASE_HEIGHT = 0x61,
     TOWN_MAGE_GUILD_BOTTOM_Y = 0x99,
@@ -97,8 +98,12 @@ H1_ENUM_CONST_BEGIN(TownObjectConstant)
     TOWN_MAGE_GUILD_LEVEL_FRAME_STRIDE = 2
 H1_ENUM_CONST_END(TownObjectConstant)
 
-// SetupThievesGuild's rows (gThievesCategoryNames order).
+// SetupThievesGuild's rows (gThievesCategoryNames order); its categories
+// argument is the row bound.
 H1_ENUM_BEGIN(TownThievesCategory)
+    // SetupThievesGuild's categories argument: count the rows from the
+    // player's thieves' guilds (one guild 3 rows, two 5, three 7, four all).
+    THIEVES_CATEGORIES_BY_GUILDS = -1,
     THIEVES_CATEGORY_TOWNS = 0,
     THIEVES_CATEGORY_CASTLES = 1,
     THIEVES_CATEGORY_HEROES = 2,
@@ -109,13 +114,11 @@ H1_ENUM_BEGIN(TownThievesCategory)
     THIEVES_CATEGORY_ARMY_STRENGTH = 7,
     THIEVES_CATEGORY_COUNT = 8
 H1_ENUM_END(TownThievesCategory)
+H1_ENUM_STEPPED(TownThievesCategory)
 
 // SetupThievesGuild's layout: a dead player's stat, the rank columns and
 // category rows, the flag frames and the tie centring step.
 H1_ENUM_CONST_BEGIN(ThievesGuildLayoutConstant)
-    // SetupThievesGuild's categories argument: count the rows from the
-    // player's thieves' guilds (one guild 3 rows, two 5, three 7, four all).
-    THIEVES_CATEGORIES_BY_GUILDS = -1,
     TOWN_THIEVES_DEAD_PLAYER_STAT = -1,
     THIEVES_RANK_FIRST_X = 0x120,
     THIEVES_PLAYER_COLUMN_WIDTH = 0x61,
@@ -235,17 +238,15 @@ H1_ENUM_CONST_BEGIN(TownTavernConstant)
     TOWN_TAVERN_FIRST_ANIMATION_FRAME = 1
 H1_ENUM_CONST_END(TownTavernConstant)
 
-// Town purchases and building tables: the spell book and boat prices, the
-// six dwellings each faction's rows hold in the gDwelling* tables, and
-// BuyBuild's split between neutral buildings (gNeutralBuildingCosts rows
-// 0..6) and dwellings.
+// Town purchases and building tables: the spell book and boat prices and
+// the six dwellings each faction's rows hold in the gDwelling* tables
+// (BuyBuild splits neutral buildings from dwellings at
+// BUILDING_SLOT_STRUCTURE_LAST).
 H1_ENUM_CONST_BEGIN(TownBuildConstant)
     TOWN_SPELL_BOOK_COST = 500,
     TOWN_BOAT_GOLD_COST = 1000,
     TOWN_BOAT_WOOD_COST = 10,
     TOWN_DWELLINGS_PER_FACTION = 6,
-    TOWN_NEUTRAL_BUILDING_LAST = 6,
-    TOWN_NEUTRAL_BUILDING_COUNT = 7,
     TOWN_DWELLING_COST_ROWS = 28,
     TOWN_MAGE_GUILD_COST_LEVEL_LAST = 3
 H1_ENUM_CONST_END(TownBuildConstant)
@@ -307,7 +308,7 @@ public:
     u16 m_affordableBuildings;
     u16 m_buildableBuildings;
     i8 m_castleDialogActive;
-    i16 m_selectedBuilding;
+    H1_ENUM_STORAGE(BuildingSlotType, i16) m_selectedBuilding;
     heroWindow* m_heroWindow0;
     heroWindow* m_heroWindow1;
     i16 m_splitAmount;
@@ -334,24 +335,31 @@ public:
     void SetArmyCommand(H1_ENUM_PARAM(MessageModifier, i16) qualifier);
     void SetCommandAndText(struct tag_message& message);
     void ShowText(char*);
-    void DoCommand(i8 command);
+    void DoCommand(H1_ENUM_PARAM(TownArmyCommand, i8) command);
     void RedrawTownScreen(void);
     void SplitArmy(void);
     void ShiftQualChange(void);
     void ResetStrips(void);
-    void Toggle(i8 building);
+    void Toggle(H1_ENUM_PARAM(BuildingSlotType, i8) building);
     void DrawTown(i8 updateScreen, i32 drawFlags);
-    i16 BuyBuild(i16 building, i8 cannotBuy, i8 quickView);
-    void BuildObj(i16 building);
+    i16 BuyBuild(H1_ENUM_PARAM(BuildingSlotType, i16) building, i8 cannotBuy, i8 quickView);
+    void BuildObj(H1_ENUM_PARAM(BuildingSlotType, i16) building);
     void SetupMage(class heroWindow* window);
     i8 RecruitHero(i8 cannotRecruit);
     void DoTavern(void);
     void SetupWell(class heroWindow* window);
-    void SetupThievesGuild(class heroWindow* window, i16 categories);
+    void SetupThievesGuild(
+        class heroWindow* window,
+        H1_ENUM_PARAM(TownThievesCategory, i16) categories
+    );
     void SetupCastle(class heroWindow* window);
-    char* GetBuildingName(i16 building);
+    char* GetBuildingName(H1_ENUM_PARAM(BuildingSlotType, i16) building);
     // HoMM1 keeps the thieves-guild helpers as townManager members.
-    void GetCategoryStats(i8 category, i32* const stats, i8* const order);
+    void GetCategoryStats(
+        H1_ENUM_PARAM(TownThievesCategory, i8) category,
+        i32* const stats,
+        i8* const order
+    );
     void SortStats(i32* const stats, i8* const order);
 };
 #pragma pack(pop)
@@ -365,7 +373,7 @@ struct TownBuildingExtent {
 };
 
 // Open's per-type town-object layout (0x0048d428).
-extern const i8 gTownObjectType[4][TOWN_MANAGER_OBJECT_CAPACITY];
+extern const H1_ENUM_ARRAY_ROWS(i8, gTownObjectType, TownType, TOWN_TYPE_COUNT, TOWN_MANAGER_OBJECT_CAPACITY);
 H1_ENUM_RETURN(MessageDispatchResult, i16) TavernHandler(struct tag_message& message);
 H1_ENUM_RETURN(MessageDispatchResult, i16) MageGuildHandler(struct tag_message& message);
 H1_ENUM_RETURN(MessageDispatchResult, i16) SplitArmyHandler(struct tag_message& message);

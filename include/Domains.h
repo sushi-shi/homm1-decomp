@@ -122,6 +122,14 @@ public:
     constexpr operator Storage() const {
         return value_;
     }
+    // Offsets of the integer face: `shared + n` is a number, whatever the
+    // domain steps.
+    constexpr Storage operator+(int amount) const {
+        return static_cast<Storage>(value_ + amount);
+    }
+    constexpr Storage operator-(int amount) const {
+        return static_cast<Storage>(value_ - amount);
+    }
     H1EnumShared& operator+=(int amount) {
         value_ = static_cast<Storage>(value_ + amount);
         return *this;
@@ -150,9 +158,48 @@ public:
 private:
     Storage value_;
 };
+// A braced list of whole elements initializes an H1EnumArray (a struct per
+// row, a row of columns per element) as it initializes the retail array; the
+// strict view declares the list type clang's list-initialization uses.
+namespace std {
+template<typename Element> class initializer_list {
+    const Element* first_;
+    unsigned int size_;
+    constexpr initializer_list(const Element* first, unsigned int size)
+        : first_(first), size_(size) {}
+
+public:
+    constexpr initializer_list() : first_(0), size_(0) {}
+    constexpr unsigned int size() const {
+        return size_;
+    }
+    constexpr const Element* begin() const {
+        return first_;
+    }
+    constexpr const Element* end() const {
+        return first_ + size_;
+    }
+};
+} // namespace std
+template<typename T> constexpr void H1EnumArrayCopy(T& to, const T& from) {
+    to = from;
+}
+template<typename T, int N> constexpr void H1EnumArrayCopy(T (&to)[N], const T (&from)[N]) {
+    for (int i = 0; i < N; i++)
+        H1EnumArrayCopy(to[i], from[i]);
+}
 template<typename T, typename Domain, int Count> class H1EnumArray {
 public:
     T elements[Count];
+
+    H1EnumArray() = default;
+    // Elements past the list are zero, as in a retail array initializer.
+    constexpr H1EnumArray(std::initializer_list<T> list) : elements{} {
+        int index = 0;
+        for (const T* element = list.begin(); element != list.end() && index < Count;
+             ++element, ++index)
+            H1EnumArrayCopy(elements[index], *element);
+    }
 
     constexpr T& operator[](Domain index) {
         return elements[static_cast<int>(index)];

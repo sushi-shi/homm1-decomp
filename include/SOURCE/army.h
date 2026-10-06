@@ -27,11 +27,15 @@ H1_ENUM_BEGIN(ArmySampleType)
     ARMY_SAMPLE_SHOOT = 3,
     ARMY_SAMPLE_COUNT = 4
 H1_ENUM_END(ArmySampleType)
+H1_ENUM_STEPPED(ArmySampleType)
 
 // army::m_spellEndCondition: what ends m_spellEffect early; Init and
 // CancelSpell store NONE.
 H1_ENUM_BEGIN(ArmySpellCancelType)
     ARMY_CANCEL_SPELLS_NONE = -1,
+    // The first real condition: CastSpell sets the rounds of a stack whose
+    // condition is at least FIRST.
+    ARMY_CANCEL_SPELLS_FIRST = 0,
     ARMY_CANCEL_SPELLS_AFTER_MOVE = 0,
     ARMY_CANCEL_SPELLS_AFTER_ATTACK = 1,
     ARMY_CANCEL_SPELLS_AFTER_DAMAGE = 2,
@@ -83,6 +87,18 @@ H1_ENUM_END(ArmyLuck)
 #define CLEAR_ARMY_TARGET(a)                                                                       \
     ((a)->m_targetSide = COMBAT_SIDE_NONE, (a)->m_targetIndex = COMBAT_ARMY_INDEX_NONE)
 
+// The sprite orientation a stack draws with: a left-facing stack draws the
+// mirrored sprite.
+#if H1_STRICT_DOMAINS
+#include <BASE/icon.h>
+inline constexpr IconDrawOrientation ArmyFacingOrientation(ArmyFacing facing) {
+    return facing == ARMY_FACING_LEFT ? ICON_DRAW_FLIPPED : ICON_DRAW_NORMAL;
+}
+#define ARMY_FACING_ORIENTATION(facing) ArmyFacingOrientation(facing)
+#else
+#define ARMY_FACING_ORIENTATION(facing) (facing)
+#endif
+
 #pragma pack(push, 1)
 class army {
 public:
@@ -123,7 +139,7 @@ public:
     i8 m_index;
     // SpellEffect's running effect index (-1 none); DrawFrame grows the
     // redraw box upward for effects 22-25.
-    i32 m_effectAnimation;
+    H1_ENUM_STORAGE(CombatEffectAnimation, i32) m_effectAnimation;
     // DrawToBuffer adds the shadow frames while set; Walk clears it to
     // redraw the field under the moving stack.
     i8 m_drawShadow;
@@ -134,9 +150,9 @@ public:
     class icon* m_walkIcon;
     class icon* m_attackIcon;
     // move, attack, wince and shoot sounds.
-    class sample* m_samples[ARMY_SAMPLE_COUNT];
+    H1_ENUM_ARRAY(class sample*, m_samples, ArmySampleType, ARMY_SAMPLE_COUNT);
     // Active spell; HoMM1 lets a stack carry one timed effect.
-    i8 m_spellEffect;
+    H1_ENUM_STORAGE(SpellType, i8) m_spellEffect;
     // What breaks m_spellEffect early: 0 the stack moving, 1 its own attack,
     // 2 taking damage, 3 only the round count; -1 with no spell.
     H1_ENUM_STORAGE(ArmySpellCancelType, i8) m_spellEndCondition;
@@ -146,11 +162,16 @@ public:
     army(void);
     // DoSurrender inlines this test.
     i32 IsAlive(void) {
-        return m_creatureType >= 0 && m_quantity > 0;
+        return m_creatureType >= CREATURE_FIRST && m_quantity > 0;
     }
     // --- methods ---
     void InitClean(void);
-    void Init(i8 type, i16 quantity, i8 side, i8 index);
+    void Init(
+        H1_ENUM_PARAM(CreatureType, i8) type,
+        i16 quantity,
+        H1_ENUM_PARAM(CombatSide, i8) side,
+        i8 index
+    );
     void LoadResources(void);
     void FreeResources(void);
     void DrawToBuffer(i16 x, i16 y);
@@ -158,9 +179,9 @@ public:
     void Stand(i8 redraw);
     void Wince(void);
     // Direction, then the stand-after and continued-walk flags.
-    void Walk(i16 direction, i8 standAfter, i8 continued);
+    void Walk(H1_ENUM_PARAM(CombatHexDirection, i16) direction, i8 standAfter, i8 continued);
     void SpecialAttack(void);
-    void DirDoAttack(i16 direction);
+    void DirDoAttack(H1_ENUM_PARAM(CombatHexDirection, i16) direction);
     void DoHydraAttack(void);
     // Nonzero for a retaliation strike.
     void DoAttack(i32 retaliation);
@@ -178,11 +199,11 @@ public:
         i32 defenseModifier
     );
     i32 Damage(i32 damage);
-    void PowEffect(i8 effect);
+    void PowEffect(H1_ENUM_PARAM(CombatPowEffect, i8) effect);
     u32 Strength(void);
     i32 LeaveNoBody(void);
     void ProcessDeath(i32 immediate);
-    void SpellEffect(i16 effect, i32 frameDelay);
+    void SpellEffect(H1_ENUM_PARAM(CombatEffectAnimation, i16) effect, i32 frameDelay);
     void CancelSpellType(i32 cancelType);
     void CancelIndividualSpell(i32 influence);
     i32 SetSpellInfluence(i32 influence, i32 rounds);
@@ -203,11 +224,17 @@ public:
     i32 OtherArmyAdjacent(i32 side, i32 index);
     i32 GetPowBaseY(void);
     i16 CanFit(i16* hex);
-    i16 ValidFlight(i16 destination, i8 useDestination);
+    i16 ValidFlight(i16 destination, H1_ENUM_PARAM(ArmyPathTarget, i8) useDestination);
     i16 FlyTo(void);
     i16 FlyTo(i16 destination);
-    i16 FindPath(i16 sourceHex, i16 targetHex, i8, i8 ignoreSpeed, i8 pathMode);
-    i16 ValidPath(i16 targetHex, i8 pathMode);
+    i16 FindPath(
+        i16 sourceHex,
+        i16 targetHex,
+        i8,
+        i8 ignoreSpeed,
+        H1_ENUM_PARAM(ArmyPathTarget, i8) pathMode
+    );
+    i16 ValidPath(i16 targetHex, H1_ENUM_PARAM(ArmyPathTarget, i8) pathMode);
     i16 GetMoveMask(i16 sourceHex);
     i16 GetAttackMask(i16 sourceHex, H1_ENUM_PARAM(ArmyAttackTarget, i8) targetMode, i8 targetHex);
     i16 ValidMove(H1_ENUM_PARAM(CombatHexDirection, i16) direction);

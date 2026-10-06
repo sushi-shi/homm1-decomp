@@ -1,17 +1,26 @@
 #ifndef HOMM1_SOURCE_KB_H
 #define HOMM1_SOURCE_KB_H
 
+#include <BASE/audioTypes.h>
 #include <BASE/message.h>
 #include <Domains.h>
 #include <SOURCE/armyGroup.h>
+#include <SOURCE/campaignTypes.h>
 #include <SOURCE/combatTypes.h>
+#include <SOURCE/cursorTypes.h>
 #include <SOURCE/dialogTypes.h>
 #include <SOURCE/fileRequester.h>
 #include <SOURCE/FINDPATH.h>
+#include <SOURCE/game.h>
 #include <SOURCE/gameTypes.h>
 #include <SOURCE/hero.h>
+#include <SOURCE/highScoreManager.h>
 #include <SOURCE/mapCell.h>
+#include <SOURCE/REMOTE.h>
+#include <SOURCE/resourceTypes.h>
+#include <SOURCE/SETUP.h>
 #include <SOURCE/terrainTypes.h>
+#include <SOURCE/VIEW.h>
 
 // WaitEndSample's waitTime: a negative wait means the default 4000 ms.
 H1_ENUM_CONST_BEGIN(SampleWaitConstant)
@@ -80,9 +89,8 @@ extern class combatManager* gpCombatManager;
 extern class executive* gpExec;
 extern class game* gpGame;
 extern i32 gHighMemBuffer;
-extern i32 giBottomViewOverride;
 extern i32 giBottomViewOverrideEndTime;
-extern i32 giBottomViewResource;
+extern H1_ENUM_STORAGE(ResourceType, i32) giBottomViewResource;
 extern i32 giBottomViewResourceQty;
 extern char gcBottomViewText[];
 extern i32 gHeroMoving;
@@ -95,19 +103,19 @@ extern H1_ENUM_STORAGE(DialogWaitType, i8) giWaitType;
 extern i8 gbFunctionComplete;
 // Artifact names (0x00492e60).
 extern H1_ENUM_ARRAY(char*, gArtifactNames, ArtifactType, ARTIFACT_COUNT);
-extern char* gNeutralBuildingNames[];
+extern H1_ENUM_ARRAY(char*, gNeutralBuildingNames, BuildingSlotType, BUILDING_SLOT_NEUTRAL_COUNT);
 extern char* gDwellingNames[];
 // BuyBuild's building descriptions (0x00493c90, 0x00493720) and per-dwelling
 // prerequisite building masks (0x00491880); CanBuild reads six masks per
 // faction.
-extern char* gNeutralBuildingDescriptions[];
+extern H1_ENUM_ARRAY(char*, gNeutralBuildingDescriptions, BuildingSlotType, BUILDING_SLOT_NEUTRAL_COUNT);
 extern char* gDwellingDescriptions[];
 extern u16 gDwellingRequirements[];
 extern i32 gMageBuildingCosts[][7];
-extern i32 gNeutralBuildingCosts[][7];
+extern H1_ENUM_ARRAY_ROWS(i32, gNeutralBuildingCosts, BuildingSlotType, BUILDING_SLOT_NEUTRAL_COUNT, 7);
 extern i32 gDwellingCosts[][7];
 extern i32 gMageBaseResourceValues[];
-extern i32 gNeutralBaseResourceValues[];
+extern H1_ENUM_ARRAY(i32, gNeutralBaseResourceValues, BuildingSlotType, BUILDING_SLOT_NEUTRAL_COUNT);
 extern i32 gDwellingBaseResourceValues[];
 extern char cNetBoxLine[][60];
 // ppMapExtra/pwSizeOfMapExtra: the map file's extra records (signs, events,
@@ -131,8 +139,8 @@ extern H1_ENUM_ARRAY(char*, gCombatFxNames, CombatEffectAnimation, COMBAT_EFFECT
 extern class icon* gCurLoadedSpellIcon;
 
 // HoMM1 KB name table accessor (retail 0x004516bf).
-char* GetMonsterSingularName(i32 monster);
-char* GetMonsterName(i32 monster);
+char* GetMonsterSingularName(H1_ENUM_PARAM(CreatureType, i32) monster);
+char* GetMonsterName(H1_ENUM_PARAM(CreatureType, i32) monster);
 class sample* LoadPlaySample(char* name);
 // glTimers slots: each entry is a KBTickCount() deadline that DelayTil waits
 // for or a loop compares against. Slots 2, 4 and 5 are global; slots 0 and
@@ -157,8 +165,8 @@ H1_ENUM_END(TimerSlot)
 extern H1_ENUM_ARRAY(i32, glTimers, TimerSlot, GLOBAL_TIMER_COUNT);
 void EarlyShutDownSystem();
 void QuickViewWait();
-i8 CanBuild(class town* t, i16 building);
-i8 CanBuy(class town* t, i16 type);
+i8 CanBuild(class town* t, H1_ENUM_PARAM(BuildingSlotType, i16) building);
+i8 CanBuy(class town* t, H1_ENUM_PARAM(BuildingSlotType, i16) type);
 extern "C" void PollSound();
 void ForcePollSound();
 #ifndef HOMM1_EDITOR
@@ -197,10 +205,10 @@ inline char CyrillicToLower(char c) {
     return c;
 }
 H1_ENUM_RETURN(MessageDispatchResult, i16) NullHandler(struct tag_message&);
-char* GetBuildingName(i32 race, i16 building);
-void GetBuildingCost(i32 race, i16 building, i32* const destination, i32 mageLevel);
-char* GetMonsterName(i32 monster);
-i32 GetBuildingBaseResourceValue(i32 race, i32 building, i32 level);
+char* GetBuildingName(H1_ENUM_PARAM(TownType, i32) race, H1_ENUM_PARAM(BuildingSlotType, i16) building);
+void GetBuildingCost(H1_ENUM_PARAM(TownType, i32) race, H1_ENUM_PARAM(BuildingSlotType, i16) building, i32* const destination, i32 mageLevel);
+char* GetMonsterName(H1_ENUM_PARAM(CreatureType, i32) monster);
+i32 GetBuildingBaseResourceValue(H1_ENUM_PARAM(TownType, i32) race, H1_ENUM_PARAM(BuildingSlotType, i32) building, i32 level);
 void AddNetBoxLine(char* text);
 void GOut(char* text);
 extern i32 giShowIntro;
@@ -216,7 +224,7 @@ void InitMainClasses(void);
 void InitVars(void);
 i32 InterpretCommandLine(void);
 void ClearMapExtra(void);
-i16 GetMonType(i32 score, i32 highScoreType);
+H1_ENUM_RETURN(CreatureType, i16) GetMonType(i32 score, H1_ENUM_PARAM(HighScoreType, i32) highScoreType);
 i32 MemSize(i32);
 i8 CheckMem(void);
 bool IsCDDrive(i32 driveIndex);
@@ -247,7 +255,7 @@ void DeleteMainClasses(void);
 extern class highScoreManager* gpHighScoreManager;
 void FileError(char* filename);
 void MemError();
-void GetMonsterCost(i32 monster, i32* const cost);
+void GetMonsterCost(H1_ENUM_PARAM(CreatureType, i32) monster, i32* const cost);
 // philAI::BuildHero charges this word-sized gold price.
 extern i16 gHeroGoldCost;
 void PopNetBox(char* notice);
@@ -270,24 +278,24 @@ void NormalDialog(
     H1_ENUM_PARAM(NormalDialogOrText, i32) showOrText = NORMAL_DIALOG_NO_OR_TEXT
 );
 extern char* gTownObjectNames[];
-extern char* gSpellDesc[];
+extern H1_ENUM_ARRAY(char*, gSpellDesc, SpellType, SPELL_COUNT);
 extern H1_ENUM_ARRAY(char*, gSpellNames, SpellType, SPELL_COUNT);
 // QuickInfo's name tables.
 extern H1_ENUM_ARRAY(char*, gTerrainNames, TerrainType, TERRAIN_COUNT);
-extern char* gResourceNames[];
-extern char* gMineNames[];
+extern H1_ENUM_ARRAY(char*, gResourceNames, ResourceType, RESOURCE_COUNT);
+extern H1_ENUM_ARRAY(char*, gMineNames, ResourceType, RESOURCE_COUNT);
 extern char* gObjectNames[];
 // KB's map-extra record count and sizes.
 extern i32 iMaxMapExtra;
 extern i32 pwSizeOfMapExtra[];
 // KB's adventure status-bar resource message and its menu, wait and victory
 // screens.
-void BVResMsg(char* s, i32 res, i32 qty);
+void BVResMsg(char* s, H1_ENUM_PARAM(ResourceType, i32) res, i32 qty);
 H1_ENUM_RETURN(MessageDispatchResult, i16) InitMenuHandler(struct tag_message& message);
 H1_ENUM_RETURN(MessageDispatchResult, i16) WaitHandler(struct tag_message& message);
 void ShowCongrats(void);
 void CongratsWait(void);
-i32 AddScoreToHighScore(i32 score, i32 standard, char*, char* scenarioName);
+i32 AddScoreToHighScore(i32 score, H1_ENUM_PARAM(HighScoreType, i32) standard, char*, char* scenarioName);
 
 // Graphics records are six words.
 struct exeGfxConfig {
@@ -306,6 +314,7 @@ H1_ENUM_BEGIN(ConfigExecutable)
     CONFIG_EXECUTABLE_EDITOR = 1,
     CONFIG_EXECUTABLE_COUNT = 2
 H1_ENUM_END(ConfigExecutable)
+H1_ENUM_STEPPED(ConfigExecutable)
 
 // gConfig.comPort/baudRate rows: the modem's and the direct (null-modem)
 // connection's settings (the "Modem"/"Direct" registry values).
@@ -319,7 +328,7 @@ H1_ENUM_END(ConfigConnection)
 // operands place musicSource at 0xb4; the old cdOffset and slowVideo fields
 // are absent. The 0x50 interval still needs its original type recovered.
 struct configStruct {
-    i32 walkSpeed;
+    H1_ENUM_STORAGE(WalkSpeed, i32) walkSpeed;
     i32 musicVolume;
     i32 soundVolume;
     i32 autosave;
@@ -329,7 +338,7 @@ struct configStruct {
     i32 firstMapOffset;
     i32 currentMapOffset;
     char _pad_0x050[0x64];
-    i32 musicSource;
+    H1_ENUM_STORAGE(SoundMusicSource, i32) musicSource;
     H1_ENUM_ARRAY(i32, comPort, ConfigConnection, CONFIG_CONNECTION_COUNT);
     H1_ENUM_ARRAY(i32, baudRate, ConfigConnection, CONFIG_CONNECTION_COUNT);
     char modemInitString[100];
@@ -364,7 +373,9 @@ extern H1_ENUM_STORAGE(ConfigExecutable, i32) gCurExe;
 // player is set up as human (GAME) and philAI draws its status text.
 // AbsAiPrint forces the MISC_FORCED level for one line; philAI traces events
 // at EVENT and switches to BATTLE tracing on the trace column.
-H1_ENUM_BEGIN(DebugLevel)
+// The level is a rank (a command-line digit tested with <, >= and as a flag),
+// so these are named thresholds of that number, not a closed value domain.
+H1_ENUM_CONST_BEGIN(DebugLevel)
     DEBUG_LEVEL_NONE = 0,
     FILE_REQUESTER_DEBUG_ALLOW_PLAYER_MISMATCH_MIN = 2,
     GAME_DEBUG_LEVEL_ALL_HUMAN_MIN = 2,
@@ -373,7 +384,7 @@ H1_ENUM_BEGIN(DebugLevel)
     AI_DEBUG_LEVEL_EVENT = 5,
     AI_DEBUG_LEVEL_BATTLE = 9,
     MISC_FORCED_DEBUG_LEVEL = 9
-H1_ENUM_END(DebugLevel)
+H1_ENUM_CONST_END(DebugLevel)
 extern i32 giDebugLevel;
 extern class palette* gpBufferPalette;
 extern i32 gColorMice;
@@ -389,7 +400,6 @@ extern i32 gInDialog;
 extern class palette* gPalette;
 // Main: right-click help for the six adventure panel buttons, the typed
 // cheat-digit sequence and the pending menu command.
-extern char* gAdvMenuHelp[];
 extern i32 gAllBlack;
 extern i32 gNoBorder;
 // Per hero type scouting radius used by TeleportTo.
@@ -402,7 +412,7 @@ extern i32 gMenuCommand;
 extern i16 gMapX;
 extern i16 gMapY;
 // UpdBottomViewHero's per-creature mons32.icn frame width.
-extern i8 gMons32Width[];
+extern H1_ENUM_ARRAY(i8, gMons32Width, CreatureType, CREATURE_COUNT);
 extern class searchArray* gpSearchArray;
 // UpdateRadar's per-owner and per-terrain radar pixel colours.
 extern i16 gRadarOwnerColor[];
@@ -430,16 +440,16 @@ extern i16 gCurLoadedSpellFileId;
 extern H1_ENUM_STORAGE(CombatSide, i32) giCurGeneral;
 // Area spells mark each stack once per cast: [side][army slot].
 extern H1_ENUM_ARRAY_ROWS(i8, gArmyEffected, CombatSide, COMBAT_SIDE_COUNT, ARMY_GROUP_SLOT_COUNT);
-extern char* gDifficultyNames[];
-extern i32 gMapDifficulty;
-extern i32 gMapSize;
+extern H1_ENUM_ARRAY(char*, gDifficultyNames, GameDifficulty, DIFFICULTY_COUNT);
+extern H1_ENUM_STORAGE(MapDifficulty, i32) gMapDifficulty;
+extern H1_ENUM_STORAGE(MapSize, i32) gMapSize;
 // The file requester's last chosen name (fileRequester::GetFilename);
 // retail places gbRetreatWin at its end.
 extern char gLastFilename[FILE_REQUESTER_NAME_SIZE];
 extern char gLastMapName[];
-extern char* gMapSizeNames[];
+extern H1_ENUM_ARRAY(char*, gMapSizeNames, MapSize, MAP_SIZE_COUNT);
 extern H1_ENUM_ARRAY(char*, gHeroScreen, HeroScreenText, HERO_TEXT_COUNT);
-extern char* gArtifactDesc[];
+extern H1_ENUM_ARRAY(char*, gArtifactDesc, ArtifactType, ARTIFACT_COUNT);
 extern char* gClassNames[];
 // Per-class sea mobility multiplier and level thresholds (retail 0x492038,
 // 0x492598).
@@ -468,7 +478,7 @@ extern i32 bSpecialHideCursor;
 extern H1_ENUM_ARRAY(i32, gArtifactBaseRV, ArtifactType, ARTIFACT_REGULAR_END);
 extern i8 gDrawSavedCursor;
 extern H1_ENUM_ARRAY(i8, gSpellAIFlags, SpellType, SPELL_COUNT);
-extern i8 gDwellingType[4][6];
+extern H1_ENUM_ARRAY_ROWS(H1_ENUM_STORAGE(CreatureType, i8), gDwellingType, TownType, TOWN_TYPE_COUNT, 6);
 extern float gSpellCastNumMod[];
 // FightValueOfStack's primary-stat power curve, per-spell AI flags and
 // values, spell-power duration scale and per-charge cast weights.
@@ -476,11 +486,11 @@ extern float gStatPower[];
 // DoAI: the single player the AI may run for, and the places each hero has
 // already started from this turn.
 extern i8 giLimitPlayer;
-extern i32 gMineIncome[];
+extern H1_ENUM_ARRAY(i32, gMineIncome, ResourceType, RESOURCE_COUNT);
 extern H1_ENUM_ARRAY(i16, gSpellAIValue, SpellType, SPELL_COUNT);
 extern class armyGroup* gpMonGroup;
 extern class philAI* gpPhilAI;
-extern i32 gResourceBaseValue[];
+extern H1_ENUM_ARRAY(i32, gResourceBaseValue, ResourceType, RESOURCE_COUNT);
 // ValueOfBuyingHero: the hero class native to each town type.
 extern i8 gTownHeroClass[];
 extern i32 gUltArtifactAvgValue;
@@ -492,21 +502,28 @@ extern i8 gbGamePosToNetPos[];
 extern i32 giHostGamePos;
 extern i32 giThisGamePos;
 extern i32 giThisNetPos;
-extern i8 iMPBaseType;
+extern H1_ENUM_STORAGE(MultiplayerBaseType, i8) iMPBaseType;
 i8 NetPosToGamePos(i32 netPos);
 i8 WaitForOtherPlayer(void);
 // SeedPosition's seeding state.
 extern i32 giSeedingValid;
 // KB-band setup state: the direct-connect flag and the multiplayer game type.
 extern i8 gDirectConnect;
-extern i8 iMPExtendedType;
+extern H1_ENUM_STORAGE(RemoteGameMode, i8) iMPExtendedType;
 extern i32 gInSmacker;
 // Spells taught per mage-guild level (retail 0x492514).
 extern i8 gMageGuildSpellCount[];
-extern struct TownBuildingExtent gTownBuildingExtents[4][16];
+extern H1_ENUM_ARRAY2(
+    struct TownBuildingExtent,
+    gTownBuildingExtents,
+    TownType,
+    TOWN_TYPE_COUNT,
+    BuildingSlotType,
+    BUILDING_SLOT_CAPACITY
+);
 // KB's tavern recruit dialog handler (retail 0x0045140e).
 H1_ENUM_RETURN(MessageDispatchResult, i16) RecruitHeroHandler(struct tag_message& message);
-extern i8 townTheme[];
+extern H1_ENUM_ARRAY(i8, townTheme, TownType, TOWN_TYPE_COUNT);
 extern i32 gFullCombatScreenDrawn;
 extern i32 gLimitedCombatUpdatePalette;
 extern i32 gScrollX;
@@ -521,15 +538,14 @@ extern i8 gKBDone;
 extern i16 boatFrameFlip[];
 // Combat ground tiles (0x00490e70) and obstacle icons (0x00490e90) per
 // combat terrain.
-extern char* gCombatGroundNames[];
-extern char* gCombatObstacleNames[];
+extern H1_ENUM_ARRAY(char*, gCombatGroundNames, TerrainType, TERRAIN_COUNT);
+extern H1_ENUM_ARRAY(char*, gCombatObstacleNames, TerrainType, TERRAIN_COUNT);
 // Hero level names and the per-class primary-skill gain table.
 extern H1_ENUM_ARRAY(char*, gHeroLevel, HeroLevelText, HERO_LEVEL_TEXT_COUNT);
-extern char* gViewGeneralHelp[];
+extern H1_ENUM_ARRAY(char*, gViewGeneralHelp, ViewGeneralHoverHelp, GENERAL_HOVER_HELP_COUNT);
 // Primary stat, morale and luck labels of the general's stats text, and the
 // combat command help lines HandleViewGeneral shows (entries 1-5).
 extern char* gViewGeneralLabels[];
-extern i32 gAdvDisposeLevel;
 extern char* gAlignmentNames[];
 extern char* gAPanelHelp[];
 // Army info strings: attack, defense, shots (combat), damage, hit points,
@@ -546,18 +562,17 @@ extern i8 gSkipIntro;
 extern i8 gbWaitForRemoteReceive;
 extern char* gCampaignScenarioNames[];
 extern char* gCampaignScenarioText[];
-extern i8 gCampaignSideCrests[][2];
+extern H1_ENUM_STORAGE(PlayerColor, i8) gCampaignSideCrests[][2];
 extern char* gCampaignSideNames[];
 extern char* gCampaignWinTexts[];
-extern char* gColorNames[];
-extern char* gCPanelHelp[];
-extern i16 gCrestHeroClass[];
+extern H1_ENUM_ARRAY(char*, gColorNames, PlayerColor, PLAYER_COLOR_COUNT);
+extern H1_ENUM_ARRAY(i16, gCrestHeroClass, PlayerColor, PLAYER_COLOR_COUNT);
 // NewMap: the town type of each crest and the types already given to the
 // first four random towns; the starting hero class of each campaign crest and
 // of each town type, each hero class's sight radius, the starting resources by
 // difficulty, the spell attribute bits and mage-guild pool by spell level, the
 // vision radius a claimed town grants and the mines placed per type.
-extern i16 gCrestTownTypes[];
+extern H1_ENUM_ARRAY(H1_ENUM_STORAGE(TownType, i16), gCrestTownTypes, PlayerColor, PLAYER_COLOR_COUNT);
 extern char gcWinText[];
 // Player colour names and the wandering-monster group of the current
 // encounter (the event texts are EVENTS.h gEventText).
@@ -572,22 +587,21 @@ extern char* gHumanPlayerTypeNames[];
 // on it), scenario titles and briefings, two crest bytes per side (the first
 // is the human player's), side names and win texts, and the town a campaign
 // map renames at a fixed position (x, y, then the name).
-extern i8 gCampaignChoice;
-extern i8 giMonthType;
+extern H1_ENUM_STORAGE(CampaignChoice, i8) gCampaignChoice;
+extern H1_ENUM_STORAGE(CalendarPeriodType, i8) giMonthType;
 extern i8 giMonthTypeExtra;
-extern char* gInitMenuHelp[];
 extern i8 gVisRangeTown;
 // Calendar specials: week/month type and the featured creature or name.
-extern i8 giWeekType;
+extern H1_ENUM_STORAGE(CalendarPeriodType, i8) giWeekType;
 extern i8 giWeekTypeExtra;
 extern char* gLuckText[];
-extern i8 gMageGuildSpellPool[4][8];
-extern char* gMapDifficultyNames[];
+extern H1_ENUM_STORAGE(SpellType, i8) gMageGuildSpellPool[4][8];
+extern H1_ENUM_ARRAY(char*, gMapDifficultyNames, MapDifficulty, MAP_DIFFICULTY_COUNT);
 extern char* gMonthNames[];
 // Morale and luck names, indexed from -3, and their info-window texts.
 extern char* gMoraleText[];
 // New-game screen: right-click help and the human/computer seat labels.
-extern char* gNewGameHelp[];
+extern H1_ENUM_ARRAY(char*, gNewGameHelp, NewGameHelp, NEW_GAME_HELP_COUNT);
 // New-turn texts: days-left and last-day warnings, then the month/week
 // banners and names.
 extern char* gNewTurnText[];
@@ -595,19 +609,19 @@ extern char* gNewTurnText[];
 extern char* gOverviewText[];
 extern char* gPlayerTypeNames[];
 extern char* gScoreLabels[];
-extern char* gSetupBaudHelp[];
-extern char* gSetupCampaignGameHelp[];
-extern char* gSetupComPortHelp[];
-extern char* gSetupDCBaudHelp[];
-extern char* gSetupDCComPortHelp[];
-extern char* gSetupDCGameHelp[];
-extern char* gSetupGameHelp[];
-extern char* gSetupHotSeatGameHelp[];
-extern char* gSetupModemGameHelp[];
-extern char* gSetupMultiPlayerGameHelp[];
-extern char* gSetupNetworkGameHelp[];
+extern H1_ENUM_ARRAY(char*, gSetupBaudHelp, SetupBaudHelp, SETUP_BAUD_HELP_COUNT);
+extern H1_ENUM_ARRAY(char*, gSetupCampaignGameHelp, SetupCampaignHelp, SETUP_CAMPAIGN_HELP_COUNT);
+extern H1_ENUM_ARRAY(char*, gSetupComPortHelp, SetupComPortHelp, SETUP_COM_PORT_HELP_COUNT);
+extern H1_ENUM_ARRAY(char*, gSetupDCBaudHelp, SetupBaudHelp, SETUP_BAUD_HELP_COUNT);
+extern H1_ENUM_ARRAY(char*, gSetupDCComPortHelp, SetupComPortHelp, SETUP_COM_PORT_HELP_COUNT);
+extern H1_ENUM_ARRAY(char*, gSetupDCGameHelp, SetupModemHelp, SETUP_MODEM_HELP_COUNT);
+extern H1_ENUM_ARRAY(char*, gSetupGameHelp, SetupGameHelp, SETUP_GAME_HELP_COUNT);
+extern H1_ENUM_ARRAY(char*, gSetupHotSeatGameHelp, SetupHotSeatHelp, SETUP_HOT_SEAT_HELP_COUNT);
+extern H1_ENUM_ARRAY(char*, gSetupModemGameHelp, SetupModemHelp, SETUP_MODEM_HELP_COUNT);
+extern H1_ENUM_ARRAY(char*, gSetupMultiPlayerGameHelp, SetupMultiPlayerHelp, SETUP_MULTIPLAYER_HELP_COUNT);
+extern H1_ENUM_ARRAY(char*, gSetupNetworkGameHelp, SetupNetworkHelp, SETUP_NETWORK_HELP_COUNT);
 extern char* gSpeedText[];
-extern i32 gStartingResources[][7];
+extern H1_ENUM_ARRAY2(i32, gStartingResources, GameDifficulty, DIFFICULTY_COUNT, ResourceType, RESOURCE_COUNT);
 extern char* gTownNames[];
 extern char* gWeekNames[];
 // Hero frame flips for the horse and boat walk cycles.
@@ -616,25 +630,32 @@ extern char* musicQualityText[];
 // Adventure control panel: option labels, then the control-panel and
 // adventure-panel help lines.
 extern char* onOffText[];
-extern char* walkSpeedText[];
+extern H1_ENUM_ARRAY(char*, walkSpeedText, WalkSpeed, WALK_SPEED_COUNT);
 
 // gAdvDisposeLevel while combat runs: how much adventure-screen art the
 // resource manager may release.
 H1_ENUM_BEGIN(AdvDisposeLevel)
     ADV_DISPOSE_NONE = 0,
     ADV_DISPOSE_PARTIAL = 1,
+    // advManager::Close releases the object icons up to this level and the
+    // rest of its art only at NONE.
+    ADV_DISPOSE_OBJECT_ICONS_LAST = ADV_DISPOSE_PARTIAL,
     ADV_DISPOSE_FULL = 2
 H1_ENUM_END(AdvDisposeLevel)
+extern H1_ENUM_STORAGE(AdvDisposeLevel, i32) gAdvDisposeLevel;
 
 // InitMenuHandler's right-click help: the gInitMenuHelp row.
 H1_ENUM_BEGIN(MainMenuHelp)
     MAIN_MENU_HELP_NONE = -1,
+    MAIN_MENU_HELP_FIRST = 0,
     MAIN_MENU_HELP_NEW_GAME = 0,
     MAIN_MENU_HELP_LOAD_GAME = 1,
     MAIN_MENU_HELP_HIGH_SCORES = 2,
     MAIN_MENU_HELP_CREDITS = 3,
-    MAIN_MENU_HELP_QUIT = 4
+    MAIN_MENU_HELP_QUIT = 4,
+    MAIN_MENU_HELP_COUNT = 5
 H1_ENUM_END(MainMenuHelp)
+extern H1_ENUM_ARRAY(char*, gInitMenuHelp, MainMenuHelp, MAIN_MENU_HELP_COUNT);
 
 // gEndSequence: CheckEndGame sets LOST/WON, and WON becomes CAMPAIGN_COMPLETE
 // after the last campaign scenario; oldmain plays the matching video (the
@@ -646,6 +667,7 @@ H1_ENUM_BEGIN(GameEndSequence)
     GAME_END_CAMPAIGN_COMPLETE = 2,
     GAME_END_SEQUENCE_COUNT = 3
 H1_ENUM_END(GameEndSequence)
+extern H1_ENUM_STORAGE(GameEndSequence, i32) gEndSequence;
 
 // Network positions (gbGamePosToNetPos, giThisNetPos): the host is
 // position HOST; a game position with no network player maps to NONE.

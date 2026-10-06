@@ -3,8 +3,10 @@
 
 #include <Domains.h>
 #include <H1/Macros.h>
+#include <SOURCE/artifactTypes.h>
 #include <SOURCE/gameTypes.h>
 #include <SOURCE/resourceTypes.h>
+#include <SOURCE/town.h>
 
 // playerData::m_heroIds: a player keeps at most eight heroes (TOWNMGR's
 // recruit and swap tests).
@@ -34,7 +36,10 @@ H1_ENUM_BEGIN(ComputerPlayerType)
     // game::PerDay gives types above these daily wood and ore, and above the
     // second one also the resource of the weekday.
     PLAYER_TYPE_NO_WOOD_ORE_BONUS_LAST = 2,
-    PLAYER_TYPE_NO_WEEKDAY_BONUS_LAST = 3
+    PLAYER_TYPE_NO_WEEKDAY_BONUS_LAST = 3,
+    // hero::CalcMobility gives a computer hero of this type and above three
+    // extra move points.
+    PLAYER_TYPE_MOBILITY_BONUS_FIRST = 3
 H1_ENUM_END(ComputerPlayerType)
 
 // A human seat's playerData::m_difficulty indexes gHandicapNames ("Human-",
@@ -102,7 +107,10 @@ public:
     // SetupThievesGuild adds it to the town-window flag frame base.
     H1_ENUM_STORAGE(PlayerColor, i8) m_color;
     // Computer-player difficulty: GetTurnAIVars scales the attack bonuses by
-    // it and hero::CalcMobility grants computer heroes +3 from level 3.
+    // it and hero::CalcMobility grants computer heroes +3 from level 3. The
+    // byte holds a ComputerPlayerType for a computer seat and a HumanHandicap
+    // for a human one (the new-game toggles cycle it as a number), so its
+    // readers decode the domain of the seat.
     i8 m_difficulty;
     i8 m_heroCount;
     i8 m_currentHero;
@@ -131,8 +139,12 @@ public:
     void Read(i32 file);
     i8 NextHero(i32);
     i8 HasMobileHero(void);
-    i32 BuildingsOwned(i32 townType, i32 buildingIndex, i32 buildState);
-    i32 NumOfGivenArtifact(i32 artifact);
+    i32 BuildingsOwned(
+        H1_ENUM_PARAM(TownType, i32) townType,
+        H1_ENUM_PARAM(BuildingSlotType, i32) buildingIndex,
+        i32 buildState
+    );
+    i32 NumOfGivenArtifact(H1_ENUM_PARAM(ArtifactType, i32) artifact);
     i8 CountVisitedObelisks(void);
     i8 CurrentHero(void) {
         return m_currentHero;

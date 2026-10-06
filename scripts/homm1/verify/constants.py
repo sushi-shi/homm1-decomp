@@ -39,7 +39,7 @@ import multiprocessing
 import re
 from collections import Counter
 from concurrent.futures import ProcessPoolExecutor
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 
 from homm1.core.paths import BUILD, IMAGE_BUILD, REPO, compiler_id
@@ -55,6 +55,9 @@ _FLOAT = re.compile(rb"(?:[0-9]+\.[0-9]*|\.[0-9]+)(?:[eE][-+]?[0-9]+)?[fFlL]?"
                     rb"|[0-9]+[eE][-+]?[0-9]+[fFlL]?")
 _SUFFIX = re.compile(r"[uUlL]+$")
 _BOOLEAN_TYPE_SPELLINGS = {"BOOL"}
+#: H1/Ints.h's boolean storage (an 8- or 32-bit integer in the retail view, a
+#: bool-only wrapper in the strict view), written with true/false.
+_FLAG_TYPE_SPELLINGS = {"b8", "b32"}
 #: VC4 (MSVC 4.x) predates the bool keywords; spelling them is C2065. VC5
 #: introduced `bool`, `true` and `false`, so a VC6 target (Buka) keeps them.
 _CXX_BOOLEAN = re.compile(r"\b(?:false|true)\b")
@@ -288,7 +291,7 @@ def _direct_operand_type(cidx, operand):
         ty = node.type
         canonical = ty.get_canonical()
         if (canonical.kind in (cidx.TypeKind.ENUM, cidx.TypeKind.BOOL)
-                or _type_spelling(ty) in _BOOLEAN_TYPE_SPELLINGS):
+                or _type_spelling(ty) in _BOOLEAN_TYPE_SPELLINGS | _FLAG_TYPE_SPELLINGS):
             return ty
         if node.kind not in transparent:
             return ty
@@ -332,13 +335,16 @@ def _semantic_type_role(cidx, ty):
     # condition, a logical operand) is int truthiness in the retail compiler.
     if _type_spelling(ty) in _BOOLEAN_TYPE_SPELLINGS:
         return "boolean"
+    if _HAS_BOOL and _type_spelling(ty) in _FLAG_TYPE_SPELLINGS:
+        return "boolean"
     if _HAS_BOOL and canonical.kind == cidx.TypeKind.BOOL:
         return "boolean"
     return None
 
 
 def _boolean_classification(value, type_spelling, visible, reason):
-    if _HAS_BOOL and type_spelling == "bool":
+    if _HAS_BOOL and re.sub(r"\b(?:const|volatile)\b", "", type_spelling).strip() in (
+            "bool", *_FLAG_TYPE_SPELLINGS):
         return "boolean", "true" if value else "false", type_spelling, reason
     name = "TRUE" if value else "FALSE"
     if name not in visible:
@@ -748,12 +754,14 @@ def _scan_entry(payload):
         _require_cl_mode(args)
     except RuntimeError as exc:
         return [], f"{path}: {exc}"
-    tu = None
-    strict = False
-    # The strict-enum view types domain-annotated storage, parameters and
-    # returns with their enums, so literals meeting them can be named; a unit
-    # that does not parse in it falls back to the retail view.
-    for extra in (_STRICT_VIEW, []):
+    # Review groups, details and destinations come from the retail view, the
+    # declarations VC6 compiles, so work-list rows do not depend on the
+    # strict view's wrapper calls. The strict-enum view types
+    # domain-annotated storage, parameters and returns with their enums, so a
+    # literal meeting them is proven there; a unit that does not parse in it
+    # keeps the retail view's proofs only.
+    parsed = {}
+    for view, extra in (("retail", []), ("strict", _STRICT_VIEW)):
         try:
             candidate = cidx.Index.create().parse(
                 str(path), args=args + extra,
@@ -762,11 +770,11 @@ def _scan_entry(payload):
             return [], f"{path}: libclang could not load TU: {exc}"
         errors = [d for d in candidate.diagnostics if d.severity >= cidx.Diagnostic.Error]
         if not errors:
-            tu = candidate
-            strict = bool(extra)
-            break
-    if tu is None:
-        return [], f"{path}: parse error: {errors[0]}"
+            parsed[view] = candidate
+        elif view == "retail":
+            return [], f"{path}: parse error: {errors[0]}"
+    tu = parsed["retail"]
+    strict = "strict" in parsed
 
     enum_values = _enum_values(cidx, tu.cursor)
     visible = frozenset(
@@ -820,7 +828,53 @@ def _scan_entry(payload):
             walk(child, stack + (node,))
 
     walk(tu.cursor)
+    if strict:
+        sites = _strict_proofs(cidx, parsed["strict"], sites, repo)
     return sites, None if strict else f"RETAIL-VIEW {path.relative_to(repo)}"
+
+
+def _strict_proofs(cidx, tu, sites, repo):
+    """Retail-view sites with the strict view's proven spelling where it has
+    one (a literal meeting typed storage, a parameter or a return)."""
+    enum_values = _enum_values(cidx, tu.cursor)
+    visible = frozenset(
+        node.spelling for node in tu.cursor.get_children()
+        if node.kind == cidx.CursorKind.MACRO_DEFINITION
+        and node.spelling in _NAMED_MACROS)
+    wanted = {(site.file, site.offset): index for index, site in enumerate(sites)}
+    cache: dict[Path, bytes] = {}
+    out = list(sites)
+
+    def walk(node, stack=()):
+        if node.kind == cidx.CursorKind.INTEGER_LITERAL and node.location.file:
+            source = Path(node.location.file.name).resolve()
+            try:
+                rel = str(source.relative_to(repo))
+            except ValueError:
+                rel = None
+            index = wanted.get((rel, node.location.offset))
+            if index is not None and not out[index].proven:
+                site = out[index]
+                site_visible = visible
+                if source.suffix.lower() in (".h", ".hpp", ".inl"):
+                    raw = cache.setdefault(source, source.read_bytes())
+                    site_visible = frozenset(
+                        name for name in visible
+                        if re.search(rb"\b" + name.encode() + rb"\b", raw))
+                cls, repl, context, reason = _classify(
+                    cidx, node, stack, site.value, enum_values, site_visible)
+                if cls in {"null-pointer", "boolean", "enum"}:
+                    review_group, review_context = _review_group(
+                        cidx, node, stack, site.scope, site.value, cls)
+                    out[index] = replace(
+                        site, classification=cls, replacement=repl,
+                        context_type=context, reason=reason,
+                        review_group=review_group, review_context=review_context)
+        for child in node.get_children():
+            walk(child, stack + (node,))
+
+    walk(tu.cursor)
+    return out
 
 
 def scan_entries(entries: list[dict], *, repo: Path = REPO, jobs: int = 1):

@@ -104,7 +104,7 @@ void strip::Draw(void) {
 VA(0x0045ca7e, 0x233)
 void strip::DrawIcons(i8 drawWindow) {
     i16 i;
-    i8 creatureType;
+    H1_ENUM_LOCAL(CreatureType, i8) creatureType;
 
     m_portraitIcon->DrawToBuffer(
         m_x + STRIP_PORTRAIT_X,
@@ -131,14 +131,14 @@ void strip::DrawIcons(i8 drawWindow) {
             m_stripIcon->DrawToBuffer(
                 m_x + i * STRIP_ARMY_X_STEP + STRIP_ARMY_FIRST_X,
                 m_y + STRIP_CONTENT_Y,
-                creatureType / STRIP_CREATURES_PER_FACTION + STRIP_FACTION_FRAME_OFFSET,
+                CREATURE_FACTION(creatureType) + STRIP_FACTION_FRAME_OFFSET,
                 ICON_DRAW_NORMAL,
                 ICON_DRAW_OFFSET_FULL
             );
             m_monsterIcon->DrawToBuffer(
                 m_x + i * STRIP_ARMY_X_STEP + STRIP_MONSTER_X,
                 m_y + STRIP_MONSTER_Y,
-                creatureType,
+                H1_ENUM_ENCODE(CreatureType, creatureType),
                 ICON_DRAW_NORMAL,
                 ICON_DRAW_OFFSET_FULL
             );
@@ -203,13 +203,13 @@ VA(0x0045cde5, 0xba)
 void bankBox::Update(void) {
     char text[12];
     tag_message message;
-    i16 i;
+    H1_ENUM_LOCAL(ResourceType, i16) i;
 
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_TEXT;
-    for (i = 0; i < RESOURCE_NON_GOLD_END; i++) {
+    for (i = RESOURCE_FIRST; i < RESOURCE_NON_GOLD_END; i++) {
         sprintf(text, "%d", m_player->m_resources[i]);
-        message.id = i + BANK_BOX_RESOURCE_FIRST;
+        message.id = H1_ENUM_ENCODE(ResourceType, i) + BANK_BOX_RESOURCE_FIRST;
         message.text = text;
         m_window->BroadcastMessage(message);
     }

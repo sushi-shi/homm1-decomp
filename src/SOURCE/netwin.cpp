@@ -168,7 +168,7 @@ H1_C_LINKAGE i16 __cdecl nb_snd(i32, u16 session, u16 len, void* data, i32 queue
 }
 
 VA(0x0044520f, 0x4f0)
-H1_C_LINKAGE i16 __cdecl nb_sess(i32, i32 operation, ...) {
+H1_C_LINKAGE i16 __cdecl nb_sess(i32, H1_ENUM_PARAM(NetbiosSessionOperation, i32) operation, ...) {
     NCB lastNcb;
     char* callNameEntry;
     i32 destinationSession;

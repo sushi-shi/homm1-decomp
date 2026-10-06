@@ -6,8 +6,7 @@
 # (tab-separated; every field is an fnmatch glob, `*` matches anything; the
 # first matching row wins): file owner spelling group detail reason.
 # group/detail are the census' review_group/review_context columns.
-#floor	1926
-include/Domains.h	*	1	*	*	the strict-domain view's stepped operators move one member and H1EnumBit shifts a one bit
+#floor	1841
 *	*	0	trivial-function-literal	0 for-init	a for loop's counter starts at zero
 *	*	0	trivial-function-literal	0 initializer*	an accumulator or counter declared at zero
 *	*	1	trivial-function-literal	1 arithmetic*	a one-step offset: the next index, element or count
@@ -32,7 +31,7 @@ include/Domains.h	*	1	*	*	the strict-domain view's stepped operators move one me
 *	*	*	call-argument	malloc(size_t) argument 1	the byte size of an allocation
 *	*	*	call-argument	sprintf(char *, const char *, ...) argument [3-9]	a value formatted into the text
 *	*	*	call-argument	TransmitRemoteData(* argument 3	the payload length in bytes
-*	*	*	call-argument	FadeScreen(i16, i16, class palette *) argument 2	the number of palette fade steps
+*	*	*	call-argument	FadeScreen(* argument 2	the number of palette fade steps
 *	*	*	call-argument	iconWidget(* argument [1-4]	widget x, y, width and height in pixels (retail window layout)
 *	*	*	call-argument	iconWidget(* argument 6	an icon frame number in the .icn resource (frames have no names)
 *	*	*	call-argument	textWidget(* argument [1-4]	widget x, y, width and height in pixels (retail window layout)
@@ -42,9 +41,8 @@ include/Domains.h	*	1	*	*	the strict-domain view's stepped operators move one me
 *	*	*	call-argument	UpdateScreenRegion(* argument [1-4]	screen region x, y, width and height in pixels
 *	*	*	call-argument	SaveFizzleSource(* argument [1-4]	screen region x, y, width and height in pixels
 *	*	*	call-argument	FizzleForward(* argument [1-4]	screen region x, y, width and height in pixels
-*	*	*	call-argument	DrawToBuffer(i16, i16, i16, i8, i8) argument [12]	icon x and y in pixels
-*	*	*	call-argument	DrawToBuffer(i16, i16, i16, i8, i8) argument 3	an icon frame number in the .icn resource (frames have no names)
-*	*	*	call-argument	DrawToBuffer(i16, i16) argument [12]	bitmap x and y in pixels
+*	*	*	call-argument	DrawToBuffer(* argument [12]	icon x and y in pixels
+*	*	*	call-argument	DrawToBuffer(* argument 3	an icon frame number in the .icn resource (frames have no names)
 *	*	*	call-argument	FillToBuffer(* argument [12]	icon x and y in pixels
 *	*	*	call-argument	FillToBuffer(* argument 3	an icon frame number in the .icn resource (frames have no names)
 *	*	*	call-argument	DimToBuffer(* argument [12]	icon x and y in pixels
@@ -91,10 +89,9 @@ include/Domains.h	*	1	*	*	the strict-domain view's stepped operators move one me
 *	*	[01]	call-argument	DoCombat(* argument 11	advManager::DoCombat's process-losses flag
 *	*	*	call-argument	DoCombat(* argument 10	the battle's random seed
 *	*	[01]	call-argument	CombatMonsterEvent(* argument 7	advManager::CombatMonsterEvent's hero-defends flag
-*	*	[01]	call-argument	GiveTakeArtifactStat(* argument 3	advManager::GiveTakeArtifactStat's take flag
 *	*	[01]	call-argument	AddWindow(* argument 3	the window's draw flag (heroWindow::Open forwards it to DrawWindow)
 *	*	[01]	call-argument	ViewGeneral(* argument [23]	combatManager::ViewGeneral's allow-actions / quick-view flags
-*	*	[01]	call-argument	ViewArmy(class army *, i32, i32) argument [23]	combatManager::ViewArmy's view flags
+*	*	[01]	call-argument	ViewArmy(* argument [23]	combatManager::ViewArmy's view flags
 *	*	[01]	call-argument	MoveAttack(* argument 2	army::MoveAttack's move-only flag
 *	*	[01]	call-argument	GetNextArmy(* argument 1	combatManager::GetNextArmy's check-morale flag
 *	*	[01]	call-argument	SetGridMode(* argument 1	combatManager::SetGridMode's grid flag
@@ -146,7 +143,7 @@ src/SOURCE/GAME.cpp	game::RandomizeEvents	*	arithmetic	operator % Random()	a ran
 *	*	*.*	arithmetic	*	a floating-point tuning factor (AI weight, damage or value scale)
 *	*	*.*	comparison-or-bound	*	a floating-point tuning threshold
 *	*	[01]	call-argument	DoAttack(* argument 1	army::DoAttack's retaliation flag
-*	*	*	call-argument	SpellEffect(i16, i32) argument 2	army::SpellEffect's frame delay in ticks
+*	*	*	call-argument	SpellEffect(* argument 2	army::SpellEffect's frame delay in ticks
 *	*	[01]	call-argument	ViewArmy(* argument [6-8]	game::ViewArmy's view-only / dismiss / upgrade flags
 *	*	[01]	call-argument	ViewSpells(* argument *	the spell book's view-only / mode flags
 *	*	[01]	call-argument	DrawWindow(* argument *	heroWindow::DrawWindow's update flag and widget id range
@@ -178,8 +175,6 @@ src/SOURCE/SEARCH.cpp	*	[01]	trivial-function-literal	[01] return	a zero/one int
 src/SOURCE/FINDPATH.cpp	*	[01]	trivial-function-literal	[01] return	a zero/one int result: false/true (VC4 has no bool) or an empty path/count
 src/SOURCE/ARMY.cpp	*	1	trivial-function-literal	1 bitwise	the single bit (1 << n) of a bit mask or set
 src/SOURCE/AI.cpp	*	1	trivial-function-literal	1 bitwise	the single bit (1 << n) of a bit mask or set
-src/SOURCE/FLY.cpp	*	1	trivial-function-literal	1 bitwise	the single bit (1 << n) of a bit mask or set
-src/SOURCE/SEARCH.cpp	*	1	trivial-function-literal	1 bitwise	the single bit (1 << n) of a bit mask or set
 src/SOURCE/FINDPATH.cpp	*	1	trivial-function-literal	1 bitwise	the single bit (1 << n) of a bit mask or set
 src/SOURCE/HEXCELL.cpp	*	1	trivial-function-literal	1 bitwise	the single bit (1 << n) of a bit mask or set
 src/SOURCE/AI.cpp	*	1	trivial-function-literal	1 initializer	a bit mask's first bit or a run counter starting at one
@@ -239,7 +234,6 @@ src/SOURCE/ARMY.cpp	army::DamageEnemy	*	*	*	DamageEnemy's attack-defense clamp t
 src/SOURCE/ARMY.cpp	*	*	call-argument	DamageEnemy(* argument [45]	DamageEnemy's ranged flag and defense modifier
 src/SOURCE/ARMY.cpp	*	*	call-argument	Walk(* argument [23]	army::Walk's stand-after / continued flags
 src/SOURCE/ARMY.cpp	*	*	call-argument	FindPath(* argument 4	army::FindPath's ignore-speed flag
-src/SOURCE/ARMY.cpp	*	*	call-argument	TakeOccupant(* argument 1	the tail hex one step behind a two-hex stack
 src/SOURCE/FLY.cpp	*	*	call-argument	TakeOccupant(* argument 1	the tail hex one step behind a two-hex stack
 src/SOURCE/ARMY.cpp	army::SpecialAttack	*	*	*	SpecialAttack's missile path geometry: launch offset 80/90, pitch y offsets, two steps per hex, midpoint halving, row parity of the wall test
 src/SOURCE/ARMY.cpp	army::DrawToBuffer	*	*	*	DrawToBuffer's sprite offsets, quantity-box geometry, clip columns and frame thresholds
@@ -301,7 +295,6 @@ src/SOURCE/ARMY.cpp	*	0	trivial-function-literal	0 store m_pathFlag	a cleared pe
 src/SOURCE/ARMY.cpp	*	0	trivial-function-literal	0 store m_hitPointsLost	no damage carried on the top creature
 src/SOURCE/HERO.cpp	*	0	trivial-function-literal	0 store m_heroLocatorPage	the hero locator's first page
 src/SOURCE/ARMY.cpp	*	0	trivial-function-literal	0 store oldMode	a saved flag reset
-src/SOURCE/ARMY.cpp	*	0	trivial-function-literal	0 array-index m_directions	the path's first step (the one next to the target)
 src/SOURCE/FINDPATH.cpp	*	0	trivial-function-literal	0 array-index m_cells	combat nodes in the first column of m_cells
 src/SOURCE/HERO.cpp	*	0	trivial-function-literal	0 array-index m_name	the name's first character (NUL: empty name)
 src/SOURCE/ARMY.cpp	*	1	trivial-function-literal	1 * m_pathLength	a one-step path
@@ -361,7 +354,6 @@ src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 equality x	a test against 
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_groundFrame	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store m_groundFrame	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_pathFlag	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_obstacleIndex	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store numTrees	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
@@ -633,7 +625,6 @@ src/SOURCE/SPELLS.cpp	combatManager::Armageddon	*	*	*	the palette fade's step co
 src/SOURCE/VIEW.cpp	combatManager::ViewGeneral	*	call-argument	sprintf(* argument 1[1-4]	the morale/luck label rows and the -3..3 text table offset
 src/SOURCE/comwin.cpp	com_init	*	*	*	the port name buffer, CreateFileA's no-share/no-flag zeros and 8 data bits
 src/SOURCE/netwin.cpp	nb_thr_ctl	0	call-argument	WaitFor*(* argument [24]	a zero (poll) wait timeout
-src/SOURCE/ARMYGRP.cpp	*	-1	trivial-function-literal	-1 initializer	a -1 not-found / unset local index or retail table sentinel without a domain name
 src/SOURCE/GAME.cpp	*	-1	trivial-function-literal	-1 equality gForceSwitchMusic	a -1 not-found / unset local index or retail table sentinel without a domain name
 src/SOURCE/GAME.cpp	*	-1	trivial-function-literal	-1 initializer	a -1 not-found / unset local index or retail table sentinel without a domain name
 src/SOURCE/TOWN.cpp	*	-1	trivial-function-literal	-1 store found	a -1 not-found / unset local index or retail table sentinel without a domain name
@@ -830,8 +821,6 @@ src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store numHumans	a counter, ac
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store numMines	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store numTowns	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store period	a counter, accumulator, coordinate or field reset to zero
-src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store race	a counter, accumulator, coordinate or field reset to zero
-src/SOURCE/HISCORE.cpp	*	0	trivial-function-literal	0 store m_monsterTypes[[]]	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/RECRUIT.cpp	*	0	trivial-function-literal	0 store m_goldTotal	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/RECRUIT.cpp	*	0	trivial-function-literal	0 store m_quantity	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/RECRUIT.cpp	*	0	trivial-function-literal	0 store m_resourceCost	a counter, accumulator, coordinate or field reset to zero
@@ -845,7 +834,6 @@ src/SOURCE/TOWN.cpp	*	0	trivial-function-literal	0 store m_id	a counter, accumul
 src/SOURCE/TOWN.cpp	*	0	trivial-function-literal	0 store m_owner	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/TOWN.cpp	*	0	trivial-function-literal	0 store m_threat	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/TOWN.cpp	*	0	trivial-function-literal	0 store m_townLocatorPage	a counter, accumulator, coordinate or field reset to zero
-src/SOURCE/TOWN.cpp	*	0	trivial-function-literal	0 store m_type	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/TOWN.cpp	*	0	trivial-function-literal	0 store m_unknown19	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/TOWNMGR.cpp	*	0	trivial-function-literal	0 store firstPlayer	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/TOWNMGR.cpp	*	0	trivial-function-literal	0 store id	a counter, accumulator, coordinate or field reset to zero
@@ -917,9 +905,7 @@ src/SOURCE/TOWNMGR.cpp	*	0	trivial-function-literal	0 array-index m_recruitHeroe
 src/SOURCE/TOWNMGR.cpp	*	1	trivial-function-literal	1 array-index m_recruitHeroes	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 bitwise	the unit bit of a 1 << n single-bit mask (town building slots, player bits, flag sets)
 src/SOURCE/TOWNMGR.cpp	*	1	trivial-function-literal	1 bitwise	the unit bit of a 1 << n single-bit mask (town building slots, player bits, flag sets)
-src/SOURCE/TOWN.cpp	*	1	trivial-function-literal	1 bitwise	the unit bit of a 1 << n single-bit mask (town building slots, player bits, flag sets)
 src/SOURCE/kbwin.cpp	*	1	trivial-function-literal	1 bitwise	the unit bit of a 1 << n single-bit mask (town building slots, player bits, flag sets)
-src/SOURCE/ARMYGRP.cpp	*	1	trivial-function-literal	1 bitwise	the unit bit of a 1 << n single-bit mask (town building slots, player bits, flag sets)
 src/SOURCE/GAME.cpp	playerData::Write	*	store	initializer of *	a local buffer extent or a named local id/geometry constant
 src/SOURCE/GAME.cpp	playerData::Read	*	store	initializer of *	a local buffer extent or a named local id/geometry constant
 src/SOURCE/GAME.cpp	*	*	call-argument	Scan(i8 *, i8, i8) argument *	a geometry, offset, length, text-row or table index argument (pixels, cell offsets, string slots, byte counts)
@@ -991,14 +977,14 @@ src/SOURCE/GAME.cpp	*	*	call-argument	TileToBitmap(tileset *, u32, bitmap *, i32
 src/SOURCE/GAME.cpp	*	*	call-argument	GetTownId(i8, i8) argument *	a geometry, offset, length, text-row or table index argument (pixels, cell offsets, string slots, byte counts)
 src/SOURCE/GAME.cpp	*	*	call-argument	RestoreCell(i32, i32, i32, i32, class mapCell *, i32) argument *	a flag, mode or selector argument of a HoMM1 routine without a named domain (draw/update/redraw/give-take flags, transfer options, no-exclusion -1)
 src/SOURCE/GAME.cpp	game::TransmitSaveGame	*	store	initializer of *	a local buffer extent or a named local id/geometry constant
-src/SOURCE/GAME.cpp	*	*	call-argument	BVResMsg(char *, i32, i32) argument *	a flag, mode or selector argument of a HoMM1 routine without a named domain (draw/update/redraw/give-take flags, transfer options, no-exclusion -1)
+src/SOURCE/GAME.cpp	*	*	call-argument	BVResMsg(* argument *	a flag, mode or selector argument of a HoMM1 routine without a named domain (draw/update/redraw/give-take flags, transfer options, no-exclusion -1)
 src/SOURCE/GAME.cpp	*	*	call-argument	CheckDoMain(i32, i32) argument *	a flag, mode or selector argument of a HoMM1 routine without a named domain (draw/update/redraw/give-take flags, transfer options, no-exclusion -1)
 src/SOURCE/GAME.cpp	game::ReceiveSaveGame	*	store	initializer of *	a local buffer extent or a named local id/geometry constant
 src/SOURCE/GAME.cpp	game::DoNewTurn	*	store	initializer of *	a local buffer extent or a named local id/geometry constant
 src/SOURCE/GAME.cpp	*	*	call-argument	NextHero(i32) argument *	a flag, mode or selector argument of a HoMM1 routine without a named domain (draw/update/redraw/give-take flags, transfer options, no-exclusion -1)
 src/SOURCE/GAME.cpp	*	*	call-argument	SetTownContext(i8) argument *	a flag, mode or selector argument of a HoMM1 routine without a named domain (draw/update/redraw/give-take flags, transfer options, no-exclusion -1)
 src/SOURCE/GAME.cpp	game::GetMap	*	store	initializer of *	a local buffer extent or a named local id/geometry constant
-src/SOURCE/GAME.cpp	*	*	call-argument	fileRequester(i16, i16, i16, const char *, const char *, const char *) argument *	a geometry, offset, length, text-row or table index argument (pixels, cell offsets, string slots, byte counts)
+src/SOURCE/GAME.cpp	*	*	call-argument	fileRequester(* argument *	a geometry, offset, length, text-row or table index argument (pixels, cell offsets, string slots, byte counts)
 src/SOURCE/GAME.cpp	game::CalcDifficultyRating	*	arithmetic	compound assignment to total	a retail tuning factor, odds, weight, frame or formula constant of this routine
 src/SOURCE/GAME.cpp	game::CalcDifficultyRating	*	arithmetic	operator *	a retail tuning factor, odds, weight, frame or formula constant of this routine
 src/SOURCE/GAME.cpp	GetBaseScore	*	store	store to score	a retail tuning factor, odds, weight, frame or formula constant of this routine
@@ -1010,7 +996,7 @@ src/SOURCE/GAME.cpp	game::ShowScenInfo	*	store	initializer of *	a local buffer e
 src/SOURCE/GAME.cpp	game::ShowScenInfo	*	arithmetic	operator * m_color	retail window/screen layout in pixels or frames, or a text/row count of this routine
 src/SOURCE/GAME.cpp	game::ShowScenInfo	*	arithmetic	operator +	retail window/screen layout in pixels or frames, or a text/row count of this routine
 src/SOURCE/RECRUIT.cpp	recruitUnit::Update	*	store	initializer of *	a local buffer extent or a named local id/geometry constant
-src/SOURCE/RECRUIT.cpp	*	*	call-argument	ViewArmy(i16, i16, i8, i16, class town *, i8, i8, i8, class hero *, class army *, class armyGroup *) argument *	a flag, mode or selector argument of a HoMM1 routine without a named domain (draw/update/redraw/give-take flags, transfer options, no-exclusion -1)
+src/SOURCE/RECRUIT.cpp	*	*	call-argument	ViewArmy(* argument *	a flag, mode or selector argument of a HoMM1 routine without a named domain (draw/update/redraw/give-take flags, transfer options, no-exclusion -1)
 src/SOURCE/REQUEST.cpp	fileRequester::fileRequester	*	store	initializer of *	a local buffer extent or a named local id/geometry constant
 src/SOURCE/REQUEST.cpp	*	*	call-argument	strcpy(char *, const char *) argument *	a geometry, offset, length, text-row or table index argument (pixels, cell offsets, string slots, byte counts)
 src/SOURCE/REQUEST.cpp	*	*	call-argument	SetOK(i8) argument *	a flag, mode or selector argument of a HoMM1 routine without a named domain (draw/update/redraw/give-take flags, transfer options, no-exclusion -1)
@@ -1025,7 +1011,7 @@ src/SOURCE/SWAPMGR.cpp	swapManager::Main	*	arithmetic	operator + CONTROL_LEFT_AR
 src/SOURCE/SWAPMGR.cpp	swapManager::Main	*	arithmetic	operator + CONTROL_RIGHT_ARTIFACT_FIRST	the n-th control of a widget-id run (FIRST + n) in a case label or range
 src/SOURCE/SWAPMGR.cpp	swapManager::Main	*	arithmetic	operator + CONTROL_LEFT_ARMY_FIRST	the n-th control of a widget-id run (FIRST + n) in a case label or range
 src/SOURCE/SWAPMGR.cpp	swapManager::Main	*	arithmetic	operator + CONTROL_RIGHT_ARMY_FIRST	the n-th control of a widget-id run (FIRST + n) in a case label or range
-src/SOURCE/TOWN.cpp	*	*	call-argument	AddSpell(i8, i8, i32) argument *	a flag, mode or selector argument of a HoMM1 routine without a named domain (draw/update/redraw/give-take flags, transfer options, no-exclusion -1)
+src/SOURCE/TOWN.cpp	*	*	call-argument	AddSpell(* argument *	a flag, mode or selector argument of a HoMM1 routine without a named domain (draw/update/redraw/give-take flags, transfer options, no-exclusion -1)
 src/SOURCE/TOWNMGR.cpp	townObject::townObject	*	store	initializer of *	a local buffer extent or a named local id/geometry constant
 src/SOURCE/TOWNMGR.cpp	*	*	call-argument	border(i16, i16, i16, i16, i16, i16, i16, char *) argument *	a geometry, offset, length, text-row or table index argument (pixels, cell offsets, string slots, byte counts)
 src/SOURCE/TOWNMGR.cpp	*	*	call-argument	strip(i16, i16, i8, i16, i8, class armyGroup *, i16, i32) argument *	a geometry, offset, length, text-row or table index argument (pixels, cell offsets, string slots, byte counts)
@@ -1053,7 +1039,7 @@ src/SOURCE/TOWNMGR.cpp	MageGuildHandler	*	arithmetic	operator + TOWN_MAGE_FIRST_
 src/SOURCE/TOWNMGR.cpp	townManager::SetupThievesGuild	*	comparison-or-bound	operator >= numThieves	retail window/screen layout in pixels or frames, or a text/row count of this routine
 src/SOURCE/TOWNMGR.cpp	townManager::RecruitHero	*	store	initializer of *	a local buffer extent or a named local id/geometry constant
 src/SOURCE/TOWNMGR.cpp	*	*	call-argument	GetHero(i8) argument *	a geometry, offset, length, text-row or table index argument (pixels, cell offsets, string slots, byte counts)
-src/SOURCE/TOWNMGR.cpp	*	*	call-argument	BuyBuild(i16, i8, i8) argument *	a flag, mode or selector argument of a HoMM1 routine without a named domain (draw/update/redraw/give-take flags, transfer options, no-exclusion -1)
+src/SOURCE/TOWNMGR.cpp	*	*	call-argument	BuyBuild(* argument *	a flag, mode or selector argument of a HoMM1 routine without a named domain (draw/update/redraw/give-take flags, transfer options, no-exclusion -1)
 src/SOURCE/TOWNMGR.cpp	*	*	call-argument	RecruitHero(i8) argument *	a flag, mode or selector argument of a HoMM1 routine without a named domain (draw/update/redraw/give-take flags, transfer options, no-exclusion -1)
 src/SOURCE/kbwin.cpp	*	*	call-argument	PeekMessageA(LPMSG, HWND, UINT, UINT, UINT) argument *	a Win32/CRT API literal argument (filter 0, reserved 0, flags, sizes)
 src/SOURCE/kbwin.cpp	*	*	call-argument	CreateWindowExA(DWORD, LPCSTR, LPCSTR, DWORD, int, int, int, int, HWND, HMENU, HINSTANCE, LPVOID) argument *	a Win32/CRT API literal argument (filter 0, reserved 0, flags, sizes)
@@ -1244,7 +1230,6 @@ src/SOURCE/EVENTS.cpp	*	*	call-argument	CheckHandleNetPlayerWait(* argument 2	Ch
 src/SOURCE/EVENTS.cpp	*	*	call-argument	RestoreCell(* argument [126]	RestoreCell's whole-map (-1, -1) position and its restore mode
 src/SOURCE/EVENTS.cpp	*	0	call-argument	PlayerMonsterInteract(* argument 7	PlayerMonsterInteract's flag argument
 src/SOURCE/EVENTS.cpp	advManager::EraseObj	0x7f	comparison-or-bound	operator <	EraseObj's object-index limit
-src/SOURCE/SETUP.cpp	game::PickLoadGame	0	call-argument	fileRequester(* argument [46]	a campaign is chosen; retail compares > 0, so neither a member nor a boundary name keeps the operator
 src/SOURCE/ARMYGRP.cpp	armyGroup::GetMorale	2	arithmetic	compound assignment to morale	the Fizbin of Misfortune's morale penalty (two points)
 src/SOURCE/GAME.cpp	NewGameHandler	[23]	array-index	array subscript m_players	the new-game dialog compacts opponent seats 1..3 by fixed seat index
 src/SOURCE/GAME.cpp	game::NewGame	[23]	array-index	array subscript *	the saved new-game opponent types per fixed seat (1..3)
@@ -1259,7 +1244,6 @@ src/SOURCE/kbwin.cpp	AppAbout	16	bitwise-or-packing	operator >> wParam	Win32 LOW
 src/SOURCE/kbwin.cpp	Process1WindowsMessage	150	comparison-or-bound	operator >	the blocking GetMessage interval in milliseconds
 src/SOURCE/kbwin.cpp	ResizeWindow	1	call-argument	MoveWindow(HWND, int, int, int, int, BOOL) argument [45]	an inclusive RECT's width/height (right - left + 1)
 src/SOURCE/kbwin.cpp	SetMenus	-1	trivial-function-literal	-1 cxx_static_cast_expr	GetMenuItemID's (UINT)-1 for a submenu entry (no Win32 macro in the VC4 headers)
-src/SOURCE/ADVMGR.cpp	advManager::UpdateRadar	4	array-index	array subscript gRadarOwnerColor	the radar neutral colour slot in an owner ternary: retail's int literal (an enumerator narrows VC4's ?: result to the char arm's type)
 src/SOURCE/PHILAI.cpp	philAI::QuickCombat	-1	call-argument	ProbableOutcomeOfBattle(*	no defending player in the m_owner ternary: retail's int literal (an enumerator narrows VC4's ?: result to char)
 src/SOURCE/PHILAI.cpp	philAI::ChooseEvaluateBattle	-1	call-argument	ProbableOutcomeOfBattle(*	no defending player in the m_owner ternary: retail's int literal (an enumerator narrows VC4's ?: result to char)
 src/SOURCE/EVENTS.cpp	*	-1	trivial-function-literal	-1 conditional	retail's int-literal arm of `owner ? m_owner : -1`; an enumerator arm narrows the conditional to signed char (VC4)

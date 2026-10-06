@@ -42,13 +42,13 @@ i32 combatManager::AICheckRetreat(void) {
     float prob;
     i32 realLoot;
     i32 armyIndex;
-    i32 owner;
+    H1_ENUM_LOCAL(CombatSide, i32) owner;
     armyGroup curGroup;
-    i32 artifactTotals[COMBAT_SIDE_COUNT];
+    H1_ENUM_ARRAY(i32, artifactTotals, CombatSide, COMBAT_SIDE_COUNT);
     float expBonus;
-    i32 theForces[COMBAT_SIDE_COUNT];
+    H1_ENUM_ARRAY(i32, theForces, CombatSide, COMBAT_SIDE_COUNT);
 
-    for (owner = 0; owner < COMBAT_SIDE_COUNT; owner++) {
+    for (owner = COMBAT_SIDE_FIRST; owner < COMBAT_SIDE_COUNT; owner++) {
         if (m_heroes[owner]) {
             heroRec = *m_heroes[owner];
             curLeader = &heroRec;
@@ -76,7 +76,7 @@ i32 combatManager::AICheckRetreat(void) {
         artifactTotals[owner] = 0;
         if (curLeader) {
             for (armyIndex = 0; armyIndex < HERO_ARTIFACT_SLOT_COUNT; armyIndex++) {
-                if (curLeader->m_artifacts[armyIndex] >= 0
+                if (curLeader->m_artifacts[armyIndex] >= ARTIFACT_FIRST
                     && curLeader->m_artifacts[armyIndex] < ARTIFACT_REGULAR_END)
                     artifactTotals[owner] += gArtifactBaseRV[curLeader->m_artifacts[armyIndex]];
             }
@@ -126,18 +126,20 @@ i32 combatManager::AICheckRetreat(void) {
 // target class, walkers otherwise close in; a castle attacker steps toward
 // the gate. The chosen move is nudged onto a free hex next to an enemy.
 VA(0x00411d88, 0x872)
-void combatManager::DoCompAI(i8) {
+void combatManager::DoCompAI(H1_ENUM_PARAM(CombatSide, i8)) {
     i8 strongerVal;
-    i16 mainShooters[COMBAT_SIDE_COUNT];
-    i32 newStrengths[COMBAT_SIDE_COUNT];
+    H1_ENUM_ARRAY(i16, mainShooters, CombatSide, COMBAT_SIDE_COUNT);
+    H1_ENUM_ARRAY(i32, newStrengths, CombatSide, COMBAT_SIDE_COUNT);
     i32 theSum;
-    i16 walkerMask[COMBAT_SIDE_COUNT];
-    i16 newPlan;
-    i32 newDir;
+    H1_ENUM_ARRAY(i16, walkerMask, CombatSide, COMBAT_SIDE_COUNT);
+    H1_ENUM_LOCAL(CombatAIAttackPlan, i16) newPlan;
+    // Counts the castle's built slots (building ids), then walks the
+    // adjacent directions of the chosen move.
+    H1_ENUM_SHARED(CombatHexDirection, i32) newDir;
     army* curArmy;
-    i16 sideEnemy;
+    H1_ENUM_LOCAL(CombatSide, i16) sideEnemy;
     i32 foeShootersNow;
-    i16 origMasks[COMBAT_SIDE_COUNT];
+    H1_ENUM_ARRAY(i16, origMasks, CombatSide, COMBAT_SIDE_COUNT);
     i32 minShootPowerVal;
     i8 ndx;
     i32 localDummy;
@@ -175,10 +177,14 @@ void combatManager::DoCompAI(i8) {
     if (m_castleSide[COMBAT_DEFENDER_SIDE]) {
         curNumArchers = COMBAT_AI_CASTLE_BASE_ARCHERS;
         castleCopy = m_combatTowns[COMBAT_DEFENDER_SIDE];
-        for (newDir = BUILDING_SLOT_DWELLING_FIRST; newDir <= BUILDING_SLOT_DWELLING_LAST; newDir++)
+        for (newDir = H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_DWELLING_FIRST);
+             newDir <= H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_DWELLING_LAST);
+             newDir++)
             if (castleCopy->m_buildings & (1 << newDir))
                 curNumArchers += COMBAT_AI_CASTLE_ARCHERS_PER_DWELLING;
-        for (newDir = BUILDING_SLOT_MAGE_GUILD; newDir <= BUILDING_SLOT_RACE_FIRST - 1; newDir++)
+        for (newDir = H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_MAGE_GUILD);
+             newDir <= H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_RACE_FIRST - 1);
+             newDir++)
             if (castleCopy->m_buildings & (1 << newDir))
                 curNumArchers++;
         wallStrength = curNumArchers * COMBAT_AI_CASTLE_ARCHER_STRENGTH;
@@ -281,7 +287,8 @@ void combatManager::DoCompAI(i8) {
 finish:
     if (giNextAction == ACTION_MOVE && giNextActionGridIndex > 0 && giNextActionGridIndex <= 43
         && gpCombatManager->m_hexCells[giNextActionGridIndex].m_occupantSide == COMBAT_SIDE_NONE) {
-        for (newDir = 0; newDir < COMBAT_DIRECTION_ADJACENT_COUNT; newDir++) {
+        for (newDir = COMBAT_DIRECTION_ADJACENT_FIRST; newDir < COMBAT_DIRECTION_ADJACENT_COUNT;
+             newDir++) {
             keptAdj = curArmy->GetAdjacentCellIndex(giNextActionGridIndex, newDir);
             if (keptAdj > 0 && keptAdj <= 43
                 && gpCombatManager->m_hexCells[keptAdj].m_occupantSide == COMBAT_OPPOSING_SIDE(m_currentSide)) {
@@ -295,7 +302,7 @@ finish:
 // Mask helpers: loop word indices over m_numArmies and build word masks
 // (dead flag 0x10, shooter 4, flyer 2).
 VA(0x004125fa, 0xb7)
-i16 combatManager::GetShooterMask(i8 side) {
+i16 combatManager::GetShooterMask(H1_ENUM_PARAM(CombatSide, i8) side) {
     i16 armyIndex = 0;
     i16 armyBit = 1;
     class army* currentArmy;
@@ -313,7 +320,7 @@ i16 combatManager::GetShooterMask(i8 side) {
 }
 
 VA(0x004126b1, 0xa9)
-i16 combatManager::GetFlyerMask(i8 side) {
+i16 combatManager::GetFlyerMask(H1_ENUM_PARAM(CombatSide, i8) side) {
     i16 armyIndex = 0;
     i16 bits;
     i16 armyBit = 1;
@@ -331,7 +338,7 @@ i16 combatManager::GetFlyerMask(i8 side) {
 }
 
 VA(0x0041275a, 0xc4)
-i16 combatManager::GetWalkerMask(i8 side) {
+i16 combatManager::GetWalkerMask(H1_ENUM_PARAM(CombatSide, i8) side) {
     i16 armyIndex = 0;
     i16 armyBit = 1;
     i16 bits = 0;
@@ -350,7 +357,7 @@ i16 combatManager::GetWalkerMask(i8 side) {
 }
 
 VA(0x0041281e, 0x9f)
-i16 combatManager::GetBestArmy(i8 side, i16 mask) {
+i16 combatManager::GetBestArmy(H1_ENUM_PARAM(CombatSide, i8) side, i16 mask) {
     i16 armyIndex = 0;
     i16 bitFlag = 1;
     u32 savedStrength;
@@ -371,7 +378,7 @@ i16 combatManager::GetBestArmy(i8 side, i16 mask) {
 }
 
 VA(0x004128bd, 0x9f)
-i16 combatManager::GetWorstArmy(i8 side, i16 mask) {
+i16 combatManager::GetWorstArmy(H1_ENUM_PARAM(CombatSide, i8) side, i16 mask) {
     i16 armyIndex = 0;
     i16 bit = 1;
     u32 force;
@@ -392,7 +399,11 @@ i16 combatManager::GetWorstArmy(i8 side, i16 mask) {
 }
 
 VA(0x0041295c, 0x102)
-i16 combatManager::GetClosestArmy(class army* currentArmy, i8 side, i16 mask) {
+i16 combatManager::GetClosestArmy(
+    class army* currentArmy,
+    H1_ENUM_PARAM(CombatSide, i8) side,
+    i16 mask
+) {
     i16 armyIndex = 0;
     army* target;
     i16 bitFlag = 1;
@@ -420,7 +431,7 @@ i16 combatManager::GetClosestArmy(class army* currentArmy, i8 side, i16 mask) {
 }
 
 VA(0x00412a5e, 0xb1)
-u32 combatManager::GetStrength(i8 side, i16 mask) {
+u32 combatManager::GetStrength(H1_ENUM_PARAM(CombatSide, i8) side, i16 mask) {
     i16 idx = 0;
     i16 bitMask = 1;
     u32 totalStrength = 0;
@@ -440,7 +451,11 @@ u32 combatManager::GetStrength(i8 side, i16 mask) {
 // Ghosts (26) pick the weakest stack; a missed two-hex target is retried
 // from its rear hex.
 VA(0x00412b0f, 0x183)
-i8 combatManager::AttemptAttack(class army* currentArmy, i8 side, i16 mask) {
+i8 combatManager::AttemptAttack(
+    class army* currentArmy,
+    H1_ENUM_PARAM(CombatSide, i8) side,
+    i16 mask
+) {
     i16 targetArmy;
     i32 targetHex;
 
@@ -480,7 +495,7 @@ i8 combatManager::AttemptAdjacentAttack(class army* currentArmy) {
     i16 otherHex;
     i16 hex;
     i16 oneBit;
-    i16 direction;
+    H1_ENUM_LOCAL(CombatHexDirection, i16) direction;
     i16 enemyMask;
     i16 openMaskValue;
     i16 victim;
@@ -491,7 +506,7 @@ i8 combatManager::AttemptAdjacentAttack(class army* currentArmy) {
         return 0;
     oneBit = 1;
     enemyMask = 0;
-    for (direction = 0; direction < COMBAT_DIRECTION_COUNT; direction++) {
+    for (direction = COMBAT_DIRECTION_NORTHEAST; direction < COMBAT_DIRECTION_COUNT; direction++) {
         if (openMaskValue & oneBit) {
             hex = currentArmy->GetAdjacentCellIndex(currentArmy->m_hex, direction);
             if (ValidHex(hex) && (currentArmy->m_stats.attributes & MONSTER_FLAGS_WIDE)
@@ -526,7 +541,11 @@ i8 combatManager::AttemptAdjacentAttack(class army* currentArmy) {
 }
 
 VA(0x00412f0e, 0x1ea)
-i8 combatManager::WalkTowardArmyFront(class army* currentArmy, i8 side, i16 mask) {
+i8 combatManager::WalkTowardArmyFront(
+    class army* currentArmy,
+    H1_ENUM_PARAM(CombatSide, i8) side,
+    i16 mask
+) {
     i16 frontHex;
     i32 armyIndex;
     i32 frontDelta;
@@ -561,7 +580,7 @@ i8 combatManager::WalkTowardArmyFront(class army* currentArmy, i8 side, i16 mask
         while (pathNdxIndex >= 0 && left) {
             giNextActionGridIndex = currentArmy->GetAdjacentCellIndex(
                 giNextActionGridIndex,
-                gpSearchArray->m_directions[pathNdxIndex]
+                H1_ENUM_DECODE(CombatHexDirection, gpSearchArray->m_directions[pathNdxIndex])
             );
             pathNdxIndex--;
             left--;
@@ -572,7 +591,11 @@ i8 combatManager::WalkTowardArmyFront(class army* currentArmy, i8 side, i16 mask
 }
 
 VA(0x004130f8, 0x1f6)
-i8 combatManager::WalkTowardArmy(class army* currentArmy, i8 side, i16 mask) {
+i8 combatManager::WalkTowardArmy(
+    class army* currentArmy,
+    H1_ENUM_PARAM(CombatSide, i8) side,
+    i16 mask
+) {
     i32 slot;
     i8 savedSpeedRequested;
     i32 routeGot;
@@ -633,7 +656,7 @@ i8 combatManager::WalkTowardArmy(class army* currentArmy, i8 side, i16 mask) {
         while (pathNdx >= 1 && left) {
             giNextActionGridIndex = currentArmy->GetAdjacentCellIndex(
                 giNextActionGridIndex,
-                gpSearchArray->m_directions[pathNdx]
+                H1_ENUM_DECODE(CombatHexDirection, gpSearchArray->m_directions[pathNdx])
             );
             pathNdx--;
             left--;

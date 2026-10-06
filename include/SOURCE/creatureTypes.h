@@ -7,6 +7,7 @@
 // armyGroup and army slots mark an empty stack with -1.
 H1_ENUM_BEGIN(CreatureType)
     CREATURE_NONE = -1,
+    CREATURE_FIRST = 0,
     CREATURE_PEASANT = 0,
     CREATURE_ARCHER = 1,
     CREATURE_PIKEMAN = 2,
@@ -35,6 +36,7 @@ H1_ENUM_BEGIN(CreatureType)
     CREATURE_NOMAD = 25,
     CREATURE_GHOST = 26,
     CREATURE_GENIE = 27,
+    CREATURE_LAST = CREATURE_GENIE,
     CREATURE_COUNT = 28
 H1_ENUM_END(CreatureType)
 
@@ -52,12 +54,22 @@ H1_ENUM_BEGIN(CreatureSpeed)
     CREATURE_SPEED_FAST = 3,
     CREATURE_SPEED_BLAZING = 4
 H1_ENUM_END(CreatureSpeed)
+H1_ENUM_STEPPED(CreatureSpeed)
 
 // Each race's six creatures are consecutive: creature / FACTION_SIZE is the
 // race (philAI's same-race bonus, KB's army alignment test).
 H1_ENUM_CONST_BEGIN(CreatureFactionConstant)
     CREATURE_FACTION_SIZE = 6
 H1_ENUM_CONST_END(CreatureFactionConstant)
+// A creature's race: its faction's index in creature order.
+#if H1_STRICT_DOMAINS
+inline constexpr int CreatureFaction(CreatureType creature) {
+    return static_cast<int>(creature) / CREATURE_FACTION_SIZE;
+}
+#define CREATURE_FACTION(creature) CreatureFaction(creature)
+#else
+#define CREATURE_FACTION(creature) ((creature) / CREATURE_FACTION_SIZE)
+#endif
 
 // Creature attribute bits (monster record / army::m_stats.attributes): wide
 // stacks take two hexes, flyers skip the path, shooters spend shots, breath attacks hit the hex behind;
@@ -85,6 +97,9 @@ H1_ENUM_FLAGS_END(MonsterFlags)
 struct tag_monsterStats {
     // army::Resurrect divides by this byte zero-extended.
     u8 hitPoints;
+    // A CreatureSpeed band, also the hex range the path search walks; path
+    // probes store wider ranges (FindPath's IGNORE_SPEED, the combat AI's
+    // COMBAT_AI_UNLIMITED_PATH_SPEED), so spells encode and decode the band.
     i8 speed;
     i8 missileType;
     i8 attack;

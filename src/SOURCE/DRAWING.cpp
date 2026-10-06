@@ -36,7 +36,11 @@ void combatManager::UpdateGrid(i16 hex, i16) {
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x004236c0, 0x47)
-void combatManager::UpdateGridForMove(i16 hex, i8 direction, i16 attributes) {
+void combatManager::UpdateGridForMove(
+    i16 hex,
+    H1_ENUM_PARAM(CombatHexDirection, i8) direction,
+    i16 attributes
+) {
     if (direction == COMBAT_DIRECTION_NORTHEAST || direction == COMBAT_DIRECTION_NORTHWEST)
         UpdateGrid(hex - COMBAT_GRID_COLUMNS, attributes);
     else
@@ -76,14 +80,14 @@ VA(0x004237b4, 0x286)
 void combatManager::CombatMessage(H1_ENUM_PARAM(CombatMessageCommand, i16) messageType) {
     army* currentArmy;
     army* targetArmy;
-    i16 actingMonsterType;
-    i16 targetMonsterType;
+    H1_ENUM_LOCAL(CreatureType, i16) actingMonsterType;
+    H1_ENUM_LOCAL(CreatureType, i16) targetMonsterType;
 
     currentArmy = &m_armies[m_currentSide][m_currentArmyIndex];
     actingMonsterType = currentArmy->m_creatureType;
     targetArmy = NULL;
-    targetMonsterType = 0;
-    if (currentArmy->m_targetSide >= 0 && currentArmy->m_targetIndex >= 0) {
+    targetMonsterType = CREATURE_FIRST;
+    if (currentArmy->m_targetSide >= COMBAT_SIDE_FIRST && currentArmy->m_targetIndex >= 0) {
         targetArmy = &m_armies[currentArmy->m_targetSide][currentArmy->m_targetIndex];
         targetMonsterType = targetArmy->m_creatureType;
     }
@@ -135,7 +139,7 @@ void combatManager::CombatMessage(H1_ENUM_PARAM(CombatMessageCommand, i16) messa
         case COMBAT_MESSAGE_COMMAND_VIEW_INFO:
             actingMonsterType =
                 m_armies[m_currentSide][m_hexCells[m_selectedHex].m_occupantIndex].m_creatureType;
-            if (actingMonsterType >= 0)
+            if (actingMonsterType >= CREATURE_FIRST)
                 sprintf(
                     gText,
                     gCombatMessage[COMBAT_TEXT_VIEW_INFO],
@@ -152,11 +156,11 @@ void combatManager::CombatMessage(H1_ENUM_PARAM(CombatMessageCommand, i16) messa
 VA(0x00423a3a, 0x92)
 void combatManager::ResetLimitCreature(void) {
     i32 j;
-    i32 side;
+    H1_ENUM_LOCAL(CombatSide, i32) side;
 
     m_computeExtent = 1;
     m_extendLimitDown = 0;
-    for (side = 0; side < COMBAT_SIDE_COUNT; side++) {
+    for (side = COMBAT_SIDE_FIRST; side < COMBAT_SIDE_COUNT; side++) {
         for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
             m_limitCreatureCount[side][j] =
                 (m_armies[side][j].m_stats.attributes & MONSTER_FLAGS_DEAD)
@@ -243,7 +247,7 @@ void combatManager::DrawFrame(i8 updateScreen) {
     i16 curCol;
     i32 selBoxRight;
     i8 savedDrawn;
-    i32 side;
+    H1_ENUM_LOCAL(CombatSide, i32) side;
     i32 i;
     i32 boxBottomValue;
     i32 boxTopNum;
@@ -258,7 +262,7 @@ void combatManager::DrawFrame(i8 updateScreen) {
         giMinExtentX = LOGICAL_SCREEN_WIDTH - 1;
         giMinExtentY = COMBAT_VIEW_HEIGHT - 1;
         savedDrawn = 0;
-        for (side = 0; side < COMBAT_SIDE_COUNT; side++) {
+        for (side = COMBAT_SIDE_FIRST; side < COMBAT_SIDE_COUNT; side++) {
             for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
                 if (m_limitCreatureCount[side][i] > 0) {
                     savedDrawn = 1;
@@ -405,7 +409,10 @@ void combatManager::DrawFrame(i8 updateScreen) {
                 m_combatIcons[COMBAT_ICON_TENT]->DrawToBuffer(
                     0x250,
                     0xeb,
-                    gpGame->m_players[m_playerId[COMBAT_DEFENDER_SIDE]].Color() + 4,
+                    H1_ENUM_ENCODE(
+                        PlayerColor,
+                        gpGame->m_players[m_playerId[COMBAT_DEFENDER_SIDE]].Color()
+                    ) + 4,
                     ICON_DRAW_FLIPPED,
                     ICON_DRAW_OFFSET_FULL
                 );
@@ -429,7 +436,10 @@ void combatManager::DrawFrame(i8 updateScreen) {
                 m_combatIcons[COMBAT_ICON_TENT]->DrawToBuffer(
                     0x2f,
                     0x9b,
-                    gpGame->m_players[m_playerId[COMBAT_ATTACKER_SIDE]].Color() + 4,
+                    H1_ENUM_ENCODE(
+                        PlayerColor,
+                        gpGame->m_players[m_playerId[COMBAT_ATTACKER_SIDE]].Color()
+                    ) + 4,
                     ICON_DRAW_NORMAL,
                     ICON_DRAW_OFFSET_FULL
                 );
@@ -488,7 +498,10 @@ void combatManager::DrawFrame(i8 updateScreen) {
                 m_combatIcons[COMBAT_ICON_TENT]->DrawToBuffer(
                     0x2f,
                     0x9b,
-                    gpGame->m_players[m_playerId[COMBAT_ATTACKER_SIDE]].Color() + 4,
+                    H1_ENUM_ENCODE(
+                        PlayerColor,
+                        gpGame->m_players[m_playerId[COMBAT_ATTACKER_SIDE]].Color()
+                    ) + 4,
                     ICON_DRAW_NORMAL,
                     ICON_DRAW_OFFSET_FULL
                 );
@@ -512,7 +525,10 @@ void combatManager::DrawFrame(i8 updateScreen) {
                 m_combatIcons[COMBAT_ICON_TENT]->DrawToBuffer(
                     0x250,
                     0xeb,
-                    gpGame->m_players[m_playerId[COMBAT_DEFENDER_SIDE]].Color() + 4,
+                    H1_ENUM_ENCODE(
+                        PlayerColor,
+                        gpGame->m_players[m_playerId[COMBAT_DEFENDER_SIDE]].Color()
+                    ) + 4,
                     ICON_DRAW_FLIPPED,
                     ICON_DRAW_OFFSET_FULL
                 );

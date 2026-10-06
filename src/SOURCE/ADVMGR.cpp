@@ -66,7 +66,7 @@ u16 s_drawGroundTile;
 DATA(0x004a672c)
 i8 s_drawFlipCloud;
 DATA(0x004a65a4)
-u8 s_drawTileset;
+H1_ENUM_STORAGE(MapTileset, u8) s_drawTileset;
 DATA(0x004a65d4)
 i32 s_drawCovered;
 DATA(0x004a65e8)
@@ -74,6 +74,8 @@ i32 s_drawStoneTile;
 
 VA(0x00401000, 0x2af)
 advManager::advManager(void) {
+    // Clears each icon and sample table in turn: a tileset, hero icon,
+    // player colour, plain sound slot and terrain sample index.
     i32 i;
 
     m_groundTiles = NULL;
@@ -90,17 +92,17 @@ advManager::advManager(void) {
     m_drawHeroShadows = 1;
     m_adventureBorder = NULL;
     for (i = 0; i < ADVMGR_OBJECT_ICON_COUNT; i++)
-        m_objectIcons[i] = NULL;
+        m_objectIcons[H1_ENUM_DECODE(MapTileset, i)] = NULL;
     for (i = 0; i < ADVMGR_HERO_ICON_COUNT; i++)
-        m_heroIcons[i] = NULL;
+        m_heroIcons[H1_ENUM_DECODE(AdventureHeroIcon, i)] = NULL;
     for (i = 0; i < ADVMGR_PLAYER_COLOR_COUNT; i++) {
-        m_flagIcons[i] = NULL;
-        m_boatFlagIcons[i] = NULL;
+        m_flagIcons[H1_ENUM_DECODE(PlayerColor, i)] = NULL;
+        m_boatFlagIcons[H1_ENUM_DECODE(PlayerColor, i)] = NULL;
     }
     for (i = 0; i < ADVMGR_ENVIRONMENT_SOUND_COUNT; i++)
         m_loopingSamples[i] = NULL;
     for (i = 0; i < ADVMGR_CURSOR_SAMPLE_COUNT; i++)
-        m_cursorSamples[i] = NULL;
+        m_cursorSamples[H1_ENUM_DECODE(TerrainType, i)] = NULL;
     m_puzzleIcon = NULL;
     m_cloudOverlayIcon = NULL;
     m_boatShadowIcon = NULL;
@@ -301,7 +303,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) advManager::Open(i16 id) {
         m_activeSounds[i].volume = ENVIRONMENT_SOUND_DEFAULT_VOLUME;
         m_activeSoundMask = 0;
     }
-    GetCursorSampleSet(gConfig.walkSpeed);
+    GetCursorSampleSet(H1_ENUM_ENCODE(WalkSpeed, gConfig.walkSpeed));
     if (!gbThisNetHumanPlayer[giCurPlayer]) {
         gpGame->TurnOnAIMusic();
         SetNoDialogMenus(0);
@@ -341,11 +343,12 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) advManager::Open(i16 id) {
     m_priority = id;
     m_active = 1;
     strcpy(m_name, "advManager");
-    return 0;
+    return BASE_MANAGER_SUCCESS;
 }
 
 VA(0x00402020, 0x388)
 void advManager::Close(void) {
+    // Walks each icon and sample table in turn (see the constructor).
     i16 index;
 
     ClearBottomView();
@@ -355,29 +358,29 @@ void advManager::Close(void) {
         free(m_adventureBorder);
         m_adventureBorder = NULL;
     }
-    if (gAdvDisposeLevel <= 1) {
+    if (gAdvDisposeLevel <= ADV_DISPOSE_OBJECT_ICONS_LAST) {
         for (index = 0; index < ADVMGR_OBJECT_ICON_COUNT; index++) {
-            if (m_objectIcons[index])
-                gpResourceManager->Dispose(m_objectIcons[index]);
-            m_objectIcons[index] = NULL;
+            if (m_objectIcons[H1_ENUM_DECODE(MapTileset, index)])
+                gpResourceManager->Dispose(m_objectIcons[H1_ENUM_DECODE(MapTileset, index)]);
+            m_objectIcons[H1_ENUM_DECODE(MapTileset, index)] = NULL;
         }
     }
-    if (gAdvDisposeLevel <= 0) {
+    if (gAdvDisposeLevel <= ADV_DISPOSE_NONE) {
         gpResourceManager->Dispose(m_puzzleIcon);
         m_puzzleIcon = NULL;
         gpResourceManager->Dispose(m_cloudOverlayIcon);
         m_cloudOverlayIcon = NULL;
         for (index = 0; index < ADVMGR_HERO_ICON_COUNT; index++) {
-            gpResourceManager->Dispose(m_heroIcons[index]);
-            m_heroIcons[index] = NULL;
+            gpResourceManager->Dispose(m_heroIcons[H1_ENUM_DECODE(AdventureHeroIcon, index)]);
+            m_heroIcons[H1_ENUM_DECODE(AdventureHeroIcon, index)] = NULL;
         }
         gpResourceManager->Dispose(m_boatShadowIcon);
         m_boatShadowIcon = NULL;
         for (index = 0; index < ADVMGR_PLAYER_COLOR_COUNT; index++) {
-            gpResourceManager->Dispose(m_flagIcons[index]);
-            m_flagIcons[index] = NULL;
-            gpResourceManager->Dispose(m_boatFlagIcons[index]);
-            m_boatFlagIcons[index] = NULL;
+            gpResourceManager->Dispose(m_flagIcons[H1_ENUM_DECODE(PlayerColor, index)]);
+            m_flagIcons[H1_ENUM_DECODE(PlayerColor, index)] = NULL;
+            gpResourceManager->Dispose(m_boatFlagIcons[H1_ENUM_DECODE(PlayerColor, index)]);
+            m_boatFlagIcons[H1_ENUM_DECODE(PlayerColor, index)] = NULL;
         }
         gpResourceManager->Dispose(m_groundTiles);
         m_groundTiles = NULL;
@@ -392,9 +395,9 @@ void advManager::Close(void) {
         m_loopingSamples[index] = NULL;
     }
     for (index = 0; index < ADVMGR_CURSOR_SAMPLE_COUNT; index++) {
-        if (m_cursorSamples[index])
-            gpResourceManager->Dispose(m_cursorSamples[index]);
-        m_cursorSamples[index] = NULL;
+        if (m_cursorSamples[H1_ENUM_DECODE(TerrainType, index)])
+            gpResourceManager->Dispose(m_cursorSamples[H1_ENUM_DECODE(TerrainType, index)]);
+        m_cursorSamples[H1_ENUM_DECODE(TerrainType, index)] = NULL;
     }
     gpWindowManager->RemoveWindow(m_adventureWindow);
     delete m_adventureWindow;
@@ -410,8 +413,8 @@ VA(0x004023a8, 0xa2)
 void advManager::GetCursorSampleSet(i32 sampleSet) {
     if (sampleSet >= 1)
         sampleSet = CURSOR_SAMPLE_FAST_SET;
-    i8 suffixSample[ADVMGR_CURSOR_SAMPLE_COUNT] = {0, 3, 5, 3, 4, 5, 6};
-    for (i32 index = 0; index < ADVMGR_CURSOR_SAMPLE_COUNT; ++index) {
+    H1_ENUM_ARRAY(i8, suffixSample, TerrainType, ADVMGR_CURSOR_SAMPLE_COUNT) = {0, 3, 5, 3, 4, 5, 6};
+    for (H1_ENUM_LOCAL(TerrainType, i32) index = TERRAIN_WATER; index < TERRAIN_COUNT; ++index) {
         sprintf(gText, "wsnd%1d%1d.82M", sampleSet, suffixSample[index]);
         m_cursorSamples[index] = gpResourceManager->GetSample(gText);
         m_cursorSamples[index]->m_playbackData.volume = SAMPLE_VOLUME_FULL;
@@ -460,7 +463,7 @@ class mapCell* advManager::DoAdvCommand(void) {
                 gpInputManager->Flush();
                 for (pos = gpSearchArray->m_pathLength - 1; pos >= 0; pos--) {
                     cellPtr = MoveHero(
-                        gpSearchArray->m_directions[pos],
+                        H1_ENUM_DECODE(MapDirection, gpSearchArray->m_directions[pos]),
                         pos == 0,
                         &TrigX,
                         &TrigY,
@@ -559,12 +562,14 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) advManager::Main(struct tag_message& 
     mapCell* location;
     hero* curHero;
     i32 townIndex;
+    // The debug keys' spell and resource loops, the typed cheat digit, the
+    // confirmed game command and the town search's slot.
     i32 amount;
     i32 quit;
     i32 movedSet;
     i8 bEnded;
-    i32 newHelpText;
-    i32 orient;
+    H1_ENUM_LOCAL(AdventurePanelHelp, i32) newHelpText;
+    H1_ENUM_LOCAL(MapDirection, i32) orient;
 
     if (glTimers[ADVENTURE_FRAME_TIMER_SLOT] < KBTickCount() && ComboDraw(1))
         UpdateScreen(1, 0);
@@ -594,7 +599,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) advManager::Main(struct tag_message& 
         && KBTickCount() - gForceSwitchMusic > FORCED_MUSIC_DELAY
         && GetCurrentTrack() == MUSIC_TRACK_NETWORK_TURN) {
         gForceSwitchMusic = FORCED_MUSIC_IDLE;
-        PlayMusic(m_currentTerrain);
+        PlayMusic(TERRAIN_MUSIC_TRACK(m_currentTerrain));
     }
     result = MESSAGE_DISPATCH_CONSUME;
     quit = 0;
@@ -635,13 +640,13 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) advManager::Main(struct tag_message& 
                                 newHelpText = ADVENTURE_HELP_GAME_OPTIONS;
                                 break;
                         }
-                        if (newHelpText >= 0)
+                        if (newHelpText >= ADVENTURE_HELP_FIRST)
                             NormalDialog(gAdvMenuHelp[newHelpText], NORMAL_DIALOG_TYPE_QUICK_VIEW);
                         break;
                 }
                 break;
             case MESSAGE_KEY_DOWN:
-                orient = -1;
+                orient = MAP_DIRECTION_NONE;
                 if (gpCurPlayer->CurrentHero() != HERO_ID_NONE)
                     curHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
                 else
@@ -670,7 +675,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) advManager::Main(struct tag_message& 
                     case INPUT_SCAN_F6:
                         if (curHero) {
                             for (amount = 0; amount < HERO_SPELL_SLOT_COUNT; amount++)
-                                curHero->AddSpell(amount, CHEAT_SPELL_CHARGES, 0);
+                                curHero->AddSpell(H1_ENUM_DECODE(SpellType, amount), CHEAT_SPELL_CHARGES, 0);
                         }
                         break;
                     case INPUT_SCAN_F7:
@@ -694,9 +699,9 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) advManager::Main(struct tag_message& 
                         }
                         break;
                     case INPUT_SCAN_F9:
-                        for (amount = 0; amount < RESOURCE_COUNT; amount++) {
-                            gpCurPlayer->m_resources[amount] +=
-                                (amount == RESOURCE_GOLD ? CHEAT_GOLD_AMOUNT
+                        for (amount = 0; H1_ENUM_DECODE(ResourceType, amount) < RESOURCE_COUNT; amount++) {
+                            gpCurPlayer->m_resources[H1_ENUM_DECODE(ResourceType, amount)] +=
+                                (H1_ENUM_DECODE(ResourceType, amount) == RESOURCE_GOLD ? CHEAT_GOLD_AMOUNT
                                                          : CHEAT_RESOURCE_AMOUNT);
                         }
                         break;
@@ -859,7 +864,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) advManager::Main(struct tag_message& 
                         if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CANCEL)
                             quit = 0;
                         else
-                            gGameCommand = amount;
+                            gGameCommand = H1_ENUM_DECODE(MainMenuControl, amount);
                         break;
                     case INPUT_SCAN_S:
                         SaveGame();
@@ -902,7 +907,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) advManager::Main(struct tag_message& 
                         }
                         break;
                 }
-                if (gpCurPlayer->m_currentHero != HERO_ID_NONE && orient >= 0) {
+                if (gpCurPlayer->m_currentHero != HERO_ID_NONE && orient >= MAP_DIRECTION_FIRST) {
                     HideRoute(1, 1, 1);
                     gpMouseManager->ReallyHidePointer();
                     location = MoveHero(orient, 1, &TrigX, &TrigY, &movedSet, 0, &bEnded);
@@ -1227,7 +1232,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i32) advManager::ProcessSelect(struct tag_
         && message->id >= BOTTOM_VIEW_DRAW_FIRST_WIDGET
         && message->id <= BOTTOM_VIEW_DRAW_LAST_WIDGET)
         NormalDialog(localization::Tr("adventure.status_help"), NORMAL_DIALOG_TYPE_QUICK_VIEW);
-    return 1;
+    return MESSAGE_DISPATCH_CONSUME;
 }
 
 VA(0x00404475, 0x1ac)
@@ -1281,7 +1286,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i32) advManager::ProcessDeSelect(
         giBottomViewOverrideEndTime = KBTickCount() + 3000;
         UpdBottomView(1, 1, 1);
     }
-    return 1;
+    return MESSAGE_DISPATCH_CONSUME;
 }
 
 VA(0x00404621, 0x428)
@@ -1318,7 +1323,7 @@ i32 advManager::ProcessSearch(i32 x, i32 y) {
     if (gbHumanPlayer[giCurPlayer])
         sample = LoadPlaySample("DIGSOUND.82M");
     if (cellPtr->m_objectIndex == MAP_CELL_NO_FRAME) {
-        cellPtr->m_objectTileset = TILESET_OBJ32_07;
+        cellPtr->m_objectTileset = H1_ENUM_ENCODE(MapTileset, TILESET_OBJ32_07);
         cellPtr->m_objectIndex = DIG_HOLE_FRAME;
         cellPtr->m_flags |= MAP_CELL_OBJECT_SHADOW_ONLY;
     }
@@ -1353,7 +1358,7 @@ i32 advManager::ProcessSearch(i32 x, i32 y) {
                     NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, 0xb1, 0x1c);
                     hero->ViewArtifact(gpGame->m_ultimateArtifactId, 0);
                 }
-                PlayMusic(m_currentTerrain);
+                PlayMusic(TERRAIN_MUSIC_TRACK(m_currentTerrain));
             } else if (gpGame->m_campaignType > 0
                        && gpGame->m_campaignScenario == CAMPAIGN_SCENARIO_EYE_OF_GOROS) {
                 sprintf(gText, localization::Tr("adventure.search.eye_of_goros_enemy"));
@@ -1399,7 +1404,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i32) advManager::ProcessHover(struct tag_m
             gpMouseManager->MouseCoords(xPos, yPos);
             if (xPos > ADVENTURE_VIEWPORT_EXTENT) {
                 gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
-                return 1;
+                return MESSAGE_DISPATCH_CONSUME;
             }
             xPos = xPos / CELL_PIXELS;
             yPos = yPos / CELL_PIXELS;
@@ -1422,7 +1427,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i32) advManager::ProcessHover(struct tag_m
                     || m_commandTargetY > MAP_CELL_GRID_SIZE - 1
                     || !(gpGame->m_mapExtra[m_commandTargetX][m_commandTargetY] & giCurPlayerBit)) {
                     gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
-                    return 1;
+                    return MESSAGE_DISPATCH_CONSUME;
                 }
                 location = GetCell(m_commandTargetX, m_commandTargetY);
                 if (gpCurPlayer->m_currentHero == HERO_ID_NONE) {
@@ -1430,16 +1435,16 @@ H1_ENUM_RETURN(MessageDispatchResult, i32) advManager::ProcessHover(struct tag_m
                         && gpGame->GetTown(location->m_objectMetadata)->m_owner == giCurPlayer) {
                         gpMouseManager->SetPointer(ADVENTURE_POINTER_TOWN);
                         m_selectedCell = ADVMGR_COMMAND_TOWN_VIEW;
-                        return 1;
+                        return MESSAGE_DISPATCH_CONSUME;
                     } else if (MAP_TRIGGER_OBJECT(location->m_triggerType) == MAP_OBJECT_HERO
                                && gpGame->GetHero(location->m_objectMetadata)->m_owner
                                       == giCurPlayer) {
                         gpMouseManager->SetPointer(ADVENTURE_POINTER_HERO);
                         m_selectedCell = ADVMGR_COMMAND_HERO_VIEW;
-                        return 1;
+                        return MESSAGE_DISPATCH_CONSUME;
                     } else {
                         gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
-                        return 1;
+                        return MESSAGE_DISPATCH_CONSUME;
                     }
                 } else {
                     prevHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
@@ -1448,7 +1453,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i32) advManager::ProcessHover(struct tag_m
                     if (xPos == heroPosX && yPos == heroPosY) {
                         gpMouseManager->SetPointer(ADVENTURE_POINTER_HERO);
                         m_selectedCell = ADVMGR_COMMAND_HERO_VIEW;
-                        return 1;
+                        return MESSAGE_DISPATCH_CONSUME;
                     }
                     if (location->m_secondaryTrigger & MAP_CELL_SECONDARY_BLOCKED) {
                         if (MAP_TRIGGER_OBJECT(location->m_triggerType) == MAP_OBJECT_TOWN) {
@@ -1467,12 +1472,12 @@ H1_ENUM_RETURN(MessageDispatchResult, i32) advManager::ProcessHover(struct tag_m
                                            == MAP_OBJECT_TOWN)) {
                                 gpMouseManager->SetPointer(ADVENTURE_POINTER_TOWN);
                                 m_selectedCell = ADVMGR_COMMAND_SELECT_TOWN;
-                                return 1;
+                                return MESSAGE_DISPATCH_CONSUME;
                             }
                         }
                         gpSearchArray->m_pathLength = 0;
                         gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
-                        return 1;
+                        return MESSAGE_DISPATCH_CONSUME;
                     }
                     if (!((m_cursorType == ADVMGR_HERO_ICON_BOAT
                            || location->m_tileIndex >= MAP_CELL_TILES_PER_TERRAIN
@@ -1484,7 +1489,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i32) advManager::ProcessHover(struct tag_m
                               || location->m_triggerType == MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST)))) {
                         gpSearchArray->m_pathLength = 0;
                         gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
-                        return 1;
+                        return MESSAGE_DISPATCH_CONSUME;
                     }
                     SeedTo(m_commandTargetX, m_commandTargetY);
                     if (gpSearchArray->m_cells[m_commandTargetX][m_commandTargetY].visited) {
@@ -1652,10 +1657,10 @@ H1_ENUM_RETURN(MessageDispatchResult, i32) advManager::ProcessHover(struct tag_m
                                 m_selectedCell = ADVMGR_COMMAND_MOVE_TO;
                                 break;
                         }
-                        return 1;
+                        return MESSAGE_DISPATCH_CONSUME;
                     } else {
                         gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
-                        return 1;
+                        return MESSAGE_DISPATCH_CONSUME;
                     }
                 }
             }
@@ -1664,9 +1669,9 @@ H1_ENUM_RETURN(MessageDispatchResult, i32) advManager::ProcessHover(struct tag_m
             if (!(gpMouseManager->m_cursorFrame >= HOVER_SCROLL_FRAME_FIRST
                   && gpMouseManager->m_cursorFrame < HOVER_SCROLL_FRAME_END && MouseInScrollZone()))
                 gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
-            return 1;
+            return MESSAGE_DISPATCH_CONSUME;
     }
-    return 1;
+    return MESSAGE_DISPATCH_CONSUME;
 }
 
 VA(0x00405530, 0x279)
@@ -1917,8 +1922,8 @@ void advManager::DrawCell(
     i16 pixelX7;
     mapCell* newCell0;
     hero* savedShowHero;
-    i8 position;
-    i8 flagColorValue;
+    H1_ENUM_LOCAL(AdventureHeroIcon, i8) position;
+    H1_ENUM_LOCAL(PlayerColor, i8) flagColorValue;
     i8 drawHeroIcon0;
 
     if (!forceDraw && !bShowIt)
@@ -2042,7 +2047,7 @@ void advManager::DrawCell(
         s_drawGroundTile |= newCell0->m_tileIndex & 0xff;
         TileToBitmap(m_groundTiles, s_drawGroundTile, gpWindowManager->m_screen, pixelX7, pixelY3);
         if (newCell0->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY) {
-            s_drawTileset = newCell0->m_objectTileset & MAP_CELL_TILESET_MASK;
+            s_drawTileset = H1_ENUM_DECODE(MapTileset, newCell0->m_objectTileset & MAP_CELL_TILESET_MASK);
             if (!drawingPuzzle || s_drawTileset != TILESET_OBJ32_07
                 || newCell0->m_objectIndex != DIG_HOLE_FRAME)
                 IconToBitmap(
@@ -2058,7 +2063,7 @@ void advManager::DrawCell(
     if (drawMask & ADVMGR_DRAW_OBJECT) {
         if (!(newCell0->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY)
             && newCell0->m_objectIndex != MAP_CELL_NO_FRAME) {
-            s_drawTileset = newCell0->m_objectTileset & MAP_CELL_TILESET_MASK;
+            s_drawTileset = H1_ENUM_DECODE(MapTileset, newCell0->m_objectTileset & MAP_CELL_TILESET_MASK);
             if (s_drawTileset != TILESET_MONS32) {
                 IconToBitmap(
                     m_objectIcons[s_drawTileset],
@@ -2081,7 +2086,7 @@ void advManager::DrawCell(
         }
         if (newCell0->m_flags & MAP_CELL_OBJECT_EXTRA)
             IconToBitmap(
-                m_objectIcons[newCell0->m_objectTileset >> MAP_CELL_EXTRA_TILESET_SHIFT],
+                m_objectIcons[H1_ENUM_DECODE(MapTileset, newCell0->m_objectTileset >> MAP_CELL_EXTRA_TILESET_SHIFT)],
                 gpWindowManager->m_screen,
                 pixelX7,
                 pixelY3,
@@ -2094,8 +2099,8 @@ void advManager::DrawCell(
         savedShowHero = NULL;
         if (!(newCell0->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY)
             && newCell0->m_objectIndex != MAP_CELL_NO_FRAME) {
-            s_drawTileset = newCell0->m_objectTileset & MAP_CELL_TILESET_MASK;
-            if (s_drawTileset == TILESET_MONS32 && newCell0->m_objectIndex <= CREATURE_COUNT - 1) {
+            s_drawTileset = H1_ENUM_DECODE(MapTileset, newCell0->m_objectTileset & MAP_CELL_TILESET_MASK);
+            if (s_drawTileset == TILESET_MONS32 && H1_ENUM_DECODE(CreatureType, newCell0->m_objectIndex) <= CREATURE_LAST) {
                 if (mapX == m_lastQuickViewX && mapY == m_lastQuickViewY) {
                     if (m_mineGuardianFacingLeft)
                         FlipIconToBitmap(
@@ -2144,11 +2149,14 @@ void advManager::DrawCell(
             heroYOffset6 = 0;
             if (newCell0->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_HERO)) {
                 savedShowHero = gpGame->GetHero(newCell0->m_objectMetadata);
-                flagColorValue = savedShowHero->IsEmbarked()
-                                     ? PLAYER_COLOR_NONE
-                                     : gpGame->m_players[savedShowHero->m_owner].m_color;
-                position = savedShowHero->IsEmbarked() ? static_cast<i8>(ADVMGR_HERO_ICON_BOAT)
-                                                       : savedShowHero->m_heroClass;
+                flagColorValue = H1_ENUM_DECODE(
+                    PlayerColor,
+                    savedShowHero->IsEmbarked()
+                        ? H1_ENUM_ENCODE(PlayerColor, PLAYER_COLOR_NONE)
+                        : H1_ENUM_ENCODE(PlayerColor, gpGame->m_players[savedShowHero->m_owner].m_color)
+                );
+                position = savedShowHero->IsEmbarked() ? H1_ENUM_CAST(AdventureHeroIcon, i8, ADVMGR_HERO_ICON_BOAT)
+                                                       : H1_ENUM_DECODE(AdventureHeroIcon, savedShowHero->m_heroClass);
                 savedFrame = GetCursorBaseFrame(savedShowHero->m_direction);
                 drawHeroIcon0 = 1;
                 if (savedShowHero->IsEmbarked())
@@ -2261,7 +2269,7 @@ void advManager::DrawCell(
     }
     if (drawMask & ADVMGR_DRAW_OVERLAY) {
         if (newCell0->m_overlayIndex != MAP_CELL_NO_FRAME) {
-            s_drawTileset = newCell0->m_overlayTileset & MAP_CELL_TILESET_MASK;
+            s_drawTileset = H1_ENUM_DECODE(MapTileset, newCell0->m_overlayTileset & MAP_CELL_TILESET_MASK);
             IconToBitmap(
                 m_objectIcons[s_drawTileset],
                 gpWindowManager->m_screen,
@@ -2282,7 +2290,7 @@ void advManager::DrawCell(
         }
         if (newCell0->m_flags & MAP_CELL_OVERLAY_EXTRA)
             IconToBitmap(
-                m_objectIcons[newCell0->m_overlayTileset >> MAP_CELL_EXTRA_TILESET_SHIFT],
+                m_objectIcons[H1_ENUM_DECODE(MapTileset, newCell0->m_overlayTileset >> MAP_CELL_EXTRA_TILESET_SHIFT)],
                 gpWindowManager->m_screen,
                 pixelX7,
                 pixelY3,
@@ -2355,15 +2363,15 @@ void advManager::UpdateRadar(i8 updateScreen, i32 partial) {
                 theOwner = gpGame->m_availableHeroes[cellPtrItem->m_objectMetadata];
                 if (theOwner == giCurPlayer)
                     color =
-                        gRadarOwnerColor[theOwner < 0 ? 4 : gpGame->m_players[theOwner].m_color];
+                        gRadarOwnerColor[theOwner < 0 ? H1_ENUM_ENCODE(PlayerColor, PLAYER_COLOR_NEUTRAL) : H1_ENUM_ENCODE(PlayerColor, gpGame->m_players[theOwner].m_color)];
                 else
                     color = gRadarTerrainColor[CELL_TERRAIN(cellPtrItem)];
             } else {
-                switch (cellPtrItem->m_objectTileset & MAP_CELL_TILESET_MASK) {
+                switch (H1_ENUM_DECODE(MapTileset, cellPtrItem->m_objectTileset & MAP_CELL_TILESET_MASK)) {
                     case TILESET_TOWN32:
                         theOwner = gpGame->m_townOwners[cellPtrItem->m_objectMetadata];
                         color = gRadarOwnerColor
-                            [theOwner < 0 ? 4 : gpGame->m_players[theOwner].m_color];
+                            [theOwner < 0 ? H1_ENUM_ENCODE(PlayerColor, PLAYER_COLOR_NEUTRAL) : H1_ENUM_ENCODE(PlayerColor, gpGame->m_players[theOwner].m_color)];
                         break;
                     case TILESET_RSRC32:
                         switch (cellPtrItem->m_triggerType) {
@@ -2375,7 +2383,7 @@ void advManager::UpdateRadar(i8 updateScreen, i32 partial) {
                             case MAP_EVENT_TRIGGER(MAP_OBJECT_SAWMILL):
                                 theOwner = gpGame->m_mineOwners[cellPtrItem->m_objectMetadata];
                                 color = gRadarOwnerColor
-                                    [theOwner < 0 ? 4 : gpGame->m_players[theOwner].m_color];
+                                    [theOwner < 0 ? H1_ENUM_ENCODE(PlayerColor, PLAYER_COLOR_NEUTRAL) : H1_ENUM_ENCODE(PlayerColor, gpGame->m_players[theOwner].m_color)];
                                 break;
                             default:
                                 color = gRadarTerrainColor[CELL_TERRAIN(cellPtrItem)];
@@ -2477,11 +2485,11 @@ void advManager::QuickInfo(i16 cellX, i16 cellY) {
                     sprintf(
                         gText,
                         "\n\n%s",
-                        gResourceNames[currentCell->m_objectIndex - RESOURCE_PILE_OBJECT_BASE]
+                        gResourceNames[H1_ENUM_DECODE(ResourceType, currentCell->m_objectIndex - RESOURCE_PILE_OBJECT_BASE)]
                     );
                     break;
                 case MAP_OBJECT_RESOURCE_SHADOW:
-                    sprintf(gText, "\n\n%s", gResourceNames[currentCell->m_objectIndex + 2]);
+                    sprintf(gText, "\n\n%s", gResourceNames[H1_ENUM_DECODE(ResourceType, currentCell->m_objectIndex + 2)]);
                     break;
                 case MAP_OBJECT_MONSTER:
                     sprintf(
@@ -2491,7 +2499,7 @@ void advManager::QuickInfo(i16 cellX, i16 cellY) {
                             currentCell->m_objectMetadata & MONSTER_COUNT_MASK,
                             ARMY_SIZE_NAME_SENTENCE
                         ),
-                        gArmyNamesPlural[currentCell->m_objectIndex]
+                        gArmyNamesPlural[H1_ENUM_DECODE(CreatureType, currentCell->m_objectIndex)]
                     );
                     break;
                 default:
@@ -2674,8 +2682,8 @@ void advManager::UpdateTownLocators(i8 drawWindow, i8 updateScreen) {
             msg.value = WIDGET_FLAG_ENABLED;
             m_adventureWindow->BroadcastMessage(msg);
             msg.command = WIDGET_COMMAND_SET_FRAME;
-            msg.value = gpGame->GetTown(whichTown)->m_type + LOCATOR_FRAME_TOWN_FIRST;
-            if (gpGame->GetTown(whichTown)->m_buildings & (1 << BUILDING_SLOT_CASTLE))
+            msg.value = H1_ENUM_ENCODE(TownType, gpGame->GetTown(whichTown)->m_type) + LOCATOR_FRAME_TOWN_FIRST;
+            if (gpGame->GetTown(whichTown)->m_buildings & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_CASTLE))
                 msg.value += LOCATOR_FRAME_CASTLE_OFFSET;
             m_adventureWindow->BroadcastMessage(msg);
         }
@@ -2868,7 +2876,7 @@ i8 advManager::UpdBottomViewEnemyTurn(void) {
         if (m_bottomViewPrimaryWidgets[ENEMY_TURN_CREST_SLOT + ADVMGR_BOTTOM_VIEW_ICON_FIRST]) {
             msg.command = WIDGET_COMMAND_SET_FRAME;
             msg.id = ENEMY_TURN_CREST_ID;
-            msg.value = gpGame->GetPlayerColor(giCurPlayer);
+            msg.value = H1_ENUM_ENCODE(PlayerColor, gpGame->GetPlayerColor(giCurPlayer));
             m_adventureWindow->BroadcastMessage(msg);
         } else {
             m_bottomViewPrimaryWidgets[ENEMY_TURN_CREST_SLOT + ADVMGR_BOTTOM_VIEW_ICON_FIRST] =
@@ -2878,7 +2886,7 @@ i8 advManager::UpdBottomViewEnemyTurn(void) {
                     ENEMY_TURN_ANIMATION_WIDTH,
                     ENEMY_TURN_ANIMATION_HEIGHT,
                     "brcrest.icn",
-                    gpGame->GetPlayerColor(giCurPlayer),
+                    H1_ENUM_ENCODE(PlayerColor, gpGame->GetPlayerColor(giCurPlayer)),
                     ICON_DRAW_NORMAL,
                     ENEMY_TURN_CREST_ID,
                     ICON_WIDGET_DRAW,
@@ -3061,7 +3069,7 @@ i8 advManager::UpdBottomViewResMsg(void) {
     );
 
     y = 0;
-    if (giBottomViewResource < 0) {
+    if (giBottomViewResource < RESOURCE_FIRST) {
         y = RESOURCE_VIEW_MULTILINE_HEIGHT;
         smFont = gpResourceManager->GetFont("smalfont.fnt");
         lineCntNo = smFont->LineLength(gcBottomViewText, BOTTOM_VIEW_PANEL_WIDTH);
@@ -3085,7 +3093,7 @@ i8 advManager::UpdBottomViewResMsg(void) {
         MemError();
     m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[0], WINDOW_Z_ORDER_APPEND);
 
-    if (giBottomViewResource >= 0) {
+    if (giBottomViewResource >= RESOURCE_FIRST) {
         if (giBottomViewResource == RESOURCE_GOLD) {
             oldIconW = RESOURCE_VIEW_GOLD_WIDTH;
             iconHVal = RESOURCE_VIEW_GOLD_HEIGHT;
@@ -3099,7 +3107,7 @@ i8 advManager::UpdBottomViewResMsg(void) {
             oldIconW,
             iconHVal,
             "resource.icn",
-            giBottomViewResource,
+            H1_ENUM_ENCODE(ResourceType, giBottomViewResource),
             ICON_DRAW_NORMAL,
             BOTTOM_VIEW_FOREGROUND_ID,
             ICON_WIDGET_DRAW,
@@ -3137,6 +3145,8 @@ i8 advManager::UpdBottomViewKingdom(void) {
     i32 numVillage;
     i32 i;
     i32 nCastles;
+    // The kingdom entries: the seven resources in ResourceType order, then
+    // castles and villages.
     i8 rowY[KINGDOM_VIEW_ENTRY_COUNT];
     u8 textX[KINGDOM_VIEW_ENTRY_COUNT];
     char* countText[KINGDOM_VIEW_ENTRY_COUNT];
@@ -3146,22 +3156,22 @@ i8 advManager::UpdBottomViewKingdom(void) {
 
     ClearBottomView();
     gCurBottomView = BOTTOM_VIEW_KINGDOM;
-    rowY[RESOURCE_WOOD] = KINGDOM_VIEW_RESOURCE_TEXT_Y;
-    rowY[RESOURCE_MERCURY] = KINGDOM_VIEW_RESOURCE_TEXT_Y;
-    rowY[RESOURCE_ORE] = KINGDOM_VIEW_RESOURCE_TEXT_Y;
-    rowY[RESOURCE_SULFUR] = KINGDOM_VIEW_RESOURCE_TEXT_Y;
-    rowY[RESOURCE_CRYSTAL] = KINGDOM_VIEW_RESOURCE_TEXT_Y;
-    rowY[RESOURCE_GEMS] = KINGDOM_VIEW_RESOURCE_TEXT_Y;
+    rowY[H1_ENUM_ENCODE(ResourceType, RESOURCE_WOOD)] = KINGDOM_VIEW_RESOURCE_TEXT_Y;
+    rowY[H1_ENUM_ENCODE(ResourceType, RESOURCE_MERCURY)] = KINGDOM_VIEW_RESOURCE_TEXT_Y;
+    rowY[H1_ENUM_ENCODE(ResourceType, RESOURCE_ORE)] = KINGDOM_VIEW_RESOURCE_TEXT_Y;
+    rowY[H1_ENUM_ENCODE(ResourceType, RESOURCE_SULFUR)] = KINGDOM_VIEW_RESOURCE_TEXT_Y;
+    rowY[H1_ENUM_ENCODE(ResourceType, RESOURCE_CRYSTAL)] = KINGDOM_VIEW_RESOURCE_TEXT_Y;
+    rowY[H1_ENUM_ENCODE(ResourceType, RESOURCE_GEMS)] = KINGDOM_VIEW_RESOURCE_TEXT_Y;
     rowY[6] = 28;
     rowY[KINGDOM_VIEW_CASTLE_ENTRY] = KINGDOM_VIEW_TOWN_TEXT_Y;
     rowY[KINGDOM_VIEW_TOWN_ENTRY] = KINGDOM_VIEW_TOWN_TEXT_Y;
-    textX[RESOURCE_WOOD] = KINGDOM_VIEW_WOOD_TEXT_X;
-    textX[RESOURCE_MERCURY] = KINGDOM_VIEW_MERCURY_TEXT_X;
-    textX[RESOURCE_ORE] = KINGDOM_VIEW_ORE_TEXT_X;
-    textX[RESOURCE_SULFUR] = KINGDOM_VIEW_SULFUR_TEXT_X;
-    textX[RESOURCE_CRYSTAL] = KINGDOM_VIEW_CRYSTAL_TEXT_X;
-    textX[RESOURCE_GEMS] = KINGDOM_VIEW_GEMS_TEXT_X;
-    textX[RESOURCE_GOLD] = KINGDOM_VIEW_GOLD_TEXT_X;
+    textX[H1_ENUM_ENCODE(ResourceType, RESOURCE_WOOD)] = KINGDOM_VIEW_WOOD_TEXT_X;
+    textX[H1_ENUM_ENCODE(ResourceType, RESOURCE_MERCURY)] = KINGDOM_VIEW_MERCURY_TEXT_X;
+    textX[H1_ENUM_ENCODE(ResourceType, RESOURCE_ORE)] = KINGDOM_VIEW_ORE_TEXT_X;
+    textX[H1_ENUM_ENCODE(ResourceType, RESOURCE_SULFUR)] = KINGDOM_VIEW_SULFUR_TEXT_X;
+    textX[H1_ENUM_ENCODE(ResourceType, RESOURCE_CRYSTAL)] = KINGDOM_VIEW_CRYSTAL_TEXT_X;
+    textX[H1_ENUM_ENCODE(ResourceType, RESOURCE_GEMS)] = KINGDOM_VIEW_GEMS_TEXT_X;
+    textX[H1_ENUM_ENCODE(ResourceType, RESOURCE_GOLD)] = KINGDOM_VIEW_GOLD_TEXT_X;
     textX[KINGDOM_VIEW_CASTLE_ENTRY] = KINGDOM_VIEW_CASTLE_TEXT_X;
     textX[KINGDOM_VIEW_TOWN_ENTRY] = KINGDOM_VIEW_VILLAGE_TEXT_X;
     numVillage = 0;
@@ -3207,7 +3217,7 @@ i8 advManager::UpdBottomViewKingdom(void) {
 
     for (i = 0; i < gpCurPlayer->m_townCount; i++) {
         if (gpGame->m_castleRecs[gpCurPlayer->m_townIds[i]].m_buildings
-            & (1 << BUILDING_SLOT_CASTLE))
+            & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_CASTLE))
             nCastles++;
         else
             numVillage++;
@@ -3216,7 +3226,7 @@ i8 advManager::UpdBottomViewKingdom(void) {
     for (i = 0; i < KINGDOM_VIEW_ENTRY_COUNT; i++) {
         countText[i] = static_cast<char*>(malloc(BOTTOM_VIEW_COUNT_BUFFER_SIZE));
         if (i < KINGDOM_VIEW_CASTLE_ENTRY)
-            sprintf(countText[i], "%d", gpCurPlayer->m_resources[i]);
+            sprintf(countText[i], "%d", gpCurPlayer->m_resources[H1_ENUM_DECODE(ResourceType, i)]);
         else if (i == KINGDOM_VIEW_CASTLE_ENTRY)
             sprintf(countText[i], "%d", nCastles);
         else
@@ -3242,7 +3252,7 @@ i8 advManager::UpdBottomViewKingdom(void) {
 VA(0x00408fe4, 0x585)
 i8 advManager::UpdBottomViewHero(void) {
     i16 slotNumPos;
-    i8 creatureType;
+    H1_ENUM_LOCAL(CreatureType, i8) creatureType;
     i32 j;
     i32 col;
     char* countStrData[ARMY_GROUP_SLOT_COUNT];
@@ -3280,7 +3290,7 @@ i8 advManager::UpdBottomViewHero(void) {
         WINDOW_Z_ORDER_APPEND
     );
 
-    iCrest = gpCurPlayer->Color() * HERO_CLASS_COUNT + curHero->m_heroClass;
+    iCrest = H1_ENUM_ENCODE(PlayerColor, gpCurPlayer->Color()) * HERO_CLASS_COUNT + curHero->m_heroClass;
     m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_FOREGROUND] = new iconWidget(
         495,
         395,
@@ -3348,7 +3358,7 @@ i8 advManager::UpdBottomViewHero(void) {
                         BOTTOM_HERO_ICON_WIDTH,
                         BOTTOM_HERO_ICON_HEIGHT,
                         "mons32.icn",
-                        creatureType,
+                        H1_ENUM_ENCODE(CreatureType, creatureType),
                         ICON_DRAW_NORMAL,
                         slotNumPos + BOTTOM_HERO_FIRST_ICON_ID,
                         ICON_WIDGET_DRAW,
@@ -3445,7 +3455,7 @@ void advManager::HeroQuickView(i8 heroId, i8 locatorSlot, i16 windowX, i16 windo
     win->BroadcastMessage(msg);
     msg.command = WIDGET_COMMAND_SET_FRAME;
     msg.id = QUICK_VIEW_FLAG;
-    msg.value = gpGame->m_players[targetHero->m_owner].Color() * QUICK_VIEW_FLAG_COLOR_STRIDE;
+    msg.value = H1_ENUM_ENCODE(PlayerColor, gpGame->m_players[targetHero->m_owner].Color()) * QUICK_VIEW_FLAG_COLOR_STRIDE;
     win->BroadcastMessage(msg);
     msg.id++;
     msg.value++;
@@ -3464,7 +3474,7 @@ void advManager::HeroQuickView(i8 heroId, i8 locatorSlot, i16 windowX, i16 windo
 
     if (targetHero->m_owner == giCurPlayer || m_identifyHeroActive == 1) {
         for (ii = 0; ii < HERO_PRIMARY_STAT_COUNT; ii++) {
-            sprintf(gText, "%d", targetHero->m_primaryStats[ii]);
+            sprintf(gText, "%d", targetHero->m_primaryStats[H1_ENUM_DECODE(HeroPrimaryStat, ii)]);
             msg.id = ii + QUICK_VIEW_STAT_FIRST;
             msg.text = gText;
             win->BroadcastMessage(msg);
@@ -3472,7 +3482,7 @@ void advManager::HeroQuickView(i8 heroId, i8 locatorSlot, i16 windowX, i16 windo
         if (creatureCount) {
             i16 armyStart;
             i16 idx;
-            i8 monster;
+            H1_ENUM_LOCAL(CreatureType, i8) monster;
 
             armyStart = (HERO_QUICK_ARMY_AREA_WIDTH - creatureCount * ARMY_QUICK_ICON_SIZE) / 2
                         + ARMY_QUICK_AREA_LEFT;
@@ -3488,7 +3498,7 @@ void advManager::HeroQuickView(i8 heroId, i8 locatorSlot, i16 windowX, i16 windo
                         ARMY_QUICK_ICON_SIZE,
                         ARMY_QUICK_ICON_SIZE,
                         "mons32.icn",
-                        monster,
+                        H1_ENUM_ENCODE(CreatureType, monster),
                         ICON_DRAW_NORMAL,
                         WIDGET_ID_NONE,
                         ICON_WIDGET_DRAW,
@@ -3521,7 +3531,7 @@ void advManager::HeroQuickView(i8 heroId, i8 locatorSlot, i16 windowX, i16 windo
         i16 rowY;
         i16 topRow;
         i16 row2;
-        i8 monster;
+        H1_ENUM_LOCAL(CreatureType, i8) monster;
         i16 idx;
         i16 stride;
         i16 armyStart;
@@ -3557,7 +3567,7 @@ void advManager::HeroQuickView(i8 heroId, i8 locatorSlot, i16 windowX, i16 windo
                 ARMY_QUICK_ICON_SIZE,
                 ARMY_QUICK_ICON_SIZE,
                 "mons32.icn",
-                monster,
+                H1_ENUM_ENCODE(CreatureType, monster),
                 ICON_DRAW_NORMAL,
                 WIDGET_ID_NONE,
                 ICON_WIDGET_DRAW,
@@ -3601,7 +3611,7 @@ void advManager::HeroQuickView(i8 heroId, i8 locatorSlot, i16 windowX, i16 windo
                     ARMY_QUICK_ICON_SIZE,
                     ARMY_QUICK_ICON_SIZE,
                     "mons32.icn",
-                    monster,
+                    H1_ENUM_ENCODE(CreatureType, monster),
                     ICON_DRAW_NORMAL,
                     WIDGET_ID_NONE,
                     ICON_WIDGET_DRAW,
@@ -3683,7 +3693,9 @@ void advManager::TownQuickView(i8 townId, i8, i16 windowX, i16 windowY) {
     town* townPtr;
     i16 playerColorWidget;
     i16 oldX;
-    i32 scouting;
+    // The detail level: the owner's EXACT, or the viewer's thieves' guild
+    // count capped at THIEVES_LAST (zero is UNKNOWN).
+    H1_ENUM_SHARED(TownQuickInformation, i32) scouting;
     i16 oldY;
     i16 armyIndex;
     i16 leftEdge;
@@ -3720,8 +3732,8 @@ void advManager::TownQuickView(i8 townId, i8, i16 windowX, i16 windowY) {
 
     creatureCount = 0;
     SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_FRAME, QUICK_VIEW_PORTRAIT);
-    message.value = townPtr->m_type + TOWN_QUICK_TYPE_FRAME_BASE;
-    if (gpGame->GetTown(townId)->m_buildings & (1 << BUILDING_SLOT_CASTLE))
+    message.value = H1_ENUM_ENCODE(TownType, townPtr->m_type) + TOWN_QUICK_TYPE_FRAME_BASE;
+    if (gpGame->GetTown(townId)->m_buildings & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_CASTLE))
         message.value += TOWN_QUICK_CASTLE_FRAME_OFFSET;
     window->BroadcastMessage(message);
     if (townPtr->m_owner == GAME_PLAYER_NONE) {
@@ -3734,7 +3746,7 @@ void advManager::TownQuickView(i8 townId, i8, i16 windowX, i16 windowY) {
     } else {
         message.command = WIDGET_COMMAND_SET_FRAME;
         message.id = QUICK_VIEW_FLAG;
-        message.value = gpGame->m_players[townPtr->m_owner].Color() * QUICK_VIEW_FLAG_COLOR_STRIDE;
+        message.value = H1_ENUM_ENCODE(PlayerColor, gpGame->m_players[townPtr->m_owner].Color()) * QUICK_VIEW_FLAG_COLOR_STRIDE;
         window->BroadcastMessage(message);
         message.id++;
         message.value++;
@@ -3778,7 +3790,7 @@ void advManager::TownQuickView(i8 townId, i8, i16 windowX, i16 windowY) {
     } else {
         i16 wIndex;
         textWidget* sizeWidgets[ARMY_GROUP_SLOT_COUNT];
-        i8 monster;
+        H1_ENUM_LOCAL(CreatureType, i8) monster;
         iconWidget* stackIcons[ARMY_GROUP_SLOT_COUNT];
         i16 row2;
         i16 stride;
@@ -3828,7 +3840,7 @@ void advManager::TownQuickView(i8 townId, i8, i16 windowX, i16 windowY) {
                 ARMY_QUICK_ICON_SIZE,
                 ARMY_QUICK_ICON_SIZE,
                 "mons32.icn",
-                monster,
+                H1_ENUM_ENCODE(CreatureType, monster),
                 ICON_DRAW_NORMAL,
                 WIDGET_ID_NONE,
                 ICON_WIDGET_DRAW,
@@ -3881,7 +3893,7 @@ void advManager::TownQuickView(i8 townId, i8, i16 windowX, i16 windowY) {
                     ARMY_QUICK_ICON_SIZE,
                     ARMY_QUICK_ICON_SIZE,
                     "mons32.icn",
-                    monster,
+                    H1_ENUM_ENCODE(CreatureType, monster),
                     ICON_DRAW_NORMAL,
                     WIDGET_ID_NONE,
                     ICON_WIDGET_DRAW,
@@ -4017,6 +4029,7 @@ void advManager::DemobilizeCurrHero(void) {
 VA(0x0040b0dd, 0x224)
 void advManager::SetTownContext(i8 townId) {
     i16 index;
+    // The town's locator slot, then the TerrainType under the town.
     i8 townNo;
     i8 wasVisible;
     town* townPointer;
@@ -4045,10 +4058,10 @@ void advManager::SetTownContext(i8 townId) {
     CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
     UpdateScreen(0, 0);
     SetEnvironmentOrigin(m_mapOriginX + ADVMGR_VIEW_CENTER, m_mapOriginY + ADVMGR_VIEW_CENTER, 1);
-    townNo = CELL_TERRAIN(GetCell(townPointer->m_x, townPointer->m_y));
-    if (townNo != m_currentTerrain) {
-        m_currentTerrain = townNo;
-        PlayMusic(m_currentTerrain);
+    townNo = H1_ENUM_ENCODE(TerrainType, CELL_TERRAIN(GetCell(townPointer->m_x, townPointer->m_y)));
+    if (H1_ENUM_DECODE(TerrainType, townNo) != m_currentTerrain) {
+        m_currentTerrain = H1_ENUM_DECODE(TerrainType, townNo);
+        PlayMusic(TERRAIN_MUSIC_TRACK(m_currentTerrain));
     }
     if (wasVisible)
         gpMouseManager->ReallyShowPointer();
@@ -4059,6 +4072,7 @@ void advManager::SetTownContext(i8 townId) {
 VA(0x0040b301, 0x38d)
 void advManager::SetHeroContext(i8 heroId, i8 update) {
     i8 wasVisible;
+    // The hero's locator slot, then the TerrainType under the hero.
     i8 curHeroSlot;
     i16 n;
     mapCell* cellPtrItem;
@@ -4078,8 +4092,8 @@ void advManager::SetHeroContext(i8 heroId, i8 update) {
     m_mapOriginY = heroPtr->m_y - ADVMGR_VIEW_CENTER;
     m_cursorMapX = m_cursorMapY = ADVMGR_VIEW_CENTER;
     m_previousCursorMapX = m_previousCursorMapY = CURSOR_CELL_NONE;
-    m_cursorType =
-        heroPtr->IsEmbarked() ? static_cast<i8>(ADVMGR_HERO_ICON_BOAT) : heroPtr->m_heroClass;
+    m_cursorType = heroPtr->IsEmbarked() ? H1_ENUM_CAST(AdventureHeroIcon, i8, ADVMGR_HERO_ICON_BOAT)
+                                         : H1_ENUM_DECODE(AdventureHeroIcon, heroPtr->m_heroClass);
     m_cursorDirection = heroPtr->m_direction;
     m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
     cellPtrItem = GetCell(heroPtr->m_x, heroPtr->m_y);
@@ -4114,10 +4128,10 @@ void advManager::SetHeroContext(i8 heroId, i8 update) {
     CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
     UpdateScreen(0, 0);
     SetEnvironmentOrigin(m_mapOriginX + ADVMGR_VIEW_CENTER, m_mapOriginY + ADVMGR_VIEW_CENTER, 1);
-    curHeroSlot = CELL_TERRAIN(cellPtrItem);
-    if (curHeroSlot != m_currentTerrain) {
-        m_currentTerrain = curHeroSlot;
-        PlayMusic(m_currentTerrain);
+    curHeroSlot = H1_ENUM_ENCODE(TerrainType, CELL_TERRAIN(cellPtrItem));
+    if (H1_ENUM_DECODE(TerrainType, curHeroSlot) != m_currentTerrain) {
+        m_currentTerrain = H1_ENUM_DECODE(TerrainType, curHeroSlot);
+        PlayMusic(TERRAIN_MUSIC_TRACK(m_currentTerrain));
     }
     if (!gHeroMoving) {
         if (wasVisible)
@@ -4311,7 +4325,7 @@ void advManager::ViewPuzzle(void) {
     CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
     UpdateScreen(0, 0);
     UpdateRadar(1, 0);
-    PlayMusic(m_currentTerrain);
+    PlayMusic(TERRAIN_MUSIC_TRACK(m_currentTerrain));
 }
 
 // PuzzleDraw redraws the 15x15 cells itself, overlaying the puzzle's
@@ -4321,7 +4335,7 @@ void advManager::PuzzleDraw(i32 left, i32 top, i32 markX, i32 markY) {
     i32 y;
     mapCell* cell;
     i32 x;
-    u8 tileset;
+    H1_ENUM_LOCAL(MapTileset, u8) tileset;
     i16 screenX;
     i16 savedDrawY;
 
@@ -4333,7 +4347,7 @@ void advManager::PuzzleDraw(i32 left, i32 top, i32 markX, i32 markY) {
             cell = GetCell(left + x, top + y);
             if (!(cell->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY)
                 && cell->m_objectIndex != MAP_CELL_NO_FRAME) {
-                tileset = cell->m_objectTileset & MAP_CELL_TILESET_MASK;
+                tileset = H1_ENUM_DECODE(MapTileset, cell->m_objectTileset & MAP_CELL_TILESET_MASK);
                 switch (tileset) {
                     case TILESET_OBJ32_04:
                     case TILESET_MTN32:
@@ -4352,7 +4366,7 @@ void advManager::PuzzleDraw(i32 left, i32 top, i32 markX, i32 markY) {
                 }
             }
             if (cell->m_overlayIndex != MAP_CELL_NO_FRAME) {
-                tileset = cell->m_overlayTileset & MAP_CELL_TILESET_MASK;
+                tileset = H1_ENUM_DECODE(MapTileset, cell->m_overlayTileset & MAP_CELL_TILESET_MASK);
                 switch (tileset) {
                     case TILESET_OBJ32_04:
                     case TILESET_MTN32:
@@ -4385,7 +4399,7 @@ void advManager::PuzzleDraw(i32 left, i32 top, i32 markX, i32 markY) {
 }
 
 VA(0x0040c0a3, 0x1a0)
-void advManager::CastSpell(i8 spell) {
+void advManager::CastSpell(H1_ENUM_PARAM(SpellType, i8) spell) {
     hero* caster;
     i32 guardianCount;
 
@@ -4442,19 +4456,21 @@ void advManager::CastSpell(i8 spell) {
 // The adventure world view (ground6/flag6/spheres icons), opened from
 // CastSpell, AdvPanel, Main and the menu handler.
 VA(0x0040c243, 0x1062)
-void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) {
+void advManager::ViewWorld(H1_ENUM_PARAM(SpellType, i8) spellType, i8 drawAllObjects, i8 drawAllTerrains) {
     icon* flags;
     hero* prevHero;
-    i8 ii;
-    i8 flip;
+    H1_ENUM_LOCAL(MapTileset, i8) ii;
+    H1_ENUM_LOCAL(IconDrawOrientation, i8) flip;
     icon* lettersNode;
+    // A ground6.icn frame, then a flag6/spheres.icn frame by player colour.
     i16 index;
     heroWindow* win;
     u16 mask;
     i16 x;
     i16 owner;
     mapCell* cell;
-    icon* prevTilesets[VIEW_WORLD_TILESET_COUNT];
+    H1_ENUM_ARRAY(icon*, prevTilesets, MapTileset, VIEW_WORLD_TILESET_COUNT);
+    // The tileset slots cleared and released, in turn.
     i16 i;
     i16 y;
     i16 screenX;
@@ -4463,16 +4479,16 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
     icon* ground;
 
     gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
-    mask = (1 << TILESET_MTN32) | (1 << TILESET_TREE32);
+    mask = H1_ENUM_BIT(MapTileset, TILESET_MTN32) | H1_ENUM_BIT(MapTileset, TILESET_TREE32);
     if (spellType == SPELL_VIEW_TOWNS || spellType == SPELL_VIEW_ALL)
-        mask |= 1 << TILESET_TOWN32;
+        mask |= H1_ENUM_BIT(MapTileset, TILESET_TOWN32);
     ground = gpResourceManager->GetIcon("ground6.icn");
     flags = gpResourceManager->GetIcon("flag6.icn");
     spheres = gpResourceManager->GetIcon("spheres.icn");
     lettersNode = gpResourceManager->GetIcon("letters.icn");
     prevHero = NULL;
     for (i = 0; i < VIEW_WORLD_TILESET_COUNT; i++)
-        prevTilesets[i] = NULL;
+        prevTilesets[H1_ENUM_DECODE(MapTileset, i)] = NULL;
     prevTilesets[TILESET_TREE32] = gpResourceManager->GetIcon("tree6.icn");
     prevTilesets[TILESET_MTN32] = gpResourceManager->GetIcon("mtn6.icn");
     prevTilesets[TILESET_TOWN32] = gpResourceManager->GetIcon("town6.icn");
@@ -4493,24 +4509,24 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
             if ((gpGame->m_mapExtra[x][y] & giCurPlayerBit) || drawAllTerrains
                 || (spellType == SPELL_VIEW_TOWNS
                     && MAP_TRIGGER_OBJECT(cell->m_triggerType) == MAP_OBJECT_TOWN)) {
-                flip = 0;
+                flip = ICON_DRAW_NORMAL;
                 screenX = x * VIEW_WORLD_CELL_PIXELS + VIEW_WORLD_ORIGIN;
                 workPosY = y * VIEW_WORLD_CELL_PIXELS + VIEW_WORLD_ORIGIN;
                 index = cell->m_tileIndex / (1 << VIEW_WORLD_GROUND_TILE_SHIFT);
                 if (cell->m_flags & MAP_CELL_GROUND_FLIP_HORIZONTAL)
-                    flip = 1;
+                    flip = ICON_DRAW_FLIPPED;
                 if (cell->m_flags & MAP_CELL_GROUND_FLIP_VERTICAL)
                     index += VIEW_WORLD_GROUND_FLIPPED_FRAMES;
                 ground->DrawToBuffer(
-                    screenX + (flip == 1 ? VIEW_WORLD_CELL_PIXELS - 1 : 0),
+                    screenX + (flip == ICON_DRAW_FLIPPED ? VIEW_WORLD_CELL_PIXELS - 1 : 0),
                     workPosY,
                     index,
                     flip,
                     ICON_DRAW_OFFSET_FULL
                 );
                 if (cell->m_objectIndex != MAP_CELL_NO_FRAME) {
-                    ii = cell->m_objectTileset & MAP_CELL_TILESET_MASK;
-                    if ((1 << ii) & mask)
+                    ii = H1_ENUM_DECODE(MapTileset, cell->m_objectTileset & MAP_CELL_TILESET_MASK);
+                    if (H1_ENUM_BIT(MapTileset, ii) & mask)
                         prevTilesets[ii]->DrawToBuffer(
                             screenX,
                             workPosY,
@@ -4540,7 +4556,7 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
                         if (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN)) {
                             owner = gpGame->m_townOwners[cell->m_objectMetadata];
                             if (owner >= 0) {
-                                index = gpGame->m_players[owner].m_color;
+                                index = H1_ENUM_ENCODE(PlayerColor, gpGame->m_players[owner].m_color);
                                 flags->DrawToBuffer(
                                     screenX - VIEW_WORLD_TOWN_FLAG_LEFT,
                                     workPosY,
@@ -4562,7 +4578,7 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
                             owner = gpGame->m_townOwners[gpGame->m_heroRecs[cell->m_objectMetadata]
                                                              .m_occupiedTown];
                             if (owner >= 0) {
-                                index = gpGame->m_players[owner].m_color;
+                                index = H1_ENUM_ENCODE(PlayerColor, gpGame->m_players[owner].m_color);
                                 flags->DrawToBuffer(
                                     screenX - VIEW_WORLD_TOWN_FLAG_LEFT,
                                     workPosY,
@@ -4584,8 +4600,8 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
                             case MAP_OBJECT_MINE:
                             case MAP_OBJECT_SAWMILL:
                                 owner = gpGame->m_mineOwners[cell->m_objectMetadata];
-                                index = owner < 0 ? PLAYER_COLOR_NEUTRAL
-                                                  : gpGame->m_players[owner].m_color;
+                                index = owner < 0 ? H1_ENUM_ENCODE(PlayerColor, PLAYER_COLOR_NEUTRAL)
+                                                  : H1_ENUM_ENCODE(PlayerColor, gpGame->m_players[owner].m_color);
                                 spheres->DrawToBuffer(
                                     screenX,
                                     workPosY,
@@ -4596,7 +4612,7 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
                                 lettersNode->DrawToBuffer(
                                     screenX,
                                     workPosY,
-                                    gpGame->m_mines[cell->m_objectMetadata].type,
+                                    H1_ENUM_ENCODE(ResourceType, gpGame->m_mines[cell->m_objectMetadata].type),
                                     ICON_DRAW_NORMAL,
                                     ICON_DRAW_OFFSET_FULL
                                 );
@@ -4609,8 +4625,8 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
                                         owner = gpGame->m_mineOwners
                                                     [gpGame->m_heroRecs[cell->m_objectMetadata]
                                                          .m_occupiedTown];
-                                        index = owner < 0 ? PLAYER_COLOR_NEUTRAL
-                                                          : gpGame->m_players[owner].m_color;
+                                        index = owner < 0 ? H1_ENUM_ENCODE(PlayerColor, PLAYER_COLOR_NEUTRAL)
+                                                          : H1_ENUM_ENCODE(PlayerColor, gpGame->m_players[owner].m_color);
                                         spheres->DrawToBuffer(
                                             screenX,
                                             workPosY,
@@ -4621,7 +4637,7 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
                                         lettersNode->DrawToBuffer(
                                             screenX,
                                             workPosY,
-                                            gpGame->m_mines[cell->m_objectMetadata].type,
+                                            H1_ENUM_ENCODE(ResourceType, gpGame->m_mines[cell->m_objectMetadata].type),
                                             ICON_DRAW_NORMAL,
                                             ICON_DRAW_OFFSET_FULL
                                         );
@@ -4633,7 +4649,7 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
                         if (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_HERO)) {
                             owner = gpGame->m_availableHeroes[cell->m_objectMetadata];
                             if (owner >= 0) {
-                                index = gpGame->m_players[owner].m_color;
+                                index = H1_ENUM_ENCODE(PlayerColor, gpGame->m_players[owner].m_color);
                                 flags->DrawToBuffer(
                                     screenX,
                                     workPosY,
@@ -4650,8 +4666,8 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
                             case MAP_OBJECT_MINE:
                             case MAP_OBJECT_SAWMILL:
                                 owner = gpGame->m_mineOwners[cell->m_objectMetadata];
-                                index = owner < 0 ? PLAYER_COLOR_NEUTRAL
-                                                  : gpGame->m_players[owner].m_color;
+                                index = owner < 0 ? H1_ENUM_ENCODE(PlayerColor, PLAYER_COLOR_NEUTRAL)
+                                                  : H1_ENUM_ENCODE(PlayerColor, gpGame->m_players[owner].m_color);
                                 spheres->DrawToBuffer(
                                     screenX,
                                     workPosY,
@@ -4662,7 +4678,7 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
                                 lettersNode->DrawToBuffer(
                                     screenX,
                                     workPosY,
-                                    gpGame->m_mines[cell->m_objectMetadata].type,
+                                    H1_ENUM_ENCODE(ResourceType, gpGame->m_mines[cell->m_objectMetadata].type),
                                     ICON_DRAW_NORMAL,
                                     ICON_DRAW_OFFSET_FULL
                                 );
@@ -4675,8 +4691,8 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
                                         owner = gpGame->m_mineOwners
                                                     [gpGame->m_heroRecs[cell->m_objectMetadata]
                                                          .m_occupiedTown];
-                                        index = owner < 0 ? PLAYER_COLOR_NEUTRAL
-                                                          : gpGame->m_players[owner].m_color;
+                                        index = owner < 0 ? H1_ENUM_ENCODE(PlayerColor, PLAYER_COLOR_NEUTRAL)
+                                                          : H1_ENUM_ENCODE(PlayerColor, gpGame->m_players[owner].m_color);
                                         spheres->DrawToBuffer(
                                             screenX,
                                             workPosY,
@@ -4687,7 +4703,7 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
                                         lettersNode->DrawToBuffer(
                                             screenX,
                                             workPosY,
-                                            gpGame->m_mines[cell->m_objectMetadata].type,
+                                            H1_ENUM_ENCODE(ResourceType, gpGame->m_mines[cell->m_objectMetadata].type),
                                             ICON_DRAW_NORMAL,
                                             ICON_DRAW_OFFSET_FULL
                                         );
@@ -4705,7 +4721,7 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
                             spheres->DrawToBuffer(
                                 screenX - VIEW_WORLD_RESOURCE_X_SHIFT,
                                 workPosY,
-                                PLAYER_COLOR_NEUTRAL,
+                                H1_ENUM_ENCODE(PlayerColor, PLAYER_COLOR_NEUTRAL),
                                 ICON_DRAW_NORMAL,
                                 ICON_DRAW_OFFSET_FULL
                             );
@@ -4732,7 +4748,7 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
                         if (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN)) {
                             owner = gpGame->m_townOwners[cell->m_objectMetadata];
                             if (owner >= 0) {
-                                index = gpGame->m_players[owner].m_color;
+                                index = H1_ENUM_ENCODE(PlayerColor, gpGame->m_players[owner].m_color);
                                 flags->DrawToBuffer(
                                     screenX - VIEW_WORLD_TOWN_FLAG_LEFT,
                                     workPosY,
@@ -4754,7 +4770,7 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
                             owner = gpGame->m_townOwners[gpGame->m_heroRecs[cell->m_objectMetadata]
                                                              .m_occupiedTown];
                             if (owner >= 0) {
-                                index = gpGame->m_players[owner].m_color;
+                                index = H1_ENUM_ENCODE(PlayerColor, gpGame->m_players[owner].m_color);
                                 flags->DrawToBuffer(
                                     screenX - VIEW_WORLD_TOWN_FLAG_LEFT,
                                     workPosY,
@@ -4776,7 +4792,7 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
                         if (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_HERO)) {
                             owner = gpGame->m_availableHeroes[cell->m_objectMetadata];
                             if (owner >= 0) {
-                                index = gpGame->m_players[owner].m_color;
+                                index = H1_ENUM_ENCODE(PlayerColor, gpGame->m_players[owner].m_color);
                                 flags->DrawToBuffer(
                                     screenX,
                                     workPosY,
@@ -4807,8 +4823,8 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
                 screenX = x * VIEW_WORLD_CELL_PIXELS + VIEW_WORLD_ORIGIN;
                 workPosY = y * VIEW_WORLD_CELL_PIXELS + VIEW_WORLD_ORIGIN;
                 if (cell->m_overlayIndex != MAP_CELL_NO_FRAME) {
-                    ii = cell->m_overlayTileset & MAP_CELL_TILESET_MASK;
-                    if ((1 << ii) & mask)
+                    ii = H1_ENUM_DECODE(MapTileset, cell->m_overlayTileset & MAP_CELL_TILESET_MASK);
+                    if (H1_ENUM_BIT(MapTileset, ii) & mask)
                         prevTilesets[ii]->DrawToBuffer(
                             screenX,
                             workPosY,
@@ -4827,7 +4843,7 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
         ADVENTURE_VIEWPORT_INNER_SIZE,
         ADVENTURE_VIEWPORT_INNER_SIZE
     );
-    sprintf(gText, "view-%02d.bin", spellType - SPELL_VIEW_MINES);
+    sprintf(gText, "view-%02d.bin", H1_ENUM_ENCODE(SpellType, spellType) - H1_ENUM_ENCODE(SpellType, SPELL_VIEW_MINES));
     win = new heroWindow(RADAR_LEFT, RADAR_TOP, gText);
     if (!win)
         MemError();
@@ -4835,8 +4851,8 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
     delete win;
     UpdateRadar(1, 0);
     for (i = 0; i < VIEW_WORLD_TILESET_COUNT; i++) {
-        if (prevTilesets[i])
-            gpResourceManager->Dispose(prevTilesets[i]);
+        if (prevTilesets[H1_ENUM_DECODE(MapTileset, i)])
+            gpResourceManager->Dispose(prevTilesets[H1_ENUM_DECODE(MapTileset, i)]);
     }
     gpResourceManager->Dispose(ground);
     gpResourceManager->Dispose(flags);
@@ -4859,9 +4875,9 @@ VA(0x0040d2db, 0x2eb)
 i16 advManager::ControlPanel(void) {
     tag_message message;
     i32 anyMobilized;
-    i8 oldSpeedState;
-    i32 gameCommand;
-    i32 n;
+    H1_ENUM_LOCAL(WalkSpeed, i8) oldSpeedState;
+    H1_ENUM_LOCAL(MainMenuControl, i32) gameCommand;
+    H1_ENUM_LOCAL(TerrainType, i32) n;
 
     TrimLoopingSounds(ADVMGR_ACTIVE_SOUND_COUNT);
     gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
@@ -4899,7 +4915,7 @@ i16 advManager::ControlPanel(void) {
         case CONTROL_NEW_GAME:
         case CONTROL_LOAD_GAME:
         case CONTROL_QUIT:
-            gameCommand = gpWindowManager->m_dialogResult;
+            gameCommand = H1_ENUM_DECODE(MainMenuControl, gpWindowManager->m_dialogResult);
             break;
         case CONTROL_SCENARIO_INFO:
             if (gpGame->m_campaignType > 0)
@@ -4912,13 +4928,13 @@ i16 advManager::ControlPanel(void) {
             break;
     }
     if (gConfig.walkSpeed != oldSpeedState) {
-        for (n = 0; n < ADVMGR_CURSOR_SAMPLE_COUNT; n++) {
+        for (n = TERRAIN_WATER; n < TERRAIN_COUNT; n++) {
             if (m_cursorSamples[n]) {
                 gpResourceManager->Dispose(m_cursorSamples[n]);
                 m_cursorSamples[n] = NULL;
             }
         }
-        GetCursorSampleSet(gConfig.walkSpeed);
+        GetCursorSampleSet(H1_ENUM_ENCODE(WalkSpeed, gConfig.walkSpeed));
     }
     if (bPrefsChanged)
         WritePrefs();
@@ -4943,10 +4959,10 @@ void UpdateCPanel(i8 initialDraw) {
     message.value = gConfig.soundVolume ? CPANEL_FRAME_SOUND_ON : CPANEL_FRAME_SOUND_OFF;
     gPanel->BroadcastMessage(message);
     message.id = CONTROL_WALK_SPEED;
-    message.value = gConfig.walkSpeed + CPANEL_FRAME_WALK_SPEED_FIRST;
+    message.value = H1_ENUM_ENCODE(WalkSpeed, gConfig.walkSpeed) + CPANEL_FRAME_WALK_SPEED_FIRST;
     gPanel->BroadcastMessage(message);
     message.id = CONTROL_MUSIC_SOURCE;
-    message.value = (gConfig.musicSource ? CPANEL_MUSIC_LABEL_CD : CPANEL_MUSIC_LABEL_LOCAL)
+    message.value = (H1_ENUM_ENCODE(SoundMusicSource, gConfig.musicSource) ? CPANEL_MUSIC_LABEL_CD : CPANEL_MUSIC_LABEL_LOCAL)
                     + CPANEL_FRAME_MUSIC_SOURCE_FIRST;
     gPanel->BroadcastMessage(message);
     message.id = CONTROL_SHOW_ROUTE;
@@ -4970,7 +4986,7 @@ void UpdateCPanel(i8 initialDraw) {
     gPanel->BroadcastMessage(message);
     message.id = CONTROL_MUSIC_SOURCE_TEXT;
     message.text =
-        musicQualityText[gConfig.musicSource ? CPANEL_MUSIC_LABEL_CD : CPANEL_MUSIC_LABEL_LOCAL];
+        musicQualityText[H1_ENUM_ENCODE(SoundMusicSource, gConfig.musicSource) ? CPANEL_MUSIC_LABEL_CD : CPANEL_MUSIC_LABEL_LOCAL];
     gPanel->BroadcastMessage(message);
     message.id = CONTROL_SHOW_ROUTE_TEXT;
     message.text = onOffText[gConfig.showRoute];
@@ -4999,7 +5015,7 @@ i8 SaveGame(void) {
     for (player = 0; player < GAME_PLAYER_COUNT; player++)
         if (!gpGame->m_playerDead[player] && gbHumanPlayer[player])
             humans++;
-    if (gCampaignChoice > 0) {
+    if (gCampaignChoice > CAMPAIGN_NONE) {
         sprintf(extensionBuf, ".CGM");
         sprintf(searchMask, "*.CGM");
     } else {
@@ -5032,7 +5048,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) CPanelHandler(struct tag_message& mes
     if (message.type == MESSAGE_WIDGET) {
         if (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
             if (IS_WIDGET_SELECTION_NOTIFICATION(message.command)) {
-                i32 helpIndex = CPANEL_HELP_NONE;
+                H1_ENUM_LOCAL(ControlPanelHelp, i32) helpIndex = CPANEL_HELP_NONE;
                 switch (message.id) {
                     case CONTROL_NEW_GAME:
                         helpIndex = CPANEL_HELP_NEW_GAME;
@@ -5071,7 +5087,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) CPanelHandler(struct tag_message& mes
                         helpIndex = CPANEL_HELP_SCENARIO_INFO;
                         break;
                 }
-                if (helpIndex >= 0)
+                if (helpIndex >= CPANEL_HELP_FIRST)
                     NormalDialog(gCPanelHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, 0xb1);
             }
         } else {
@@ -5121,17 +5137,17 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) CPanelHandler(struct tag_message& mes
                             break;
                         case CONTROL_WALK_SPEED:
                             ++gConfig.walkSpeed;
-                            gConfig.walkSpeed %= WALK_SPEED_COUNT;
+                            WALK_SPEED_WRAP(gConfig.walkSpeed);
                             anyChanged = 1;
                             bPrefsChanged = 1;
                             break;
                         case CONTROL_MUSIC_SOURCE:
-                            if (gConfig.musicSource) {
+                            if (H1_ENUM_ENCODE(SoundMusicSource, gConfig.musicSource)) {
                                 gConfig.musicSource = SOUND_MUSIC_SOURCE_DIGITAL;
                             } else {
                                 gConfig.musicSource = SOUND_MUSIC_SOURCE_CD;
                             }
-                            SetMusicSource(gConfig.musicSource != 0);
+                            SetMusicSource(gConfig.musicSource != SOUND_MUSIC_SOURCE_DIGITAL);
                             anyChanged = 1;
                             bPrefsChanged = 1;
                             break;
@@ -5363,7 +5379,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) DimensionDoorHandler(struct tag_messa
             break;
     }
     if (result) {
-        message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
+        message.command = H1_ENUM_DECODE(BaseWidgetCommand, message.id = H1_ENUM_ENCODE(BaseWidgetCommand, WIDGET_COMMAND_DIALOG_SELECT));
         return MESSAGE_DISPATCH_FORWARD;
     }
     return MESSAGE_DISPATCH_CONSUME;
@@ -5722,7 +5738,7 @@ void advManager::TeleportTo(i32 x, i32 y, i32) {
     mapCell* location;
     mapCell* savedOldCell;
     i32 hold;
-    i8 newTerrain;
+    H1_ENUM_LOCAL(TerrainType, i8) newTerrain;
     hero* mapHero;
     town* occupiedTown;
 
@@ -5735,7 +5751,7 @@ void advManager::TeleportTo(i32 x, i32 y, i32) {
         occupiedTown->m_occupyingHeroId = TOWN_OCCUPYING_HERO_NONE;
     }
     if (savedOldCell->m_flags & MAP_CELL_HERO_CURSOR)
-        savedOldCell->m_flags -= MAP_CELL_HERO_CURSOR;
+        MAP_CELL_SUBTRACT_FLAG(savedOldCell->m_flags, MAP_CELL_HERO_CURSOR);
     CompleteDraw(0);
     if (!gbHumanPlayer[giCurPlayer]) {
         if (!gConfig.blackoutComputer && !gRemoteOn
@@ -5787,7 +5803,7 @@ void advManager::TeleportTo(i32 x, i32 y, i32) {
     newTerrain = CELL_TERRAIN(location);
     if (newTerrain != m_currentTerrain) {
         m_currentTerrain = newTerrain;
-        PlayMusic(m_currentTerrain);
+        PlayMusic(TERRAIN_MUSIC_TRACK(m_currentTerrain));
     }
     Reseed(0, 0);
     UpdateRadar(1, 0);
@@ -5827,7 +5843,7 @@ void advManager::DimensionDoor(void) {
         } else {
             PlayMusic(MUSIC_TRACK_TELEPORT);
             TeleportTo(newX, newY, 0);
-            PlayMusic(m_currentTerrain);
+            PlayMusic(TERRAIN_MUSIC_TRACK(m_currentTerrain));
         }
         gpGame->GetHero(gpCurPlayer->m_currentHero)->UseSpell(SPELL_DIMENSION_DOOR);
     } else {
@@ -5881,7 +5897,7 @@ void advManager::TownGate(void) {
     gpGame->m_castleRecs[gpCurPlayer->m_townIds[selectedTown]].GiveSpells();
     targetHero->m_locationType = MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN);
     targetHero->m_occupiedTown = gpCurPlayer->m_townIds[selectedTown];
-    PlayMusic(m_currentTerrain);
+    PlayMusic(TERRAIN_MUSIC_TRACK(m_currentTerrain));
 }
 
 VA(0x0040fc90, 0x4bb)
@@ -5890,7 +5906,7 @@ void advManager::SummonBoat(void) {
     mapCell* destinationCell;
     i8 okCell;
     i16 slotIndex;
-    i16 iDir;
+    H1_ENUM_LOCAL(MapDirection, i16) iDir;
     i8 foundBoat;
     i8 heroSlot;
     boatRecord* boatRec;
@@ -5906,10 +5922,10 @@ void advManager::SummonBoat(void) {
     destinationCell = GetCell(m_mapOriginX + ADVMGR_VIEW_CENTER, m_mapOriginY + ADVMGR_VIEW_CENTER);
     if (destinationCell->m_tileIndex < MAP_CELL_TILES_PER_TERRAIN)
         goto summon_done;
-    for (iDir = 0; iDir < MAP_DIRECTION_COUNT; iDir++) {
+    for (iDir = MAP_DIRECTION_FIRST; iDir < MAP_DIRECTION_COUNT; iDir++) {
         destinationCell = GetCell(
-            m_mapOriginX + normalDirTable[iDir].x + ADVMGR_VIEW_CENTER,
-            m_mapOriginY + normalDirTable[iDir].y + ADVMGR_VIEW_CENTER
+            m_mapOriginX + normalDirTable[H1_ENUM_ENCODE(MapDirection, iDir)].x + ADVMGR_VIEW_CENTER,
+            m_mapOriginY + normalDirTable[H1_ENUM_ENCODE(MapDirection, iDir)].y + ADVMGR_VIEW_CENTER
         );
         if (destinationCell->m_objectIndex == MAP_CELL_NO_FRAME
             && destinationCell->m_tileIndex < MAP_CELL_TILES_PER_TERRAIN) {
@@ -5967,8 +5983,8 @@ void advManager::SummonBoat(void) {
                 gpWindowManager
                     ->FizzleForward(clipX, clipY, clipWidth, clipHeight, FIZZLE_USE_DEFAULT_DELAY);
             }
-            boatRec->x = m_mapOriginX + normalDirTable[iDir].x + ADVMGR_VIEW_CENTER;
-            boatRec->y = m_mapOriginY + normalDirTable[iDir].y + ADVMGR_VIEW_CENTER;
+            boatRec->x = m_mapOriginX + normalDirTable[H1_ENUM_ENCODE(MapDirection, iDir)].x + ADVMGR_VIEW_CENTER;
+            boatRec->y = m_mapOriginY + normalDirTable[H1_ENUM_ENCODE(MapDirection, iDir)].y + ADVMGR_VIEW_CENTER;
             boatRec->savedTriggerType = destinationCell->m_triggerType;
             boatRec->savedEventData = destinationCell->m_objectMetadata;
             destinationCell->m_triggerType = MAP_EVENT_TRIGGER(MAP_OBJECT_SHIP);
@@ -6007,8 +6023,8 @@ void advManager::ShowRoute(i32 redraw, i32, i32 updateButton) {
     i32 index;
     i32 mapY;
     i32 dir;
-    i32 terr;
-    i16 buttonFrame;
+    H1_ENUM_LOCAL(TerrainType, i32) terr;
+    H1_ENUM_LOCAL(BaseWidgetCommand, i16) buttonFrame;
 
     reachable = 0;
     if (!gbThisNetHumanPlayer[giCurPlayer] && (!giDebugLevel || !gShowComputerRoute))
@@ -6039,7 +6055,7 @@ void advManager::ShowRoute(i32 redraw, i32, i32 updateButton) {
             dir = gpSearchArray->m_directions[index];
             terr = CELL_TERRAIN(GetCell(mapX, mapY));
             remain -=
-                CalcTerrainCost(terr, dir & MAP_DIRECTION_DIAGONAL_BIT, remain, hero->m_heroClass);
+                CalcTerrainCost(H1_ENUM_ENCODE(TerrainType, terr), dir & MAP_DIRECTION_DIAGONAL_BIT, remain, hero->m_heroClass);
             mapX += normalDirTable[dir].x;
             mapY += normalDirTable[dir].y;
             if (index == 0) {
@@ -6117,11 +6133,11 @@ void advManager::CheckDimHero(void) {
 
 VA(0x00410577, 0x63)
 void advManager::CheckDimNextHeroBut(void) {
-    i16 frame;
+    H1_ENUM_LOCAL(BaseWidgetCommand, i16) frame;
 
     frame = gbThisNetHumanPlayer[giCurPlayer] && gpCurPlayer->HasMobileHero()
-                ? static_cast<i16>(WIDGET_COMMAND_CLEAR_FLAGS)
-                : static_cast<i16>(WIDGET_COMMAND_SET_FLAGS);
+                ? H1_ENUM_CAST(BaseWidgetCommand, i16, WIDGET_COMMAND_CLEAR_FLAGS)
+                : H1_ENUM_CAST(BaseWidgetCommand, i16, WIDGET_COMMAND_SET_FLAGS);
     gpWindowManager->BroadcastMessage(
         MESSAGE_WIDGET,
         frame,
@@ -6144,7 +6160,7 @@ void advManager::SeedTo(i32 targetX, i32 targetY) {
         gpSearchArray->SeedPosition(
             currentHero->m_x,
             currentHero->m_y,
-            m_cursorDirection,
+            H1_ENUM_ENCODE(MapDirection, m_cursorDirection),
             SEARCH_UNLIMITED_COST,
             m_cursorType == ADVMGR_HERO_ICON_BOAT,
             0,
@@ -6159,7 +6175,7 @@ void advManager::SeedTo(i32 targetX, i32 targetY) {
         gpSearchArray->SeedPosition(
             currentHero->m_x,
             currentHero->m_y,
-            m_cursorDirection,
+            H1_ENUM_ENCODE(MapDirection, m_cursorDirection),
             SEARCH_UNLIMITED_COST,
             m_cursorType == ADVMGR_HERO_ICON_BOAT,
             0,
@@ -6185,7 +6201,7 @@ void advManager::ForceNewHover(void) {
 }
 
 VA(0x00410746, 0x1d0)
-void advManager::ScreenScroll(i8 direction, i32 updatePointer) {
+void advManager::ScreenScroll(H1_ENUM_PARAM(MapDirection, i8) direction, i32 updatePointer) {
     i16 yOrigin;
     i16 xOrigin;
 
@@ -6225,7 +6241,7 @@ void advManager::ScreenScroll(i8 direction, i32 updatePointer) {
     }
 
     if (updatePointer)
-        gpMouseManager->SetPointer(direction + HOVER_SCROLL_FRAME_FIRST);
+        gpMouseManager->SetPointer(H1_ENUM_ENCODE(MapDirection, direction) + HOVER_SCROLL_FRAME_FIRST);
 
     if (xOrigin < SCROLL_MIN_ORIGIN)
         xOrigin = SCROLL_MIN_ORIGIN;
@@ -6344,7 +6360,7 @@ void advManager::SetInitialMapOrigin(void) {
     m_currentTerrain = giGroundToTerrain
         [GetCell(m_mapOriginX + ADVMGR_VIEW_CENTER, m_mapOriginY + ADVMGR_VIEW_CENTER)
              ->m_tileIndex];
-    PlayMusic(m_currentTerrain);
+    PlayMusic(TERRAIN_MUSIC_TRACK(m_currentTerrain));
     SetEnvironmentOrigin(m_mapOriginX + ADVMGR_VIEW_CENTER, m_mapOriginY + ADVMGR_VIEW_CENTER, 1);
     gpMouseManager->MouseCoords(x, y);
     gpMouseManager->WarpPointer(x - 20, y - 20);
@@ -6580,7 +6596,7 @@ i32 TrigX = 0;
 DATA(0x004a674c)
 i32 TrigY = 0;
 DATA(0x004a6750)
-i32 gCurBottomView = BOTTOM_VIEW_NONE;
+H1_ENUM_STORAGE(BottomViewMode, i32) gCurBottomView = BOTTOM_VIEW_NONE;
 DATA(0x0048e144)
 i32 gCurBottomViewEnemy = BOTTOM_VIEW_NO_ENEMY;
 DATA(0x004a6754)

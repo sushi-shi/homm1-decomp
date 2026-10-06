@@ -38,7 +38,7 @@ void hexcell::DrawGround(void) {
 
 VA(0x0043b7c1, 0x71)
 void hexcell::DrawOccupant(void) {
-    i8 frame;
+    H1_ENUM_LOCAL(ArmyFacing, i8) frame;
     army* occupant;
 
     if (m_occupantSide != COMBAT_SIDE_NONE) {
@@ -50,7 +50,7 @@ void hexcell::DrawOccupant(void) {
 }
 
 VA(0x0043b832, 0x124)
-void hexcell::DrawTower(i8 frame) {
+void hexcell::DrawTower(H1_ENUM_PARAM(CombatObstacleIndex, i8) frame) {
     i8 level;
     i16 row;
 
@@ -58,7 +58,8 @@ void hexcell::DrawTower(i8 frame) {
     gpCombatManager->m_combatIcons[COMBAT_ICON_CASTLE]->DrawToBuffer(
         level ? m_x : m_x + 28,
         m_y,
-        frame,
+        // The tower piece's obstacle state is its frame in castle%02d.icn.
+        H1_ENUM_ENCODE(CombatObstacleIndex, frame),
         ICON_DRAW_FLIPPED,
         ICON_DRAW_OFFSET_FULL
     );
@@ -165,6 +166,13 @@ void hexcell::DrawObstacle(void) {
         }
     } else {
         gpCombatManager->m_combatIcons[COMBAT_ICON_OBSTACLES]
-            ->DrawToBuffer(m_x, m_y, m_obstacleIndex, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
+            // A rock's obstacle index is its frame in the obstacle icon.
+            ->DrawToBuffer(
+                m_x,
+                m_y,
+                H1_ENUM_ENCODE(CombatObstacleIndex, m_obstacleIndex),
+                ICON_DRAW_NORMAL,
+                ICON_DRAW_OFFSET_FULL
+            );
     }
 }

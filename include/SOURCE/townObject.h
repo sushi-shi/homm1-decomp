@@ -1,7 +1,9 @@
 #ifndef HOMM1_SOURCE_TOWNOBJECT_H
 #define HOMM1_SOURCE_TOWNOBJECT_H
 
+#include <Domains.h>
 #include <H1/Macros.h>
+#include <SOURCE/town.h>
 
 class icon;
 class border;
@@ -12,7 +14,7 @@ public:
     i8 m_animationFrameCount;
     i8 m_animationFrame;
     i8 m_visible;
-    i16 m_buildingId;
+    H1_ENUM_STORAGE(BuildingSlotType, i16) m_buildingId;
     icon* m_icon;
     border* m_border;
     // --- constructors ---

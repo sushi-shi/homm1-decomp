@@ -58,7 +58,7 @@ VA(0x004084aa, 0x106)
 i32 oldmain(void) {
     palette* editorPalette;
 
-    if (gpExec->InitSystem())
+    if (H1_ENUM_ENCODE(BaseManagerStatus, gpExec->InitSystem()))
         ShutDown(localization::Tr("editor.startup.initialize.failed"));
     KBChangeMenu(hmnuDflt);
     editorPalette = gpResourceManager->GetPalette("kb.pal");
@@ -66,7 +66,7 @@ i32 oldmain(void) {
     gMapX = 0;
     gMapY = 0;
     gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_NORMAL, editorPalette);
-    if (gpExec->AddManager(gpEditManager, BASE_MANAGER_PRIORITY_UNASSIGNED))
+    if (H1_ENUM_ENCODE(BaseManagerStatus, gpExec->AddManager(gpEditManager, BASE_MANAGER_PRIORITY_UNASSIGNED)))
         ShutDown(localization::Tr("startup.manager.failed"));
     gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, editorPalette);
     gpExec->MainLoop();
@@ -216,7 +216,7 @@ void ShowStatusText(char* text) {
         EDITOR_STATUS_BAR_WIDTH,
         EDITOR_STATUS_BAR_HEIGHT,
         1,
-        1
+        FONT_ALIGN_CENTER
     );
     gpWindowManager->UpdateScreenRegion(
         EDITOR_STATUS_BAR_X,

@@ -570,14 +570,14 @@ void SetMenus(HMENU menu, i32 enabled) {
 // is gone.
 VA(0x00443e4a, 0x145)
 void SetGameDefaults(void) {
-    i32 i;
+    H1_ENUM_LOCAL(ConfigExecutable, i32) i;
 
     gConfig.musicVolume = SOUND_VOLUME_100;
     gConfig.soundVolume = SOUND_VOLUME_100;
     gConfig.autosave = 1;
     gConfig.showRoute = 1;
     gConfig.blackoutComputer = 0;
-    for (i = 0; i < CONFIG_EXECUTABLE_COUNT; i++) {
+    for (i = CONFIG_EXECUTABLE_GAME; i < CONFIG_EXECUTABLE_COUNT; i++) {
         gConfig.gfx[i].showMenu = 1;
         gConfig.gfx[i].x = DEFAULT_WINDOW_ORIGIN;
         gConfig.gfx[i].y = DEFAULT_WINDOW_ORIGIN;
@@ -865,7 +865,7 @@ void ReadPrefs(void) {
             strcpy(gcRegCDRomPath, "");
         RegCloseKey(key);
         SetVolumes(gConfig.soundVolume, gConfig.musicVolume);
-        SetMusicSource(gConfig.musicSource != 0);
+        SetMusicSource(gConfig.musicSource != SOUND_MUSIC_SOURCE_DIGITAL);
     }
 }
 
@@ -1226,7 +1226,7 @@ H1_ENUM_RETURN(CdSetupResult, i32) SetupCDDrive(void) {
 }
 
 VA(0x00444ae3, 0x6b)
-void SetWinText(heroWindow* window, i16 id) {
+void SetWinText(heroWindow* window, H1_ENUM_PARAM(WindowTextId, i16) id) {
     i32 i;
     tag_message msg;
 #ifdef HOMM1_EDITOR
@@ -1234,7 +1234,7 @@ void SetWinText(heroWindow* window, i16 id) {
 #else
     for (i = 0; i < WINDOW_TEXT_ENTRY_COUNT; i++) {
 #endif
-        if (gWinSetup[i].windowId == id) {
+        if (gWinSetup[i].windowId == H1_ENUM_ENCODE(WindowTextId, id)) {
             SET_WIDGET_MESSAGE(msg, WIDGET_COMMAND_SET_TEXT, gWinSetup[i].widgetId);
             msg.text = gWinSetupText[i];
             window->BroadcastMessage(msg);

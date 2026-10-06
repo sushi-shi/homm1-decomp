@@ -4,7 +4,10 @@
 #include <Domains.h>
 
 H1_ENUM_BEGIN(MapDirection)
+    // advManager::Main's arrow keys before one picks a direction.
+    MAP_DIRECTION_NONE = -1,
     MAP_DIRECTION_NORTH = 0,
+    MAP_DIRECTION_FIRST = MAP_DIRECTION_NORTH,
     MAP_DIRECTION_NORTH_EAST = 1,
     MAP_DIRECTION_EAST = 2,
     MAP_DIRECTION_SOUTH_EAST = 3,
@@ -17,6 +20,7 @@ H1_ENUM_BEGIN(MapDirection)
     // (advManager::CompleteDraw's redraw order).
     MAP_DIRECTION_UNMIRRORED_LAST = MAP_DIRECTION_SOUTH
 H1_ENUM_END(MapDirection)
+H1_ENUM_STEPPED(MapDirection)
 
 // Direction bit masks over MapDirection (1 << direction): a step north-west,
 // north or north-east is blocked by an object on the cell it leaves, a step
@@ -39,6 +43,19 @@ H1_ENUM_BEGIN(WalkSpeed)
     WALK_SPEED_JUMP = 4,
     WALK_SPEED_COUNT = 5
 H1_ENUM_END(WalkSpeed)
+H1_ENUM_STEPPED(WalkSpeed)
+// The control panel's speed button steps the speed and wraps after JUMP
+// back to WALK.
+#if H1_STRICT_DOMAINS
+inline void WrapWalkSpeed(H1EnumStorage<WalkSpeed, i32>& speed) {
+    speed = static_cast<WalkSpeed>(
+        static_cast<int>(static_cast<WalkSpeed>(speed)) % static_cast<int>(WALK_SPEED_COUNT)
+    );
+}
+#define WALK_SPEED_WRAP(speed) WrapWalkSpeed(speed)
+#else
+#define WALK_SPEED_WRAP(speed) ((speed) %= WALK_SPEED_COUNT)
+#endif
 
 // The opposite direction is (d + OPPOSITE_OFFSET) & INDEX_MASK (SEARCH's
 // path walk-back and PushPoint).

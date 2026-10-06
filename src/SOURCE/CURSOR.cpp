@@ -26,7 +26,7 @@
 
 // Keys the cycle off the global walk speed and indexes the map directly.
 VA(0x004215c0, 0x143)
-void advManager::StartCursor(i8 direction) {
+void advManager::StartCursor(H1_ENUM_PARAM(MapDirection, i8) direction) {
     i16 oldDeltaX;
     i16 newX;
     i16 directionY;
@@ -35,8 +35,8 @@ void advManager::StartCursor(i8 direction) {
     m_cursorDirection = direction;
     m_cursorFrame = GetCursorBaseFrame(direction) + 1;
     m_cursorCycle = gConfig.walkSpeed > WALK_SPEED_FIRST ? 1 : SLOW_CURSOR_CYCLE_START;
-    oldDeltaX = normalDirTable[direction].x;
-    directionY = normalDirTable[direction].y;
+    oldDeltaX = normalDirTable[H1_ENUM_ENCODE(MapDirection, direction)].x;
+    directionY = normalDirTable[H1_ENUM_ENCODE(MapDirection, direction)].y;
     m_previousCursorMapX = m_cursorMapX;
     m_previousCursorMapY = m_cursorMapY;
     m_cursorMapX += oldDeltaX;
@@ -230,7 +230,7 @@ i16 advManager::GetCursorBaseFrame(H1_ENUM_PARAM(MapDirection, i16) direction) {
 
 // Sixteen half-step frames and word-sized step delays.
 VA(0x00421e15, 0x20e)
-void advManager::TurnTo(i8 direction) {
+void advManager::TurnTo(H1_ENUM_PARAM(MapDirection, i8) direction) {
     i16 inc = 1;
     i16 frameIndex;
     i16 directionDifference = direction - m_cursorDirection;
@@ -242,7 +242,7 @@ void advManager::TurnTo(i8 direction) {
         || (directionDifference > 0 && directionDifference > DIRECTION_HALF_COUNT))
         inc = -1;
     m_cursorTurning = 1;
-    frameIndex = m_cursorDirection * TURN_FRAME_MULTIPLIER;
+    frameIndex = H1_ENUM_ENCODE(MapDirection, m_cursorDirection) * TURN_FRAME_MULTIPLIER;
     delayTime = gStepDelay[gConfig.walkSpeed];
     if (gConfig.walkSpeed == WALK_SPEED_WALK)
         delayTime *= CURSOR_SLOW_TURN_MULTIPLIER;
@@ -264,7 +264,7 @@ void advManager::TurnTo(i8 direction) {
         if (frameIndex < 0)
             frameIndex = CURSOR_TURN_FRAME_COUNT - 1;
         frameIndex %= CURSOR_TURN_FRAME_COUNT;
-    } while (frameIndex != direction * TURN_FRAME_MULTIPLIER);
+    } while (frameIndex != H1_ENUM_ENCODE(MapDirection, direction) * TURN_FRAME_MULTIPLIER);
     m_cursorDirection = direction;
     StopCursor(1);
     if (bShowIt)
@@ -276,7 +276,7 @@ void advManager::TurnTo(i8 direction) {
 // Reads the current hero itself and tests the watch player's high bit
 // (0x004be7cc) directly in the map-extra grid.
 VA(0x00422023, 0x104)
-i32 advManager::GetMoveShowIt(i8 direction) {
+i32 advManager::GetMoveShowIt(H1_ENUM_PARAM(MapDirection, i8) direction) {
     i16 dy;
     hero* movingHero;
     i16 dx;
@@ -284,8 +284,8 @@ i32 advManager::GetMoveShowIt(i8 direction) {
     if (gpCurPlayer->CurrentHero() == HERO_ID_NONE)
         return 0;
     movingHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
-    dx = normalDirTable[direction].x;
-    dy = normalDirTable[direction].y;
+    dx = normalDirTable[H1_ENUM_ENCODE(MapDirection, direction)].x;
+    dy = normalDirTable[H1_ENUM_ENCODE(MapDirection, direction)].y;
     if ((gbThisNetHumanPlayer[giCurPlayer] || (!gConfig.blackoutComputer && !gRemoteOn))
         && ((gpGame->m_mapExtra[movingHero->m_x][movingHero->m_y] & gCurWatchPlayerHighBit)
             || (gpGame->m_mapExtra[movingHero->m_x + dx][movingHero->m_y + dy]
@@ -300,7 +300,7 @@ i32 advManager::GetMoveShowIt(i8 direction) {
 
 VA(0x00422127, 0xccd)
 mapCell* advManager::MoveHero(
-    i8 direction,
+    H1_ENUM_PARAM(MapDirection, i8) direction,
     i8 stopAfterMove,
     i32* eventX,
     i32* eventY,
@@ -312,7 +312,7 @@ mapCell* advManager::MoveHero(
     i32 inc;
     i32 posX;
     mapCell* nextCellItem;
-    i8 theTerrain;
+    H1_ENUM_LOCAL(TerrainType, i8) theTerrain;
     mapCell* retCell;
     i16 xInc;
     i16 yInc;
@@ -331,14 +331,14 @@ mapCell* advManager::MoveHero(
     champion = gpGame->GetHero(gpCurPlayer->m_currentHero);
     posX = champion->m_x;
     nextPy = champion->m_y;
-    xInc = normalDirTable[direction].x;
-    yInc = normalDirTable[direction].y;
+    xInc = normalDirTable[H1_ENUM_ENCODE(MapDirection, direction)].x;
+    yInc = normalDirTable[H1_ENUM_ENCODE(MapDirection, direction)].y;
     bShowIt = GetMoveShowIt(direction);
     theTerrain = CELL_TERRAIN(GetCell(champion->m_x, champion->m_y));
     nextCellItem = GetCell(champion->m_x + xInc, champion->m_y + yInc);
     if (champion->m_remainingMobility < CalcTerrainCost(
-            theTerrain,
-            direction & CURSOR_DIAGONAL_DIRECTION_BIT,
+            H1_ENUM_ENCODE(TerrainType, theTerrain),
+            H1_ENUM_ENCODE(MapDirection, direction) & CURSOR_DIAGONAL_DIRECTION_BIT,
             champion->m_remainingMobility,
             champion->m_heroClass
         )) {
@@ -429,13 +429,13 @@ mapCell* advManager::MoveHero(
                 CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
                 UpdateScreen(0, 0);
                 champion->m_remainingMobility -= CalcTerrainCost(
-                    theTerrain,
-                    direction & CURSOR_DIAGONAL_DIRECTION_BIT,
+                    H1_ENUM_ENCODE(TerrainType, theTerrain),
+                    H1_ENUM_ENCODE(MapDirection, direction) & CURSOR_DIAGONAL_DIRECTION_BIT,
                     champion->m_remainingMobility,
                     champion->m_heroClass
                 );
                 if (champion->m_remainingMobility < CalcTerrainCost(
-                        CELL_TERRAIN(nextCellItem),
+                        H1_ENUM_ENCODE(TerrainType, CELL_TERRAIN(nextCellItem)),
                         0,
                         champion->m_remainingMobility,
                         champion->m_heroClass
@@ -452,13 +452,13 @@ mapCell* advManager::MoveHero(
                     CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
                     UpdateScreen(0, 0);
                     champion->m_remainingMobility -= CalcTerrainCost(
-                        theTerrain,
-                        direction & CURSOR_DIAGONAL_DIRECTION_BIT,
+                        H1_ENUM_ENCODE(TerrainType, theTerrain),
+                        H1_ENUM_ENCODE(MapDirection, direction) & CURSOR_DIAGONAL_DIRECTION_BIT,
                         champion->m_remainingMobility,
                         champion->m_heroClass
                     );
                     if (champion->m_remainingMobility < CalcTerrainCost(
-                            CELL_TERRAIN(nextCellItem),
+                            H1_ENUM_ENCODE(TerrainType, CELL_TERRAIN(nextCellItem)),
                             0,
                             champion->m_remainingMobility,
                             champion->m_heroClass
@@ -540,13 +540,13 @@ mapCell* advManager::MoveHero(
         gEnlargeScreenBlit = 1;
     }
     champion->m_remainingMobility -= CalcTerrainCost(
-        theTerrain,
-        direction & CURSOR_DIAGONAL_DIRECTION_BIT,
+        H1_ENUM_ENCODE(TerrainType, theTerrain),
+        H1_ENUM_ENCODE(MapDirection, direction) & CURSOR_DIAGONAL_DIRECTION_BIT,
         champion->m_remainingMobility,
         champion->m_heroClass
     );
     if (champion->m_remainingMobility < CalcTerrainCost(
-            CELL_TERRAIN(nextCellItem),
+            H1_ENUM_ENCODE(TerrainType, CELL_TERRAIN(nextCellItem)),
             0,
             champion->m_remainingMobility,
             champion->m_heroClass
@@ -566,7 +566,7 @@ mapCell* advManager::MoveHero(
               ->m_tileIndex;
     if (giGroundToTerrain[inc] != m_currentTerrain && inc % MAP_CELL_TILES_PER_TERRAIN < 4) {
         m_currentTerrain = giGroundToTerrain[inc];
-        PlayMusic(m_currentTerrain);
+        PlayMusic(TERRAIN_MUSIC_TRACK(m_currentTerrain));
     }
     m_updateMinX = m_updateMinY = 0;
     cellPtr = GetCell(m_mapOriginX + m_cursorMapX, m_mapOriginY + m_cursorMapY);
@@ -668,15 +668,15 @@ void advManager::CheckAdjacentMon(i8* adjacentMonster) {
 // A boat may meet another boat but not land on most objects; the rest is
 // left to ValidMove.
 VA(0x00422f55, 0x1a3)
-i16 advManager::ValidMoveWithEvent(hero* movingHero, i16 direction) {
+i16 advManager::ValidMoveWithEvent(hero* movingHero, H1_ENUM_PARAM(MapDirection, i16) direction) {
     i16 deltaY;
     i16 newY;
     i16 deltaX;
     i16 newX;
     mapCell* cellPtr;
 
-    deltaX = normalDirTable[direction].x;
-    deltaY = normalDirTable[direction].y;
+    deltaX = normalDirTable[H1_ENUM_ENCODE(MapDirection, direction)].x;
+    deltaY = normalDirTable[H1_ENUM_ENCODE(MapDirection, direction)].y;
     newX = movingHero->m_x + deltaX;
     newY = movingHero->m_y + deltaY;
     if (newX < 0 || newX > MAP_CELL_GRID_SIZE - 1 || newY < 0 || newY > MAP_CELL_GRID_SIZE - 1)
@@ -719,7 +719,7 @@ i16 advManager::ValidMoveWithEvent(hero* movingHero, i16 direction) {
 // Indexes from the cursor's map position and tests the north/south object
 // masks directly.
 VA(0x004230f8, 0x24c)
-i16 advManager::ValidMove(i16 direction) {
+i16 advManager::ValidMove(H1_ENUM_PARAM(MapDirection, i16) direction) {
     i16 curDirX;
     i16 downMask;
     mapCell* hereCellItem;
@@ -729,8 +729,8 @@ i16 advManager::ValidMove(i16 direction) {
     i16 newX;
     i16 newY;
 
-    curDirX = normalDirTable[direction].x;
-    firstDirY = normalDirTable[direction].y;
+    curDirX = normalDirTable[H1_ENUM_ENCODE(MapDirection, direction)].x;
+    firstDirY = normalDirTable[H1_ENUM_ENCODE(MapDirection, direction)].y;
     newX = m_mapOriginX + curDirX;
     newY = m_mapOriginY + firstDirY;
     if (newX < -ADVMGR_VIEW_CENTER || newX > MAP_CELL_GRID_SIZE - ADVMGR_VIEW_CENTER - 1)
@@ -751,8 +751,8 @@ i16 advManager::ValidMove(i16 direction) {
             return 0;
     }
     hereCellItem = &m_mapData[m_mapOriginX + m_cursorMapX][m_mapOriginY + m_cursorMapY];
-    north = (1 << direction) & MAP_DIRECTION_NORTH_MASK;
-    downMask = (1 << direction) & MAP_DIRECTION_SOUTH_MASK;
+    north = H1_ENUM_BIT(MapDirection, direction) & MAP_DIRECTION_NORTH_MASK;
+    downMask = H1_ENUM_BIT(MapDirection, direction) & MAP_DIRECTION_SOUTH_MASK;
     if (north && CELL_HAS_NON_SHADOW_OBJECT(hereCellItem)
         && hereCellItem->m_triggerType != MAP_EVENT_TRIGGER(MAP_OBJECT_WHIRLPOOL))
         return 0;
@@ -801,9 +801,9 @@ void advManager::MoveOrigin(i16 directionX, i16 directionY) {
 DATA(0x0048fa5c)
 i8 gMoveSoundMade = 1;
 DATA(0x0048fa60)
-i16 gPixelsPerStep[5] = {1, 4, 6, 8, 16};
+H1_ENUM_ARRAY(i16, gPixelsPerStep, WalkSpeed, WALK_SPEED_COUNT) = {1, 4, 6, 8, 16};
 DATA(0x0048fa6c)
-i16 gStepDelay[5] = {30, 45, 30, 15, 15};
+H1_ENUM_ARRAY(i16, gStepDelay, WalkSpeed, WALK_SPEED_COUNT) = {30, 45, 30, 15, 15};
 DATA(0x004a6ac6)
 i8 EveryOther = 0;
 DATA(0x0048fa78)
@@ -817,4 +817,4 @@ i16 S1cursorTurning;
 DATA(0x004a6abe)
 i16 S1cursorBaseFrame;
 DATA(0x004a6ac0)
-i8 S1cursorDirection;
+H1_ENUM_STORAGE(MapDirection, i8) S1cursorDirection;

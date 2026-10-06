@@ -131,7 +131,7 @@ void ShutdownComError(char* function) {
 }
 
 VA(0x0041cd46, 0x302)
-i16 com_init(u8 portNumber, i32 baudRate, i32 useDtr) {
+i16 com_init(u8 portNumber, H1_ENUM_PARAM(ComBaudCode, i32) baudRate, i32 useDtr) {
     i32 err;
     i32 slot;
     BOOL rv;
@@ -176,7 +176,7 @@ i16 com_init(u8 portNumber, i32 baudRate, i32 useDtr) {
             state.BaudRate = CBR_38400;
             break;
         default:
-            state.BaudRate = baudRate;
+            state.BaudRate = H1_ENUM_ENCODE(ComBaudCode, baudRate);
             break;
     }
     state.fParity = FALSE;

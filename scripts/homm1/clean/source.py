@@ -107,6 +107,7 @@ WORD_RULES = {
 RESIDUE_NAMES = frozenset(CALL_RULES) | frozenset(WORD_RULES) | {
     "HOMM1_MATCH_H", "HOMM1_DOMAINS_H", "HOMM1_H1_MACROS_H", "H1EnumStorage",
     "H1EnumShared", "H1EnumArray", "H1EnumBit", "H1EnumDecode", "H1EnumEncode",
+    "H1_STRICT_DOMAINS", "H1Bool",
 }
 RESIDUE_PREFIXES = ("H1_ENUM_",)
 
@@ -233,12 +234,19 @@ def rewrite(text: str, *, keep_lines: bool = False) -> str:
                 raise ValueError(f"{spelling}: expected {arity} argument(s), got {len(args)}")
             # A multi-line invocation becomes one line; its arguments' own
             # line breaks are kept only inside literals.
-            breaks = "".join(parts[k][1] for k in range(i, cursor + 1)).count("\n")
+            raw = "".join(parts[k][1] for k in range(i, cursor + 1))
+            breaks = raw.count("\n")
+            # Inside a #define the breaks are continuations: the joined
+            # expansion keeps them as backslash-newlines.
+            continued = bool(re.search(r"\\[ \t]*\n", raw))
+            if continued:
+                args = [re.sub(r"\s*\\[ \t]*\n\s*", " ", arg) for arg in args]
             if not keep_lines:
                 args = [re.sub(r"\s*\n\s*", " ", arg) for arg in args]
                 breaks = 0
             expansion = rule(args)
-            out.append(expansion + "\n" * (breaks - expansion.count("\n")))
+            newline = " \\\n" if continued else "\n"
+            out.append(expansion + newline * (breaks - expansion.count("\n")))
             i = cursor + 1
         return "".join(out)
 
@@ -249,13 +257,51 @@ _INCLUDE = re.compile(r'^\s*#\s*include\s*[<"]([^>"]+)[>"]')
 _LINE = re.compile(r"^\s*#\s*line\b")
 
 
-def rewrite_directives(text: str, *, keep_lines: bool = False) -> str:
-    """Drop `#line` pins and the scaffolding headers' includes.
+_STRICT_IF = re.compile(r"^\s*#\s*if\s+H1_STRICT_DOMAINS\s*$")
+_PP_IF = re.compile(r"^\s*#\s*if(?:n?def)?\b")
+_PP_ELSE = re.compile(r"^\s*#\s*else\b")
+_PP_ENDIF = re.compile(r"^\s*#\s*endif\b")
 
-    `keep_lines` keeps both: the control build's path and line state."""
+
+def drop_strict_blocks(lines: list[str]) -> list[str]:
+    """Keep only the retail branch of each `#if H1_STRICT_DOMAINS` block: the
+    strict-domain view is analysis scaffolding (Domains.h), and the retail
+    branch is what VC6 compiles. Dropped lines become sentinels, so the
+    line-preserving control form keeps its numbering."""
+    out, depth, keeping = [], 0, True
+    for line in lines:
+        if depth == 0:
+            if _STRICT_IF.match(line):
+                depth, keeping = 1, False
+                out.append(DROPPED)
+            else:
+                out.append(line)
+            continue
+        if _PP_IF.match(line):
+            depth += 1
+        elif depth == 1 and _PP_ELSE.match(line):
+            keeping = True
+            out.append(DROPPED)
+            continue
+        elif _PP_ENDIF.match(line):
+            depth -= 1
+            if depth == 0:
+                out.append(DROPPED)
+                keeping = True
+                continue
+        out.append(line if keeping else DROPPED)
+    return out
+
+
+def rewrite_directives(text: str, *, keep_lines: bool = False) -> str:
+    """Drop `#line` pins, the scaffolding headers' includes and the strict
+    view's `#if H1_STRICT_DOMAINS` branches.
+
+    `keep_lines` keeps the pins and includes: the control build's path and
+    line state."""
     if keep_lines:
-        return text
-    lines = text.split("\n")
+        return "\n".join(drop_strict_blocks(text.split("\n")))
+    lines = drop_strict_blocks(text.split("\n"))
     included: set[str] = set()
     out = []
     for line in lines:

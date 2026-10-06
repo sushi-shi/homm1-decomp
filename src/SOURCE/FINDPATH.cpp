@@ -36,11 +36,11 @@ static searchNode* gSearchCell;
 DATA(0x004a6bb0)
 static H1_ENUM_STORAGE(MapObjectType, i32) gSearchTriggerType;
 DATA(0x004a6bc4)
-static i32 gSearchTerrain;
+static H1_ENUM_STORAGE(TerrainType, i32) gSearchTerrain;
 DATA(0x004a6ba0)
 static u32 gSearchMiddle;
 DATA(0x004a6bcc)
-static i32 gSearchDirection;
+static H1_ENUM_STORAGE(MapDirection, i32) gSearchDirection;
 DATA(0x004a6bac)
 static mapCell* gSearchNextCell;
 
@@ -71,7 +71,7 @@ i16 searchArray::QuickDistance(i16 x1, i16 y1, i16 x2, i16 y2) {
 // HoMM1-only per-terrain step cost that InitVars tabulates into giTerrainCost
 // for both step kinds; a diagonal step costs half as much again.
 VA(0x00429cf0, 0x54)
-i16 TerrainStepCost(i8 terrain, i8 diagonal) {
+i16 TerrainStepCost(H1_ENUM_PARAM(TerrainType, i8) terrain, i8 diagonal) {
     i16 cost = 0;
     switch (terrain) {
         case TERRAIN_WATER:
@@ -108,9 +108,9 @@ i32 CalcTerrainCost(i32 terrain, i32 diagonal, i32 mobility, i32 waterMode) {
 
 // HoMM1 has no castle moat, so combat paths take no moat slowdown.
 VA(0x00429da0, 0x2cb)
-i16 searchArray::FindCombatPath(i16 sourceHex, i16 targetHex, army* unit, i8 attackPath) {
+i16 searchArray::FindCombatPath(i16 sourceHex, i16 targetHex, army* unit, H1_ENUM_PARAM(ArmyPathTarget, i8) attackPath) {
     i32 bestHex;
-    i32 direction;
+    H1_ENUM_LOCAL(CombatHexDirection, i32) direction;
     i8 attackTargetHex;
     u8* path;
     searchNode node;
@@ -118,11 +118,11 @@ i16 searchArray::FindCombatPath(i16 sourceHex, i16 targetHex, army* unit, i8 att
     i16 attackMask;
     i16 moveMask;
     i32 bestDistance;
-    i32 opposite;
+    H1_ENUM_LOCAL(CombatHexDirection, i32) opposite;
 
     bestDistance = FINDPATH_INITIAL_BEST_DISTANCE;
     bestHex = ARMY_HEX_INVALID;
-    if (attackPath)
+    if (ARMY_PATH_ATTACKS(attackPath))
         attackTargetHex = static_cast<i8>(targetHex);
     else
         attackTargetHex = ARMY_HEX_INVALID;
@@ -152,8 +152,9 @@ i16 searchArray::FindCombatPath(i16 sourceHex, i16 targetHex, army* unit, i8 att
         if (unit->m_targetSide != COMBAT_SIDE_NONE) {
             attackMask = unit->GetAttackMask(node.x, ARMY_ATTACK_TARGET_ASSIGNED, attackTargetHex);
             if (attackMask != COMBAT_ALL_DIRECTIONS_BLOCKED) {
-                for (direction = 0; direction < COMBAT_DIRECTION_COUNT; direction++) {
-                    if (!(attackMask & (1 << direction))) {
+                for (direction = COMBAT_DIRECTION_NORTHEAST; direction < COMBAT_DIRECTION_COUNT;
+                     direction++) {
+                    if (!(attackMask & H1_ENUM_BIT(CombatHexDirection, direction))) {
                         *path++ = static_cast<u8>(direction);
                         m_pathLength++;
                         bestHex = node.x;
@@ -170,11 +171,13 @@ i16 searchArray::FindCombatPath(i16 sourceHex, i16 targetHex, army* unit, i8 att
                 break;
         }
         moveMask = unit->GetMoveMask(node.x);
-        for (direction = 0; direction < COMBAT_DIRECTION_COUNT; direction++) {
-            if (!(moveMask & (1 << direction)))
+        for (direction = COMBAT_DIRECTION_NORTHEAST; direction < COMBAT_DIRECTION_COUNT; direction++) {
+            if (!(moveMask & H1_ENUM_BIT(CombatHexDirection, direction)))
                 PushCombatPoint(
                     unit->GetAdjacentCellIndex(node.x, direction),
-                    direction,
+                    // The search node keeps the step's direction in its
+                    // 4-bit field.
+                    H1_ENUM_ENCODE(CombatHexDirection, direction),
                     node.distance + 1,
                     unit->m_stats.speed
                 );
@@ -193,7 +196,7 @@ i16 searchArray::FindCombatPath(i16 sourceHex, i16 targetHex, army* unit, i8 att
         m_pathLength++;
         if (m_pathLength >= SEARCH_PATH_CAPACITY)
             break;
-        opposite = OppositeDirection(cell->direction);
+        opposite = OppositeDirection(H1_ENUM_DECODE(CombatHexDirection, cell->direction));
         bestHex = unit->GetAdjacentCellIndex(bestHex, opposite);
     }
     return m_pathLength;
@@ -324,12 +327,13 @@ void searchArray::TestPossibleDirections(
     i16 allowOccupied,
     i32 waterMode
 ) {
-    memset(occupied, 0, MAP_DIRECTION_COUNT);
+    memset(occupied, 0, H1_ENUM_ENCODE(MapDirection, MAP_DIRECTION_COUNT));
     gSearchCurrentCell = gpAdvManager->GetCell(x, y);
 
-    for (gSearchDirection = 0; gSearchDirection < MAP_DIRECTION_COUNT; gSearchDirection++) {
-        gSearchNextX = x + normalDirTable[gSearchDirection].x;
-        gSearchNextY = y + normalDirTable[gSearchDirection].y;
+    for (gSearchDirection = MAP_DIRECTION_FIRST; gSearchDirection < MAP_DIRECTION_COUNT;
+         gSearchDirection++) {
+        gSearchNextX = x + normalDirTable[H1_ENUM_ENCODE(MapDirection, gSearchDirection)].x;
+        gSearchNextY = y + normalDirTable[H1_ENUM_ENCODE(MapDirection, gSearchDirection)].y;
         if (gSearchNextX <= -7 || gSearchNextX >= MAP_CELL_GRID_SIZE || gSearchNextY <= -7
             || gSearchNextY >= MAP_CELL_GRID_SIZE) {
             gSearchTerrain = TERRAIN_INVALID;
@@ -354,7 +358,7 @@ void searchArray::TestPossibleDirections(
                     goto storeDirection;
                 }
             } else {
-                occupied[gSearchDirection] = 1;
+                occupied[H1_ENUM_ENCODE(MapDirection, gSearchDirection)] = 1;
             }
         }
 
@@ -380,12 +384,12 @@ void searchArray::TestPossibleDirections(
             goto storeDirection;
         }
 
-        if ((1 << gSearchDirection) & MAP_DIRECTION_NORTH_MASK) {
+        if (H1_ENUM_BIT(MapDirection, gSearchDirection) & MAP_DIRECTION_NORTH_MASK) {
             if (CELL_HAS_NON_SHADOW_OBJECT(gSearchCurrentCell)) {
                 gSearchTerrain = TERRAIN_INVALID;
                 goto storeDirection;
             }
-        } else if ((1 << gSearchDirection) & MAP_DIRECTION_SOUTH_MASK) {
+        } else if (H1_ENUM_BIT(MapDirection, gSearchDirection) & MAP_DIRECTION_SOUTH_MASK) {
             if (CELL_HAS_NON_SHADOW_OBJECT(gSearchNextCell)) {
                 if (gSearchNextCell->m_triggerType & MAP_TRIGGER_EVENT) {
                     gSearchTriggerType = MAP_TRIGGER_OBJECT(gSearchNextCell->m_triggerType);
@@ -414,7 +418,8 @@ void searchArray::TestPossibleDirections(
         }
 
     storeDirection:
-        terrain[gSearchDirection] = static_cast<i8>(gSearchTerrain);
+        terrain[H1_ENUM_ENCODE(MapDirection, gSearchDirection)] =
+            static_cast<i8>(H1_ENUM_ENCODE(TerrainType, gSearchTerrain));
     }
 }
 

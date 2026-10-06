@@ -28,9 +28,9 @@
 VA(0x00450d30, 0x1c9)
 void SetupRecruitWin(
     heroWindow* window,
-    i32 creatureType,
+    H1_ENUM_PARAM(CreatureType, i32) creatureType,
     i32 goldCost,
-    i32 resourceType,
+    H1_ENUM_PARAM(ResourceType, i32) resourceType,
     i32 resourceCost,
     i32 available
 ) {
@@ -60,12 +60,12 @@ void SetupRecruitWin(
     window->BroadcastMessage(message);
 
     SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_FRAME, RECRUIT_CREATURE_CONTROL);
-    message.value = creatureType;
+    message.value = H1_ENUM_ENCODE(CreatureType, creatureType);
     window->BroadcastMessage(message);
     if (resourceType != RESOURCE_NONE) {
         message.command = WIDGET_COMMAND_SET_FRAME;
         message.id = RECRUIT_RESOURCE_ICON_CONTROL;
-        message.value = resourceType;
+        message.value = H1_ENUM_ENCODE(ResourceType, resourceType);
         window->BroadcastMessage(message);
         message.command = WIDGET_COMMAND_SET_FRAME;
         message.id = RECRUIT_RESOURCE_IMAGE_CONTROL;
@@ -239,7 +239,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) recruitUnit::Main(struct tag_message&
                             0,
                             NULL,
                             1,
-                            0,
+                            ARMY_FACING_RIGHT,
                             quickView,
                             NULL,
                             NULL,
@@ -305,9 +305,13 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) recruitUnit::Main(struct tag_message&
 }
 
 VA(0x00451697, 0xbc)
-recruitUnit::recruitUnit(armyGroup* army, i8 creatureType, i16* available) {
-    i32 unitCosts[RESOURCE_COUNT];
-    i32 i;
+recruitUnit::recruitUnit(
+    armyGroup* army,
+    H1_ENUM_PARAM(CreatureType, i8) creatureType,
+    i16* available
+) {
+    H1_ENUM_ARRAY(i32, unitCosts, ResourceType, RESOURCE_COUNT);
+    H1_ENUM_LOCAL(ResourceType, i32) i;
 
     m_sourceType = RECRUIT_SOURCE_EVENT;
     m_army = army;
@@ -315,7 +319,7 @@ recruitUnit::recruitUnit(armyGroup* army, i8 creatureType, i16* available) {
     m_available = available;
     GetMonsterCost(m_creatureType, unitCosts);
     m_goldCost = unitCosts[RESOURCE_GOLD];
-    for (i = 0; i < RESOURCE_NON_GOLD_END; i++) {
+    for (i = RESOURCE_FIRST; i < RESOURCE_NON_GOLD_END; i++) {
         if (unitCosts[i])
             break;
     }
@@ -330,8 +334,8 @@ recruitUnit::recruitUnit(armyGroup* army, i8 creatureType, i16* available) {
 
 VA(0x00451753, 0xd9)
 recruitUnit::recruitUnit(town* townData, i8 dwelling) {
-    i32 unitCosts[RESOURCE_COUNT];
-    i32 i;
+    H1_ENUM_ARRAY(i32, unitCosts, ResourceType, RESOURCE_COUNT);
+    H1_ENUM_LOCAL(ResourceType, i32) i;
 
     m_sourceType = RECRUIT_SOURCE_TOWN;
     m_army = &townData->m_army;
@@ -339,7 +343,7 @@ recruitUnit::recruitUnit(town* townData, i8 dwelling) {
     m_available = &townData->m_garrison[dwelling];
     GetMonsterCost(m_creatureType, unitCosts);
     m_goldCost = unitCosts[RESOURCE_GOLD];
-    for (i = 0; i < RESOURCE_NON_GOLD_END; i++) {
+    for (i = RESOURCE_FIRST; i < RESOURCE_NON_GOLD_END; i++) {
         if (unitCosts[i])
             break;
     }
@@ -355,20 +359,20 @@ recruitUnit::recruitUnit(town* townData, i8 dwelling) {
 // Hides the pointer around the quick view.
 VA(0x0045182c, 0x17d)
 void QuickViewRecruit(town* townData, i8 dwelling) {
-    i32 monsterType;
-    i32 resourceType;
+    H1_ENUM_LOCAL(CreatureType, i32) monsterType;
+    H1_ENUM_LOCAL(ResourceType, i32) resourceType;
     heroWindow* recruitWindow;
-    i32 unitCosts[RESOURCE_COUNT];
+    H1_ENUM_ARRAY(i32, unitCosts, ResourceType, RESOURCE_COUNT);
     i32 resourceCost;
     i32 goldCost;
-    i32 resourceIndex;
+    H1_ENUM_LOCAL(ResourceType, i32) resourceIndex;
     i32 avail;
 
     monsterType = gDwellingType[townData->m_type][dwelling];
     avail = townData->m_garrison[dwelling];
     GetMonsterCost(monsterType, unitCosts);
     goldCost = unitCosts[RESOURCE_GOLD];
-    for (resourceIndex = 0; resourceIndex < RESOURCE_NON_GOLD_END; resourceIndex++) {
+    for (resourceIndex = RESOURCE_FIRST; resourceIndex < RESOURCE_NON_GOLD_END; resourceIndex++) {
         if (unitCosts[resourceIndex])
             break;
     }

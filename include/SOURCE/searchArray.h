@@ -5,6 +5,7 @@
 #include <H1/Macros.h>
 #include <SOURCE/cursorTypes.h>
 #include <SOURCE/mapCell.h>
+#include <SOURCE/PATH.h>
 
 // forward declarations:
 class army;
@@ -142,7 +143,12 @@ public:
     );
     void SeedCombatPosition(class army* unit);
     // attackPath is an ArmyPathTarget (PATH.h).
-    i16 FindCombatPath(i16 sourceHex, i16 targetHex, class army* unit, i8 attackPath);
+    i16 FindCombatPath(
+        i16 sourceHex,
+        i16 targetHex,
+        class army* unit,
+        H1_ENUM_PARAM(ArmyPathTarget, i8) attackPath
+    );
     void PushCombatPoint(i16 hex, i16 direction, u16 distance, u16 speed);
 };
 #pragma pack(pop)

@@ -1,6 +1,7 @@
 #ifndef HOMM1_BASE_EXECUTIVE_H
 #define HOMM1_BASE_EXECUTIVE_H
 
+#include <BASE/baseManager.h>
 #include <Domains.h>
 #include <H1/Macros.h>
 

@@ -12,7 +12,8 @@ H1_ENUM_BEGIN(SmackVideo)
     SMACK_INTRO = 2,
     SMACK_LOSE = 3,
     SMACK_WIN1 = 4,
-    SMACK_WIN2 = 5
+    SMACK_WIN2 = 5,
+    SMACK_COUNT = 6
 H1_ENUM_END(SmackVideo)
 
 // Buka retail 0x0049f850: six packed rows, 0x1b bytes each.
@@ -30,8 +31,8 @@ struct SSmackOptions {
 };
 #pragma pack(pop)
 
-extern SSmackOptions SmackOptions[6];
-extern i8 gSmackNum;
+extern H1_ENUM_ARRAY(SSmackOptions, SmackOptions, SmackVideo, SMACK_COUNT);
+extern H1_ENUM_STORAGE(SmackVideo, i8) gSmackNum;
 void InitSmackSound();
 void ShutdownSmackSound();
 void ConvertSmackerPalette(u8* paletteData);

@@ -23,10 +23,11 @@ i16 searchArray::FindNearestObject(
     u8 triggerType
 ) {
     searchNode node;
-    i8 possibleDirections[MAP_DIRECTION_COUNT];
-    i8 directionCosts[MAP_DIRECTION_COUNT];
-    i16 i;
-    i16 terrain;
+    // TestPossibleDirections fills the terrain of each step's cell as bytes.
+    H1_ENUM_ARRAY(i8, possibleDirections, MapDirection, MAP_DIRECTION_COUNT);
+    H1_ENUM_ARRAY(i8, directionCosts, MapDirection, MAP_DIRECTION_COUNT);
+    H1_ENUM_LOCAL(MapDirection, i16) i;
+    H1_ENUM_LOCAL(TerrainType, i16) terrain;
     i16 cost;
     searchNode* pathNode;
     u8* pathDirection;
@@ -50,21 +51,21 @@ i16 searchArray::FindNearestObject(
                 break;
             }
         TestPossibleDirections(node.x, node.y, possibleDirections, directionCosts, 1, 0);
-        for (i = 0; i < MAP_DIRECTION_COUNT; i++) {
-            terrain = possibleDirections[i];
+        for (i = MAP_DIRECTION_FIRST; i < MAP_DIRECTION_COUNT; i++) {
+            terrain = H1_ENUM_DECODE(TerrainType, possibleDirections[i]);
             if (terrain != TERRAIN_INVALID) {
                 cost = CalcTerrainCost(
-                    terrain,
-                    i & SEARCH_DIAGONAL_COST_MASK,
+                    H1_ENUM_ENCODE(TerrainType, terrain),
+                    H1_ENUM_ENCODE(MapDirection, i) & SEARCH_DIAGONAL_COST_MASK,
                     SEARCH_UNLIMITED_COST,
                     0
                 );
-                neighborX = node.x + normalDirTable[i].x;
-                neighborY = node.y + normalDirTable[i].y;
+                neighborX = node.x + normalDirTable[H1_ENUM_ENCODE(MapDirection, i)].x;
+                neighborY = node.y + normalDirTable[H1_ENUM_ENCODE(MapDirection, i)].y;
                 PushPoint(
                     neighborX,
                     neighborY,
-                    i,
+                    H1_ENUM_ENCODE(MapDirection, i),
                     node.distance + cost,
                     maximumCost,
                     0,
@@ -144,9 +145,9 @@ void searchArray::SeedPosition(
     i32 scanMap
 ) {
     DATA(0x004cc85c)
-    static i16 s_direction;
+    static H1_ENUM_STORAGE(MapDirection, i16) s_direction;
     DATA(0x004cc898)
-    static i32 s_terrain;
+    static H1_ENUM_STORAGE(TerrainType, i32) s_terrain;
     DATA(0x004cc888)
     static searchNode s_currentNode;
     DATA(0x004cc854)
@@ -160,7 +161,7 @@ void searchArray::SeedPosition(
     DATA(0x004cc8a4)
     static i32 s_stepCost[FINDPATH_STEP_COST_COUNT];
     DATA(0x004cc86c)
-    static i8 s_possibleDirections[MAP_DIRECTION_COUNT];
+    static H1_ENUM_ARRAY(i8, s_possibleDirections, MapDirection, MAP_DIRECTION_COUNT);
     DATA(0x004cc884)
     static i32 s_currentCost;
     DATA(0x004cc894)
@@ -171,8 +172,9 @@ void searchArray::SeedPosition(
     static i32 s_neighborX;
     DATA(0x004cc864)
     static i32 s_neighborY;
+    // Filled through TestPossibleDirections' byte pointer.
     DATA(0x004cc8b4)
-    static u8 s_directionOccupied[MAP_DIRECTION_COUNT];
+    static u8 s_directionOccupied[H1_ENUM_ENCODE(MapDirection, MAP_DIRECTION_COUNT)];
     DATA(0x004cc880)
     static i32 s_directionBlocked;
     DATA(0x004cc868)
@@ -207,7 +209,7 @@ void searchArray::SeedPosition(
         s_targetCell = gpAdvManager->GetCell(targetX, targetY);
         if (s_targetCell->m_secondaryTrigger & MAP_CELL_SECONDARY_BLOCKED)
             return;
-        if (!CELL_TERRAIN(s_targetCell)) {
+        if (!TERRAIN_IS_LAND(CELL_TERRAIN(s_targetCell))) {
             if (waterMode) {
                 if (s_targetCell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_SHIPWRECK)
                     || s_targetCell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_SHIP))
@@ -280,7 +282,7 @@ void searchArray::SeedPosition(
             }
         }
         if (waterMode) {
-            s_triggerType = gpAdvManager->GetCell(s_currentNode.x, s_currentNode.y)->m_triggerType;
+            s_triggerType = MAP_PASSIVE_OBJECT(gpAdvManager->GetCell(s_currentNode.x, s_currentNode.y)->m_triggerType);
             if (s_triggerType == MAP_OBJECT_COAST)
                 goto point_complete;
         } else {
@@ -322,23 +324,23 @@ void searchArray::SeedPosition(
         s_terrain = CELL_TERRAIN(gpAdvManager->GetCell(s_currentNode.x, s_currentNode.y));
         s_stepCost[FINDPATH_STEP_STRAIGHT] = s_currentNode.distance
                                              + CalcTerrainCost(
-                                                 s_terrain,
+                                                 H1_ENUM_ENCODE(TerrainType, s_terrain),
                                                  FINDPATH_STEP_STRAIGHT,
                                                  gCurTempMobility - s_currentNode.distance,
                                                  costMode
                                              );
         s_stepCost[FINDPATH_STEP_DIAGONAL] = s_currentNode.distance
                                              + CalcTerrainCost(
-                                                 s_terrain,
+                                                 H1_ENUM_ENCODE(TerrainType, s_terrain),
                                                  FINDPATH_STEP_DIAGONAL,
                                                  gCurTempMobility - s_currentNode.distance,
                                                  costMode
                                              );
-        for (s_direction = 0; s_direction < MAP_DIRECTION_COUNT; s_direction++) {
-            if (s_possibleDirections[s_direction] == TERRAIN_INVALID)
+        for (s_direction = MAP_DIRECTION_FIRST; s_direction < MAP_DIRECTION_COUNT; s_direction++) {
+            if (H1_ENUM_DECODE(TerrainType, s_possibleDirections[s_direction]) == TERRAIN_INVALID)
                 continue;
-            s_neighborX = s_currentNode.x + normalDirTable[s_direction].x;
-            s_neighborY = s_currentNode.y + normalDirTable[s_direction].y;
+            s_neighborX = s_currentNode.x + normalDirTable[H1_ENUM_ENCODE(MapDirection, s_direction)].x;
+            s_neighborY = s_currentNode.y + normalDirTable[H1_ENUM_ENCODE(MapDirection, s_direction)].y;
             if (findAdjacentMonster
                 && (mapExtra[s_neighborX][s_neighborY] & MAP_EXTRA_MONSTER_ADJACENT)
                 && m_cells[s_neighborX][s_neighborY].visited
@@ -359,10 +361,10 @@ void searchArray::SeedPosition(
             PushPoint(
                 s_neighborX,
                 s_neighborY,
-                s_direction,
-                s_stepCost[s_direction & SEARCH_DIAGONAL_COST_MASK],
+                H1_ENUM_ENCODE(MapDirection, s_direction),
+                s_stepCost[H1_ENUM_ENCODE(MapDirection, s_direction) & SEARCH_DIAGONAL_COST_MASK],
                 maximumCost,
-                s_directionOccupied[s_direction],
+                s_directionOccupied[H1_ENUM_ENCODE(MapDirection, s_direction)],
                 s_hasAdjacentMonster,
                 s_adjacentMonsterX,
                 s_adjacentMonsterY,
@@ -370,13 +372,13 @@ void searchArray::SeedPosition(
                 s_currentNode.previousX,
                 s_currentNode.previousY
             );
-            if (s_hasTarget && s_currentNode.x + normalDirTable[s_direction].x == targetX
-                && s_currentNode.y + normalDirTable[s_direction].y == targetY
+            if (s_hasTarget && s_currentNode.x + normalDirTable[H1_ENUM_ENCODE(MapDirection, s_direction)].x == targetX
+                && s_currentNode.y + normalDirTable[H1_ENUM_ENCODE(MapDirection, s_direction)].y == targetY
                 && !s_currentNode.rvFlag1) {
                 if (s_currentNode.distance
                         + CalcTerrainCost(
                             s_possibleDirections[s_direction],
-                            s_direction & SEARCH_DIAGONAL_COST_MASK,
+                            H1_ENUM_ENCODE(MapDirection, s_direction) & SEARCH_DIAGONAL_COST_MASK,
                             gCurTempMobility - s_currentNode.distance,
                             costMode
                         )
@@ -384,7 +386,7 @@ void searchArray::SeedPosition(
                     s_bestTargetCost = s_currentNode.distance
                                        + CalcTerrainCost(
                                            s_possibleDirections[s_direction],
-                                           s_direction & SEARCH_DIAGONAL_COST_MASK,
+                                           H1_ENUM_ENCODE(MapDirection, s_direction) & SEARCH_DIAGONAL_COST_MASK,
                                            gCurTempMobility - s_currentNode.distance,
                                            costMode
                                        );
@@ -398,12 +400,12 @@ void searchArray::SeedPosition(
             for (s_mapY = 0; s_mapY < MAP_CELL_GRID_SIZE; s_mapY++) {
                 if (MAP_TRIGGER_OBJECT(gpAdvManager->GetCell(s_mapX, s_mapY)->m_triggerType)
                     == MAP_OBJECT_MONSTER) {
-                    for (s_direction = 0; s_direction < MAP_DIRECTION_COUNT; s_direction++) {
-                        s_adjacentX = s_mapX + normalDirTable[s_direction].x;
-                        s_adjacentY = s_mapY + normalDirTable[s_direction].y;
+                    for (s_direction = MAP_DIRECTION_FIRST; s_direction < MAP_DIRECTION_COUNT; s_direction++) {
+                        s_adjacentX = s_mapX + normalDirTable[H1_ENUM_ENCODE(MapDirection, s_direction)].x;
+                        s_adjacentY = s_mapY + normalDirTable[H1_ENUM_ENCODE(MapDirection, s_direction)].y;
                         s_targetCell = gpAdvManager->GetCell(s_adjacentX, s_adjacentY);
                         s_directionBlocked = 1;
-                        if (((1 << s_direction) & MAP_DIRECTION_SOUTH_MASK)
+                        if ((H1_ENUM_BIT(MapDirection, s_direction) & MAP_DIRECTION_SOUTH_MASK)
                             && CELL_HAS_NON_SHADOW_OBJECT(s_targetCell))
                             s_directionBlocked = 0;
                         if (s_directionBlocked && m_cells[s_adjacentX][s_adjacentY].visited
@@ -413,7 +415,7 @@ void searchArray::SeedPosition(
                             s_stepCost[FINDPATH_STEP_STRAIGHT] =
                                 s_adjacentCost
                                 + CalcTerrainCost(
-                                    s_terrain,
+                                    H1_ENUM_ENCODE(TerrainType, s_terrain),
                                     FINDPATH_STEP_STRAIGHT,
                                     gCurTempMobility - s_adjacentCost,
                                     costMode
@@ -421,7 +423,7 @@ void searchArray::SeedPosition(
                             s_stepCost[FINDPATH_STEP_DIAGONAL] =
                                 s_adjacentCost
                                 + CalcTerrainCost(
-                                    s_terrain,
+                                    H1_ENUM_ENCODE(TerrainType, s_terrain),
                                     FINDPATH_STEP_DIAGONAL,
                                     gCurTempMobility - s_adjacentCost,
                                     costMode
@@ -429,8 +431,8 @@ void searchArray::SeedPosition(
                             PushPoint(
                                 s_mapX,
                                 s_mapY,
-                                OppositeMapDirection(s_direction),
-                                s_stepCost[s_direction & SEARCH_DIAGONAL_COST_MASK],
+                                OppositeMapDirection(H1_ENUM_ENCODE(MapDirection, s_direction)),
+                                s_stepCost[H1_ENUM_ENCODE(MapDirection, s_direction) & SEARCH_DIAGONAL_COST_MASK],
                                 maximumCost,
                                 1,
                                 0,

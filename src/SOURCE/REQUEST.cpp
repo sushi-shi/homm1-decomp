@@ -315,7 +315,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) fileRequester::Open(i16 priority) {
     m_priority = priority;
     m_active = 1;
     strcpy(m_name, "fileRequester");
-    return 0;
+    return BASE_MANAGER_SUCCESS;
 }
 
 // Uses fixed dimming flags.
@@ -525,7 +525,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) fileRequester::Main(tag_message& mess
 
     if (handled == 1) {
 #ifndef HOMM1_EDITOR
-        if (gCampaignChoice <= 0 && m_mode == FILE_REQUESTER_LOAD && m_selectedIndex >= 0
+        if (gCampaignChoice <= CAMPAIGN_NONE && m_mode == FILE_REQUESTER_LOAD && m_selectedIndex >= 0
             && gRequestingGames && message.value != FILE_REQUESTER_CANCEL) {
             key = m_extensions[m_selectedIndex].text[FILE_REQUESTER_EXTENSION_PLAYER_DIGIT] - '0';
             if (key < giNumHumanPlayers
@@ -666,7 +666,7 @@ void fileRequester::Update(i8 drawWindow) {
                 m_extensions[m_topIndex + y].text[FILE_REQUESTER_EXTENSION_PLAYER_DIGIT] - '0';
             newPlayers = 0;
 #ifndef HOMM1_EDITOR
-            if (oldHumans != 1 && gCampaignChoice <= 0 && gRequestingGames) {
+            if (oldHumans != 1 && gCampaignChoice <= CAMPAIGN_NONE && gRequestingGames) {
                 newPlayers = 1;
                 sprintf(prevExtra, " (%d %s)", oldHumans, localization::Tr("file.players.label"));
                 theSuffixWidth = bigFont->LineWidth(prevExtra);

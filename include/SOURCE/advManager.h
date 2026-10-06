@@ -1,6 +1,7 @@
 #ifndef HOMM1_SOURCE_ADVMANAGER_H
 #define HOMM1_SOURCE_ADVMANAGER_H
 
+#include <BASE/audioTypes.h>
 #include <BASE/baseManager.h>
 #include <BASE/message.h>
 #include <Domains.h>
@@ -10,6 +11,7 @@
 #include <SOURCE/creatureTypes.h>
 #include <SOURCE/cursorTypes.h>
 #include <SOURCE/dialogTypes.h>
+#include <SOURCE/EVENTS.h>
 #include <SOURCE/mapCell.h>
 #include <SOURCE/mapObjectTypes.h>
 #include <SOURCE/playerData.h>
@@ -219,14 +221,14 @@ H1_ENUM_FLAGS_END(AdventureDrawMask)
 #pragma pack(push, 1)
 class advManager : public baseManager {
 public:
-    i8 m_selectedCell;
+    H1_ENUM_STORAGE(AdventureCommand, i8) m_selectedCell;
     class widget* m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_WIDGET_COUNT];
     class widget* m_bottomViewSecondaryWidgets[ADVMGR_BOTTOM_VIEW_WIDGET_COUNT];
     class heroWindow* m_adventureWindow;
     // ShowRoute clears 72*72 bytes and stores signed route frames.
     i8* m_visibilityMap;
     i8 m_routeShown;
-    i8 m_currentTerrain;
+    H1_ENUM_STORAGE(TerrainType, i8) m_currentTerrain;
     char m_unused9b[4];
     class mapCell (*m_mapData)[MAP_CELL_GRID_SIZE];
     class iconWidget* m_scrollLeftButton;
@@ -260,8 +262,8 @@ public:
     H1_ENUM_ARRAY(class icon*, m_boatFlagIcons, PlayerColor, ADVMGR_PLAYER_COLOR_COUNT);
     i8 m_cursorActive;
     i8 m_drawHeroShadows;
-    u8 m_cursorType;
-    i8 m_cursorDirection;
+    H1_ENUM_STORAGE(AdventureHeroIcon, u8) m_cursorType;
+    H1_ENUM_STORAGE(MapDirection, i8) m_cursorDirection;
     i16 m_cursorFrame;
     i16 m_cursorFrameCount;
     i16 m_cursorCycle;
@@ -293,16 +295,16 @@ public:
     virtual void Close(void) OVERRIDE;
     virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
-    void StartCursor(i8 direction);
+    void StartCursor(H1_ENUM_PARAM(MapDirection, i8) direction);
     void StopCursor(i8 stopSound);
     void DrawCursor(void);
     void DrawCursorShadow(void);
     i16 GetCursorBaseFrame(H1_ENUM_PARAM(MapDirection, i16) direction);
-    void TurnTo(i8 direction);
-    i32 GetMoveShowIt(i8 direction);
+    void TurnTo(H1_ENUM_PARAM(MapDirection, i8) direction);
+    i32 GetMoveShowIt(H1_ENUM_PARAM(MapDirection, i8) direction);
     // HoMM1 retail 0x0043ab9c: byte direction/flags, seven arguments (ret 0x1c).
     class mapCell* MoveHero(
-        i8 direction,
+        H1_ENUM_PARAM(MapDirection, i8) direction,
         i8 stopAfterMove,
         i32* eventX,
         i32* eventY,
@@ -311,15 +313,15 @@ public:
         i8* adjacentMonster
     );
     void CheckAdjacentMon(i8* adjacentMonster);
-    i16 ValidMoveWithEvent(class hero* movingHero, i16 direction);
-    i16 ValidMove(i16 direction);
+    i16 ValidMoveWithEvent(class hero* movingHero, H1_ENUM_PARAM(MapDirection, i16) direction);
+    i16 ValidMove(H1_ENUM_PARAM(MapDirection, i16) direction);
     void MoveOrigin(i16 directionX, i16 directionY);
     void ProcessMapChange(struct SMapChange change);
     void ProcessIncomingSingleMapChange(struct SMapChange* incoming);
     void ProcessIncomingGroupMapChange(char* incomingData);
     void PurgeMapChangeQueue(void);
     void UnwindMapChangeQueue(i32 maximumToUnwind, i32 processChanges);
-    void ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains);
+    void ViewWorld(H1_ENUM_PARAM(SpellType, i8) spellType, i8 drawAllObjects, i8 drawAllTerrains);
     void VWCleanup(void);
     void VWInit(i32 centerX, i32 centerY);
     void VWCompleteDraw(void);
@@ -367,7 +369,11 @@ public:
     char* GetArmySizeName(i16 armySize, H1_ENUM_PARAM(ArmySizeNameVariant, i8) grammar);
     void TownQuickView(i8 townId, i8, i16 windowX, i16 windowY);
     void RedrawAdvScreen(i32 update);
-    void GiveTakeArtifactStat(class hero* targetHero, i8 artifact, i8 take);
+    void GiveTakeArtifactStat(
+        class hero* targetHero,
+        H1_ENUM_PARAM(ArtifactType, i8) artifact,
+        H1_ENUM_PARAM(EventArtifactStat, i8) take
+    );
     void DeactivateCurrTown(void);
     void DeactivateCurrHero(void);
     void MobilizeCurrHero(i32 update);
@@ -395,7 +401,7 @@ public:
     void CheckDimNextHeroBut(void);
     void SeedTo(i32 targetX, i32 targetY);
     void ForceNewHover(void);
-    void ScreenScroll(i8 direction, i32 updatePointer);
+    void ScreenScroll(H1_ENUM_PARAM(MapDirection, i8) direction, i32 updatePointer);
     void CheckScreenScroll(void);
     i32 MouseInScrollZone(void);
     void SetInitialMapOrigin(void);
@@ -434,7 +440,7 @@ public:
     void TownEvent(class mapCell* cell, i32 x, i32 y);
     void EventSound(H1_ENUM_PARAM(MapObjectType, i16) eventType, i16 eventData);
     void EventWindow(
-        i16 eventId,
+        H1_ENUM_PARAM(MapEventTextId, i16) eventId,
         H1_ENUM_PARAM(NormalDialogType, i32) buttons,
         char* text,
         H1_ENUM_PARAM(NormalDialogResourceType, i32) type1,
@@ -443,7 +449,7 @@ public:
         i32 value2,
         H1_ENUM_PARAM(NormalDialogOrText, i32) showOrText
     );
-    i32 GiveRandomArtifact(class hero* eventHero);
+    H1_ENUM_RETURN(ArtifactType, i32) GiveRandomArtifact(class hero* eventHero);
     i32 GiveExperience(class hero* eventHero, i32 experience, i8 checkLevel);
     // HoMM1 retail: byte resource, word amount (ret 0xc).
     void GiveResource(class hero* eventHero, H1_ENUM_PARAM(ResourceType, i8) resource, i16 amount);
@@ -455,10 +461,16 @@ public:
     );
     i32 SkeletonEvent(class hero* eventHero, class mapCell* cell, char* text, i32 x, i32 y);
     i32 ZombieEvent(class hero* eventHero, class mapCell* cell, char* text, i32 x, i32 y);
-    i8 GhostEvent(class hero* eventHero, class mapCell* cell, i32 textId, i32 x, i32 y);
+    i8 GhostEvent(
+        class hero* eventHero,
+        class mapCell* cell,
+        H1_ENUM_PARAM(MapEventTextId, i32) textId,
+        i32 x,
+        i32 y
+    );
     void HouseEvent(class hero* eventHero, class mapCell* cell);
     // HoMM1 retail: nine arguments (ret 0x24), result in AL.
-    i8 CombatMonsterEvent(
+    H1_ENUM_RETURN(CombatSide, i8) CombatMonsterEvent(
         class hero* eventHero,
         H1_ENUM_PARAM(CreatureType, i8) monsterType,
         i16 count,
@@ -472,7 +484,7 @@ public:
     void TransferArtifacts(class hero* sourceHero, class hero* destHero);
     void HeroLoses(class hero* lostHero);
     void DoWhirlpool(class hero* eventHero);
-    void FizzleCenter(i32 fizzleType);
+    void FizzleCenter(H1_ENUM_PARAM(EventFizzleType, i32) fizzleType);
     void DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i32 y);
     i32 BarrierAIEvent(class mapCell*, class hero*);
     void PasswordAIEvent(class mapCell*, class hero*);
@@ -492,7 +504,7 @@ public:
     );
     void ComputerMonsterInteract(class mapCell* cell, class hero* eventHero, i8* handled);
     i32 DoNetCombat(char* packet);
-    i32 DoCombat(
+    H1_ENUM_RETURN(CombatSide, i32) DoCombat(
         i32 x,
         i32 y,
         class hero* firstHero,
@@ -566,8 +578,20 @@ H1_ENUM_CONST_BEGIN(ForcedMusicConstant)
 H1_ENUM_CONST_END(ForcedMusicConstant)
 extern i32 gLastScrollTime;
 extern i32 gForceUpdate;
+// The adventure music for a terrain: MusicTrack's first seven tracks are
+// the TerrainType themes in terrain order, so m_currentTerrain plays as its
+// own track (advManager, game, hero and KB restart the terrain music).
+#if H1_STRICT_DOMAINS
+inline constexpr MusicTrack TerrainMusicTrack(TerrainType terrain) {
+    return static_cast<MusicTrack>(static_cast<int>(terrain));
+}
+#define TERRAIN_MUSIC_TRACK(terrain) TerrainMusicTrack(terrain)
+#else
+#define TERRAIN_MUSIC_TRACK(terrain) (terrain)
+#endif
+
 // The adventure screen's bottom-right panel: gCurBottomView is the view
-// UpdBottomView last drew, giBottomViewOverride (KB.h) a temporary one that
+// UpdBottomView last drew, giBottomViewOverride (defined in KB) a temporary one that
 // wins until its end time: the new-turn/kingdom toggle, KB's BVResMsg
 // resource message, and game's DISABLED hold while the AI moves.
 H1_ENUM_BEGIN(BottomViewMode)
@@ -579,7 +603,8 @@ H1_ENUM_BEGIN(BottomViewMode)
     BOTTOM_VIEW_RESOURCE = 5,
     BOTTOM_VIEW_OVERRIDE_DISABLED = 6
 H1_ENUM_END(BottomViewMode)
-extern i32 gCurBottomView;
+extern H1_ENUM_STORAGE(BottomViewMode, i32) gCurBottomView;
+extern H1_ENUM_STORAGE(BottomViewMode, i32) giBottomViewOverride;
 extern i32 gCurBottomViewEnemy;
 extern i32 iLastAnimFrame;
 // UpdBottomViewEnemyTurn's hourglass animation clocks and frames.
@@ -612,14 +637,14 @@ extern i32 TrigY;
 // (0x004a0d4c/0x004a0d50).
 extern i8 gMoveSoundMade;
 extern i8 EveryOther;
-extern i8 S1cursorDirection;
+extern H1_ENUM_STORAGE(MapDirection, i8) S1cursorDirection;
 extern i16 S1cursorBaseFrame;
 extern i16 S1cursorFrameCount;
 extern i16 S1cursorCycle;
 extern i16 S1cursorTurning;
-extern i16 gStepDelay[];
+extern H1_ENUM_ARRAY(i16, gStepDelay, WalkSpeed, WALK_SPEED_COUNT);
 // MoveHero's pixels per walk step by speed and the step offsets.
-extern i16 gPixelsPerStep[];
+extern H1_ENUM_ARRAY(i16, gPixelsPerStep, WalkSpeed, WALK_SPEED_COUNT);
 extern i16 startVals[];
 extern i32 giFrameStep;
 
@@ -1129,12 +1154,15 @@ H1_ENUM_FLAGS_END(CloudNeighborMask)
 H1_ENUM_BEGIN(AdventurePanelHelp)
     ADVENTURE_HELP_NONE = -1,
     ADVENTURE_HELP_NEXT_HERO = 0,
+    ADVENTURE_HELP_FIRST = ADVENTURE_HELP_NEXT_HERO,
     ADVENTURE_HELP_CONTINUE_ROUTE = 1,
     ADVENTURE_HELP_OVERVIEW = 2,
     ADVENTURE_HELP_END_TURN = 3,
     ADVENTURE_HELP_ADVENTURE_OPTIONS = 4,
-    ADVENTURE_HELP_GAME_OPTIONS = 5
+    ADVENTURE_HELP_GAME_OPTIONS = 5,
+    ADVENTURE_HELP_COUNT = 6
 H1_ENUM_END(AdventurePanelHelp)
+extern H1_ENUM_ARRAY(char*, gAdvMenuHelp, AdventurePanelHelp, ADVENTURE_HELP_COUNT);
 
 // qhero0/qhero1/qtown1.bin widgets: name, portrait, the hero's four primary
 // stats from STAT_FIRST, and the owner's flag pair from FLAG (frames colour
@@ -1195,6 +1223,7 @@ H1_ENUM_CONST_END(ControlPanelMusicLabel)
 H1_ENUM_BEGIN(ControlPanelHelp)
     CPANEL_HELP_NONE = -1,
     CPANEL_HELP_NEW_GAME = 0,
+    CPANEL_HELP_FIRST = CPANEL_HELP_NEW_GAME,
     CPANEL_HELP_LOAD_GAME = 1,
     CPANEL_HELP_QUIT = 2,
     CPANEL_HELP_CLOSE = 3,
@@ -1205,8 +1234,10 @@ H1_ENUM_BEGIN(ControlPanelHelp)
     CPANEL_HELP_MUSIC_SOURCE = 8,
     CPANEL_HELP_SHOW_ROUTE = 9,
     CPANEL_HELP_SHOW_ENEMY_MOVES = 10,
-    CPANEL_HELP_SCENARIO_INFO = 11
+    CPANEL_HELP_SCENARIO_INFO = 11,
+    CPANEL_HELP_COUNT = 12
 H1_ENUM_END(ControlPanelHelp)
+extern H1_ENUM_ARRAY(char*, gCPanelHelp, ControlPanelHelp, CPANEL_HELP_COUNT);
 
 // DimensionDoor's dimdoor.bin dialog: hovering the map view (FIRST_BUTTON)
 // sets m_dialogResult to ACCEPT over a free cell, else REJECT, as does the

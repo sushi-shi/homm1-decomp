@@ -45,7 +45,8 @@ H1_ENUM_END(AIPurchaseType)
 
 struct BHC {
     town* pTown;
-    i32 type;
+    H1_ENUM_STORAGE(AIPurchaseType, i32) type;
+    // The building slot, available-hero index or dwelling index of `type`.
     i32 what;
     i32 num;
 };
@@ -61,7 +62,7 @@ public:
     void DoAllHeroInteractions(void);
     void CheckForCreatureUpgrades(void);
     void CheckBuyStuff(void);
-    i32 GoodAdjacent(class hero* pHero, i32* direction);
+    i32 GoodAdjacent(class hero* pHero, H1_ENUM_PARAM(MapDirection, i32) * direction);
     void CheckReload(class hero* pHero);
     void CheckBerserk(class hero* pHero);
     void DimensionDoorTo(i32 x, i32 y);
@@ -93,22 +94,22 @@ public:
     float GetOddsOfWinning(i32);
     void ValueOfBuyingBuilding(
         class town* townPointer,
-        i32 building,
+        H1_ENUM_PARAM(BuildingSlotType, i32) building,
         i32& resourceValue,
         float& benefitCost
     );
     void GetBestBuilding(class town* townPointer, struct BHC& purchase, float& benefitCost);
     void ValueOfBuyingCreature(
         class town* townPointer,
-        i32 creature,
+        H1_ENUM_PARAM(CreatureType, i32) creature,
         i32& resourceValue,
         i32 purchaseCount,
         float& benefitCost
     );
     void GetBestCreature(class town* townPointer, struct BHC& best, float& bestValue);
     i32 CreaturesToBuy(class town* townPointer, i32 level);
-    i32 CreaturesToBuy(i32 creatureType, i32 availableCount);
-    i32 MaxBuyableCreatures(i32 creatureType);
+    i32 CreaturesToBuy(H1_ENUM_PARAM(CreatureType, i32) creatureType, i32 availableCount);
+    i32 MaxBuyableCreatures(H1_ENUM_PARAM(CreatureType, i32) creatureType);
     void ValueOfBuyingHero(
         class town* townPointer,
         class hero* heroPointer,
@@ -163,7 +164,7 @@ public:
     );
     void EvaluateOneTimeCreaturePurchase(
         class hero* pHero,
-        i32 creature,
+        H1_ENUM_PARAM(CreatureType, i32) creature,
         i32 availableCount,
         i32 useAvailableCount,
         i32& purchaseCount,
@@ -214,14 +215,19 @@ public:
         i32& outValue
     );
     i32 ChooseToFightForArtifact(i32 artifact, i32 monster, i32 quantity);
-    i32 ChooseToBuyArtifact(class hero*, i32 artifact, i32 goldCost);
+    i32 ChooseToBuyArtifact(class hero*, H1_ENUM_PARAM(ArtifactType, i32) artifact, i32 goldCost);
     i32 NetValueOfArtifact(i32 artifact, i32 goldCost, i32 resourceType, i32 resourceCost);
     i32 ChooseToPayRansomOnHero(class hero*, i32);
-    void BuildBuilding(class town* townPointer, i16 building);
+    void BuildBuilding(class town* townPointer, H1_ENUM_PARAM(BuildingSlotType, i16) building);
     void BuildHero(class town* townPointer, i16 availableHeroIndex);
     void BuildCreature(class town* townPointer, i32 dwelling, i32 purchaseCount);
     i32 CanBuyBHC(struct BHC& purchase);
-    i8 CombatMonsterEvent(class hero* h, i8 monType, i32* pCount, class mapCell*);
+    i8 CombatMonsterEvent(
+        class hero* h,
+        H1_ENUM_PARAM(CreatureType, i8) monType,
+        i32* pCount,
+        class mapCell*
+    );
     void FightEvent(class hero* heroPointer, class mapCell* cell);
     i32 DamageGroup(class armyGroup* ag, class hero* loser, class hero*, float dmg);
     float StatChangeValue(i32 oldValue, i32 newValue);
@@ -243,7 +249,7 @@ public:
     i32 EvaluateHeroEvent(i32 heroId, i32 x, i32 y, i32 mode, i32* liveChance);
     i32 EvaluateTownEvent(i32 townId, i32 x, i32 y, i32 mode, i32* liveChance);
 };
-extern i32 costTemp[];
+extern H1_ENUM_ARRAY(i32, costTemp, ResourceType, RESOURCE_COUNT);
 extern i32 iLastFrameRateTimer;
 extern i32 giHumanTownConquered;
 extern i32 gbBerserk;
@@ -289,10 +295,11 @@ H1_ENUM_CONST_BEGIN(AIResourceValue)
     RV_UNSET = -32001
 H1_ENUM_CONST_END(AIResourceValue)
 // mapExtra bit 7: game::SetupAdjacentMons sets it where FindAdjacentMonster
-// finds a guard next to the cell and clears it (mask 0x7f) elsewhere.
-H1_ENUM_BEGIN(MapExtraFlag)
+// finds a guard next to the cell and clears it (mask 0x7f) elsewhere. A flag
+// of the cell's mapExtra bit set (tested with &, set with |=), not a value.
+H1_ENUM_FLAGS_BEGIN(MapExtraFlag, u8)
     MAP_EXTRA_MONSTER_ADJACENT = 0x80
-H1_ENUM_END(MapExtraFlag)
+H1_ENUM_FLAGS_END(MapExtraFlag)
 
 // Shared with GAME and EVENTS: the per-cell bitmask of the players whose
 // heroes have stood there and the current/watch players' high bits (all in

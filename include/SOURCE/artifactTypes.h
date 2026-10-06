@@ -8,6 +8,8 @@
 // mark an empty slot with -1.
 H1_ENUM_BEGIN(ArtifactType)
     ARTIFACT_NONE = -1,
+    // The first artifact id: a hero slot holds an artifact when it is >= FIRST.
+    ARTIFACT_FIRST = 0,
     ARTIFACT_ULTIMATE_BOOK = 0,
     ARTIFACT_ULTIMATE_SWORD = 1,
     ARTIFACT_ULTIMATE_CLOAK = 2,
@@ -54,5 +56,6 @@ H1_ENUM_BEGIN(ArtifactType)
     ARTIFACT_REGULAR_END = ARTIFACT_MAGIC_BOOK,
     ARTIFACT_COUNT = 38
 H1_ENUM_END(ArtifactType)
+H1_ENUM_STEPPED(ArtifactType)
 
 #endif // HOMM1_SOURCE_ARTIFACTTYPES_H

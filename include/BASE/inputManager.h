@@ -163,7 +163,7 @@ public:
     void MakeScanCodeTable(void);
     void ForceMouseMove(void);
     // Inline qualifier accessor.
-    i16 GetModifiers(void) {
+    H1_ENUM_RETURN(MessageModifier, i16) GetModifiers(void) {
         return m_modifiers;
     }
 };

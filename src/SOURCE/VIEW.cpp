@@ -76,7 +76,7 @@ i8 combatManager::ViewGeneral(H1_ENUM_PARAM(CombatSide, i32) side, i32 allowActi
     wnd->BroadcastMessage(packet);
     packet.command = WIDGET_COMMAND_SET_FRAME;
     packet.id = GENERAL_COLOR_WIDGET;
-    packet.value = gpGame->m_players[m_heroes[side]->m_owner].Color() + 1;
+    packet.value = H1_ENUM_ENCODE(PlayerColor, gpGame->m_players[m_heroes[side]->m_owner].Color()) + 1;
     wnd->BroadcastMessage(packet);
     sprintf(
         gText,
@@ -154,7 +154,7 @@ i8 combatManager::ViewGeneral(H1_ENUM_PARAM(CombatSide, i32) side, i32 allowActi
     m_gridUpdateRow = 0;
     DrawFrame(1);
     if (!quickView)
-        DoCommand(gpWindowManager->m_dialogResult);
+        DoCommand(H1_ENUM_DECODE(CombatMessageCommand, gpWindowManager->m_dialogResult));
     return 0;
 }
 
@@ -162,7 +162,7 @@ i8 combatManager::ViewGeneral(H1_ENUM_PARAM(CombatSide, i32) side, i32 allowActi
 // their help line.
 VA(0x004663ee, 0x1a7)
 H1_ENUM_RETURN(MessageDispatchResult, i16) HandleViewGeneral(tag_message& message) {
-    i32 pos;
+    H1_ENUM_LOCAL(ViewGeneralHoverHelp, i32) pos;
     i16 prevCtrl;
     i16 borderId;
     i16 theBarId;
@@ -236,8 +236,8 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) HandleViewGeneral(tag_message& messag
         }
     }
     if (result) {
-        message.id = WIDGET_COMMAND_DIALOG_SELECT;
-        message.command = message.id;
+        message.id = H1_ENUM_ENCODE(BaseWidgetCommand, WIDGET_COMMAND_DIALOG_SELECT);
+        message.command = H1_ENUM_DECODE(BaseWidgetCommand, message.id);
         return MESSAGE_DISPATCH_FORWARD;
     }
     return MESSAGE_DISPATCH_CONSUME;

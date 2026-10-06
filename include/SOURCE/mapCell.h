@@ -45,6 +45,18 @@ H1_ENUM_FLAGS_BEGIN(MapCellFlag, u8)
     MAP_CELL_HERO_CURSOR = 0x40,
     MAP_CELL_OBJECT_SHADOW_ONLY = 0x80
 H1_ENUM_FLAGS_END(MapCellFlag)
+// Takes a flag the caller has just tested out of m_flags by subtraction
+// (TeleportTo's hero-cursor cell, the event code's animation bit).
+#if H1_STRICT_DOMAINS
+inline void MapCellSubtractFlag(H1EnumStorage<MapCellFlag, u8>& flags, MapCellFlag flag) {
+    flags = static_cast<MapCellFlag>(
+        static_cast<int>(static_cast<MapCellFlag>(flags)) - static_cast<int>(flag)
+    );
+}
+#define MAP_CELL_SUBTRACT_FLAG(flags, flag) MapCellSubtractFlag(flags, flag)
+#else
+#define MAP_CELL_SUBTRACT_FLAG(flags, flag) ((flags) -= (flag))
+#endif
 
 // Adventure object tilesets: advManager's m_objectIcons slots, loaded from
 // these ICN files in the constructor.

@@ -298,7 +298,7 @@ void combatManager::CheckSetMouseDirection(i32 mouseX, i32 mouseY, i32 targetHex
 
     if (m_gridSelectionDisabled)
         return;
-    if (m_validDirectionCount <= 1 && m_mouseDirection >= 0)
+    if (m_validDirectionCount <= 1 && m_mouseDirection >= COMBAT_DIRECTION_FIRST)
         return;
     xPos = mouseX - (targetHex % COMBAT_GRID_COLUMNS - 1) * COMBAT_HEX_WIDTH;
     if ((targetHex / COMBAT_GRID_COLUMNS) & 1)
@@ -911,7 +911,10 @@ void combatManager::ClearWinLoseBottom(class heroWindow* window) {
 }
 
 VA(0x0041f491, 0x28d)
-void combatManager::ShowWinLoseArtifact(class heroWindow* window, i32 artifact) {
+void combatManager::ShowWinLoseArtifact(
+    class heroWindow* window,
+    H1_ENUM_PARAM(ArtifactType, i32) artifact
+) {
     char* artifactName;
     i16 boxWidth = 0x140;
     i16 bottomEdge = 0x1ca;
@@ -942,7 +945,7 @@ void combatManager::ShowWinLoseArtifact(class heroWindow* window, i32 artifact) 
         0x40,
         0x40,
         "artifact.icn",
-        artifact,
+        H1_ENUM_ENCODE(ArtifactType, artifact),
         ICON_DRAW_NORMAL,
         WIN_LOSE_ARTIFACT_ICON,
         ICON_WIDGET_DRAW,
@@ -977,24 +980,31 @@ void combatManager::ShowWinLoseArtifact(class heroWindow* window, i32 artifact) 
 // Lays out up to five casualties a side with fixed 40-pixel spacing.
 VA(0x0041f71e, 0x753)
 void combatManager::ShowDeadArmies(class heroWindow* window) {
-    i32 numLost[COMBAT_SIDE_COUNT];
+    H1_ENUM_ARRAY(i32, numLost, CombatSide, COMBAT_SIDE_COUNT);
     char* buffer;
-    i32 casualtyTypeStr[COMBAT_SIDE_COUNT][ARMY_GROUP_SLOT_COUNT];
+    H1_ENUM_ARRAY_ROWS(
+        H1_ENUM_LOCAL(CreatureType, i32),
+        casualtyTypeStr,
+        CombatSide,
+        COMBAT_SIDE_COUNT,
+        ARMY_GROUP_SLOT_COUNT
+    );
     i32 theIconSpacing;
     i32 armyIndex;
-    i32 team;
+    // A widget slot in the clearing loop, then the side whose casualties are laid out.
+    H1_ENUM_SHARED(CombatSide, i32) team;
     i16 boxWidth = 0x140;
     i16 bottomVal = 0x1ca;
     i32 rowYVal;
     tag_message message;
-    i32 casualtyCount[COMBAT_SIDE_COUNT][ARMY_GROUP_SLOT_COUNT];
+    H1_ENUM_ARRAY_ROWS(i32, casualtyCount, CombatSide, COMBAT_SIDE_COUNT, ARMY_GROUP_SLOT_COUNT);
     i32 firstX;
 
     for (team = 0; team < WIN_LOSE_SLOT_COUNT; team++) {
         m_winLoseBottomWidgets[team] = NULL;
         m_winLoseBottomTextWidgets[team] = NULL;
     }
-    for (team = 0; team < COMBAT_SIDE_COUNT; team++) {
+    for (team = COMBAT_SIDE_FIRST; team < COMBAT_SIDE_COUNT; team++) {
         numLost[team] = 0;
         for (armyIndex = 0; armyIndex < ARMY_GROUP_SLOT_COUNT; armyIndex++) {
             if (m_armies[team][armyIndex].m_creatureType != CREATURE_NONE
@@ -1026,7 +1036,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
         m_winLoseBottomTextWidgets[WIN_LOSE_SLOT_CASUALTY_TITLE],
         WINDOW_Z_ORDER_APPEND
     );
-    for (team = 0; team < COMBAT_SIDE_COUNT; team++) {
+    for (team = COMBAT_SIDE_FIRST; team < COMBAT_SIDE_COUNT; team++) {
         rowYVal = team == COMBAT_ATTACKER_SIDE ? 0x118 : 0x159;
         buffer = static_cast<char*>(malloc(0x1e));
         sprintf(
@@ -1034,21 +1044,25 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
             team == COMBAT_ATTACKER_SIDE ? localization::Tr("combat.casualties.attacker")
                                          : localization::Tr("combat.casualties.defender")
         );
-        m_winLoseBottomTextWidgets[WIN_LOSE_SLOT_SIDE_HEADING_FIRST + team] = new textWidget(
-            0,
-            rowYVal,
-            0x140,
-            0x14,
-            buffer,
-            "smalfont.fnt",
-            1,
-            WIN_LOSE_CASUALTY_HEADING,
-            WIDGET_KIND_TEXT
-        );
-        if (m_winLoseBottomTextWidgets[WIN_LOSE_SLOT_SIDE_HEADING_FIRST + team] == NULL)
+        m_winLoseBottomTextWidgets
+            [WIN_LOSE_SLOT_SIDE_HEADING_FIRST + H1_ENUM_ENCODE(CombatSide, team)] = new textWidget(
+                0,
+                rowYVal,
+                0x140,
+                0x14,
+                buffer,
+                "smalfont.fnt",
+                1,
+                WIN_LOSE_CASUALTY_HEADING,
+                WIDGET_KIND_TEXT
+            );
+        if (m_winLoseBottomTextWidgets
+                [WIN_LOSE_SLOT_SIDE_HEADING_FIRST + H1_ENUM_ENCODE(CombatSide, team)]
+            == NULL)
             MemError();
         window->AddWidget(
-            m_winLoseBottomTextWidgets[WIN_LOSE_SLOT_SIDE_HEADING_FIRST + team],
+            m_winLoseBottomTextWidgets
+                [WIN_LOSE_SLOT_SIDE_HEADING_FIRST + H1_ENUM_ENCODE(CombatSide, team)],
             WINDOW_Z_ORDER_APPEND
         );
         if (numLost[team] <= 0) {
@@ -1081,7 +1095,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
                 0x20,
                 0x1c,
                 "mons32.icn",
-                casualtyTypeStr[team][armyIndex],
+                H1_ENUM_ENCODE(CreatureType, casualtyTypeStr[team][armyIndex]),
                 ICON_DRAW_NORMAL,
                 team * ARMY_GROUP_SLOT_COUNT + armyIndex + WIN_LOSE_CASUALTY_ICON_FIRST,
                 ICON_WIDGET_DRAW,
@@ -1246,7 +1260,7 @@ void combatManager::DoLoseWindow(void) {
     H1_ENUM_LOCAL(MessageDispatchResult, i16) res;
     i32 delayVal;
     i16 bestOffset;
-    i32 party;
+    H1_ENUM_LOCAL(CombatSide, i32) party;
     i16 nextWidth;
     i16 sx;
     i16 blitHeightVal;
@@ -1485,7 +1499,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) combatManager::ProcessNextAction(stru
         remoteIndex = m_playerId[COMBAT_OPPOSING_SIDE(m_currentSide)];
         if (remoteIndex < 0 || !gbHumanPlayer[remoteIndex])
             remoteIndex = giHostGamePos;
-        actionData[0] = giNextAction;
+        actionData[0] = H1_ENUM_ENCODE(CombatAction, giNextAction);
         actionData[1] = giNextActionExtra;
         actionData[2] = giNextActionGridIndex;
         actionData[3] = giNextActionGridIndex2;
@@ -1508,7 +1522,12 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) combatManager::ProcessNextAction(stru
             break;
         case ACTION_CAST_SPELL:
             gpMouseManager->ReallyHidePointer();
-            CastSpell(giNextActionExtra, giNextActionGridIndex, 0, giNextActionGridIndex2);
+            CastSpell(
+                H1_ENUM_DECODE(SpellType, giNextActionExtra),
+                giNextActionGridIndex,
+                0,
+                giNextActionGridIndex2
+            );
             if (m_armies[m_currentSide][m_currentArmyIndex].m_quantity <= 0)
                 doAdvance = 1;
             break;
@@ -1581,8 +1600,8 @@ i32 giNextActionGridIndex;
 DATA(0x004a6ab4)
 i32 giSurrenderCost;
 DATA(0x004a6a94)
-i8 iTransferArtifacts[HERO_ARTIFACT_SLOT_COUNT];
+H1_ENUM_STORAGE(ArtifactType, i8) iTransferArtifacts[HERO_ARTIFACT_SLOT_COUNT];
 DATA(0x004a6aac)
-i32 giNextAction;
+H1_ENUM_STORAGE(CombatAction, i32) giNextAction;
 DATA(0x004a6a90)
 i32 giNextActionGridIndex2;

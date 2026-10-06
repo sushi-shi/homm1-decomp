@@ -21,5 +21,6 @@ H1_ENUM_BEGIN(ResourceType)
     RESOURCE_LAST = RESOURCE_GOLD,
     RESOURCE_COUNT = 7
 H1_ENUM_END(ResourceType)
+H1_ENUM_STEPPED(ResourceType)
 
 #endif

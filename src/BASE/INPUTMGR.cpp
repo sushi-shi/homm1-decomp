@@ -327,11 +327,11 @@ void inputManager::AsciiConvert(tag_message& event) {
     else
         event.keyCode = m_keyState[event.keyCode] & INPUT_SCAN_CODE_MASK;
 
-    if ((event.modifiers & MESSAGE_MODIFIER_SHIFT_KEYS) == 0 && event.keyCode > 'A' - 1
+    if ((event.modifiers & MESSAGE_MODIFIER_SHIFT_KEYS) == MESSAGE_MODIFIER_NONE && event.keyCode > 'A' - 1
         && event.keyCode < 'Z' + 1)
         event.keyCode = static_cast<u8>(CyrillicToLower(static_cast<char>(event.keyCode)));
 
-    if ((event.modifiers & MESSAGE_MODIFIER_SHIFT_KEYS) != 0) {
+    if ((event.modifiers & MESSAGE_MODIFIER_SHIFT_KEYS) != MESSAGE_MODIFIER_NONE) {
         switch (event.keyCode) {
             case '1':
                 event.keyCode = '!';
@@ -395,7 +395,7 @@ void inputManager::AsciiConvert(tag_message& event) {
                 break;
         }
     }
-    if ((event.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS) == 0)
+    if ((event.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS) == MESSAGE_MODIFIER_NONE)
         TranslateInputCharacterCp1251(event);
 }
 

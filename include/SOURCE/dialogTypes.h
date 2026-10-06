@@ -4,10 +4,12 @@
 #include <BASE/dialog.h>
 #include <Domains.h>
 
-H1_ENUM_BEGIN(NormalDialogWidgetRange)
+// NormalDialog's DrawWindow id bounds: the foreground widgets below LIMIT,
+// then the background up to LAST_ID (extents of the id range, not values).
+H1_ENUM_CONST_BEGIN(NormalDialogWidgetRange)
     NORMAL_DIALOG_FOREGROUND_WIDGET_LIMIT = 0x9000,
     NORMAL_DIALOG_BACKGROUND_WIDGET_LAST_ID = -256
-H1_ENUM_END(NormalDialogWidgetRange)
+H1_ENUM_CONST_END(NormalDialogWidgetRange)
 
 // HoMM1 NormalDialog's resource slot kinds (frames of resource.icn first).
 H1_ENUM_BEGIN(NormalDialogResourceType)
@@ -31,6 +33,18 @@ H1_ENUM_BEGIN(NormalDialogResourceType)
     NORMAL_DIALOG_EXPMRL_FIRST = NORMAL_DIALOG_LUCK_BONUS,
     NORMAL_DIALOG_HERO = 15
 H1_ENUM_END(NormalDialogResourceType)
+H1_ENUM_STEPPED(NormalDialogResourceType)
+// The slot kind that shows a resource: the resource kinds come first, in
+// resource order (a mine's, campfire's or windmill's resource).
+#if H1_STRICT_DOMAINS
+#include <SOURCE/resourceTypes.h>
+inline constexpr NormalDialogResourceType NormalDialogResource(ResourceType resource) {
+    return static_cast<NormalDialogResourceType>(static_cast<int>(resource));
+}
+#define NORMAL_DIALOG_RESOURCE(resource) NormalDialogResource(resource)
+#else
+#define NORMAL_DIALOG_RESOURCE(resource) (resource)
+#endif
 
 // NormalDialog's dialogType argument: which of evntwin*.bin's buttons stay.
 H1_ENUM_BEGIN(NormalDialogType)

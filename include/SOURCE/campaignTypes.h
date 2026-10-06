@@ -45,9 +45,10 @@ struct campaignScenario {
     // Space-padded name of the campaign town the map renames (not NUL-terminated).
     char victoryTownName[0x10];
     i8 playerTypes[GAME_PLAYER_COUNT];
-    // Opponent crests, indexed by player position.
+    // Opponent crests, indexed by player position; PLAYER_COLOR_COUNT leaves
+    // the crest to RandomizePlayerCrests' draw.
     i16 playerCrests[3];
-    u16 resources[GAME_PLAYER_COUNT][7];
+    H1_ENUM_ARRAY(u16, resources[GAME_PLAYER_COUNT], ResourceType, RESOURCE_COUNT);
 };
 #pragma pack(pop)
 

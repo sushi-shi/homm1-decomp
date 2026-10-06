@@ -3,7 +3,10 @@
 
 #include <Domains.h>
 #include <SOURCE/armyGroup.h>
+#include <SOURCE/combatTypes.h>
 #include <SOURCE/hero.h>
+#include <SOURCE/REMOTE.h>
+#include <SOURCE/resourceTypes.h>
 #include <SOURCE/town.h>
 
 // mapCell::m_objectMetadata payloads DoEvent/DoAIEvent decode per object:
@@ -102,8 +105,7 @@ H1_ENUM_CONST_BEGIN(MapEventDisplayConstant)
     EVENT_WHIRLPOOL_TRIGGER_ROLL = 1,
     EVENT_WHIRLPOOL_TRIGGER_MAX = 3,
     EVENT_WHIRLPOOL_ARMY_VALUE_LIMIT = 99999999,
-    EVENT_TEXT_BUFFER_SIZE = 500,
-    EVENT_TEXT_WINDOW_END = 76
+    EVENT_TEXT_BUFFER_SIZE = 500
 H1_ENUM_CONST_END(MapEventDisplayConstant)
 
 // DoCombat's network wait marker and memory thresholds.
@@ -127,9 +129,12 @@ extern i8 gEventMusicPlaying;
 // advManager::EventWindow's eventId: the gEventText row it prints, or
 // EVENT_TEXT_CUSTOM for caller text. The five houses use
 // RECRUIT/RANKS_FULL/EMPTY of the first house plus three rows per house.
+// EventWindow prints the rows FIRST..WINDOW_END (half-open) and reports any
+// other id but CUSTOM as "Event ID %d".
 H1_ENUM_BEGIN(MapEventTextId)
     EVENT_TEXT_CUSTOM = -1,
     EVENT_TEXT_ALCHEMIST_CAPTURED = 0,
+    EVENT_TEXT_FIRST = EVENT_TEXT_ALCHEMIST_CAPTURED,
     EVENT_TEXT_SIGNPOST = 1,
     EVENT_TEXT_BUOY_VISITED = 2,
     EVENT_TEXT_BUOY_REWARD = 3,
@@ -189,6 +194,7 @@ H1_ENUM_BEGIN(MapEventTextId)
     EVENT_TEXT_LEPRECHAUN_NO_GOLD = 73,
     EVENT_TEXT_ARTIFACT_RECOVERED = 74,
     EVENT_TEXT_SKELETON_EMPTY = 75,
+    EVENT_TEXT_WINDOW_END = 76,
     EVENT_TEXT_SKELETON_ARTIFACT = 76,
     EVENT_TEXT_COUNT = 77
 H1_ENUM_END(MapEventTextId)
@@ -200,6 +206,25 @@ H1_ENUM_CONST_BEGIN(HouseEventConstant)
     EVENT_TEXT_HOUSE_STRIDE = 3,
     EVENT_HOUSE_COUNT = 5
 H1_ENUM_CONST_END(HouseEventConstant)
+
+// The gEventText row a house prints: the first house's RECRUIT, RANKS_FULL
+// or EMPTY row offset by three rows per house; and the row announcing a
+// captured mine of a resource.
+#if H1_STRICT_DOMAINS
+inline constexpr MapEventTextId EventTextHouse(int house, MapEventTextId row) {
+    return static_cast<MapEventTextId>(house * EVENT_TEXT_HOUSE_STRIDE + static_cast<int>(row));
+}
+inline constexpr MapEventTextId EventTextMineCaptured(ResourceType resource) {
+    return static_cast<MapEventTextId>(
+        static_cast<int>(resource) + static_cast<int>(EVENT_TEXT_MINE_CAPTURED_BASE)
+    );
+}
+#define EVENT_TEXT_HOUSE(house, row) EventTextHouse(house, row)
+#define EVENT_TEXT_MINE_CAPTURED(resource) EventTextMineCaptured(resource)
+#else
+#define EVENT_TEXT_HOUSE(house, row) ((house) * EVENT_TEXT_HOUSE_STRIDE + (row))
+#define EVENT_TEXT_MINE_CAPTURED(resource) ((resource) + EVENT_TEXT_MINE_CAPTURED_BASE)
+#endif
 
 // Remote combat hand-off: SendHeroTownData sends the combat record as
 // REMOTE_COMMAND_HERO_TOWN_DATA (answered by REMOTE_COMMAND_HERO_TOWN_CONFIRM),
@@ -244,7 +269,7 @@ struct combatRemoteHeroFragment {
 struct combatRemoteMessage {
     i8 sender;
     i32 id;
-    i8 type;
+    H1_ENUM_STORAGE(RemoteMessageType, i8) type;
     i8 command;
     i16 payloadSize;
     combatRemoteData combat;
@@ -253,7 +278,7 @@ struct combatRemoteMessage {
 struct heroRemoteMessage {
     i8 sender;
     i32 id;
-    i8 type;
+    H1_ENUM_STORAGE(RemoteMessageType, i8) type;
     i8 command;
     i16 payloadSize;
     combatRemoteHeroFragment heroFragment;

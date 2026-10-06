@@ -32,9 +32,14 @@ H1_ENUM_BEGIN(ArmyGroupAlignmentResult)
     ARMY_GROUP_ALIGNMENT_SAME = 1
 H1_ENUM_END(ArmyGroupAlignmentResult)
 
-// Empty every slot of an army group.
+// Empty every slot of an army group: memset fills each type byte with
+// CREATURE_NONE's byte and zeroes the counts.
 #define CLEAR_ARMY_GROUP(group)                                                                    \
-    (memset((group).m_creatureTypes, CREATURE_NONE, sizeof((group).m_creatureTypes)),              \
+    (memset(                                                                                       \
+         (group).m_creatureTypes,                                                                  \
+         H1_ENUM_ENCODE(CreatureType, CREATURE_NONE),                                              \
+         sizeof((group).m_creatureTypes)                                                           \
+     ),                                                                                            \
      memset((group).m_creatureCounts, 0, sizeof((group).m_creatureCounts)))
 
 #pragma pack(push, 1)
@@ -52,13 +57,13 @@ public:
     // HoMM1 retail: hero and town only (ret 8), morale in AX.
     i16 GetMorale(class hero* h, class town* t);
     void Dismiss(i8 slot);
-    i8 IsMember(i8 creatureType);
+    i8 IsMember(H1_ENUM_PARAM(CreatureType, i8) creatureType);
     H1_ENUM_RETURN(ArmyGroupAlignmentResult, i8) IsHomogeneous(i8 countRaces);
-    i8 CanJoin(i8 creatureType);
+    i8 CanJoin(H1_ENUM_PARAM(CreatureType, i8) creatureType);
     // HoMM1 returns the count in AX (callers sign-extend).
     i16 GetNumArmies(void);
     // HoMM1 retail: byte creature/slot, word count, word result (ret 0xc).
-    i16 Add(i8 creatureType, i16 quantity, i8 slot);
+    i16 Add(H1_ENUM_PARAM(CreatureType, i8) creatureType, i16 quantity, i8 slot);
     void Swap(i8 slot, class armyGroup* otherGroup, i8 otherSlot);
     void DamageGroup(float damagePercent);
 };

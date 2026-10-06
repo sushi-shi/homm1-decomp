@@ -45,16 +45,16 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
     H1_ENUM_LOCAL(MapObjectType, i8) eventKind;
     tag_message unusedMessage;
     i8 removeObj;
-    i32 fizzleEffect;
-    i32 artifactId;
+    H1_ENUM_LOCAL(EventFizzleType, i32) fizzleEffect;
+    H1_ENUM_LOCAL(ArtifactType, i32) artifactId;
     i32 income;
     hero* opponent;
-    i32 res;
+    H1_ENUM_LOCAL(CombatSide, i32) res;
     i8 teleX;
     i8 teleY;
     char resourceText[20];
     i8 portalCount;
-    i32 eventResource;
+    H1_ENUM_LOCAL(ResourceType, i32) eventResource;
     heroWindow* thiefWindow;
     boatRecord* boat;
     i8 guardMonster;
@@ -75,7 +75,8 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                 visitingHero->m_eventFlags &= ~HERO_EVENT_EMBARKED;
                 visitingHero->m_remainingMobility = 0;
                 visitingHero->m_direction = m_cursorDirection;
-                m_cursorType = visitingHero->m_heroClass;
+                // A hero's class names its sprite's icon slot.
+                m_cursorType = H1_ENUM_DECODE(AdventureHeroIcon, visitingHero->m_heroClass);
                 m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
                 m_cursorActive = 1;
                 gpWindowManager->SaveFizzleSource(
@@ -119,10 +120,10 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
             else
                 income = MINE_RARE_INCOME;
             EventWindow(
-                gpGame->m_mines[cell->m_objectMetadata].type + EVENT_TEXT_MINE_CAPTURED_BASE,
+                EVENT_TEXT_MINE_CAPTURED(gpGame->m_mines[cell->m_objectMetadata].type),
                 NORMAL_DIALOG_TYPE_OK,
                 "",
-                gpGame->m_mines[cell->m_objectMetadata].type,
+                NORMAL_DIALOG_RESOURCE(gpGame->m_mines[cell->m_objectMetadata].type),
                 -income,
                 NORMAL_DIALOG_NO_RESOURCE,
                 0,
@@ -426,7 +427,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                             NORMAL_DIALOG_TYPE_OK,
                             gText,
                             NORMAL_DIALOG_ARTIFACT,
-                            artifactId,
+                            H1_ENUM_ENCODE(ArtifactType, artifactId),
                             NORMAL_DIALOG_NO_RESOURCE,
                             0,
                             NORMAL_DIALOG_NO_OR_TEXT
@@ -443,7 +444,9 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                 "",
                 NORMAL_DIALOG_RESOURCE_GOLD,
                 (cell->m_objectMetadata >> CAMPFIRE_AMOUNT_SHIFT) * CAMPFIRE_GOLD_MULTIPLIER,
-                cell->m_objectMetadata & CAMPFIRE_RESOURCE_MASK,
+                NORMAL_DIALOG_RESOURCE(
+                    H1_ENUM_DECODE(ResourceType, cell->m_objectMetadata & CAMPFIRE_RESOURCE_MASK)
+                ),
                 cell->m_objectMetadata >> CAMPFIRE_AMOUNT_SHIFT,
                 NORMAL_DIALOG_NO_OR_TEXT
             );
@@ -454,7 +457,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
             );
             GiveResource(
                 visitingHero,
-                cell->m_objectMetadata & CAMPFIRE_RESOURCE_MASK,
+                H1_ENUM_DECODE(ResourceType, cell->m_objectMetadata & CAMPFIRE_RESOURCE_MASK),
                 cell->m_objectMetadata >> CAMPFIRE_AMOUNT_SHIFT
             );
             removeObj = 1;
@@ -527,7 +530,8 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
             }
             break;
         case MAP_OBJECT_RESOURCE:
-            eventResource = cell->m_objectIndex - RESOURCE_PILE_OBJECT_BASE;
+            // A resource pile's object frame selects its resource.
+            eventResource = H1_ENUM_DECODE(ResourceType, cell->m_objectIndex - RESOURCE_PILE_OBJECT_BASE);
             GiveResource(
                 visitingHero,
                 eventResource,
@@ -554,13 +558,17 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                     EVENT_TEXT_WINDMILL_REWARD,
                     NORMAL_DIALOG_TYPE_OK,
                     "",
-                    cell->m_objectMetadata,
+                    NORMAL_DIALOG_RESOURCE(H1_ENUM_DECODE(ResourceType, cell->m_objectMetadata)),
                     WINDMILL_RESOURCE_AMOUNT,
                     NORMAL_DIALOG_NO_RESOURCE,
                     0,
                     NORMAL_DIALOG_NO_OR_TEXT
                 );
-                GiveResource(visitingHero, cell->m_objectMetadata, WINDMILL_RESOURCE_AMOUNT);
+                GiveResource(
+                    visitingHero,
+                    H1_ENUM_DECODE(ResourceType, cell->m_objectMetadata),
+                    WINDMILL_RESOURCE_AMOUNT
+                );
                 cell->m_objectMetadata = WINDMILL_EMPTY;
             } else {
                 EventWindow(
@@ -717,11 +725,11 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                 gText,
                 "%s'%s'.",
                 gEventText[EVENT_TEXT_SPELL_SHRINE],
-                gSpellNames[cell->m_objectMetadata - MAP_EVENT_SPELL_OFFSET]
+                gSpellNames[H1_ENUM_DECODE(SpellType, cell->m_objectMetadata - MAP_EVENT_SPELL_OFFSET)]
             );
             if (visitingHero->HasArtifact(ARTIFACT_MAGIC_BOOK)) {
                 visitingHero->AddSpell(
-                    cell->m_objectMetadata - MAP_EVENT_SPELL_OFFSET,
+                    H1_ENUM_DECODE(SpellType, cell->m_objectMetadata - MAP_EVENT_SPELL_OFFSET),
                     visitingHero->m_primaryStats[HERO_PRIMARY_KNOWLEDGE],
                     0
                 );
@@ -805,7 +813,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                         NORMAL_DIALOG_NO_OR_TEXT
                     );
                 giveArtifact:
-                    GiveArtifact(visitingHero, cell->m_objectIndex);
+                    GiveArtifact(visitingHero, H1_ENUM_DECODE(ArtifactType, cell->m_objectIndex));
                     removeObj = 1;
                     fizzleEffect = EVENT_FIZZLE_PICKUP;
                     break;
@@ -835,7 +843,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                         sprintf(
                             gText,
                             gEventText[EVENT_TEXT_ARTIFACT_RECOVERED],
-                            gArtifactNames[cell->m_objectIndex]
+                            gArtifactNames[H1_ENUM_DECODE(ArtifactType, cell->m_objectIndex)]
                         );
                         EventWindow(
                             EVENT_TEXT_CUSTOM,
@@ -854,7 +862,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                     sprintf(
                         gText,
                         gEventText[EVENT_TEXT_LEPRECHAUN_OFFER],
-                        gArtifactNames[cell->m_objectIndex]
+                        gArtifactNames[H1_ENUM_DECODE(ArtifactType, cell->m_objectIndex)]
                     );
                     EventWindow(
                         EVENT_TEXT_CUSTOM,
@@ -933,7 +941,8 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
             gpSearchArray->FindNearestObject(
                 visitingHero->m_x,
                 visitingHero->m_y,
-                visitingHero->m_direction,
+                // Seeds the first search node's direction field.
+                H1_ENUM_ENCODE(MapDirection, visitingHero->m_direction),
                 SEARCH_NO_COST_LIMIT,
                 MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN)
             );
@@ -1014,7 +1023,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                         NORMAL_DIALOG_TYPE_OK,
                         "",
                         NORMAL_DIALOG_ARTIFACT,
-                        artifactId,
+                        H1_ENUM_ENCODE(ArtifactType, artifactId),
                         NORMAL_DIALOG_EXPERIENCE,
                         DAEMON_EXPERIENCE,
                         NORMAL_DIALOG_NO_OR_TEXT
@@ -1140,8 +1149,8 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                         break;
                     default:
                         previousCell = GetCell(
-                            x - normalDirTable[visitingHero->m_direction].x,
-                            y - normalDirTable[visitingHero->m_direction].y
+                            x - normalDirTable[H1_ENUM_ENCODE(MapDirection, visitingHero->m_direction)].x,
+                            y - normalDirTable[H1_ENUM_ENCODE(MapDirection, visitingHero->m_direction)].y
                         );
                         if (GhostEvent(
                                 visitingHero,
@@ -1169,7 +1178,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
         CompleteDraw(0);
     }
     UpdateScreen(0, 0);
-    PlayMusic(m_currentTerrain);
+    PlayMusic(TERRAIN_MUSIC_TRACK(m_currentTerrain));
     gpMouseManager->ReallyShowPointer();
     CheckEndGame(0);
 }
@@ -1184,7 +1193,7 @@ void advManager::EraseObj(class mapCell* cell, i32 x, i32 y) {
     cell->m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_NONE);
     cell->m_objectIndex = MAP_CELL_NO_FRAME;
     if (cell->m_flags & MAP_CELL_OBJECT_ANIMATED)
-        cell->m_flags -= MAP_CELL_OBJECT_ANIMATED;
+        MAP_CELL_SUBTRACT_FLAG(cell->m_flags, MAP_CELL_OBJECT_ANIMATED);
     if ((cell->m_secondaryTrigger & MAP_TRIGGER_TYPE_MASK) > 0
         && (cell->m_secondaryTrigger & MAP_TRIGGER_TYPE_MASK) < 0x7f) {
         cell->m_triggerType = cell->m_secondaryTrigger & MAP_TRIGGER_TYPE_MASK;
@@ -1224,7 +1233,7 @@ void advManager::HeroSwap(class hero* firstHero, class hero* secondHero) {
 VA(0x00426a58, 0x191)
 void advManager::TownEvent(class mapCell* cell, i32 x, i32 y) {
     hero* curHero;
-    i32 result;
+    H1_ENUM_LOCAL(CombatSide, i32) result;
     hero* defender;
     town* recRef;
 
@@ -1269,7 +1278,7 @@ void advManager::TownEvent(class mapCell* cell, i32 x, i32 y) {
 // object type and records that an event track is playing.
 VA(0x00426be9, 0x1dd)
 void advManager::EventSound(H1_ENUM_PARAM(MapObjectType, i16) eventType, i16 eventData) {
-    i32 musicTrack = MUSIC_TRACK_NONE;
+    H1_ENUM_LOCAL(MusicTrack, i32) musicTrack = MUSIC_TRACK_NONE;
 
     switch (eventType) {
         case MAP_OBJECT_STRAW_HUT:
@@ -1289,7 +1298,7 @@ void advManager::EventSound(H1_ENUM_PARAM(MapObjectType, i16) eventType, i16 eve
             musicTrack = MUSIC_TRACK_SPELL_SHRINE;
             break;
         case MAP_OBJECT_ARTIFACT:
-            if (eventData == 1)
+            if (eventData == ARTIFACT_EVENT_MODE_PICKUP)
                 musicTrack = MUSIC_TRACK_TREASURE;
             break;
         case MAP_OBJECT_SKELETON:
@@ -1336,7 +1345,7 @@ void advManager::EventSound(H1_ENUM_PARAM(MapObjectType, i16) eventType, i16 eve
             musicTrack = MUSIC_TRACK_STATUE;
             break;
         case MAP_OBJECT_DESERT_TENT:
-            musicTrack = 0xf;
+            musicTrack = MUSIC_TRACK_DESERT_TENT;
             break;
         case MAP_OBJECT_STONE_LITHS:
             musicTrack = MUSIC_TRACK_TELEPORT;
@@ -1361,7 +1370,7 @@ void advManager::EventSound(H1_ENUM_PARAM(MapObjectType, i16) eventType, i16 eve
 
 VA(0x00426dc6, 0xc0)
 void advManager::EventWindow(
-    i16 eventId,
+    H1_ENUM_PARAM(MapEventTextId, i16) eventId,
     H1_ENUM_PARAM(NormalDialogType, i32) buttons,
     char* text,
     H1_ENUM_PARAM(NormalDialogResourceType, i32) type1,
@@ -1383,7 +1392,7 @@ void advManager::EventWindow(
     stopOk = 0;
     GrabScreen();
     newUnused = 1;
-    if (eventId >= 0 && eventId < EVENT_TEXT_WINDOW_END)
+    if (eventId >= EVENT_TEXT_FIRST && eventId < EVENT_TEXT_WINDOW_END)
         sprintf(eventText, gEventText[eventId]);
     else if (eventId == EVENT_TEXT_CUSTOM)
         sprintf(eventText, text);
@@ -1393,7 +1402,7 @@ void advManager::EventWindow(
 }
 
 VA(0x00426e86, 0x90)
-i16 advManager::GiveArtifact(class hero* eventHero, i8 artifact) {
+i16 advManager::GiveArtifact(class hero* eventHero, H1_ENUM_PARAM(ArtifactType, i8) artifact) {
     i16 slot;
 
     for (slot = 0; slot < HERO_ARTIFACT_SLOT_COUNT; slot++) {
@@ -1401,7 +1410,7 @@ i16 advManager::GiveArtifact(class hero* eventHero, i8 artifact) {
             break;
     }
     if (slot == HERO_ARTIFACT_SLOT_COUNT)
-        return -1;
+        return GIVE_ARTIFACT_NO_SLOT;
     eventHero->m_artifacts[slot] = artifact;
     gpGame->m_randomArtifacts[artifact] = eventHero->m_id;
     GiveTakeArtifactStat(eventHero, artifact, EVENT_ARTIFACT_GIVE);
@@ -1409,8 +1418,8 @@ i16 advManager::GiveArtifact(class hero* eventHero, i8 artifact) {
 }
 
 VA(0x00426f16, 0x4f)
-i32 advManager::GiveRandomArtifact(class hero* eventHero) {
-    i8 artifact;
+H1_ENUM_RETURN(ArtifactType, i32) advManager::GiveRandomArtifact(class hero* eventHero) {
+    H1_ENUM_LOCAL(ArtifactType, i8) artifact;
 
     artifact = gpGame->GetRandomArtifactId();
     if (artifact == ARTIFACT_NONE)
@@ -1443,13 +1452,17 @@ i32 advManager::GiveExperience(class hero* eventHero, i32 experience, i8 checkLe
 }
 
 VA(0x00427003, 0x6a)
-void advManager::GiveResource(class hero* eventHero, i8 resource, i16 amount) {
-    if (resource >= 0 && resource <= RESOURCE_LAST)
+void advManager::GiveResource(class hero* eventHero, H1_ENUM_PARAM(ResourceType, i8) resource, i16 amount) {
+    if (resource >= RESOURCE_FIRST && resource <= RESOURCE_LAST)
         gpGame->m_players[eventHero->m_owner].m_resources[resource] += amount;
 }
 
 VA(0x0042706d, 0xbf)
-void advManager::RecruitEvent(class hero* eventHero, i32 creatureType, class mapCell* cell) {
+void advManager::RecruitEvent(
+    class hero* eventHero,
+    H1_ENUM_PARAM(CreatureType, i32) creatureType,
+    class mapCell* cell
+) {
     tag_message recruitMessage;
     i16 availableCount;
     recruitUnit* recruitWindow;
@@ -1465,8 +1478,14 @@ void advManager::RecruitEvent(class hero* eventHero, i32 creatureType, class map
 }
 
 VA(0x0042712c, 0x2ac)
-i8 advManager::GhostEvent(class hero* eventHero, class mapCell* cell, i32 textId, i32 x, i32 y) {
-    i32 artifact;
+i8 advManager::GhostEvent(
+    class hero* eventHero,
+    class mapCell* cell,
+    H1_ENUM_PARAM(MapEventTextId, i32) textId,
+    i32 x,
+    i32 y
+) {
+    H1_ENUM_LOCAL(ArtifactType, i32) artifact;
 
     switch (cell->m_objectMetadata) {
         case GHOST_SITE_SMALL:
@@ -1569,7 +1588,7 @@ i8 advManager::GhostEvent(class hero* eventHero, class mapCell* cell, i32 textId
                         NORMAL_DIALOG_RESOURCE_GOLD,
                         GHOST_HUGE_GOLD,
                         NORMAL_DIALOG_ARTIFACT,
-                        artifact,
+                        H1_ENUM_ENCODE(ArtifactType, artifact),
                         NORMAL_DIALOG_NO_OR_TEXT
                     );
                 else
@@ -1599,7 +1618,7 @@ void advManager::HouseEvent(class hero* eventHero, class mapCell* cell) {
     houseIndex = MAP_TRIGGER_OBJECT(cell->m_triggerType) - MAP_OBJECT_HOUSE_FIRST;
     if (!cell->m_objectMetadata) {
         EventWindow(
-            houseIndex * EVENT_TEXT_HOUSE_STRIDE + EVENT_TEXT_HOUSE_EMPTY,
+            EVENT_TEXT_HOUSE(houseIndex, EVENT_TEXT_HOUSE_EMPTY),
             NORMAL_DIALOG_TYPE_OK,
             "",
             NORMAL_DIALOG_NO_RESOURCE,
@@ -1609,11 +1628,11 @@ void advManager::HouseEvent(class hero* eventHero, class mapCell* cell) {
             NORMAL_DIALOG_NO_OR_TEXT
         );
     } else {
-        i8 creatures[EVENT_HOUSE_COUNT] =
+        H1_ENUM_LOCAL(CreatureType, i8) creatures[EVENT_HOUSE_COUNT] =
             {CREATURE_GOBLIN, CREATURE_PEASANT, CREATURE_ARCHER, CREATURE_DWARF, CREATURE_PEASANT};
 
         EventWindow(
-            houseIndex * EVENT_TEXT_HOUSE_STRIDE + EVENT_TEXT_HOUSE_RECRUIT,
+            EVENT_TEXT_HOUSE(houseIndex, EVENT_TEXT_HOUSE_RECRUIT),
             NORMAL_DIALOG_TYPE_YES_NO,
             "",
             NORMAL_DIALOG_NO_RESOURCE,
@@ -1629,7 +1648,7 @@ void advManager::HouseEvent(class hero* eventHero, class mapCell* cell) {
                 cell->m_objectMetadata = MAP_EVENT_DATA_EMPTY;
             } else {
                 EventWindow(
-                    houseIndex * EVENT_TEXT_HOUSE_STRIDE + EVENT_TEXT_HOUSE_RANKS_FULL,
+                    EVENT_TEXT_HOUSE(houseIndex, EVENT_TEXT_HOUSE_RANKS_FULL),
                     NORMAL_DIALOG_TYPE_OK,
                     "",
                     NORMAL_DIALOG_NO_RESOURCE,
@@ -1644,9 +1663,9 @@ void advManager::HouseEvent(class hero* eventHero, class mapCell* cell) {
 }
 
 VA(0x004274db, 0x1e2)
-i8 advManager::CombatMonsterEvent(
+H1_ENUM_RETURN(CombatSide, i8) advManager::CombatMonsterEvent(
     class hero* eventHero,
-    i8 monsterType,
+    H1_ENUM_PARAM(CreatureType, i8) monsterType,
     i16 count,
     class mapCell* cell,
     i32 x,
@@ -1656,7 +1675,7 @@ i8 advManager::CombatMonsterEvent(
     i32 fromY
 ) {
     i16 i;
-    i32 res;
+    H1_ENUM_LOCAL(CombatSide, i32) res;
 
     DemobilizeCurrHero();
     if (fromX == -1) {
@@ -1715,8 +1734,12 @@ i8 advManager::CombatMonsterEvent(
 
 // Per-artifact primary-stat bonuses, called through gpAdvManager.
 VA(0x004276bd, 0x1e4)
-void advManager::GiveTakeArtifactStat(class hero* targetHero, i8 artifact, i8 take) {
-    i8 theStat = HERO_PRIMARY_NONE;
+void advManager::GiveTakeArtifactStat(
+    class hero* targetHero,
+    H1_ENUM_PARAM(ArtifactType, i8) artifact,
+    H1_ENUM_PARAM(EventArtifactStat, i8) take
+) {
+    H1_ENUM_LOCAL(HeroPrimaryStat, i8) theStat = HERO_PRIMARY_NONE;
     i8 amount = 0;
     i32 i;
 
@@ -1844,7 +1867,7 @@ void advManager::TransferArtifacts(class hero* sourceHero, class hero* destHero)
                                 -1,
                                 -1,
                                 NORMAL_DIALOG_ARTIFACT,
-                                sourceHero->m_artifacts[j]
+                                H1_ENUM_ENCODE(ArtifactType, sourceHero->m_artifacts[j])
                             );
                         }
                         gpGame->m_randomArtifacts[sourceHero->m_artifacts[j]] = HERO_ID_NONE;
@@ -1918,7 +1941,7 @@ void advManager::DoWhirlpool(class hero* eventHero) {
 }
 
 VA(0x00427c1b, 0xc2)
-void advManager::FizzleCenter(i32 fizzleType) {
+void advManager::FizzleCenter(H1_ENUM_PARAM(EventFizzleType, i32) fizzleType) {
     class sample* fizzleSample;
 
     if (!bShowIt)
@@ -1956,13 +1979,13 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
     i32 handled;
     i32 c;
     i32 recruited;
-    i32 recruitType;
+    H1_ENUM_LOCAL(CreatureType, i32) recruitType;
     i32 isFree;
     i32 oldPlayer;
     i32 eventWork[4];
     i8 removeEvent;
     hero* opponent;
-    i32 res;
+    H1_ENUM_LOCAL(CombatSide, i32) res;
     i32 battleResult;
     H1_ENUM_LOCAL(MapObjectType, i8) eventType;
     i8 teleX;
@@ -1970,14 +1993,14 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
     i8 teleY;
     i32 armyStrength;
     i8 portalCount;
-    i32 eventResource;
+    H1_ENUM_LOCAL(ResourceType, i32) eventResource;
     i8 priorShowIt;
     boatRecord* boat;
     i32 success;
     i8 guardMonster;
     float theirLosses;
     float ourLosses;
-    i32 troopCost[RESOURCE_COUNT];
+    H1_ENUM_ARRAY(i32, troopCost, ResourceType, RESOURCE_COUNT);
 
     heroTown = NULL;
     eventType = MAP_TRIGGER_OBJECT(cell->m_triggerType);
@@ -1993,7 +2016,8 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                 eventHero->m_eventFlags &= ~HERO_EVENT_EMBARKED;
                 eventHero->m_remainingMobility = 0;
                 eventHero->m_direction = m_cursorDirection;
-                m_cursorType = eventHero->m_heroClass;
+                // A hero's class names its sprite's icon slot.
+                m_cursorType = H1_ENUM_DECODE(AdventureHeroIcon, eventHero->m_heroClass);
                 m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
                 m_cursorActive = 1;
                 CheckAdjacentMon(&guardMonster);
@@ -2117,7 +2141,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
             );
             GiveResource(
                 eventHero,
-                cell->m_objectMetadata & CAMPFIRE_RESOURCE_MASK,
+                H1_ENUM_DECODE(ResourceType, cell->m_objectMetadata & CAMPFIRE_RESOURCE_MASK),
                 cell->m_objectMetadata >> CAMPFIRE_AMOUNT_SHIFT
             );
             removeEvent = 1;
@@ -2141,7 +2165,8 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
             }
             break;
         case MAP_OBJECT_RESOURCE:
-            eventResource = cell->m_objectIndex - RESOURCE_PILE_OBJECT_BASE;
+            // A resource pile's object frame selects its resource.
+            eventResource = H1_ENUM_DECODE(ResourceType, cell->m_objectIndex - RESOURCE_PILE_OBJECT_BASE);
             GiveResource(
                 eventHero,
                 eventResource,
@@ -2153,7 +2178,11 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
             break;
         case MAP_OBJECT_WINDMILL:
             if (cell->m_objectMetadata != WINDMILL_EMPTY) {
-                GiveResource(eventHero, cell->m_objectMetadata, WINDMILL_RESOURCE_AMOUNT);
+                GiveResource(
+                    eventHero,
+                    H1_ENUM_DECODE(ResourceType, cell->m_objectMetadata),
+                    WINDMILL_RESOURCE_AMOUNT
+                );
                 cell->m_objectMetadata = WINDMILL_EMPTY;
             }
             break;
@@ -2205,8 +2234,11 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                     cell->m_objectMetadata -= recruited;
                     if (!isFree) {
                         GetMonsterCost(recruitType, troopCost);
-                        for (c = 0; c < RESOURCE_COUNT; c++)
-                            gpCurPlayer->m_resources[c] -= recruited * troopCost[c];
+                        // c also holds the guard count philAI updates through
+                        // its address, so the resource loop decodes it.
+                        for (c = 0; c < H1_ENUM_ENCODE(ResourceType, RESOURCE_COUNT); c++)
+                            gpCurPlayer->m_resources[H1_ENUM_DECODE(ResourceType, c)] -=
+                                recruited * troopCost[H1_ENUM_DECODE(ResourceType, c)];
                     }
                 }
             }
@@ -2227,7 +2259,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
         case MAP_OBJECT_SPELL_SHRINE:
             if (eventHero->HasArtifact(ARTIFACT_MAGIC_BOOK))
                 eventHero->AddSpell(
-                    cell->m_objectMetadata - MAP_EVENT_SPELL_OFFSET,
+                    H1_ENUM_DECODE(SpellType, cell->m_objectMetadata - MAP_EVENT_SPELL_OFFSET),
                     eventHero->m_primaryStats[HERO_PRIMARY_KNOWLEDGE],
                     0
                 );
@@ -2274,7 +2306,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
             switch (cell->m_objectMetadata) {
                 case ARTIFACT_EVENT_MODE_PICKUP:
                 giveArtifact:
-                    GiveArtifact(eventHero, cell->m_objectIndex);
+                    GiveArtifact(eventHero, H1_ENUM_DECODE(ArtifactType, cell->m_objectIndex));
                     removeEvent = 1;
                     break;
                 case ARTIFACT_EVENT_MODE_GUARDED:
@@ -2285,7 +2317,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                 case ARTIFACT_EVENT_MODE_GOLD:
                     if (gpPhilAI->ChooseToBuyArtifact(
                             eventHero,
-                            cell->m_objectIndex,
+                            H1_ENUM_DECODE(ArtifactType, cell->m_objectIndex),
                             ARTIFACT_EVENT_GOLD_COST
                         )) {
                         gpGame->m_players[eventHero->m_owner].m_resources[RESOURCE_GOLD] -=
@@ -2405,18 +2437,18 @@ void advManager::PlayerMonsterInteract(
     i32 combatX,
     i32 combatY
 ) {
-    i32 result;
+    H1_ENUM_LOCAL(CombatSide, i32) result;
 
     unused = 0;
     if (cell->m_objectMetadata & MONSTER_WILLING_FLAG) {
         if (gpPhilAI->FightValueOfStack(&eventHero->m_army, eventHero, 0)
             > (cell->m_objectMetadata & MONSTER_COUNT_MASK)
-                  * gMonsterDatabase[cell->m_objectIndex].fightValue * 1.75) {
-            if (eventHero->m_army.CanJoin(cell->m_objectIndex)) {
+                  * gMonsterDatabase[H1_ENUM_DECODE(CreatureType, cell->m_objectIndex)].fightValue * 1.75) {
+            if (eventHero->m_army.CanJoin(H1_ENUM_DECODE(CreatureType, cell->m_objectIndex))) {
                 sprintf(
                     gText,
                     gEventText[EVENT_TEXT_FOLLOWERS],
-                    gArmyNamesPlural[cell->m_objectIndex]
+                    gArmyNamesPlural[H1_ENUM_DECODE(CreatureType, cell->m_objectIndex)]
                 );
                 EventWindow(
                     EVENT_TEXT_CUSTOM,
@@ -2430,7 +2462,7 @@ void advManager::PlayerMonsterInteract(
                 );
                 if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                     eventHero->m_army.Add(
-                        cell->m_objectIndex,
+                        H1_ENUM_DECODE(CreatureType, cell->m_objectIndex),
                         cell->m_objectMetadata & MONSTER_COUNT_MASK,
                         ARMY_GROUP_EMPTY_SLOT
                     );
@@ -2453,7 +2485,7 @@ void advManager::PlayerMonsterInteract(
     }
     result = CombatMonsterEvent(
         eventHero,
-        cell->m_objectIndex,
+        H1_ENUM_DECODE(CreatureType, cell->m_objectIndex),
         cell->m_objectMetadata & MONSTER_COUNT_MASK,
         combatCell,
         x,
@@ -2479,10 +2511,10 @@ void advManager::ComputerMonsterInteract(class mapCell* cell, class hero* eventH
     if (cell->m_objectMetadata & MONSTER_WILLING_FLAG
         && gpPhilAI->FightValueOfStack(&eventHero->m_army, eventHero, 0)
                > (cell->m_objectMetadata & MONSTER_COUNT_MASK)
-                     * gMonsterDatabase[cell->m_objectIndex].fightValue * 1.75) {
+                     * gMonsterDatabase[H1_ENUM_DECODE(CreatureType, cell->m_objectIndex)].fightValue * 1.75) {
         gpPhilAI->EvaluateOneTimeCreaturePurchase(
             eventHero,
-            cell->m_objectIndex,
+            H1_ENUM_DECODE(CreatureType, cell->m_objectIndex),
             cell->m_objectMetadata & MONSTER_COUNT_MASK,
             1,
             numToBuy,
@@ -2492,7 +2524,7 @@ void advManager::ComputerMonsterInteract(class mapCell* cell, class hero* eventH
         if (numToBuy > 0) {
             gpGame->GiveArmy(
                 &eventHero->m_army,
-                cell->m_objectIndex,
+                H1_ENUM_DECODE(CreatureType, cell->m_objectIndex),
                 cell->m_objectMetadata & MONSTER_COUNT_MASK,
                 bestSlot
             );
@@ -2500,8 +2532,12 @@ void advManager::ComputerMonsterInteract(class mapCell* cell, class hero* eventH
         }
     } else {
         creatureCountIdx = cell->m_objectMetadata & MONSTER_COUNT_MASK;
-        retVal =
-            gpPhilAI->CombatMonsterEvent(eventHero, cell->m_objectIndex, &creatureCountIdx, cell);
+        retVal = gpPhilAI->CombatMonsterEvent(
+            eventHero,
+            H1_ENUM_DECODE(CreatureType, cell->m_objectIndex),
+            &creatureCountIdx,
+            cell
+        );
         cell->m_objectMetadata = (cell->m_objectMetadata & MONSTER_WILLING_FLAG) + creatureCountIdx;
         if (retVal)
             *handled = 1;
@@ -2549,18 +2585,22 @@ i32 advManager::DoNetCombat(char* packet) {
         &gbCombatSurrender
     );
     party = nextAttacker->m_owner;
-    res = DoCombat(
-        curPosX,
-        theCellY,
-        nextAttacker,
-        selAttArmyPtr,
-        tempTown,
-        leader,
-        defendArmy,
-        sx,
-        curStartY,
-        randSeed,
-        0
+    // The result goes back to the remote player as the record's result byte.
+    res = H1_ENUM_ENCODE(
+        CombatSide,
+        DoCombat(
+            curPosX,
+            theCellY,
+            nextAttacker,
+            selAttArmyPtr,
+            tempTown,
+            leader,
+            defendArmy,
+            sx,
+            curStartY,
+            randSeed,
+            0
+        )
     );
     if (!gbHumanPlayer[party])
         SendHeroTownData(
@@ -2594,7 +2634,7 @@ i32 advManager::DoNetCombat(char* packet) {
 }
 
 VA(0x00429107, 0x584)
-i32 advManager::DoCombat(
+H1_ENUM_RETURN(CombatSide, i32) advManager::DoCombat(
     i32 x,
     i32 y,
     class hero* firstHero,
@@ -2706,7 +2746,7 @@ i32 advManager::DoCombat(
                                     memcpy(firstHero, hero1Net, sizeof(hero));
                                     free(hero1Net);
                                 }
-                                gpCombatManager->m_combatResult = res;
+                                gpCombatManager->m_combatResult = H1_ENUM_DECODE(CombatSide, res);
                                 goto combatFinished;
                         }
                     }

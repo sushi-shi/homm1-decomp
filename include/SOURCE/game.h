@@ -4,6 +4,9 @@
 #include <BASE/message.h>
 #include <Domains.h>
 #include <H1/Macros.h>
+#include <SOURCE/combatTypes.h>
+#include <SOURCE/dialogTypes.h>
+#include <SOURCE/fileRequester.h>
 #include <SOURCE/gameTypes.h>
 #include <SOURCE/hero.h>
 #include <SOURCE/mapCell.h>
@@ -186,7 +189,10 @@ H1_ENUM_CONST_END(SaveFileConstant)
 struct mineRecord {
     i8 id;
     i8 owner;
-    i8 type;
+    // The resource the mine produces. The two unique sites' records
+    // (MINE_SLOT_DRAGON_CITY, MINE_SLOT_LIGHTHOUSE) hold their MapObjectType
+    // in this byte instead (ClaimMine switches on both encodings).
+    H1_ENUM_STORAGE(ResourceType, i8) type;
     i8 guardianType;
     u8 guardianCount;
     // GetMineId sign-extends both coordinates.
@@ -202,7 +208,7 @@ struct boatRecord {
     i8 id;
     i8 x;
     i8 y;
-    i8 direction;
+    H1_ENUM_STORAGE(MapDirection, i8) direction;
     u8 savedTriggerType;
     u8 savedEventData;
     i8 heroId;
@@ -238,7 +244,7 @@ struct mapTownExtra {
     i8 owner;
     i16 buildings;
     i8 buildState;
-    i8 troopTypes[ARMY_GROUP_SLOT_COUNT];
+    H1_ENUM_STORAGE(CreatureType, i8) troopTypes[ARMY_GROUP_SLOT_COUNT];
     i16 troopCounts[ARMY_GROUP_SLOT_COUNT];
 };
 #pragma pack(pop)
@@ -248,10 +254,10 @@ struct mapTownExtra {
 #pragma pack(push, 1)
 struct mapHeroExtra {
     i8 owner;
-    i8 troopTypes[ARMY_GROUP_SLOT_COUNT];
+    H1_ENUM_STORAGE(CreatureType, i8) troopTypes[ARMY_GROUP_SLOT_COUNT];
     i16 troopCounts[ARMY_GROUP_SLOT_COUNT];
     i8 heroId;
-    i8 artifacts[MAP_HERO_EXTRA_ARTIFACT_COUNT];
+    H1_ENUM_STORAGE(ArtifactType, i8) artifacts[MAP_HERO_EXTRA_ARTIFACT_COUNT];
     i32 experience;
 };
 #pragma pack(pop)
@@ -276,14 +282,14 @@ public:
     i32 m_campaignDay;
     // NewGame copies the chosen map's size, difficulty, title and
     // description; ShowCongrats files the title with the high score.
-    i8 m_mapSize;
-    i8 m_mapDifficulty;
+    H1_ENUM_STORAGE(MapSize, i8) m_mapSize;
+    H1_ENUM_STORAGE(MapDifficulty, i8) m_mapDifficulty;
     char m_mapName[0x11];
     char m_mapDescription[0x79];
     // SaveGame/LoadGame and the save requester's default name.
     char m_saveName[0x15f];
     // InitEntireCampaign stores 3 here.
-    i8 m_difficulty;
+    H1_ENUM_STORAGE(GameDifficulty, i8) m_difficulty;
     i8 m_playerCount;
     i8 m_unused200;
     i8 m_deadPlayerCount;
@@ -317,7 +323,7 @@ public:
     u8 m_mapExtra[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
     i8 m_ultimateArtifactX;
     i8 m_ultimateArtifactY;
-    i8 m_ultimateArtifactId;
+    H1_ENUM_STORAGE(ArtifactType, i8) m_ultimateArtifactId;
     // NewGame's newgame.bin window.
     class heroWindow* m_newGameWindow;
     i8 m_unused16e5d;
@@ -332,7 +338,7 @@ public:
     class hero* m_viewSpellsHero;
     i16 m_spellFirst;
     i16 m_spellLast;
-    i16 m_viewSpell;
+    H1_ENUM_STORAGE(SpellType, i16) m_viewSpell;
     i16 m_viewSpellsTop;
     H1_ENUM_RETURN(MessageDispatchResult, i16) (*m_viewSpellsCallback)(struct tag_message&);
     i8 m_viewSpellsReadOnly;
@@ -406,7 +412,7 @@ public:
     void ClaimTown(i8 townId, i8 player);
     void ClaimMine(i8 mineId, i8 player);
     // HoMM1 retail: byte spell type and read-only flag, spell in AL (ret 0x10).
-    i8 ViewSpells(
+    H1_ENUM_RETURN(SpellType, i8) ViewSpells(
         class hero* spellHero,
         H1_ENUM_PARAM(HeroSpellType, i8) spellType,
         H1_ENUM_RETURN(MessageDispatchResult, i16) (*callback)(struct tag_message&),
@@ -421,18 +427,18 @@ public:
     void ViewArmy(
         i16 x,
         i16 y,
-        i8 monsterType,
+        H1_ENUM_PARAM(CreatureType, i8) monsterType,
         i16 numTroops,
         class town* castle,
         i8 disableDismiss,
-        i8 facing,
+        H1_ENUM_PARAM(ArmyFacing, i8) facing,
         i8 quickView,
         class hero* theHero,
         class army* theArmy,
         class armyGroup* theGroup
     );
     // HoMM1 retail: byte creature, count returned in AL.
-    i8 GetRandomNumTroops(i8 monsterType);
+    i8 GetRandomNumTroops(H1_ENUM_PARAM(CreatureType, i8) monsterType);
     void TurnOnAIMusic(void);
     void TurnOffAIMusic(void);
     void NextPlayer(void);
@@ -462,19 +468,19 @@ public:
     // HoMM1 retail 0x00442fb4 (ret 8): default dwellings and mage-guild spells.
     void SetupTown(i8 townId, i8 aiOwned);
     void InitRandomArtifacts(void);
-    i8 GetRandomArtifactId(void);
+    H1_ENUM_RETURN(ArtifactType, i8) GetRandomArtifactId(void);
     void RandomizeHeroPool(void);
     void SetRandomHeroArmies(i16 heroId, i32 strongArmy);
     // HoMM1 retail: towns-only pass flag (ret 4).
     void ProcessRandomObjects(i32 castlesOnly);
     void SetVisibility(i16 x, i16 y, i16 player, i16 radius);
     void MakeAllWaterVisible(i32 player);
-    void GiveArmy(class armyGroup* group, i32 type, i32 count, i32 slot);
+    void GiveArmy(class armyGroup* group, H1_ENUM_PARAM(CreatureType, i32) type, i32 count, i32 slot);
     i32 ExperienceValueOfStack(class armyGroup* group, class hero* h);
     // HoMM1 retail: hero and army only (ret 8).
     i32 GetLuck(class hero* h, class army*);
     // Enemy-turn crest reads widen the stored color to a signed short.
-    i16 GetPlayerColor(i32 player) {
+    H1_ENUM_RETURN(PlayerColor, i16) GetPlayerColor(i32 player) {
         return m_players[player].m_color;
     }
     void SetupAdjacentMons(void);
@@ -509,8 +515,8 @@ public:
     void SetupNewRumour(void);
     void CheckForTimeEvent(void);
     i32 CountShrines(i32 player);
-    void ShowMoraleInfo(class hero* h, i32 dialogType);
-    void ShowLuckInfo(class hero* h, i32 dialogType);
+    void ShowMoraleInfo(class hero* h, H1_ENUM_PARAM(NormalDialogType, i32) dialogType);
+    void ShowLuckInfo(class hero* h, H1_ENUM_PARAM(NormalDialogType, i32) dialogType);
     // Retail GetMap never reads ecx; its caller passes no this.
     static void GetMap(void);
     void ProcessNewMap(struct SMapHeader* header);
@@ -549,16 +555,15 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) ViewSpecialHandler(struct tag_message
 H1_ENUM_RETURN(MessageDispatchResult, i16) ViewArmyHandler(struct tag_message& message);
 i32 GetBaseScore(i32 days);
 extern i32 gGameOver;
-extern i32 gEndSequence;
 // SaveGame files the current player through this byte.
 extern i8 gSaveCurPlayer;
 // NewGame remembers the last new-game settings for the next setup screen.
-extern i8 gSavedDifficulty;
+extern H1_ENUM_STORAGE(GameDifficulty, i8) gSavedDifficulty;
 extern i8 gSavedPlayerTypes[];
 extern i8 gSavedKingOfTheHill;
-extern i8 gSavedCrest;
-extern i8 gRandomTownTypes[4];
-extern i16 gMineTypeCount[];
+extern H1_ENUM_STORAGE(PlayerColor, i8) gSavedCrest;
+extern H1_ENUM_STORAGE(TownType, i8) gRandomTownTypes[4];
+extern H1_ENUM_ARRAY(i16, gMineTypeCount, ResourceType, RESOURCE_COUNT);
 extern i32 gLastSeed;
 i32 SGenRand(void);
 i32 SRandom(i32 low, i32 high);
@@ -609,6 +614,7 @@ H1_ENUM_CONST_END(NewGameFrame)
 // NewGameHandler's right-click help: the gNewGameHelp row shown.
 H1_ENUM_BEGIN(NewGameHelp)
     NEW_GAME_HELP_NONE = -1,
+    NEW_GAME_HELP_FIRST = 0,
     NEW_GAME_HELP_ACCEPT = 0,
     NEW_GAME_HELP_MAIN_MENU = 1,
     NEW_GAME_HELP_KING_OF_THE_HILL = 2,
@@ -617,7 +623,8 @@ H1_ENUM_BEGIN(NewGameHelp)
     NEW_GAME_HELP_OPPONENT = 5,
     NEW_GAME_HELP_COLOR = 6,
     NEW_GAME_HELP_RATING = 7,
-    NEW_GAME_HELP_HUMAN_OPPONENT = 8
+    NEW_GAME_HELP_HUMAN_OPPONENT = 8,
+    NEW_GAME_HELP_COUNT = 9
 H1_ENUM_END(NewGameHelp)
 
 // GiveTroopsToNeutralTowns: a 1..15 roll picks the tier, whose key plus the

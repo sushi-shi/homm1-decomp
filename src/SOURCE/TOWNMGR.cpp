@@ -56,7 +56,8 @@ townObject::townObject(char* name) {
     char fileNameText[16];
     i16 w;
     i16 temp;
-    i16 id;
+    // The .tod resource id, then the building id the file names.
+    H1_ENUM_SHARED(BuildingSlotType, i16) id;
     i16 x;
     i16 h;
     i16 y;
@@ -138,7 +139,7 @@ townManager::townManager(void) {
     m_townObjectCount = 0;
     m_heroWindow0 = NULL;
     m_coverWindow = NULL;
-    m_selectedBuilding = TOWN_BUILDING_NONE;
+    m_selectedBuilding = BUILDING_SLOT_NONE;
     m_castleDialogActive = 0;
     m_dispatchMask = TOWN_MANAGER_DISPATCH_MASK;
 }
@@ -180,8 +181,8 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) townManager::Open(i16 id) {
                 sprintf(
                     gText,
                     "%s%s",
-                    gTownObjectNames[TOWN_FIRST_FACTION_OBJECT + m_town->m_type],
-                    gTownObjectNames[buildId + TOWN_TYPE_COUNT]
+                    gTownObjectNames[TOWN_FIRST_FACTION_OBJECT + H1_ENUM_ENCODE(TownType, m_town->m_type)],
+                    gTownObjectNames[buildId + H1_ENUM_ENCODE(TownType, TOWN_TYPE_COUNT)]
                 );
             m_townObjects[m_townObjectCount] = new townObject(gText);
             if (m_townObjects[m_townObjectCount] == NULL)
@@ -201,7 +202,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) townManager::Open(i16 id) {
     }
     glTimers[TOWN_FRAME_TIMER_SLOT] = KBTickCount() + TOWN_REDRAW_INTERVAL;
     gpWindowManager->AddWindow(m_townWindow, 0, 1);
-    crestFrame = gpCurPlayer->m_color;
+    crestFrame = H1_ENUM_ENCODE(PlayerColor, gpCurPlayer->m_color);
     if (m_town->m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE) {
         crestFrame *= HERO_CLASS_COUNT;
         crestFrame += gpGame->GetHero(m_town->m_occupyingHeroId)->m_heroClass;
@@ -236,7 +237,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) townManager::Open(i16 id) {
         );
         if (m_heroStrip == NULL)
             MemError();
-        if (m_town->m_buildings & (1 << BUILDING_SLOT_MAGE_GUILD))
+        if (m_town->m_buildings & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_MAGE_GUILD))
             m_town->GiveSpells();
     } else {
         m_heroStrip = new strip(
@@ -406,6 +407,7 @@ void townManager::SetCommandAndText(struct tag_message& message) {
 
     id = message.id;
     m_command = TOWN_ARMY_COMMAND_NONE;
+    // A town object's border carries its building slot as the widget id.
     switch (id) {
         case TOWN_CLOSE_CONTROL:
             strcpy(m_statusText, gTownCommand[TOWN_TEXT_EXIT]);
@@ -474,36 +476,66 @@ void townManager::SetCommandAndText(struct tag_message& message) {
                 }
             }
             break;
-        case BUILDING_SLOT_MAGE_GUILD:
-            strcpy(m_statusText, gTownCommand[TOWN_TEXT_BUILDING_0 + BUILDING_SLOT_MAGE_GUILD]);
+        case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_MAGE_GUILD):
+            strcpy(
+                m_statusText,
+                gTownCommand[TOWN_TEXT_BUILDING_0
+                             + H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_MAGE_GUILD)]
+            );
             break;
-        case BUILDING_SLOT_THIEVES_GUILD:
-            strcpy(m_statusText, gTownCommand[TOWN_TEXT_BUILDING_0 + BUILDING_SLOT_THIEVES_GUILD]);
+        case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_THIEVES_GUILD):
+            strcpy(
+                m_statusText,
+                gTownCommand[TOWN_TEXT_BUILDING_0
+                             + H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_THIEVES_GUILD)]
+            );
             break;
-        case BUILDING_SLOT_TAVERN:
-            strcpy(m_statusText, gTownCommand[TOWN_TEXT_BUILDING_0 + BUILDING_SLOT_TAVERN]);
+        case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_TAVERN):
+            strcpy(
+                m_statusText,
+                gTownCommand[TOWN_TEXT_BUILDING_0
+                             + H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_TAVERN)]
+            );
             break;
-        case BUILDING_SLOT_SHIPYARD:
-            strcpy(m_statusText, gTownCommand[TOWN_TEXT_BUILDING_0 + BUILDING_SLOT_SHIPYARD]);
+        case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_SHIPYARD):
+            strcpy(
+                m_statusText,
+                gTownCommand[TOWN_TEXT_BUILDING_0
+                             + H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_SHIPYARD)]
+            );
             break;
-        case BUILDING_SLOT_WELL:
-            strcpy(m_statusText, gTownCommand[TOWN_TEXT_BUILDING_0 + BUILDING_SLOT_WELL]);
+        case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_WELL):
+            strcpy(
+                m_statusText,
+                gTownCommand[TOWN_TEXT_BUILDING_0
+                             + H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_WELL)]
+            );
             break;
-        case BUILDING_SLOT_TENT:
-            strcpy(m_statusText, gTownCommand[TOWN_TEXT_BUILDING_0 + BUILDING_SLOT_TENT]);
+        case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_TENT):
+            strcpy(
+                m_statusText,
+                gTownCommand[TOWN_TEXT_BUILDING_0
+                             + H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_TENT)]
+            );
             break;
-        case BUILDING_SLOT_CASTLE:
-            strcpy(m_statusText, gTownCommand[TOWN_TEXT_BUILDING_0 + BUILDING_SLOT_CASTLE]);
+        case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_CASTLE):
+            strcpy(
+                m_statusText,
+                gTownCommand[TOWN_TEXT_BUILDING_0
+                             + H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_CASTLE)]
+            );
             break;
-        case BUILDING_SLOT_DWELLING_1:
-        case BUILDING_SLOT_DWELLING_2:
-        case BUILDING_SLOT_DWELLING_3:
-        case BUILDING_SLOT_DWELLING_4:
-        case BUILDING_SLOT_DWELLING_5:
-        case BUILDING_SLOT_DWELLING_6:
+        case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_DWELLING_1):
+        case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_DWELLING_2):
+        case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_DWELLING_3):
+        case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_DWELLING_4):
+        case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_DWELLING_5):
+        case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_DWELLING_6):
             strcpy(
                 s_dwellingArmyName,
-                gArmyNamesPlural[gDwellingType[m_town->m_type][id - BUILDING_SLOT_DWELLING_FIRST]]
+                gArmyNamesPlural[gDwellingType[m_town->m_type]
+                                              [H1_ENUM_DECODE(BuildingSlotType, id)
+                                               - BUILDING_SLOT_DWELLING_FIRST]]
             );
             s_dwellingArmyName[0] = CyrillicToLower(s_dwellingArmyName[0]);
             sprintf(m_statusText, gTownCommand[TOWN_TEXT_DWELLING], s_dwellingArmyName);
@@ -558,30 +590,39 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) townManager::Main(struct tag_message&
         case MESSAGE_WIDGET:
             switch (message.command) {
                 case WIDGET_NOTIFY_SELECT:
+                    // A town object's border carries its building slot as the
+                    // widget id.
                     switch (message.id) {
-                        case BUILDING_SLOT_DWELLING_1:
-                        case BUILDING_SLOT_DWELLING_2:
-                        case BUILDING_SLOT_DWELLING_3:
-                        case BUILDING_SLOT_DWELLING_4:
-                        case BUILDING_SLOT_DWELLING_5:
-                        case BUILDING_SLOT_DWELLING_6:
+                        case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_DWELLING_1):
+                        case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_DWELLING_2):
+                        case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_DWELLING_3):
+                        case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_DWELLING_4):
+                        case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_DWELLING_5):
+                        case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_DWELLING_6):
                             if (rightButton) {
-                                QuickViewRecruit(m_town, message.id - BUILDING_SLOT_DWELLING_FIRST);
+                                QuickViewRecruit(
+                                    m_town,
+                                    H1_ENUM_DECODE(BuildingSlotType, message.id)
+                                        - BUILDING_SLOT_DWELLING_FIRST
+                                );
                                 break;
                             }
                             gpMouseManager->ReallyHidePointer();
                             DrawTown(1, 1);
-                            recruitMgr =
-                                new recruitUnit(m_town, message.id - BUILDING_SLOT_DWELLING_FIRST);
+                            recruitMgr = new recruitUnit(
+                                m_town,
+                                H1_ENUM_DECODE(BuildingSlotType, message.id)
+                                    - BUILDING_SLOT_DWELLING_FIRST
+                            );
                             if (recruitMgr == NULL)
                                 MemError();
                             gpExec->DoDialog(recruitMgr);
                             delete recruitMgr;
                             break;
-                        case BUILDING_SLOT_MAGE_GUILD:
-                        case BUILDING_SLOT_THIEVES_GUILD:
-                        case BUILDING_SLOT_WELL:
-                        case BUILDING_SLOT_CASTLE:
+                        case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_MAGE_GUILD):
+                        case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_THIEVES_GUILD):
+                        case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_WELL):
+                        case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_CASTLE):
                             if (rightButton)
                                 break;
                             gpWindowManager->BroadcastMessage(
@@ -596,7 +637,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) townManager::Main(struct tag_message&
                                 MemError();
                             gpWindowManager->AddWindow(m_coverWindow, WINDOW_Z_ORDER_APPEND, 1);
                             m_heroWindow0 = NULL;
-                            switch (message.id) {
+                            switch (H1_ENUM_DECODE(BuildingSlotType, message.id)) {
                                 case BUILDING_SLOT_CASTLE:
                                     gpWindowManager->SaveFizzleSource(0, 0x100, 0x228, 0xcc);
                                     m_heroWindow0 = new heroWindow(0, 0, "caslwind.bin");
@@ -693,7 +734,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) townManager::Main(struct tag_message&
                                 delete m_heroWindow0;
                             gpWindowManager->RemoveWindow(m_coverWindow);
                             delete m_coverWindow;
-                            if (m_selectedBuilding != TOWN_BUILDING_NONE)
+                            if (m_selectedBuilding != BUILDING_SLOT_NONE)
                                 BuildObj(m_selectedBuilding);
                             if (m_recruitResult) {
                                 hero* visitingHero;
@@ -729,12 +770,12 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) townManager::Main(struct tag_message&
                                 WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED
                             );
                             break;
-                        case BUILDING_SLOT_TAVERN:
+                        case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_TAVERN):
                             if (rightButton)
                                 break;
                             DoTavern();
                             break;
-                        case BUILDING_SLOT_TENT:
+                        case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_TENT):
                             if (rightButton)
                                 return MESSAGE_DISPATCH_CONSUME;
                             if (BuyBuild(
@@ -746,7 +787,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) townManager::Main(struct tag_message&
                                 m_town->XformToCastle();
                             }
                             break;
-                        case BUILDING_SLOT_SHIPYARD:
+                        case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_SHIPYARD):
                             if (rightButton)
                                 break;
                             gpWindowManager->BroadcastMessage(
@@ -846,7 +887,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) townManager::Main(struct tag_message&
                                             ->m_creatureCounts[m_selectedArmySlot],
                                         m_town,
                                         1,
-                                        0,
+                                        ARMY_FACING_RIGHT,
                                         1,
                                         viewHero,
                                         NULL,
@@ -913,8 +954,9 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) townManager::Main(struct tag_message&
 // Merges duplicate stacks after a swap and opens the kingdom overview from
 // the town.
 VA(0x004619b5, 0x601)
-void townManager::DoCommand(i8 command) {
+void townManager::DoCommand(H1_ENUM_PARAM(TownArmyCommand, i8) command) {
     hero* visitor;
+    // The swap's held count, then its creature, then the merge scan's slot.
     i32 oldValue;
     i16 i;
     hero* viewedHero;
@@ -938,7 +980,7 @@ void townManager::DoCommand(i8 command) {
                 m_castleDialogActive == 1
                     || (m_selectedStrip == m_heroStrip
                         && m_selectedStrip->m_army->GetNumArmies() == 1),
-                0,
+                ARMY_FACING_RIGHT,
                 0,
                 viewedHero,
                 NULL,
@@ -969,10 +1011,14 @@ void townManager::DoCommand(i8 command) {
             m_pendingStrip->m_army->m_creatureCounts[m_pendingArmySlot] =
                 m_swapStrip->m_army->m_creatureCounts[m_swapArmySlot];
             m_swapStrip->m_army->m_creatureCounts[m_swapArmySlot] = oldValue;
-            oldValue = m_pendingStrip->m_army->m_creatureTypes[m_pendingArmySlot];
+            oldValue = H1_ENUM_ENCODE(
+                CreatureType,
+                m_pendingStrip->m_army->m_creatureTypes[m_pendingArmySlot]
+            );
             m_pendingStrip->m_army->m_creatureTypes[m_pendingArmySlot] =
                 m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot];
-            m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot] = oldValue;
+            m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot] =
+                H1_ENUM_DECODE(CreatureType, oldValue);
             if (m_swapStrip != m_pendingStrip) {
                 for (oldValue = 0; oldValue < ARMY_GROUP_SLOT_COUNT; oldValue++) {
                     if (m_pendingStrip->m_army->m_creatureTypes[oldValue]
@@ -1116,10 +1162,10 @@ void townManager::ResetStrips(void) {
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x004624c8, 0x85)
-void townManager::Toggle(i8 building) {
+void townManager::Toggle(H1_ENUM_PARAM(BuildingSlotType, i8) building) {
     i16 index;
 
-    if (m_town->m_buildings & (1 << building)) {
+    if (m_town->m_buildings & H1_ENUM_BIT(BuildingSlotType, building)) {
         for (index = 0; index < m_townObjectCount; index++) {
             if (m_townObjects[index]->m_buildingId == building)
                 m_townObjects[index]->m_visible ^= 1;
@@ -1161,9 +1207,10 @@ void townManager::DrawTown(i8 updateScreen, i32 drawFlags) {
 // frame of buybuil%d.bin.
 VA(0x00462630, 0xdd2)
 #line 1483 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\TOWNMGR.CPP"
-i16 townManager::BuyBuild(i16 building, i8 cannotBuy, i8 quickView) {
+i16 townManager::BuyBuild(H1_ENUM_PARAM(BuildingSlotType, i16) building, i8 cannotBuy, i8 quickView) {
     i32 entryWidth;
-    i16 buildCosts[RESOURCE_COUNT];
+    // The cost list holds at most one entry per resource.
+    i16 buildCosts[H1_ENUM_ENCODE(ResourceType, RESOURCE_COUNT)];
     textWidget* descriptionWidget;
     i16 dialogRight;
     i16 resourceX;
@@ -1184,7 +1231,7 @@ i16 townManager::BuyBuild(i16 building, i8 cannotBuy, i8 quickView) {
     i16 lowerResources;
     i32 rowY;
     i32 originY;
-    i8 resourceTypes[RESOURCE_COUNT];
+    H1_ENUM_STORAGE(ResourceType, i8) resourceTypes[H1_ENUM_ENCODE(ResourceType, RESOURCE_COUNT)];
     i32 costCount;
     i32 inRow;
     i32 typeId;
@@ -1192,55 +1239,58 @@ i16 townManager::BuyBuild(i16 building, i8 cannotBuy, i8 quickView) {
     i16 dialogButton;
     i16 dialogWidth;
     i32 rowIndex;
-    iconWidget* resWidgets[RESOURCE_COUNT];
-    i32 typeList[4];
+    iconWidget* resWidgets[H1_ENUM_ENCODE(ResourceType, RESOURCE_COUNT)];
+    H1_ENUM_STORAGE(ResourceType, i32) typeList[4];
     i16 topResources;
     tag_message msg;
     char* infoBuffer;
     i16 dialogResult;
-    textWidget* amountWidgets[RESOURCE_COUNT];
-    char* amountText[RESOURCE_COUNT];
+    textWidget* amountWidgets[H1_ENUM_ENCODE(ResourceType, RESOURCE_COUNT)];
+    char* amountText[H1_ENUM_ENCODE(ResourceType, RESOURCE_COUNT)];
 
     guildRank = 0;
     i = 0;
     costCount = 0;
     infoBuffer = static_cast<char*>(malloc(300));
-    for (i = 0; i < RESOURCE_COUNT; i++)
-        resourceTypes[i] = buildCosts[i] = RESOURCE_NONE;
+    for (i = 0; i < H1_ENUM_ENCODE(ResourceType, RESOURCE_COUNT); i++)
+        resourceTypes[i] = H1_ENUM_DECODE(
+            ResourceType,
+            buildCosts[i] = H1_ENUM_ENCODE(ResourceType, RESOURCE_NONE)
+        );
     dwelling = -1;
-    if (building > TOWN_NEUTRAL_BUILDING_LAST)
+    if (building > BUILDING_SLOT_STRUCTURE_LAST)
         dwelling =
-            building - BUILDING_SLOT_DWELLING_FIRST + m_town->m_type * TOWN_DWELLINGS_PER_FACTION;
+            building - BUILDING_SLOT_DWELLING_FIRST + H1_ENUM_ENCODE(TownType, m_town->m_type) * TOWN_DWELLINGS_PER_FACTION;
     if (building == BUILDING_SLOT_MAGE_GUILD) {
-        if (m_town->m_buildings & (1 << BUILDING_SLOT_MAGE_GUILD))
+        if (m_town->m_buildings & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_MAGE_GUILD))
             guildRank = gpTownManager->m_town->m_buildState + 1;
         else
             guildRank = 0;
         if (guildRank > TOWN_MAGE_GUILD_COST_LEVEL_LAST)
             guildRank = TOWN_MAGE_GUILD_COST_LEVEL_LAST;
-        for (i = 0; i < RESOURCE_COUNT; i++) {
+        for (i = 0; H1_ENUM_DECODE(ResourceType, i) < RESOURCE_COUNT; i++) {
             if (gMageBuildingCosts[guildRank][i] > 0) {
-                resourceTypes[costCount] = i;
+                resourceTypes[costCount] = H1_ENUM_DECODE(ResourceType, i);
                 buildCosts[costCount] = gMageBuildingCosts[guildRank][i];
                 costCount++;
             }
         }
-    } else if (building <= TOWN_NEUTRAL_BUILDING_LAST) {
-        for (i = 0; i < RESOURCE_COUNT; i++) {
+    } else if (building <= BUILDING_SLOT_STRUCTURE_LAST) {
+        for (i = 0; H1_ENUM_DECODE(ResourceType, i) < RESOURCE_COUNT; i++) {
             // clang-format off
 #line 1555
-            H1_ASSERT(building >= 0 && building < TOWN_NEUTRAL_BUILDING_COUNT);
+            H1_ASSERT(building >= BUILDING_SLOT_FIRST && building < BUILDING_SLOT_NEUTRAL_COUNT);
             // clang-format on
 #line 1556
             H1_ASSERT(i >= 0 && i <= 6);
             if (gNeutralBuildingCosts[building][i] > 0) {
-                resourceTypes[costCount] = i;
+                resourceTypes[costCount] = H1_ENUM_DECODE(ResourceType, i);
                 buildCosts[costCount] = gNeutralBuildingCosts[building][i];
                 costCount++;
             }
         }
     } else {
-        for (i = 0; i < RESOURCE_COUNT; i++) {
+        for (i = 0; H1_ENUM_DECODE(ResourceType, i) < RESOURCE_COUNT; i++) {
             // clang-format off
 #line 1570
             H1_ASSERT(dwelling >= 0 && dwelling < TOWN_DWELLING_COST_ROWS);
@@ -1248,7 +1298,7 @@ i16 townManager::BuyBuild(i16 building, i8 cannotBuy, i8 quickView) {
 #line 1571
             H1_ASSERT(i >= 0 && i <= 6);
             if (gDwellingCosts[dwelling][i] > 0) {
-                resourceTypes[costCount] = i;
+                resourceTypes[costCount] = H1_ENUM_DECODE(ResourceType, i);
                 buildCosts[costCount] = gDwellingCosts[dwelling][i];
                 costCount++;
             }
@@ -1265,7 +1315,7 @@ i16 townManager::BuyBuild(i16 building, i8 cannotBuy, i8 quickView) {
     requiredCount = 0;
     topResources = 0;
     lowerResources = 0;
-    for (i = 0; i < RESOURCE_COUNT; i++) {
+    for (i = 0; i < H1_ENUM_ENCODE(ResourceType, RESOURCE_COUNT); i++) {
         if (resourceTypes[i] != RESOURCE_NONE)
             requiredCount++;
     }
@@ -1281,7 +1331,7 @@ i16 townManager::BuyBuild(i16 building, i8 cannotBuy, i8 quickView) {
         topResources = 3;
         lowerResources = 4;
     }
-    if (building <= TOWN_NEUTRAL_BUILDING_LAST)
+    if (building <= BUILDING_SLOT_STRUCTURE_LAST)
         sprintf(infoBuffer, gNeutralBuildingDescriptions[building]);
     else
         sprintf(infoBuffer, gDwellingDescriptions[dwelling]);
@@ -1289,22 +1339,23 @@ i16 townManager::BuyBuild(i16 building, i8 cannotBuy, i8 quickView) {
         u16 prerequisiteMask;
         i32 prerequisiteCount = 0;
         prerequisiteMask = gDwellingRequirements
-            [m_town->m_type * TOWN_DWELLINGS_PER_FACTION
+            [H1_ENUM_ENCODE(TownType, m_town->m_type) * TOWN_DWELLINGS_PER_FACTION
              + (building - BUILDING_SLOT_DWELLING_FIRST)];
-        for (i = 0; i < BUILDING_SLOT_REQUIREMENT_END; i++) {
+        // i walks the prerequisite building slots.
+        for (i = 0; H1_ENUM_DECODE(BuildingSlotType, i) < BUILDING_SLOT_REQUIREMENT_END; i++) {
             if (prerequisiteMask & (1 << i)) {
                 if (prerequisiteCount == 0)
                     strcat(infoBuffer, localization::Tr("town.build.requires"));
                 prerequisiteCount++;
                 strcat(infoBuffer, "\n");
-                if (i <= BUILDING_SLOT_STRUCTURE_LAST)
-                    strcat(infoBuffer, gNeutralBuildingNames[i]);
+                if (H1_ENUM_DECODE(BuildingSlotType, i) <= BUILDING_SLOT_STRUCTURE_LAST)
+                    strcat(infoBuffer, gNeutralBuildingNames[H1_ENUM_DECODE(BuildingSlotType, i)]);
                 else
                     strcat(
                         infoBuffer,
                         gDwellingNames
-                            [i - BUILDING_SLOT_DWELLING_FIRST
-                             + m_town->m_type * TOWN_DWELLINGS_PER_FACTION]
+                            [H1_ENUM_DECODE(BuildingSlotType, i) - BUILDING_SLOT_DWELLING_FIRST
+                             + H1_ENUM_ENCODE(TownType, m_town->m_type) * TOWN_DWELLINGS_PER_FACTION]
                     );
             }
         }
@@ -1333,9 +1384,12 @@ i16 townManager::BuyBuild(i16 building, i8 cannotBuy, i8 quickView) {
         MemError();
     SetWinText(panel, WINDOW_TEXT_BUILD);
     SET_WIDGET_MESSAGE(msg, WIDGET_COMMAND_SET_FRAME, BUY_BUILD_ICON_CONTROL);
+    // The picture frame: the generic buildings first, then a block of seven
+    // per town type from the tent on.
     msg.value = building < BUILDING_SLOT_RACE_FIRST
-                    ? building + 1
-                    : (gpTownManager->m_town->m_type + 1) * 7 + building - 6;
+                    ? H1_ENUM_ENCODE(BuildingSlotType, building) + 1
+                    : (H1_ENUM_ENCODE(TownType, gpTownManager->m_town->m_type) + 1) * 7
+                          + H1_ENUM_ENCODE(BuildingSlotType, building) - 6;
     panel->BroadcastMessage(msg);
     if (building == BUILDING_SLOT_MAGE_GUILD)
         sprintf(gText, localization::Tr("town.build.mage_guild_level"), guildRank + 1);
@@ -1403,7 +1457,7 @@ i16 townManager::BuyBuild(i16 building, i8 cannotBuy, i8 quickView) {
                     entryWidth,
                     12,
                     "resource.icn",
-                    resourceTypes[typeId],
+                    H1_ENUM_ENCODE(ResourceType, resourceTypes[typeId]),
                     ICON_DRAW_NORMAL,
                     WIDGET_ID_NONE,
                     ICON_WIDGET_DRAW,
@@ -1425,7 +1479,7 @@ i16 townManager::BuyBuild(i16 building, i8 cannotBuy, i8 quickView) {
             TOWN_CLOSE_CONTROL,
             WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED
         );
-    m_selectedBuilding = TOWN_BUILDING_NONE;
+    m_selectedBuilding = BUILDING_SLOT_NONE;
     if (quickView) {
         msg.command = WIDGET_COMMAND_CLEAR_FLAGS;
         msg.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
@@ -1478,19 +1532,19 @@ i16 townManager::BuyBuild(i16 building, i8 cannotBuy, i8 quickView) {
 
 // Fizzles a fixed per-building rectangle.
 VA(0x00463402, 0x35f)
-void townManager::BuildObj(i16 building) {
+void townManager::BuildObj(H1_ENUM_PARAM(BuildingSlotType, i16) building) {
     i16 i;
     class sample* sample;
 
     gpMouseManager->ReallyHidePointer();
     DrawTown(1, 1);
     if (building == BUILDING_SLOT_MAGE_GUILD) {
-        if (m_town->m_buildings & (1 << BUILDING_SLOT_MAGE_GUILD))
+        if (m_town->m_buildings & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_MAGE_GUILD))
             m_town->m_buildState++;
         if (m_town->m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE)
             m_town->GiveSpells();
     }
-    m_town->m_buildings |= 1 << building;
+    m_town->m_buildings |= H1_ENUM_BIT(BuildingSlotType, building);
     if (building >= BUILDING_SLOT_DWELLING_FIRST && building <= BUILDING_SLOT_DWELLING_LAST)
         m_town->m_garrison[building - BUILDING_SLOT_DWELLING_FIRST] =
             gMonsterDatabase[gDwellingType[m_town->m_type][building - BUILDING_SLOT_DWELLING_FIRST]]
@@ -1502,7 +1556,7 @@ void townManager::BuildObj(i16 building) {
         }
     }
     if (building == BUILDING_SLOT_CASTLE) {
-        m_town->m_buildings &= ~(1 << BUILDING_SLOT_TENT);
+        m_town->m_buildings &= ~H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_TENT);
         for (i = 0; i < m_townObjectCount; i++) {
             if (m_townObjects[i]->m_buildingId == BUILDING_SLOT_TENT) {
                 m_townObjects[i]->m_visible = 0;
@@ -1526,7 +1580,7 @@ void townManager::BuildObj(i16 building) {
         FIZZLE_USE_DEFAULT_DELAY
     );
     WaitSample(sample);
-    m_selectedBuilding = TOWN_BUILDING_NONE;
+    m_selectedBuilding = BUILDING_SLOT_NONE;
     m_bankBox->Update();
     m_townWindow->DrawWindow();
     gpMouseManager->ReallyShowPointer();
@@ -1544,25 +1598,26 @@ void townManager::BuildObj(i16 building) {
 // slot with fixed frames.
 VA(0x00463761, 0x45a)
 void townManager::SetupCastle(class heroWindow* window) {
-    i16 builtIcon = TOWN_CASTLE_FRAME_BUILT;
-    i16 buildVal = TOWN_CASTLE_FRAME_CANNOT_BUILD;
-    i16 noMoney = TOWN_CASTLE_FRAME_CANNOT_AFFORD;
+    H1_ENUM_LOCAL(TownCastleFrame, i16) builtIcon = TOWN_CASTLE_FRAME_BUILT;
+    H1_ENUM_LOCAL(TownCastleFrame, i16) buildVal = TOWN_CASTLE_FRAME_CANNOT_BUILD;
+    H1_ENUM_LOCAL(TownCastleFrame, i16) noMoney = TOWN_CASTLE_FRAME_CANNOT_AFFORD;
+    // A building slot, then a dwelling index.
     i16 i;
     tag_message msg;
-    i32 stateFrame;
+    H1_ENUM_LOCAL(TownCastleFrame, i32) stateFrame;
 
     m_affordableBuildings = m_buildableBuildings = 0;
-    for (i = 0; i < BUILDING_SLOT_COUNT; i++) {
-        if (CanBuy(m_town, i))
+    for (i = 0; H1_ENUM_DECODE(BuildingSlotType, i) < BUILDING_SLOT_COUNT; i++) {
+        if (CanBuy(m_town, H1_ENUM_DECODE(BuildingSlotType, i)))
             m_affordableBuildings |= 1 << i;
-        if (CanBuild(m_town, i))
+        if (CanBuild(m_town, H1_ENUM_DECODE(BuildingSlotType, i)))
             m_buildableBuildings |= 1 << i;
     }
     msg.type = MESSAGE_WIDGET;
     msg.command = WIDGET_COMMAND_SET_FRAME;
     for (i = 0; i < BUILDING_SLOT_DWELLING_COUNT; i++) {
         msg.id = i + TOWN_WELL_FIRST_NAME_CONTROL;
-        msg.value = (m_town->m_type + 1) * TOWN_WELL_FRAMES_PER_TYPE + i + 1;
+        msg.value = (H1_ENUM_ENCODE(TownType, m_town->m_type) + 1) * TOWN_WELL_FRAMES_PER_TYPE + i + 1;
         window->BroadcastMessage(msg);
     }
     msg.command = WIDGET_COMMAND_SET_TEXT;
@@ -1573,7 +1628,7 @@ void townManager::SetupCastle(class heroWindow* window) {
     }
     for (i = 0; i < TOWN_CASTLE_SPECIAL_BUILDING_COUNT; i++) {
         stateFrame = TOWN_CASTLE_FRAME_NONE;
-        if (TOWN_BUILDING_COMPLETE(*m_town, i))
+        if (TOWN_BUILDING_COMPLETE(*m_town, H1_ENUM_DECODE(BuildingSlotType, i)))
             stateFrame = TOWN_CASTLE_FRAME_BUILT;
         else if (!(m_buildableBuildings & (1 << i)))
             stateFrame = TOWN_CASTLE_FRAME_CANNOT_BUILD;
@@ -1585,7 +1640,7 @@ void townManager::SetupCastle(class heroWindow* window) {
             msg.value = WIDGET_FLAG_DRAW;
             window->BroadcastMessage(msg);
             msg.command = WIDGET_COMMAND_SET_FRAME;
-            msg.value = stateFrame;
+            msg.value = H1_ENUM_ENCODE(TownCastleFrame, stateFrame);
             window->BroadcastMessage(msg);
         } else {
             msg.command = WIDGET_COMMAND_CLEAR_FLAGS;
@@ -1596,11 +1651,13 @@ void townManager::SetupCastle(class heroWindow* window) {
     }
     for (i = 0; i < BUILDING_SLOT_DWELLING_COUNT; i++) {
         stateFrame = TOWN_CASTLE_FRAME_NONE;
-        if (m_town->m_buildings & (1 << (i + BUILDING_SLOT_DWELLING_FIRST)))
+        if (m_town->m_buildings & H1_ENUM_BIT(BuildingSlotType, i + BUILDING_SLOT_DWELLING_FIRST))
             stateFrame = TOWN_CASTLE_FRAME_BUILT;
-        else if (!(m_buildableBuildings & (1 << (i + BUILDING_SLOT_DWELLING_FIRST))))
+        else if (!(m_buildableBuildings
+                   & H1_ENUM_BIT(BuildingSlotType, i + BUILDING_SLOT_DWELLING_FIRST)))
             stateFrame = TOWN_CASTLE_FRAME_CANNOT_BUILD;
-        else if (!(m_affordableBuildings & (1 << (i + BUILDING_SLOT_DWELLING_FIRST))))
+        else if (!(m_affordableBuildings
+                   & H1_ENUM_BIT(BuildingSlotType, i + BUILDING_SLOT_DWELLING_FIRST)))
             stateFrame = TOWN_CASTLE_FRAME_CANNOT_AFFORD;
         if (stateFrame != TOWN_CASTLE_FRAME_NONE) {
             msg.command = WIDGET_COMMAND_SET_FLAGS;
@@ -1608,7 +1665,7 @@ void townManager::SetupCastle(class heroWindow* window) {
             msg.value = WIDGET_FLAG_DRAW;
             window->BroadcastMessage(msg);
             msg.command = WIDGET_COMMAND_SET_FRAME;
-            msg.value = stateFrame;
+            msg.value = H1_ENUM_ENCODE(TownCastleFrame, stateFrame);
             window->BroadcastMessage(msg);
         } else {
             msg.command = WIDGET_COMMAND_CLEAR_FLAGS;
@@ -1632,7 +1689,7 @@ void townManager::SetupCastle(class heroWindow* window) {
         msg.command = WIDGET_COMMAND_SET_FLAGS;
         window->BroadcastMessage(msg);
         msg.command = WIDGET_COMMAND_SET_FRAME;
-        msg.value = stateFrame;
+        msg.value = H1_ENUM_ENCODE(TownCastleFrame, stateFrame);
         window->BroadcastMessage(msg);
     } else {
         msg.command = WIDGET_COMMAND_CLEAR_FLAGS;
@@ -1656,10 +1713,10 @@ void townManager::SetupWell(class heroWindow* window) {
     msg.command = WIDGET_COMMAND_SET_FRAME;
     for (i = 0; i < BUILDING_SLOT_DWELLING_COUNT; i++) {
         msg.id = i + TOWN_WELL_FIRST_ICON_CONTROL;
-        msg.value = (m_town->m_type + 1) * TOWN_WELL_FRAMES_PER_TYPE + i + 1;
+        msg.value = (H1_ENUM_ENCODE(TownType, m_town->m_type) + 1) * TOWN_WELL_FRAMES_PER_TYPE + i + 1;
         window->BroadcastMessage(msg);
         msg.id = i + TOWN_WELL_FIRST_MONSTER_ICON_CONTROL;
-        msg.value = gDwellingType[m_town->m_type][i];
+        msg.value = H1_ENUM_ENCODE(CreatureType, gDwellingType[m_town->m_type][i]);
         window->BroadcastMessage(msg);
     }
     msg.type = MESSAGE_WIDGET;
@@ -1676,7 +1733,8 @@ void townManager::SetupWell(class heroWindow* window) {
     }
     for (i = 0; i < BUILDING_SLOT_DWELLING_COUNT; i++) {
         msg.id = i + TOWN_WELL_FIRST_AVAILABLE_CONTROL;
-        if (!(m_town->m_buildings & (1 << (i + BUILDING_SLOT_DWELLING_FIRST))))
+        if (!(m_town->m_buildings
+              & H1_ENUM_BIT(BuildingSlotType, i + BUILDING_SLOT_DWELLING_FIRST)))
             strcpy(gText, localization::Tr("town.well.empty"));
         else {
             theRate = gMonsterDatabase[gDwellingType[m_town->m_type][i]].growth;
@@ -1745,7 +1803,7 @@ void townManager::SetupMage(class heroWindow* window) {
         } else {
             message.command = WIDGET_COMMAND_SET_FRAME;
             message.id = spellNo + TOWN_MAGE_FIRST_ICON_CONTROL;
-            message.value = m_town->m_mageGuildSpells[spellNo];
+            message.value = H1_ENUM_ENCODE(SpellType, m_town->m_mageGuildSpells[spellNo]);
             window->BroadcastMessage(message);
             message.command = WIDGET_COMMAND_SET_TEXT;
             message.id = spellNo + TOWN_MAGE_FIRST_NAME_CONTROL;
@@ -1777,7 +1835,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) MageGuildHandler(struct tag_message& 
     i16 firstSpell = TOWN_MAGE_FIRST_SPELL_CONTROL;
     i16 iconBaseVal = TOWN_MAGE_FIRST_ICON_CONTROL;
     i32 quickViewVal;
-    i32 spellId;
+    H1_ENUM_LOCAL(SpellType, i32) spellId;
     i32 theMageLevel;
     i32 spellPosIndex;
 
@@ -1823,7 +1881,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) MageGuildHandler(struct tag_message& 
                             -1,
                             -1,
                             NORMAL_DIALOG_SPELL,
-                            spellId
+                            H1_ENUM_ENCODE(SpellType, spellId)
                         );
                         return MESSAGE_DISPATCH_CONSUME;
                 }
@@ -1835,7 +1893,10 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) MageGuildHandler(struct tag_message& 
 // Draws only the ranking flags, with the category count taken from the
 // number of guilds owned.
 VA(0x00464277, 0x2b5)
-void townManager::SetupThievesGuild(class heroWindow* window, i16 categories) {
+void townManager::SetupThievesGuild(
+    class heroWindow* window,
+    H1_ENUM_PARAM(TownThievesCategory, i16) categories
+) {
     iconWidget* marker;
     i16 firstPlayer;
     i32 numThieves;
@@ -1850,7 +1911,7 @@ void townManager::SetupThievesGuild(class heroWindow* window, i16 categories) {
     i16 bColWidth = THIEVES_PLAYER_WIDTH;
     i8 baseRanking[GAME_PLAYER_COUNT];
     i16 bestRank;
-    i16 categoryIndex;
+    H1_ENUM_LOCAL(TownThievesCategory, i16) categoryIndex;
     i32 savedTotals[GAME_PLAYER_COUNT];
     i16 savedPos;
     i16 realHi;
@@ -1869,7 +1930,7 @@ void townManager::SetupThievesGuild(class heroWindow* window, i16 categories) {
     }
     if (categories > THIEVES_CATEGORY_COUNT)
         categories = THIEVES_CATEGORY_COUNT;
-    for (categoryIndex = 0; categoryIndex < categories; categoryIndex++) {
+    for (categoryIndex = THIEVES_CATEGORY_TOWNS; categoryIndex < categories; categoryIndex++) {
         GetCategoryStats(categoryIndex, savedTotals, baseRanking);
         SortStats(savedTotals, baseRanking);
         firstPlayer = 0;
@@ -1888,11 +1949,13 @@ void townManager::SetupThievesGuild(class heroWindow* window, i16 categories) {
             for (newPos = firstPlayer; !(newPos > realHi); newPos++) {
                 marker = new iconWidget(
                     savedPos + (newPos - firstPlayer) * THIEVES_RANK_ICON_WIDTH,
-                    categoryIndex * THIEVES_CATEGORY_ROW_HEIGHT + THIEVES_FIRST_CATEGORY_Y,
+                    H1_ENUM_ENCODE(TownThievesCategory, categoryIndex) * THIEVES_CATEGORY_ROW_HEIGHT
+                        + THIEVES_FIRST_CATEGORY_Y,
                     THIEVES_RANK_ICON_WIDTH,
                     THIEVES_RANK_ICON_HEIGHT,
                     "townwind.icn",
-                    gpGame->m_players[baseRanking[newPos]].m_color + THIEVES_FLAG_FRAME_BASE,
+                    H1_ENUM_ENCODE(PlayerColor, gpGame->m_players[baseRanking[newPos]].m_color)
+                        + THIEVES_FLAG_FRAME_BASE,
                     ICON_DRAW_NORMAL,
                     WIDGET_ID_NONE,
                     ICON_WIDGET_DRAW,
@@ -1911,7 +1974,11 @@ void townManager::SetupThievesGuild(class heroWindow* window, i16 categories) {
 // Eight categories; sums three resources per row and counts obelisks
 // through playerData.
 VA(0x0046452c, 0x40b)
-void townManager::GetCategoryStats(i8 category, i32* const stats, i8* const order) {
+void townManager::GetCategoryStats(
+    H1_ENUM_PARAM(TownThievesCategory, i8) category,
+    i32* const stats,
+    i8* const order
+) {
     i16 townIndex;
     i16 index;
     i32 strengthValue;
@@ -1933,7 +2000,7 @@ void townManager::GetCategoryStats(i8 category, i32* const stats, i8* const orde
                     for (townIndex = 0; townIndex < GAME_TOWN_COUNT; townIndex++) {
                         if (gpGame->m_castleRecs[townIndex].m_owner == player
                             && (gpGame->m_castleRecs[townIndex].m_buildings
-                                & (1 << BUILDING_SLOT_TENT)))
+                                & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_TENT)))
                             firstNumTowns++;
                     }
                     stats[player] = firstNumTowns;
@@ -1942,7 +2009,7 @@ void townManager::GetCategoryStats(i8 category, i32* const stats, i8* const orde
                     for (townIndex = 0; townIndex < GAME_TOWN_COUNT; townIndex++) {
                         if (gpGame->m_castleRecs[townIndex].m_owner == player
                             && (gpGame->m_castleRecs[townIndex].m_buildings
-                                & (1 << BUILDING_SLOT_CASTLE)))
+                                & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_CASTLE)))
                             numCastles++;
                     }
                     stats[player] = numCastles;
@@ -2009,7 +2076,7 @@ void townManager::SortStats(i32* const stats, i8* const order) {
 
 // Town-type wrapper over the global building-name table lookup.
 VA(0x00464a22, 0x25)
-char* townManager::GetBuildingName(i16 building) {
+char* townManager::GetBuildingName(H1_ENUM_PARAM(BuildingSlotType, i16) building) {
     return ::GetBuildingName(m_town->m_type, building);
 }
 
@@ -2102,7 +2169,8 @@ i8 townManager::RecruitHero(i8 cannotRecruit) {
         sprintf(
             gText,
             "crst%04d.icn",
-            gpCurPlayer->Color() * HERO_CLASS_COUNT + m_recruitHeroes[m_recruitState]->m_heroClass
+            H1_ENUM_ENCODE(PlayerColor, gpCurPlayer->Color()) * HERO_CLASS_COUNT
+                + m_recruitHeroes[m_recruitState]->m_heroClass
         );
         m_garrisonStrip = new strip(
             0,
@@ -2132,7 +2200,7 @@ i8 townManager::RecruitHero(i8 cannotRecruit) {
         );
         if (m_heroStrip == NULL)
             MemError();
-        if (m_town->m_buildings & (1 << BUILDING_SLOT_MAGE_GUILD))
+        if (m_town->m_buildings & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_MAGE_GUILD))
             m_town->GiveSpells();
         newHeroClass = gpCurPlayer->m_availableHeroIds[1 - m_recruitState] / HERO_PER_CLASS_COUNT;
         newHeroClass = (newHeroClass + Random(1, 3)) % HERO_CLASS_COUNT;
@@ -2212,7 +2280,8 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) CastleHandler(struct tag_message& mes
     i16 statusId = TOWN_CASTLE_STATUS_CONTROL;
     i32 result = 0;
     i32 baseQuick;
-    i32 objNum;
+    // A gCastleInfo row, then the town-object scan index.
+    H1_ENUM_SHARED(TownCastleInfoText, i32) objNum;
 
     if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
@@ -2220,23 +2289,29 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) CastleHandler(struct tag_message& mes
                 if (gpTownManager->m_lastHoverId == message.id)
                     break;
                 gpTownManager->m_lastHoverId = message.id;
+                // castle.bin's building widgets carry their building slot as
+                // the widget id.
                 switch (message.id) {
-                    case BUILDING_SLOT_MAGE_GUILD:
+                    case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_MAGE_GUILD):
                         if (!(gpTownManager->m_buildableBuildings & (1 << message.id)))
                             sprintf(
                                 gText,
                                 gCastleInfo[TOWN_CASTLE_INFO_CANNOT_BUILD],
-                                gpTownManager->GetBuildingName(message.id)
+                                gpTownManager->GetBuildingName(
+                                    H1_ENUM_DECODE(BuildingSlotType, message.id)
+                                )
                             );
                         else if (!(gpTownManager->m_affordableBuildings & (1 << message.id)))
                             sprintf(
                                 gText,
                                 gCastleInfo[TOWN_CASTLE_INFO_CANNOT_AFFORD],
-                                gpTownManager->GetBuildingName(message.id)
+                                gpTownManager->GetBuildingName(
+                                    H1_ENUM_DECODE(BuildingSlotType, message.id)
+                                )
                             );
                         else {
                             if (!(gpTownManager->m_town->m_buildings
-                                  & (1 << BUILDING_SLOT_MAGE_GUILD)))
+                                  & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_MAGE_GUILD)))
                                 objNum = TOWN_CASTLE_INFO_BUILD_MAGE_GUILD;
                             else if (gpTownManager->m_town->m_buildState
                                      == MAGE_GUILD_STATE_LEVEL_4)
@@ -2248,39 +2323,47 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) CastleHandler(struct tag_message& mes
                             strcpy(gText, gCastleInfo[objNum]);
                         }
                         break;
-                    case BUILDING_SLOT_THIEVES_GUILD:
-                    case BUILDING_SLOT_TAVERN:
-                    case BUILDING_SLOT_SHIPYARD:
-                    case BUILDING_SLOT_WELL:
-                    case BUILDING_SLOT_DWELLING_1:
-                    case BUILDING_SLOT_DWELLING_2:
-                    case BUILDING_SLOT_DWELLING_3:
-                    case BUILDING_SLOT_DWELLING_4:
-                    case BUILDING_SLOT_DWELLING_5:
-                    case BUILDING_SLOT_DWELLING_6:
+                    case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_THIEVES_GUILD):
+                    case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_TAVERN):
+                    case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_SHIPYARD):
+                    case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_WELL):
+                    case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_DWELLING_1):
+                    case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_DWELLING_2):
+                    case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_DWELLING_3):
+                    case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_DWELLING_4):
+                    case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_DWELLING_5):
+                    case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_DWELLING_6):
                         if (gpTownManager->m_town->m_buildings & (1 << message.id))
                             sprintf(
                                 gText,
                                 gCastleInfo[TOWN_CASTLE_INFO_ALREADY_BUILT],
-                                gpTownManager->GetBuildingName(message.id)
+                                gpTownManager->GetBuildingName(
+                                    H1_ENUM_DECODE(BuildingSlotType, message.id)
+                                )
                             );
                         else if (!(gpTownManager->m_buildableBuildings & (1 << message.id)))
                             sprintf(
                                 gText,
                                 gCastleInfo[TOWN_CASTLE_INFO_CANNOT_BUILD],
-                                gpTownManager->GetBuildingName(message.id)
+                                gpTownManager->GetBuildingName(
+                                    H1_ENUM_DECODE(BuildingSlotType, message.id)
+                                )
                             );
                         else if (!(gpTownManager->m_affordableBuildings & (1 << message.id)))
                             sprintf(
                                 gText,
                                 gCastleInfo[TOWN_CASTLE_INFO_CANNOT_AFFORD],
-                                gpTownManager->GetBuildingName(message.id)
+                                gpTownManager->GetBuildingName(
+                                    H1_ENUM_DECODE(BuildingSlotType, message.id)
+                                )
                             );
                         else
                             sprintf(
                                 gText,
                                 gCastleInfo[TOWN_CASTLE_INFO_BUILD],
-                                gpTownManager->GetBuildingName(message.id)
+                                gpTownManager->GetBuildingName(
+                                    H1_ENUM_DECODE(BuildingSlotType, message.id)
+                                )
                             );
                         break;
                     case TOWN_CASTLE_HERO_CONTROL:
@@ -2322,36 +2405,37 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) CastleHandler(struct tag_message& mes
                 );
                 return MESSAGE_DISPATCH_CONSUME;
             case WIDGET_NOTIFY_SELECT:
-                baseQuick = (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) != 0;
+                baseQuick = (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) != MESSAGE_MODIFIER_NONE;
                 switch (message.id) {
-                    case BUILDING_SLOT_MAGE_GUILD:
+                    case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_MAGE_GUILD):
                         if (!baseQuick
                             && (gpTownManager->m_town->m_buildState == MAGE_GUILD_STATE_LEVEL_4
                                 || !(gpTownManager->m_buildableBuildings & (1 << message.id))))
                             break;
                         else
                             goto buy_building;
-                    case BUILDING_SLOT_THIEVES_GUILD:
-                    case BUILDING_SLOT_TAVERN:
-                    case BUILDING_SLOT_SHIPYARD:
-                    case BUILDING_SLOT_WELL:
-                    case BUILDING_SLOT_DWELLING_1:
-                    case BUILDING_SLOT_DWELLING_2:
-                    case BUILDING_SLOT_DWELLING_3:
-                    case BUILDING_SLOT_DWELLING_4:
-                    case BUILDING_SLOT_DWELLING_5:
-                    case BUILDING_SLOT_DWELLING_6:
+                    case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_THIEVES_GUILD):
+                    case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_TAVERN):
+                    case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_SHIPYARD):
+                    case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_WELL):
+                    case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_DWELLING_1):
+                    case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_DWELLING_2):
+                    case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_DWELLING_3):
+                    case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_DWELLING_4):
+                    case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_DWELLING_5):
+                    case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_DWELLING_6):
                         if (!baseQuick
                             && ((gpTownManager->m_town->m_buildings & (1 << message.id))
                                 || !(gpTownManager->m_buildableBuildings & (1 << message.id))))
                             break;
                     buy_building:
                         for (objNum = 0; objNum < gpTownManager->m_townObjectCount; objNum++) {
-                            if (gpTownManager->m_townObjects[objNum]->m_buildingId == message.id)
+                            if (gpTownManager->m_townObjects[objNum]->m_buildingId
+                                == H1_ENUM_DECODE(BuildingSlotType, message.id))
                                 break;
                         }
                         result = gpTownManager->BuyBuild(
-                            message.id,
+                            H1_ENUM_DECODE(BuildingSlotType, message.id),
                             (gpTownManager->m_affordableBuildings & (1 << message.id)) == 0,
                             baseQuick
                         );
@@ -2375,7 +2459,10 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) CastleHandler(struct tag_message& mes
         }
     }
     if (result) {
-        message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
+        message.command = H1_ENUM_DECODE(
+            BaseWidgetCommand,
+            message.id = H1_ENUM_ENCODE(BaseWidgetCommand, WIDGET_COMMAND_DIALOG_SELECT)
+        );
         return MESSAGE_DISPATCH_FORWARD;
     }
     return TrueFalseDialogHandler(message);
@@ -2439,7 +2526,10 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) SplitArmyHandler(struct tag_message& 
     }
 
     if (handled == 1) {
-        message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
+        message.command = H1_ENUM_DECODE(
+            BaseWidgetCommand,
+            message.id = H1_ENUM_ENCODE(BaseWidgetCommand, WIDGET_COMMAND_DIALOG_SELECT)
+        );
         return MESSAGE_DISPATCH_FORWARD;
     }
     return MESSAGE_DISPATCH_CONSUME;
@@ -2454,7 +2544,7 @@ update_amount:
 }
 // TOWNMGR's .rdata: Open's per-type town-object layout.
 DATA(0x0048a70c)
-const i8 gTownObjectType[4][16] = {
+const H1_ENUM_ARRAY_ROWS(i8, gTownObjectType, TownType, TOWN_TYPE_COUNT, TOWN_MANAGER_OBJECT_CAPACITY) = {
     {5, 6, 8, 11, 7, 0, 1, 2, 10, 9, 3, 4, 12, -1, -1, -1},
     {5, 6, 12, 8, 0, 9, 10, 1, 2, 11, 3, 4, 7, -1, -1, -1},
     {13, 5, 6, 9, 7, 11, 0, 1, 2, 10, 8, 12, 3, 4, -1, -1},

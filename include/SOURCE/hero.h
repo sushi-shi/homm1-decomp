@@ -7,6 +7,7 @@
 #include <H1/Macros.h>
 #include <SOURCE/armyGroup.h>
 #include <SOURCE/artifactTypes.h>
+#include <SOURCE/cursorTypes.h>
 #include <SOURCE/spellTypes.h>
 
 // forward declarations:
@@ -97,7 +98,7 @@ public:
     i8 m_y;
     i8 m_destinationX;
     i8 m_destinationY;
-    u8 m_direction;
+    H1_ENUM_STORAGE(MapDirection, u8) m_direction;
     u8 m_locationType;
     // SetHeroContext passes it zero-extended to game::RestoreCell.
     u8 m_occupiedTown;
@@ -146,7 +147,7 @@ public:
     void RedrawHeroScreen(void);
     i8 HeroView(i8 viewOnly);
     void ViewStat(i8 stat, i8 quickView);
-    void ViewArtifact(i8 artifact, i8 quickView);
+    void ViewArtifact(H1_ENUM_PARAM(ArtifactType, i8) artifact, i8 quickView);
     i8 Dismiss(void);
     void Deallocate(void);
     i32 GetExperience(i32 level);
@@ -240,16 +241,17 @@ H1_ENUM_BEGIN(HeroScreenText)
     HERO_TEXT_COUNT = 19
 H1_ENUM_END(HeroScreenText)
 
-// Frames HeroView sets on the three luck and three morale icons, and how
-// many of each the screen shows.
-H1_ENUM_BEGIN(HeroScreenMoodFrame)
+// Frames HeroView sets on the three luck and three morale icons, carried to
+// the icon widgets in tag_message::value (WIDGET_COMMAND_SET_FRAME): a set of
+// frame ids, not a value domain.
+H1_ENUM_ID_BEGIN(HeroScreenMoodFrame)
     HERO_LUCK_FRAME_GOOD = 11,
     HERO_LUCK_FRAME_BAD = 12,
     HERO_MORALE_FRAME_GOOD = 13,
     HERO_MORALE_FRAME_BAD = 14,
     HERO_LUCK_FRAME_NEUTRAL = 16,
     HERO_MORALE_FRAME_NEUTRAL = 17
-H1_ENUM_END(HeroScreenMoodFrame)
+H1_ENUM_ID_END(HeroScreenMoodFrame)
 
 H1_ENUM_CONST_BEGIN(HeroScreenMoodConstant)
     HERO_SCREEN_MOOD_ICON_COUNT = 3

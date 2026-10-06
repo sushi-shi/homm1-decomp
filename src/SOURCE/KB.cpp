@@ -209,7 +209,7 @@ i32 EarlySetup(void) {
 VA(0x0043d0c4, 0xccb)
 i32 oldmain(void) {
     char saveBuf[20];
-    H1_ENUM_STORAGE(SmackVideo, char) endVideos[GAME_END_SEQUENCE_COUNT];
+    H1_ENUM_ARRAY(H1_ENUM_STORAGE(SmackVideo, char), endVideos, GameEndSequence, GAME_END_SEQUENCE_COUNT);
     i32 netIndex;
     heroWindow* mainMenuWindow;
     font* textFont;
@@ -225,7 +225,7 @@ i32 oldmain(void) {
         return 0;
     gKBDone = 1;
     command = MAIN_MENU_NO_COMMAND;
-    if (gpExec->InitSystem())
+    if (H1_ENUM_ENCODE(BaseManagerStatus, gpExec->InitSystem()))
         ShutDown(localization::Tr("startup.initialize.failed"));
     CheckMem();
     KBChangeMenu(hmnuDflt);
@@ -284,7 +284,7 @@ i32 oldmain(void) {
         backdropLoaded = 1;
         if (gGameCommand != MAIN_MENU_QUIT)
             gpWindowManager->m_updateFlags = 1;
-        gCampaignChoice = 0;
+        gCampaignChoice = CAMPAIGN_NONE;
         gpMouseManager->ReallyShowPointer();
 
         if (gMenuCommand != APP_MENU_NONE) {
@@ -348,7 +348,7 @@ i32 oldmain(void) {
                     goto mainMenu;
                 break;
             case MAIN_MENU_HIGH_SCORES:
-                if (gpExec->AddManager(gpHighScoreManager, BASE_MANAGER_PRIORITY_UNASSIGNED))
+                if (H1_ENUM_ENCODE(BaseManagerStatus, gpExec->AddManager(gpHighScoreManager, BASE_MANAGER_PRIORITY_UNASSIGNED)))
                     ShutDown(localization::Tr("startup.manager.failed"));
                 gpExec->MainLoop();
                 gpExec->RemoveManager(gpHighScoreManager);
@@ -454,7 +454,7 @@ i32 oldmain(void) {
             gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
             gMapX = 0;
             gMapY = 0;
-            if (gpExec->AddManager(gpAdvManager, BASE_MANAGER_PRIORITY_UNASSIGNED))
+            if (H1_ENUM_ENCODE(BaseManagerStatus, gpExec->AddManager(gpAdvManager, BASE_MANAGER_PRIORITY_UNASSIGNED)))
                 ShutDown(localization::Tr("startup.manager.failed"));
             if (command == MAIN_MENU_NEW_GAME)
                 gpAdvManager->SetHeroContext(gpGame->m_players[0].NextHero(0), 0);
@@ -497,12 +497,12 @@ i32 oldmain(void) {
                     giCurTurn,
                     HIGH_SCORE_TYPE_CAMPAIGN,
                     "",
-                    gCampaignSideNames[gpGame->m_campaignType - CAMPAIGN_IRONFIST]
+                    gCampaignSideNames[gpGame->m_campaignType - H1_ENUM_ENCODE(CampaignChoice, CAMPAIGN_IRONFIST)]
                 );
             }
             if (gShowHighScore) {
                 gpMouseManager->ReallyShowPointer();
-                if (gpExec->AddManager(gpHighScoreManager, BASE_MANAGER_PRIORITY_UNASSIGNED))
+                if (H1_ENUM_ENCODE(BaseManagerStatus, gpExec->AddManager(gpHighScoreManager, BASE_MANAGER_PRIORITY_UNASSIGNED)))
                     ShutDown(localization::Tr("startup.manager.failed"));
                 gpExec->MainLoop();
                 gpExec->RemoveManager(gpHighScoreManager);
@@ -527,7 +527,7 @@ i32 oldmain(void) {
                     gpGame->m_campaignScenario++;
                     gpGame->m_campaignScenariosWon++;
                     if (gpGame->m_campaignScenario - CAMPAIGN_SCENARIO_LORD_FIRST
-                        == gpGame->m_campaignType - CAMPAIGN_IRONFIST)
+                        == gpGame->m_campaignType - H1_ENUM_ENCODE(CampaignChoice, CAMPAIGN_IRONFIST))
                         gpGame->m_campaignScenario++;
                     gpGame->InitCampaignMap(gpGame->m_campaignScenario, 0);
                     sprintf(
@@ -616,7 +616,7 @@ i32 InterpretCommandLine(void) {
 VA(0x0043e05e, 0x154)
 H1_ENUM_RETURN(MessageDispatchResult, i16) InitMenuHandler(tag_message& message) {
     i32 handled = 0;
-    i32 helpIndex;
+    H1_ENUM_LOCAL(MainMenuHelp, i32) helpIndex;
 
     PollSound();
     if (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
@@ -639,7 +639,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) InitMenuHandler(tag_message& message)
                     helpIndex = MAIN_MENU_HELP_QUIT;
                     break;
             }
-            if (helpIndex >= 0)
+            if (helpIndex >= MAIN_MENU_HELP_FIRST)
                 NormalDialog(gInitMenuHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW);
         }
     } else if (message.type == MESSAGE_WIDGET) {
@@ -712,7 +712,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) RecruitHeroHandler(tag_message& messa
         }
     }
     if (shouldClose == 1) {
-        message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
+        message.command = H1_ENUM_DECODE(BaseWidgetCommand, message.id = H1_ENUM_ENCODE(BaseWidgetCommand, WIDGET_COMMAND_DIALOG_SELECT));
         return MESSAGE_DISPATCH_FORWARD;
     }
     return MESSAGE_DISPATCH_CONSUME;
@@ -720,27 +720,27 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) RecruitHeroHandler(tag_message& messa
 
 // HoMM1 has seven neutral building slots before six per-faction dwellings.
 VA(0x0043e319, 0x30)
-char* GetBuildingName(i32 race, i16 building) {
+char* GetBuildingName(H1_ENUM_PARAM(TownType, i32) race, H1_ENUM_PARAM(BuildingSlotType, i16) building) {
     if (building < BUILDING_SLOT_DWELLING_FIRST)
         return gNeutralBuildingNames[building];
     else
         return gDwellingNames
-            [race * BUILDING_SLOT_DWELLING_COUNT + (building - BUILDING_SLOT_DWELLING_FIRST)];
+            [H1_ENUM_ENCODE(TownType, race) * BUILDING_SLOT_DWELLING_COUNT + (building - BUILDING_SLOT_DWELLING_FIRST)];
 }
 
 VA(0x0043e349, 0x77)
-void GetBuildingCost(i32 race, i16 building, i32* const destination, i32 mageLevel) {
+void GetBuildingCost(H1_ENUM_PARAM(TownType, i32) race, H1_ENUM_PARAM(BuildingSlotType, i16) building, i32* const destination, i32 mageLevel) {
     if (building < BUILDING_SLOT_DWELLING_FIRST) {
         if (building == BUILDING_SLOT_MAGE_GUILD)
-            memcpy(destination, gMageBuildingCosts[mageLevel], RESOURCE_COUNT * sizeof(i32));
+            memcpy(destination, gMageBuildingCosts[mageLevel], H1_ENUM_ENCODE(ResourceType, RESOURCE_COUNT) * sizeof(i32));
         else
-            memcpy(destination, gNeutralBuildingCosts[building], RESOURCE_COUNT * sizeof(i32));
+            memcpy(destination, gNeutralBuildingCosts[building], H1_ENUM_ENCODE(ResourceType, RESOURCE_COUNT) * sizeof(i32));
     } else {
         memcpy(
             destination,
             gDwellingCosts
-                [race * BUILDING_SLOT_DWELLING_COUNT + (building - BUILDING_SLOT_DWELLING_FIRST)],
-            RESOURCE_COUNT * sizeof(i32)
+                [H1_ENUM_ENCODE(TownType, race) * BUILDING_SLOT_DWELLING_COUNT + (building - BUILDING_SLOT_DWELLING_FIRST)],
+            H1_ENUM_ENCODE(ResourceType, RESOURCE_COUNT) * sizeof(i32)
         );
     }
 }
@@ -750,44 +750,45 @@ void GetBuildingCost(i32 race, i16 building, i32* const destination, i32 mageLev
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0043e3c0, 0xf)
-char* GetMonsterSingularName(i32 monster) {
+char* GetMonsterSingularName(H1_ENUM_PARAM(CreatureType, i32) monster) {
     return gArmyNames[monster];
 }
 
 VA(0x0043e3cf, 0xf)
-char* GetMonsterName(i32 monster) {
+char* GetMonsterName(H1_ENUM_PARAM(CreatureType, i32) monster) {
     return gArmyNamesPlural[monster];
 }
 
 VA(0x0043e3de, 0xbe)
-void GetMonsterCost(i32 monster, i32* const cost) {
+void GetMonsterCost(H1_ENUM_PARAM(CreatureType, i32) monster, i32* const cost) {
     i32 index;
-    for (index = 0; index < RESOURCE_COUNT; index++)
+    // cost is the caller's resource row; this loop clears it by position.
+    for (index = 0; index < H1_ENUM_ENCODE(ResourceType, RESOURCE_COUNT); index++)
         cost[index] = 0;
-    cost[RESOURCE_GOLD] = gMonsterDatabase[monster].cost;
+    cost[H1_ENUM_ENCODE(ResourceType, RESOURCE_GOLD)] = gMonsterDatabase[monster].cost;
     switch (monster) {
         case CREATURE_GENIE:
-            cost[RESOURCE_GEMS] = 1;
+            cost[H1_ENUM_ENCODE(ResourceType, RESOURCE_GEMS)] = 1;
             break;
         case CREATURE_PHOENIX:
-            cost[RESOURCE_MERCURY] = 1;
+            cost[H1_ENUM_ENCODE(ResourceType, RESOURCE_MERCURY)] = 1;
             break;
         case CREATURE_CYCLOPS:
-            cost[RESOURCE_CRYSTAL] = 1;
+            cost[H1_ENUM_ENCODE(ResourceType, RESOURCE_CRYSTAL)] = 1;
             break;
         case CREATURE_DRAGON:
-            cost[RESOURCE_SULFUR] = 1;
+            cost[H1_ENUM_ENCODE(ResourceType, RESOURCE_SULFUR)] = 1;
             break;
     }
 }
 
 VA(0x0043e49c, 0x104)
-i8 CanBuild(town* t, i16 building) {
+i8 CanBuild(town* t, H1_ENUM_PARAM(BuildingSlotType, i16) building) {
     mapCell* cell;
     u16 required;
     if (BitTest(gpGame->m_townBuiltToday, t->m_id))
         return 0;
-    if (building != BUILDING_SLOT_CASTLE && !(t->m_buildings & (1 << BUILDING_SLOT_CASTLE)))
+    if (building != BUILDING_SLOT_CASTLE && !(t->m_buildings & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_CASTLE)))
         return 0;
     if (building == BUILDING_SLOT_SHIPYARD) {
         cell = gpAdvManager->GetCell(t->m_x - 1, t->m_y + 1);
@@ -803,28 +804,28 @@ i8 CanBuild(town* t, i16 building) {
     if (building < BUILDING_SLOT_DWELLING_FIRST)
         return 1;
     required = gDwellingRequirements
-        [t->m_type * BUILDING_SLOT_DWELLING_COUNT + (building - BUILDING_SLOT_DWELLING_FIRST)];
+        [H1_ENUM_ENCODE(TownType, t->m_type) * BUILDING_SLOT_DWELLING_COUNT + (building - BUILDING_SLOT_DWELLING_FIRST)];
     if ((required & t->m_buildings) == required)
         return 1;
     return 0;
 }
 
 VA(0x0043e5a0, 0xb6)
-i8 CanBuy(town* t, i16 type) {
-    i32 cost[RESOURCE_COUNT];
+i8 CanBuy(town* t, H1_ENUM_PARAM(BuildingSlotType, i16) type) {
+    H1_ENUM_ARRAY(i32, cost, ResourceType, RESOURCE_COUNT);
     playerData* rec;
-    i32 i;
+    H1_ENUM_LOCAL(ResourceType, i32) i;
     GetBuildingCost(
         t->m_type,
         type,
         cost,
-        (t->m_buildings & (1 << BUILDING_SLOT_MAGE_GUILD))
+        (t->m_buildings & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_MAGE_GUILD))
             ? (t->m_buildState < TOWN_MAGE_GUILD_COST_LEVEL_LAST ? t->m_buildState + 1
                                                                  : TOWN_MAGE_GUILD_COST_LEVEL_LAST)
             : 0
     );
     rec = &gpGame->m_players[giCurPlayer];
-    for (i = 0; i < RESOURCE_COUNT; ++i) {
+    for (i = RESOURCE_FIRST; i < RESOURCE_COUNT; ++i) {
         if (rec->m_resources[i] < cost[i])
             return 0;
     }
@@ -833,7 +834,7 @@ i8 CanBuy(town* t, i16 type) {
 
 // HoMM1 keeps seven neutral value slots ahead of six per-faction dwellings.
 VA(0x0043e656, 0x3d)
-i32 GetBuildingBaseResourceValue(i32 race, i32 building, i32 level) {
+i32 GetBuildingBaseResourceValue(H1_ENUM_PARAM(TownType, i32) race, H1_ENUM_PARAM(BuildingSlotType, i32) building, i32 level) {
     if (building < BUILDING_SLOT_DWELLING_FIRST) {
         if (building == BUILDING_SLOT_MAGE_GUILD)
             return gMageBaseResourceValues[level];
@@ -841,7 +842,7 @@ i32 GetBuildingBaseResourceValue(i32 race, i32 building, i32 level) {
             return gNeutralBaseResourceValues[building];
     } else {
         return gDwellingBaseResourceValues
-            [race * BUILDING_SLOT_DWELLING_COUNT + (building - BUILDING_SLOT_DWELLING_FIRST)];
+            [H1_ENUM_ENCODE(TownType, race) * BUILDING_SLOT_DWELLING_COUNT + (building - BUILDING_SLOT_DWELLING_FIRST)];
     }
 }
 
@@ -861,7 +862,7 @@ void NormalDialog(
 ) {
     char* amounts[NORMAL_DIALOG_RESOURCE_COUNT];
     i32 sizedHeight;
-    i32 resourceKind[NORMAL_DIALOG_RESOURCE_COUNT];
+    H1_ENUM_LOCAL(NormalDialogResourceType, i32) resourceKind[NORMAL_DIALOG_RESOURCE_COUNT];
     iconWidget* resourcePanel;
     i32 width;
     tag_message msg;
@@ -934,12 +935,12 @@ void NormalDialog(
             case NORMAL_DIALOG_RESOURCE_GOLD:
                 sizedHeight = 26;
                 break;
-            case RESOURCE_WOOD:
-            case RESOURCE_MERCURY:
-            case RESOURCE_ORE:
-            case RESOURCE_SULFUR:
-            case RESOURCE_CRYSTAL:
-            case RESOURCE_GEMS:
+            case NORMAL_DIALOG_RESOURCE_WOOD:
+            case NORMAL_DIALOG_RESOURCE_MERCURY:
+            case NORMAL_DIALOG_RESOURCE_ORE:
+            case NORMAL_DIALOG_RESOURCE_SULFUR:
+            case NORMAL_DIALOG_RESOURCE_CRYSTAL:
+            case NORMAL_DIALOG_RESOURCE_GEMS:
                 sizedHeight = 44;
                 break;
             case NORMAL_DIALOG_SPELL:
@@ -1015,9 +1016,9 @@ void NormalDialog(
             else
                 sprintf(amounts[index], localization::Tr("dialog.income.per_day"), -resourceAmounts[index]);
             strcpy(iconFile, "resource.icn");
-            iconFrameIndex = resourceKind[index];
+            iconFrameIndex = H1_ENUM_ENCODE(NormalDialogResourceType, resourceKind[index]);
         } else if (resourceKind[index] == NORMAL_DIALOG_SPELL) {
-            sprintf(amounts[index], "%s", gSpellNames[resourceAmounts[index]]);
+            sprintf(amounts[index], "%s", gSpellNames[H1_ENUM_DECODE(SpellType, resourceAmounts[index])]);
             strcpy(iconFile, "spells.icn");
             iconFrameIndex = resourceAmounts[index];
         } else if (resourceKind[index] == NORMAL_DIALOG_CREST) {
@@ -1039,7 +1040,7 @@ void NormalDialog(
         } else {
             strcpy(amounts[index], "");
             strcpy(iconFile, "resource.icn");
-            iconFrameIndex = resourceKind[index];
+            iconFrameIndex = H1_ENUM_ENCODE(NormalDialogResourceType, resourceKind[index]);
         }
 
         switch (resourceKind[index]) {
@@ -1079,12 +1080,12 @@ void NormalDialog(
                 resWidth = 76;
                 sizedHeight = 26;
                 break;
-            case RESOURCE_WOOD:
-            case RESOURCE_MERCURY:
-            case RESOURCE_ORE:
-            case RESOURCE_SULFUR:
-            case RESOURCE_CRYSTAL:
-            case RESOURCE_GEMS:
+            case NORMAL_DIALOG_RESOURCE_WOOD:
+            case NORMAL_DIALOG_RESOURCE_MERCURY:
+            case NORMAL_DIALOG_RESOURCE_ORE:
+            case NORMAL_DIALOG_RESOURCE_SULFUR:
+            case NORMAL_DIALOG_RESOURCE_CRYSTAL:
+            case NORMAL_DIALOG_RESOURCE_GEMS:
                 resWidth = 38;
                 sizedHeight = 32;
                 break;
@@ -1254,7 +1255,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) WaitHandler(tag_message& message) {
     gbFunctionComplete = 1;
     PollSound();
     if (!MusicPlaying())
-        PlayMusic(gpAdvManager->m_currentTerrain);
+        PlayMusic(TERRAIN_MUSIC_TRACK(gpAdvManager->m_currentTerrain));
     if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
             case WIDGET_NOTIFY_DESELECT:
@@ -1299,7 +1300,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) WaitHandler(tag_message& message) {
     if (result) {
         gpWindowManager->m_dialogResult = DIALOG_BUTTON_1;
         message.type = MESSAGE_WIDGET;
-        message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
+        message.command = H1_ENUM_DECODE(BaseWidgetCommand, message.id = H1_ENUM_ENCODE(BaseWidgetCommand, WIDGET_COMMAND_DIALOG_SELECT));
         return MESSAGE_DISPATCH_FORWARD;
     }
     return MESSAGE_DISPATCH_CONSUME;
@@ -1308,7 +1309,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) WaitHandler(tag_message& message) {
 VA(0x0043f5ef, 0xb3)
 H1_ENUM_RETURN(MessageDispatchResult, i16) EventWindowHandler(tag_message& message) {
     if (!MusicPlaying())
-        PlayMusic(gpAdvManager->m_currentTerrain);
+        PlayMusic(TERRAIN_MUSIC_TRACK(gpAdvManager->m_currentTerrain));
     if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
             case WIDGET_NOTIFY_DESELECT:
@@ -1363,7 +1364,7 @@ void PlayerDead(i32 player) {
 }
 
 DATA(0x004902d0)
-char* gCombatGroundNames[7] = {
+H1_ENUM_ARRAY(char*, gCombatGroundNames, TerrainType, TERRAIN_COUNT) = {
     "boat.xtl",
     "grass.xtl",
     "snow.xtl",
@@ -1373,7 +1374,7 @@ char* gCombatGroundNames[7] = {
     "dgrass.xtl",
 };
 DATA(0x004902ec)
-char* gCombatObstacleNames[7] = {
+H1_ENUM_ARRAY(char*, gCombatObstacleNames, TerrainType, TERRAIN_COUNT) = {
     "boat.obj",
     "grass.obj",
     "snow.obj",
@@ -1419,11 +1420,15 @@ H1_ENUM_ARRAY(i8, gSpellAIFlags, SpellType, SPELL_COUNT) = {
     3, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
 };
 DATA(0x0049040c)
-i8 gMageGuildSpellPool[4][8] = {
-    {9, 13, 6, 8, 10, 20, 19, 8},
-    {1, 5, 3, 7, 11, 21, 26, 12},
-    {0, 18, 14, 16, 22, 25, 23, 2},
-    {27, 4, 15, 17, 28, 24, 28, 27},
+H1_ENUM_STORAGE(SpellType, i8) gMageGuildSpellPool[4][8] = {
+    {SPELL_PROTECTION, SPELL_DISPEL_MAGIC, SPELL_SLOW, SPELL_BLESS, SPELL_CURSE, SPELL_VIEW_RESOURCES,
+     SPELL_VIEW_MINES, SPELL_BLESS},
+    {SPELL_LIGHTNING_BOLT, SPELL_HASTE, SPELL_CURE, SPELL_BLIND, SPELL_TURN_UNDEAD, SPELL_VIEW_ARTIFACTS,
+     SPELL_SUMMON_BOAT, SPELL_ANTI_MAGIC},
+    {SPELL_FIREBALL, SPELL_PARALYZE, SPELL_BERZERKER, SPELL_STORM, SPELL_VIEW_TOWNS, SPELL_IDENTIFY_HERO,
+     SPELL_VIEW_HEROES, SPELL_TELEPORT},
+    {SPELL_DIMENSION_DOOR, SPELL_RESURRECT, SPELL_ARMAGEDDON, SPELL_METEOR_SHOWER, SPELL_TOWN_GATE,
+     SPELL_VIEW_ALL, SPELL_TOWN_GATE, SPELL_DIMENSION_DOOR},
 };
 DATA(0x0049042c)
 H1_ENUM_ARRAY(i8, gCombatAdjacency[45], CombatHexDirection, COMBAT_DIRECTION_ADJACENT_COUNT) = {
@@ -1461,11 +1466,11 @@ char* gTownObjectNames[20] = {
     "cast",    "_d0",      "_d1",    "_d2",  "_d3",  "_d4",  "_d5",  "_e0",  "_e1", "_e2",
 };
 DATA(0x00490608)
-i8 gDwellingType[4][6] = {
-    {0, 1, 2, 3, 4, 5},
-    {12, 13, 14, 15, 16, 17},
-    {6, 7, 8, 9, 10, 11},
-    {18, 19, 20, 21, 22, 23},
+H1_ENUM_ARRAY_ROWS(H1_ENUM_STORAGE(CreatureType, i8), gDwellingType, TownType, TOWN_TYPE_COUNT, 6) = {
+    {CREATURE_PEASANT, CREATURE_ARCHER, CREATURE_PIKEMAN, CREATURE_SWORDSMAN, CREATURE_CAVALRY, CREATURE_PALADIN},
+    {CREATURE_SPRITE, CREATURE_DWARF, CREATURE_ELF, CREATURE_DRUID, CREATURE_UNICORN, CREATURE_PHOENIX},
+    {CREATURE_GOBLIN, CREATURE_ORC, CREATURE_WOLF, CREATURE_OGRE, CREATURE_TROLL, CREATURE_CYCLOPS},
+    {CREATURE_CENTAUR, CREATURE_GARGOYLE, CREATURE_GRIFFIN, CREATURE_MINOTAUR, CREATURE_HYDRA, CREATURE_DRAGON},
 };
 DATA(0x00490620)
 i32 gMageBuildingCosts[4][7] = {
@@ -1475,7 +1480,7 @@ i32 gMageBuildingCosts[4][7] = {
     {5, 10, 5, 10, 10, 10, 1000},
 };
 DATA(0x00490690)
-i32 gNeutralBuildingCosts[7][7] = {
+H1_ENUM_ARRAY_ROWS(i32, gNeutralBuildingCosts, BuildingSlotType, BUILDING_SLOT_NEUTRAL_COUNT, 7) = {
     {5, 0, 5, 0, 0, 0, 2000},
     {5, 0, 0, 0, 0, 0, 750},
     {5, 0, 0, 0, 0, 0, 500},
@@ -1487,7 +1492,7 @@ i32 gNeutralBuildingCosts[7][7] = {
 DATA(0x00490754)
 i32 gMageBaseResourceValues[4] = {4000, 6500, 8500, 10500};
 DATA(0x00490764)
-i32 gNeutralBaseResourceValues[7] = {5000, 1500, 500, 2000, 3000, 0, 12000};
+H1_ENUM_ARRAY(i32, gNeutralBaseResourceValues, BuildingSlotType, BUILDING_SLOT_NEUTRAL_COUNT) = {5000, 1500, 500, 2000, 3000, 0, 12000};
 DATA(0x00490780)
 i32 gDwellingBaseResourceValues[24] = {
     858,  2225, 2816, 7385, 13754, 29785, 1684, 2256, 3736, 7213, 15181, 27684,
@@ -1587,7 +1592,7 @@ void ReceiveRemotePlayerExit(i8 position, i8, i8 eliminated, i8 timedOut) {
                 0x61,
                 NORMAL_DIALOG_AUTO_POSITION,
                 NORMAL_DIALOG_CREST,
-                gpGame->m_players[position].Color()
+                H1_ENUM_ENCODE(PlayerColor, gpGame->m_players[position].Color())
             );
             goto dropPlayer;
         } else {
@@ -1663,7 +1668,7 @@ void CheckEndGame(i32 forced) {
                     0x61,
                     NORMAL_DIALOG_AUTO_POSITION,
                     NORMAL_DIALOG_CREST,
-                    gpGame->m_players[static_cast<i8>(playerIndex)].Color()
+                    H1_ENUM_ENCODE(PlayerColor, gpGame->m_players[static_cast<i8>(playerIndex)].Color())
                 );
             } else if (!curPlayer->m_townCount) {
                 if (curPlayer->m_daysLeft == END_GAME_NO_GRACE_PERIOD) {
@@ -1680,7 +1685,7 @@ void CheckEndGame(i32 forced) {
                             NORMAL_DIALOG_AUTO_POSITION,
                             NORMAL_DIALOG_AUTO_POSITION,
                             NORMAL_DIALOG_CREST,
-                            gpGame->m_players[static_cast<i8>(playerIndex)].Color()
+                            H1_ENUM_ENCODE(PlayerColor, gpGame->m_players[static_cast<i8>(playerIndex)].Color())
                         );
                     }
                     curPlayer->m_daysLeft = END_GAME_GRACE_DAYS;
@@ -1707,7 +1712,7 @@ void CheckEndGame(i32 forced) {
                         0x61,
                         NORMAL_DIALOG_AUTO_POSITION,
                         NORMAL_DIALOG_CREST,
-                        gpGame->m_players[static_cast<i8>(playerIndex)].Color()
+                        H1_ENUM_ENCODE(PlayerColor, gpGame->m_players[static_cast<i8>(playerIndex)].Color())
                     );
                 }
             } else {
@@ -1831,7 +1836,8 @@ void QuickViewWait(void) {
 
 VA(0x0044053e, 0x175)
 void InitVars(void) {
-    i32 i;
+    // i walks the ground tiles, then the terrains, then the map-extra slots.
+    H1_ENUM_SHARED(TerrainType, i32) i;
     iMaxMapExtra = MAP_EXTRA_FIRST_RECORD;
     gGameCommand = MAIN_MENU_NO_COMMAND;
     gPalette = NULL;
@@ -1840,7 +1846,7 @@ void InitVars(void) {
     gpGame->m_viewArmyResult = 0;
     gbInNewGameSetup = 0;
     for (i = 0; i < MAP_CELL_GROUND_TILE_COUNT; i++)
-        giGroundToTerrain[i] = i / MAP_CELL_TILES_PER_TERRAIN;
+        giGroundToTerrain[i] = H1_ENUM_DECODE(TerrainType, i / MAP_CELL_TILES_PER_TERRAIN);
     for (i = 0; i < FINDPATH_TERRAIN_COUNT; i++) {
         giTerrainCost[i][FINDPATH_STEP_STRAIGHT] = TerrainStepCost(i, FINDPATH_STEP_STRAIGHT);
         giTerrainCost[i][FINDPATH_STEP_DIAGONAL] = TerrainStepCost(i, FINDPATH_STEP_DIAGONAL);
@@ -1856,10 +1862,10 @@ void InitVars(void) {
 }
 
 VA(0x004406b3, 0x3f2)
-void game::ShowMoraleInfo(hero* h, i32 dialogType) {
+void game::ShowMoraleInfo(hero* h, H1_ENUM_PARAM(NormalDialogType, i32) dialogType) {
     i32 newFaction;
     i32 i;
-    i32 alignments;
+    H1_ENUM_LOCAL(ArmyGroupAlignmentResult, i32) alignments;
     i32 length;
     char buffer[200];
 
@@ -1878,7 +1884,7 @@ void game::ShowMoraleInfo(hero* h, i32 dialogType) {
         newFaction = 0;
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
             if (h->m_army.m_creatureTypes[i] != CREATURE_NONE)
-                newFaction = h->m_army.m_creatureTypes[i] / CREATURE_FACTION_SIZE;
+                newFaction = CREATURE_FACTION(h->m_army.m_creatureTypes[i]);
         }
         sprintf(buffer, gMoraleInfoText[MORALE_INFO_ALL_TROOPS], gAlignmentNames[newFaction]);
         strcat(gText, buffer);
@@ -1925,7 +1931,7 @@ void game::ShowMoraleInfo(hero* h, i32 dialogType) {
 }
 
 VA(0x00440aa5, 0x1cd)
-void game::ShowLuckInfo(hero* h, i32 dialogType) {
+void game::ShowLuckInfo(hero* h, H1_ENUM_PARAM(NormalDialogType, i32) dialogType) {
     i32 alignments;
     i32 size;
     char buffer[200];
@@ -1968,22 +1974,22 @@ void ClearMapExtra(void) {
 }
 
 VA(0x00440ccf, 0x6a)
-i16 GetMonType(i32 score, i32 highScoreType) {
+H1_ENUM_RETURN(CreatureType, i16) GetMonType(i32 score, H1_ENUM_PARAM(HighScoreType, i32) highScoreType) {
     i32 index;
     for (index = SCORE_MONSTER_COUNT - 1; index >= 0; index--) {
         if (highScoreType == HIGH_SCORE_TYPE_CAMPAIGN) {
             if (score <= gScoreCampaignMon[index][SCORE_MONSTER_THRESHOLD])
-                return gScoreCampaignMon[index][SCORE_MONSTER_TYPE];
+                return H1_ENUM_DECODE(CreatureType, gScoreCampaignMon[index][SCORE_MONSTER_TYPE]);
         } else {
             if (score >= gScoreMon[index][SCORE_MONSTER_THRESHOLD])
-                return gScoreMon[index][SCORE_MONSTER_TYPE];
+                return H1_ENUM_DECODE(CreatureType, gScoreMon[index][SCORE_MONSTER_TYPE]);
         }
     }
-    return gScoreMon[0][SCORE_MONSTER_TYPE];
+    return H1_ENUM_DECODE(CreatureType, gScoreMon[0][SCORE_MONSTER_TYPE]);
 }
 
 VA(0x00440d39, 0x32d)
-i32 AddScoreToHighScore(i32 score, i32 standard, char*, char* scenarioName) {
+i32 AddScoreToHighScore(i32 score, H1_ENUM_PARAM(HighScoreType, i32) standard, char*, char* scenarioName) {
     HighScoreEntry curScores[HIGH_SCORE_DISPLAY_ENTRY_COUNT];
     i32 entry;
     i32 theDest;
@@ -2012,7 +2018,7 @@ i32 AddScoreToHighScore(i32 score, i32 standard, char*, char* scenarioName) {
     }
 
     gShowHighScore = 1;
-    giHighScoreType = standard;
+    giHighScoreType = H1_ENUM_ENCODE(HighScoreType, standard);
     gHighScoreRank = HIGH_SCORE_EMPTY;
     giScore = score;
     for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++) {
@@ -2042,7 +2048,7 @@ i32 AddScoreToHighScore(i32 score, i32 standard, char*, char* scenarioName) {
 }
 
 VA(0x00441066, 0x51)
-void BVResMsg(char* s, i32 res, i32 qty) {
+void BVResMsg(char* s, H1_ENUM_PARAM(ResourceType, i32) res, i32 qty) {
     giBottomViewOverride = BOTTOM_VIEW_RESOURCE;
     giBottomViewOverrideEndTime = KBTickCount() + 5000;
     giBottomViewResource = res;
@@ -2715,12 +2721,12 @@ i32 HandleAppSpecificMenuCommands(i32 command) {
             menuChanged = 1;
             break;
         case APP_MENU_CD_STEREO:
-            if (gConfig.musicSource) {
+            if (H1_ENUM_ENCODE(SoundMusicSource, gConfig.musicSource)) {
                 gConfig.musicSource = SOUND_MUSIC_SOURCE_DIGITAL;
             } else {
                 gConfig.musicSource = SOUND_MUSIC_SOURCE_CD;
             }
-            SetMusicSource(gConfig.musicSource != 0);
+            SetMusicSource(gConfig.musicSource != SOUND_MUSIC_SOURCE_DIGITAL);
             menuChanged = 1;
             break;
         case APP_MENU_SHOW_PATH:
@@ -2866,7 +2872,7 @@ void UpdateSystemOptionsMenu(void) {
     CheckMenuItem(
         hmnuApp,
         APP_MENU_CD_STEREO,
-        gConfig.musicSource ? MF_CHECKED : MF_UNCHECKED
+        H1_ENUM_ENCODE(SoundMusicSource, gConfig.musicSource) ? MF_CHECKED : MF_UNCHECKED
     );
     CheckMenuItem(
         hmnuApp,
@@ -2930,7 +2936,9 @@ tag_tilePoint normalDirTable[8] = {
     {-1, -1, 16},
 };
 DATA(0x00490ac0)
-TownBuildingExtent gTownBuildingExtents[4][16] = {
+H1_ENUM_ARRAY2(
+    TownBuildingExtent, gTownBuildingExtents, TownType, TOWN_TYPE_COUNT, BuildingSlotType, BUILDING_SLOT_CAPACITY
+) = {
     {{296, 0, 88, 156},
      {128, 64, 136, 128},
      {196, 64, 124, 148},
@@ -3002,16 +3010,17 @@ u16 gDwellingRequirements[24] = {
     0, 128, 128, 128, 1024, 2048, 0, 128, 128, 256, 512,  3072,
 };
 DATA(0x00490cf0)
-i32 gResourceBaseValue[7] = {250, 250, 200, 250, 250, 250, 1};
+H1_ENUM_ARRAY(i32, gResourceBaseValue, ResourceType, RESOURCE_COUNT) = {250, 250, 200, 250, 250, 250, 1};
+// Starting resources: a row of the seven resources per game difficulty.
 DATA(0x00490d0c)
-i32 gStartingResources[4][7] = {
+H1_ENUM_ARRAY2(i32, gStartingResources, GameDifficulty, DIFFICULTY_COUNT, ResourceType, RESOURCE_COUNT) = {
     {30, 10, 30, 10, 10, 10, 10000},
     {20, 5, 20, 5, 5, 5, 7500},
     {10, 0, 10, 0, 0, 0, 5000},
     {0, 0, 0, 0, 0, 0, 0},
 };
 DATA(0x00490d7c)
-i32 gMineIncome[7] = {2, 1, 2, 1, 1, 1, 1000};
+H1_ENUM_ARRAY(i32, gMineIncome, ResourceType, RESOURCE_COUNT) = {2, 1, 2, 1, 1, 1, 1000};
 DATA(0x00490d98)
 H1_ENUM_ARRAY(i32, gArtifactBaseRV, ArtifactType, ARTIFACT_REGULAR_END) = {
     9000, 22000, 18000, 14000, 6000, 4000, 4000, 5600, 1200, 1200, 1200, 1200, -1200,
@@ -3135,7 +3144,7 @@ u8 gCloudType[256] = {
     103, 108, 15,  30,  5,   14,  3,   1,   0,
 };
 DATA(0x00491acc)
-i8 gMons32Width[28] = {
+H1_ENUM_ARRAY(i8, gMons32Width, CreatureType, CREATURE_COUNT) = {
     20, 20, 20, 25, 25, 24, 21, 21, 25, 27, 22, 20, 23, 23,
     21, 22, 25, 23, 27, 22, 29, 28, 32, 27, 21, 26, 21, 29,
 };
@@ -3166,7 +3175,7 @@ WindowTextEntry gWinSetup[68] = {
     {609, 15}, {610, 15}, {611, 15}, {1, 16},
 };
 DATA(0x00491cd8)
-i8 townTheme[4] = {3, 0, 2, 1};
+H1_ENUM_ARRAY(i8, townTheme, TownType, TOWN_TYPE_COUNT) = {3, 0, 2, 1};
 DATA(0x00491ce0)
 campaignScenario gCampaignScenarios[CAMPAIGN_SCENARIO_COUNT] = {
     {0,
@@ -3261,11 +3270,18 @@ campaignScenario gCampaignScenarios[CAMPAIGN_SCENARIO_COUNT] = {
       {30, 10, 30, 10, 10, 10, 10000}}},
 };
 DATA(0x00491fe0)
-i8 gCampaignSideCrests[4][2] = {{2, 0}, {1, 0}, {3, 0}, {0, 0}};
+H1_ENUM_STORAGE(PlayerColor, i8) gCampaignSideCrests[4][2] = {
+    {PLAYER_COLOR_RED, PLAYER_COLOR_BLUE},
+    {PLAYER_COLOR_GREEN, PLAYER_COLOR_BLUE},
+    {PLAYER_COLOR_YELLOW, PLAYER_COLOR_BLUE},
+    {PLAYER_COLOR_BLUE, PLAYER_COLOR_BLUE},
+};
 DATA(0x00491fe8)
-i16 gCrestTownTypes[4] = {3, 2, 0, 1};
+H1_ENUM_ARRAY(H1_ENUM_STORAGE(TownType, i16), gCrestTownTypes, PlayerColor, PLAYER_COLOR_COUNT) = {
+    TOWN_TYPE_WARLOCK, TOWN_TYPE_BARBARIAN, TOWN_TYPE_KNIGHT, TOWN_TYPE_SORCERESS
+};
 DATA(0x00491ff0)
-i16 gCrestHeroClass[4] = {3, 1, 0, 2};
+H1_ENUM_ARRAY(i16, gCrestHeroClass, PlayerColor, PLAYER_COLOR_COUNT) = {3, 1, 0, 2};
 DATA(0x00491ff8)
 H1_ENUM_ARRAY(i8, gHeroSkillBonus[4][9], HeroPrimaryStat, HERO_PRIMARY_STAT_COUNT) = {
     {{20, 60, 10, 10},
@@ -3406,7 +3422,7 @@ H1_ENUM_ARRAY(char*, gArtifactNames, ArtifactType, ARTIFACT_COUNT) = {
     localization::Tr("table.gArtifactNames.36"), localization::Tr("table.gArtifactNames.37"),
 };
 DATA(0x00492424)
-char* gArtifactDesc[38] = {
+H1_ENUM_ARRAY(char*, gArtifactDesc, ArtifactType, ARTIFACT_COUNT) = {
     localization::Tr("table.gArtifactDesc.0"),  localization::Tr("table.gArtifactDesc.1"),
     localization::Tr("table.gArtifactDesc.2"),  localization::Tr("table.gArtifactDesc.3"),
     localization::Tr("table.gArtifactDesc.4"),  localization::Tr("table.gArtifactDesc.5"),
@@ -3551,7 +3567,7 @@ H1_ENUM_ARRAY(char*, gSpellNames, SpellType, SPELL_COUNT) = {
     localization::Tr("table.gSpellNames.28"),
 };
 DATA(0x00492750)
-char* gNeutralBuildingNames[7] = {
+H1_ENUM_ARRAY(char*, gNeutralBuildingNames, BuildingSlotType, BUILDING_SLOT_NEUTRAL_COUNT) = {
     localization::Tr("table.gNeutralBuildingNames.0"),
     localization::Tr("table.gNeutralBuildingNames.1"),
     localization::Tr("table.gNeutralBuildingNames.2"),
@@ -3586,7 +3602,7 @@ H1_ENUM_ARRAY(char*, gTerrainNames, TerrainType, TERRAIN_COUNT) = {
     localization::Tr("table.gTerrainNames.6")
 };
 DATA(0x004927e8)
-char* gResourceNames[7] = {
+H1_ENUM_ARRAY(char*, gResourceNames, ResourceType, RESOURCE_COUNT) = {
     localization::Tr("table.gResourceNames.0"),
     localization::Tr("table.gResourceNames.1"),
     localization::Tr("table.gResourceNames.2"),
@@ -3596,7 +3612,7 @@ char* gResourceNames[7] = {
     localization::Tr("table.gResourceNames.6")
 };
 DATA(0x00492804)
-char* gMineNames[7] = {
+H1_ENUM_ARRAY(char*, gMineNames, ResourceType, RESOURCE_COUNT) = {
     localization::Tr("table.gMineNames.0"),
     localization::Tr("table.gMineNames.1"),
     localization::Tr("table.gMineNames.2"),
@@ -3743,7 +3759,7 @@ char* gAPanelHelp[5] = {
     localization::Tr("table.gAPanelHelp.4"),
 };
 DATA(0x00492af4)
-char* gInitMenuHelp[5] = {
+H1_ENUM_ARRAY(char*, gInitMenuHelp, MainMenuHelp, MAIN_MENU_HELP_COUNT) = {
     localization::Tr("table.gInitMenuHelp.0"),
     localization::Tr("table.gInitMenuHelp.1"),
     localization::Tr("table.gInitMenuHelp.2"),
@@ -3751,7 +3767,7 @@ char* gInitMenuHelp[5] = {
     localization::Tr("table.gInitMenuHelp.4"),
 };
 DATA(0x00492b08)
-char* gAdvMenuHelp[6] = {
+H1_ENUM_ARRAY(char*, gAdvMenuHelp, AdventurePanelHelp, ADVENTURE_HELP_COUNT) = {
     localization::Tr("table.gAdvMenuHelp.0"),
     localization::Tr("table.gAdvMenuHelp.1"),
     localization::Tr("table.gAdvMenuHelp.2"),
@@ -3794,7 +3810,7 @@ char* onOffText[11] = {
     localization::Tr("table.onOffText.10")
 };
 DATA(0x00492b84)
-char* walkSpeedText[5] = {
+H1_ENUM_ARRAY(char*, walkSpeedText, WalkSpeed, WALK_SPEED_COUNT) = {
     localization::Tr("table.walkSpeedText.0"),
     localization::Tr("table.walkSpeedText.1"),
     localization::Tr("table.walkSpeedText.2"),
@@ -3802,7 +3818,7 @@ char* walkSpeedText[5] = {
     localization::Tr("table.walkSpeedText.4")
 };
 DATA(0x00492b98)
-char* gColorNames[4] = {
+H1_ENUM_ARRAY(char*, gColorNames, PlayerColor, PLAYER_COLOR_COUNT) = {
     localization::Tr("table.gColorNames.0"),
     localization::Tr("table.gColorNames.1"),
     localization::Tr("table.gColorNames.2"),
@@ -3817,7 +3833,7 @@ char* gAlignmentNames[5] = {
     localization::Tr("table.gAlignmentNames.4")
 };
 DATA(0x00492bbc)
-char* gSpellDesc[29] = {
+H1_ENUM_ARRAY(char*, gSpellDesc, SpellType, SPELL_COUNT) = {
     localization::Tr("table.gSpellDesc.0"),  localization::Tr("table.gSpellDesc.1"),
     localization::Tr("table.gSpellDesc.2"),  localization::Tr("table.gSpellDesc.3"),
     localization::Tr("table.gSpellDesc.4"),  localization::Tr("table.gSpellDesc.5"),
@@ -4018,7 +4034,7 @@ char* gViewGeneralLabels[6] = {
     localization::Tr("table.gViewGeneralLabels.5"),
 };
 DATA(0x00492e90)
-char* gViewGeneralHelp[6] = {
+H1_ENUM_ARRAY(char*, gViewGeneralHelp, ViewGeneralHoverHelp, GENERAL_HOVER_HELP_COUNT) = {
     localization::Tr("table.gViewGeneralHelp.0"),
     localization::Tr("table.gViewGeneralHelp.1"),
     localization::Tr("table.gViewGeneralHelp.2"),
@@ -4107,7 +4123,7 @@ char* gHeroNames[36][2] = {
     {localization::Tr("table.gHeroNames.35.0"), localization::Tr("table.gHeroNames.35.1")},
 };
 DATA(0x00493070)
-char* gCPanelHelp[12] = {
+H1_ENUM_ARRAY(char*, gCPanelHelp, ControlPanelHelp, CPANEL_HELP_COUNT) = {
     localization::Tr("table.gCPanelHelp.0"),
     localization::Tr("table.gCPanelHelp.1"),
     localization::Tr("table.gCPanelHelp.2"),
@@ -4122,7 +4138,7 @@ char* gCPanelHelp[12] = {
     localization::Tr("table.gCPanelHelp.11")
 };
 DATA(0x004930a0)
-char* gNewGameHelp[9] = {
+H1_ENUM_ARRAY(char*, gNewGameHelp, NewGameHelp, NEW_GAME_HELP_COUNT) = {
     localization::Tr("table.gNewGameHelp.0"),
     localization::Tr("table.gNewGameHelp.1"),
     localization::Tr("table.gNewGameHelp.2"),
@@ -4134,7 +4150,7 @@ char* gNewGameHelp[9] = {
     localization::Tr("table.gNewGameHelp.8"),
 };
 DATA(0x004930c4)
-char* gSetupCampaignGameHelp[5] = {
+H1_ENUM_ARRAY(char*, gSetupCampaignGameHelp, SetupCampaignHelp, SETUP_CAMPAIGN_HELP_COUNT) = {
     localization::Tr("table.gSetupCampaignGameHelp.0"),
     localization::Tr("table.gSetupCampaignGameHelp.1"),
     localization::Tr("table.gSetupCampaignGameHelp.2"),
@@ -4142,7 +4158,7 @@ char* gSetupCampaignGameHelp[5] = {
     localization::Tr("table.gSetupCampaignGameHelp.4"),
 };
 DATA(0x004930d8)
-char* gSetupBaudHelp[5] = {
+H1_ENUM_ARRAY(char*, gSetupBaudHelp, SetupBaudHelp, SETUP_BAUD_HELP_COUNT) = {
     localization::Tr("table.gSetupBaudHelp.0"),
     localization::Tr("table.gSetupBaudHelp.1"),
     localization::Tr("table.gSetupBaudHelp.2"),
@@ -4150,7 +4166,7 @@ char* gSetupBaudHelp[5] = {
     localization::Tr("table.gSetupBaudHelp.4"),
 };
 DATA(0x004930ec)
-char* gSetupComPortHelp[5] = {
+H1_ENUM_ARRAY(char*, gSetupComPortHelp, SetupComPortHelp, SETUP_COM_PORT_HELP_COUNT) = {
     localization::Tr("table.gSetupComPortHelp.0"),
     localization::Tr("table.gSetupComPortHelp.1"),
     localization::Tr("table.gSetupComPortHelp.2"),
@@ -4158,7 +4174,7 @@ char* gSetupComPortHelp[5] = {
     localization::Tr("table.gSetupComPortHelp.4"),
 };
 DATA(0x00493100)
-char* gSetupDCBaudHelp[5] = {
+H1_ENUM_ARRAY(char*, gSetupDCBaudHelp, SetupBaudHelp, SETUP_BAUD_HELP_COUNT) = {
     localization::Tr("table.gSetupDCBaudHelp.0"),
     localization::Tr("table.gSetupDCBaudHelp.1"),
     localization::Tr("table.gSetupDCBaudHelp.2"),
@@ -4166,7 +4182,7 @@ char* gSetupDCBaudHelp[5] = {
     localization::Tr("table.gSetupDCBaudHelp.4"),
 };
 DATA(0x00493114)
-char* gSetupDCComPortHelp[5] = {
+H1_ENUM_ARRAY(char*, gSetupDCComPortHelp, SetupComPortHelp, SETUP_COM_PORT_HELP_COUNT) = {
     localization::Tr("table.gSetupDCComPortHelp.0"),
     localization::Tr("table.gSetupDCComPortHelp.1"),
     localization::Tr("table.gSetupDCComPortHelp.2"),
@@ -4174,28 +4190,28 @@ char* gSetupDCComPortHelp[5] = {
     localization::Tr("table.gSetupDCComPortHelp.4"),
 };
 DATA(0x00493128)
-char* gSetupHotSeatGameHelp[4] = {
+H1_ENUM_ARRAY(char*, gSetupHotSeatGameHelp, SetupHotSeatHelp, SETUP_HOT_SEAT_HELP_COUNT) = {
     localization::Tr("table.gSetupHotSeatGameHelp.0"),
     localization::Tr("table.gSetupHotSeatGameHelp.1"),
     localization::Tr("table.gSetupHotSeatGameHelp.2"),
     localization::Tr("table.gSetupHotSeatGameHelp.3"),
 };
 DATA(0x00493138)
-char* gSetupModemGameHelp[4] = {
+H1_ENUM_ARRAY(char*, gSetupModemGameHelp, SetupModemHelp, SETUP_MODEM_HELP_COUNT) = {
     localization::Tr("table.gSetupModemGameHelp.0"),
     localization::Tr("table.gSetupModemGameHelp.1"),
     localization::Tr("table.gSetupModemGameHelp.2"),
     localization::Tr("table.gSetupModemGameHelp.3"),
 };
 DATA(0x00493148)
-char* gSetupDCGameHelp[4] = {
+H1_ENUM_ARRAY(char*, gSetupDCGameHelp, SetupModemHelp, SETUP_MODEM_HELP_COUNT) = {
     localization::Tr("table.gSetupDCGameHelp.0"),
     localization::Tr("table.gSetupDCGameHelp.1"),
     localization::Tr("table.gSetupDCGameHelp.2"),
     localization::Tr("table.gSetupDCGameHelp.3"),
 };
 DATA(0x00493158)
-char* gSetupMultiPlayerGameHelp[5] = {
+H1_ENUM_ARRAY(char*, gSetupMultiPlayerGameHelp, SetupMultiPlayerHelp, SETUP_MULTIPLAYER_HELP_COUNT) = {
     localization::Tr("table.gSetupMultiPlayerGameHelp.0"),
     localization::Tr("table.gSetupMultiPlayerGameHelp.1"),
     localization::Tr("table.gSetupMultiPlayerGameHelp.2"),
@@ -4203,13 +4219,13 @@ char* gSetupMultiPlayerGameHelp[5] = {
     localization::Tr("table.gSetupMultiPlayerGameHelp.4"),
 };
 DATA(0x0049316c)
-char* gSetupNetworkGameHelp[3] = {
+H1_ENUM_ARRAY(char*, gSetupNetworkGameHelp, SetupNetworkHelp, SETUP_NETWORK_HELP_COUNT) = {
     localization::Tr("table.gSetupNetworkGameHelp.0"),
     localization::Tr("table.gSetupNetworkGameHelp.1"),
     localization::Tr("table.gSetupNetworkGameHelp.2"),
 };
 DATA(0x00493178)
-char* gSetupGameHelp[4] = {
+H1_ENUM_ARRAY(char*, gSetupGameHelp, SetupGameHelp, SETUP_GAME_HELP_COUNT) = {
     localization::Tr("table.gSetupGameHelp.0"),
     localization::Tr("table.gSetupGameHelp.1"),
     localization::Tr("table.gSetupGameHelp.2"),
@@ -4230,7 +4246,7 @@ H1_ENUM_ARRAY(char*, gBattleResults, BattleResultText, BATTLE_RESULT_COUNT) = {
     localization::Tr("table.gBattleResults.10"),
 };
 DATA(0x004931b4)
-char* gNeutralBuildingDescriptions[7] = {
+H1_ENUM_ARRAY(char*, gNeutralBuildingDescriptions, BuildingSlotType, BUILDING_SLOT_NEUTRAL_COUNT) = {
     localization::Tr("table.gNeutralBuildingDescriptions.0"),
     localization::Tr("table.gNeutralBuildingDescriptions.1"),
     localization::Tr("table.gNeutralBuildingDescriptions.2"),
@@ -4254,13 +4270,13 @@ H1_ENUM_ARRAY(char*, gMoraleInfoText, MoraleInfoText, MORALE_INFO_COUNT) = {
     localization::Tr("table.gMoraleInfoText.20"),
 };
 DATA(0x00493224)
-char* gMapSizeNames[3] = {
+H1_ENUM_ARRAY(char*, gMapSizeNames, MapSize, MAP_SIZE_COUNT) = {
     localization::Tr("table.gMapSizeNames.0"),
     localization::Tr("table.gMapSizeNames.1"),
     localization::Tr("table.gMapSizeNames.2"),
 };
 DATA(0x00493230)
-char* gMapDifficultyNames[5] = {
+H1_ENUM_ARRAY(char*, gMapDifficultyNames, MapDifficulty, MAP_DIFFICULTY_COUNT) = {
     localization::Tr("table.gMapDifficultyNames.0"),
     localization::Tr("table.gMapDifficultyNames.1"),
     localization::Tr("table.gMapDifficultyNames.2"),
@@ -4304,7 +4320,7 @@ char* gCampaignScenarioText[9] = {
     localization::Tr("table.gCampaignScenarioText.8"),
 };
 DATA(0x004932b0)
-char* gDifficultyNames[4] = {
+H1_ENUM_ARRAY(char*, gDifficultyNames, GameDifficulty, DIFFICULTY_COUNT) = {
     localization::Tr("table.gDifficultyNames.0"),
     localization::Tr("table.gDifficultyNames.1"),
     localization::Tr("table.gDifficultyNames.2"),
@@ -4389,9 +4405,9 @@ i32 gRequiredExtendedMemory = 4434;
 DATA(0x0049342c)
 i32 gRequiredConventionalMemory = 374;
 DATA(0x004a9918)
-i32 gMapSize = 0;
+H1_ENUM_STORAGE(MapSize, i32) gMapSize = MAP_SIZE_SMALL;
 DATA(0x004a991c)
-i32 gMapDifficulty = 0;
+H1_ENUM_STORAGE(MapDifficulty, i32) gMapDifficulty = MAP_DIFFICULTY_EASY;
 DATA(0x004a9920)
 i8 gHeroWindShowing = 0;
 DATA(0x004a9921)
@@ -4421,7 +4437,7 @@ i32 gLimitToExtent = 0;
 DATA(0x00493438)
 i32 gCurrArmyDrawn = 1;
 DATA(0x004a9940)
-i32 gAdvDisposeLevel = 0;
+H1_ENUM_STORAGE(AdvDisposeLevel, i32) gAdvDisposeLevel = ADV_DISPOSE_NONE;
 DATA(0x004a9944)
 i32 gRemoteOn = 0;
 DATA(0x004a9948)
@@ -4459,7 +4475,7 @@ i32 giBottomViewOverrideEndTime;
 DATA(0x004a98c0)
 H1_ENUM_ARRAY_ROWS(i8, gArmyEffected, CombatSide, COMBAT_SIDE_COUNT, ARMY_GROUP_SLOT_COUNT);
 DATA(0x004a74c4)
-i32 giBottomViewResource;
+H1_ENUM_STORAGE(ResourceType, i32) giBottomViewResource;
 DATA(0x004a9408)
 i32 giSeedingValid;
 DATA(0x004a7ba9)
@@ -4509,13 +4525,13 @@ i32 giMinExtentX;
 DATA(0x004a9564)
 i32 giMinExtentY;
 DATA(0x004a7b9c)
-i8 iMPBaseType;
+H1_ENUM_STORAGE(MultiplayerBaseType, i8) iMPBaseType;
 DATA(0x004a7fb4)
 class hero* gHVHero;
 DATA(0x004a747c)
 i32 giHeroScreenSrcIndex;
 DATA(0x004a7494)
-i8 giWeekType;
+H1_ENUM_STORAGE(CalendarPeriodType, i8) giWeekType;
 DATA(0x004a7168)
 char gText[768];
 DATA(0x004a74dc)
@@ -4525,13 +4541,13 @@ palette* gpBufferPalette;
 DATA(0x004a7492)
 i8 giMonthTypeExtra;
 DATA(0x004a74a0)
-i8 iMPExtendedType;
+H1_ENUM_STORAGE(RemoteGameMode, i8) iMPExtendedType;
 DATA(0x004a74b0)
 char gFullMapName[20];
 DATA(0x004a7620)
 i32 giShowIntro;
 DATA(0x004a98a0)
-i32 glTimers[GLOBAL_TIMER_COUNT];
+H1_ENUM_ARRAY(i32, glTimers, TimerSlot, GLOBAL_TIMER_COUNT);
 DATA(0x004a7fbc)
 i32 giScore;
 DATA(0x004a9404)
@@ -4541,7 +4557,7 @@ configStruct gConfig;
 DATA(0x004a7a10)
 char gcRegAppPath[352];
 DATA(0x004a9410)
-i8 gCampaignChoice;
+H1_ENUM_STORAGE(CampaignChoice, i8) gCampaignChoice;
 DATA(0x004a7ba0)
 class game* gpGame;
 DATA(0x004a7823)
@@ -4551,7 +4567,7 @@ H1_ENUM_STORAGE(DialogWaitType, i8) giWaitType;
 DATA(0x004a74e8)
 i16 gCurLoadedSpellFileId;
 DATA(0x004a761c)
-i32 giBottomViewOverride;
+H1_ENUM_STORAGE(BottomViewMode, i32) giBottomViewOverride;
 DATA(0x004a76c4)
 char gLastFilename[FILE_REQUESTER_NAME_SIZE];
 DATA(0x004a7470)
@@ -4589,13 +4605,13 @@ i16 gSpellEffectFrame;
 DATA(0x004a95c8)
 executive* gpExec;
 DATA(0x004a7638)
-i8 giGroundToTerrain[140];
+H1_ENUM_STORAGE(TerrainType, i8) giGroundToTerrain[140];
 DATA(0x004a9734)
 i32 giCurWindowsStyleFlags;
 DATA(0x004a746c)
 H1_ENUM_STORAGE(MainMenuControl, i16) gGameCommand;
 DATA(0x004a9738)
-i8 giMonthType;
+H1_ENUM_STORAGE(CalendarPeriodType, i8) giMonthType;
 DATA(0x004a6c4c)
 char gMapDescription[124];
 DATA(0x004a7498)

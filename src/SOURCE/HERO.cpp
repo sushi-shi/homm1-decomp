@@ -46,7 +46,7 @@ VA(0x00438f7d, 0xd)
 void hero::GetArmyStrengths(u32* const) {}
 
 VA(0x00438f8a, 0x4b)
-i8 hero::HasArtifact(i8 artifact) {
+i8 hero::HasArtifact(H1_ENUM_PARAM(ArtifactType, i8) artifact) {
     i16 i;
 
     for (i = 0; i < HERO_ARTIFACT_SLOT_COUNT; i++) {
@@ -66,7 +66,7 @@ i16 hero::CalcMobility(void) {
     const i16 nomadBootsBonus = 24;
     const i16 travelerBonus = 12;
     i32 movePoints;
-    i16 slowestSpeedValue;
+    H1_ENUM_LOCAL(CreatureSpeed, i16) slowestSpeedValue;
     i32 creatureIndex;
 
     if (IsEmbarked()) {
@@ -81,12 +81,16 @@ i16 hero::CalcMobility(void) {
         slowestSpeedValue = CREATURE_SPEED_FAST;
         for (creatureIndex = 0; creatureIndex < ARMY_GROUP_SLOT_COUNT; creatureIndex++) {
             if (m_army.m_creatureTypes[creatureIndex] != CREATURE_NONE
-                && gMonsterDatabase[m_army.m_creatureTypes[creatureIndex]].stats.speed
-                       < slowestSpeedValue)
-                slowestSpeedValue =
-                    gMonsterDatabase[m_army.m_creatureTypes[creatureIndex]].stats.speed;
+                && H1_ENUM_DECODE(
+                       CreatureSpeed,
+                       gMonsterDatabase[m_army.m_creatureTypes[creatureIndex]].stats.speed
+                   ) < slowestSpeedValue)
+                slowestSpeedValue = H1_ENUM_DECODE(
+                    CreatureSpeed,
+                    gMonsterDatabase[m_army.m_creatureTypes[creatureIndex]].stats.speed
+                );
         }
-        movePoints = mobilityTable[slowestSpeedValue - 1];
+        movePoints = mobilityTable[H1_ENUM_ENCODE(CreatureSpeed, slowestSpeedValue) - 1];
         if (HasArtifact(ARTIFACT_NOMAD_BOOTS))
             movePoints += nomadBootsBonus;
         if (HasArtifact(ARTIFACT_TRAVELER_BOOTS))
@@ -95,13 +99,14 @@ i16 hero::CalcMobility(void) {
     if (HasArtifact(ARTIFACT_TRUE_COMPASS))
         movePoints += compassMobility;
     if (m_owner >= 0 && !gbHumanPlayer[m_owner]
-        && gpGame->m_players[m_owner].m_difficulty >= DIFFICULTY_COUNT - 1)
+        && H1_ENUM_DECODE(ComputerPlayerType, gpGame->m_players[m_owner].m_difficulty)
+               >= PLAYER_TYPE_MOBILITY_BONUS_FIRST)
         movePoints += 3;
     return movePoints;
 }
 
 VA(0x00439192, 0x41)
-i8 hero::HasSpell(i8 spell) {
+i8 hero::HasSpell(H1_ENUM_PARAM(SpellType, i8) spell) {
     i32 i;
 
     for (i = 0; i < HERO_SPELL_SLOT_COUNT; i++) {
@@ -137,12 +142,12 @@ i16 hero::GetNumSpells(H1_ENUM_PARAM(HeroSpellType, i8) type) {
 }
 
 VA(0x0043929b, 0x204)
-void hero::UseSpell(i8 spell) {
+void hero::UseSpell(H1_ENUM_PARAM(SpellType, i8) spell) {
     i16 i;
     i32 j;
     i32 k;
 
-    if (spell >= 0 && spell < HERO_COMBAT_SPELL_SLOT_COUNT) {
+    if (spell >= SPELL_FIRST && spell < SPELL_ADVENTURE_FIRST) {
         for (i = 0; i < HERO_COMBAT_SPELL_SLOT_COUNT; i++) {
             if (m_spells[i] == spell)
                 break;
@@ -159,7 +164,7 @@ void hero::UseSpell(i8 spell) {
             m_spells[HERO_COMBAT_SPELL_SLOT_COUNT - 1] = SPELL_NONE;
             m_spellCharges[HERO_COMBAT_SPELL_SLOT_COUNT - 1] = 0;
         }
-    } else if (spell >= HERO_COMBAT_SPELL_SLOT_COUNT && spell < HERO_SPELL_SLOT_COUNT) {
+    } else if (spell >= SPELL_ADVENTURE_FIRST && spell < SPELL_COUNT) {
         for (i = HERO_COMBAT_SPELL_SLOT_COUNT; i < HERO_SPELL_SLOT_COUNT; i++) {
             if (m_spells[i] == spell)
                 break;
@@ -180,11 +185,11 @@ void hero::UseSpell(i8 spell) {
 }
 
 VA(0x0043949f, 0x1a7)
-i32 hero::AddSpell(i8 spell, i8 charges, i32 checkOnly) {
+i32 hero::AddSpell(H1_ENUM_PARAM(SpellType, i8) spell, i8 charges, i32 checkOnly) {
     i32 added = 0;
     i16 i;
 
-    if (spell >= 0 && spell < HERO_COMBAT_SPELL_SLOT_COUNT) {
+    if (spell >= SPELL_FIRST && spell < SPELL_ADVENTURE_FIRST) {
         for (i = 0; i < HERO_COMBAT_SPELL_SLOT_COUNT; i++) {
             if (m_spells[i] == spell || m_spells[i] == SPELL_NONE) {
                 if (m_spells[i] == spell)
@@ -199,7 +204,7 @@ i32 hero::AddSpell(i8 spell, i8 charges, i32 checkOnly) {
             }
         }
     }
-    if (spell >= HERO_COMBAT_SPELL_SLOT_COUNT && spell < HERO_SPELL_SLOT_COUNT) {
+    if (spell >= SPELL_ADVENTURE_FIRST && spell < SPELL_COUNT) {
         for (i = HERO_COMBAT_SPELL_SLOT_COUNT; i < HERO_SPELL_SLOT_COUNT; i++) {
             if (m_spells[i] == spell || m_spells[i] == SPELL_NONE) {
                 if (m_spells[i] == spell)
@@ -268,7 +273,7 @@ i8 hero::HeroView(i8 viewOnly) {
     heroWin->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_TEXT;
     for (i = 0; i < HERO_PRIMARY_STAT_COUNT; i++) {
-        sprintf(gText, "%d", m_primaryStats[i]);
+        sprintf(gText, "%d", m_primaryStats[H1_ENUM_DECODE(HeroPrimaryStat, i)]);
         message.id = i + HERO_SCREEN_STAT_VALUE_FIRST;
         message.text = gText;
         heroWin->BroadcastMessage(message);
@@ -320,7 +325,11 @@ i8 hero::HeroView(i8 viewOnly) {
     message.id = HERO_SCREEN_EXPERIENCE;
     message.text = gText;
     heroWin->BroadcastMessage(message);
-    sprintf(gText, "crst%04d.icn", gpCurPlayer->Color() * 4 + m_heroClass);
+    sprintf(
+        gText,
+        "crst%04d.icn",
+        H1_ENUM_ENCODE(PlayerColor, gpCurPlayer->Color()) * 4 + m_heroClass
+    );
     message.command = WIDGET_COMMAND_SET_ICON;
     message.id = HERO_SCREEN_CREST;
     heroWin->BroadcastMessage(message);
@@ -329,7 +338,7 @@ i8 hero::HeroView(i8 viewOnly) {
         message.id = i + HERO_SCREEN_ARTIFACT_FIRST;
         if (m_artifacts[i] != ARTIFACT_NONE) {
             message.command = WIDGET_COMMAND_SET_FRAME;
-            message.value = m_artifacts[i];
+            message.value = H1_ENUM_ENCODE(ArtifactType, m_artifacts[i]);
             heroWin->BroadcastMessage(message);
             if (m_artifacts[i] >= ARTIFACT_REGULAR_FIRST) {
                 message.command = WIDGET_COMMAND_CLEAR_FLAGS;
@@ -419,11 +428,11 @@ void hero::UpdateArmies(void) {
         } else {
             message.command = WIDGET_COMMAND_SET_FRAME;
             message.id = i + HERO_SCREEN_ARMY_BACKGROUND_FIRST;
-            message.value = m_army.m_creatureTypes[i] / CREATURE_FACTION_SIZE
+            message.value = CREATURE_FACTION(m_army.m_creatureTypes[i])
                             + HERO_ARMY_BACKGROUND_FACTION_FIRST_FRAME;
             heroWin->BroadcastMessage(message);
             message.id = i + HERO_SCREEN_ARMY_CREATURE_FIRST;
-            message.value = m_army.m_creatureTypes[i];
+            message.value = H1_ENUM_ENCODE(CreatureType, m_army.m_creatureTypes[i]);
             heroWin->BroadcastMessage(message);
             message.command = WIDGET_COMMAND_SET_FLAGS;
             message.value = WIDGET_FLAG_DRAW;
@@ -466,7 +475,7 @@ void hero::ViewStat(i8 stat, i8 quickView) {
 }
 
 VA(0x0043a114, 0x3e)
-void hero::ViewArtifact(i8 artifact, i8 quickView) {
+void hero::ViewArtifact(H1_ENUM_PARAM(ArtifactType, i8) artifact, i8 quickView) {
     NormalDialog(
         gArtifactDesc[artifact],
         quickView == 0 ? NORMAL_DIALOG_TYPE_OK : NORMAL_DIALOG_TYPE_QUICK_VIEW,
@@ -641,8 +650,9 @@ void hero::ApplyBattleLossTemps(void) {
 VA(0x0043a8b1, 0x2b7)
 void hero::CheckLevel(void) {
     i32 oldLvl;
-    i32 i;
-    i32 stats[HERO_PRIMARY_STAT_COUNT];
+    // Counts the gained levels, then indexes the primary stats.
+    H1_ENUM_SHARED(HeroPrimaryStat, i32) i;
+    H1_ENUM_ARRAY(i32, stats, HeroPrimaryStat, HERO_PRIMARY_STAT_COUNT);
     i32 levelCount;
     i32 highIndexNo;
     char curText[50];
@@ -694,7 +704,7 @@ void hero::CheckLevel(void) {
     if (!gbInNewGameSetup && m_owner >= 0 && gbThisNetHumanPlayer[m_owner]) {
         PlayMusic(MUSIC_TRACK_LEVEL_UP);
         NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_HERO, m_id);
-        PlayMusic(gpAdvManager->m_currentTerrain);
+        PlayMusic(TERRAIN_MUSIC_TRACK(gpAdvManager->m_currentTerrain));
     }
 }
 
@@ -704,7 +714,7 @@ i32 hero::NumArtifacts(void) {
     i32 i;
 
     for (i = 0; i < HERO_ARTIFACT_SLOT_COUNT; i++) {
-        if (m_artifacts[i] >= 0)
+        if (m_artifacts[i] >= ARTIFACT_FIRST)
             count++;
     }
     return count;
@@ -858,6 +868,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) HeroHandler(struct tag_message& messa
     i8 quickViewVal;
     i8 complete = 0;
     i16 slot;
+    // Integer storage that swaps a slot's creature type, then its count.
     i16 temporaryVal;
     i32 curSpare;
 
@@ -962,7 +973,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) HeroHandler(struct tag_message& messa
                                 NULL,
                                 quickViewVal || gpTownManager->m_castleDialogActive == 1
                                     || gHVHero->m_army.GetNumArmies() == 1,
-                                0,
+                                ARMY_FACING_RIGHT,
                                 quickViewVal,
                                 gHVHero,
                                 NULL,
@@ -977,10 +988,12 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) HeroHandler(struct tag_message& messa
                                 gHVHero->HeroScreenUpdate();
                             }
                         } else if (!quickViewVal) {
-                            temporaryVal = gHVHero->m_army.m_creatureTypes[slot];
+                            temporaryVal =
+                                H1_ENUM_ENCODE(CreatureType, gHVHero->m_army.m_creatureTypes[slot]);
                             gHVHero->m_army.m_creatureTypes[slot] =
                                 gHVHero->m_army.m_creatureTypes[giHeroScreenSrcIndex];
-                            gHVHero->m_army.m_creatureTypes[giHeroScreenSrcIndex] = temporaryVal;
+                            gHVHero->m_army.m_creatureTypes[giHeroScreenSrcIndex] =
+                                H1_ENUM_DECODE(CreatureType, temporaryVal);
                             temporaryVal = gHVHero->m_army.m_creatureCounts[slot];
                             gHVHero->m_army.m_creatureCounts[slot] =
                                 gHVHero->m_army.m_creatureCounts[giHeroScreenSrcIndex];

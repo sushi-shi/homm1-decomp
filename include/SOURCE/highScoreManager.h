@@ -6,6 +6,7 @@
 #include <BASE/message.h>
 #include <Domains.h>
 #include <H1/Macros.h>
+#include <SOURCE/creatureTypes.h>
 
 // forward declarations:
 struct tag_message;
@@ -77,7 +78,7 @@ H1_ENUM_CONST_END(HighScoreColor)
 class highScoreManager : public baseManager {
 public:
     i16 m_animationFrames[HIGH_SCORE_DISPLAY_ENTRY_COUNT];
-    i16 m_monsterTypes[HIGH_SCORE_DISPLAY_ENTRY_COUNT];
+    H1_ENUM_STORAGE(CreatureType, i16) m_monsterTypes[HIGH_SCORE_DISPLAY_ENTRY_COUNT];
     i8 m_showCampaignScores;
     heroWindow* m_window;
     // HoMM1 Main tests this additional mask against message.m_type.

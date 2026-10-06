@@ -14,7 +14,7 @@
 
 // The speed slot is unused; a two-hex creature retries from its rear hex.
 VA(0x00446450, 0x11e)
-i16 army::FindPath(i16 sourceHex, i16 targetHex, i8, i8 ignoreSpeed, i8 pathMode) {
+i16 army::FindPath(i16 sourceHex, i16 targetHex, i8, i8 ignoreSpeed, H1_ENUM_PARAM(ArmyPathTarget, i8) pathMode) {
     i16 retVal;
     i32 savedSpeed;
 
@@ -24,7 +24,7 @@ i16 army::FindPath(i16 sourceHex, i16 targetHex, i8, i8 ignoreSpeed, i8 pathMode
     if (ignoreSpeed)
         m_stats.speed = IGNORE_SPEED;
     retVal = gpSearchArray->FindCombatPath(sourceHex, targetHex, this, pathMode);
-    if (!retVal && (m_stats.attributes & MONSTER_FLAGS_WIDE) && !pathMode) {
+    if (!retVal && (m_stats.attributes & MONSTER_FLAGS_WIDE) && !ARMY_PATH_ATTACKS(pathMode)) {
         switch (m_facing) {
             case ARMY_FACING_LEFT:
                 targetHex = GetAdjacentCellIndex(targetHex, COMBAT_DIRECTION_EAST);
@@ -43,7 +43,7 @@ i16 army::FindPath(i16 sourceHex, i16 targetHex, i8, i8 ignoreSpeed, i8 pathMode
 }
 
 VA(0x0044656e, 0x86)
-i16 army::ValidPath(i16 targetHex, i8 pathMode) {
+i16 army::ValidPath(i16 targetHex, H1_ENUM_PARAM(ArmyPathTarget, i8) pathMode) {
     i32 pathResult;
     i32 unusedExtra;
 

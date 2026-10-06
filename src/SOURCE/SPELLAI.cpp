@@ -39,12 +39,12 @@ DATA(0x004cccb4)
 i32 gSpellAIEffectShift;
 // Side of the stack standing on the hex DetermineEffectOfSpell evaluates.
 DATA(0x004cccb0)
-i32 gSpellAITargetSide;
+H1_ENUM_STORAGE(CombatSide, i32) gSpellAITargetSide;
 
 // Heroes memorize spells with charges.
 VA(0x00458de0, 0x196)
-i32 combatManager::DoSpellAI(i8 side) {
-    i32 selectedSpellVal;
+i32 combatManager::DoSpellAI(H1_ENUM_PARAM(CombatSide, i8) side) {
+    H1_ENUM_LOCAL(SpellType, i32) selectedSpellVal;
     i32 bestEffectVal;
     i32 spellEffect;
     i32 bestHexWork;
@@ -64,7 +64,7 @@ i32 combatManager::DoSpellAI(i8 side) {
     else
         gSpellAIEffectShift = 0;
     for (entry = 0; entry < HERO_SPELL_SLOT_COUNT; entry++) {
-        if (m_heroes[side]->m_spells[entry] >= 0
+        if (m_heroes[side]->m_spells[entry] >= SPELL_FIRST
             && (gSpellAIFlags[m_heroes[side]->m_spells[entry]] & SPELL_AI_FLAG_COMBAT)
             && m_heroes[side]->m_spellCharges[entry] > 0) {
             DetermineEffectOfSpell(m_heroes[side]->m_spells[entry], &spellEffect, &candHex);
@@ -77,7 +77,7 @@ i32 combatManager::DoSpellAI(i8 side) {
     }
     if (bestEffectVal > 0) {
         giNextAction = ACTION_CAST_SPELL;
-        giNextActionExtra = selectedSpellVal;
+        giNextActionExtra = H1_ENUM_ENCODE(SpellType, selectedSpellVal);
         giNextActionGridIndex = bestHexWork;
         return 1;
     }
@@ -87,13 +87,17 @@ i32 combatManager::DoSpellAI(i8 side) {
 // HoMM1's nineteen combat spells: each spell is scored once, across the area
 // grid, or over one side's stacks.
 VA(0x00458f76, 0x42d)
-void combatManager::DetermineEffectOfSpell(i32 spell, i32* bestEffect, i32* bestHex) {
+void combatManager::DetermineEffectOfSpell(
+    H1_ENUM_PARAM(SpellType, i32) spell,
+    i32* bestEffect,
+    i32* bestHex
+) {
     i32 spellEffect;
     i32 firstDurMax;
     i32 bDone;
-    i32 owner;
+    H1_ENUM_LOCAL(CombatSide, i32) owner;
     army* targetPtr;
-    i32 spellMode;
+    H1_ENUM_LOCAL(CombatSpellAITargetMode, i32) spellMode;
     i32 curHexVal;
 
     bDone = 0;
@@ -173,11 +177,12 @@ void combatManager::DetermineEffectOfSpell(i32 spell, i32* bestEffect, i32* best
             case SPELL_BLESS:
             case SPELL_PROTECTION:
             case SPELL_ANTI_MAGIC:
-                if (spell == SPELL_ANTI_MAGIC && m_heroes[COMBAT_OPPOSING_SIDE(m_currentSide)] == NULL)
+                if (spell == SPELL_ANTI_MAGIC
+                    && m_heroes[COMBAT_OPPOSING_SIDE(m_currentSide)] == NULL)
                     spellEffect = 0;
                 else
                     spellEffect = RawEffectSpellInfluence(targetPtr, spell) >> gSpellAIEffectShift;
-                if (targetPtr->m_spellEffect >= 0)
+                if (targetPtr->m_spellEffect >= SPELL_FIRST)
                     spellEffect -= RawEffectSpellInfluence(targetPtr, targetPtr->m_spellEffect);
                 break;
             case SPELL_SLOW:
@@ -186,7 +191,7 @@ void combatManager::DetermineEffectOfSpell(i32 spell, i32* bestEffect, i32* best
             case SPELL_BERZERKER:
             case SPELL_PARALYZE:
                 spellEffect = -(RawEffectSpellInfluence(targetPtr, spell) >> gSpellAIEffectShift);
-                if (targetPtr->m_spellEffect >= 0)
+                if (targetPtr->m_spellEffect >= SPELL_FIRST)
                     spellEffect += RawEffectSpellInfluence(targetPtr, targetPtr->m_spellEffect);
                 break;
             case SPELL_TELEPORT:
@@ -226,7 +231,7 @@ void combatManager::DetermineEffectOfSpell(i32 spell, i32* bestEffect, i32* best
 
 // A spell's value as a share of the stack's fight value.
 VA(0x004593a3, 0x246)
-i32 combatManager::RawEffectSpellInfluence(army* target, i32 spell) {
+i32 combatManager::RawEffectSpellInfluence(army* target, H1_ENUM_PARAM(SpellType, i32) spell) {
     i32 worth;
     i32 effect;
 
@@ -258,9 +263,10 @@ i32 combatManager::RawEffectSpellInfluence(army* target, i32 spell) {
                 effect = 0;
             else if (target->m_stats.attributes & MONSTER_FLAGS_SHOOTER)
                 effect = 0;
-            else if (target->m_stats.speed < CREATURE_SPEED_SLOW_END)
+            else if (H1_ENUM_DECODE(CreatureSpeed, target->m_stats.speed) < CREATURE_SPEED_SLOW_END)
                 effect = worth * SPELL_AI_HASTE_MODIFIER;
-            else if (target->m_stats.speed < CREATURE_SPEED_MEDIUM_END)
+            else if (H1_ENUM_DECODE(CreatureSpeed, target->m_stats.speed)
+                     < CREATURE_SPEED_MEDIUM_END)
                 effect = worth * SPELL_AI_HASTE_MODIFIER / 2.0f;
             else
                 effect = 0;
@@ -287,9 +293,9 @@ i32 combatManager::RawEffectSpellInfluence(army* target, i32 spell) {
 
 VA(0x004595e9, 0x52)
 void combatManager::ClearEffects(void) {
-    i32 side;
+    H1_ENUM_LOCAL(CombatSide, i32) side;
     i32 idx;
-    for (side = 0; side < COMBAT_SIDE_COUNT; ++side) {
+    for (side = COMBAT_SIDE_FIRST; side < COMBAT_SIDE_COUNT; ++side) {
         for (idx = 0; idx < ARMY_GROUP_SLOT_COUNT; ++idx)
             gArmyEffected[side][idx] = 0;
     }
@@ -307,10 +313,11 @@ void combatManager::NextPos(i32* hex) {
 // The next hex at or after startHex holding a stack of the side (2: either
 // side).
 VA(0x00459678, 0x66)
-i32 combatManager::FirstArmy(i32 startHex, i32 side, i32* hex) {
+i32 combatManager::FirstArmy(i32 startHex, H1_ENUM_PARAM(CombatSide, i32) side, i32* hex) {
     while (startHex <= COMBAT_SPELL_AI_HEX_LAST) {
         if (m_hexCells[startHex].m_occupantSide == side
-            || (side == COMBAT_SIDE_ANY && m_hexCells[startHex].m_occupantSide >= 0)) {
+            || (side == COMBAT_SIDE_ANY
+                && m_hexCells[startHex].m_occupantSide >= COMBAT_SIDE_FIRST)) {
             *hex = startHex;
             return 0;
         }
@@ -323,8 +330,12 @@ i32 combatManager::FirstArmy(i32 startHex, i32 side, i32* hex) {
 // The value of cancelling a side's (2: both sides') spell effects; stacks
 // carry a single effect.
 VA(0x004596de, 0x20c)
-void combatManager::EffectSpellCure(i32* effect, i32 targetSide, i8 cure) {
-    i32 curSide;
+void combatManager::EffectSpellCure(
+    i32* effect,
+    H1_ENUM_PARAM(CombatSide, i32) targetSide,
+    i8 cure
+) {
+    H1_ENUM_LOCAL(CombatSide, i32) curSide;
     i32 prevNegEffect;
     i32 entry;
     army* armyPtr;
@@ -401,18 +412,23 @@ void combatManager::EffectSpellResurrect(i32* effect, i32 hex) {
 // The net fight value a damage spell destroys, or a decisive value when it
 // wipes out a side.
 VA(0x004599be, 0x491)
-void combatManager::EffectSpellDamage(i32* effect, i32 spell, i32 damagePerPower, i32 targetHex) {
-    i32 partValue[COMBAT_SIDE_COUNT];
+void combatManager::EffectSpellDamage(
+    i32* effect,
+    H1_ENUM_PARAM(SpellType, i32) spell,
+    i32 damagePerPower,
+    i32 targetHex
+) {
+    H1_ENUM_ARRAY(i32, partValue, CombatSide, COMBAT_SIDE_COUNT);
     i32 unusedTotal;
-    i32 stacksKilled[COMBAT_SIDE_COUNT];
-    i32 fightValue[COMBAT_SIDE_COUNT];
-    i32 side;
+    H1_ENUM_ARRAY(i32, stacksKilled, CombatSide, COMBAT_SIDE_COUNT);
+    H1_ENUM_ARRAY(i32, fightValue, CombatSide, COMBAT_SIDE_COUNT);
+    H1_ENUM_LOCAL(CombatSide, i32) side;
     i32 hitDamage;
     army* targetArmy;
     i32 hex;
     i32 baseDamage;
     i32 done;
-    i32 facing;
+    H1_ENUM_LOCAL(CombatHexDirection, i32) facing;
     i32 killedCount;
 
     baseDamage = m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * damagePerPower;
@@ -422,7 +438,7 @@ void combatManager::EffectSpellDamage(i32* effect, i32 spell, i32 damagePerPower
     if (m_hexCells[targetHex].m_occupantIndex >= 0)
         targetArmy =
             &m_armies[m_hexCells[targetHex].m_occupantSide][m_hexCells[targetHex].m_occupantIndex];
-    for (side = 0; side < COMBAT_SIDE_COUNT; side++) {
+    for (side = COMBAT_SIDE_FIRST; side < COMBAT_SIDE_COUNT; side++) {
         stacksKilled[side] = 0;
         partValue[side] = 0;
         fightValue[side] = 0;
@@ -450,7 +466,8 @@ void combatManager::EffectSpellDamage(i32* effect, i32 spell, i32 damagePerPower
                     hex = targetHex;
                 break;
         }
-        if (!done && m_hexCells[hex].m_occupantIndex >= 0 && m_hexCells[hex].m_occupantSide >= 0) {
+        if (!done && m_hexCells[hex].m_occupantIndex >= 0
+            && m_hexCells[hex].m_occupantSide >= COMBAT_SIDE_FIRST) {
             targetArmy = &m_armies[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex];
             if (targetArmy->m_stats.hitPoints > 0
                 && !gArmyEffected[m_hexCells[hex].m_occupantSide]

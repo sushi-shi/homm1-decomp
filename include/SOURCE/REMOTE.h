@@ -126,7 +126,7 @@ struct RemoteMessage {
 
 extern i8 gInNetSetup;
 extern i32 gIDCtr;
-extern u8 GameMode;
+extern H1_ENUM_STORAGE(RemoteGameMode, u8) GameMode;
 extern u8 gPacketSequence;
 extern i32 gNetNameIndex;
 extern char PacketSend[];
@@ -186,15 +186,19 @@ extern i8 gInitNetGuestStatus;
 extern i8 gWaitForHostStatus;
 void PollRemote();
 // REMOTE.cpp defines the transport bring-up.
-void RemoteMain(i32 gameMode);
+void RemoteMain(H1_ENUM_PARAM(RemoteGameMode, i32) gameMode);
 i32 nbnet_init(void);
 
-H1_ENUM_BEGIN(ModemResponseLimit)
+// GUIModemResponseExec stops collecting a response line at this buffer
+// position: an extent of GUIMRresponse, not a value domain.
+H1_ENUM_CONST_BEGIN(ModemResponseLimit)
     MODEM_RESPONSE_LAST = 79
-H1_ENUM_END(ModemResponseLimit)
+H1_ENUM_CONST_END(ModemResponseLimit)
 
 // WriteModemPacket frames a packet as ESCAPE START ... ESCAPE END, doubling
 // an ESCAPE byte inside it; ReadPacket undoes it.
+// The bytes travel in the raw modem stream, so both ends encode and decode
+// them at the buffer.
 H1_ENUM_BEGIN(ModemPacketControl)
     MODEM_PACKET_START = 0,
     MODEM_PACKET_END = 1,

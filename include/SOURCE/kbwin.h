@@ -119,6 +119,7 @@ struct SMenuEnableStatus {
 #pragma pack(push, 1)
 struct WindowTextEntry {
     i16 widgetId;
+    // The WindowTextId of the window the label belongs to.
     i16 windowId;
 };
 #pragma pack(pop)
@@ -139,7 +140,7 @@ void KBChangeMenu(HMENU menu);
 void ResizeWindow(i32 x, i32 y, i32 width, i32 height);
 void SetMenuStatus(i32 showMenu);
 // HoMM1 window caption helper (retail 0x0045dc1f, cdecl).
-void SetWinText(class heroWindow* window, i16 id);
+void SetWinText(class heroWindow* window, H1_ENUM_PARAM(WindowTextId, i16) id);
 void UpdateDfltMenu(HMENU menu);
 extern i32 gForegroundApp;
 extern i32 gNoDialogMenusOn;

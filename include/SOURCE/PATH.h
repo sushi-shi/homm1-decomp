@@ -24,6 +24,16 @@ H1_ENUM_BEGIN(ArmyPathTarget)
     ARMY_PATH_ANY_TARGET_HEX = 0,
     ARMY_PATH_EXACT_TARGET_HEX = 1
 H1_ENUM_END(ArmyPathTarget)
+// The mode routes to a hex from which the target can be attacked (every
+// mode but ANY).
+#if H1_STRICT_DOMAINS
+inline constexpr bool ArmyPathAttacks(ArmyPathTarget mode) {
+    return mode != ARMY_PATH_ANY_TARGET_HEX;
+}
+#define ARMY_PATH_ATTACKS(mode) ArmyPathAttacks(mode)
+#else
+#define ARMY_PATH_ATTACKS(mode) (mode)
+#endif
 
 // A hex argument or result meaning "no hex": GetAdjacentCellIndex's
 // off-grid result and ValidAttack's "any target hex".

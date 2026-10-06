@@ -26,11 +26,11 @@ void armyGroup::View(i32) {}
 VA(0x004184ee, 0x11b)
 i16 armyGroup::GetMorale(hero* h, town* t) {
     i32 morale;
-    i32 alignment;
+    H1_ENUM_LOCAL(ArmyGroupAlignmentResult, i32) alignment;
 
     morale = 0;
     alignment = IsHomogeneous(ARMY_GROUP_EMPTY_SLOT);
-    morale += alignment;
+    morale += H1_ENUM_ENCODE(ArmyGroupAlignmentResult, alignment);
     if (h) {
         if (!h->m_heroClass)
             morale++;
@@ -46,7 +46,7 @@ i16 armyGroup::GetMorale(hero* h, town* t) {
         if (h->HasArtifact(ARTIFACT_FIZBIN_OF_MISFORTUNE))
             morale -= 2;
     }
-    if (t && (t->m_buildings & (1 << BUILDING_SLOT_TAVERN)))
+    if (t && (t->m_buildings & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_TAVERN)))
         morale++;
     if (morale < ARMY_GROUP_MORALE_MIN)
         morale = ARMY_GROUP_MORALE_MIN;
@@ -63,7 +63,7 @@ void armyGroup::Dismiss(i8 slot) {
 
 // HoMM1 retail reads a signed byte parameter and returns in AL.
 VA(0x0041862f, 0x47)
-i8 armyGroup::IsMember(i8 creatureType) {
+i8 armyGroup::IsMember(H1_ENUM_PARAM(CreatureType, i8) creatureType) {
     for (i16 slot = 0; slot < ARMY_GROUP_SLOT_COUNT; ++slot) {
         if (m_creatureTypes[slot] == creatureType)
             return 1;
@@ -77,13 +77,13 @@ H1_ENUM_RETURN(ArmyGroupAlignmentResult, i8) armyGroup::IsHomogeneous(i8 countRa
     i32 numCreatureTypes = 0;
     i8 raceUsed[ARMY_GROUP_RACE_COUNT];
     raceUsed[0] = raceUsed[1] = raceUsed[2] = raceUsed[3] = raceUsed[4] = 0;
-    i32 prev = -1;
+    H1_ENUM_LOCAL(CreatureType, i32) prev = CREATURE_NONE;
     i32 numRaces;
     i16 i;
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; ++i) {
         if (m_creatureTypes[i] != CREATURE_NONE) {
             if (countRaces == ARMY_GROUP_EMPTY_SLOT)
-                ++raceUsed[m_creatureTypes[i] / CREATURE_FACTION_SIZE];
+                ++raceUsed[CREATURE_FACTION(m_creatureTypes[i])];
             if (m_creatureTypes[i] != prev) {
                 ++numCreatureTypes;
                 prev = m_creatureTypes[i];
@@ -113,7 +113,7 @@ H1_ENUM_RETURN(ArmyGroupAlignmentResult, i8) armyGroup::IsHomogeneous(i8 countRa
 
 // HoMM1 retail returns in AL and sign-extends its IsMember call results.
 VA(0x004187b4, 0x3b)
-i8 armyGroup::CanJoin(i8 creatureType) {
+i8 armyGroup::CanJoin(H1_ENUM_PARAM(CreatureType, i8) creatureType) {
     if (IsMember(creatureType))
         return 1;
     if (IsMember(CREATURE_NONE))
@@ -132,7 +132,7 @@ i16 armyGroup::GetNumArmies(void) {
 }
 
 VA(0x00418841, 0xfe)
-i16 armyGroup::Add(i8 creatureType, i16 quantity, i8 slot) {
+i16 armyGroup::Add(H1_ENUM_PARAM(CreatureType, i8) creatureType, i16 quantity, i8 slot) {
     i16 searchSlot;
     if (slot == ARMY_GROUP_EMPTY_SLOT) {
         for (searchSlot = 0; searchSlot < ARMY_GROUP_SLOT_COUNT; ++searchSlot) {
@@ -163,7 +163,8 @@ i16 armyGroup::Add(i8 creatureType, i16 quantity, i8 slot) {
 
 VA(0x0041893f, 0x77)
 void armyGroup::Swap(i8 slot, armyGroup* otherGroup, i8 otherSlot) {
-    i32 temporary = m_creatureTypes[slot];
+    // One temporary swaps the creature type, then the count.
+    H1_ENUM_SHARED(CreatureType, i32) temporary(m_creatureTypes[slot]);
     m_creatureTypes[slot] = otherGroup->m_creatureTypes[otherSlot];
     otherGroup->m_creatureTypes[otherSlot] = temporary;
 

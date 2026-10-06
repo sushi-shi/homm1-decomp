@@ -15,14 +15,14 @@
 
 VA(0x0045e9c0, 0x60)
 town::town(void) {
-    m_type = 0;
+    m_type = TOWN_TYPE_KNIGHT;
     m_threat = 0;
     m_id = 0;
     m_owner = 0;
     m_x = 0;
     m_y = 0;
     m_occupyingHeroId = TOWN_OCCUPYING_HERO_NONE;
-    m_buildings = (1 << BUILDING_SLOT_TENT);
+    m_buildings = H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_TENT);
     m_buildState = 0;
     m_unknown19 = 0;
 }
@@ -46,7 +46,7 @@ void town::GiveSpells(void) {
     visitingHero = gpGame->GetHero(m_occupyingHeroId);
     if (!visitingHero->HasArtifact(ARTIFACT_MAGIC_BOOK))
         return;
-    if (!(m_buildings & (1 << BUILDING_SLOT_MAGE_GUILD)))
+    if (!(m_buildings & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_MAGE_GUILD)))
         return;
     if (visitingHero->m_owner == m_owner) {
         for (i = 0; i < gMageGuildSpellCount[m_buildState]; i++)

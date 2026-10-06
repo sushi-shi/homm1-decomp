@@ -149,19 +149,23 @@ i8 playerData::CountVisitedObelisks(void) {
 
 // Slot 0 is the mage guild.
 VA(0x0042b97f, 0xb6)
-i32 playerData::BuildingsOwned(i32 townType, i32 buildingIndex, i32 buildState) {
+i32 playerData::BuildingsOwned(
+    H1_ENUM_PARAM(TownType, i32) townType,
+    H1_ENUM_PARAM(BuildingSlotType, i32) buildingIndex,
+    i32 buildState
+) {
     i32 count = 0;
     i32 i;
     for (i = 0; i < m_townCount; ++i) {
         town* ownedTown = &gpGame->m_castleRecs[m_townIds[i]];
         if (buildingIndex < BUILDING_SLOT_DWELLING_FIRST || ownedTown->m_type == townType) {
             if (buildingIndex == BUILDING_SLOT_MAGE_GUILD) {
-                if (ownedTown->m_buildings & (1 << BUILDING_SLOT_MAGE_GUILD)) {
+                if (ownedTown->m_buildings & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_MAGE_GUILD)) {
                     if (ownedTown->m_buildState == buildState)
                         ++count;
                 }
             } else {
-                if (ownedTown->m_buildings & (1 << buildingIndex))
+                if (ownedTown->m_buildings & H1_ENUM_BIT(BuildingSlotType, buildingIndex))
                     ++count;
             }
         }
@@ -171,7 +175,7 @@ i32 playerData::BuildingsOwned(i32 townType, i32 buildingIndex, i32 buildState) 
 
 // Scans the fourteen hero slots.
 VA(0x0042ba35, 0x84)
-i32 playerData::NumOfGivenArtifact(i32 artifact) {
+i32 playerData::NumOfGivenArtifact(H1_ENUM_PARAM(ArtifactType, i32) artifact) {
     i32 count = 0;
     i32 i;
     i32 jj;
@@ -284,10 +288,11 @@ i8 game::IsMobile(i8 heroId) {
     if (heroId == HERO_ID_NONE)
         return 0;
     hero* mobileHero = &m_heroRecs[heroId];
-    i32 terrainValue = CELL_TERRAIN(gpAdvManager->GetCell(mobileHero->m_x, mobileHero->m_y));
+    H1_ENUM_LOCAL(TerrainType, i32) terrainValue =
+        CELL_TERRAIN(gpAdvManager->GetCell(mobileHero->m_x, mobileHero->m_y));
     return mobileHero->m_remainingMobility >= CalcTerrainCost(
-               terrainValue,
-               mobileHero->m_direction & MAP_DIRECTION_DIAGONAL_BIT,
+               H1_ENUM_ENCODE(TerrainType, terrainValue),
+               H1_ENUM_ENCODE(MapDirection, mobileHero->m_direction) & MAP_DIRECTION_DIAGONAL_BIT,
                mobileHero->m_remainingMobility,
                mobileHero->m_heroClass
            );
@@ -663,7 +668,7 @@ VA(0x0042d4f2, 0x4f3)
 H1_ENUM_RETURN(MessageDispatchResult, i16) NewGameHandler(tag_message& message) {
     i32 iPlayer;
     i32 i;
-    i32 helpIndex;
+    H1_ENUM_LOCAL(NewGameHelp, i32) helpIndex;
     if (message.type == MESSAGE_WIDGET) {
         if (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
             if (IS_WIDGET_SELECTION_NOTIFICATION(message.command)) {
@@ -690,10 +695,10 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) NewGameHandler(tag_message& message) 
                     case NEW_GAME_DIFFICULTY_FIRST:
                         helpIndex = NEW_GAME_HELP_DIFFICULTY;
                         break;
-                    case NEW_GAME_DIFFICULTY_FIRST + DIFFICULTY_NORMAL:
+                    case NEW_GAME_DIFFICULTY_FIRST + H1_ENUM_ENCODE(GameDifficulty, DIFFICULTY_NORMAL):
                         helpIndex = NEW_GAME_HELP_DIFFICULTY;
                         break;
-                    case NEW_GAME_DIFFICULTY_FIRST + DIFFICULTY_HARD:
+                    case NEW_GAME_DIFFICULTY_FIRST + H1_ENUM_ENCODE(GameDifficulty, DIFFICULTY_HARD):
                         helpIndex = NEW_GAME_HELP_DIFFICULTY;
                         break;
                     case NEW_GAME_DIFFICULTY_LAST:
@@ -714,7 +719,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) NewGameHandler(tag_message& message) 
                         helpIndex = NEW_GAME_HELP_RATING;
                         break;
                 }
-                if (helpIndex >= 0)
+                if (helpIndex >= NEW_GAME_HELP_FIRST)
                     NormalDialog(gNewGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW);
             }
         } else {
@@ -724,7 +729,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) NewGameHandler(tag_message& message) 
                         case NEW_GAME_OK:
                             gpGame->m_playerCount = 0;
                             for (i = 0; i < GAME_PLAYER_COUNT; i++) {
-                                if (gpGame->m_players[i].m_difficulty > PLAYER_TYPE_NONE)
+                                if (H1_ENUM_DECODE(ComputerPlayerType, gpGame->m_players[i].m_difficulty) > PLAYER_TYPE_NONE)
                                     gpGame->m_playerCount++;
                             }
                             if (gpGame->m_playerCount < GAME_MIN_PLAYER_COUNT) {
@@ -740,18 +745,18 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) NewGameHandler(tag_message& message) 
                                     if (gpGame->m_players[2].m_difficulty) {
                                         gpGame->m_players[1].m_difficulty =
                                             gpGame->m_players[2].m_difficulty;
-                                        gpGame->m_players[2].m_difficulty = PLAYER_TYPE_NONE;
+                                        gpGame->m_players[2].m_difficulty = H1_ENUM_ENCODE(ComputerPlayerType, PLAYER_TYPE_NONE);
                                     } else {
                                         gpGame->m_players[1].m_difficulty =
                                             gpGame->m_players[3].m_difficulty;
-                                        gpGame->m_players[3].m_difficulty = PLAYER_TYPE_NONE;
+                                        gpGame->m_players[3].m_difficulty = H1_ENUM_ENCODE(ComputerPlayerType, PLAYER_TYPE_NONE);
                                     }
                                 }
                                 if (!gpGame->m_players[2].m_difficulty
                                     && gpGame->m_players[3].m_difficulty) {
                                     gpGame->m_players[2].m_difficulty =
                                         gpGame->m_players[3].m_difficulty;
-                                    gpGame->m_players[3].m_difficulty = PLAYER_TYPE_NONE;
+                                    gpGame->m_players[3].m_difficulty = H1_ENUM_ENCODE(ComputerPlayerType, PLAYER_TYPE_NONE);
                                 }
                             }
                         case NEW_GAME_CANCEL:
@@ -764,24 +769,26 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) NewGameHandler(tag_message& message) 
                 case WIDGET_NOTIFY_SELECT:
                     switch (message.id) {
                         case NEW_GAME_DIFFICULTY_FIRST:
-                        case NEW_GAME_DIFFICULTY_FIRST + DIFFICULTY_NORMAL:
-                        case NEW_GAME_DIFFICULTY_FIRST + DIFFICULTY_HARD:
+                        case NEW_GAME_DIFFICULTY_FIRST + H1_ENUM_ENCODE(GameDifficulty, DIFFICULTY_NORMAL):
+                        case NEW_GAME_DIFFICULTY_FIRST + H1_ENUM_ENCODE(GameDifficulty, DIFFICULTY_HARD):
                         case NEW_GAME_DIFFICULTY_LAST:
-                            gpGame->m_difficulty = message.id - NEW_GAME_DIFFICULTY_FIRST;
+                            gpGame->m_difficulty = H1_ENUM_DECODE(GameDifficulty, message.id - NEW_GAME_DIFFICULTY_FIRST);
                             break;
                         case NEW_GAME_OPPONENT_FIRST:
                         case NEW_GAME_OPPONENT_FIRST + 1:
                         case NEW_GAME_OPPONENT_LAST:
                             iPlayer = message.id - NEW_GAME_OPPONENT_TOGGLE_BASE;
                             gpGame->m_players[iPlayer].m_difficulty++;
-                            gpGame->m_players[iPlayer].m_difficulty %= PLAYER_TYPE_COUNT;
+                            gpGame->m_players[iPlayer].m_difficulty %= H1_ENUM_ENCODE(ComputerPlayerType, PLAYER_TYPE_COUNT);
                             if (iPlayer < giNumHumanPlayers
                                 && !gpGame->m_players[iPlayer].m_difficulty)
-                                gpGame->m_players[iPlayer].m_difficulty = HUMAN_HANDICAP_EASY;
+                                gpGame->m_players[iPlayer].m_difficulty = H1_ENUM_ENCODE(HumanHandicap, HUMAN_HANDICAP_EASY);
                             break;
                         case NEW_GAME_COLOR:
-                            gpGame->m_players[0].m_color =
-                                (gpGame->m_players[0].m_color + 1) % GAME_PLAYER_COUNT;
+                            gpGame->m_players[0].m_color = H1_ENUM_DECODE(
+                                PlayerColor,
+                                (H1_ENUM_ENCODE(PlayerColor, gpGame->m_players[0].m_color) + 1) % GAME_PLAYER_COUNT
+                            );
                             break;
                         case NEW_GAME_KING_OF_THE_HILL:
                             gbIAmGreatest = 1 - gbIAmGreatest;
@@ -810,7 +817,8 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) NewGameHandler(tag_message& message) 
 VA(0x0042d9e5, 0x293)
 void game::UpdateNewGameWindow(void) {
     tag_message message;
-    i16 i;
+    // Also the opponent seat of the frame and label loops.
+    H1_ENUM_SHARED(GameDifficulty, i16) i;
     char* period;
 
     strcpy(gText, gFullMapName);
@@ -822,12 +830,12 @@ void game::UpdateNewGameWindow(void) {
     m_newGameWindow->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_CLEAR_FLAGS;
     message.value = WIDGET_FLAG_DRAW;
-    for (i = 0; i < DIFFICULTY_COUNT; i++) {
-        message.id = i + NEW_GAME_DIFFICULTY_FIRST;
+    for (i = DIFFICULTY_EASY; i < DIFFICULTY_COUNT; i++) {
+        message.id = H1_ENUM_ENCODE(GameDifficulty, i) + NEW_GAME_DIFFICULTY_FIRST;
         m_newGameWindow->BroadcastMessage(message);
     }
     message.command = WIDGET_COMMAND_SET_FLAGS;
-    message.id = m_difficulty + NEW_GAME_DIFFICULTY_FIRST;
+    message.id = H1_ENUM_ENCODE(GameDifficulty, m_difficulty) + NEW_GAME_DIFFICULTY_FIRST;
     m_newGameWindow->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_FRAME;
     for (i = 1; i < GAME_PLAYER_COUNT; i++) {
@@ -861,7 +869,7 @@ void game::UpdateNewGameWindow(void) {
     if (m_players[0].m_color != PLAYER_COLOR_NONE) {
         message.id = NEW_GAME_COLOR;
         message.value =
-            m_players[0].m_color * NEW_GAME_FRAME_CREST_STRIDE + NEW_GAME_FRAME_CREST_BASE;
+            H1_ENUM_ENCODE(PlayerColor, m_players[0].m_color) * NEW_GAME_FRAME_CREST_STRIDE + NEW_GAME_FRAME_CREST_BASE;
         m_newGameWindow->BroadcastMessage(message);
     }
     message.command = WIDGET_COMMAND_SET_FRAME;
@@ -877,7 +885,7 @@ void game::GiveTroopsToNeutralTowns(void) {
     i32 die;
     i32 i;
     i32 tierValue;
-    i32 monster;
+    H1_ENUM_LOCAL(CreatureType, i32) monster;
     for (i = 0; i < GAME_TOWN_COUNT; i++) {
         if ((m_castleRecs[i].m_x > 0 || m_castleRecs[i].m_y > 0) && m_castleRecs[i].m_owner < 0) {
             die = Random(REINFORCEMENT_ROLL_MIN, REINFORCEMENT_ROLL_MAX);
@@ -898,53 +906,53 @@ void game::GiveTroopsToNeutralTowns(void) {
                 howMany =
                     Random(REINFORCEMENT_TIER_FOUR_COUNT_MIN, REINFORCEMENT_TIER_FOUR_COUNT_MAX);
             }
-            switch (tierValue + m_castleRecs[i].m_type) {
-                case REINFORCEMENT_TIER_ONE_KEY + TOWN_TYPE_KNIGHT:
+            switch (tierValue + H1_ENUM_ENCODE(TownType, m_castleRecs[i].m_type)) {
+                case REINFORCEMENT_TIER_ONE_KEY + H1_ENUM_ENCODE(TownType, TOWN_TYPE_KNIGHT):
                     monster = CREATURE_PEASANT;
                     break;
-                case REINFORCEMENT_TIER_TWO_KEY + TOWN_TYPE_KNIGHT:
+                case REINFORCEMENT_TIER_TWO_KEY + H1_ENUM_ENCODE(TownType, TOWN_TYPE_KNIGHT):
                     monster = CREATURE_ARCHER;
                     break;
-                case REINFORCEMENT_TIER_THREE_KEY + TOWN_TYPE_KNIGHT:
+                case REINFORCEMENT_TIER_THREE_KEY + H1_ENUM_ENCODE(TownType, TOWN_TYPE_KNIGHT):
                     monster = CREATURE_PIKEMAN;
                     break;
-                case REINFORCEMENT_TIER_FOUR_KEY + TOWN_TYPE_KNIGHT:
+                case REINFORCEMENT_TIER_FOUR_KEY + H1_ENUM_ENCODE(TownType, TOWN_TYPE_KNIGHT):
                     monster = CREATURE_SWORDSMAN;
                     break;
-                case REINFORCEMENT_TIER_ONE_KEY + TOWN_TYPE_BARBARIAN:
+                case REINFORCEMENT_TIER_ONE_KEY + H1_ENUM_ENCODE(TownType, TOWN_TYPE_BARBARIAN):
                     monster = CREATURE_GOBLIN;
                     break;
-                case REINFORCEMENT_TIER_TWO_KEY + TOWN_TYPE_BARBARIAN:
+                case REINFORCEMENT_TIER_TWO_KEY + H1_ENUM_ENCODE(TownType, TOWN_TYPE_BARBARIAN):
                     monster = CREATURE_ORC;
                     break;
-                case REINFORCEMENT_TIER_THREE_KEY + TOWN_TYPE_BARBARIAN:
+                case REINFORCEMENT_TIER_THREE_KEY + H1_ENUM_ENCODE(TownType, TOWN_TYPE_BARBARIAN):
                     monster = CREATURE_WOLF;
                     break;
-                case REINFORCEMENT_TIER_FOUR_KEY + TOWN_TYPE_BARBARIAN:
+                case REINFORCEMENT_TIER_FOUR_KEY + H1_ENUM_ENCODE(TownType, TOWN_TYPE_BARBARIAN):
                     monster = CREATURE_OGRE;
                     break;
-                case REINFORCEMENT_TIER_ONE_KEY + TOWN_TYPE_SORCERESS:
+                case REINFORCEMENT_TIER_ONE_KEY + H1_ENUM_ENCODE(TownType, TOWN_TYPE_SORCERESS):
                     monster = CREATURE_SPRITE;
                     break;
-                case REINFORCEMENT_TIER_TWO_KEY + TOWN_TYPE_SORCERESS:
+                case REINFORCEMENT_TIER_TWO_KEY + H1_ENUM_ENCODE(TownType, TOWN_TYPE_SORCERESS):
                     monster = CREATURE_DWARF;
                     break;
-                case REINFORCEMENT_TIER_THREE_KEY + TOWN_TYPE_SORCERESS:
+                case REINFORCEMENT_TIER_THREE_KEY + H1_ENUM_ENCODE(TownType, TOWN_TYPE_SORCERESS):
                     monster = CREATURE_ELF;
                     break;
-                case REINFORCEMENT_TIER_FOUR_KEY + TOWN_TYPE_SORCERESS:
+                case REINFORCEMENT_TIER_FOUR_KEY + H1_ENUM_ENCODE(TownType, TOWN_TYPE_SORCERESS):
                     monster = CREATURE_DRUID;
                     break;
-                case REINFORCEMENT_TIER_ONE_KEY + TOWN_TYPE_WARLOCK:
+                case REINFORCEMENT_TIER_ONE_KEY + H1_ENUM_ENCODE(TownType, TOWN_TYPE_WARLOCK):
                     monster = CREATURE_CENTAUR;
                     break;
-                case REINFORCEMENT_TIER_TWO_KEY + TOWN_TYPE_WARLOCK:
+                case REINFORCEMENT_TIER_TWO_KEY + H1_ENUM_ENCODE(TownType, TOWN_TYPE_WARLOCK):
                     monster = CREATURE_GARGOYLE;
                     break;
-                case REINFORCEMENT_TIER_THREE_KEY + TOWN_TYPE_WARLOCK:
+                case REINFORCEMENT_TIER_THREE_KEY + H1_ENUM_ENCODE(TownType, TOWN_TYPE_WARLOCK):
                     monster = CREATURE_GRIFFIN;
                     break;
-                case REINFORCEMENT_TIER_FOUR_KEY + TOWN_TYPE_WARLOCK:
+                case REINFORCEMENT_TIER_FOUR_KEY + H1_ENUM_ENCODE(TownType, TOWN_TYPE_WARLOCK):
                     monster = CREATURE_MINOTAUR;
                     break;
             }
@@ -963,8 +971,8 @@ i8 game::NewGame(void) {
     i32 player;
     if (!SetupGame(1))
         return 0;
-    if (gCampaignChoice > 0) {
-        InitEntireCampaign(gCampaignChoice);
+    if (gCampaignChoice > CAMPAIGN_NONE) {
+        InitEntireCampaign(H1_ENUM_ENCODE(CampaignChoice, gCampaignChoice));
         return 1;
     }
     if (gbWaitForRemoteReceive)
@@ -982,7 +990,7 @@ i8 game::NewGame(void) {
         gbIAmGreatest = gSavedKingOfTheHill;
         m_players[0].m_color = gSavedCrest;
         for (player = 1; player < giNumHumanPlayers; player++) {
-            if (m_players[player].m_difficulty == HUMAN_HANDICAP_NONE)
+            if (H1_ENUM_DECODE(HumanHandicap, m_players[player].m_difficulty) == HUMAN_HANDICAP_NONE)
                 m_players[player].m_difficulty = m_players[0].m_difficulty;
         }
     }
@@ -1100,7 +1108,7 @@ void game::InitCampaignMap(i32 scenario, i32) {
     i32 saveTypeValue;
     i32 firstSavedScenario;
     i32 i;
-    i32 jId;
+    H1_ENUM_LOCAL(ResourceType, i32) jId;
     i32 savedState;
     i32 savedDay;
 
@@ -1120,7 +1128,7 @@ void game::InitCampaignMap(i32 scenario, i32) {
     giCurTurn = GAME_DAY_NUMBER(*this);
     gbIAmGreatest = gCampaignScenarios[scenario].kingOfTheHill;
     giNumHumanPlayers = 0;
-    m_players[0].m_difficulty = HUMAN_HANDICAP_EXPERT;
+    m_players[0].m_difficulty = H1_ENUM_ENCODE(HumanHandicap, HUMAN_HANDICAP_EXPERT);
     m_players[0].m_color = gCampaignSideCrests[m_campaignType - 1][0];
     m_playerCount = 1;
     for (i = 1; i < GAME_PLAYER_COUNT; i++) {
@@ -1132,7 +1140,7 @@ void game::InitCampaignMap(i32 scenario, i32) {
     sprintf(gMapName, "CAMP%d.CMP", scenario + 1);
     NewMap(gMapName);
     for (i = 0; i < GAME_PLAYER_COUNT; i++) {
-        for (jId = 0; jId < RESOURCE_COUNT; jId++)
+        for (jId = RESOURCE_FIRST; jId < RESOURCE_COUNT; jId++)
             m_players[i].m_resources[jId] = gCampaignScenarios[scenario].resources[i][jId];
     }
 }
@@ -1156,7 +1164,8 @@ void game::NewMap(char* mapName) {
     i32 k;
     i32 ultimateSpread;
     i8 allNeutralVal;
-    i32 curDifficulty;
+    // A human seat's handicap less one picks its starting resources.
+    H1_ENUM_LOCAL(GameDifficulty, i32) curDifficulty;
 
     gbInNewGameSetup = 1;
     giCurPlayer = 0;
@@ -1226,7 +1235,7 @@ void game::NewMap(char* mapName) {
                 m_players[i].m_heroIds[0] = GetNewHeroId(gCrestHeroClass[m_players[i].m_color]);
             else
                 m_players[i].m_heroIds[0] =
-                    GetNewHeroId(gTownHeroClass[m_castleRecs[m_players[i].m_townIds[0]].m_type]);
+                    GetNewHeroId(gTownHeroClass[H1_ENUM_ENCODE(TownType, m_castleRecs[m_players[i].m_townIds[0]].m_type)]);
             m_availableHeroes[m_players[i].m_heroIds[0]] = i;
             m_heroRecs[m_players[i].m_heroIds[0]].m_owner = i;
             m_heroRecs[m_players[i].m_heroIds[0]].m_x = m_castleRecs[m_players[i].m_townIds[0]].m_x;
@@ -1264,9 +1273,9 @@ void game::NewMap(char* mapName) {
                     m_map[xTownVal - TOWN_FOOTPRINT_LEFT + i][yTown].m_objectIndex -=
                         TOWN_CASTLE_FRAME_OFFSET;
                 }
-                m_castleRecs[k].m_buildings = 1 << BUILDING_SLOT_TENT;
+                m_castleRecs[k].m_buildings = H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_TENT);
                 if (m_castleRecs[k].m_type == TOWN_TYPE_BARBARIAN)
-                    m_castleRecs[k].m_buildings |= 1 << BUILDING_SLOT_SPECIAL;
+                    m_castleRecs[k].m_buildings |= H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_SPECIAL);
                 SetupTown(k, 0);
             }
         }
@@ -1304,15 +1313,18 @@ void game::NewMap(char* mapName) {
     }
     m_ultimateArtifactX = i;
     m_ultimateArtifactY = j;
-    m_ultimateArtifactId = Random(0, 3);
+    m_ultimateArtifactId = H1_ENUM_DECODE(
+        ArtifactType,
+        Random(H1_ENUM_ENCODE(ArtifactType, ARTIFACT_ULTIMATE_BOOK), H1_ENUM_ENCODE(ArtifactType, ARTIFACT_ULTIMATE_LAST))
+    );
     for (i = 0; i < m_playerCount; i++) {
         if (gbHumanPlayer[i]) {
             if (i == 0)
                 curDifficulty = m_difficulty;
             else
-                curDifficulty = m_players[i].m_difficulty - 1;
+                curDifficulty = H1_ENUM_DECODE(GameDifficulty, m_players[i].m_difficulty - 1);
         } else {
-            curDifficulty = 0;
+            curDifficulty = DIFFICULTY_EASY;
         }
         memcpy(
             m_players[i].m_resources,
@@ -1408,8 +1420,8 @@ void game::SettleOverlay(i32 x, i32 y) {
 // trigger bits.
 VA(0x0042f830, 0xb14)
 void game::RandomizeEvents(void) {
-    u8 theTileset;
-    u8 nextObjTileset;
+    H1_ENUM_LOCAL(MapTileset, u8) theTileset;
+    H1_ENUM_LOCAL(MapTileset, u8) nextObjTileset;
     i16 y;
     i16 i;
     i16 j;
@@ -1526,8 +1538,10 @@ void game::RandomizeEvents(void) {
                     break;
                 case MAP_EVENT_TRIGGER(MAP_OBJECT_MONSTER):
                     if (!nextCell->m_objectMetadata) {
-                        nextCell->m_objectMetadata = GetRandomNumTroops(nextCell->m_objectIndex);
-                        if (Random(0, 99) <= 25 && nextCell->m_objectIndex != CREATURE_GHOST)
+                        nextCell->m_objectMetadata =
+                            GetRandomNumTroops(H1_ENUM_DECODE(CreatureType, nextCell->m_objectIndex));
+                        if (Random(0, 99) <= 25
+                            && H1_ENUM_DECODE(CreatureType, nextCell->m_objectIndex) != CREATURE_GHOST)
                             nextCell->m_objectMetadata |= MONSTER_WILLING_FLAG;
                     }
                     break;
@@ -1535,7 +1549,7 @@ void game::RandomizeEvents(void) {
                     nextCell->m_objectMetadata = nextCell->m_objectIndex;
                     if (nextCell->m_objectIndex > 4)
                         nextCell->m_objectMetadata -= RESOURCE_PILE_OBJECT_BASE;
-                    switch (nextCell->m_objectMetadata) {
+                    switch (H1_ENUM_DECODE(ResourceType, nextCell->m_objectMetadata)) {
                         case RESOURCE_WOOD:
                         case RESOURCE_ORE:
                             nextCell->m_objectMetadata = Random(8, 16);
@@ -1555,18 +1569,18 @@ void game::RandomizeEvents(void) {
                         case RANDOM_DECILE_2:
                         case RANDOM_DECILE_3:
                             nextCell->m_objectMetadata =
-                                gMageGuildSpellPool[MAGE_GUILD_STATE_LEVEL_1][Random(0, 7)] + 1;
+                                H1_ENUM_ENCODE(SpellType, gMageGuildSpellPool[MAGE_GUILD_STATE_LEVEL_1][Random(0, 7)]) + 1;
                             break;
                         case RANDOM_DECILE_4:
                         case RANDOM_DECILE_5:
                         case RANDOM_DECILE_6:
                         case RANDOM_DECILE_7:
                             nextCell->m_objectMetadata =
-                                gMageGuildSpellPool[MAGE_GUILD_STATE_LEVEL_2][Random(0, 7)] + 1;
+                                H1_ENUM_ENCODE(SpellType, gMageGuildSpellPool[MAGE_GUILD_STATE_LEVEL_2][Random(0, 7)]) + 1;
                             break;
                         default:
                             nextCell->m_objectMetadata =
-                                gMageGuildSpellPool[MAGE_GUILD_STATE_LEVEL_3][Random(0, 7)] + 1;
+                                H1_ENUM_ENCODE(SpellType, gMageGuildSpellPool[MAGE_GUILD_STATE_LEVEL_3][Random(0, 7)]) + 1;
                             break;
                     }
                     break;
@@ -1640,8 +1654,8 @@ void game::RandomizeEvents(void) {
             nextCell = &m_map[x][y];
             if (nextCell->m_objectIndex != MAP_CELL_NO_FRAME
                 && nextCell->m_overlayIndex != MAP_CELL_NO_FRAME) {
-                nextObjTileset = nextCell->m_objectTileset & MAP_CELL_TILESET_MASK;
-                theTileset = nextCell->m_overlayTileset & MAP_CELL_TILESET_MASK;
+                nextObjTileset = H1_ENUM_DECODE(MapTileset, nextCell->m_objectTileset & MAP_CELL_TILESET_MASK);
+                theTileset = H1_ENUM_DECODE(MapTileset, nextCell->m_overlayTileset & MAP_CELL_TILESET_MASK);
                 if ((nextObjTileset == TILESET_MTN32 || nextObjTileset == TILESET_TREE32)
                     && (theTileset == TILESET_MTN32 || theTileset == TILESET_TREE32))
                     nextCell->m_secondaryTrigger |= MAP_CELL_SECONDARY_BLOCKED;
@@ -1767,13 +1781,13 @@ i16 game::LoadMap(char* filename) {
         if (x >= 0) {
             m_castleRecs[i].m_x = x;
             m_castleRecs[i].m_y = y;
-            m_castleRecs[i].m_type = type & MAP_TOWN_TYPE_MASK;
-            if ((type & MAP_TOWN_TYPE_MASK) == TOWN_TYPE_BARBARIAN)
-                m_castleRecs[i].m_buildings |= 1 << BUILDING_SLOT_SPECIAL;
+            m_castleRecs[i].m_type = H1_ENUM_DECODE(TownType, type & MAP_TOWN_TYPE_MASK);
+            if (H1_ENUM_DECODE(TownType, type & MAP_TOWN_TYPE_MASK) == TOWN_TYPE_BARBARIAN)
+                m_castleRecs[i].m_buildings |= H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_SPECIAL);
             if (type < 0)
-                m_castleRecs[i].m_buildings |= (1 << BUILDING_SLOT_CASTLE);
+                m_castleRecs[i].m_buildings |= H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_CASTLE);
             else
-                m_castleRecs[i].m_buildings |= (1 << BUILDING_SLOT_TENT);
+                m_castleRecs[i].m_buildings |= H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_TENT);
         }
     }
     for (i = 0; i < GAME_MINE_COUNT; i++) {
@@ -1783,7 +1797,7 @@ i16 game::LoadMap(char* filename) {
         if (x >= 0) {
             m_mines[i].x = x;
             m_mines[i].y = y;
-            m_mines[i].type = type;
+            m_mines[i].type = H1_ENUM_DECODE(ResourceType, type);
         }
     }
     read(handle, m_randomArtifacts, sizeof(m_randomArtifacts));
@@ -1829,12 +1843,12 @@ void game::ClaimTown(i8 townId, i8 player) {
 
     cell = &m_map[m_castleRecs[townId].m_x - 1][m_castleRecs[townId].m_y];
     cell->m_flags |= MAP_CELL_OBJECT_EXTRA;
-    cell->m_objectTileset |= TILESET_FLAG32 << MAP_CELL_EXTRA_TILESET_SHIFT;
-    cell->m_extraFrame = m_players[player].Color() * 2;
+    cell->m_objectTileset |= H1_ENUM_ENCODE(MapTileset, TILESET_FLAG32) << MAP_CELL_EXTRA_TILESET_SHIFT;
+    cell->m_extraFrame = H1_ENUM_ENCODE(PlayerColor, m_players[player].Color()) * 2;
     cell = &m_map[m_castleRecs[townId].m_x + 1][m_castleRecs[townId].m_y];
     cell->m_flags |= MAP_CELL_OBJECT_EXTRA;
-    cell->m_objectTileset |= TILESET_FLAG32 << MAP_CELL_EXTRA_TILESET_SHIFT;
-    cell->m_extraFrame = m_players[player].Color() * 2 + 1;
+    cell->m_objectTileset |= H1_ENUM_ENCODE(MapTileset, TILESET_FLAG32) << MAP_CELL_EXTRA_TILESET_SHIFT;
+    cell->m_extraFrame = H1_ENUM_ENCODE(PlayerColor, m_players[player].Color()) * 2 + 1;
     SetVisibility(m_castleRecs[townId].m_x, m_castleRecs[townId].m_y, player, gVisRangeTown);
     CheckEndGame(0);
 }
@@ -1847,31 +1861,31 @@ void game::ClaimMine(i8 mineId, i8 player) {
     mapCell* cellPtr;
     m_mines[mineId].owner = player;
     m_mineOwners[mineId] = player;
-    switch (m_mines[mineId].type) {
-        case MAP_OBJECT_DRAGON_CITY:
+    switch (H1_ENUM_ENCODE(ResourceType, m_mines[mineId].type)) {
+        case H1_ENUM_ENCODE(MapObjectType, MAP_OBJECT_DRAGON_CITY):
             frame = 0x14;
             break;
-        case MAP_OBJECT_LIGHTHOUSE:
+        case H1_ENUM_ENCODE(MapObjectType, MAP_OBJECT_LIGHTHOUSE):
             frame = 0x18;
             break;
-        case RESOURCE_WOOD:
+        case H1_ENUM_ENCODE(ResourceType, RESOURCE_WOOD):
             frame = 0x10;
             break;
-        case RESOURCE_MERCURY:
+        case H1_ENUM_ENCODE(ResourceType, RESOURCE_MERCURY):
             frame = 0xc;
             break;
         default:
             frame = 8;
             break;
     }
-    switch (m_mines[mineId].type) {
-        case RESOURCE_MERCURY:
+    switch (H1_ENUM_ENCODE(ResourceType, m_mines[mineId].type)) {
+        case H1_ENUM_ENCODE(ResourceType, RESOURCE_MERCURY):
             cellPtr = &m_map[m_mines[mineId].x][m_mines[mineId].y - 2];
             break;
-        case MAP_OBJECT_DRAGON_CITY:
+        case H1_ENUM_ENCODE(MapObjectType, MAP_OBJECT_DRAGON_CITY):
             cellPtr = &m_map[m_mines[mineId].x - 1][m_mines[mineId].y - 3];
             break;
-        case MAP_OBJECT_LIGHTHOUSE:
+        case H1_ENUM_ENCODE(MapObjectType, MAP_OBJECT_LIGHTHOUSE):
             cellPtr = &m_map[m_mines[mineId].x - 2][m_mines[mineId].y];
             break;
         default:
@@ -1882,15 +1896,15 @@ void game::ClaimMine(i8 mineId, i8 player) {
         cellPtr->m_flags ^= MAP_CELL_OVERLAY_EXTRA;
     } else {
         cellPtr->m_flags |= MAP_CELL_OVERLAY_EXTRA;
-        cellPtr->m_overlayTileset |= TILESET_FLAG32 << MAP_CELL_EXTRA_TILESET_SHIFT;
-        cellPtr->m_extraFrame = frame + m_players[player].Color();
+        cellPtr->m_overlayTileset |= H1_ENUM_ENCODE(MapTileset, TILESET_FLAG32) << MAP_CELL_EXTRA_TILESET_SHIFT;
+        cellPtr->m_extraFrame = frame + H1_ENUM_ENCODE(PlayerColor, m_players[player].Color());
     }
 }
 
 // Combat (0) and adventure (1) books each have their own window position;
 // type 2 shows both tabs.
 VA(0x00430bef, 0x23b)
-i8 game::ViewSpells(
+H1_ENUM_RETURN(SpellType, i8) game::ViewSpells(
     class hero* spellHero,
     H1_ENUM_PARAM(HeroSpellType, i8) spellType,
     H1_ENUM_RETURN(MessageDispatchResult, i16) (*callback)(struct tag_message&),
@@ -1982,7 +1996,7 @@ void game::UpdateSpellWidgets(void) {
                 m_viewSpellsWindow->BroadcastMessage(message);
             }
             message.command = WIDGET_COMMAND_SET_FRAME;
-            message.value = m_viewSpellsHero->m_spells[m_viewSpellsTop + i];
+            message.value = H1_ENUM_ENCODE(SpellType, m_viewSpellsHero->m_spells[m_viewSpellsTop + i]);
             m_viewSpellsWindow->BroadcastMessage(message);
             sprintf(
                 gText,
@@ -2002,7 +2016,7 @@ void game::UpdateSpellWidgets(void) {
 // or pick the spell to cast.
 VA(0x0043109e, 0x494)
 H1_ENUM_RETURN(MessageDispatchResult, i16) ViewSpellsHandler(tag_message& message) {
-    i32 spell;
+    H1_ENUM_LOCAL(SpellType, i32) spell;
     if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
             case WIDGET_NOTIFY_SELECT:
@@ -2023,7 +2037,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) ViewSpellsHandler(tag_message& messag
                                 -1,
                                 -1,
                                 NORMAL_DIALOG_SPELL,
-                                spell
+                                H1_ENUM_ENCODE(SpellType, spell)
                             );
                             break;
                         case SPELL_BOOK_PREVIOUS_PAGE:
@@ -2067,7 +2081,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) ViewSpellsHandler(tag_message& messag
                                     -1,
                                     -1,
                                     NORMAL_DIALOG_SPELL,
-                                    spell
+                                    H1_ENUM_ENCODE(SpellType, spell)
                                 );
                                 return MESSAGE_DISPATCH_CONSUME;
                             }
@@ -2116,8 +2130,8 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) ViewSpellsHandler(tag_message& messag
                     return gpGame->m_viewSpellsCallback(message);
                 break;
         }
-        if (message.id == WIDGET_COMMAND_DIALOG_SELECT) {
-            message.command = message.id;
+        if (message.id == H1_ENUM_ENCODE(BaseWidgetCommand, WIDGET_COMMAND_DIALOG_SELECT)) {
+            message.command = H1_ENUM_DECODE(BaseWidgetCommand, message.id);
             return MESSAGE_DISPATCH_FORWARD;
         }
     }
@@ -2165,11 +2179,11 @@ VA(0x0043165b, 0x8af)
 void game::ViewArmy(
     i16 x,
     i16 y,
-    i8 monsterType,
+    H1_ENUM_PARAM(CreatureType, i8) monsterType,
     i16 numTroops,
     class town* castle,
     i8 disableDismiss,
-    i8 facing,
+    H1_ENUM_PARAM(ArmyFacing, i8) facing,
     i8 quickView,
     class hero* theHero,
     class army* theArmy,
@@ -2237,7 +2251,7 @@ void game::ViewArmy(
         149,
         theName,
         0,
-        facing == ARMY_FACING_LEFT,
+        H1_ENUM_DECODE(IconDrawOrientation, facing == ARMY_FACING_LEFT),
         VIEW_ARMY_ANIMATION,
         ICON_WIDGET_DRAW,
         1
@@ -2387,7 +2401,10 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) ViewArmyHandler(tag_message& message)
                         );
                         if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                             gbDismissArmy = 1;
-                            message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
+                            message.command = H1_ENUM_DECODE(
+                                BaseWidgetCommand,
+                                message.id = H1_ENUM_ENCODE(BaseWidgetCommand, WIDGET_COMMAND_DIALOG_SELECT)
+                            );
                             return MESSAGE_DISPATCH_FORWARD;
                         }
                         break;
@@ -2436,16 +2453,19 @@ void game::Overview(void) {
     icon* ovIconRef;
     i16 newHeroTextH;
     i16 townTop;
+    // Counts heroes, hero classes, towns, town types, mines and resources in
+    // turn.
     i16 j;
     font* smallFontItem;
-    i16 theTotals[TOWN_TYPE_COUNT];
+    // Per hero class, then per town type.
+    i16 theTotals[H1_ENUM_ENCODE(TownType, TOWN_TYPE_COUNT)];
     i16 activeTownTextWPos;
     i16 dayIdYValue;
     i16 spacing;
     i16 theVal;
     i16 one;
     font* bigFont;
-    i8 mineNumsBuffer[RESOURCE_COUNT];
+    H1_ENUM_ARRAY(i8, mineNumsBuffer, ResourceType, RESOURCE_COUNT);
     i16 spare1;
     i16 newHeroNumYW;
     i16 allLimitYOff;
@@ -2532,11 +2552,11 @@ void game::Overview(void) {
 
     memset(theTotals, 0, sizeof(theTotals));
     for (j = 0; j < gpCurPlayer->m_townCount; j++) {
-        if (m_castleRecs[gpCurPlayer->m_townIds[j]].m_buildings & (1 << BUILDING_SLOT_CASTLE))
-            theTotals[m_castleRecs[gpCurPlayer->m_townIds[j]].m_type]++;
+        if (m_castleRecs[gpCurPlayer->m_townIds[j]].m_buildings & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_CASTLE))
+            theTotals[H1_ENUM_ENCODE(TownType, m_castleRecs[gpCurPlayer->m_townIds[j]].m_type)]++;
     }
     numCastlesVal = 0;
-    for (j = 0; j < TOWN_TYPE_COUNT; j++) {
+    for (j = 0; j < H1_ENUM_ENCODE(TownType, TOWN_TYPE_COUNT); j++) {
         if (theTotals[j])
             numCastlesVal++;
     }
@@ -2563,11 +2583,11 @@ void game::Overview(void) {
 
     memset(theTotals, 0, sizeof(theTotals));
     for (j = 0; j < gpCurPlayer->m_townCount; j++) {
-        if (!(m_castleRecs[gpCurPlayer->m_townIds[j]].m_buildings & (1 << BUILDING_SLOT_CASTLE)))
-            theTotals[m_castleRecs[gpCurPlayer->m_townIds[j]].m_type]++;
+        if (!(m_castleRecs[gpCurPlayer->m_townIds[j]].m_buildings & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_CASTLE)))
+            theTotals[H1_ENUM_ENCODE(TownType, m_castleRecs[gpCurPlayer->m_townIds[j]].m_type)]++;
     }
     numTowns = 0;
-    for (j = 0; j < TOWN_TYPE_COUNT; j++) {
+    for (j = 0; j < H1_ENUM_ENCODE(TownType, TOWN_TYPE_COUNT); j++) {
         if (theTotals[j])
             numTowns++;
     }
@@ -2598,8 +2618,8 @@ void game::Overview(void) {
             mineNumsBuffer[m_mines[j].type]++;
     }
     numMines = 0;
-    for (j = 0; j < RESOURCE_COUNT; j++) {
-        if (mineNumsBuffer[j])
+    for (j = 0; j < H1_ENUM_ENCODE(ResourceType, RESOURCE_COUNT); j++) {
+        if (mineNumsBuffer[H1_ENUM_DECODE(ResourceType, j)])
             numMines++;
     }
     if (numMines) {
@@ -2607,7 +2627,7 @@ void game::Overview(void) {
         left = 100;
         oldNextType = 0;
         for (j = 0; j < numMines; j++) {
-            while (!mineNumsBuffer[oldNextType])
+            while (!mineNumsBuffer[H1_ENUM_DECODE(ResourceType, oldNextType)])
                 oldNextType++;
             ovIconRef->DrawToBuffer(
                 left + spacing * j,
@@ -2624,7 +2644,7 @@ void game::Overview(void) {
                     ICON_DRAW_NORMAL,
                     ICON_DRAW_OFFSET_FULL
                 );
-            sprintf(gText, "%d", mineNumsBuffer[oldNextType]);
+            sprintf(gText, "%d", mineNumsBuffer[H1_ENUM_DECODE(ResourceType, oldNextType)]);
             bigFont
                 ->DrawBoundedString(gText, left + spacing * j, 355, 72, 16, 1, FONT_ALIGN_CENTER);
             oldNextType++;
@@ -2643,8 +2663,8 @@ void game::Overview(void) {
     activeMessage.id = OVERVIEW_DAILY_GOLD;
     sprintf(gText, "%d", ComputeDailyGold(giCurPlayer));
     baseWin->BroadcastMessage(activeMessage);
-    for (j = 0; j < RESOURCE_COUNT; j++) {
-        sprintf(gText, "%d", gpCurPlayer->m_resources[j]);
+    for (j = 0; j < H1_ENUM_ENCODE(ResourceType, RESOURCE_COUNT); j++) {
+        sprintf(gText, "%d", gpCurPlayer->m_resources[H1_ENUM_DECODE(ResourceType, j)]);
         activeMessage.id = j + OVERVIEW_RESOURCE_BASE;
         baseWin->BroadcastMessage(activeMessage);
     }
@@ -2673,7 +2693,7 @@ void game::Overview(void) {
 
 // Covers the 28 creatures.
 VA(0x00432d0a, 0x25d)
-i8 game::GetRandomNumTroops(i8 monsterType) {
+i8 game::GetRandomNumTroops(H1_ENUM_PARAM(CreatureType, i8) monsterType) {
     switch (monsterType) {
         case CREATURE_PEASANT:
             return Random(30, 80);
@@ -2855,7 +2875,7 @@ i32 game::ComputeDailyGold(i32 player) {
     for (index = 0; index < GAME_TOWN_COUNT; index++) {
         if (m_castleRecs[index].m_owner == player) {
             dailyGold += static_cast<i16>(
-                (m_castleRecs[index].m_buildings & (1 << BUILDING_SLOT_TENT)) ? DAILY_GOLD_TOWN
+                (m_castleRecs[index].m_buildings & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_TENT)) ? DAILY_GOLD_TOWN
                                                                               : DAILY_GOLD_CASTLE
             );
         }
@@ -2867,13 +2887,13 @@ i32 game::ComputeDailyGold(i32 player) {
     dailyGold += m_players[player].NumOfGivenArtifact(ARTIFACT_ENDLESS_PURSE_OF_GOLD)
                  * DAILY_GOLD_ENDLESS_PURSE;
     if (!gbHumanPlayer[player]) {
-        if (gpGame->m_players[player].m_difficulty == PLAYER_TYPE_DUMB)
+        if (H1_ENUM_DECODE(ComputerPlayerType, gpGame->m_players[player].m_difficulty) == PLAYER_TYPE_DUMB)
             dailyGold = dailyGold * 0.75;
-        if (gpGame->m_players[player].m_difficulty == PLAYER_TYPE_AVERAGE)
+        if (H1_ENUM_DECODE(ComputerPlayerType, gpGame->m_players[player].m_difficulty) == PLAYER_TYPE_AVERAGE)
             dailyGold = dailyGold * 1.0;
-        if (gpGame->m_players[player].m_difficulty == PLAYER_TYPE_SMART)
+        if (H1_ENUM_DECODE(ComputerPlayerType, gpGame->m_players[player].m_difficulty) == PLAYER_TYPE_SMART)
             dailyGold = dailyGold * 1.29;
-        if (gpGame->m_players[player].m_difficulty == PLAYER_TYPE_GENIUS)
+        if (H1_ENUM_DECODE(ComputerPlayerType, gpGame->m_players[player].m_difficulty) == PLAYER_TYPE_GENIUS)
             dailyGold = dailyGold * 1.45;
     }
     return dailyGold;
@@ -2886,11 +2906,11 @@ void game::PerDay(void) {
     i16 i;
     i16 theProduction;
     i16 ii;
-    i16 j;
-    i8 curResource;
+    H1_ENUM_LOCAL(ResourceType, i16) j;
+    H1_ENUM_LOCAL(ResourceType, i8) curResource;
 
     for (i = 0; i < gpGame->m_playerCount; i++) {
-        for (j = 0; j < RESOURCE_COUNT; j++)
+        for (j = RESOURCE_FIRST; j < RESOURCE_COUNT; j++)
             gpGame->m_players[i].m_aiData.m_income[j] = -m_players[i].m_resources[j];
     }
     memset(m_townBuiltToday, 0, sizeof(m_townBuiltToday));
@@ -2914,13 +2934,13 @@ void game::PerDay(void) {
         m_players[i].m_resources[RESOURCE_GOLD] += ComputeDailyGold(i);
     for (i = 0; i < m_playerCount; i++) {
         if (!gbHumanPlayer[i]) {
-            if (gpGame->m_players[i].m_difficulty > PLAYER_TYPE_NO_WOOD_ORE_BONUS_LAST) {
+            if (H1_ENUM_DECODE(ComputerPlayerType, gpGame->m_players[i].m_difficulty) > PLAYER_TYPE_NO_WOOD_ORE_BONUS_LAST) {
                 m_players[i].m_resources[RESOURCE_WOOD]++;
                 m_players[i].m_resources[RESOURCE_ORE]++;
             }
-            if (gpGame->m_players[i].m_difficulty > PLAYER_TYPE_NO_WEEKDAY_BONUS_LAST && m_day >= 1
-                && m_day <= RESOURCE_NON_GOLD_END)
-                m_players[i].m_resources[m_day - 1] += 1;
+            if (H1_ENUM_DECODE(ComputerPlayerType, gpGame->m_players[i].m_difficulty) > PLAYER_TYPE_NO_WEEKDAY_BONUS_LAST
+                && m_day >= 1 && m_day <= H1_ENUM_ENCODE(ResourceType, RESOURCE_NON_GOLD_END))
+                m_players[i].m_resources[H1_ENUM_DECODE(ResourceType, m_day - 1)] += 1;
         }
     }
     m_day++;
@@ -2934,7 +2954,7 @@ void game::PerDay(void) {
         PerMonth();
     }
     for (i = 0; i < gpGame->m_playerCount; i++) {
-        for (j = 0; j < RESOURCE_COUNT; j++)
+        for (j = RESOURCE_FIRST; j < RESOURCE_COUNT; j++)
             gpGame->m_players[i].m_aiData.m_income[j] += m_players[i].m_resources[j];
     }
 }
@@ -2946,7 +2966,8 @@ void game::PerWeek(void) {
     i16 posY;
     i16 posX;
     town* townPointer;
-    i16 j;
+    // Also the tavern-hero slot of the hero refresh.
+    H1_ENUM_SHARED(BuildingSlotType, i16) j;
     i16 i;
     i32 heroClass = 0;
 
@@ -2962,21 +2983,21 @@ void game::PerWeek(void) {
     for (i = 0; i < GAME_TOWN_COUNT; i++) {
         townPointer = GetTown(i);
         for (j = BUILDING_SLOT_DWELLING_FIRST; j <= BUILDING_SLOT_DWELLING_LAST; j++) {
-            if (townPointer->m_buildings & (1 << j)) {
+            if (townPointer->m_buildings & H1_ENUM_BIT(BuildingSlotType, j)) {
                 i16 gain = gMonsterDatabase[gDwellingType[townPointer->m_type]
                                                          [j - BUILDING_SLOT_DWELLING_FIRST]]
                                .growth;
-                if (townPointer->m_buildings & (1 << BUILDING_SLOT_WELL))
+                if (townPointer->m_buildings & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_WELL))
                     gain += WEEKLY_WELL_GROWTH_BONUS;
                 if (townPointer->m_owner >= 0 && !gbHumanPlayer[townPointer->m_owner]) {
-                    if (gpGame->m_players[townPointer->m_owner].m_difficulty == PLAYER_TYPE_SMART)
+                    if (H1_ENUM_DECODE(ComputerPlayerType, gpGame->m_players[townPointer->m_owner].m_difficulty) == PLAYER_TYPE_SMART)
                         gain = gain * 1.24;
-                    if (gpGame->m_players[townPointer->m_owner].m_difficulty == PLAYER_TYPE_GENIUS)
+                    if (H1_ENUM_DECODE(ComputerPlayerType, gpGame->m_players[townPointer->m_owner].m_difficulty) == PLAYER_TYPE_GENIUS)
                         gain = gain * 1.36;
                 }
                 if (giWeekType == CALENDAR_PERIOD_CREATURE
                     && gDwellingType[townPointer->m_type][j - BUILDING_SLOT_DWELLING_FIRST]
-                           == giWeekTypeExtra)
+                           == H1_ENUM_DECODE(CreatureType, giWeekTypeExtra))
                     gain += WEEKLY_CREATURE_GROWTH_BONUS;
                 townPointer->m_garrison[j - BUILDING_SLOT_DWELLING_FIRST] += gain;
             }
@@ -3044,14 +3065,17 @@ void game::PerWeek(void) {
 VA(0x0043435e, 0x2c0)
 void game::PerMonth(void) {
     DATA(0x0048fcbc)
-    static i8 gMonType[12] = {0, 6, 13, 14, 9, 15, 7, 8, 18, 19, 16, 20};
+    static H1_ENUM_STORAGE(CreatureType, i8) gMonType[12] = {
+        CREATURE_PEASANT, CREATURE_GOBLIN, CREATURE_DWARF, CREATURE_ELF, CREATURE_OGRE, CREATURE_DRUID,
+        CREATURE_ORC, CREATURE_WOLF, CREATURE_CENTAUR, CREATURE_GARGOYLE, CREATURE_UNICORN, CREATURE_GRIFFIN
+    };
     mapCell* spot;
     i32 x;
     i16 i;
     i32 y;
     i16 growth;
     town* townPointer;
-    i16 j;
+    H1_ENUM_LOCAL(BuildingSlotType, i16) j;
 
     m_month++;
     i = Random(1, 10);
@@ -3060,22 +3084,22 @@ void game::PerMonth(void) {
         giMonthTypeExtra = Random(0, CALENDAR_MONTH_NAME_COUNT - 1);
     } else if (i <= 9) {
         giMonthType = CALENDAR_PERIOD_CREATURE;
-        giMonthTypeExtra = gMonType[Random(0, CALENDAR_MONTH_CREATURE_COUNT - 1)];
+        giMonthTypeExtra = H1_ENUM_ENCODE(CreatureType, gMonType[Random(0, CALENDAR_MONTH_CREATURE_COUNT - 1)]);
     } else {
         giMonthType = CALENDAR_PERIOD_PLAGUE;
     }
     for (i = 0; i < GAME_TOWN_COUNT; i++) {
         for (j = BUILDING_SLOT_DWELLING_FIRST; j <= BUILDING_SLOT_DWELLING_LAST; j++) {
             townPointer = GetTown(i);
-            if (townPointer->m_buildings & (1 << j)) {
+            if (townPointer->m_buildings & H1_ENUM_BIT(BuildingSlotType, j)) {
                 growth = gMonsterDatabase[gDwellingType[townPointer->m_type]
                                                        [j - BUILDING_SLOT_DWELLING_FIRST]]
                              .growth;
-                if (townPointer->m_buildings & (1 << BUILDING_SLOT_WELL))
+                if (townPointer->m_buildings & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_WELL))
                     growth += WEEKLY_WELL_GROWTH_BONUS;
                 if (giMonthType == CALENDAR_PERIOD_CREATURE
                     && gDwellingType[townPointer->m_type][j - BUILDING_SLOT_DWELLING_FIRST]
-                           == giMonthTypeExtra)
+                           == H1_ENUM_DECODE(CreatureType, giMonthTypeExtra))
                     townPointer->m_garrison[j - BUILDING_SLOT_DWELLING_FIRST] *=
                         MONTHLY_CREATURE_GROWTH_FACTOR;
                 if (giMonthType == CALENDAR_PERIOD_PLAGUE) {
@@ -3092,12 +3116,12 @@ void game::PerMonth(void) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
                 spot = gpAdvManager->GetCell(x, y);
-                if (!spot->m_triggerType && CELL_TERRAIN(spot)) {
+                if (!spot->m_triggerType && TERRAIN_IS_LAND(CELL_TERRAIN(spot))) {
                     if (Random(0, MONTH_CREATURE_SPAWN_ROLL_MAX) == MONTH_CREATURE_SPAWN_ROLL_HIT) {
                         spot->m_triggerType = MAP_EVENT_TRIGGER(MAP_OBJECT_MONSTER);
-                        spot->m_objectTileset = TILESET_MONS32;
+                        spot->m_objectTileset = H1_ENUM_ENCODE(MapTileset, TILESET_MONS32);
                         spot->m_objectIndex = giMonthTypeExtra;
-                        spot->m_objectMetadata = GetRandomNumTroops(giMonthTypeExtra);
+                        spot->m_objectMetadata = GetRandomNumTroops(H1_ENUM_DECODE(CreatureType, giMonthTypeExtra));
                     }
                 }
             }
@@ -3117,7 +3141,7 @@ void game::RandomizeTown(i8 x, i8 y, i8 isCastle) {
     i8 i;
     u8 activeFrameShift;
     i8 townNum;
-    i8 race;
+    H1_ENUM_LOCAL(TownType, i8) race;
     i8 plain;
 
     townNum = GetTownId(x, y);
@@ -3145,9 +3169,12 @@ void game::RandomizeTown(i8 x, i8 y, i8 isCastle) {
         race = gCrestTownTypes[m_players[0].m_color];
     } else if (townNum < GAME_PLAYER_COUNT) {
         curUnique = 0;
-        race = 0;
+        race = TOWN_TYPE_KNIGHT;
         while (!curUnique) {
-            race = Random(0, 3);
+            race = H1_ENUM_DECODE(
+                TownType,
+                Random(H1_ENUM_ENCODE(TownType, TOWN_TYPE_KNIGHT), H1_ENUM_ENCODE(TownType, TOWN_TYPE_WARLOCK))
+            );
             curUnique = 1;
             for (i = 0; i < GAME_PLAYER_COUNT; i++) {
                 if (gRandomTownTypes[i] == race)
@@ -3156,7 +3183,10 @@ void game::RandomizeTown(i8 x, i8 y, i8 isCastle) {
         }
         gRandomTownTypes[townNum] = race;
     } else {
-        race = Random(0, 3);
+        race = H1_ENUM_DECODE(
+            TownType,
+            Random(H1_ENUM_ENCODE(TownType, TOWN_TYPE_KNIGHT), H1_ENUM_ENCODE(TownType, TOWN_TYPE_WARLOCK))
+        );
     }
     activeFrameShift = (TOWN_TYPE_COUNT - race) * TOWN_RACE_FRAME_STRIDE;
     for (i = 0; i < TOWN_FOOTPRINT_WIDTH; i++) {
@@ -3172,18 +3202,18 @@ void game::RandomizeTown(i8 x, i8 y, i8 isCastle) {
         plain = 0;
     if (plain) {
         m_castleRecs[townNum].m_buildings =
-            race == TOWN_TYPE_BARBARIAN ? 1 << BUILDING_SLOT_SPECIAL : 0;
+            race == TOWN_TYPE_BARBARIAN ? H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_SPECIAL) : 0;
     }
     if (isCastle) {
         m_castleRecs[townNum].m_buildings |=
-            ((1 << BUILDING_SLOT_CASTLE) | (1 << BUILDING_SLOT_DWELLING_1));
+            (H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_CASTLE) | H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_DWELLING_1));
         m_castleRecs[townNum].m_garrison[0] = gMonsterDatabase[gDwellingType[race][0]].growth;
-        if (m_castleRecs[townNum].m_buildings & (1 << BUILDING_SLOT_TENT))
-            m_castleRecs[townNum].m_buildings -= (1 << BUILDING_SLOT_TENT);
+        if (m_castleRecs[townNum].m_buildings & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_TENT))
+            m_castleRecs[townNum].m_buildings -= H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_TENT);
     } else {
-        m_castleRecs[townNum].m_buildings |= (1 << BUILDING_SLOT_TENT);
-        if (m_castleRecs[townNum].m_buildings & (1 << BUILDING_SLOT_CASTLE))
-            m_castleRecs[townNum].m_buildings -= (1 << BUILDING_SLOT_CASTLE);
+        m_castleRecs[townNum].m_buildings |= H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_TENT);
+        if (m_castleRecs[townNum].m_buildings & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_CASTLE))
+            m_castleRecs[townNum].m_buildings -= H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_CASTLE);
         SetupTown(townNum, 0);
     }
 }
@@ -3196,9 +3226,9 @@ void game::SetupTown(i8 townId, i8 aiOwned) {
     i16 dwellingCount;
     char rollList[10];
     i32 n;
-    i8 nextUsed[29];
-    i8 curTownType;
-    i16 newSpell;
+    H1_ENUM_ARRAY(i8, nextUsed, SpellType, SPELL_COUNT);
+    H1_ENUM_LOCAL(TownType, i8) curTownType;
+    H1_ENUM_LOCAL(SpellType, i16) newSpell;
     i16 spellValue;
     i32 spellLevel;
 
@@ -3216,18 +3246,18 @@ void game::SetupTown(i8 townId, i8 aiOwned) {
     curTownType = m_castleRecs[townId].m_type;
     if (m_castleRecs[townId].m_customized) {
         for (n = 0; n < BUILDING_SLOT_DWELLING_COUNT; n++) {
-            if (m_castleRecs[townId].m_buildings & (1 << (n + BUILDING_SLOT_DWELLING_FIRST)))
+            if (m_castleRecs[townId].m_buildings & H1_ENUM_BIT(BuildingSlotType, n + BUILDING_SLOT_DWELLING_FIRST))
                 m_castleRecs[townId].m_garrison[n] =
                     gMonsterDatabase[gDwellingType[curTownType][n]].growth;
         }
     }
     if (!m_castleRecs[townId].m_customized) {
-        m_castleRecs[townId].m_buildings |= (1 << BUILDING_SLOT_DWELLING_1);
+        m_castleRecs[townId].m_buildings |= H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_DWELLING_1);
         m_castleRecs[townId].m_garrison[0] = gMonsterDatabase[gDwellingType[curTownType][0]].growth;
         if (aiOwned && dwellingCount == 1 && Random(1, 10) < 4)
             dwellingCount++;
         if (--dwellingCount) {
-            m_castleRecs[townId].m_buildings |= (1 << BUILDING_SLOT_DWELLING_2);
+            m_castleRecs[townId].m_buildings |= H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_DWELLING_2);
             m_castleRecs[townId].m_garrison[1] =
                 gMonsterDatabase[gDwellingType[curTownType][1]].growth;
             dwellingCount--;
@@ -3270,8 +3300,8 @@ void game::RandomizeMine(i8 x, i8 y) {
     i32 count;
     i8 iCol;
     u8 trigger;
-    i8 resType;
-    i8 terrain;
+    H1_ENUM_LOCAL(ResourceType, i8) resType;
+    H1_ENUM_LOCAL(TerrainType, i8) terrain;
     u8 mineFrame;
 
     terrain = giGroundToTerrain[m_map[x][y].m_tileIndex];
@@ -3279,22 +3309,34 @@ void game::RandomizeMine(i8 x, i8 y) {
         switch (terrain) {
             case TERRAIN_GRASS:
             case TERRAIN_DIRT:
-                resType = Random(1, 6);
+                resType = H1_ENUM_DECODE(
+                    ResourceType,
+                    Random(H1_ENUM_ENCODE(ResourceType, RESOURCE_MERCURY), H1_ENUM_ENCODE(ResourceType, RESOURCE_GOLD))
+                );
                 if (resType == RESOURCE_MERCURY)
                     resType = RESOURCE_WOOD;
                 break;
             case TERRAIN_SNOW:
-                resType = Random(2, 6);
+                resType = H1_ENUM_DECODE(
+                    ResourceType,
+                    Random(H1_ENUM_ENCODE(ResourceType, RESOURCE_ORE), H1_ENUM_ENCODE(ResourceType, RESOURCE_GOLD))
+                );
                 break;
             case TERRAIN_SWAMP:
-                resType = Random(0, 6);
+                resType = H1_ENUM_DECODE(
+                    ResourceType,
+                    Random(H1_ENUM_ENCODE(ResourceType, RESOURCE_WOOD), H1_ENUM_ENCODE(ResourceType, RESOURCE_GOLD))
+                );
                 break;
             case TERRAIN_LAVA:
                 resType = RESOURCE_MERCURY;
                 break;
             case TERRAIN_DESERT:
             default:
-                resType = Random(1, 6);
+                resType = H1_ENUM_DECODE(
+                    ResourceType,
+                    Random(H1_ENUM_ENCODE(ResourceType, RESOURCE_MERCURY), H1_ENUM_ENCODE(ResourceType, RESOURCE_GOLD))
+                );
                 break;
         }
         if (!gMineTypeCount[resType])
@@ -3370,7 +3412,7 @@ void game::RandomizeMine(i8 x, i8 y) {
         trigger = MAP_OBJECT_TRIGGER(MAP_OBJECT_SAWMILL);
     } else {
         m_map[x + 1][y].m_flags |= MAP_CELL_OBJECT_EXTRA;
-        m_map[x + 1][y].m_objectTileset |= TILESET_RSRC32 << MAP_CELL_EXTRA_TILESET_SHIFT;
+        m_map[x + 1][y].m_objectTileset |= H1_ENUM_ENCODE(MapTileset, TILESET_RSRC32) << MAP_CELL_EXTRA_TILESET_SHIFT;
         m_map[x + 1][y].m_extraFrame = resType - RESOURCE_ORE;
         trigger = MAP_OBJECT_TRIGGER(MAP_OBJECT_MINE);
     }
@@ -3393,19 +3435,21 @@ void game::RandomizeMine(i8 x, i8 y) {
 
 // Picks an unused random artifact (ids 4..36), else the first free one.
 VA(0x00435425, 0x5e)
-i8 game::GetRandomArtifactId(void) {
-    i8 freeSlot = Scan(
-        m_randomArtifacts,
-        ARTIFACT_REGULAR_FIRST,
-        ARTIFACT_REGULAR_END - ARTIFACT_REGULAR_FIRST
+H1_ENUM_RETURN(ArtifactType, i8) game::GetRandomArtifactId(void) {
+    H1_ENUM_LOCAL(ArtifactType, i8) freeSlot = H1_ENUM_DECODE(
+        ArtifactType,
+        Scan(m_randomArtifacts, H1_ENUM_ENCODE(ArtifactType, ARTIFACT_REGULAR_FIRST), ARTIFACT_REGULAR_END - ARTIFACT_REGULAR_FIRST)
     );
-    if (freeSlot == GAME_TABLE_FREE)
+    if (freeSlot == ARTIFACT_NONE)
         return ARTIFACT_NONE;
-    i8 artifact = RandomScan(
-        m_randomArtifacts,
-        ARTIFACT_REGULAR_FIRST,
-        ARTIFACT_REGULAR_END - ARTIFACT_REGULAR_FIRST,
-        ARTIFACT_REGULAR_END
+    H1_ENUM_LOCAL(ArtifactType, i8) artifact = H1_ENUM_DECODE(
+        ArtifactType,
+        RandomScan(
+            m_randomArtifacts,
+            H1_ENUM_ENCODE(ArtifactType, ARTIFACT_REGULAR_FIRST),
+            ARTIFACT_REGULAR_END - ARTIFACT_REGULAR_FIRST,
+            H1_ENUM_ENCODE(ArtifactType, ARTIFACT_REGULAR_END)
+        )
     );
     if (artifact == ARTIFACT_NONE)
         return freeSlot;
@@ -3431,10 +3475,18 @@ void game::SetRandomHeroArmies(i16 heroId, i32 strongArmy) {
     armyGroup* curArmy = &m_heroRecs[heroId].m_army;
     i16 curSlot = 0;
     i16 armies[HERO_CLASS_COUNT][RANDOM_HERO_ARMY_OPTION_COUNT][RANDOM_HERO_ARMY_FIELD_COUNT] = {
-        {{CREATURE_PEASANT, 30, 50}, {CREATURE_ARCHER, 3, 5}, {CREATURE_PIKEMAN, 2, 4}},
-        {{CREATURE_GOBLIN, 15, 25}, {CREATURE_ORC, 3, 5}, {CREATURE_WOLF, 2, 3}},
-        {{CREATURE_SPRITE, 10, 20}, {CREATURE_DWARF, 2, 4}, {CREATURE_ELF, 1, 2}},
-        {{CREATURE_CENTAUR, 6, 10}, {CREATURE_GARGOYLE, 2, 4}, {CREATURE_GRIFFIN, 1, 2}}
+        {{H1_ENUM_ENCODE(CreatureType, CREATURE_PEASANT), 30, 50},
+         {H1_ENUM_ENCODE(CreatureType, CREATURE_ARCHER), 3, 5},
+         {H1_ENUM_ENCODE(CreatureType, CREATURE_PIKEMAN), 2, 4}},
+        {{H1_ENUM_ENCODE(CreatureType, CREATURE_GOBLIN), 15, 25},
+         {H1_ENUM_ENCODE(CreatureType, CREATURE_ORC), 3, 5},
+         {H1_ENUM_ENCODE(CreatureType, CREATURE_WOLF), 2, 3}},
+        {{H1_ENUM_ENCODE(CreatureType, CREATURE_SPRITE), 10, 20},
+         {H1_ENUM_ENCODE(CreatureType, CREATURE_DWARF), 2, 4},
+         {H1_ENUM_ENCODE(CreatureType, CREATURE_ELF), 1, 2}},
+        {{H1_ENUM_ENCODE(CreatureType, CREATURE_CENTAUR), 6, 10},
+         {H1_ENUM_ENCODE(CreatureType, CREATURE_GARGOYLE), 2, 4},
+         {H1_ENUM_ENCODE(CreatureType, CREATURE_GRIFFIN), 1, 2}}
     };
     i32 curPresent[RANDOM_HERO_ARMY_OPTION_COUNT];
     i32 i;
@@ -3454,8 +3506,10 @@ void game::SetRandomHeroArmies(i16 heroId, i32 strongArmy) {
     }
     for (i = 0; i < RANDOM_HERO_ARMY_SELECTION_COUNT; i++) {
         if (curPresent[i]) {
-            curArmy->m_creatureTypes[curSlot] =
-                armies[m_heroRecs[heroId].m_heroClass][i][RANDOM_HERO_ARMY_FIELD_CREATURE];
+            curArmy->m_creatureTypes[curSlot] = H1_ENUM_DECODE(
+                CreatureType,
+                armies[m_heroRecs[heroId].m_heroClass][i][RANDOM_HERO_ARMY_FIELD_CREATURE]
+            );
             minNum = armies[m_heroRecs[heroId].m_heroClass][i][RANDOM_HERO_ARMY_FIELD_MIN]
                      * RANDOM_HERO_COUNT_SCALE;
             curMax = armies[m_heroRecs[heroId].m_heroClass][i][RANDOM_HERO_ARMY_FIELD_MAX]
@@ -3477,10 +3531,11 @@ void game::ProcessRandomObjects(i32 castlesOnly) {
     i32 lowFVVal;
     i32 y;
     i32 x;
-    i32 i;
+    // Also the player of the random-town reset.
+    H1_ENUM_SHARED(ResourceType, i32) i;
     i32 highFVNum;
 
-    for (i = 0; i < RESOURCE_COUNT; i++)
+    for (i = RESOURCE_FIRST; i < RESOURCE_COUNT; i++)
         gMineTypeCount[i] = 0;
     for (i = 0; i < GAME_PLAYER_COUNT; i++)
         gRandomTownTypes[i] = TOWN_TYPE_NONE;
@@ -3520,8 +3575,9 @@ void game::ProcessRandomObjects(i32 castlesOnly) {
                     pickMonster:
                         cellPtrItem->m_triggerType = MAP_EVENT_TRIGGER(MAP_OBJECT_MONSTER);
                         cellPtrItem->m_objectIndex = Random(0, 27);
-                        while (gMonsterDatabase[cellPtrItem->m_objectIndex].fightValue <= lowFVVal
-                               || gMonsterDatabase[cellPtrItem->m_objectIndex].fightValue
+                        while (gMonsterDatabase[H1_ENUM_DECODE(CreatureType, cellPtrItem->m_objectIndex)].fightValue
+                                   <= lowFVVal
+                               || gMonsterDatabase[H1_ENUM_DECODE(CreatureType, cellPtrItem->m_objectIndex)].fightValue
                                       >= highFVNum)
                             cellPtrItem->m_objectIndex = Random(0, 27);
                         break;
@@ -3531,8 +3587,8 @@ void game::ProcessRandomObjects(i32 castlesOnly) {
                         break;
                     case MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_ARTIFACT):
                         cellPtrItem->m_triggerType = MAP_EVENT_TRIGGER(MAP_OBJECT_ARTIFACT);
-                        cellPtrItem->m_objectIndex = GetRandomArtifactId();
-                        m_randomArtifacts[cellPtrItem->m_objectIndex] = GAME_ARTIFACT_ON_MAP;
+                        cellPtrItem->m_objectIndex = H1_ENUM_ENCODE(ArtifactType, GetRandomArtifactId());
+                        m_randomArtifacts[H1_ENUM_DECODE(ArtifactType, cellPtrItem->m_objectIndex)] = GAME_ARTIFACT_ON_MAP;
                         break;
                     case MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_MINE):
                         RandomizeMine(x, y);
@@ -3578,7 +3634,7 @@ void game::SetVisibility(i16 x, i16 y, i16 player, i16 radius) {
 }
 
 VA(0x00435ca3, 0xc8)
-void game::GiveArmy(armyGroup* group, i32 type, i32 count, i32 slot) {
+void game::GiveArmy(armyGroup* group, H1_ENUM_PARAM(CreatureType, i32) type, i32 count, i32 slot) {
     i32 swap;
     i32 i;
     if (slot >= 0) {
@@ -3592,7 +3648,7 @@ void game::GiveArmy(armyGroup* group, i32 type, i32 count, i32 slot) {
         }
         if (i >= ARMY_GROUP_SLOT_COUNT) {
             for (i = 0; i < ARMY_GROUP_SLOT_COUNT; ++i) {
-                if (group->m_creatureTypes[i] < 0) {
+                if (group->m_creatureTypes[i] < CREATURE_FIRST) {
                     group->m_creatureCounts[i] = 0;
                     break;
                 }
@@ -3874,7 +3930,7 @@ void game::WaitForPlayer(char* text, i32 player) {
             0x61,
             -1,
             NORMAL_DIALOG_CREST,
-            gpGame->m_players[player].m_color
+            H1_ENUM_ENCODE(PlayerColor, gpGame->m_players[player].m_color)
         );
         StopMusic();
     }
@@ -4007,7 +4063,7 @@ void game::ProcessOnMapHeroes(void) {
                         theHeroEntry->m_army.m_creatureTypes[i] = CREATURE_NONE;
                 }
                 for (jx = 0; jx < MAP_HERO_EXTRA_ARTIFACT_COUNT; jx++) {
-                    if (extra->artifacts[jx] >= 0)
+                    if (extra->artifacts[jx] >= ARTIFACT_FIRST)
                         gpAdvManager->GiveArtifact(theHeroEntry, extra->artifacts[jx]);
                 }
                 theHeroEntry->m_experience = 0;
@@ -4129,7 +4185,7 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
     i32 block;
     i32 blocksCount;
     i32 unusedData;
-    i32 oldTrackVal;
+    H1_ENUM_LOCAL(MusicTrack, i32) oldTrackVal;
     RemotePayload* sendPacket;
     i32 sizeVal;
     i32 entry;
@@ -4165,7 +4221,7 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
     sprintf(curPathname, "%s%s", gDataPath, "REMOTE.GAM");
     prevSize = FileSize(curPathname);
     sendPacket = static_cast<RemotePayload*>(malloc(REMOTE_MESSAGE_SIZE));
-    if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gRemoteReady))
+    if (!H1_ENUM_ENCODE(MultiplayerBaseType, iMPBaseType) || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gRemoteReady))
         mainOutData = static_cast<char*>(malloc(prevSize));
     dataObj = static_cast<char*>(malloc(prevSize));
     mainFile = open(curPathname, O_BINARY);
@@ -4177,7 +4233,7 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
     {
         read(mainFile, dataObj, prevSize);
         close(mainFile);
-        if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gRemoteReady))
+        if (!H1_ENUM_ENCODE(MultiplayerBaseType, iMPBaseType) || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gRemoteReady))
             prevSize = EncodeData(mainOutData, dataObj, prevSize);
         else
             mainOutData = dataObj;
@@ -4264,7 +4320,7 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
 
 cleanup:
     free(sendPacket);
-    if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gRemoteReady))
+    if (!H1_ENUM_ENCODE(MultiplayerBaseType, iMPBaseType) || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gRemoteReady))
         free(mainOutData);
     free(dataObj);
     AiPrint("Transmit End");
@@ -4287,7 +4343,7 @@ i32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
     char pathname[452];
     char* curInData;
     i32 i;
-    i32 trackOld;
+    H1_ENUM_LOCAL(MusicTrack, i32) trackOld;
     i32 handleValue;
     i8 done;
     char* sendPacket;
@@ -4316,7 +4372,7 @@ i32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
     if (!curRet)
         ShutDown(NULL);
     memset(myGotIt, 0, sizeof(myGotIt));
-    if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gRemoteReady))
+    if (!H1_ENUM_ENCODE(MultiplayerBaseType, iMPBaseType) || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gRemoteReady))
         decodedData = static_cast<char*>(malloc(REMOTE_SAVE_DECODE_BUFFER_SIZE));
     sendPacket = static_cast<char*>(malloc(REMOTE_MESSAGE_SIZE));
     curInData = static_cast<char*>(malloc(dataSize + REMOTE_SAVE_BUFFER_EXTRA));
@@ -4370,7 +4426,7 @@ i32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
             }
         }
     }
-    if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gRemoteReady))
+    if (!H1_ENUM_ENCODE(MultiplayerBaseType, iMPBaseType) || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gRemoteReady))
         dataSize = DecodeData(decodedData, curInData);
     else
         decodedData = curInData;
@@ -4383,7 +4439,7 @@ i32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
     okay = 1;
     free(sendPacket);
     free(curInData);
-    if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gRemoteReady))
+    if (!H1_ENUM_ENCODE(MultiplayerBaseType, iMPBaseType) || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gRemoteReady))
         free(decodedData);
     AiPrint("Receive End");
     if (gpAdvManager->m_active == 1) {
@@ -4398,7 +4454,7 @@ i32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
 
 VA(0x00437b7f, 0x5b5)
 void game::DoNewTurn(void) {
-    i32 track;
+    H1_ENUM_LOCAL(MusicTrack, i32) track;
     char monsterName[52];
 
     if (!gbThisNetHumanPlayer[giCurPlayer]) {
@@ -4435,7 +4491,7 @@ void game::DoNewTurn(void) {
             0x61,
             -1,
             NORMAL_DIALOG_CREST,
-            gpGame->m_players[giCurPlayer].Color()
+            H1_ENUM_ENCODE(PlayerColor, gpGame->m_players[giCurPlayer].Color())
         );
     }
     if (gpCurPlayer->m_heroCount > 0)
@@ -4443,7 +4499,7 @@ void game::DoNewTurn(void) {
     else if (gpCurPlayer->m_townCount > 0)
         gpAdvManager->SetTownContext(gpCurPlayer->m_townIds[0]);
     gpAdvManager->CheckDimNextHeroBut();
-    PlayMusic(gpAdvManager->m_currentTerrain);
+    PlayMusic(TERRAIN_MUSIC_TRACK(gpAdvManager->m_currentTerrain));
     if (m_day == 1) {
         if ((m_month != 1 || m_week != 1 || m_day != 1) && giWeekType != CALENDAR_PERIOD_NONE) {
             track = MUSIC_TRACK_NONE;
@@ -4456,12 +4512,12 @@ void game::DoNewTurn(void) {
                         gMonthNames[giMonthTypeExtra]
                     );
                 } else if (giMonthType == CALENDAR_PERIOD_CREATURE) {
-                    strcpy(monsterName, gArmyNamesPlural[giMonthTypeExtra]);
+                    strcpy(monsterName, gArmyNamesPlural[H1_ENUM_DECODE(CreatureType, giMonthTypeExtra)]);
                     monsterName[0] = CyrillicToLower(monsterName[0]);
                     sprintf(
                         gText,
                         gNewTurnText[NEW_TURN_TEXT_MONTH_CREATURE],
-                        gArmyNamesPlural[giMonthTypeExtra],
+                        gArmyNamesPlural[H1_ENUM_DECODE(CreatureType, giMonthTypeExtra)],
                         monsterName
                     );
                 } else {
@@ -4476,12 +4532,12 @@ void game::DoNewTurn(void) {
                         gWeekNames[giWeekTypeExtra]
                     );
                 } else {
-                    strcpy(monsterName, gArmyNamesPlural[giWeekTypeExtra]);
+                    strcpy(monsterName, gArmyNamesPlural[H1_ENUM_DECODE(CreatureType, giWeekTypeExtra)]);
                     monsterName[0] = CyrillicToLower(monsterName[0]);
                     sprintf(
                         gText,
                         gNewTurnText[NEW_TURN_TEXT_WEEK_CREATURE],
-                        gArmyNamesPlural[giWeekTypeExtra],
+                        gArmyNamesPlural[H1_ENUM_DECODE(CreatureType, giWeekTypeExtra)],
                         monsterName
                     );
                 }
@@ -4489,7 +4545,7 @@ void game::DoNewTurn(void) {
             PlayMusic(track);
             gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
             NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, 0x61);
-            PlayMusic(gpAdvManager->m_currentTerrain);
+            PlayMusic(TERRAIN_MUSIC_TRACK(gpAdvManager->m_currentTerrain));
         }
     }
 }
@@ -4560,7 +4616,7 @@ i32 game::GetNumThievesGuilds(i32 color) {
     i32 i;
     for (i = 0; i < m_players[color].m_townCount; ++i) {
         if (gpGame->m_castleRecs[m_players[color].m_townIds[i]].m_buildings
-            & (1 << BUILDING_SLOT_THIEVES_GUILD))
+            & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_THIEVES_GUILD))
             ++numGuilds;
     }
     return numGuilds;
@@ -4586,20 +4642,20 @@ i32 game::CalcDifficultyRating(void) {
     for (i = 1; i < GAME_PLAYER_COUNT; i++) {
         if (i < giNumHumanPlayers)
             total += (m_players[i].m_difficulty - 1) * 10;
-        else if (m_players[i].m_difficulty == PLAYER_TYPE_NONE)
+        else if (H1_ENUM_DECODE(ComputerPlayerType, m_players[i].m_difficulty) == PLAYER_TYPE_NONE)
             total -= 10;
-        else if (m_players[i].m_difficulty == PLAYER_TYPE_DUMB)
+        else if (H1_ENUM_DECODE(ComputerPlayerType, m_players[i].m_difficulty) == PLAYER_TYPE_DUMB)
             total += 5;
-        else if (m_players[i].m_difficulty == PLAYER_TYPE_AVERAGE)
+        else if (H1_ENUM_DECODE(ComputerPlayerType, m_players[i].m_difficulty) == PLAYER_TYPE_AVERAGE)
             total += 10;
-        else if (m_players[i].m_difficulty == PLAYER_TYPE_SMART)
+        else if (H1_ENUM_DECODE(ComputerPlayerType, m_players[i].m_difficulty) == PLAYER_TYPE_SMART)
             total += 15;
-        else if (m_players[i].m_difficulty == PLAYER_TYPE_GENIUS)
+        else if (H1_ENUM_DECODE(ComputerPlayerType, m_players[i].m_difficulty) == PLAYER_TYPE_GENIUS)
             total += 20;
     }
     gpGame->m_playerCount = 0;
     for (i = 0; i < GAME_PLAYER_COUNT; i++) {
-        if (gpGame->m_players[i].m_difficulty > PLAYER_TYPE_NONE)
+        if (H1_ENUM_DECODE(ComputerPlayerType, gpGame->m_players[i].m_difficulty) > PLAYER_TYPE_NONE)
             gpGame->m_playerCount++;
     }
     if (gbIAmGreatest) {
@@ -4676,7 +4732,8 @@ void game::ShowScenInfo(void) {
     const i8 kingOfHillId = 107;
     const i8 ratingId = 108;
     char line1Buf[20];
-    i32 baseDifficulty;
+    // The game's difficulty, or a human seat's handicap less one.
+    H1_ENUM_LOCAL(GameDifficulty, i32) baseDifficulty;
     heroWindow* scenWindow;
     tag_message packet;
     i16 startIdx;
@@ -4691,7 +4748,7 @@ void game::ShowScenInfo(void) {
     scenWindow->BroadcastMessage(packet);
     baseDifficulty = m_difficulty;
     if (giCurPlayer > 0)
-        baseDifficulty = gpCurPlayer->m_difficulty - 1;
+        baseDifficulty = H1_ENUM_DECODE(GameDifficulty, gpCurPlayer->m_difficulty - 1);
     packet.id = levelIdIdx;
     packet.text = gDifficultyNames[baseDifficulty];
     scenWindow->BroadcastMessage(packet);
@@ -4707,7 +4764,7 @@ void game::ShowScenInfo(void) {
                                   : gPlayerTypeNames[m_players[jj].m_difficulty]
             );
         } else if (jj == 1) {
-            sprintf(line1Buf, "%s\n", gHandicapNames[m_difficulty + 1]);
+            sprintf(line1Buf, "%s\n", gHandicapNames[H1_ENUM_ENCODE(GameDifficulty, m_difficulty) + 1]);
         } else {
             startIdx = jj - 1 < giCurPlayer ? jj - 1 : jj;
             sprintf(
@@ -4743,7 +4800,7 @@ void game::ShowScenInfo(void) {
     packet.command = WIDGET_COMMAND_SET_FRAME;
     if (m_players[giCurPlayer].m_color != PLAYER_COLOR_NONE) {
         packet.id = crestId;
-        packet.value = m_players[giCurPlayer].m_color * 2 + 11;
+        packet.value = H1_ENUM_ENCODE(PlayerColor, m_players[giCurPlayer].m_color) * 2 + 11;
         scenWindow->BroadcastMessage(packet);
     }
     gpWindowManager->DoDialog(scenWindow, EventWindowHandler, 0);
@@ -4754,7 +4811,7 @@ void game::ShowScenInfo(void) {
 VA(0x00438d44, 0x114)
 void game::RandomizePlayerCrests(void) {
     i32 i;
-    i8 taken[PLAYER_COLOR_COUNT];
+    H1_ENUM_ARRAY(i8, taken, PlayerColor, PLAYER_COLOR_COUNT);
     taken[PLAYER_COLOR_BLUE] = 0;
     taken[PLAYER_COLOR_GREEN] = 0;
     taken[PLAYER_COLOR_RED] = 0;
@@ -4763,11 +4820,14 @@ void game::RandomizePlayerCrests(void) {
     for (i = 1; i < m_playerCount; i++) {
         do {
             if (m_campaignType > 0
-                && gCampaignScenarios[m_campaignScenario].playerCrests[i] < PLAYER_COLOR_COUNT
+                && H1_ENUM_DECODE(PlayerColor, gCampaignScenarios[m_campaignScenario].playerCrests[i]) < PLAYER_COLOR_COUNT
                 && gCampaignScenarios[m_campaignScenario].playerCrests[i] >= 0)
-                m_players[i].m_color = gCampaignScenarios[m_campaignScenario].playerCrests[i];
+                m_players[i].m_color = H1_ENUM_DECODE(PlayerColor, gCampaignScenarios[m_campaignScenario].playerCrests[i]);
             else
-                m_players[i].m_color = Random(0, 3);
+                m_players[i].m_color = H1_ENUM_DECODE(
+                    PlayerColor,
+                    Random(H1_ENUM_ENCODE(PlayerColor, PLAYER_COLOR_BLUE), H1_ENUM_ENCODE(PlayerColor, PLAYER_COLOR_YELLOW))
+                );
         } while (taken[m_players[i].m_color] == 1);
         taken[m_players[i].m_color] = 1;
     }
@@ -4799,11 +4859,11 @@ i32 gLastSeed = 135621123;
 DATA(0x004a6c0c)
 i8 gSaveCurPlayer;
 DATA(0x004a6bdc)
-i8 gSavedCrest;
+H1_ENUM_STORAGE(PlayerColor, i8) gSavedCrest;
 DATA(0x004a6bf0)
-i8 gSavedDifficulty;
+H1_ENUM_STORAGE(GameDifficulty, i8) gSavedDifficulty;
 DATA(0x004a6c20)
-i32 gEndSequence;
+H1_ENUM_STORAGE(GameEndSequence, i32) gEndSequence;
 DATA(0x004a6c0d)
 i8 gbDismissArmy;
 DATA(0x004a6be4)
@@ -4811,10 +4871,10 @@ heroWindow* gReqExtraWindow;
 DATA(0x004a6bd0)
 i8 gSavedPlayerTypes[4];
 DATA(0x004a6bf4)
-i16 gMineTypeCount[RESOURCE_COUNT];
+H1_ENUM_ARRAY(i16, gMineTypeCount, ResourceType, RESOURCE_COUNT);
 DATA(0x004a6c10)
 char gCurMapName[16];
 DATA(0x004a6c0e)
 i8 gSavedKingOfTheHill;
 DATA(0x004a6be0)
-i8 gRandomTownTypes[4];
+H1_ENUM_STORAGE(TownType, i8) gRandomTownTypes[4];

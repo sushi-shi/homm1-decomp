@@ -45,7 +45,16 @@ swapManager::swapManager(class hero* leftHero, class hero* rightHero) {
 
 VA(0x0045cf7d, 0x2e)
 void swapManager::Reset(void) {
-    m_selectedSide = m_targetSide = m_itemType = m_selectedSlot = m_targetSlot = SWAP_SLOT_NONE;
+    m_selectedSide = m_targetSide = H1_ENUM_DECODE(
+        SwapManagerSide,
+        H1_ENUM_ENCODE(
+            SwapManagerItemType,
+            m_itemType = H1_ENUM_DECODE(
+                SwapManagerItemType,
+                m_selectedSlot = m_targetSlot = SWAP_SLOT_NONE
+            )
+        )
+    );
 }
 
 VA(0x0045cfab, 0x2b4)
@@ -370,7 +379,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) swapManager::Main(struct tag_message&
                                             .m_creatureCounts[message.id - CONTROL_LEFT_ARMY_FIRST],
                                         NULL,
                                         0,
-                                        0,
+                                        ARMY_FACING_RIGHT,
                                         1,
                                         m_heroes[SWAP_SIDE_LEFT],
                                         NULL,
@@ -378,7 +387,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) swapManager::Main(struct tag_message&
                                     );
                                 break;
                             }
-                            if (m_itemType) {
+                            if (H1_ENUM_ENCODE(SwapManagerItemType, m_itemType)) {
                                 if (m_heroes[SWAP_SIDE_LEFT]
                                         ->m_army
                                         .m_creatureTypes[message.id - CONTROL_LEFT_ARMY_FIRST]
@@ -435,7 +444,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) swapManager::Main(struct tag_message&
                                             [message.id - CONTROL_RIGHT_ARMY_FIRST],
                                         NULL,
                                         0,
-                                        0,
+                                        ARMY_FACING_RIGHT,
                                         1,
                                         m_heroes[SWAP_SIDE_RIGHT],
                                         NULL,
@@ -443,7 +452,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) swapManager::Main(struct tag_message&
                                     );
                                 break;
                             }
-                            if (m_itemType) {
+                            if (H1_ENUM_ENCODE(SwapManagerItemType, m_itemType)) {
                                 if (m_heroes[SWAP_SIDE_RIGHT]
                                         ->m_army
                                         .m_creatureTypes[message.id - CONTROL_RIGHT_ARMY_FIRST]
@@ -513,7 +522,7 @@ void swapManager::ViewMon(void) {
         m_heroes[m_selectedSide]->m_army.m_creatureCounts[m_targetSlot],
         NULL,
         m_heroes[m_selectedSide]->m_army.GetNumArmies() == 1,
-        0,
+        ARMY_FACING_RIGHT,
         0,
         m_heroes[m_selectedSide],
         NULL,
@@ -523,20 +532,32 @@ void swapManager::ViewMon(void) {
 
 VA(0x0045de3b, 0x126)
 void swapManager::SwapArtifacts(void) {
-    i8 targetArtifact;
-    i8 selectedArtifact;
+    H1_ENUM_LOCAL(ArtifactType, i8) targetArtifact;
+    H1_ENUM_LOCAL(ArtifactType, i8) selectedArtifact;
 
     if (m_selectedSide == SWAP_SIDE_NONE && m_targetSide == SWAP_SIDE_NONE)
         return;
 
     selectedArtifact = m_heroes[m_selectedSide]->m_artifacts[m_selectedSlot];
     targetArtifact = m_heroes[m_targetSide]->m_artifacts[m_targetSlot];
-    gpAdvManager->GiveTakeArtifactStat(m_heroes[m_selectedSide], selectedArtifact, 1);
-    gpAdvManager->GiveTakeArtifactStat(m_heroes[m_targetSide], targetArtifact, 1);
+    gpAdvManager->GiveTakeArtifactStat(
+        m_heroes[m_selectedSide],
+        selectedArtifact,
+        EVENT_ARTIFACT_TAKE
+    );
+    gpAdvManager->GiveTakeArtifactStat(m_heroes[m_targetSide], targetArtifact, EVENT_ARTIFACT_TAKE);
     m_heroes[m_selectedSide]->m_artifacts[m_selectedSlot] = targetArtifact;
     m_heroes[m_targetSide]->m_artifacts[m_targetSlot] = selectedArtifact;
-    gpAdvManager->GiveTakeArtifactStat(m_heroes[m_selectedSide], targetArtifact, 0);
-    gpAdvManager->GiveTakeArtifactStat(m_heroes[m_targetSide], selectedArtifact, 0);
+    gpAdvManager->GiveTakeArtifactStat(
+        m_heroes[m_selectedSide],
+        targetArtifact,
+        EVENT_ARTIFACT_GIVE
+    );
+    gpAdvManager->GiveTakeArtifactStat(
+        m_heroes[m_targetSide],
+        selectedArtifact,
+        EVENT_ARTIFACT_GIVE
+    );
 }
 
 VA(0x0045df61, 0x259)
@@ -594,10 +615,18 @@ void swapManager::Update(void) {
     message.text = gText;
     for (i = 0; i < HERO_PRIMARY_STAT_COUNT; i++) {
         message.id = i + CONTROL_LEFT_PRIMARY_SKILL_FIRST;
-        sprintf(gText, "%d", m_heroes[SWAP_SIDE_LEFT]->m_primaryStats[i]);
+        sprintf(
+            gText,
+            "%d",
+            m_heroes[SWAP_SIDE_LEFT]->m_primaryStats[H1_ENUM_DECODE(HeroPrimaryStat, i)]
+        );
         m_window->BroadcastMessage(message);
         message.id = i + CONTROL_RIGHT_PRIMARY_SKILL_FIRST;
-        sprintf(gText, "%d", m_heroes[SWAP_SIDE_RIGHT]->m_primaryStats[i]);
+        sprintf(
+            gText,
+            "%d",
+            m_heroes[SWAP_SIDE_RIGHT]->m_primaryStats[H1_ENUM_DECODE(HeroPrimaryStat, i)]
+        );
         m_window->BroadcastMessage(message);
     }
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
@@ -610,7 +639,8 @@ void swapManager::Update(void) {
             message.value = WIDGET_FLAG_DRAW;
             m_window->BroadcastMessage(message);
             message.command = WIDGET_COMMAND_SET_FRAME;
-            message.value = m_heroes[SWAP_SIDE_LEFT]->m_army.m_creatureTypes[i];
+            message.value =
+                H1_ENUM_ENCODE(CreatureType, m_heroes[SWAP_SIDE_LEFT]->m_army.m_creatureTypes[i]);
         }
         m_window->BroadcastMessage(message);
     }
@@ -639,7 +669,8 @@ void swapManager::Update(void) {
             message.value = WIDGET_FLAG_DRAW;
             m_window->BroadcastMessage(message);
             message.command = WIDGET_COMMAND_SET_FRAME;
-            message.value = m_heroes[SWAP_SIDE_RIGHT]->m_army.m_creatureTypes[i];
+            message.value =
+                H1_ENUM_ENCODE(CreatureType, m_heroes[SWAP_SIDE_RIGHT]->m_army.m_creatureTypes[i]);
         }
         m_window->BroadcastMessage(message);
     }
@@ -668,7 +699,7 @@ void swapManager::Update(void) {
             message.value = WIDGET_FLAG_DRAW;
             m_window->BroadcastMessage(message);
             message.command = WIDGET_COMMAND_SET_FRAME;
-            message.value = m_heroes[SWAP_SIDE_LEFT]->m_artifacts[i];
+            message.value = H1_ENUM_ENCODE(ArtifactType, m_heroes[SWAP_SIDE_LEFT]->m_artifacts[i]);
         }
         m_window->BroadcastMessage(message);
     }
@@ -682,7 +713,7 @@ void swapManager::Update(void) {
             message.value = WIDGET_FLAG_DRAW;
             m_window->BroadcastMessage(message);
             message.command = WIDGET_COMMAND_SET_FRAME;
-            message.value = m_heroes[SWAP_SIDE_RIGHT]->m_artifacts[i];
+            message.value = H1_ENUM_ENCODE(ArtifactType, m_heroes[SWAP_SIDE_RIGHT]->m_artifacts[i]);
         }
         m_window->BroadcastMessage(message);
     }

@@ -12,6 +12,8 @@
 // spells below 19 and marks an empty spell slot with -1.
 H1_ENUM_BEGIN(SpellType)
     SPELL_NONE = -1,
+    // The first spell id: a memorized slot holds a spell when it is >= FIRST.
+    SPELL_FIRST = 0,
     SPELL_FIREBALL = 0,
     SPELL_LIGHTNING_BOLT = 1,
     SPELL_TELEPORT = 2,
@@ -31,6 +33,9 @@ H1_ENUM_BEGIN(SpellType)
     SPELL_STORM = 16,
     SPELL_METEOR_SHOWER = 17,
     SPELL_PARALYZE = 18,
+    // Combat spells are [FIRST, ADVENTURE_FIRST), adventure spells
+    // [ADVENTURE_FIRST, COUNT) (hero::UseSpell and AddSpell's slot ranges).
+    SPELL_ADVENTURE_FIRST = 19,
     SPELL_VIEW_MINES = 19,
     SPELL_VIEW_RESOURCES = 20,
     SPELL_VIEW_ARTIFACTS = 21,

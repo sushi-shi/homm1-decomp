@@ -4,12 +4,17 @@
 #include <Domains.h>
 #include <H1/Macros.h>
 #include <SOURCE/armyGroup.h>
+#include <SOURCE/spellTypes.h>
 
 // forward declarations:
 class hero;
 
 H1_ENUM_CONST_BEGIN(TownConstant)
     TOWN_MAGE_GUILD_SPELL_COUNT = 9,
+    // Dwellings per town, a count of dwelling indexes rather than a building
+    // slot: gDwellingNames/gDwellingRequirements rows are
+    // m_type * DWELLING_COUNT + dwelling (TOWNMGR).
+    BUILDING_SLOT_DWELLING_COUNT = 6,
     // town::m_occupyingHeroId when no hero stands in the town.
     TOWN_OCCUPYING_HERO_NONE = -1
 H1_ENUM_CONST_END(TownConstant)
@@ -38,6 +43,7 @@ H1_ENUM_BEGIN(TownType)
     TOWN_TYPE_WARLOCK = 3,
     TOWN_TYPE_COUNT = 4
 H1_ENUM_END(TownType)
+H1_ENUM_STEPPED(TownType)
 
 // town::m_buildState is the mage guild's level - 1 (STATE_LEVEL_1..4); its
 // nine m_mageGuildSpells slots fill three, two, two and two per level
@@ -83,7 +89,7 @@ public:
     i8 m_id;
     i8 m_owner;
     i8 m_threat;
-    i8 m_type;
+    H1_ENUM_STORAGE(TownType, i8) m_type;
     // XformToCastle sign-extends the map coordinates.
     i8 m_x;
     i8 m_y;
@@ -98,7 +104,7 @@ public:
     u8 m_extraIndex;
     i8 m_customized;
     char m_unused28[4];
-    i8 m_mageGuildSpells[TOWN_MAGE_GUILD_SPELL_COUNT];
+    H1_ENUM_STORAGE(SpellType, i8) m_mageGuildSpells[TOWN_MAGE_GUILD_SPELL_COUNT];
     // ClaimTown sets two turns for a town taken from no owner, else zero.
     // GetBestBHC logs and compares it zero-extended.
     u16 m_turnsOwned;
@@ -124,6 +130,9 @@ public:
 // bit 1 << id. CanBuild confirms the roles: 6 needs no castle, 3 needs water
 // at the dock cell, 5 is never built and 0 has mage-guild levels.
 H1_ENUM_BEGIN(BuildingSlotType)
+    // townManager::m_selectedBuilding with no building bought.
+    BUILDING_SLOT_NONE = -1,
+    BUILDING_SLOT_FIRST = 0,
     BUILDING_SLOT_MAGE_GUILD = 0,
     BUILDING_SLOT_THIEVES_GUILD = 1,
     BUILDING_SLOT_TAVERN = 2,
@@ -139,6 +148,9 @@ H1_ENUM_BEGIN(BuildingSlotType)
     BUILDING_SLOT_CASTLE = 6,
     // The non-dwelling structures end here (TOWNMGR building <= 6 tests).
     BUILDING_SLOT_STRUCTURE_LAST = 6,
+    // The neutral building tables (gNeutralBuildingCosts, names and
+    // descriptions) hold one row per slot before the dwellings.
+    BUILDING_SLOT_NEUTRAL_COUNT = 7,
     BUILDING_SLOT_DWELLING_FIRST = 7,
     BUILDING_SLOT_DWELLING_1 = 7,
     BUILDING_SLOT_DWELLING_2 = 8,
@@ -150,20 +162,21 @@ H1_ENUM_BEGIN(BuildingSlotType)
     // gDwellingRequirements masks name only slots before the sixth dwelling
     // (nothing requires it); BuyBuild lists the prerequisites below this.
     BUILDING_SLOT_REQUIREMENT_END = 12,
-    // Dwellings per town: gDwellingNames/gDwellingRequirements rows are
-    // m_type * DWELLING_COUNT + dwelling (TOWNMGR).
-    BUILDING_SLOT_DWELLING_COUNT = 6,
     BUILDING_SLOT_COUNT = 13,
     // Past the buildable slots: the race special building's bit (bit 13).
     // LoadMap, NewMap and RandomizeTown give it to barbarian towns only; no
     // reader tests it.
-    BUILDING_SLOT_SPECIAL = 13
+    BUILDING_SLOT_SPECIAL = 13,
+    // The sixteen bits of m_buildings: gTownBuildingExtents keeps a
+    // full-screen rectangle for each slot past SPECIAL.
+    BUILDING_SLOT_CAPACITY = 16
 H1_ENUM_END(BuildingSlotType)
+H1_ENUM_STEPPED(BuildingSlotType)
 
 // Building slot is built in town t, the mage guild only at its last level:
 // mask first, then the guild level.
 #define TOWN_BUILDING_COMPLETE(t, slot)                                                            \
-    (((t).m_buildings & (1 << (slot)))                                                             \
+    (((t).m_buildings & H1_ENUM_BIT(BuildingSlotType, slot))                                       \
      && ((slot) != BUILDING_SLOT_MAGE_GUILD || (t).m_buildState == MAGE_GUILD_STATE_LEVEL_4))
 
 #endif // HOMM1_SOURCE_TOWN_H

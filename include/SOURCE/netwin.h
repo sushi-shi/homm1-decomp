@@ -93,7 +93,7 @@ H1_C_LINKAGE u16 __cdecl nb_init(u16 maxSessions);
 H1_C_LINKAGE void __cdecl nb_term(i32);
 H1_C_LINKAGE i16 __cdecl nb_rcv(i32, u16 len, void* buffer);
 H1_C_LINKAGE i16 __cdecl nb_snd(i32, u16 session, u16 len, void* data, i32 queueToFree);
-H1_C_LINKAGE i16 __cdecl nb_sess(i32, i32 operation, ...);
+H1_C_LINKAGE i16 __cdecl nb_sess(i32, H1_ENUM_PARAM(NetbiosSessionOperation, i32) operation, ...);
 H1_C_LINKAGE u8 __cdecl nb_stat(i32, u16 session);
 
 #endif

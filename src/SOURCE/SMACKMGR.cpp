@@ -39,7 +39,7 @@ static SmackSoundFormat gSmackSoundFormats[12] = {
     {WAVE_FORMAT_1M08, 1, 11025, 8}
 };
 DATA(0x0049f850)
-SSmackOptions SmackOptions[6] = {
+H1_ENUM_ARRAY(SSmackOptions, SmackOptions, SmackVideo, SMACK_COUNT) = {
     {"BUKA", "", 1, 1, 1, 0, 0, 0, 0},
     {"NWCLOGO", "", 1, 1, 1, 0, 0, 0, 0},
     {"INTRO", "", 1, 1, 1, 0, 0, 0, 0},
@@ -50,7 +50,7 @@ SSmackOptions SmackOptions[6] = {
 DATA(0x0049f8f4)
 static i32 gSmackVolumes[11] = {0, 127, 97, 75, 52, 40, 30, 20, 15, 10, 5};
 DATA(0x004cc8d0)
-i8 gSmackNum;
+H1_ENUM_STORAGE(SmackVideo, i8) gSmackNum;
 DATA(0x004cc8d4)
 static i32 gSmackCompleted;
 DATA(0x004cc8d8)

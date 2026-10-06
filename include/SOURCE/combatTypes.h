@@ -6,6 +6,7 @@
 
 H1_ENUM_BEGIN(CombatHexDirection)
     COMBAT_DIRECTION_INVALID = -1,
+    COMBAT_DIRECTION_FIRST = 0,
     COMBAT_DIRECTION_NORTHEAST = 0,
     COMBAT_DIRECTION_EAST = 1,
     COMBAT_DIRECTION_SOUTHEAST = 2,
@@ -64,11 +65,15 @@ H1_ENUM_CONST_END(CombatPointerSectorConstant)
 // (CheckWin; a retreating side loses to the other) and DoVictory indexes the
 // per-side tables by it: DRAW (no side) when both sides fall, PENDING from
 // Open until the battle ends; advManager::DoCombat switches on it for losses.
+// ANY selects both sides: CastMassSpell's castSide (mass dispel) and the
+// spell AI's FirstArmy/EffectSpellCure target side.
 H1_ENUM_BEGIN(CombatSide)
     COMBAT_SIDE_NONE = -1,
+    COMBAT_SIDE_FIRST = 0,
     COMBAT_DEFENDER_SIDE = 0,
     COMBAT_ATTACKER_SIDE = 1,
     COMBAT_SIDE_COUNT = 2,
+    COMBAT_SIDE_ANY = COMBAT_SIDE_COUNT,
     COMBAT_RESULT_DRAW = COMBAT_SIDE_NONE,
     COMBAT_RESULT_DEFENDER = COMBAT_DEFENDER_SIDE,
     COMBAT_RESULT_ATTACKER = COMBAT_ATTACKER_SIDE,
@@ -84,14 +89,37 @@ inline constexpr CombatSide CombatOpposingSide(CombatSide side) {
 #else
 #define COMBAT_OPPOSING_SIDE(side) (1 - (side))
 #endif
+// Turn a side variable to the other side in place.
+#if H1_STRICT_DOMAINS
+inline CombatSide& CombatSwitchSide(CombatSide& side) {
+    return side = static_cast<CombatSide>(static_cast<int>(side) ^ 1);
+}
+#define COMBAT_SWITCH_SIDE(side) CombatSwitchSide(side)
+#else
+#define COMBAT_SWITCH_SIDE(side) ((side) ^= 1)
+#endif
 
 // army::m_facing, also passed as the sprite orientation: the attacker (side
 // 1) starts at column 1 with facing side ^ 1 = 0, so 0 faces right and 1 is
 // the mirrored, left-facing sprite.
+// hexcell::m_occupantFrame records the facing a cell's occupant was last
+// drawn with; the constructor and TakeOccupant reset it to
+// HEXCELL_OCCUPANT_FRAME_NONE so the next frame redraws.
 H1_ENUM_BEGIN(ArmyFacing)
+    HEXCELL_OCCUPANT_FRAME_NONE = -1,
     ARMY_FACING_RIGHT = 0,
     ARMY_FACING_LEFT = 1
 H1_ENUM_END(ArmyFacing)
+// The step from a wide stack's hex to its second hex: west (-1) for a
+// left-facing stack, east (+1) for a right-facing one.
+#if H1_STRICT_DOMAINS
+inline constexpr int ArmyWideHexStep(ArmyFacing facing) {
+    return facing != ARMY_FACING_RIGHT ? -1 : 1;
+}
+#define ARMY_WIDE_HEX_STEP(facing) ArmyWideHexStep(facing)
+#else
+#define ARMY_WIDE_HEX_STEP(facing) ((facing) ? -1 : 1)
+#endif
 
 // GetMoveMask/GetAttackMask/GetBestDirection blocked-direction masks: bit n
 // is CombatHexDirection n (GetBestDirection returns n when bit n is clear);
@@ -145,15 +173,37 @@ H1_ENUM_END(CombatEffectAnimation)
 // Catapult marks the struck piece HIT (from INTACT) or DAMAGED_HIT, then it
 // either survives as DAMAGED or COLLAPSES and is cleared to NONE.
 // hexcell::DrawObstacle draws INTACT/DAMAGED as those tower frames and the
-// HIT states with DrawWall.
+// HIT states with DrawWall. Elsewhere GenerateMap picks a rock frame from
+// FIRST_FRAME to LAND_ONLY_FRAME and redraws LAND_ONLY as FIRST on water and
+// lava.
 H1_ENUM_BEGIN(CombatObstacleIndex)
     COMBAT_OBSTACLE_NONE = -1,
+    COMBAT_OBSTACLE_FIRST_FRAME = 0,
+    COMBAT_OBSTACLE_LAND_ONLY_FRAME = 2,
     COMBAT_WALL_INTACT = 8,
     COMBAT_WALL_DAMAGED = 10,
     COMBAT_WALL_INTACT_HIT = 0x40,
     COMBAT_WALL_DAMAGED_HIT = 0x41,
     COMBAT_WALL_COLLAPSING = 0x42
 H1_ENUM_END(CombatObstacleIndex)
+
+// combatManager::m_combatIcons slots, as LoadCombatResources fills them:
+// the terrain's ground and obstacle icons, textbar.icn, catapult.icn,
+// tent.icn, castle%02d.icn, cloud.icn, keep%02d.icn and spells.icn.
+// hexcell::m_groundIcon and m_obstacleType name the slot a cell draws from.
+H1_ENUM_BEGIN(CombatIconSlot)
+    COMBAT_ICON_GROUND = 0,
+    COMBAT_ICON_TEXTBAR = 1,
+    COMBAT_ICON_OBSTACLES = 2,
+    COMBAT_ICON_CATAPULT = 3,
+    COMBAT_ICON_TENT = 4,
+    COMBAT_ICON_CASTLE = 5,
+    COMBAT_ICON_CLOUD = 6,
+    COMBAT_ICON_KEEP = 7,
+    COMBAT_ICON_SPELLS = 8,
+    COMBAT_ICON_COUNT = 9
+H1_ENUM_END(CombatIconSlot)
+H1_ENUM_STEPPED(CombatIconSlot)
 
 // GetGridIndex hexes of the hero portraits beside the field: GetCommand and
 // RightClick open the defender's (row 2, last column) or the attacker's
@@ -162,13 +212,6 @@ H1_ENUM_CONST_BEGIN(CombatHeroHex)
     COMBAT_ATTACKER_HERO_HEX = 9,
     COMBAT_DEFENDER_HERO_HEX = 26
 H1_ENUM_CONST_END(CombatHeroHex)
-
-
-// A side argument meaning both sides: CastMassSpell's castSide (mass dispel)
-// and the spell AI's FirstArmy/EffectSpellCure target side.
-H1_ENUM_CONST_BEGIN(CombatSideSelection)
-    COMBAT_SIDE_ANY = 2
-H1_ENUM_CONST_END(CombatSideSelection)
 
 // gPowEffectNames rows army::PowEffect loads for the hit animation, named by
 // their icon files (cloud.icn, physical.icn, redfire.icn, electric.icn).
@@ -195,14 +238,15 @@ H1_ENUM_CONST_BEGIN(CombatGridDimension)
 H1_ENUM_CONST_END(CombatGridDimension)
 
 // HoMM1 spell-AI row traversal: retail NextPos steps along a row of
-// COMBAT_GRID_COLUMNS hexes, skipping the two edge columns.
-H1_ENUM_BEGIN(CombatSpellAIGrid)
+// COMBAT_GRID_COLUMNS hexes, skipping the two edge columns. A constant
+// group: the offsets and bounds are hex-index arithmetic, not a value domain.
+H1_ENUM_CONST_BEGIN(CombatSpellAIGrid)
     COMBAT_SPELL_AI_ROW_END_OFFSET = 2,
     COMBAT_SPELL_AI_ROW_SKIP = 3,
     // The scan runs over the field's inner hexes, from row 0 column 1 to
     // row 4 column 7 (DetermineEffectOfSpell, FirstArmy, EffectSpellDamage).
     COMBAT_SPELL_AI_HEX_FIRST = 1,
     COMBAT_SPELL_AI_HEX_LAST = 0x2b
-H1_ENUM_END(CombatSpellAIGrid)
+H1_ENUM_CONST_END(CombatSpellAIGrid)
 
 #endif

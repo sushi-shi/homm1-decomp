@@ -193,6 +193,8 @@ DATA(0x004cdf6c)
 audiere::SampleSourcePtr AudiereMusic::source;
 DATA(0x004cdde8)
 static int gMusicSuspensions;
+// The playing MusicTrack as the backend's integer: -1 for none, and the
+// gMusicPositions/gCDTrackMap index.
 DATA(0x004a0d70)
 static int gCurrentTrack = -1;
 DATA(0x004a0d74)
@@ -283,8 +285,8 @@ void PlayMusic(int track) {
 }
 
 VA(0x00469738, 0xa)
-int GetCurrentTrack() {
-    return gCurrentTrack;
+H1_ENUM_RETURN(MusicTrack, int) GetCurrentTrack() {
+    return H1_ENUM_DECODE(MusicTrack, gCurrentTrack);
 }
 
 VA(0x00469742, 0x164)
