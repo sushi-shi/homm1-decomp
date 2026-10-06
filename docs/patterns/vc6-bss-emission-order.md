@@ -26,10 +26,23 @@ Measured with the pinned HoMM1 Buka VC6 SP5 compiler under
   one key, defined in that order, come out `vabe`, `vaai`, `vaca`).
 - **Zero-initialized definitions** (`char zz0 = 0;`) also go to `.bss`, after
   every uninitialized one, in definition order.
+- A **static data member** definition is keyed by its full decorated name
+  (`?member@Class@@2HA`), in the same sort as the file-scope identifiers
+  (15 random members of one class and 15 globals: no inversion).
 - Compiler static-destructor guards (`_$S<n>`) take part under their `$S<n>`
-  name. In `BASE/Audio`, `$S30` (key 961, device) sorts before `$S19` (key
-  962, music); retail has the music guard first (0x004cdf70) and the device
-  guard after it (0x004cdf71), so retail's guard numbers differ.
+  name. A destroy-once guard byte is emitted for a run of class-type static
+  member definitions; the run's first member gets it, and a definition after
+  intervening functions starts a new guard. `<n>` comes from a TU-wide counter
+  shared with the `$E` initializer/destructor helpers and the `.CRT$XCU`
+  entries. Every static data member declaration advances it by one (an `int`
+  member as well), as does each name the `<string>` prelude creates; function
+  bodies and ordinary declarations do not.
+- In `BASE/Audio` the music members' guard and the device member's guard
+  are 11 counter values apart. With three member declarations before the
+  music definitions they are `$S19` (key 962) and `$S30` (key 961), so the
+  device guard sorts first; retail has the music guard first (0x004cdf70)
+  and the device guard after it (0x004cdf71). Any count of declarations
+  from four up orders them as retail (four gives `$S20`/`$S31`).
 
 ## Use
 

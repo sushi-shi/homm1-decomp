@@ -354,6 +354,8 @@ bool MusicSuspended() {
 
 DATA(0x004cdf50)
 audiere::AudioDevicePtr AudiereDevice::device;
+DATA(0x004cdf54)
+int AudiereDevice::unusedSlot;
 DATA(0x004a0f04)
 static float gEffectsVolume = 1.0f;
 DATA(0x004a0f08)
