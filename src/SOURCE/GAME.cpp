@@ -236,6 +236,18 @@ void ComputeUALoc(i32 player) {
     }
 }
 
+i32 game::CountObelisksVisitedBy(i8 player) {
+    i32 obelisk;
+    i32 count;
+
+    count = 0;
+    for (obelisk = 0; obelisk < m_obeliskCount; obelisk++) {
+        if (m_obeliskVisitors[obelisk] & (1 << player))
+            count++;
+    }
+    return count;
+}
+
 void game::VisitObelisk(i8 player) {
     i16 curAttempts;
     i8 piecesRemoved;
@@ -246,7 +258,11 @@ void game::VisitObelisk(i8 player) {
     i32 removeCount;
 
     piecesTotal = PLAYER_PUZZLE_PIECE_COUNT;
+    // The pieces that do not divide evenly go to the first obelisks the
+    // player visits, so visiting every obelisk completes the puzzle.
     removeCount = piecesTotal / m_obeliskCount;
+    if (CountObelisksVisitedBy(player) < piecesTotal % m_obeliskCount)
+        removeCount++;
     if (removeCount < 1)
         removeCount = 1;
     for (myRemovedNo = 0; myRemovedNo < removeCount; myRemovedNo++) {
@@ -2067,10 +2083,6 @@ i16 ViewSpellsHandler(tag_message& message) {
                     return gGame->m_viewSpellsCallback(message);
                 break;
         }
-        if (message.id == WIDGET_COMMAND_DIALOG_SELECT) {
-            message.command = message.id;
-            return MESSAGE_DISPATCH_FORWARD;
-        }
     }
     return MESSAGE_DISPATCH_CONSUME;
 }
@@ -2889,6 +2901,7 @@ void game::PerWeek(void) {
     i16 j;
     i16 i;
     i32 heroClass = 0;
+    i8 previousHeroIds[PLAYER_TAVERN_HERO_COUNT];
 
     gWeekType = CALENDAR_PERIOD_NORMAL;
     gWeekTypeExtra = Random(0, CALENDAR_WEEK_NAME_COUNT - 1);
@@ -2924,14 +2937,26 @@ void game::PerWeek(void) {
             }
         }
     }
+    // Every hero drawn for a tavern is reserved there, so no hero is offered
+    // in two taverns at once; last week's pair goes back to the pool only
+    // after both slots are redrawn, so a tavern never offers it again
+    // straight away. A dead player's tavern reserves nobody.
     for (i = 0; i < GAME_PLAYER_COUNT; i++) {
         for (j = 0; j < PLAYER_TAVERN_HERO_COUNT; j++) {
             heroClass = (Random(1, 3) + heroClass) % HERO_CLASS_COUNT;
-            if (gGame->m_availableHeroes[gGame->m_players[i].m_availableHeroIds[j]]
-                == HERO_AVAILABILITY_IN_TAVERN)
-                gGame->m_availableHeroes[gGame->m_players[i].m_availableHeroIds[j]] =
-                    HERO_AVAILABILITY_UNAVAILABLE;
+            previousHeroIds[j] = gGame->m_players[i].m_availableHeroIds[j];
             gGame->m_players[i].m_availableHeroIds[j] = gGame->GetNewHeroId(heroClass);
+            gGame->m_availableHeroes[gGame->m_players[i].m_availableHeroIds[j]] =
+                m_playerDead[i] ? HERO_AVAILABILITY_UNAVAILABLE : HERO_AVAILABILITY_IN_TAVERN;
+        }
+        if (m_playerDead[i])
+            continue;
+        for (j = 0; j < PLAYER_TAVERN_HERO_COUNT; j++) {
+            if (previousHeroIds[j] >= 0
+                && previousHeroIds[j] != gGame->m_players[i].m_availableHeroIds[0]
+                && previousHeroIds[j] != gGame->m_players[i].m_availableHeroIds[1]
+                && gGame->m_availableHeroes[previousHeroIds[j]] == HERO_AVAILABILITY_IN_TAVERN)
+                gGame->m_availableHeroes[previousHeroIds[j]] = HERO_AVAILABILITY_UNAVAILABLE;
         }
     }
     for (posY = 0; posY < MAP_CELL_GRID_SIZE; posY++) {
@@ -3126,11 +3151,9 @@ void game::RandomizeTown(i8 x, i8 y, b8 isCastle) {
             race == TOWN_TYPE_BARBARIAN ? (1 << BUILDING_SLOT_SPECIAL) : 0;
     }
     if (isCastle) {
-        m_castleRecs[townNum].m_buildings |=
-            ((1 << BUILDING_SLOT_CASTLE)
-             | (1 << BUILDING_SLOT_DWELLING_1));
-        m_castleRecs[townNum].m_dwellingAvailable[0] =
-            gMonsterDatabase[gDwellingType[race][0]].growth;
+        // A random castle gets only its castle; dwellings follow the map's
+        // customization or SetupTown's defaults.
+        m_castleRecs[townNum].m_buildings |= (1 << BUILDING_SLOT_CASTLE);
         if (m_castleRecs[townNum].m_buildings & (1 << BUILDING_SLOT_TENT))
             m_castleRecs[townNum].m_buildings -= (1 << BUILDING_SLOT_TENT);
     } else {
@@ -3144,6 +3167,8 @@ void game::RandomizeTown(i8 x, i8 y, b8 isCastle) {
 
 void game::SetupTown(i8 townId, b8 aiOwned) {
     i16 dwellingCount;
+    i32 x;
+    i32 y;
     char rollList[10];
     i32 n;
     b8 nextUsed[SPELL_COUNT];
@@ -3184,6 +3209,23 @@ void game::SetupTown(i8 townId, b8 aiOwned) {
             m_castleRecs[townId].m_dwellingAvailable[1] =
                 gMonsterDatabase[gDwellingType[curTownType][1]].growth;
             dwellingCount--;
+        }
+    }
+    // Every cell of the town's footprint names the town, so clicks, quick
+    // views and the radar find it from any of them; objects placed inside
+    // the footprint keep their own data.
+    for (x = m_castleRecs[townId].m_x - TOWN_FOOTPRINT_LEFT;
+         x < m_castleRecs[townId].m_x - TOWN_FOOTPRINT_LEFT + TOWN_FOOTPRINT_WIDTH;
+         x++) {
+        for (y = m_castleRecs[townId].m_y - TOWN_FOOTPRINT_TOP;
+             y < m_castleRecs[townId].m_y - TOWN_FOOTPRINT_TOP + TOWN_FOOTPRINT_HEIGHT;
+             y++) {
+            if (x < 0 || y < 0 || x >= MAP_CELL_GRID_SIZE || y >= MAP_CELL_GRID_SIZE)
+                continue;
+            if ((m_map[x][y].m_triggerType & MAP_TRIGGER_EVENT)
+                && (m_map[x][y].m_triggerType & MAP_TRIGGER_TYPE_MASK) != MAP_OBJECT_TOWN)
+                continue;
+            m_map[x][y].m_objectMetadata = townId;
         }
     }
     memset(nextUsed, 0, 29);
@@ -3355,10 +3397,43 @@ i8 game::GetRandomArtifactId(void) {
         return artifact;
 }
 
+// A site's random artifact is chosen from where it lies and the heroes'
+// random seeds, so reloading a saved game cannot change it. Artifacts that
+// are already in play are skipped; with none left the site pays gold.
+i8 game::CellRandomArtifactId(i32 cellIndex) {
+    i32 freeCount;
+    i32 pick;
+    i8 artifact;
+
+    freeCount = 0;
+    for (artifact = ARTIFACT_REGULAR_FIRST; artifact < ARTIFACT_REGULAR_END; artifact++) {
+        if (m_randomArtifacts[artifact] == GAME_TABLE_FREE)
+            freeCount++;
+    }
+    if (freeCount == 0)
+        return ARTIFACT_NONE;
+    pick = static_cast<u8>(m_heroRecs
+                               [(cellIndex + static_cast<u8>(m_heroRecs[0].m_randomSeed))
+                                % GAME_ARTIFACT_SEED_HERO_COUNT]
+                                   .m_randomSeed)
+           % freeCount;
+    for (artifact = ARTIFACT_REGULAR_FIRST; artifact < ARTIFACT_REGULAR_END; artifact++) {
+        if (m_randomArtifacts[artifact] == GAME_TABLE_FREE) {
+            if (pick == 0)
+                return artifact;
+            pick--;
+        }
+    }
+    return ARTIFACT_NONE;
+}
+
 void game::RandomizeHeroPool(void) {
     i16 heroId;
     for (heroId = 0; heroId < GAME_HERO_COUNT; heroId++) {
-        m_heroRecs[heroId].m_experience = Random(0, 50) + RANDOM_HERO_EXPERIENCE_BASE;
+        // Heroes start without experience; the draw is kept so the rest of
+        // the game's random sequence stays as before.
+        Random(0, 50);
+        m_heroRecs[heroId].m_experience = 0;
         SetRandomHeroArmies(heroId, RANDOM_HERO_NORMAL_ARMY);
         m_heroRecs[heroId].m_remainingMobility = m_heroRecs[heroId].CalcMobility();
         m_heroRecs[heroId].m_mobility = m_heroRecs[heroId].m_remainingMobility;
@@ -3941,6 +4016,10 @@ void game::ProcessOnMapHeroes(void) {
                 else
                     iPlayer = extra->owner;
                 theHeroEntry->m_owner = iPlayer;
+                // Movement depends on the hero's artifacts and owner, both
+                // known only now.
+                theHeroEntry->m_mobility = theHeroEntry->CalcMobility();
+                theHeroEntry->m_remainingMobility = theHeroEntry->m_mobility;
                 m_availableHeroes[extra->heroId] = iPlayer;
                 m_players[theHeroEntry->m_owner]
                     .m_heroIds[m_players[theHeroEntry->m_owner].m_heroCount] = theHeroEntry->m_id;

@@ -73,6 +73,7 @@ void SetupRecruitWin(
 i16 recruitUnit::Open(i16 priority) {
     i32 resourceMaximum;
     i32 goldMaximum;
+    i32 affordable;
 
     m_window = new heroWindow(
         RECRUIT_WINDOW_X,
@@ -101,14 +102,17 @@ i16 recruitUnit::Open(i16 priority) {
     );
     gWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, 1);
 
+    // The affordable count is limited by the creatures available before it
+    // is stored, so a large treasury cannot overflow it.
     goldMaximum = gCurPlayerData->m_resources[RESOURCE_GOLD] / m_goldCost;
     if (m_resourceType != RESOURCE_NONE) {
         resourceMaximum = gCurPlayerData->m_resources[m_resourceType] / m_resourceCost;
-        m_maximum = __min(goldMaximum, resourceMaximum);
+        affordable = __min(goldMaximum, resourceMaximum);
     } else
-        m_maximum = goldMaximum;
-    if (m_maximum > *m_available)
-        m_maximum = *m_available;
+        affordable = goldMaximum;
+    if (affordable > *m_available)
+        affordable = *m_available;
+    m_maximum = affordable;
     m_recruited = false;
     m_noRoom = false;
     if (*m_available == 0) {

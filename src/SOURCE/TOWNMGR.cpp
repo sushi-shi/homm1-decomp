@@ -777,8 +777,10 @@ i16 townManager::Main(struct tag_message& message) {
                                 && gAdvManager->GetCell(m_town->m_x - 1, m_town->m_y + 1)
                                            ->m_triggerType
                                        == MAP_OBJECT_TRIGGER(MAP_OBJECT_NONE)
-                                && gAdvManager->m_cursorMapX != m_town->m_x - 1
-                                && gAdvManager->m_cursorMapY != m_town->m_y + 1) {
+                                && !(
+                                    gAdvManager->GetCell(m_town->m_x - 1, m_town->m_y + 1)->m_flags
+                                    & MAP_CELL_HERO_CURSOR
+                                )) {
                                 m_heroWindow0 = new heroWindow(0xb1, 0x14, "shipwind.bin");
                                 if (m_heroWindow0 == NULL)
                                     MemError();

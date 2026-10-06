@@ -57,7 +57,6 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
     heroWindow* thiefWindow;
     boatRecord* boat;
     b8 guardMonster;
-    mapCell* previousCell;
     town* theirTown;
     i32 numTroops;
 
@@ -413,7 +412,22 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                             NORMAL_DIALOG_NO_OR_TEXT
                         );
                     } else {
-                        artifactId = GiveRandomArtifact(visitingHero);
+                        artifactId = GiveRandomArtifact(cell, visitingHero);
+                        if (artifactId == ARTIFACT_NONE) {
+                            sprintf(gText, "%s.", localization::Tr("event.skeleton.treasure"));
+                            EventWindow(
+                                EVENT_TEXT_CUSTOM,
+                                NORMAL_DIALOG_TYPE_OK,
+                                gText,
+                                NORMAL_DIALOG_RESOURCE_GOLD,
+                                EVENT_RANDOM_ARTIFACT_GOLD,
+                                NORMAL_DIALOG_NO_RESOURCE,
+                                0,
+                                NORMAL_DIALOG_NO_OR_TEXT
+                            );
+                            cell->m_objectMetadata = SKELETON_EMPTY;
+                            break;
+                        }
                         sprintf(
                             gText,
                             "%s %s",
@@ -1015,7 +1029,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                     if (gGame->GetRandomArtifactId() == ARTIFACT_NONE)
                         goto goldReward;
                     GiveExperience(visitingHero, DAEMON_EXPERIENCE, false);
-                    artifactId = GiveRandomArtifact(visitingHero);
+                    artifactId = GiveRandomArtifact(cell, visitingHero);
                     EventWindow(
                         EVENT_TEXT_DAEMON_CAVE_ARTIFACT,
                         NORMAL_DIALOG_TYPE_OK,
@@ -1146,23 +1160,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                         }
                         break;
                     default:
-                        previousCell = GetCell(
-                            x
-                                - gNormalDirTable
-                                      [visitingHero->m_direction]
-                                          .x,
-                            y
-                                - gNormalDirTable
-                                      [visitingHero->m_direction]
-                                          .y
-                        );
-                        if (GhostEvent(
-                                visitingHero,
-                                previousCell,
-                                EVENT_TEXT_SHIPWRECK_REWARD,
-                                x,
-                                y
-                            ))
+                        if (GhostEvent(visitingHero, cell, EVENT_TEXT_SHIPWRECK_REWARD, x, y))
                             cell->m_objectMetadata = GHOST_SITE_EMPTY;
                         break;
                 }
@@ -1408,15 +1406,16 @@ i16 advManager::GiveArtifact(class hero* eventHero, i8 artifact) {
     if (slot == HERO_ARTIFACT_SLOT_COUNT)
         return GIVE_ARTIFACT_NO_SLOT;
     eventHero->m_artifacts[slot] = artifact;
-    gGame->m_randomArtifacts[artifact] = eventHero->m_id;
+    if (artifact >= 0 && artifact < ARTIFACT_REGULAR_END)
+        gGame->m_randomArtifacts[artifact] = eventHero->m_id;
     GiveTakeArtifactStat(eventHero, artifact, EVENT_ARTIFACT_GIVE);
     return slot;
 }
 
-i32 advManager::GiveRandomArtifact(class hero* eventHero) {
+i32 advManager::GiveRandomArtifact(class mapCell* cell, class hero* eventHero) {
     i8 artifact;
 
-    artifact = gGame->GetRandomArtifactId();
+    artifact = gGame->CellRandomArtifactId(cell - &m_mapData[0][0]);
     if (artifact == ARTIFACT_NONE)
         GiveResource(eventHero, RESOURCE_GOLD, EVENT_RANDOM_ARTIFACT_GOLD);
     else
@@ -1433,9 +1432,8 @@ i32 advManager::GiveExperience(class hero* eventHero, i32 experience, b8 checkLe
 
     prevLevel = eventHero->GetLevel(eventHero->m_experience);
     eventHero->m_level = prevLevel;
-    eventHero->m_experience += experience;
-    H1_ASSERT(experience >= 0);
-    H1_ASSERT(eventHero->m_experience >= 0);
+    if (experience > 0)
+        eventHero->m_experience += experience;
     levelNow = eventHero->GetLevel(eventHero->m_experience);
     if (checkLevel)
         eventHero->CheckLevel();
@@ -1580,7 +1578,7 @@ b8 advManager::GhostEvent(
                     y
                 )
                 == COMBAT_RESULT_ATTACKER) {
-                artifact = GiveRandomArtifact(eventHero);
+                artifact = GiveRandomArtifact(cell, eventHero);
                 sprintf(gText, "%s", gEventText[textId]);
                 if (artifact != ARTIFACT_NONE)
                     EventWindow(
@@ -2121,7 +2119,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                 case SKELETON_EMPTY:
                     break;
                 case SKELETON_ARTIFACT:
-                    GiveRandomArtifact(eventHero);
+                    GiveRandomArtifact(cell, eventHero);
                     cell->m_objectMetadata = SKELETON_EMPTY;
                     break;
             }
@@ -2381,7 +2379,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                     break;
                 case DAEMON_REWARD_ARTIFACT:
                     GiveExperience(eventHero, DAEMON_EXPERIENCE, true);
-                    GiveRandomArtifact(eventHero);
+                    GiveRandomArtifact(cell, eventHero);
                     break;
                 case DAEMON_REWARD_EXPERIENCE_GOLD:
                     GiveExperience(eventHero, DAEMON_EXPERIENCE, true);

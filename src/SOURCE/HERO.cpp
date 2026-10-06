@@ -344,6 +344,7 @@ i8 hero::HeroView(b8 viewOnly) {
     delete gHeroScreenWindow;
     gHeroWin = NULL;
     if (gWindowManager->m_dialogResult == HERO_SCREEN_DISMISS) {
+        gHeroWindShowing = false;
         return 1;
     } else {
         m_mobility = CalcMobility();

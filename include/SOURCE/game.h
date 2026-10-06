@@ -335,6 +335,8 @@ public:
     void RandomizeMine(i8 x, i8 y);
     void SetupTown(i8 townId, b8 aiOwned);
     i8 GetRandomArtifactId(void);
+    i8 CellRandomArtifactId(i32 cellIndex);
+    i32 CountObelisksVisitedBy(i8 player);
     void RandomizeHeroPool(void);
     void SetRandomHeroArmies(i16 heroId, i32 strongArmy);
     void ProcessRandomObjects(b32 castlesOnly);

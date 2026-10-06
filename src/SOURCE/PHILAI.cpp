@@ -239,7 +239,11 @@ void philAI::CheckBuyStuff(void) {
         }
     }
     if (gBuildBoat[gCurPlayer] >= 0) {
+        // A boat can only be launched onto a free dock: nothing there and no
+        // hero standing on it.
         if ((dockTown->m_buildings & (1 << BUILDING_SLOT_SHIPYARD))
+            && gGame->m_map[dockTown->m_x - 1][dockTown->m_y + 1].m_triggerType == MAP_OBJECT_NONE
+            && !(gGame->m_map[dockTown->m_x - 1][dockTown->m_y + 1].m_flags & MAP_CELL_HERO_CURSOR)
             && gCurPlayerData->m_resources[RESOURCE_GOLD] >= TOWN_BOAT_GOLD_COST
             && gCurPlayerData->m_resources[RESOURCE_WOOD] >= TOWN_BOAT_WOOD_COST) {
             if (gGame->CreateBoat(dockTown->m_x - 1, dockTown->m_y + 1) != GAME_TABLE_FREE) {
@@ -2918,7 +2922,7 @@ void philAI::FightEvent(hero* heroPointer, mapCell* cell) {
                     break;
                 case GHOST_SITE_HUGE:
                     gAdvManager->GiveResource(heroPointer, RESOURCE_GOLD, GHOST_HUGE_GOLD);
-                    gAdvManager->GiveRandomArtifact(heroPointer);
+                    gAdvManager->GiveRandomArtifact(cell, heroPointer);
                     break;
             }
             cell->m_objectMetadata = GHOST_SITE_EMPTY;

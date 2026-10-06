@@ -17,7 +17,9 @@ enum GamePlayerConstant {
     GAME_TABLE_FREE = -1,
     GAME_RANDOM_SCAN_TRIES = 10000,
     GAME_PLAYER_HIGH_BIT_SHIFT = 4,
-    GAME_ARTIFACT_ON_MAP = 36
+    GAME_ARTIFACT_ON_MAP = 36,
+    // CellRandomArtifactId draws a site's seed from the first heroes.
+    GAME_ARTIFACT_SEED_HERO_COUNT = 31
 };
 
 enum GameCalendarConstant {

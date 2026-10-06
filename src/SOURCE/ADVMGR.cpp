@@ -4629,7 +4629,10 @@ void advManager::ViewWorld(
                                         lettersIcons->DrawToBuffer(
                                             screenX,
                                             rowPixelY,
-                                            (gGame->m_mines[cell->m_objectMetadata].type),
+                                            (gGame
+                                                ->m_mines[gGame->m_heroRecs[cell->m_objectMetadata]
+                                                              .m_occupiedTown]
+                                                .type),
                                             ICON_DRAW_NORMAL,
                                             ICON_DRAW_OFFSET_FULL
                                         );
@@ -4701,7 +4704,10 @@ void advManager::ViewWorld(
                                         lettersIcons->DrawToBuffer(
                                             screenX,
                                             rowPixelY,
-                                            (gGame->m_mines[cell->m_objectMetadata].type),
+                                            (gGame
+                                                ->m_mines[gGame->m_heroRecs[cell->m_objectMetadata]
+                                                              .m_occupiedTown]
+                                                .type),
                                             ICON_DRAW_NORMAL,
                                             ICON_DRAW_OFFSET_FULL
                                         );
@@ -5840,7 +5846,8 @@ void advManager::DimensionDoor(void) {
         newX = m_mapOriginX + m_hoverCellX;
         newY = m_mapOriginY + m_hoverCellY;
         targetCell = GetCell(newX, newY);
-        if ((targetHero->IsEmbarked() && targetCell->m_tileIndex >= MAP_CELL_TILES_PER_TERRAIN)
+        if (newX < 0 || newY < 0 || newX >= MAP_CELL_GRID_SIZE || newY >= MAP_CELL_GRID_SIZE
+            || (targetHero->IsEmbarked() && targetCell->m_tileIndex >= MAP_CELL_TILES_PER_TERRAIN)
             || (!targetHero->IsEmbarked()
                 && targetCell->m_tileIndex < MAP_CELL_TILES_PER_TERRAIN)) {
             NormalDialog(
