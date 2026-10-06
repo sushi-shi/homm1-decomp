@@ -1,19 +1,25 @@
 #!/usr/bin/env python3
-"""Build HEROES.EXE with the Visual C++ 6.0 SP5 toolchain under Wine.
+"""Build HEROES.EXE and the scenario editor EDITOR.EXE with the Visual C++ 6.0
+SP5 toolchain under Wine.
 
-    python3 build.py [--locale LANG] [--toolchain DIR] [--icon-from HEROES.EXE] [--jobs N]
-                     [--out DIR]
+    python3 build.py [--target game|editor|all] [--locale LANG] [--toolchain DIR]
+                     [--icon-from EXE ...] [--jobs N] [--out DIR]
 
-DIR holds vc6/ (CL, ML, LINK and the VC6 headers and libraries), wing10/ and
-dx1/ (the WinG and DirectX 1 SDK files), as in the hash-pinned release the
-flake fetches. `--locale` selects the language compiled into the program, one
-of locales/<LANG>.json (default: ru, the retail program): its catalog resolves
-every `localization::Tr("id")` to literals in the language's Windows code page
-under build/<LANG>/localized/, and the program is build/<LANG>/HEROES.EXE
+`--target` selects the program (build.json `targets`; default: the game).
+The editor shares the BASE library and the kbwin, REQUEST and wingraph
+sources with the game, compiled again with its own profiles and
+HOMM1_EDITOR defined. DIR holds vc6/ (CL, ML, LINK and the VC6 headers and
+libraries), wing10/ and dx1/ (the WinG and DirectX 1 SDK files), as in the
+hash-pinned release the flake fetches. `--locale` selects the language
+compiled into the program, one of locales/<LANG>.json (default: ru, the
+retail program): its catalog resolves every `localization::Tr("id")` to
+literals in the language's Windows code page under build/<LANG>/localized/,
+and the program is build/<LANG>/HEROES.EXE or build/<LANG>/EDITOR.EXE
 (`--out` replaces build/); the source files are never rewritten. Resources
-compile with llvm-rc and llvm-cvtres in the language's resource language. The
-icon is a retail asset: `--icon-from` extracts it from your HEROES.EXE;
-without it the executable carries the menus and About box but no icon.
+compile with llvm-rc and llvm-cvtres in the language's resource language.
+The icons are retail assets: `--icon-from` names your HEROES.EXE and/or
+EDITOR.EXE (repeatable; each program takes the icon of the file with its
+name); without it the program carries its menus and About box but no icon.
 """
 
 from __future__ import annotations
@@ -71,9 +77,9 @@ class Wine:
             raise SystemExit(f"{tool} failed for {expect.name}:\n{output}")
 
 
-def compile_unit(wine: Wine, unit: dict) -> Path:
+def compile_unit(wine: Wine, target: str, unit: dict) -> Path:
     source = OUT / "localized" / unit["source"]
-    obj = OUT / "obj" / f"{unit['unit']}.obj"
+    obj = OUT / target / "obj" / f"{unit['unit']}.obj"
     obj.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(dir=OUT) as scratch:   # fresh vc60.pdb/.idb
         if source.suffix.lower() == ".asm":
@@ -82,7 +88,7 @@ def compile_unit(wine: Wine, unit: dict) -> Path:
         else:
             wine.run("CL.EXE", [*unit["flags"], f"/Fo{windows(obj)}", windows(source)],
                      Path(scratch), obj)
-    print(f"  {unit['unit']}", flush=True)
+    print(f"  {target}: {unit['unit']}", flush=True)
     return obj
 
 
@@ -155,20 +161,22 @@ def load_catalog():
         raise SystemExit(f"locales/ is invalid (python3 catalog.py check):\n{error}")
 
 
-def resources(icon_from: Path | None, locale: str) -> Path:
-    script = load_catalog().render_resource(
-        (ROOT / "src/SOURCE/Heroes.rc").read_text(), locale=locale)
-    stage = OUT / "rsrc"
+def resources(target: str, script_path: str, icon_from: Path | None, locale: str) -> Path:
+    script = load_catalog().render_resource((ROOT / script_path).read_text(), locale=locale)
+    stage = OUT / target / "rsrc"
     stage.mkdir(parents=True, exist_ok=True)
-    if icon_from:
-        (stage / "heroes.ico").write_bytes(icon_group(icon_from))
+    icon = next((line.split('"')[1] for line in script.split("\n")
+                 if line.split('"')[0].split()[1:2] == ["ICON"] and '"' in line), None)
+    if icon_from and icon:
+        (stage / icon).write_bytes(icon_group(icon_from))
     else:
-        print("no --icon-from: building without the retail icon", flush=True)
+        print(f"{target}: no --icon-from: building without the retail icon", flush=True)
         script = "\n".join(line for line in script.split("\n")
                            if "ICON" not in line.split('"')[0])
-    (stage / "Heroes.rc").write_text(script)
-    res, obj = stage / "heroes.res", stage / "heroes_res.obj"
-    subprocess.run(["llvm-rc", "/fo", str(res), str(stage / "Heroes.rc")], check=True)
+    rc = stage / Path(script_path).name
+    rc.write_text(script)
+    res, obj = stage / f"{target}.res", stage / f"{target}_res.obj"
+    subprocess.run(["llvm-rc", "/fo", str(res), str(rc)], check=True)
     subprocess.run(["llvm-cvtres", "/machine:x86", f"/out:{obj}", str(res)], check=True)
     return obj
 
@@ -188,17 +196,58 @@ def prepare_sources(locale: str):
                 shutil.copyfile(source, target)
 
 
+def link(wine: Wine, target: str, contract: dict, objects: dict[str, Path], rsrc: Path) -> Path:
+    """Archive the BASE members, then link the program in retail object order."""
+    line = contract["link"]
+    library = OUT / target / line["library"]
+    response = OUT / target / "library.rsp"
+    response.write_text("\n".join(["/NOLOGO", f"/OUT:{windows(library)}",
+                                   *[f'"{windows(objects[u])}"' for u in line["members"]]]) + "\n")
+    wine.run("LINK.EXE", ["-lib", f"@{windows(response)}"], OUT, library)
+    libraries = list(line["libraries"])
+    libraries.insert(libraries.index(line["library_after"]) + 1, windows(library))
+    executable = OUT / contract["executable"]
+    response = OUT / target / "link.rsp"
+    response.write_text("\n".join([
+        f"/OUT:{windows(executable)}",
+        f"/MAP:{windows(executable.with_suffix('.map'))}", "/NOLOGO",
+        *line["flags"], *libraries,
+        *[f'"{windows(objects[u])}"' for u in line["objects"]], f'"{windows(rsrc)}"']) + "\n")
+    wine.run("LINK.EXE", [f"@{windows(response)}"], OUT, executable)
+    return executable
+
+
+def icons(given: list[Path], targets: dict[str, dict], parser) -> dict[str, Path]:
+    """{target: retail executable}: each file serves the program of its name."""
+    chosen = {}
+    for path in given:
+        target = next((key for key, contract in targets.items()
+                       if contract["executable"].lower() == path.name.lower()), None)
+        if target is None:
+            parser.error(f"--icon-from {path}: name it as one of "
+                         + ", ".join(c["executable"] for c in targets.values()))
+        if not path.is_file():
+            parser.error(f"--icon-from {path}: no such file")
+        chosen[target] = path
+    return chosen
+
+
 def build() -> int:
     global OUT
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
+    manifest = json.loads((ROOT / "build.json").read_text())
+    compiler, targets = manifest["compiler"], manifest["targets"]
+    parser.add_argument("--target", default=manifest["default_target"],
+                        choices=[*targets, "all"],
+                        help="the program to build (default: %(default)s)")
     parser.add_argument("--toolchain", type=Path, default=os.environ.get("HOMM1_TOOLCHAIN"))
-    parser.add_argument("--icon-from", type=Path, help="your HEROES.EXE, for the icon")
+    parser.add_argument("--icon-from", type=Path, action="append", default=[],
+                        metavar="EXE", help="your HEROES.EXE or EDITOR.EXE, for the "
+                                            "program's icon (repeatable)")
     parser.add_argument("--jobs", type=int, default=min(8, os.cpu_count() or 1))
     parser.add_argument("--out", type=Path, default=ROOT / "build",
                         help="output directory (default: build/)")
-    manifest = json.loads((ROOT / "build.json").read_text())
-    compiler = manifest["compiler"]
     parser.add_argument("--locale", default=manifest.get("locale", "ru"),
                         choices=sorted(p.stem for p in (ROOT / "locales").glob("*.json")),
                         help="the language (locales/LANG.json; default: %(default)s)")
@@ -210,7 +259,8 @@ def build() -> int:
     for tool in ("wine", "wineboot", "llvm-rc", "llvm-cvtres"):
         if shutil.which(tool) is None:
             parser.error(f"{tool} is required; `nix develop` supplies it")
-    manifest = json.loads((ROOT / "build.json").read_text())
+    chosen = list(targets) if args.target == "all" else [args.target]
+    icon_of = icons(args.icon_from, {key: targets[key] for key in chosen}, parser)
     OUT.mkdir(parents=True, exist_ok=True)
     prepare_sources(args.locale)
     wine = Wine(args.toolchain.resolve(), compiler)
@@ -218,28 +268,15 @@ def build() -> int:
     (OUT / "imports").mkdir(exist_ok=True)
     for stub in sorted((ROOT / "imports").glob("*.c")):
         import_library(wine, stub)
-    print(f"compiling {len(manifest['units'])} units", flush=True)
-    with ThreadPoolExecutor(args.jobs) as pool:
-        objects = dict(zip((u["unit"] for u in manifest["units"]),
-                           pool.map(lambda u: compile_unit(wine, u), manifest["units"])))
-    rsrc = resources(args.icon_from, args.locale)
-
-    link = manifest["link"]
-    library = OUT / link["library"]
-    response = OUT / "library.rsp"
-    response.write_text("\n".join(["/NOLOGO", f"/OUT:{windows(library)}",
-                                   *[f'"{windows(objects[u])}"' for u in link["members"]]]) + "\n")
-    wine.run("LINK.EXE", ["-lib", f"@{windows(response)}"], OUT, library)
-    libraries = list(link["libraries"])
-    libraries.insert(libraries.index(link["library_after"]) + 1, windows(library))
-    executable = OUT / manifest["executable"]
-    response = OUT / "link.rsp"
-    response.write_text("\n".join([
-        f"/OUT:{windows(executable)}", f"/MAP:{windows(OUT / 'HEROES.map')}", "/NOLOGO",
-        *link["flags"], *libraries,
-        *[f'"{windows(objects[u])}"' for u in link["objects"]], f'"{windows(rsrc)}"']) + "\n")
-    wine.run("LINK.EXE", [f"@{windows(response)}"], OUT, executable)
-    print(f"built {executable}", flush=True)
+    for target in chosen:
+        contract = targets[target]
+        units = contract["units"]
+        print(f"{target}: compiling {len(units)} units", flush=True)
+        with ThreadPoolExecutor(args.jobs) as pool:
+            objects = dict(zip((u["unit"] for u in units),
+                               pool.map(lambda u: compile_unit(wine, target, u), units)))
+        rsrc = resources(target, contract["resources"], icon_of.get(target), args.locale)
+        print(f"built {link(wine, target, contract, objects, rsrc)}", flush=True)
     return 0
 
 

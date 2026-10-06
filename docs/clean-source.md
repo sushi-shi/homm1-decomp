@@ -5,7 +5,7 @@ machinery, and can publish each one as a local single-commit branch:
 
 | Variant | Branch | Contents |
 | --- | --- | --- |
-| `source` | `source-buka-2003` | The primary C++ tree. Game text stays as catalog references (`localization::Tr("id")`) with one catalog per language ([localization](localization.md)). Builds any of them with the pinned VC6. |
+| `source` | `source-buka-2003` | The primary C++ tree of the game and the scenario editor ([editor](editor.md)). Text stays as catalog references (`localization::Tr("id")`) with one catalog per language ([localization](localization.md)). Builds either program in any of them with the pinned VC6. |
 | `classic` | `classic-buka-2003` | The same tree as a reading view. Every reference is spelled out as a readable UTF-8 Russian literal. The integer-enum and name-mangling model is unchanged. |
 
 ```sh
@@ -56,12 +56,19 @@ Generation fails in any of these cases:
 - a frame-slot alias is not `#undef`'d right after its function, brackets
   more than one definition, or its readable name also spells a parameter,
   member or qualified name there (or its storage spelling appears there);
+- a source spells the storage name of a `.bss` alias, which exists only
+  through the dropped define;
 - `src/` holds a file that no rule covers;
 - in the classic view, a catalog reference survives.
 
-Both trees carry the unit sources, every header, `Heroes.rc`, the module
-definition and import stubs for `mss32.dll`, `smackw32.dll` and `audiere.dll`.
-The stubs come from the retail import table through `homm1.graph.implib`.
+Both trees carry the unit sources of both programs (`src/EDITOR/` with the
+shared BASE and SOURCE units), every header, `Heroes.rc` and `Editor.rc`, the
+module definition and import stubs for `mss32.dll`, `smackw32.dll` and
+`audiere.dll`. The stubs come from the game's retail import table through
+`homm1.graph.implib`; the editor imports two of the game's Audiere functions
+and nothing else without an SDK library. Shared sources keep their
+`#ifdef HOMM1_EDITOR` branches: `HOMM1_EDITOR` is a real build define that the
+editor's compile of every unit passes.
 
 The source tree also carries:
 
@@ -69,12 +76,19 @@ The source tree also carries:
   and `catalog.py`;
 - a `build.json` link contract and `build.py`;
 - `play.py`, the game runner shared with `homm1 play` ([playing](play.md)),
-  behind the flake's `nix run .#play`;
+  behind the flake's `nix run .#play` and, with `--target editor`,
+  `nix run .#editor`;
 - a flake and a README.
 
-`build.json` keeps the retail object order, the BASE library and the retail
-`/OPT:NOREF`, computed from the annotations before they are removed. No address
-reaches the tree.
+`build.json` has one entry per program under `targets` (`game`, the default,
+and `editor`). Each lists its units with their full VC6 flags (the per-image
+profile of `config/units.toml` and the image's defines), its resource script,
+and its link: the retail object order, the BASE library and the retail
+`/OPT:NOREF`. The game's order is computed from the annotations before they are
+removed; the editor's comes from `config/retail/editor/link_order.tsv`, whose
+first BASE unit starts the editor's BASE library, and its library line is the
+game's without WINMM, mss32, smackw32 and NETAPI32 and without the game's
+`/STACK`. No address reaches the tree.
 
 The classic tree drops the build files and the catalog. It keeps a README that
 points to `source-buka-2003` for building. Research notes and all tooling stay
@@ -107,15 +121,20 @@ unit's `config/units.toml` profile. MASM units are assembled as the retail
 link's OMF and as comparison COFF. Every tree links through `homm1.graph.link`
 without `/FORCE`, and an unresolved external fails verification.
 
+Both programs are compiled: the game's 68 units against `build/objdiff/base`,
+and the editor's 39 (its own units and the shared ones again, with the
+editor's profiles and `HOMM1_EDITOR`) against `build/editor/objdiff/base`.
+
 - **Control.** The tree applies the same expansions and comment removal, but
   keeps every line, the `#line` pins and the scaffolding headers and includes.
   Each unit compiles in the matching build's localization view (the
   length-padded catalog macros through the forced include). The control must
-  reproduce every non-debug section of all 68 objects (bytes, relocations and
-  symbol names) and the candidate `HEROES.EXE` byte for byte. The only
-  exception is LINK's TimeDateStamps (PE header, export, resource and debug
-  directories, and the CodeView signature). This proves that the transforms
-  change no code.
+  reproduce every non-debug section of all 68 game and 39 editor objects
+  (bytes, relocations and symbol names) and the candidate `HEROES.EXE` byte for
+  byte. The only exception is LINK's TimeDateStamps (PE header, export,
+  resource and debug directories, and the CodeView signature). This proves
+  that the transforms change no code. The matching build has no editor
+  candidate to compare a linked `EDITOR.EXE` with.
 - **Source.** The generated tree is compiled from its Russian localized copy,
   as its own `build.py` does, and must link. Its objects are compared after
   VC6's compiler-local names (`$L`, `$T`, `$SG`, `$E`, `$S`, `$label$N`) are
@@ -128,9 +147,12 @@ without `/FORCE`, and an unresolved external fails verification.
   names. Currently 56 of 68 units are identical. The 12 that differ are the
   assertion units INPUTMGR, MOUSEMGR, RESMGR, WINMGR, miscwin, EVENTS, NOOPT,
   PATH, SMACKMGR, TOWNMGR, netwin and wingraph.
-- **Standalone** (source variant). The tree's `build.py` runs through its own
-  flake for every language of its catalog (`--locale en`, `--locale ru`).
-  Each run must produce `build/<locale>/HEROES.EXE`.
+- **Resources.** `Heroes.rc` and `Editor.rc` of the source tree must compile
+  to their retail programs' payloads (`homm1.tool.rc`).
+- **Standalone** (source variant). The tree's `build.py --target all` runs
+  through its own flake for every language of its catalog (`--locale en`,
+  `--locale ru`). Each run must produce `build/<locale>/HEROES.EXE` and
+  `build/<locale>/EDITOR.EXE`.
 - **Classic equivalence** (classic variant). The classic files must equal the
   source tree's Russian compiler input token for token. Each UTF-8 literal is
   read back as the Windows-1251 bytes it shows, and it may stand for a byte
@@ -160,21 +182,29 @@ commit message records `Generated-By: homm1 clean` and `Source-Commit:`.
 ```sh
 nix develop -c python3 build.py --icon-from /path/to/HEROES.EXE              # Russian
 nix develop -c python3 build.py --locale en --icon-from /path/to/HEROES.EXE  # English
+nix develop -c python3 build.py --target editor --icon-from /path/to/EDITOR.EXE
+nix develop -c python3 build.py --target all --icon-from HEROES.EXE --icon-from EDITOR.EXE
 ```
 
 The flake fetches the hash-pinned Buka toolchain release (VC6 SP5 and the
 vendor SDK files) and supplies Wine and LLVM. `build.py` works as follows:
 
+- `--target` selects `game` (the default), `editor` or `all`. Each program's
+  objects, BASE library and resources go to `build/<locale>/<target>/`, its
+  executable and map to `build/<locale>/`.
 - It compiles each unit with its retail profile in a fresh directory, using a
   Wine prefix under `build/wineprefix`.
 - It builds the vendor import libraries from the stubs.
 - It compiles resources with `llvm-rc`/`llvm-cvtres`.
 - It links with the retail library line and object order.
 
-The program icon is a retail asset, so `--icon-from` extracts it from the
-user's executable; `nix run .#play` passes the one from the imported game copy.
+The program icons are retail assets, so `--icon-from` extracts each from the
+user's executable of the same name (`HEROES.EXE`, `EDITOR.EXE`; repeatable);
+`nix run .#play` and `nix run .#editor` pass the ones from the imported game
+copy.
 `--out` moves `build/` elsewhere: the runner builds into its state directory
 when it runs from the flake's read-only copy. The generated README carries the
 branch diagram and these instructions. `homm1 clean --verify` also runs
-`nix run .#play -- --dry-run` against a fresh state directory (and checks the
-game copy named by `HOMM1_GAME`, when set).
+`nix run .#play -- --dry-run` and `nix run .#editor -- --dry-run` against a
+fresh state directory (and checks the game copy named by `HOMM1_GAME`, when
+set).

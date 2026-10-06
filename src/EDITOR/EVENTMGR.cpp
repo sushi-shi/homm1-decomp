@@ -180,7 +180,7 @@ void eventsManager::EditCell(i16 x, i16 y) {
     // Never filled: only the cell is restored on cancel.
     editMapCellPair savedPair;
 
-    if (giDebugLevel < EVENTS_CELL_EDIT_DEBUG_LEVEL) {
+    if (gDebugLevel < EVENTS_CELL_EDIT_DEBUG_LEVEL) {
         NormalDialog(localization::Tr("editor.events.cell.unavailable"), NORMAL_DIALOG_TYPE_OK);
         return;
     }
@@ -1041,10 +1041,7 @@ i16 MapDetailsWindowHandler(tag_message& message) {
             } else if (message.id == DETAILS_WINDOW_DESCRIPTION) {
                 gDetailsWindow->BroadcastMessage(request);
                 for (i = 0; i < MAP_HEADER_LANGUAGE_COUNT; i++)
-                    strcpy(
-                        gMapHeader->description[i],
-                        request.text
-                    );
+                    strcpy(gMapHeader->description[i], request.text);
             } else if (message.id == DETAILS_WINDOW_MAP_CODE) {
                 gDetailsWindow->BroadcastMessage(request);
                 strcpy(gText, request.text);

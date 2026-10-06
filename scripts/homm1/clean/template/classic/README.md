@@ -1,7 +1,8 @@
 # Heroes of Might and Magic — Buka 2003 source, classic view
 
 The generated C++ source of the 2003 Buka edition of Heroes of Might and Magic
-(`HEROES.EXE`) with its game text written out in Russian. Every text reference
+(`HEROES.EXE`) and its scenario editor (`EDITOR.EXE`, `src/EDITOR/`) with their
+text written out in Russian. Every text reference
 of the source tree is replaced by the Russian string the retail program shows,
 as readable UTF-8. Types, enums and code are those of `source-buka-2003`.
 

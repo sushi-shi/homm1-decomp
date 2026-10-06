@@ -148,3 +148,14 @@ reconstructed name matches it, so the referencing function scores below 100%,
 and `build/editor/gen/data_debt.tsv` lists the targets a claimed body
 references. Reviewed data names carry the extent of the game datum they were
 placed from, so interior references resolve to the owner and an addend.
+
+## Resources and the generated source
+
+`src/EDITOR/Editor.rc` spells the editor's five resources (two icon images
+under group 109, the `EDITOR` About dialog and its `MNUDFLT` menu, the game's
+reduced to Exit, the screen modes and help) and compiles to the retail
+payloads (`homm1 tool rc --src src/EDITOR/Editor.rc --verify-exe
+build/orig/EDITOR.EXE`). `homm1 clean` exports the editor with the game: both
+trees carry `src/EDITOR`, `include/EDITOR` and `Editor.rc`, and the source
+tree's `build.py --target editor` and `nix run .#editor` build and run
+`EDITOR.EXE` ([clean source](clean-source.md), [playing](play.md)).

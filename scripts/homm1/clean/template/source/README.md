@@ -1,9 +1,10 @@
 # Heroes of Might and Magic — Buka 2003 source
 
 C++ source for the 2003 Buka edition of Heroes of Might and Magic (`HEROES.EXE`,
-Windows), built with the original Visual C++ 6.0 SP5 toolchain. The game text
-lives in a catalog with one translation per language: `locales/ru.po` (the
-retail Russian) and `locales/en.po` (English). Building selects one of them.
+Windows) and its scenario editor (`EDITOR.EXE`), built with the original Visual
+C++ 6.0 SP5 toolchain. The text lives in a catalog with one translation per
+language: `locales/ru.po` (the retail Russian) and `locales/en.po` (English).
+Building selects one of them.
 
 ## Build and play
 
@@ -26,6 +27,21 @@ switch to 640x480 the game stops at start-up; `--window` runs it in a 640x480
 Wine desktop window instead. Other options: `--rebuild`, `--prefix-reset`,
 `--dry-run` (print the steps, change nothing) and `-- ARGS` for the game;
 `nix run .#play -- --help` lists them.
+
+## Scenario editor
+
+```sh
+nix run .#editor -- --game /path/to/game-or-cd.iso   # first run, if the game was never imported
+nix run .#editor -- --window                         # later runs, in a 640x480 window
+```
+
+`nix run .#editor` builds `build/<locale>/EDITOR.EXE` and runs it with the same
+game copy, Wine prefix, CD drive and registry key as the game. The editor
+needs the same installation: it opens `DATA/HEROES.AGG` from the game folder,
+finds the CD by its first music track, reads the game's registry key (its
+window settings are the `HMM1 Editor...` values) and loads and saves maps in
+`~/.local/share/homm1-buka/game/MAPS/`. It takes the same options as the game's
+runner.
 
 ## Branches
 
@@ -64,13 +80,21 @@ On x86-64 Linux with Nix flakes enabled, from this directory:
 ```sh
 nix develop -c python3 build.py --icon-from /path/to/HEROES.EXE              # Russian
 nix develop -c python3 build.py --locale en --icon-from /path/to/HEROES.EXE  # English
+nix develop -c python3 build.py --target editor --icon-from /path/to/EDITOR.EXE
+nix develop -c python3 build.py --target all \
+    --icon-from /path/to/HEROES.EXE --icon-from /path/to/EDITOR.EXE
 ```
 
-This writes `build/ru/HEROES.EXE` or `build/en/HEROES.EXE`. The flake fetches the
+This writes `build/ru/HEROES.EXE` or `build/en/HEROES.EXE`, and with
+`--target editor` (or `all`) `build/<locale>/EDITOR.EXE`. The flake fetches the
 hash-pinned Visual C++ 6.0 SP5, WinG and DirectX 1 files and supplies Wine and
 LLVM's resource tools. Each unit compiles with its own retail optimization
-profile (`build.json`) and links in retail object order. `--icon-from` takes the
-program icon from your own executable. Game data and the Smacker, Miles and
+profile (`build.json`) and links in retail object order. The editor reuses the
+game's BASE library and its `kbwin`, `REQUEST` and `wingraph` sources, compiled
+a second time with the editor's own profiles and `HOMM1_EDITOR` defined;
+`src/EDITOR/` holds the editor's own units and `src/EDITOR/Editor.rc` its menu,
+About box and icon. `--icon-from` takes each program's icon from your own
+executable of the same name. Game data and the Smacker, Miles and
 Audiere runtime DLLs are not included.
 
 The source keeps every piece of game text as `localization::Tr("id")`. The build
@@ -88,7 +112,8 @@ to create its `.po`, translate every entry, check it with
 with the fonts in its data files, which have glyphs for ASCII and, in Buka's
 edition, Cyrillic; a language needing other letters also needs new fonts.
 
-`nix run .#play` runs the result with your game data; see [Build and play](#build-and-play).
+`nix run .#play` and `nix run .#editor` run the results with your game data; see
+[Build and play](#build-and-play) and [Scenario editor](#scenario-editor).
 
 ## Regeneration
 

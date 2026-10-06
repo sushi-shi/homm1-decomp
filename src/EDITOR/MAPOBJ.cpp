@@ -361,7 +361,7 @@ void editManager::RemoveSmallRegions(void) {
                 continue;
             memset(inRegion, 0, MAP_CELL_GRID_SIZE * MAP_CELL_GRID_SIZE);
             (*(inRegion + startX + homeY * MAP_CELL_GRID_SIZE))++;
-            ground = giGroundToTerrain[m_map.cells[startX][homeY].m_tileIndex];
+            ground = gGroundToTerrain[m_map.cells[startX][homeY].m_tileIndex];
             spread = 1;
             extent = 1;
             fromX = startX - 1;
@@ -381,9 +381,9 @@ void editManager::RemoveSmallRegions(void) {
                     y1 = MAP_CELL_GRID_SIZE - 1;
                 for (j = searchTop; j <= y1; j++) {
                     for (n = fromX; n <= maxX; n++) {
-                        if (giGroundToTerrain[m_map.cells[n][j].m_tileIndex] != ground) {
+                        if (gGroundToTerrain[m_map.cells[n][j].m_tileIndex] != ground) {
                             if (other == -1)
-                                other = giGroundToTerrain[m_map.cells[n][j].m_tileIndex];
+                                other = gGroundToTerrain[m_map.cells[n][j].m_tileIndex];
                             continue;
                         }
                         if (*(inRegion + n + j * MAP_CELL_GRID_SIZE))
@@ -476,7 +476,7 @@ void editManager::PlaceObstacleChains(i32 density, i32 tileset) {
             hunting = 0;
             rootX = Random(0, MAP_CELL_GRID_SIZE - 1);
             rootY = Random(0, MAP_CELL_GRID_SIZE - 1);
-            ground = giGroundToTerrain[m_map.cells[rootX][rootY].m_tileIndex];
+            ground = gGroundToTerrain[m_map.cells[rootX][rootY].m_tileIndex];
             if (tileset == TILESET_TREE32 && ground == TERRAIN_LAVA && Random(0, 100) < 80)
                 hunting = 1;
             if (tileset == TILESET_TREE32 && ground == TERRAIN_DESERT && Random(0, 100) < 70)
@@ -572,7 +572,7 @@ i32 editManager::PlaceChainLink(i32* x, i32* y, i32 direction, i32 tileset, char
     if (*x < 0 || *x > MAP_CELL_GRID_SIZE - 1 || *y < 0 || *y > MAP_CELL_GRID_SIZE - 1)
         return 0;
     frame = 0;
-    ground = giGroundToTerrain[m_map.cells[*x][*y].m_tileIndex];
+    ground = gGroundToTerrain[m_map.cells[*x][*y].m_tileIndex];
     bit = -1;
     if (tileset == TILESET_MTN32) {
         switch (ground) {

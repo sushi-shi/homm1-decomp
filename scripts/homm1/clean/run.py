@@ -14,7 +14,8 @@ compiler already sees and removes the rest.
 Two variants come from one snapshot. `source` keeps the catalog references
 (`localization::Tr("id")`) and builds any language of its locales/ catalog
 with VC6; `classic` is the same tree with the retail program's Russian text
-spelled out as readable UTF-8 for reading. See docs/clean-source.md.
+spelled out as readable UTF-8 for reading. Both carry the game and the
+scenario editor (EDITOR.EXE). See docs/clean-source.md.
 """
 
 from __future__ import annotations
@@ -70,28 +71,21 @@ def snapshot(repo: Path, revision: str = "HEAD", *, working: bool = False
     return commit, files
 
 
-def _units(files: dict[str, bytes], *, every_image: bool = False) -> list[dict]:
-    """The game's units (the generated trees build the game only); with
-    `every_image`, also those other images (the editor) link alone."""
+def _units(files: dict[str, bytes]) -> list[dict]:
+    """Every unit of every program the trees build (the game and the editor)."""
     import tomllib
-    from homm1.core.paths import DEFAULT_IMAGE
-    from homm1.manifest import unit_images
-    return [u for u in tomllib.loads(files["config/units.toml"].decode())["unit"]
-            if every_image or DEFAULT_IMAGE in unit_images(u)]
+    return tomllib.loads(files["config/units.toml"].decode())["unit"]
 
 
 def selected(files: dict[str, bytes]) -> dict[str, str]:
     """{path: transform} for every file the clean tree carries.
 
-    The tree holds the game's unit sources, every header, and the resource
-    script; units only another image links are left out. Anything else under
-    src/ fails generation rather than silently vanishing.
+    The tree holds the unit sources of the game and of the scenario editor,
+    every header, and their resource scripts. Anything else under src/ fails
+    generation rather than silently vanishing.
     """
     chosen = {unit["source"]: "" for unit in _units(files)}
-    other_images = {unit["source"] for unit in _units(files, every_image=True)} - set(chosen)
     for name in files:
-        if name in other_images:
-            continue
         top = name.split("/", 1)[0]
         if top in ("include", "vendor") and name.endswith(".h") \
                 and name not in source.DROP_FILES:
@@ -169,6 +163,8 @@ def generate(files: dict[str, bytes], *, variant: str = "source", control: bool 
         if kind == "cpp":
             problems += [f"{name}: scaffolding survived: {word}"
                          for word in sorted(set(source.residue(cleaned)))]
+            problems += [f"{name}: uses the storage spelling {word}; write {renames[word]}"
+                         for word in source.storage_spellings(cleaned, renames)]
         elif any(token == "comment" for token, _ in source.tokens(cleaned, **kinds[kind])):
             problems.append(f"{name}: comment survived")
         problems += [f"{name}: stranded punctuation: {line}"

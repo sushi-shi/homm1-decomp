@@ -304,6 +304,13 @@ def aliases(texts) -> dict[str, str]:
     return found
 
 
+def storage_spellings(text: str, renames: dict[str, str]) -> list[str]:
+    """The `.bss` storage spellings `text` still names: they exist only through
+    their dropped defines, so the generated tree must spell the readable name."""
+    return sorted({spelling for kind, spelling in tokens(text)
+                   if kind == "word" and spelling in renames})
+
+
 def drop_aliases(text: str) -> str:
     return _ALIAS.sub(DROPPED, text)
 

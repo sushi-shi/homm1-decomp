@@ -235,12 +235,95 @@ class FrameSlotAliasTests(unittest.TestCase):
         from unittest import mock
         with TemporaryDirectory() as tree:
             Path(tree, "a.cpp").write_text("void f() {}\n")
-            with mock.patch("homm1.manifest.units",
+            with mock.patch("homm1.manifest.all_units",
                             return_value=[{"unit": "A", "source": "a.cpp"}]):
                 self.assertEqual(verify.unexplained_differences(Path(tree), {"A": [".text"]}),
                                  ["A"])
                 self.assertEqual(verify.unexplained_differences(
                     Path(tree), {"A": [".text"]}, {"a.cpp"}), [])
+
+
+class StorageSpellingTests(unittest.TestCase):
+    def test_the_storage_spelling_of_a_dropped_define_is_reported(self):
+        renames = source.aliases([LayoutAliasTests.HEADER])
+        self.assertEqual(source.storage_spellings("i32 f() { return gpGame != 0; }", renames),
+                         ["gpGame"])
+        self.assertEqual(source.storage_spellings('char* s = "gpGame"; game* g = gGame;',
+                                                  renames), [])
+
+
+class EditorTargetTests(unittest.TestCase):
+    UNITS = """
+[build]
+compiler = "vc6"
+[flags]
+cpp = ["/c", "/Od"]
+cpp_oi = ["/c", "/Od", "/Oi"]
+[images.editor]
+defines = ["HOMM1_EDITOR"]
+[[unit]]
+unit = "SOURCE/GAME"
+source = "src/SOURCE/GAME.cpp"
+flags = "cpp"
+[[unit]]
+unit = "SOURCE/kbwin"
+source = "src/SOURCE/kbwin.cpp"
+flags = "cpp"
+images = ["game", "editor"]
+image_flags = { editor = "cpp_oi" }
+[[unit]]
+unit = "BASE/WINDOW"
+source = "src/BASE/WINDOW.cpp"
+flags = "cpp"
+images = ["game", "editor"]
+[[unit]]
+unit = "EDITOR/EDITOR"
+source = "src/EDITOR/EDITOR.cpp"
+flags = "cpp_oi"
+images = ["editor"]
+"""
+    ORDER = ("# reviewed spans\nindex\tunit\tlo\thi\tclass\n"
+             "0\tEDITOR/EDITOR\t0x00001000\t0x00002000\tcode\n"
+             "1\tSOURCE/kbwin\t0x00002000\t0x00003000\tcode\n"
+             "2\tBASE/WINDOW\t0x00004000\t0x00005000\tcode\n"
+             "3\tSOURCE/kbwin\t0x00001800\t0x00001900\tcode\n")
+
+    def files(self):
+        return {"config/units.toml": self.UNITS.encode(),
+                "config/retail/targets.json": json.dumps(
+                    {"game": {"name": "HEROES.EXE", "locale": "ru"},
+                     "editor": {"name": "EDITOR.EXE"}}).encode(),
+                "config/retail/editor/link_order.tsv": self.ORDER.encode(),
+                "src/SOURCE/GAME.cpp": b"", "src/SOURCE/kbwin.cpp": b"",
+                "src/BASE/WINDOW.cpp": b"", "src/EDITOR/EDITOR.cpp": b"",
+                "src/SOURCE/Heroes.rc": b"", "src/EDITOR/Editor.rc": b"",
+                "include/EDITOR/EDITOR.h": b""}
+
+    def test_the_trees_carry_the_editor_sources_and_resources(self):
+        from homm1.clean import run
+        chosen = run.selected(self.files())
+        for name in ("src/EDITOR/EDITOR.cpp", "src/EDITOR/Editor.rc", "include/EDITOR/EDITOR.h",
+                     "src/SOURCE/GAME.cpp"):
+            self.assertIn(name, chosen)
+
+    def test_the_editor_target_orders_its_link_and_defines_its_image(self):
+        from homm1.clean import project
+        files = self.files()
+        self.assertEqual(project.images(files), ["game", "editor"])
+        self.assertEqual(project.image_starts(files, "editor"),
+                         {"EDITOR/EDITOR": 0x1000, "SOURCE/kbwin": 0x1800, "BASE/WINDOW": 0x4000})
+        editor = project.target(files, "editor")
+        self.assertEqual(editor["executable"], "EDITOR.EXE")
+        self.assertEqual(editor["resources"], "src/EDITOR/Editor.rc")
+        self.assertEqual(editor["link"]["objects"], ["EDITOR/EDITOR", "SOURCE/kbwin"])
+        self.assertEqual(editor["link"]["members"], ["BASE/WINDOW"])
+        self.assertEqual(editor["link"]["libraries"][-1], "libcmt.lib")
+        self.assertNotIn("winmm.lib", editor["link"]["libraries"])
+        flags = {u["unit"]: u["flags"] for u in editor["units"]}
+        self.assertEqual(flags["SOURCE/kbwin"], ["/c", "/Od", "/Oi", "/DHOMM1_EDITOR"])
+        self.assertEqual(flags["BASE/WINDOW"], ["/c", "/Od", "/DHOMM1_EDITOR"])
+        self.assertNotIn("SOURCE/GAME", flags)
+        self.assertFalse(any(f.startswith("/STACK") for f in editor["link"]["flags"]))
 
 
 class DomainArrayTests(unittest.TestCase):

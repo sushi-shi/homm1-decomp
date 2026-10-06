@@ -37,6 +37,13 @@ class FileTests(unittest.TestCase):
             self.assertEqual((target / "DATA/standard.hs").read_text(), "played")
             self.assertFalse((target / "heroes.exe").exists())
 
+    def test_only_the_retail_programs_are_kept(self):
+        with tempfile.TemporaryDirectory() as work:
+            state, fake = Path(work, "state"), Path(work, "EDITOR.EXE")
+            fake.write_bytes(b"not the retail editor")
+            play.keep_retail(state, {"editor": fake})
+            self.assertIsNone(play.retail_executable(state, "editor"))
+
     def test_check_reports_missing_data(self):
         with tempfile.TemporaryDirectory() as work:
             errors, _warnings = play.check_install(Path(work))
@@ -54,6 +61,20 @@ class CommandLineTests(unittest.TestCase):
     def test_game_arguments_follow_the_separator(self):
         self.assertEqual(play.split_argv(["--window", "--", "-x", "--y"]),
                          (["--window"], ["-x", "--y"]))
+
+    def test_editor_dry_run_installs_the_editor(self):
+        parser = argparse.ArgumentParser()
+        play.add_arguments(parser, standalone=False)
+        with tempfile.TemporaryDirectory() as work:
+            state = Path(work, "state")
+            args = parser.parse_args(["--dry-run", "--state", str(state)])
+            output = io.StringIO()
+            with contextlib.redirect_stdout(output):
+                status = play.session(args, [], lambda icon: Path("/built/EDITOR.EXE"),
+                                      program="editor")
+            self.assertEqual(status, 0)
+            self.assertFalse(state.exists())
+            self.assertIn(str(state / "game" / "EDITOR.EXE"), output.getvalue())
 
     def test_dry_run_changes_nothing(self):
         parser = argparse.ArgumentParser()
