@@ -2,7 +2,7 @@
 # Written only by `homm1 verify link-diff --update`.
 region	differing
 size	0
-headers	87
+headers	0
 .text	0
 .rdata	0
 .data	0

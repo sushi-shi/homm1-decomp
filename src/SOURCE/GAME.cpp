@@ -461,7 +461,7 @@ i16 game::SaveGame(char* filename, i8 generateName) {
     } else {
         sprintf(genName, filename);
     }
-    if (!strcmpi(genName, "REMOTE.GAM")) {
+    if (!stricmp(genName, "REMOTE.GAM")) {
         sprintf(savePath, "%s%s", gDataPath, genName);
     } else {
         sprintf(savePath, "%s%s", gGamePath, genName);

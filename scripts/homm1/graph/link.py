@@ -51,9 +51,12 @@ from homm1.tool.wine import winepath
 #: retail import table plus the reviewed import-thunk names in
 #: function_referents.tsv, in the formats config/retail/import_libraries.tsv
 #: records.
+#: msvcprt.lib follows the BASE library: retail's `operator delete` is its
+#: delop_s.obj (C++ 12.00.8047, the first CRT function at 0x00477c4d), which
+#: puts the Rich header's C++ CRT entry after the C and MASM CRT entries.
 LINK_LIBS = ["oldnames.lib", "winmm.lib", "kernel32.lib", "user32.lib",
              "gdi32.lib", "advapi32.lib", "mss32.lib", "wing32.lib",
-             "smackw32.lib", "netapi32.lib", "audiere.lib"]
+             "smackw32.lib", "netapi32.lib", "audiere.lib", "msvcprt.lib"]
 
 #: Retail's C runtime is the VC4.1 multithreaded LIBCMT.LIB, not the
 #: single-threaded LIBC.LIB the objects request: retail carries LIBCMT's
