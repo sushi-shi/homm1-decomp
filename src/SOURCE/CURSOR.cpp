@@ -53,7 +53,7 @@ void advManager::StopCursor(i8 stopSound) {
         gMoveSoundMade = 1;
         m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
         m_cursorFrameCount = 0;
-        EveryOther = 0;
+        gEveryOther = 0;
     }
     m_cursorCycle = 0;
     if (m_previousCursorMapX != CURSOR_CELL_NONE) {
@@ -74,11 +74,11 @@ void advManager::DrawCursor(void) {
     if (gShowIt == 0 || gSpecialHideCursor)
         return;
     if (gDrawSavedCursor) {
-        m_cursorDirection = S1cursorDirection;
-        m_cursorFrame = S1cursorBaseFrame;
-        m_cursorFrameCount = S1cursorFrameCount;
-        m_cursorCycle = S1cursorCycle;
-        m_cursorTurning = S1cursorTurning;
+        m_cursorDirection = gSavedCursorDirection;
+        m_cursorFrame = gSavedCursorBaseFrame;
+        m_cursorFrameCount = gSavedCursorFrameCount;
+        m_cursorCycle = gSavedCursorCycle;
+        m_cursorTurning = gSavedCursorTurning;
     }
     drawX = m_scrollOffsetX + CURSOR_DRAW_X;
     posY = m_scrollOffsetY + CURSOR_DRAW_Y;
@@ -181,8 +181,8 @@ void advManager::DrawCursor(void) {
             && (m_cursorFrameCount == SKIPPED_ANIMATION_FRAME || m_cursorFrameCount == 1))
             m_cursorFrameCount++;
         if (gConfig.walkSpeed == WALK_SPEED_WALK) {
-            EveryOther = 1 - EveryOther;
-            if (EveryOther)
+            gEveryOther = 1 - gEveryOther;
+            if (gEveryOther)
                 m_cursorFrameCount--;
         }
     }
@@ -192,7 +192,7 @@ void advManager::DrawCursor(void) {
         if (m_cursorFrameCount == FOOTSTEP_ANIMATION_FRAME
             || (gConfig.walkSpeed == WALK_SPEED_JUMP && !gMoveSoundMade)) {
             gMoveSoundMade = 1;
-            if (!EveryOther)
+            if (!gEveryOther)
                 PlaySample(
                     m_cursorSamples[CELL_TERRAIN(GetCell(
                         m_mapOriginX + ADVMGR_VIEW_CENTER,
@@ -202,11 +202,11 @@ void advManager::DrawCursor(void) {
         }
     }
     if (!gDrawSavedCursor) {
-        S1cursorDirection = m_cursorDirection;
-        S1cursorBaseFrame = m_cursorFrame;
-        S1cursorFrameCount = m_cursorFrameCount;
-        S1cursorCycle = m_cursorCycle;
-        S1cursorTurning = m_cursorTurning;
+        gSavedCursorDirection = m_cursorDirection;
+        gSavedCursorBaseFrame = m_cursorFrame;
+        gSavedCursorFrameCount = m_cursorFrameCount;
+        gSavedCursorCycle = m_cursorCycle;
+        gSavedCursorTurning = m_cursorTurning;
     }
 }
 
@@ -497,7 +497,7 @@ mapCell* advManager::MoveHero(
     delayNum = gStepDelay[gConfig.walkSpeed];
     StartCursor(direction);
     if (gConfig.walkSpeed == WALK_SPEED_JUMP) {
-        if (EveryOther)
+        if (gEveryOther)
             m_cursorFrame--;
         gMoveSoundMade = 0;
         MoveOrigin(xInc, yInc);
@@ -505,7 +505,7 @@ mapCell* advManager::MoveHero(
         champion->m_y += yInc;
         if (ComboDraw(0))
             UpdateScreen(0, 0);
-        EveryOther = 1 - EveryOther;
+        gEveryOther = 1 - gEveryOther;
     } else {
         gEnlargeScreenBlit = 0;
         gNoBorder = 1;
@@ -517,8 +517,8 @@ mapCell* advManager::MoveHero(
                 MoveOrigin(xInc, yInc);
                 champion->m_x += xInc;
                 champion->m_y += yInc;
-                m_scrollOffsetX = startVals[xInc + 1];
-                m_scrollOffsetY = startVals[yInc + 1];
+                m_scrollOffsetX = gStepScrollStart[xInc + 1];
+                m_scrollOffsetY = gStepScrollStart[yInc + 1];
             }
             tick = KBTickCount();
             if (inc + 1 == numSteps * MOVE_TILE_HALF_COUNT) {
@@ -801,16 +801,16 @@ i16 gPixelsPerStep[5] = {1, 4, 6, 8, 16};
 DATA(0x0048fa6c)
 i16 gStepDelay[5] = {30, 45, 30, 15, 15};
 DATA(0x004a6ac6)
-i8 EveryOther = 0;
+i8 gEveryOther = 0;
 DATA(0x0048fa78)
-i16 startVals[3] = {16, 0, -16};
+i16 gStepScrollStart[3] = {16, 0, -16};
 DATA(0x004a6ac2)
-i16 S1cursorCycle;
+i16 gSavedCursorCycle;
 DATA(0x004a6abc)
-i16 S1cursorFrameCount;
+i16 gSavedCursorFrameCount;
 DATA(0x004a6ac4)
-i16 S1cursorTurning;
+i16 gSavedCursorTurning;
 DATA(0x004a6abe)
-i16 S1cursorBaseFrame;
+i16 gSavedCursorBaseFrame;
 DATA(0x004a6ac0)
-i8 S1cursorDirection;
+i8 gSavedCursorDirection;

@@ -465,8 +465,8 @@ class mapCell* advManager::DoAdvCommand(void) {
                     cellPtr = MoveHero(
                         gSearchArray->m_directions[pathIndex],
                         pathIndex == 0,
-                        &TrigX,
-                        &TrigY,
+                        &gTriggerX,
+                        &gTriggerY,
                         &anyMoveChanged,
                         0,
                         &moveDone
@@ -500,7 +500,7 @@ class mapCell* advManager::DoAdvCommand(void) {
                 UpdBottomView(1, 1, 1);
                 if (cellPtr) {
                     StopCursor(1);
-                    DoEvent(cellPtr, TrigX, TrigY);
+                    DoEvent(cellPtr, gTriggerX, gTriggerY);
                     cellPtr = NULL;
                 }
                 Reseed(0, 0);
@@ -559,9 +559,9 @@ i32 gSandAnim = 0;
 DATA(0x004a6744)
 i32 gLastHourGlassUpdateTime = 0;
 DATA(0x004a6748)
-i32 TrigX = 0;
+i32 gTriggerX = 0;
 DATA(0x004a674c)
-i32 TrigY = 0;
+i32 gTriggerY = 0;
 DATA(0x004a6750)
 i32 gCurBottomView = BOTTOM_VIEW_NONE;
 DATA(0x004a6754)
@@ -925,11 +925,11 @@ i16 advManager::Main(struct tag_message& message) {
                 if (gCurPlayerData->m_currentHero != HERO_ID_NONE && orient >= 0) {
                     HideRoute(1, 1, 1);
                     gMouseManager->ReallyHidePointer();
-                    location = MoveHero(orient, 1, &TrigX, &TrigY, &movedSet, 0, &bEnded);
+                    location = MoveHero(orient, 1, &gTriggerX, &gTriggerY, &movedSet, 0, &bEnded);
                     UpdateHeroLocator(LOCATOR_SLOT_CURRENT_HERO, 1, 1);
                     if (location) {
                         StopCursor(1);
-                        DoEvent(location, TrigX, TrigY);
+                        DoEvent(location, gTriggerX, gTriggerY);
                         location = NULL;
                     }
                     Reseed(0, 0);
@@ -942,7 +942,7 @@ i16 advManager::Main(struct tag_message& message) {
         }
     }
     if (location)
-        DoEvent(location, TrigX, TrigY);
+        DoEvent(location, gTriggerX, gTriggerY);
     if (gGameOver || quit == 1 || gMenuCommand != APP_MENU_NONE) {
         message.type = MESSAGE_EXECUTIVE;
         message.executiveCommand = EXECUTIVE_COMMAND_TERMINATE_LOOP;

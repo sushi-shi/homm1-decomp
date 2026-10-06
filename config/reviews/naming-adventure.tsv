@@ -74,3 +74,7 @@ local	advManager (CombatMonsterEvent, GiveExperience, DoEvent, DoAIEvent)	res/sa
 local	swapManager::DrawSelector	leftArmyBase/rightMonsterBaseVal/curTop/armySpacingVal/art1/curArt2/newTop/itemGap/mainX/mainY	leftArmyLeft/rightArmyLeft/armyRow/armyStride/leftArtifactCol/rightArtifactCol/artifactY0/artifactsSpacing/selectorX0/selectorY0	swapwin layout: army and artifact grid origins and steps, the selector frame position
 local	swapManager::SplitMons/SwapMons	dstTroopsPtr/idPos/amountWidgetVal/lastI, sourceTroops/destTroops	targetTroops/textControl/amountWidgetId/placeSlot, selectedArmy/targetTroops	the two heroes' armies, the prompt/amount widget ids, the destination slot
 local	HandleViewGeneral	pos/result	helpIndex/dialogEnded	gViewGeneralHelp row; set when a button ends the dialog
+global	advManager.h	TrigX/TrigY	gTriggerX/gTriggerY	the cell whose trigger MoveHero reports to DoEvent; alias keeps the storage spelling
+global	advManager.h	EveryOther	gEveryOther	walk alternate-frame/footstep toggle; alias keeps the storage spelling
+global	advManager.h	S1cursorDirection/BaseFrame/FrameCount/Cycle/Turning	gSavedCursorDirection/BaseFrame/FrameCount/Cycle/Turning	cursor state DrawCursor saves and restores around gDrawSavedCursor; aliases keep the storage spelling
+global	advManager.h	startVals	gStepScrollStart	the scroll offset (16, 0, -16) MoveHero starts the second half-step from; alias keeps the storage spelling

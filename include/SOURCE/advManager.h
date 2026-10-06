@@ -599,22 +599,32 @@ extern i8 gFreshSave;
 // ComboDraw's per-view-cell redraw marks and its animation frame clock.
 #define gComboDraw bComboDraw // spelling fixes .bss order
 extern i8 gComboDraw[][17];
-// DoAdvCommand's route event coordinates handed from MoveHero to DoEvent.
-extern i32 TrigX;
-extern i32 TrigY;
-// CURSOR globals: byte flags and the last two footstep sample handles
-// (0x004a0d4c/0x004a0d50).
+// The cell whose trigger MoveHero reports, handed from DoAdvCommand's walk
+// to DoEvent.
+#define gTriggerX TrigX // spelling fixes .bss order
+extern i32 gTriggerX;
+#define gTriggerY TrigY // spelling fixes .bss order
+extern i32 gTriggerY;
+// CURSOR globals: the footstep and alternate-frame flags, and the hero cursor
+// state DrawCursor saves and restores around gDrawSavedCursor.
 extern i8 gMoveSoundMade;
-extern i8 EveryOther;
-extern i8 S1cursorDirection;
-extern i16 S1cursorBaseFrame;
-extern i16 S1cursorFrameCount;
-extern i16 S1cursorCycle;
-extern i16 S1cursorTurning;
+#define gEveryOther EveryOther // spelling fixes .bss order
+extern i8 gEveryOther;
+#define gSavedCursorDirection S1cursorDirection // spelling fixes .bss order
+extern i8 gSavedCursorDirection;
+#define gSavedCursorBaseFrame S1cursorBaseFrame // spelling fixes .bss order
+extern i16 gSavedCursorBaseFrame;
+#define gSavedCursorFrameCount S1cursorFrameCount // spelling fixes .bss order
+extern i16 gSavedCursorFrameCount;
+#define gSavedCursorCycle S1cursorCycle // spelling fixes .bss order
+extern i16 gSavedCursorCycle;
+#define gSavedCursorTurning S1cursorTurning // spelling fixes .bss order
+extern i16 gSavedCursorTurning;
 extern i16 gStepDelay[];
 // MoveHero's pixels per walk step by speed and the step offsets.
 extern i16 gPixelsPerStep[];
-extern i16 startVals[];
+#define gStepScrollStart startVals // spelling fixes .bss order
+extern i16 gStepScrollStart[];
 #define gFrameStep giFrameStep // spelling fixes .bss order
 extern i32 gFrameStep;
 
