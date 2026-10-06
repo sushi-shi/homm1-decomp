@@ -150,7 +150,7 @@ void highScoreManager::Update(void) {
     else
         sprintf(scorePath, "%sSTANDARD.HS", gDataPath);
     inputFile = open(scorePath, _O_BINARY);
-    if (inputFile == -1)
+    if (inputFile == FILE_DESCRIPTOR_INVALID)
         noScoreFile = true;
 
     sprintf(gText, "hiscore.bmp");

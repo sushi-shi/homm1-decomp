@@ -37,7 +37,7 @@ void icon::DrawToBuffer(
     H1_ENUM_PARAM(IconDrawOrientation, i8) orientation,
     H1_ENUM_PARAM(IconDrawOffsetMode, i8) offsetMode
 ) {
-    if (gComputeExtent != 0) {
+    if (gComputeExtent != false) {
         if (orientation != ICON_DRAW_NORMAL) {
             if (offsetMode != ICON_DRAW_OFFSET_FULL)
                 m_drawRight = x - (m_frames[frame].x >> ICON_DRAW_QUARTER_OFFSET_SHIFT);
@@ -66,7 +66,7 @@ void icon::DrawToBuffer(
                 gMaxExtentY = m_drawBottom;
         }
     }
-    if (gLimitToExtent != 0
+    if (gLimitToExtent != false
         && (gCurrArmyDrawn == false || m_drawLeft > gMaxExtentX || m_drawRight < gMinExtentX
             || m_drawTop > gMaxExtentY || m_drawBottom < gMinExtentY))
         return;
@@ -160,7 +160,7 @@ void icon::DimToBuffer(
     H1_ENUM_PARAM(IconDrawOrientation, i8) orientation,
     H1_ENUM_PARAM(IconDrawOffsetMode, i8) offsetMode
 ) {
-    if (gComputeExtent != 0) {
+    if (gComputeExtent != false) {
         if (orientation != ICON_DRAW_NORMAL) {
             if (offsetMode != ICON_DRAW_OFFSET_FULL)
                 m_drawRight = x - (m_frames[frame].x >> ICON_DRAW_QUARTER_OFFSET_SHIFT);
@@ -189,7 +189,7 @@ void icon::DimToBuffer(
                 gMaxExtentY = m_drawBottom;
         }
     }
-    if (gLimitToExtent != 0
+    if (gLimitToExtent != false
         && (gCurrArmyDrawn == false || m_drawLeft > gMaxExtentX || m_drawRight < gMinExtentX
             || m_drawTop > gMaxExtentY || m_drawBottom < gMinExtentY))
         return;

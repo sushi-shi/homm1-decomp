@@ -634,7 +634,7 @@ i32 combatManager::CheckWin(struct tag_message* message) {
         m_combatResult = COMBAT_OPPOSING_SIDE(m_currentSide);
     } else if (m_sideRetreated[COMBAT_ATTACKER_SIDE] || m_sideRetreated[COMBAT_DEFENDER_SIDE]) {
         combatEnded = true;
-        gRetreatWin = 1;
+        gRetreatWin = true;
         m_combatResult = m_sideRetreated[COMBAT_ATTACKER_SIDE]
                              ? H1_ENUM_CAST(CombatSide, i8, COMBAT_RESULT_DEFENDER)
                              : H1_ENUM_CAST(CombatSide, i8, COMBAT_RESULT_ATTACKER);
@@ -1583,11 +1583,11 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) combatManager::ProcessNextAction(stru
             break;
         case ACTION_RETREAT:
             m_sideRetreated[m_currentSide] = 1;
-            gRetreatWin = 1;
+            gRetreatWin = true;
             break;
         case ACTION_SURRENDER:
-            gCombatSurrender = 1;
-            gRetreatWin = 1;
+            gCombatSurrender = true;
+            gRetreatWin = true;
             m_sideSurrendered[m_currentSide] = 1;
             gGame->m_players[m_playerId[m_currentSide]].m_resources[RESOURCE_GOLD] -=
                 gNextActionExtra;

@@ -2017,7 +2017,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
     i32 armyStrength;
     i8 portalCount;
     H1_ENUM_LOCAL(ResourceType, i32) eventResource;
-    i8 priorShowIt;
+    b8 priorShowIt;
     boatRecord* boat;
     i32 success;
     b8 guardMonster;
@@ -2660,7 +2660,7 @@ i32 advManager::DoNetCombat(RemoteMessage* packet) {
         free(secondHro);
     if (attackingHro)
         free(attackingHro);
-    gRetreatWin = 0;
+    gRetreatWin = false;
     return 1;
 }
 
@@ -2690,7 +2690,7 @@ H1_ENUM_RETURN(CombatSide, i32) advManager::DoCombat(
     i32 defenderSide;
     i32 attackPlayer;
     i32 oldPlayer;
-    i8 showItSaved;
+    b8 showItSaved;
     i32 unused;
 
     gInCombat = true;
@@ -2722,8 +2722,8 @@ H1_ENUM_RETURN(CombatSide, i32) advManager::DoCombat(
                 randomSeed,
                 defenderSide,
                 0,
-                0,
-                0
+                false,
+                false
             );
             if (!gHumanPlayer[attackPlayer]) {
                 while (1) {
@@ -2788,7 +2788,7 @@ H1_ENUM_RETURN(CombatSide, i32) advManager::DoCombat(
                 }
             }
         } else if (!gThisNetHumanPlayer[attackPlayer]) {
-            gShowIt = 1;
+            gShowIt = true;
             gGame->TurnOffAIMusic();
             sprintf(
                 gText,
@@ -2802,7 +2802,7 @@ H1_ENUM_RETURN(CombatSide, i32) advManager::DoCombat(
         }
     }
 
-    gShowIt = 1;
+    gShowIt = true;
     gCombatManager->SetupCombat(
         x,
         y,
@@ -2858,7 +2858,7 @@ combatFinished:
     }
     MobilizeCurrHero(false);
     if (processLosses)
-        gRetreatWin = 0;
+        gRetreatWin = false;
     gInCombat = false;
     return gCombatManager->m_combatResult;
 }
@@ -2877,8 +2877,8 @@ void advManager::SendHeroTownData(
     i32 randomSeed,
     i8 remotePlayer,
     i8 combatResult,
-    i8 retreatWin,
-    i8 combatSurrender
+    b8 retreatWin,
+    b8 combatSurrender
 ) {
     RemoteMessage* reply;
     i32 result;
@@ -2969,8 +2969,8 @@ void advManager::ReceiveHeroTownData(
     i32* setupCombatY,
     i32* randomSeed,
     i8* combatResult,
-    i8* retreatWin,
-    i8* combatSurrender
+    b8* retreatWin,
+    b8* combatSurrender
 ) {
     b8 hasTownOn;
     i32 confirmSent;

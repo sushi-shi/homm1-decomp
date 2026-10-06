@@ -52,16 +52,16 @@ void combatManager::UpdateGridForMove(
 VA(0x00423707, 0xad)
 // clang-format on
 void combatManager::CombatMessage(char* text, b32 updateScreen) {
-    i32 oldCompute;
+    b32 oldCompute;
     tag_message message;
-    i32 prevLimit;
+    b32 prevLimit;
 
     SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, COMBAT_STATUS_TEXT_CONTROL);
     message.text = text;
     m_combatWindow->BroadcastMessage(message);
     oldCompute = gComputeExtent;
     prevLimit = gLimitToExtent;
-    gComputeExtent = gLimitToExtent = 0;
+    gComputeExtent = gLimitToExtent = false;
     m_combatWindow->DrawWindow(0, COMBAT_STATUS_FIRST_CONTROL, COMBAT_STATUS_TEXT_CONTROL);
     SaveCombatBorder();
     if (updateScreen)
@@ -347,8 +347,8 @@ void combatManager::DrawFrame(b8 updateScreen) {
         }
     }
     if (m_computeExtent) {
-        gLimitToExtent = 1;
-        gComputeExtent = 1;
+        gLimitToExtent = true;
+        gComputeExtent = true;
     }
     if (!m_drawRightToLeft) {
         for (row = 0; row < COMBAT_GRID_ROWS; row++) {
@@ -534,8 +534,8 @@ void combatManager::DrawFrame(b8 updateScreen) {
     if (m_computeExtent || m_redrawExtent) {
         m_computeExtent = false;
         m_redrawExtent = false;
-        gLimitToExtent = 0;
-        gComputeExtent = 0;
+        gLimitToExtent = false;
+        gComputeExtent = false;
         gFullCombatScreenDrawn = false;
         DelayTil(&gTimers[COMBAT_FRAME_TIMER_SLOT]);
         gTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;

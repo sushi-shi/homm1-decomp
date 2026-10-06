@@ -200,15 +200,15 @@ void CheckDoMain(i32, b32 doMain) {
         PollSound();
         if (gTimers[ADVENTURE_FRAME_TIMER_SLOT] < KBTickCount()) {
             if (doMain == false) {
-                i32 oldShowIt = gShowIt;
+                b32 oldShowIt = gShowIt;
                 i32 oldX = gAdvManager->m_previousOriginX;
                 i32 oldY = gAdvManager->m_previousOriginY;
                 gDrawSavedCursor = true;
                 if (gConfig.blackoutComputer == 0 && gRemoteOn == false)
-                    gShowIt = 1;
+                    gShowIt = true;
                 else
-                    gShowIt = 0;
-                if (gShowIt == 0)
+                    gShowIt = false;
+                if (gShowIt == false)
                     gSpecialHideCursor = true;
                 if (gAdvManager->ComboDraw(
                         gAdvManager->m_previousOriginX,
@@ -597,7 +597,7 @@ void philAI::DoAI(i32 player) {
     mapCell* eventCell;
     i32 unusedValue;
     b8 nextStopAfterStep;
-    i32 savedShowIt;
+    b32 savedShowIt;
     H1_ENUM_LOCAL(MapDirection, i32) adjacentDirection;
     i32 stopPosX;
     i32 stopPosY;
@@ -632,10 +632,10 @@ void philAI::DoAI(i32 player) {
         gShowComputerRoute = false;
         if (gConfig.blackoutComputer == 0 && gRemoteOn == false
             && (gGame->m_mapExtra[movingHero->m_x][movingHero->m_y] & gCurWatchPlayerHighBit)) {
-            gShowIt = 1;
+            gShowIt = true;
             gAdvManager->SetHeroContext(movingHero->m_id, false);
         } else {
-            gShowIt = 0;
+            gShowIt = false;
             gAdvManager->SetHeroContext(movingHero->m_id, false);
         }
         allMoveDone = false;
@@ -714,7 +714,7 @@ void philAI::DoAI(i32 player) {
                                 H1_ENUM_DECODE(MapDirection, gSearchArray->m_directions[pathIndex])
                             )) {
                             savedShowIt = gShowIt;
-                            gShowIt = 1;
+                            gShowIt = true;
                             gMouseManager->ReallyHidePointer();
                             gShowIt = savedShowIt;
                         }
@@ -758,7 +758,7 @@ void philAI::DoAI(i32 player) {
                             || (exhaustedMobility && !eventCell)))
                         allMoveDone = true;
                     savedShowIt = gShowIt;
-                    gShowIt = 1;
+                    gShowIt = true;
                     gMouseManager->ReallyShowPointer();
                     gShowIt = savedShowIt;
                     gAdvManager->UpdateRadar(true, false);
@@ -3206,7 +3206,7 @@ void philAI::TownEvent(mapCell* cell, hero* heroPointer, i32 x, i32 y) {
     gAdvManager->DemobilizeCurrHero();
     if (targetCastle->m_owner != gCurPlayer) {
         if (targetCastle->HasGarrison()) {
-            if (targetCastle->m_owner < 0 || gHumanPlayer[targetCastle->m_owner] == 0) {
+            if (targetCastle->m_owner < 0 || gHumanPlayer[targetCastle->m_owner] == false) {
                 heroVictory = QuickCombat(
                     &heroPointer->m_army,
                     heroPointer,

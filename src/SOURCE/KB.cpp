@@ -211,11 +211,11 @@ b8 gInCombat = false;
 DATA(0x004a9931)
 i8 gDirectConnect = 0;
 DATA(0x004a9934)
-i32 gComputeExtent = 0;
+b32 gComputeExtent = false;
 DATA(0x004a9938)
 b32 gSaveBiggestExtent = false;
 DATA(0x004a993c)
-i32 gLimitToExtent = 0;
+b32 gLimitToExtent = false;
 DATA(0x004a9940)
 H1_ENUM_STORAGE(AdvDisposeLevel, i32) gAdvDisposeLevel = ADV_DISPOSE_NONE;
 DATA(0x004a9944)
@@ -563,7 +563,7 @@ i32 oldmain(void) {
 
         if (gGameOver) {
             RemoteCleanup();
-            gShowIt = 1;
+            gShowIt = true;
             gMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
             gMouseManager->ReallyHidePointer();
             sprintf(gWinText, localization::Tr("campaign.victory"), gCurTurn);
@@ -1499,7 +1499,7 @@ VA(0x0043f6b3, 0x145)
 void PlayerDead(i32 player) {
     playerData* currentPlayer;
     i32 i;
-    gRetreatWin = 0;
+    gRetreatWin = false;
     currentPlayer = &gGame->m_players[player];
     gGame->m_playerDead[player] = true;
     ++gGame->m_deadPlayerCount;
@@ -1710,7 +1710,7 @@ void HandleRemoteDeadPlayerExit(i32 position) {
             REMOTE_MESSAGE_RELIABLE
         );
         RemoteCleanup();
-        gHumanPlayer[position] = 0;
+        gHumanPlayer[position] = false;
     }
 }
 
@@ -1795,7 +1795,7 @@ void ReceiveRemotePlayerExit(i8 position, i8 hadControl, b8 eliminated, b8 timed
             if (gNumHumanPlayers == REMOTE_PLAYER_COUNT) {
                 gNumHumanPlayers--;
                 RemoteCleanup();
-                gHumanPlayer[position] = 0;
+                gHumanPlayer[position] = false;
             }
         } else {
             RemoteCleanup();
@@ -2031,7 +2031,7 @@ void InitVars(void) {
     gGameCommand = MAIN_MENU_NO_COMMAND;
     gPalette = NULL;
     gPhilAI->m_debugFont = NULL;
-    gCombatSurrender = 0;
+    gCombatSurrender = false;
     gGame->m_dialogAnimationCounter = 0;
     gInNewGameSetup = false;
     for (i = 0; i < MAP_CELL_GROUND_TILE_COUNT; i++)
@@ -2303,7 +2303,7 @@ VA(0x004411a2, 0x65a)
 void PopNetBox(char* notice) {
     RemoteMessage* remoteData;
     b32 firstLineId;
-    i8 savedShowIt;
+    b8 savedShowIt;
     i32 heightValue;
     tag_message event;
     i8 pointerWasVisible;
@@ -2338,7 +2338,7 @@ void PopNetBox(char* notice) {
     inputLength = 0;
     pointerWasVisible = gMouseManager->IsVis();
     savedShowIt = gShowIt;
-    gShowIt = 1;
+    gShowIt = true;
     netBox = new heroWindow(0, 418, "netbox.bin");
     if (!netBox)
         MemError();
@@ -4606,7 +4606,7 @@ i32 gHighMemBuffer = 4000;
 #include <SOURCE/EVENTS.h>
 
 DATA(0x004a9414)
-i32 gHumanPlayer[4];
+b32 gHumanPlayer[4];
 // No retail code reads this; it holds its retail .bss place.
 DATA(0x004a9424)
 i32 gOldKBMark;
@@ -4666,7 +4666,7 @@ class font* gBigFont;
 DATA(0x004a7fb8)
 class icon* gSystemIcons;
 DATA(0x004a7495)
-i8 gCombatSurrender;
+b8 gCombatSurrender;
 DATA(0x004a7b80)
 char gMapName[13];
 DATA(0x004a9560)
@@ -4722,7 +4722,7 @@ class game* gGame;
 DATA(0x004a7ba4)
 i32 gKBOldId;
 DATA(0x004a7823)
-i8 gRetreatWin;
+b8 gRetreatWin;
 DATA(0x004a7b8d)
 H1_ENUM_STORAGE(DialogWaitType, i8) gWaitType;
 DATA(0x004a74e8)
@@ -4778,7 +4778,7 @@ char gMapDescription[124];
 DATA(0x004a7498)
 char* gDefaultAggregateName;
 DATA(0x004a7b94)
-i8 gThisNetHumanPlayer[4];
+b8 gThisNetHumanPlayer[4];
 DATA(0x004a78b0)
 char gAggPathName[352];
 DATA(0x004a7634)
@@ -4799,7 +4799,7 @@ char gWinText[300];
 DATA(0x004a7493)
 i8 gDataEntryTime;
 DATA(0x004a98bc)
-i32 gShowIt;
+b32 gShowIt;
 DATA(0x004a6c48)
 i32 gDebugLevel;
 DATA(0x004a74a8)

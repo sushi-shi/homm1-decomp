@@ -111,7 +111,7 @@ advManager::advManager(void) {
     m_routeMap = NULL;
     m_heroContextLocked = false;
     m_townContextLocked = false;
-    gShowIt = 1;
+    gShowIt = true;
     m_combatMonsterX = COMBAT_MONSTER_CELL_NONE;
     m_combatMonsterY = COMBAT_MONSTER_CELL_NONE;
     m_animationPhases[ANIMATION_PHASE_COLUMN_0] = ANIMATION_PHASE_COLUMN_0_INITIAL;
@@ -132,7 +132,7 @@ advManager::~advManager() {}
 
 VA(0x004012c3, 0xd5d)
 H1_ENUM_RETURN(BaseManagerStatus, i16) advManager::Open(i16 id) {
-    i32 savedShowIt;
+    b32 savedShowIt;
     b32 firstTime;
     i32 oldPlayerVal;
     i32 oldVolume;
@@ -141,7 +141,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) advManager::Open(i16 id) {
     firstTime = true;
     gCurBottomView = BOTTOM_VIEW_NONE;
     m_heroesLogoShown = false;
-    gShowIt = 0;
+    gShowIt = false;
     m_adventureBorder = NULL;
     for (i = 0; i < ADVMGR_BOTTOM_VIEW_WIDGET_COUNT; i++) {
         m_bottomViewPrimaryWidgets[i] = NULL;
@@ -324,7 +324,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) advManager::Open(i16 id) {
     savedShowIt = gShowIt;
     gCurPlayer = gCurWatchPlayer;
     gCurPlayerData = &gGame->m_players[gCurPlayer];
-    gShowIt = 1;
+    gShowIt = true;
     RedrawAdvScreen(true);
     gCurPlayer = oldPlayerVal;
     gShowIt = savedShowIt;
@@ -5925,7 +5925,7 @@ i32 gAdvSpareInt;
 
 VA(0x0040f55c, 0x2f7)
 void advManager::TeleportTo(i32 x, i32 y, i32) {
-    i32 savedShow;
+    b32 savedShow;
     i32 curFizzle;
     mapCell* location;
     mapCell* savedOldCell;
@@ -5948,9 +5948,9 @@ void advManager::TeleportTo(i32 x, i32 y, i32) {
     if (!gHumanPlayer[gCurPlayer]) {
         if (!gConfig.blackoutComputer && !gRemoteOn
             && (gGame->m_mapExtra[mapHero->m_x][mapHero->m_y] & gCurWatchPlayerHighBit))
-            gShowIt = 1;
+            gShowIt = true;
         else
-            gShowIt = 0;
+            gShowIt = false;
     }
     if (savedShow)
         HideRoute(true, true, true);
@@ -6627,8 +6627,8 @@ RemoteMessage* advManager::CheckHandleNet(void) {
                 break;
             case REMOTE_COMMAND_PLAYER_EXIT:
                 ReceiveRemotePlayerExit(
-                    receivedPacket->payload.data[0],
-                    receivedPacket->payload.data[1],
+                    receivedPacket->payload.data[REMOTE_PLAYER_EXIT_POSITION],
+                    receivedPacket->payload.data[REMOTE_PLAYER_EXIT_HAD_CONTROL],
                     false,
                     false
                 );

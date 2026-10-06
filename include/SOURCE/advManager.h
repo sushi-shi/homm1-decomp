@@ -496,8 +496,8 @@ public:
         i32 randomSeed,
         i8 remotePlayer,
         i8 combatResult,
-        i8 retreatWin,
-        i8 combatSurrender
+        b8 retreatWin,
+        b8 combatSurrender
     );
     void ReceiveHeroTownData(
         RemoteMessage* packet,
@@ -513,8 +513,8 @@ public:
         i32* setupCombatY,
         i32* randomSeed,
         i8* combatResult,
-        i8* retreatWin,
-        i8* combatSurrender
+        b8* retreatWin,
+        b8* combatSurrender
     );
 };
 #pragma pack(pop)

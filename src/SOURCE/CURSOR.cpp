@@ -72,7 +72,7 @@ void advManager::DrawCursor(void) {
     i16 posY;
     i16 drawFrame;
 
-    if (gShowIt == 0 || gSpecialHideCursor)
+    if (gShowIt == false || gSpecialHideCursor)
         return;
     if (gDrawSavedCursor) {
         m_cursorDirection = gSavedCursorDirection;

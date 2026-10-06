@@ -319,10 +319,10 @@ i16 army::FlyTo(i16 destination) {
         gMinExtentX = gMinExtentY;
         gMaxExtentY = 0;
         gMaxExtentX = gMaxExtentY;
-        gComputeExtent = 1;
+        gComputeExtent = true;
         gSaveBiggestExtent = true;
         DrawToBuffer(inFlightX, inFlightY);
-        gComputeExtent = 0;
+        gComputeExtent = false;
         gSaveBiggestExtent = false;
         if (gMinExtentX < 0)
             gMinExtentX = 0;

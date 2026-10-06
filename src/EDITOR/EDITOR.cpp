@@ -56,7 +56,7 @@ H1_ENUM_ARRAY(i16, gRadarTerrainColor, TerrainType, 24) = {
 DATA(0x0043edd0)
 i16 gVesaMode[6] = {640, 480, 256, 20226, 257, 0};
 DATA(0x0043eddc)
-i32 gShowIt = 1;
+b32 gShowIt = true;
 DATA(0x0043ede0)
 b32 gEnlargeScreenBlit = true;
 DATA(0x0043ede4)
@@ -1361,13 +1361,13 @@ H1_ENUM_ARRAY(i32, gTimers, TimerSlot, GLOBAL_TIMER_COUNT);
 DATA(0x0045287c)
 char gCurMapName[16] = "";
 DATA(0x0045288c)
-i32 gComputeExtent = 0;
+b32 gComputeExtent = false;
 DATA(0x00452890)
 b32 gCurrArmyDrawn = false;
 DATA(0x00452894)
 b8 gIconClipOn = false;
 DATA(0x00452898)
-i32 gLimitToExtent = 0;
+b32 gLimitToExtent = false;
 DATA(0x0045289c)
 b32 gLoadingMonoIcon = false;
 DATA(0x004528a0)

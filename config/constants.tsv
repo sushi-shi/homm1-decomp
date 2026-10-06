@@ -6,7 +6,7 @@
 # (tab-separated; every field is an fnmatch glob, `*` matches anything; the
 # first matching row wins): file owner spelling group detail reason.
 # group/detail are the census' review_group/review_context columns.
-#floor	28
+#floor	9
 *	*	0	trivial-function-literal	0 for-init	a for loop's counter starts at zero
 *	*	0	trivial-function-literal	0 initializer*	an accumulator or counter declared at zero
 *	*	1	trivial-function-literal	1 arithmetic*	a one-step offset: the next index, element or count
@@ -141,9 +141,6 @@ src/SOURCE/AI.cpp	*	1	trivial-function-literal	1 bitwise	the single bit (1 << n)
 src/SOURCE/FINDPATH.cpp	*	1	trivial-function-literal	1 bitwise	the single bit (1 << n) of a bit mask or set
 src/SOURCE/HEXCELL.cpp	*	1	trivial-function-literal	1 bitwise	the single bit (1 << n) of a bit mask or set
 src/SOURCE/AI.cpp	*	1	trivial-function-literal	1 initializer	a bit mask's first bit or a run counter starting at one
-src/SOURCE/FLY.cpp	*	[01]	trivial-function-literal	[01] store gComputeExtent	a global int flag (BOOL-like; windows.h is not in scope) set or cleared
-src/SOURCE/DRAWING.cpp	*	[01]	trivial-function-literal	[01] store gLimitToExtent	a global int flag (BOOL-like; windows.h is not in scope) set or cleared
-src/SOURCE/DRAWING.cpp	*	[01]	trivial-function-literal	[01] store gComputeExtent	a global int flag (BOOL-like; windows.h is not in scope) set or cleared
 src/SOURCE/ARMY.cpp	*	[01]	trivial-function-literal	[01] store m_limitCreatureCount[]	a stack marked (1) or cleared (0) for the limited redraw
 src/SOURCE/FINDPATH.cpp	*	[01]	trivial-function-literal	[01] store visited	a search node's visited bit
 src/SOURCE/FINDPATH.cpp	*	[01]	trivial-function-literal	[01] store rvFlag2	a search node's beyond-mobility bit
@@ -258,8 +255,6 @@ src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_heroCastSpell[[][]
 src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 bitwise	an odd/even row test or a single low bit
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_sideRetreated[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store gEffectFileId	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store gbRetreatWin	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store gbCombatSurrender	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_sideSurrendered[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 array-index musicList	the first or second element of a local buffer, table or slot pair
 src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 array-index musicList	the first or second element of a local buffer, table or slot pair
@@ -297,7 +292,6 @@ src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 store m_keepAttacksRemaini
 src/SOURCE/COMMAND.cpp	*	0	trivial-function-literal	0 store m_heroCastSpell[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/COMMAND.cpp	*	0	trivial-function-literal	0 store m_hitPointsLost	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/COMMAND.cpp	*	0	trivial-function-literal	0 equality m_spellRounds	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
-src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 store gbRetreatWin	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 equality ValidPath()	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
 src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 equality DoSurrender()	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
 src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 initializer	a counter or frame starting at one
@@ -311,7 +305,6 @@ src/SOURCE/COMMAND.cpp	*	-1	trivial-function-literal	-1 store iCurTransferArtifa
 src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 bound gNumHumanPlayers	a bound at one (the last remaining item, more than one)
 src/SOURCE/COMMAND.cpp	*	0	trivial-function-literal	0 store giSurrenderCost	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 store m_sideRetreated[[][]]	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 store gbCombatSurrender	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 store m_sideSurrendered[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/PATH.cpp	*	0	trivial-function-literal	0 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
 src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
@@ -470,7 +463,6 @@ src/SOURCE/SPELLS.cpp	combatManager::Armageddon	*	*	*	the palette fade's step co
 src/SOURCE/VIEW.cpp	combatManager::ViewGeneral	*	call-argument	sprintf(* argument 1[1-4]	the morale/luck label rows and the -3..3 text table offset
 src/SOURCE/comwin.cpp	com_init	*	*	*	the port name buffer, CreateFileA's no-share/no-flag zeros and 8 data bits
 src/SOURCE/netwin.cpp	nb_thr_ctl	0	call-argument	WaitFor*(* argument [24]	a zero (poll) wait timeout
-src/SOURCE/GAME.cpp	*	-1	trivial-function-literal	-1 equality gForceSwitchMusic	a -1 not-found / unset local index or retail table sentinel without a domain name
 src/SOURCE/GAME.cpp	*	-1	trivial-function-literal	-1 initializer	a -1 not-found / unset local index or retail table sentinel without a domain name
 src/SOURCE/TOWN.cpp	*	-1	trivial-function-literal	-1 store foundIndex	a -1 not-found / unset local index or retail table sentinel without a domain name
 src/SOURCE/ARMYGRP.cpp	*	0	trivial-function-literal	0 return	a 0/1 predicate or success result of a non-BOOL (signed char/int/short) function
@@ -484,11 +476,9 @@ src/SOURCE/TOWN.cpp	*	1	trivial-function-literal	1 return	a 0/1 predicate or suc
 src/SOURCE/TOWNMGR.cpp	*	0	trivial-function-literal	0 return	a 0/1 predicate or success result of a non-BOOL (signed char/int/short) function
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 return	a 0/1 predicate or success result of a non-BOOL (signed char/int/short) function
 src/SOURCE/kbwin.cpp	*	1	trivial-function-literal	1 return	a 0/1 predicate or success result of a non-BOOL (signed char/int/short) function
-src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store bShowIt	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store taken[[]]	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 equality m_active	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 equality taken[[]]	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
-src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 store bShowIt	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 store one	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 store taken[[]]	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/HISCORE.cpp	*	0	trivial-function-literal	0 store m_active	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
@@ -550,8 +540,6 @@ src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 equality m_daysLeft	a count, 
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 equality m_month	a count, day/week or index of one (the first or a single item)
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 equality m_week	a count, day/week or index of one (the first or a single item)
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 for-init	a count, day/week or index of one (the first or a single item)
-src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 store gbHumanPlayer[[]]	a count, day/week or index of one (the first or a single item)
-src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 store gbThisNetHumanPlayer[[]]	a count, day/week or index of one (the first or a single item)
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 store gNumHumanPlayers	a count, day/week or index of one (the first or a single item)
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 store iMaxMapExtra	a count, day/week or index of one (the first or a single item)
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 store m_campaignDay	a count, day/week or index of one (the first or a single item)
@@ -576,8 +564,6 @@ src/SOURCE/ARMYGRP.cpp	*	0	trivial-function-literal	0 store m_creatureCounts[[]]
 src/SOURCE/ARMYGRP.cpp	*	0	trivial-function-literal	0 store morale	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/ARMYGRP.cpp	*	0	trivial-function-literal	0 store numRaces	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store gText[[]]	a counter, accumulator, coordinate or field reset to zero
-src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store gbHumanPlayer[[]]	a counter, accumulator, coordinate or field reset to zero
-src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store gbThisNetHumanPlayer[[]]	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store giCurPlayer	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store gMineTypeNums[[]]	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store gNumHumanPlayers	a counter, accumulator, coordinate or field reset to zero
@@ -661,7 +647,6 @@ src/SOURCE/TOWNMGR.cpp	*	0	trivial-function-literal	0 equality	a zero test of a 
 src/SOURCE/TOWNMGR.cpp	*	0	trivial-function-literal	0 equality m_splitAmount	a zero test of a count, id or index (no sentinel name: zero is the first or empty value)
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality	a zero test of a count, id or index (no sentinel name: zero is the first or empty value)
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality bProcessMessage[[]]	a zero test of a count, id or index (no sentinel name: zero is the first or empty value)
-src/SOURCE/GAME.cpp	*	-1	trivial-function-literal	-1 equality handle	the -1 failure result of the CRT open/_lseek/access/_chdir (and CreateBoat's no-boat result)
 src/SOURCE/kbwin.cpp	*	-1	trivial-function-literal	-1 equality _chdir()	the -1 failure result of the CRT open/_lseek/access/_chdir (and CreateBoat's no-boat result)
 src/SOURCE/kbwin.cpp	*	-1	trivial-function-literal	-1 equality tailResult	the -1 failure result of the CRT open/_lseek/access/_chdir (and CreateBoat's no-boat result)
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 array-index gCampaignSideCrests	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
@@ -985,8 +970,6 @@ src/SOURCE/kbwin.cpp	ResizeWindow	1	call-argument	MoveWindow(HWND, int, int, int
 src/SOURCE/kbwin.cpp	SetMenus	-1	trivial-function-literal	-1 cxx_static_cast_expr	GetMenuItemID's (UINT)-1 for a submenu entry (no Win32 macro in the VC4 headers)
 src/SOURCE/PHILAI.cpp	philAI::QuickCombat	-1	call-argument	ProbableOutcomeOfBattle(*	no defending player in the m_owner ternary: retail's int literal (an enumerator narrows VC4's ?: result to char)
 src/SOURCE/PHILAI.cpp	philAI::ChooseEvaluateBattle	-1	call-argument	ProbableOutcomeOfBattle(*	no defending player in the m_owner ternary: retail's int literal (an enumerator narrows VC4's ?: result to char)
-src/SOURCE/PHILAI.cpp	*	[01]	trivial-function-literal	[01] store bShowIt	gShowIt, the adventure code's shared integer show-the-move flag (stored 0/1 and tested against 0 by CURSOR/EVENTS/ADVMGR)
-src/SOURCE/PHILAI.cpp	*	0	trivial-function-literal	0 equality bShowIt	gShowIt, the adventure code's shared integer show-the-move flag (stored 0/1 and tested against 0 by CURSOR/EVENTS/ADVMGR)
 src/SOURCE/PHILAI.cpp	*	0	trivial-function-literal	0 equality blackoutComputer	gConfig.blackoutComputer, the saved integer option: 0 shows the computer's moves
 src/SOURCE/PHILAI.cpp	*	0	call-argument	CheckDoMain(i32, b32) argument 1	CheckDoMain's first argument, which it never reads
 src/SOURCE/PHILAI.cpp	*	0	trivial-function-literal	0 store m_remainingMobility	the hero's remaining movement points spent: its move ends this turn
@@ -1091,7 +1074,6 @@ src/SOURCE/PHILAI.cpp	philAI::CombatMonsterEvent	0	trivial-function-literal	0 st
 src/SOURCE/PHILAI.cpp	philAI::CombatMonsterEvent	0	trivial-function-literal	0 equality result	QuickCombat's integer victory result: the hero lost
 src/SOURCE/PHILAI.cpp	philAI::CombatMonsterEvent	[01]	trivial-function-literal	[01] return	CombatMonsterEvent's i8 victory result for advManager (1 won, 0 lost)
 src/SOURCE/PHILAI.cpp	philAI::DamageGroup	[01]	trivial-function-literal	[01] return	DamageGroup's integer result: 1 when the group was destroyed
-src/SOURCE/PHILAI.cpp	philAI::TownEvent	0	trivial-function-literal	0 equality gbHumanPlayer[[][]]	gHumanPlayer's integer entry: a computer player
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	0	trivial-function-literal	0 store gVisitResult	the event is worth nothing to this hero
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	0	trivial-function-literal	0 store g*	a sum, score or estimate reset to zero before it accumulates
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	0	trivial-function-literal	0 store liveChance	no chance to survive the event
@@ -1265,10 +1247,8 @@ src/SOURCE/EVENTS.cpp	*	1	trivial-function-literal	1 bound portalCount	at least 
 src/SOURCE/EVENTS.cpp	advManager::EventWindow	1	trivial-function-literal	1 store newUnused	a retail local stored and never read (i16)
 src/SOURCE/EVENTS.cpp	advManager::DoWhirlpool	1	trivial-function-literal	1 bound *	a single stack or a single creature, which the whirlpool spares from halving away
 src/SOURCE/EVENTS.cpp	advManager::DoAIEvent	1	trivial-function-literal	1 store m_creatureCounts[[]]	one dragon per slot: the probe army the AI weighs Dragon City's guards with
-src/SOURCE/EVENTS.cpp	*	0	trivial-function-literal	0 store gbRetreatWin	KB.h's retreat-win byte (i8, also sent as a network combat field) cleared after a battle
 src/SOURCE/EVENTS.cpp	advManager::DoNetCombat	1	trivial-function-literal	1 return	DoNetCombat's handled result (i32)
 src/SOURCE/EVENTS.cpp	advManager::DoCombat	1	trivial-function-literal	1 condition	an unconditional loop (left by break)
-src/SOURCE/EVENTS.cpp	advManager::DoCombat	1	trivial-function-literal	1 store bShowIt	KB.h's gShowIt (an i32 flag) forced on to show the battle
 src/SOURCE/EVENTS.cpp	advManager::SendHeroTownData	0	trivial-function-literal	0 conditional	no gold to report for an absent hero
 src/SOURCE/CURSOR.cpp	*	0	trivial-function-literal	0 store m_remainingMobility	the hero's movement points used up (the step ends its move)
 src/SOURCE/CURSOR.cpp	advManager::MoveHero	0	trivial-function-literal	0 store m_scrollOffset[XY]	the view's pixel scroll back at rest on the new origin
@@ -1279,10 +1259,8 @@ src/SOURCE/CURSOR.cpp	advManager::TurnTo	-1	trivial-function-literal	-1 store in
 src/SOURCE/CURSOR.cpp	*	[01]	trivial-function-literal	[01] store m_cursorTurning	the cursor's turning flag, an i16 (saved in gSavedCursorTurning) with no 16-bit flag type
 src/SOURCE/CURSOR.cpp	advManager::StopCursor	0	trivial-function-literal	0 store EveryOther	gEveryOther, the alternate-frame toggle flipped as 1 - gEveryOther
 src/SOURCE/CURSOR.cpp	advManager::ValidMove*	[01]	trivial-function-literal	[01] return	ValidMove's i16 yes/no result (callers test it for truth; no 16-bit flag type)
-src/SOURCE/CURSOR.cpp	advManager::DrawCursor	0	trivial-function-literal	0 equality bShowIt	KB.h's gShowIt (an i32 flag) off: nothing to draw
 src/SOURCE/HERO.cpp	hero::HeroView	1	trivial-function-literal	1 store magnitude	at least one luck/morale icon (neutral shows one)
 src/SOURCE/HISCORE.cpp	*	0	call-argument	CyrillicToUpper(char) argument 1	the text's first character, capitalized
-src/SOURCE/HISCORE.cpp	*	-1	trivial-function-literal	-1 equality inputFile	the -1 failure result of the CRT open
 src/SOURCE/PATH.cpp	army::FindPath	0	trivial-function-literal	0 store retVal	no path (FindCombatPath's empty result) to a target off the grid
 src/SOURCE/PATH.cpp	army::Get*Mask	0	*	*	an empty direction mask (no direction blocked yet)
 src/SOURCE/PATH.cpp	army::GetAttackMask	1	trivial-function-literal	1 store curDirBit	the first direction's bit, shifted left once per direction
@@ -1302,7 +1280,6 @@ src/SOURCE/TOWNMGR.cpp	townManager::SetupThievesGuild	*	trivial-function-literal
 src/SOURCE/TOWNMGR.cpp	townManager::GetCategoryStats	0	trivial-function-literal	0 store *	a per-player counter reset to zero
 src/SOURCE/GAME.cpp	game::SaveGame	0	trivial-function-literal	0 store nHuman	a human-seat counter reset to zero
 src/SOURCE/GAME.cpp	game::SaveGame	0	trivial-function-literal	0 store humans[[]]	a dead seat saved as not human (the saved byte copies gHumanPlayer)
-src/SOURCE/GAME.cpp	*	-1	trivial-function-literal	-1 equality *	the -1 failure result of the CRT open
 src/SOURCE/GAME.cpp	game::NewMap	0	trivial-function-literal	0 store *	the first town name, and a town name marked taken in the Scan table (free entries are GAME_TABLE_FREE)
 src/SOURCE/GAME.cpp	game::RandomizeEvents	1	trivial-function-literal	1 store *	the first obelisk and site id (map ids are 1-based)
 src/SOURCE/GAME.cpp	game::ViewArmy	164	store	store to posY	retail window/screen layout in pixels
@@ -1534,3 +1511,4 @@ src/SOURCE/KB.cpp	ReceiveRemotePlayerExit	0	*	*CyrillicToUpper*	the text's first
 src/SOURCE/KB.cpp	ReceiveRemotePlayerExit	0	trivial-function-literal	0 array-index gText	the text's first letter, capitalised
 src/SOURCE/KB.cpp	ShowCongrats	0	*	*	the player name's first letter, capitalised
 src/SOURCE/kbwin.cpp	SetupCDDrive	0	call-argument	DriveSupportsFreeSpaceQuery(char) argument 1	the drive letter, the CD path's first character
+src/SOURCE/ADVMGR.cpp	advManager::CheckHandleNet	0	call-argument	ReceiveRemotePlayerExit(* argument 2	ReceiveRemotePlayerExit's hadControl, which it never reads: the exiting guest had no control

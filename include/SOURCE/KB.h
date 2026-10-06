@@ -52,7 +52,7 @@ extern i8 gTerrainCost[FINDPATH_TERRAIN_COUNT][FINDPATH_STEP_COST_COUNT];
 // The terrain type under a map cell.
 #define CELL_TERRAIN(cell) (gGroundToTerrain[(cell)->m_tileIndex])
 #define gShowIt bShowIt // spelling fixes .bss order
-extern i32 gShowIt;
+extern b32 gShowIt;
 extern char gText[];
 extern H1_ENUM_ARRAY(char*, gArmyNames, CreatureType, CREATURE_COUNT);
 // Locale-independent resource stems; display names stay in the catalog.
@@ -86,7 +86,7 @@ extern class heroWindow* gNormalDialogWindow;
 #define gAdvManager gpAdvManager // spelling fixes .bss order
 extern class advManager* gAdvManager;
 #define gThisNetHumanPlayer gbThisNetHumanPlayer // spelling fixes .bss order
-extern i8 gThisNetHumanPlayer[];
+extern b8 gThisNetHumanPlayer[];
 #define gTownManager gpTownManager // spelling fixes .bss order
 extern class townManager* gTownManager;
 #define gCombatManager gpCombatManager // spelling fixes .bss order
@@ -271,7 +271,7 @@ extern char gMapDescription[];
 extern char gAggPathName[];
 extern i32 gNumHumanPlayers;
 #define gHumanPlayer gbHumanPlayer // spelling fixes .bss order
-extern i32 gHumanPlayer[];
+extern b32 gHumanPlayer[];
 void InitMainClasses(void);
 void InitVars(void);
 b32 InterpretCommandLine(void);
@@ -298,11 +298,11 @@ void HandleRemoteDeadPlayerExit(i32 position);
 void CheckEndGame(b32 forceWin);
 void HandleRemoteSuddenExit(void);
 #define gRetreatWin gbRetreatWin // spelling fixes .bss order
-extern i8 gRetreatWin;
+extern b8 gRetreatWin;
 extern b8 gGameInitialized;
 extern H1_ENUM_STORAGE(MainMenuControl, i16) gGameCommand;
 #define gCombatSurrender gbCombatSurrender // spelling fixes .bss order
-extern i8 gCombatSurrender;
+extern b8 gCombatSurrender;
 // The new-map builder raises this while it claims towns and mines.
 #define gInNewGameSetup gbInNewGameSetup // spelling fixes .bss order
 extern b32 gInNewGameSetup;
@@ -417,11 +417,11 @@ struct tag_tilePoint {
 struct SPlayerExit {
     i8 player[7];
 };
-extern i32 gComputeExtent;
+extern b32 gComputeExtent;
 extern b32 gCurrArmyDrawn;
 #define gIconClipOn gbIconClipOn // spelling fixes .bss order
 extern b8 gIconClipOn;
-extern i32 gLimitToExtent;
+extern b32 gLimitToExtent;
 extern b32 gSaveBiggestExtent;
 #define gMaxExtentX giMaxExtentX // spelling fixes .bss order
 extern i32 gMaxExtentX;

@@ -480,7 +480,7 @@ i16 game::SaveGame(char* filename, b8 generateName) {
             strcpy(gGame->m_saveName, filename);
     }
     outFile = open(savePath, O_WRONLY | O_CREAT | O_TRUNC | O_BINARY, S_IWRITE);
-    if (outFile == -1)
+    if (outFile == FILE_DESCRIPTOR_INVALID)
         FileError(savePath);
     WRITE_FILE_VALUE(outFile, gIAmGreatest);
     write(outFile, this, 2);
@@ -561,7 +561,7 @@ i16 game::LoadGame(char* filename, b32 origData, b32) {
     else
         sprintf(pathName, "%s%s", gGamePath, filename);
     theLoadHandle = open(pathName, O_BINARY);
-    if (theLoadHandle == -1)
+    if (theLoadHandle == FILE_DESCRIPTOR_INVALID)
         FileError(pathName);
     ClearMapExtra();
     READ_FILE_VALUE(theLoadHandle, gIAmGreatest);
@@ -592,19 +592,19 @@ i16 game::LoadGame(char* filename, b32 origData, b32) {
         if ((theHumans[ix] || gDebugLevel >= GAME_DEBUG_LEVEL_ALL_HUMAN_MIN)
             && numHumans < gNumHumanPlayers) {
             numHumans++;
-            gHumanPlayer[ix] = 1;
+            gHumanPlayer[ix] = true;
         } else {
-            gHumanPlayer[ix] = 0;
+            gHumanPlayer[ix] = false;
         }
     }
     for (ix = 0; ix < GAME_PLAYER_COUNT; ix++) {
         if (gHumanPlayer[ix]) {
             if (!gRemoteOn || ix == gThisGamePos)
-                gThisNetHumanPlayer[ix] = 1;
+                gThisNetHumanPlayer[ix] = true;
             else
-                gThisNetHumanPlayer[ix] = 0;
+                gThisNetHumanPlayer[ix] = false;
         } else {
-            gThisNetHumanPlayer[ix] = 0;
+            gThisNetHumanPlayer[ix] = false;
         }
     }
     READ_FILE_VALUE(theLoadHandle, m_day);
@@ -1812,7 +1812,7 @@ i16 game::LoadMap(char* filename) {
 
     sprintf(gText, "%s%s", gMapPath, filename);
     handle = open(gText, O_BINARY);
-    if (handle == -1)
+    if (handle == FILE_DESCRIPTOR_INVALID)
         FileError(gText);
     READ_FILE_VALUE(handle, theVersion);
     if (theVersion == MAP_HEADER_ID) {
@@ -2878,7 +2878,7 @@ void game::NextPlayer(void) {
         SetNoDialogMenus(0);
         gBottomViewOverride = BOTTOM_VIEW_OVERRIDE_DISABLED;
         ShowComputerScreen();
-        gShowIt = 0;
+        gShowIt = false;
         if (gRemoteOn && (gHumanPlayer[gCurPlayer] || gThisGamePos != gHostGamePos)) {
             if (!gHumanPlayer[gCurPlayer])
                 remoteVal = gHostGamePos;
@@ -2910,7 +2910,8 @@ void game::NextPlayer(void) {
     DoNewTurn();
     gMouseManager->ReallyShowPointer();
     CheckEndGame(false);
-    if (gThisNetHumanPlayer[gCurPlayer] && gRemoteOn && m_day != 1 && gForceSwitchMusic == -1) {
+    if (gThisNetHumanPlayer[gCurPlayer] && gRemoteOn && m_day != 1
+        && gForceSwitchMusic == FORCED_MUSIC_IDLE) {
         PlayMusic(MUSIC_TRACK_NETWORK_TURN);
         gForceSwitchMusic = KBTickCount();
     }
@@ -3985,7 +3986,7 @@ void game::SetupAdjacentMons(void) {
 VA(0x004363dc, 0x55)
 void game::CancelComputerScreen(void) {
     TurnOffAIMusic();
-    gShowIt = 1;
+    gShowIt = true;
     i32 i;
     for (i = ADVMGR_PANEL_BUTTON_FIRST; i <= ADVMGR_PANEL_BUTTON_LAST; ++i)
         gWindowManager->BroadcastMessage(
@@ -3999,8 +4000,8 @@ void game::CancelComputerScreen(void) {
 VA(0x00436431, 0x105)
 void game::ShowComputerScreen(void) {
     if (gConfig.blackoutComputer || gRemoteOn) {
-        i32 saved = gThisNetHumanPlayer[gCurPlayer];
-        gThisNetHumanPlayer[gCurPlayer] = 1;
+        b32 saved = gThisNetHumanPlayer[gCurPlayer];
+        gThisNetHumanPlayer[gCurPlayer] = true;
         i32 i;
         for (i = ADVMGR_PANEL_BUTTON_FIRST; i <= ADVMGR_PANEL_BUTTON_LAST; ++i)
             gWindowManager->BroadcastMessage(
@@ -4359,9 +4360,9 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
         mainOutData = static_cast<char*>(malloc(dataSize));
     dataObj = static_cast<char*>(malloc(dataSize));
     mainFile = open(curPathname, O_BINARY);
-    if (mainFile == -1)
+    if (mainFile == FILE_DESCRIPTOR_INVALID)
         FileError(curPathname);
-    if (mainFile == -1) {
+    if (mainFile == FILE_DESCRIPTOR_INVALID) {
         goto cleanup;
     }
     {
@@ -4564,7 +4565,7 @@ b32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
         decodedData = curInData;
     sprintf(pathname, "%s%s", gDataPath, "REMOTE.GAM");
     handleValue = open(pathname, O_WRONLY | O_CREAT | O_TRUNC | O_BINARY, S_IWRITE);
-    if (handleValue == -1)
+    if (handleValue == FILE_DESCRIPTOR_INVALID)
         FileError(pathname);
     write(handleValue, decodedData, dataSize);
     close(handleValue);

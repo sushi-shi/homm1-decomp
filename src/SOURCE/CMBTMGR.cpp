@@ -221,8 +221,8 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) combatManager::Open(i16 priority) {
     m_limitCreatureHex = ARMY_HEX_INVALID;
     m_previousCommand = COMBAT_INVALID_COMMAND;
     GenerateMap();
-    gRetreatWin = 0;
-    gCombatSurrender = 0;
+    gRetreatWin = false;
+    gCombatSurrender = false;
     m_sideSurrendered[COMBAT_DEFENDER_SIDE] = 0;
     m_sideSurrendered[COMBAT_ATTACKER_SIDE] = 0;
     m_limitCreature = true;

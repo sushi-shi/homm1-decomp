@@ -464,11 +464,11 @@ void army::Walk(H1_ENUM_PARAM(CombatHexDirection, i16) direction, b8 standAfter,
     if (!continued) {
         gMinExtentX = gMinExtentY = COMBAT_EXTENT_MIN_START;
         gMaxExtentX = gMaxExtentY = 0;
-        gComputeExtent = 1;
+        gComputeExtent = true;
         gSaveBiggestExtent = true;
         DrawToBuffer(gCombatManager->m_hexCells[m_hex].m_x, gCombatManager->m_hexCells[m_hex].m_y);
         gSaveBiggestExtent = false;
-        gComputeExtent = 0;
+        gComputeExtent = false;
     }
     if (gMinExtentX < 0)
         gMinExtentX = 0;
@@ -571,10 +571,10 @@ void army::Walk(H1_ENUM_PARAM(CombatHexDirection, i16) direction, b8 standAfter,
         }
         gMinExtentX = gMinExtentY = COMBAT_EXTENT_MIN_START;
         gMaxExtentX = gMaxExtentY = 0;
-        gComputeExtent = 1;
+        gComputeExtent = true;
         gSaveBiggestExtent = true;
         DrawToBuffer(gCombatManager->m_hexCells[m_hex].m_x, gCombatManager->m_hexCells[m_hex].m_y);
-        gComputeExtent = 0;
+        gComputeExtent = false;
         gSaveBiggestExtent = false;
         if (gMinExtentX < 0)
             gMinExtentX = 0;
@@ -585,13 +585,13 @@ void army::Walk(H1_ENUM_PARAM(CombatHexDirection, i16) direction, b8 standAfter,
         if (gMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
             gMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
         gCurrArmyDrawn = false;
-        gComputeExtent = 1;
-        gLimitToExtent = 1;
+        gComputeExtent = true;
+        gLimitToExtent = true;
         m_drawShadow = false;
         gCombatManager->DrawFrame(false);
         m_drawShadow = true;
-        gLimitToExtent = 0;
-        gComputeExtent = 0;
+        gLimitToExtent = false;
+        gComputeExtent = false;
         gCurrArmyDrawn = true;
         if (gMinExtentX < boundMinX)
             boundMinX = gMinExtentX;

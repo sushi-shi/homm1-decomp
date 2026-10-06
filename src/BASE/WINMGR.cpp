@@ -434,7 +434,7 @@ void heroWindowManager::Cleanup(void) {}
 
 VA(0x0046abe6, 0xf3)
 void heroWindowManager::SaveFizzleSource(i16 x, i16 y, i16 width, i16 height) {
-    if (gShowIt == 0)
+    if (gShowIt == false)
         return;
     if (m_fizzleSource != NULL)
         delete m_fizzleSource;
@@ -542,7 +542,7 @@ void heroWindowManager::FizzleForward(i16 x, i16 y, i16 width, i16 height, i32 d
     i32 sourceX;
     i8* cycleTable;
     i32 savedUpdateFlags;
-    if (gShowIt == 0)
+    if (gShowIt == false)
         return;
     gEnlargeScreenBlit = false;
     tickStart = 0;
