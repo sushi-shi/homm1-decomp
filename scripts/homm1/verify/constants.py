@@ -857,10 +857,10 @@ def scan_entries(entries: list[dict], *, repo: Path = REPO, jobs: int = 1):
 def scan(*, cdb: Path = CDB, repo: Path = REPO, jobs: int = 1):
     if not cdb.is_file():
         raise FileNotFoundError(f"{cdb}: no compile database; run homm1 configure")
-    entries = json.loads(cdb.read_text())
-    entries = [entry for entry in entries
-               if Path(entry["file"]).suffix in (".c", ".cpp")
-               and str(entry["file"]).replace("\\", "/").startswith("src/")]
+    # The editor-only units (src/EDITOR) are read with the editor's compile
+    # commands, so one census and one floor cover both programs.
+    from homm1.verify.srcscan import project_compile_entries
+    entries = project_compile_entries(json.loads(cdb.read_text()))
     if not entries:
         raise RuntimeError(f"{cdb}: no project C++ translation units")
     return scan_entries(entries, repo=repo, jobs=jobs)

@@ -156,3 +156,26 @@ def index_classes() -> dict[str, tuple[int, list[str]]]:
             if prev is None or own > prev[0]:
                 out[name] = (own, bases)
     return out
+
+
+def project_compile_entries(entries: list[dict]) -> list[dict]:
+    """The project C/C++ units of a compile database, plus the units only
+    another image compiles (src/EDITOR), read with that image's commands, so
+    a source census covers every program's sources."""
+    import json
+
+    from homm1.core.paths import DEFAULT_IMAGE, image_build, images
+    entries = list(entries)
+    seen = {entry["file"] for entry in entries}
+    for image in images():
+        other = image_build(image) / "clangd/compile_commands.json"
+        if image == DEFAULT_IMAGE or not other.is_file():
+            continue
+        for entry in json.loads(other.read_text()):
+            if entry["file"] not in seen:
+                seen.add(entry["file"])
+                entries.append(entry)
+    return [entry for entry in entries
+            if Path(entry["file"]).suffix in (".c", ".cpp")
+            and str(entry["file"]).replace("\\", "/").startswith("src/")]
+
