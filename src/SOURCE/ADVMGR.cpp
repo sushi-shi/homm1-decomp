@@ -111,6 +111,9 @@ advManager::advManager(void) {
     m_cursorFrameCount = 0;
     m_cursorCycle = CURSOR_CYCLE_STOPPED;
     m_cursorTurning = 0;
+    // Compared before it is first set (SetHeroContext); none yet, so the
+    // first hero's terrain starts its music.
+    m_currentTerrain = TERRAIN_INVALID;
 }
 
 advManager::~advManager() {}

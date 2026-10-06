@@ -78,6 +78,11 @@ void army::Init(
     m_unused29 = 6;
     m_spellEffect = SPELL_NONE;
     m_spellEndCondition = ARMY_CANCEL_SPELLS_NONE;
+    // Not set here in the original: the luck of the first strike and the
+    // spell countdown of a new stack were what the memory held (zero in a
+    // freshly allocated combat manager, a previous battle's stack later).
+    m_luck = ARMY_LUCK_NONE;
+    m_spellRounds = 0;
     commander = gCombatManager->m_heroes[side];
     if (commander) {
         m_stats.attack += commander->m_primaryStats[HERO_PRIMARY_ATTACK];

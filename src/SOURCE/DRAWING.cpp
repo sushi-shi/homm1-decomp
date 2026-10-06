@@ -131,9 +131,12 @@ void combatManager::ResetLimitCreature(void) {
     m_computeExtent = true;
     m_extendLimitDown = false;
     for (side = COMBAT_SIDE_FIRST; side < COMBAT_SIDE_COUNT; side++) {
+        // The slots past the side's stacks hold no army (uninitialised in
+        // the first battle); they are hidden like dead stacks, which is how
+        // they are drawn either way.
         for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
             m_limitCreatureCount[side][j] =
-                (m_armies[side][j].m_stats.attributes & MONSTER_FLAGS_DEAD)
+                j >= m_numArmies[side] || (m_armies[side][j].m_stats.attributes & MONSTER_FLAGS_DEAD)
                     ? COMBAT_LIMIT_CREATURE_HIDDEN
                     : 0;
         }

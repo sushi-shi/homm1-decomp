@@ -256,7 +256,10 @@ tools/port/survey.py --build build/port-asan --data ~/.local/share/homm1-buka/ga
 Each finding is printed once with how often it was seen and a command that
 reproduces it; a run that stops making progress is stopped
 (`HOMM1_SURVEY_WATCHDOG`) and its stack printed. `--keep-logs` keeps every
-run's output.
+run's output. The survey programs of a build without sanitizers also run
+under valgrind (`nix shell nixpkgs#valgrind`; `valgrind --track-origins=yes
+build/port/tests/port/homm1_survey combat MAP 5 1`), which finds the reads
+of uninitialised memory the sanitizers do not.
 
 ### Unattended runs
 
