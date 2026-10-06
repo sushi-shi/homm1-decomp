@@ -115,3 +115,21 @@ global	SOURCE/REMOTE	GUIMRrespptr	gModemResponseLength	g-prefixed name; length o
 global	SOURCE/REMOTE	GUIMRc	gModemResponseChar	g-prefixed name; the last byte read from the modem
 param	ReceiveRemoteData	decodeType	source	the sender DecodePacket accepts (REMOTE_BROADCAST_PLAYER or a net position)
 local	WaitForDirectConnect/Connect/calc_crc/FileSize	rng/msg/theCarry/f	idSeed/idMessage/overflow/stream	the six-digit ID seed and "ID%s_%i" packet; the CRC's shifted-out top bit; the FILE*
+local-aliased	textWidget::Read	name	fontName	Read13 then GetFont; frame-slot spelling kept behind a function-scoped define
+local-aliased	heroWindowManager::UpdateScreenRegion	topVal/curBottom	top/bottom	the pointer-overlap rectangle beside left/right
+local-aliased	heroWindowManager::FizzleForward	ccycleBuf/saveFlags	cycleTable/savedUpdateFlags	the CCYCLE lookup table; m_updateFlags saved across the fizzle
+local-aliased	heroWindow::MoveWindow	x/yPrev/oldHgt/toX/toY	oldX/oldY/oldHeight/newX/newY	the old and new window origin and the dirty extent
+local-aliased	executive::DoDialog	ex/saveMgr/savePrev/saveNext/idx	nestedExecutive/savedManagers/savedPrevLinks/savedNextLinks/index	the nested executive runs the dialog; the saved manager-list links are restored afterwards
+local-aliased	font::LineLength/LineWidth/DrawString	thePos/cursor/p/pos	position/chars/chars/drawX	the scan index, the text pointer, the pen x
+local-aliased	MAKEFILEID	line/activeSize	upperName/length	the upper-cased copy of the name and its length
+local-aliased	CleanupSamples	head	nextNode	the node after the deleted head
+local-aliased	resourceManager::Expunge	cur	current	list walk
+local-aliased	ClippedMonoIconToBitmap	clipLast	clipBottom	pairs with clipRight
+local-aliased	fileRequester::Main/Update/fileRequester	ptrX,ptrY/y,firstIdIdx/findHandleWork,headerData	mouseX,mouseY/row,firstRowId/findHandle,header	pointer position, list row, the FindFirstFile handle and the .MAP header
+local-aliased	DecodePacket	theSize	dataSize	the packet's payload byte count
+local-aliased	PopNetBox	dataObj/myBaseId/oldShown	remoteData/firstLineId/pointerWasVisible	the queued remote record, the first line widget id, the pointer visibility to restore
+local-aliased	AddScoreToHighScore	curScores/theDest/nextFile/missingFileValue	entries/shiftRank/file/noScoreFile	same roles as highScoreManager::Update
+local-aliased	SetupCDDrive	activeKeyVal	key	the registry key handle
+local-aliased	oldmain	gameDone	creditsDone	ends the credits screen loop only
+local-aliased	RecruitHeroHandler	pos	heroSlot	which of the two offered heroes is viewed
+local-aliased	ShowCongrats	ii	labelIndex	the score label row

@@ -235,6 +235,7 @@ void PostprocessIcon(icon* loadedIcon) {}
 
 #include <string.h>
 
+#define clipBottom clipLast // frame-slot spelling
 VA(0x0046fe62, 0x214)
 void ClippedMonoIconToBitmap(
     icon* sourceIcon,
@@ -250,7 +251,7 @@ void ClippedMonoIconToBitmap(
     i32 clipH
 ) {
     i32 clipRight = clipX + clipW - 1;
-    i32 clipLast = clipY + clipH - 1;
+    i32 clipBottom = clipY + clipH - 1;
     IconEntry* entry = sourceIcon->m_frames + frame;
     u8* source = sourceIcon->m_data + entry->srcOffset;
     i32 curX = x + entry->x;
@@ -264,7 +265,8 @@ void ClippedMonoIconToBitmap(
             } else
                 decoding = FALSE;
         } else if (*source != ICON_MONO_NEWLINE_COMMAND) {
-            if (curY >= clipY && curY <= clipLast && curX + *source >= clipX && curX <= clipRight) {
+            if (curY >= clipY && curY <= clipBottom && curX + *source >= clipX
+                && curX <= clipRight) {
                 if (curX >= clipX) {
                     if (curX + *source <= clipRight)
                         memset(
@@ -302,6 +304,7 @@ void ClippedMonoIconToBitmap(
         }
     }
 }
+#undef clipBottom
 
 // Clipped colour icon blit kept beside the mono path. Retail keeps every
 // working value in file statics, as in the assembly renderers.

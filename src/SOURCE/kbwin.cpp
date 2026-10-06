@@ -1152,8 +1152,9 @@ bool DriveSupportsFreeSpaceQuery(char driveLetter) {
 
 VA(0x00444774, 0x36f)
 // The disc probe now checks an Ogg track; it no longer opens an MCI CD device.
+#define key activeKeyVal // frame-slot spelling
 H1_ENUM_RETURN(CdSetupResult, i32) SetupCDDrive(void) {
-    HKEY activeKeyVal;
+    HKEY key;
     char keyPath[REGISTRY_TEXT_BUFFER_SIZE];
     i32 tailResult;
     i32 drivesCount;
@@ -1218,18 +1219,18 @@ H1_ENUM_RETURN(CdSetupResult, i32) SetupCDDrive(void) {
                         keyPath,
                         "SOFTWARE\\Buka\\3DO\\Heroes of Might and Magic Platinum\\1.000"
                     );
-                    activeKeyVal = NULL;
-                    if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, keyPath, 0, KEY_WRITE, &activeKeyVal)
+                    key = NULL;
+                    if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, keyPath, 0, KEY_WRITE, &key)
                         == ERROR_SUCCESS) {
                         RegSetValueExA(
-                            activeKeyVal,
+                            key,
                             "HMM1 CDDrive",
                             0,
                             REG_SZ,
                             reinterpret_cast<LPBYTE>(gRegCDRomPath),
                             strlen(gRegCDRomPath) + 1
                         );
-                        RegCloseKey(activeKeyVal);
+                        RegCloseKey(key);
                     }
                     return CD_SETUP_READY;
                 }
@@ -1239,6 +1240,7 @@ H1_ENUM_RETURN(CdSetupResult, i32) SetupCDDrive(void) {
     }
     return CD_SETUP_NOT_FOUND;
 }
+#undef key
 
 VA(0x00444ae3, 0x6b)
 void SetWinText(heroWindow* window, i16 id) {

@@ -197,19 +197,21 @@ void resourceManager::AddResource(class resource* newResource) {
     }
 }
 
+#define current cur // frame-slot spelling
 VA(0x0046c7bd, 0x7e)
 void resourceManager::Expunge(void) {
     m_expunging = 1;
-    resource* cur = m_resourceListHead;
+    resource* current = m_resourceListHead;
     resource* next = NULL;
-    while (cur != NULL) {
-        next = cur->m_next;
-        RemoveResource(cur);
-        delete cur;
-        cur = next;
+    while (current != NULL) {
+        next = current->m_next;
+        RemoveResource(current);
+        delete current;
+        current = next;
     }
     m_expunging = 0;
 }
+#undef current
 
 VA(0x0046c83b, 0x3b)
 class resource* resourceManager::Query(i16 resourceId) {

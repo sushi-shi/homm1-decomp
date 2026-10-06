@@ -281,7 +281,8 @@ void heroWindow::DrawWindow(i16 updateScreen, i32 firstId, i32 lastId) {
         current = current->m_prev;
     }
     PollSound();
-    if (updateScreen != 0 && (m_winFlags & WINDOW_UPDATE_SUPPRESS_MASK) != WINDOW_FLAG_FIXED_LAYER) {
+    if (updateScreen != 0
+        && (m_winFlags & WINDOW_UPDATE_SUPPRESS_MASK) != WINDOW_FLAG_FIXED_LAYER) {
         gWindowManager->UpdateScreenRegion(m_posX, m_posY, m_winWidth, m_winHeight);
         PollSound();
     }
@@ -304,32 +305,42 @@ void heroWindow::RestoreBackground(void) {
     m_savedBackground = NULL;
 }
 
+#define oldX x           // frame-slot spelling
+#define oldY yPrev       // frame-slot spelling
+#define oldHeight oldHgt // frame-slot spelling
+#define newX toX         // frame-slot spelling
+#define newY toY         // frame-slot spelling
 VA(0x0046dcb2, 0x1bc)
 void heroWindow::MoveWindow(i16 dx, i16 dy) {
-    i16 x = m_posX;
-    i16 yPrev = m_posY;
+    i16 oldX = m_posX;
+    i16 oldY = m_posY;
     i16 oldWidth = m_winWidth;
-    i16 oldHgt = m_winHeight;
-    i16 toX = m_posX + dx;
-    i16 toY = m_posY + dy;
-    if (toX < 0)
-        toX = 0;
-    if (toY < 0)
-        toY = 0;
-    if (toX + m_winWidth > LOGICAL_SCREEN_WIDTH)
-        toX = LOGICAL_SCREEN_WIDTH - m_winWidth;
-    if (toY + m_winHeight > LOGICAL_SCREEN_HEIGHT)
-        toY = LOGICAL_SCREEN_HEIGHT - m_winHeight;
+    i16 oldHeight = m_winHeight;
+    i16 newX = m_posX + dx;
+    i16 newY = m_posY + dy;
+    if (newX < 0)
+        newX = 0;
+    if (newY < 0)
+        newY = 0;
+    if (newX + m_winWidth > LOGICAL_SCREEN_WIDTH)
+        newX = LOGICAL_SCREEN_WIDTH - m_winWidth;
+    if (newY + m_winHeight > LOGICAL_SCREEN_HEIGHT)
+        newY = LOGICAL_SCREEN_HEIGHT - m_winHeight;
     m_savedBackground->DrawToBuffer(m_posX, m_posY);
-    m_posX = toX;
-    m_posY = toY;
+    m_posX = newX;
+    m_posY = newY;
     m_savedBackground->GrabBitmap(gWindowManager->m_screen, m_posX, m_posY);
     DrawWindow(0);
-    oldWidth += abs(m_posX - x);
-    oldHgt += abs(m_posY - yPrev);
-    if (m_posX < x)
-        x = m_posX;
-    if (m_posY < yPrev)
-        yPrev = m_posY;
-    gWindowManager->UpdateScreenRegion(x, yPrev, oldWidth, oldHgt);
+    oldWidth += abs(m_posX - oldX);
+    oldHeight += abs(m_posY - oldY);
+    if (m_posX < oldX)
+        oldX = m_posX;
+    if (m_posY < oldY)
+        oldY = m_posY;
+    gWindowManager->UpdateScreenRegion(oldX, oldY, oldWidth, oldHeight);
 }
+#undef oldX
+#undef oldY
+#undef oldHeight
+#undef newX
+#undef newY

@@ -288,6 +288,7 @@ i32 EarlySetup(void) {
 // oldmain: two intro videos, the stpmain.bin menu (new, load, campaign, high
 // scores, credits, quit), one network handshake and the campaign
 // replay/next-scenario loop.
+#define creditsDone gameDone // frame-slot spelling
 VA(0x0043d0c4, 0xccb)
 i32 oldmain(void) {
     char saveBuf[20];
@@ -299,7 +300,7 @@ i32 oldmain(void) {
     i8 initialScreen;
     i32 gamePlayer;
     i32 sendResult;
-    i8 gameDone;
+    i8 creditsDone;
     i8 leave;
     i16 command;
 
@@ -446,15 +447,15 @@ i32 oldmain(void) {
                 gWindowManager
                     ->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
                 gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, gPalette);
-                gameDone = 0;
+                creditsDone = 0;
                 gInputManager->Flush();
-                while (!gameDone) {
+                while (!creditsDone) {
                     Process1WindowsMessage();
                     switch (gInputManager->GetEvent().type) {
                         case MESSAGE_KEY_DOWN:
                         case MESSAGE_LEFT_BUTTON_DOWN:
                         case MESSAGE_RIGHT_BUTTON_DOWN:
-                            gameDone = 1;
+                            creditsDone = 1;
                     }
                 }
                 gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, gPalette);
@@ -632,6 +633,7 @@ i32 oldmain(void) {
     ShutDown(NULL);
     return 0;
 }
+#undef creditsDone
 
 VA(0x0043dd8f, 0x83)
 char toupper(char character) {
@@ -749,6 +751,7 @@ i16 NullHandler(tag_message& message) {
 
 // Two heroes are offered, each with its own view (its portrait, rcrthero.bin
 // ids 2-3) and recruit (ids 8-9) button.
+#define heroSlot pos // frame-slot spelling
 VA(0x0043e1bb, 0x15e)
 i16 RecruitHeroHandler(tag_message& message) {
     const i16 viewButton1Value = RECRUIT_HERO_PORTRAIT_FIRST;
@@ -756,7 +759,7 @@ i16 RecruitHeroHandler(tag_message& message) {
     const i16 recruitButton1 = RECRUIT_HERO_SELECT_FIRST;
     const i16 recruitButton2 = RECRUIT_HERO_SELECT_SECOND;
     i32 shouldClose = 0;
-    i32 pos;
+    i32 heroSlot;
 
     if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
@@ -764,8 +767,8 @@ i16 RecruitHeroHandler(tag_message& message) {
                 switch (message.id) {
                     case viewButton1Value:
                     case viewButton2Value:
-                        pos = message.id - viewButton1Value;
-                        gTownManager->m_recruitHeroes[pos]->HeroView(0);
+                        heroSlot = message.id - viewButton1Value;
+                        gTownManager->m_recruitHeroes[heroSlot]->HeroView(0);
                         gTownManager->RedrawTownScreen();
                         gTownManager->m_heroWindow0->DrawWindow();
                         gTownManager->m_heroWindow1->DrawWindow();
@@ -799,6 +802,7 @@ i16 RecruitHeroHandler(tag_message& message) {
     }
     return MESSAGE_DISPATCH_CONSUME;
 }
+#undef heroSlot
 
 // HoMM1 has seven neutral building slots before six per-faction dwellings.
 VA(0x0043e319, 0x30)
@@ -2077,33 +2081,37 @@ i16 GetMonType(i32 score, i32 highScoreType) {
     return gScoreMon[0][SCORE_MONSTER_TYPE];
 }
 
+#define entries curScores            // frame-slot spelling
+#define shiftRank theDest            // frame-slot spelling
+#define file nextFile                // frame-slot spelling
+#define noScoreFile missingFileValue // frame-slot spelling
 VA(0x00440d39, 0x32d)
 i32 AddScoreToHighScore(i32 score, i32 highScoreType, char*, char* scenarioName) {
-    HighScoreEntry curScores[HIGH_SCORE_DISPLAY_ENTRY_COUNT];
+    HighScoreEntry entries[HIGH_SCORE_DISPLAY_ENTRY_COUNT];
     i32 entry;
-    i32 theDest;
-    i32 nextFile;
+    i32 shiftRank;
+    i32 file;
     char scoreFile[352];
     char enteredPlayerName[20];
-    i8 missingFileValue;
+    i8 noScoreFile;
 
-    missingFileValue = 0;
+    noScoreFile = 0;
     if (highScoreType == HIGH_SCORE_TYPE_STANDARD)
         sprintf(scoreFile, "%sSTANDARD.HS", gDataPath);
     else
         sprintf(scoreFile, "%sCAMPAIGN.HS", gDataPath);
-    nextFile = open(scoreFile, _O_BINARY);
-    if (nextFile == -1)
-        missingFileValue = 1;
-    if (missingFileValue) {
+    file = open(scoreFile, _O_BINARY);
+    if (file == -1)
+        noScoreFile = 1;
+    if (noScoreFile) {
         for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++) {
-            memset(&curScores[entry], 0, sizeof(HighScoreEntry));
-            curScores[entry].score = HIGH_SCORE_EMPTY;
+            memset(&entries[entry], 0, sizeof(HighScoreEntry));
+            entries[entry].score = HIGH_SCORE_EMPTY;
         }
     } else {
         for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++)
-            read(nextFile, &curScores[entry], sizeof(curScores));
-        close(nextFile);
+            read(file, &entries[entry], sizeof(entries));
+        close(file);
     }
 
     gShowHighScore = 1;
@@ -2111,30 +2119,34 @@ i32 AddScoreToHighScore(i32 score, i32 highScoreType, char*, char* scenarioName)
     gHighScoreRank = HIGH_SCORE_EMPTY;
     gScore = score;
     for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++) {
-        if ((score >= curScores[entry].score && highScoreType == HIGH_SCORE_TYPE_STANDARD)
-            || (score <= curScores[entry].score && highScoreType == HIGH_SCORE_TYPE_CAMPAIGN)
-            || curScores[entry].score == HIGH_SCORE_EMPTY) {
+        if ((score >= entries[entry].score && highScoreType == HIGH_SCORE_TYPE_STANDARD)
+            || (score <= entries[entry].score && highScoreType == HIGH_SCORE_TYPE_CAMPAIGN)
+            || entries[entry].score == HIGH_SCORE_EMPTY) {
             gHighScoreRank = entry;
             break;
         }
     }
 
     if (entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT) {
-        for (theDest = HIGH_SCORE_DISPLAY_ENTRY_COUNT - 2; theDest >= entry; theDest--)
-            curScores[theDest + 1] = curScores[theDest];
+        for (shiftRank = HIGH_SCORE_DISPLAY_ENTRY_COUNT - 2; shiftRank >= entry; shiftRank--)
+            entries[shiftRank + 1] = entries[shiftRank];
         GetDataEntry(localization::Tr("score.name.prompt"), enteredPlayerName, 16, NULL);
-        strcpy(curScores[entry].playerName, enteredPlayerName);
-        strcpy(curScores[entry].scenarioName, scenarioName);
-        curScores[entry].score = score;
-        nextFile = open(scoreFile, _O_BINARY | _O_TRUNC | _O_CREAT | _O_WRONLY, _S_IWRITE);
-        if (nextFile == -1)
+        strcpy(entries[entry].playerName, enteredPlayerName);
+        strcpy(entries[entry].scenarioName, scenarioName);
+        entries[entry].score = score;
+        file = open(scoreFile, _O_BINARY | _O_TRUNC | _O_CREAT | _O_WRONLY, _S_IWRITE);
+        if (file == -1)
             FileError(scoreFile);
         for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++)
-            WRITE_FILE_VALUE(nextFile, curScores[entry]);
-        close(nextFile);
+            WRITE_FILE_VALUE(file, entries[entry]);
+        close(file);
     }
     return 0;
 }
+#undef entries
+#undef shiftRank
+#undef file
+#undef noScoreFile
 
 VA(0x00441066, 0x51)
 void BVResMsg(char* text, i32 resourceType, i32 quantity) {
@@ -2183,14 +2195,17 @@ i8 WaitForOtherPlayer(void) {
     return result;
 }
 
+#define remoteData dataObj         // frame-slot spelling
+#define firstLineId myBaseId       // frame-slot spelling
+#define pointerWasVisible oldShown // frame-slot spelling
 VA(0x004411a2, 0x65a)
 void PopNetBox(char* notice) {
-    RemoteMessage* dataObj;
-    i32 myBaseId;
+    RemoteMessage* remoteData;
+    i32 firstLineId;
     i8 savedShowIt;
     i32 heightValue;
     tag_message event;
-    i8 oldShown;
+    i8 pointerWasVisible;
     i32 inputLength;
     i8 enterPressed;
     tag_message messageData;
@@ -2211,7 +2226,7 @@ void PopNetBox(char* notice) {
     if (!gRemoteOn)
         return;
     lineMax = 60;
-    myBaseId = 1;
+    firstLineId = 1;
     heightValue = 42;
     boxFont = gResourceManager->GetFont("bigfont.fnt");
     noticeStamp = 0;
@@ -2220,7 +2235,7 @@ void PopNetBox(char* notice) {
         noticeStamp = KBTickCount();
     }
     inputLength = 0;
-    oldShown = gMouseManager->IsVis();
+    pointerWasVisible = gMouseManager->IsVis();
     savedShowIt = gShowIt;
     gShowIt = 1;
     netBox = new heroWindow(0, 418, "netbox.bin");
@@ -2245,15 +2260,15 @@ void PopNetBox(char* notice) {
 
     while (!closeWindow) {
         PollSound();
-        dataObj = GetRemoteData(0);
-        if (dataObj) {
-            if (dataObj->type != REMOTE_MESSAGE_RELIABLE) {
-                dataObj = GetRemoteData(1);
+        remoteData = GetRemoteData(0);
+        if (remoteData) {
+            if (remoteData->type != REMOTE_MESSAGE_RELIABLE) {
+                remoteData = GetRemoteData(1);
             } else {
-                switch (dataObj->command) {
+                switch (remoteData->command) {
                     case REMOTE_COMMAND_CHAT:
-                        dataObj = GetRemoteData(1);
-                        AddNetBoxLine(dataObj->payload.data);
+                        remoteData = GetRemoteData(1);
+                        AddNetBoxLine(remoteData->payload.data);
                         redrawText = 1;
                         if (noticeStamp)
                             noticeStamp = KBTickCount();
@@ -2360,10 +2375,13 @@ void PopNetBox(char* notice) {
     gInputManager->SetKeyCodeType(INPUT_KEY_CODE_SCAN);
     gWindowManager->RemoveWindow(netBox);
     gShowIt = savedShowIt;
-    if (oldShown)
+    if (pointerWasVisible)
         gMouseManager->ReallyShowPointer();
     gResourceManager->Dispose(boxFont);
 }
+#undef remoteData
+#undef firstLineId
+#undef pointerWasVisible
 
 // The net box holds two uncoloured lines.
 VA(0x004417fc, 0x28)
@@ -2426,10 +2444,11 @@ void FileError(char* filename) {
 // HoMM1's victory screen: campaigns show the scenario's win text; standard
 // games score the days played, rank the result as a creature and file it with
 // the high scores.
+#define labelIndex ii // frame-slot spelling
 VA(0x00441977, 0x3f5)
 void ShowCongrats(void) {
     char name[32];
-    i32 ii;
+    i32 labelIndex;
     i32 total;
     tag_message message;
     i32 baseScore;
@@ -2460,9 +2479,9 @@ void ShowCongrats(void) {
         sprintf(gText, localization::Tr("congratulations.victory.title"));
         message.id = CONGRATS_TITLE;
         window->BroadcastMessage(message);
-        for (ii = 0; ii < CONGRATS_SCORE_LABEL_COUNT; ii++) {
-            sprintf(gText, gScoreLabels[ii]);
-            message.id = ii + CONGRATS_SCORE_LABEL_FIRST;
+        for (labelIndex = 0; labelIndex < CONGRATS_SCORE_LABEL_COUNT; labelIndex++) {
+            sprintf(gText, gScoreLabels[labelIndex]);
+            message.id = labelIndex + CONGRATS_SCORE_LABEL_FIRST;
             window->BroadcastMessage(message);
         }
         sprintf(gText, "%d", gCurTurn);
@@ -2490,6 +2509,7 @@ void ShowCongrats(void) {
     if (gGame->m_campaignType <= 0)
         AddScoreToHighScore(total, HIGH_SCORE_TYPE_STANDARD, "", gGame->m_mapName);
 }
+#undef labelIndex
 
 VA(0x00441d6c, 0x8b)
 void CongratsWait(void) {

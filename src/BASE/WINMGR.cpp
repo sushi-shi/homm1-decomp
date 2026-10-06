@@ -333,25 +333,27 @@ void heroWindowManager::UpdateScreen(void) {
 }
 
 // Hides the software pointer only when it overlaps the updated region.
+#define top topVal       // frame-slot spelling
+#define bottom curBottom // frame-slot spelling
 VA(0x0046a917, 0x15d)
 void heroWindowManager::UpdateScreenRegion(i16 x, i16 y, i16 width, i16 height) {
-    i16 topVal, left, curBottom, right;
+    i16 top, left, bottom, right;
     i16 pointerInside;
     i16 mousePosX, mouseY;
 
     left = x - gMouseManager->m_savedUnderlying->m_width;
-    topVal = y - gMouseManager->m_savedUnderlying->m_height;
+    top = y - gMouseManager->m_savedUnderlying->m_height;
     right = x + width;
-    curBottom = y + height;
+    bottom = y + height;
     mousePosX = gMouseManager->m_mouseX;
     mouseY = gMouseManager->m_mouseY;
     pointerInside = 0;
     if (gMouseManager->IsVis()) {
         if (mousePosX < left || mousePosX > right)
             pointerInside = 0;
-        else if (mouseY < topVal || mouseY > curBottom)
+        else if (mouseY < top || mouseY > bottom)
             pointerInside = 0;
-        else if (mousePosX >= left && mouseY >= topVal && mousePosX <= right && mouseY <= curBottom)
+        else if (mousePosX >= left && mouseY >= top && mousePosX <= right && mouseY <= bottom)
             pointerInside = 1;
     }
     PollSound();
@@ -362,6 +364,8 @@ void heroWindowManager::UpdateScreenRegion(i16 x, i16 y, i16 width, i16 height) 
         gMouseManager->ShowColorPointer();
     PollSound();
 }
+#undef top
+#undef bottom
 
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
@@ -493,7 +497,7 @@ void CreateFizzleTables(void) {
             for (destColor = 0; destColor < PALETTE_COLOR_COUNT; destColor++) {
                 for (c = 0; c < PALETTE_GRAPHICS_CHANNELS; c++)
                     FIZZLE_PAIR(blend, src, destColor)
-                    [c] += FIZZLE_PAIR(increment, src, destColor)[c];
+                [c] += FIZZLE_PAIR(increment, src, destColor)[c];
                 table[src][destColor] =
                     rgbCube[static_cast<i32>(FIZZLE_PAIR(blend, src, destColor)[0])]
                            [static_cast<i32>(FIZZLE_PAIR(blend, src, destColor)[1])]
@@ -511,6 +515,8 @@ void CreateFizzleTables(void) {
     free(blend);
 }
 
+#define cycleTable ccycleBuf       // frame-slot spelling
+#define savedUpdateFlags saveFlags // frame-slot spelling
 VA(0x0046b11d, 0x36a)
 void heroWindowManager::FizzleForward(i16 x, i16 y, i16 width, i16 height, i32 delay) {
     u8* workPixel;
@@ -520,30 +526,30 @@ void heroWindowManager::FizzleForward(i16 x, i16 y, i16 width, i16 height, i32 d
     i32 frame;
     i32 sourceY;
     i32 sourceX;
-    i8* ccycleBuf;
-    i32 saveFlags;
+    i8* cycleTable;
+    i32 savedUpdateFlags;
     if (gShowIt == 0)
         return;
     gEnlargeScreenBlit = 0;
     tickStart = 0;
-    saveFlags = gWindowManager->m_updateFlags;
+    savedUpdateFlags = gWindowManager->m_updateFlags;
     gWindowManager->m_updateFlags = 0;
     if (delay == FIZZLE_USE_DEFAULT_DELAY)
         delay = FIZZLE_DEFAULT_DELAY;
     m_fizzleWork = new bitmap(BITMAP_TYPE_NONE, width, height);
-    ccycleBuf = static_cast<i8*>(malloc(FIZZLE_CYCLE_TABLE_BYTES));
+    cycleTable = static_cast<i8*>(malloc(FIZZLE_CYCLE_TABLE_BYTES));
     BlitBitmap(gWindowManager->m_screen, x, y, width, height, m_fizzleWork, 0, 0);
 
     for (frame = 0; frame < CYCLE_FRAME_COUNT; frame++) {
         sprintf(gText, "CCYCLE%02d.BIN", frame);
         gResourceManager->PointToFile(gResourceManager->MakeId(gText));
-        gResourceManager->ReadBlock(ccycleBuf, FIZZLE_CYCLE_TABLE_BYTES);
+        gResourceManager->ReadBlock(cycleTable, FIZZLE_CYCLE_TABLE_BYTES);
         for (sourceY = y; sourceY < y + height; sourceY++) {
             savePixel = m_fizzleSource->m_pixels + (sourceY - y) * m_fizzleSource->m_width;
             workPixel = m_fizzleWork->m_pixels + (sourceY - y) * width;
             screenPixel = m_screen->m_pixels + sourceY * LOGICAL_SCREEN_WIDTH + x;
             for (sourceX = x; sourceX < x + width; sourceX++) {
-                *screenPixel = ccycleBuf[static_cast<u16>(
+                *screenPixel = cycleTable[static_cast<u16>(
                     *workPixel | (*savePixel << FIZZLE_LOOKUP_HIGH_BYTE_SHIFT)
                 )];
                 savePixel++;
@@ -560,13 +566,15 @@ void heroWindowManager::FizzleForward(i16 x, i16 y, i16 width, i16 height, i32 d
     DelayTilMilli(tickStart + delay);
     BlitBitmapToScreen(m_fizzleWork, 0, 0, width, height, x, y);
     gEnlargeScreenBlit = 1;
-    gWindowManager->m_updateFlags = saveFlags;
+    gWindowManager->m_updateFlags = savedUpdateFlags;
     delete m_fizzleSource;
     m_fizzleSource = NULL;
     delete m_fizzleWork;
     m_fizzleWork = NULL;
-    free(ccycleBuf);
+    free(cycleTable);
 }
+#undef cycleTable
+#undef savedUpdateFlags
 
 VA(0x0046b487, 0x4d)
 void heroWindowManager::ReleaseFizzleSource(void) {

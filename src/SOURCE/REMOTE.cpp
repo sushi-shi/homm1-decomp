@@ -183,12 +183,13 @@ i32 EncodePacket(RemoteMessage* data, i8 source, i8 destination, i32 length) {
     return length + sizeof(RemotePacketHeader);
 }
 
+#define dataSize theSize // frame-slot spelling
 VA(0x00451ea9, 0xb2)
 i32 DecodePacket(RemoteMessage* data, i32 source) {
     u16 computedCrc;
     u16 crc;
     i32 i;
-    u32 theSize;
+    u32 dataSize;
 
     computedCrc = 0;
     if (REMOTE_PACKET(gPacket)->source != source && source != REMOTE_BROADCAST_PLAYER) {
@@ -198,17 +199,18 @@ i32 DecodePacket(RemoteMessage* data, i32 source) {
         && REMOTE_PACKET(gPacket)->destination != REMOTE_BROADCAST_PLAYER) {
         return 0;
     }
-    theSize = REMOTE_PACKET(gPacket)->payloadSize;
+    dataSize = REMOTE_PACKET(gPacket)->payloadSize;
     crc = REMOTE_PACKET(gPacket)->crc;
     REMOTE_PACKET(gPacket)->crc = 0;
     // API-forced: calc_crc takes unsigned bytes; the wire buffer is char[].
-    calc_crc(&computedCrc, reinterpret_cast<u8*>(gPacket), theSize + sizeof(RemotePacketHeader));
+    calc_crc(&computedCrc, reinterpret_cast<u8*>(gPacket), dataSize + sizeof(RemotePacketHeader));
     if (crc != computedCrc) {
         return 0;
     }
-    memcpy(data, gPacket + sizeof(RemotePacketHeader), theSize);
+    memcpy(data, gPacket + sizeof(RemotePacketHeader), dataSize);
     return 1;
 }
+#undef dataSize
 
 VA(0x00451f5b, 0x10f)
 i32 SendRemoteData(RemoteMessage* dataToSend, u8*, i32 destination, i32 length) {

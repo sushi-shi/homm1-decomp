@@ -40,11 +40,12 @@ i32 RemapCyrillicCharacter(i32 character) {
     return character - 0x3f;
 }
 
+#define drawX pos // frame-slot spelling
 VA(0x00471f3e, 0xff)
 void font::DrawString(char* text, i16 x, i16 y, i16 color) {
     i16* entries = m_glyphIcon->m_frameWords;
     i32 glyph = 0;
-    i16 pos = x;
+    i16 drawX = x;
     i16 index = 0;
     while (text[index] != 0) {
         glyph = static_cast<u8>(text[index]);
@@ -57,18 +58,19 @@ void font::DrawString(char* text, i16 x, i16 y, i16 color) {
         glyph -= ' ';
         if (glyph != 0)
             m_glyphIcon->FillToBuffer(
-                pos,
+                drawX,
                 y + m_headerWord,
                 glyph,
                 color,
                 ICON_DRAW_NORMAL,
                 ICON_DRAW_OFFSET_FULL
             );
-        pos += entries[glyph * FONT_GLYPH_ENTRY_WORDS + FONT_GLYPH_WIDTH_WORD]
-               + FONT_GLYPH_ADVANCE_SPACING;
+        drawX += entries[glyph * FONT_GLYPH_ENTRY_WORDS + FONT_GLYPH_WIDTH_WORD]
+                 + FONT_GLYPH_ADVANCE_SPACING;
         index++;
     }
 }
+#undef drawX
 
 VA(0x0047203d, 0x34f)
 void font::DrawBoundedString(
@@ -163,10 +165,12 @@ void font::DrawBoundedString(
     delete[] textCopy;
 }
 
+#define position thePos // frame-slot spelling
+#define chars cursor    // frame-slot spelling
 VA(0x0047238c, 0x25f)
 i32 font::LineLength(char* text, i16 maxWidth) {
     i16 widthUsed;
-    i16 thePos;
+    i16 position;
     i16 textLen = strlen(text);
     i32 baseGlyph;
     i16* widths = m_glyphIcon->m_frameWords;
@@ -175,17 +179,17 @@ i32 font::LineLength(char* text, i16 maxWidth) {
     i16 t = 0;
     i16 lineEnd;
     i16 lineStart;
-    char* cursor;
+    char* chars;
     char breakChar;
 
     lineStart = 0;
     lineEnd = 0;
-    thePos = 0;
+    position = 0;
     widthUsed = 0;
-    cursor = text;
-    while (thePos < textLen && cursor[thePos] != 0) {
-        while (cursor[thePos] != 0 && cursor[thePos] != '\n' && widthUsed <= maxWidth) {
-            baseGlyph = static_cast<u8>(cursor[thePos]);
+    chars = text;
+    while (position < textLen && chars[position] != 0) {
+        while (chars[position] != 0 && chars[position] != '\n' && widthUsed <= maxWidth) {
+            baseGlyph = static_cast<u8>(chars[position]);
             if (baseGlyph < ' '
                 || (baseGlyph > 0x7f && baseGlyph < CYRILLIC_CAPITAL_A
                     && baseGlyph != CYRILLIC_SMALL_YO && baseGlyph != CYRILLIC_CAPITAL_YO))
@@ -195,12 +199,12 @@ i32 font::LineLength(char* text, i16 maxWidth) {
             baseGlyph -= ' ';
             widthUsed += widths[baseGlyph * FONT_GLYPH_ENTRY_WORDS + FONT_GLYPH_WIDTH_WORD]
                          + FONT_GLYPH_ADVANCE_SPACING;
-            thePos++;
+            position++;
         }
         if (widthUsed > maxWidth) {
-            thePos--;
-            while (cursor[thePos] != ' ' && thePos >= lineStart) {
-                baseGlyph = static_cast<u8>(cursor[thePos]);
+            position--;
+            while (chars[position] != ' ' && position >= lineStart) {
+                baseGlyph = static_cast<u8>(chars[position]);
                 if (baseGlyph < ' '
                     || (baseGlyph > 0x7f && baseGlyph < CYRILLIC_CAPITAL_A
                         && baseGlyph != CYRILLIC_SMALL_YO && baseGlyph != CYRILLIC_CAPITAL_YO))
@@ -210,20 +214,23 @@ i32 font::LineLength(char* text, i16 maxWidth) {
                 baseGlyph -= ' ';
                 widthUsed -= widths[baseGlyph * FONT_GLYPH_ENTRY_WORDS + FONT_GLYPH_WIDTH_WORD]
                              + FONT_GLYPH_ADVANCE_SPACING;
-                thePos--;
+                position--;
             }
-            if (cursor[thePos] == ' ')
+            if (chars[position] == ' ')
                 widthUsed -= widths[FONT_GLYPH_WIDTH_WORD] + FONT_GLYPH_ADVANCE_SPACING;
         }
-        lineEnd = thePos;
+        lineEnd = position;
         lines++;
         lineStart = lineEnd + 1;
-        thePos = lineStart;
+        position = lineStart;
         widthUsed = 0;
     }
     return lines;
 }
+#undef position
+#undef chars
 
+#define chars p // frame-slot spelling
 VA(0x004725eb, 0x133)
 i32 font::LineWidth(char* text) {
     i32 spare;
@@ -232,7 +239,7 @@ i32 font::LineWidth(char* text) {
     i16 textLen;
     i32 oldSpare;
     i16 newSpare, mySpare, savedSpare, position, widthUsed;
-    char* p;
+    char* chars;
 
     textLen = strlen(text);
     widths = m_glyphIcon->m_frameWords;
@@ -242,10 +249,10 @@ i32 font::LineWidth(char* text) {
     savedSpare = 0;
     position = 0;
     widthUsed = 0;
-    p = text;
-    while (position < textLen && p[position] != 0) {
-        while (p[position] != 0 && p[position] != '\n') {
-            baseGlyph = static_cast<u8>(p[position]);
+    chars = text;
+    while (position < textLen && chars[position] != 0) {
+        while (chars[position] != 0 && chars[position] != '\n') {
+            baseGlyph = static_cast<u8>(chars[position]);
             if (baseGlyph < ' '
                 || (baseGlyph > 0x7f && baseGlyph < CYRILLIC_CAPITAL_A
                     && baseGlyph != CYRILLIC_SMALL_YO && baseGlyph != CYRILLIC_CAPITAL_YO))
@@ -260,5 +267,6 @@ i32 font::LineWidth(char* text) {
     }
     return widthUsed;
 }
+#undef chars
 
 VA_COMPGEN(0x00472760, 0x2e, "??_Gfont@@UAEPAXI@Z", 0x00471dd0)
