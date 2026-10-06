@@ -78,14 +78,14 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                 // A hero's class names its sprite's icon slot.
                 m_cursorType = H1_ENUM_DECODE(AdventureHeroIcon, visitingHero->m_heroClass);
                 m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
-                m_cursorActive = 1;
+                m_cursorActive = true;
                 gWindowManager->SaveFizzleSource(
                     COAST_FIZZLE_X,
                     COAST_FIZZLE_Y,
                     COAST_FIZZLE_WIDTH,
                     COAST_FIZZLE_HEIGHT
                 );
-                CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
+                CompleteDraw(m_mapOriginX, m_mapOriginY, false);
                 gWindowManager->FizzleForward(
                     COAST_FIZZLE_X,
                     COAST_FIZZLE_Y,
@@ -106,9 +106,9 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
             m_cursorType = ADVMGR_HERO_ICON_BOAT;
             m_cursorDirection = boat->direction;
             m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
-            m_cursorActive = 1;
-            CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
-            UpdateScreen(0, 0);
+            m_cursorActive = true;
+            CompleteDraw(m_mapOriginX, m_mapOriginY, false);
+            UpdateScreen(0, false);
             break;
         case MAP_OBJECT_MINE:
             if (gGame->m_mineOwners[cell->m_objectMetadata] == gCurPlayer)
@@ -246,7 +246,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                     visitingHero,
                     (cell->m_objectMetadata - CHEST_EXPERIENCE_LEVEL_OFFSET)
                         * CHEST_EXPERIENCE_MULTIPLIER,
-                    0
+                    false
                 );
             removeObj = 1;
             fizzleEffect = EVENT_FIZZLE_PICKUP;
@@ -493,7 +493,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                     0,
                     NORMAL_DIALOG_NO_OR_TEXT
                 );
-                GiveExperience(visitingHero, GAZEBO_EXPERIENCE, 0);
+                GiveExperience(visitingHero, GAZEBO_EXPERIENCE, false);
                 visitingHero->m_visitedSites |= 1 << cell->m_objectMetadata;
                 visitingHero->CheckLevel();
             }
@@ -717,9 +717,9 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
             SET_WIDGET_MESSAGE(widgetEvent, WIDGET_COMMAND_SET_TEXT, 0);
             widgetEvent.text = gText;
             thiefWindow->BroadcastMessage(widgetEvent);
-            gWindowManager->DoDialog(thiefWindow, TrueFalseDialogHandler, 0);
+            gWindowManager->DoDialog(thiefWindow, TrueFalseDialogHandler, false);
             delete thiefWindow;
-            RedrawAdvScreen(1);
+            RedrawAdvScreen(true);
             break;
         case MAP_OBJECT_SPELL_SHRINE:
             sprintf(
@@ -733,7 +733,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                 visitingHero->AddSpell(
                     H1_ENUM_DECODE(SpellType, cell->m_objectMetadata - MAP_EVENT_SPELL_OFFSET),
                     visitingHero->m_primaryStats[HERO_PRIMARY_KNOWLEDGE],
-                    0
+                    false
                 );
                 EventWindow(
                     EVENT_TEXT_CUSTOM,
@@ -793,7 +793,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                     }
                 }
             teleport:
-                StopCursor(1);
+                StopCursor(true);
                 gAdvManager->TeleportTo(teleX, teleY, 1);
             }
             break;
@@ -933,7 +933,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                     x,
                     y,
                     COMBAT_RANDOM_SEED_NEW,
-                    1
+                    true
                 );
                 if (fightOutcome == COMBAT_RESULT_ATTACKER && theirTown)
                     gGame->ClaimTown(theirTown->m_id, gCurPlayer);
@@ -999,7 +999,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                     cell->m_objectMetadata = DAEMON_CAVE_EMPTY;
                     break;
                 case DAEMON_REWARD_EXPERIENCE:
-                    GiveExperience(visitingHero, DAEMON_EXPERIENCE, 0);
+                    GiveExperience(visitingHero, DAEMON_EXPERIENCE, false);
                     EventWindow(
                         EVENT_TEXT_DAEMON_CAVE_EXPERIENCE,
                         NORMAL_DIALOG_TYPE_OK,
@@ -1018,7 +1018,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                         goto goldReward;
                     if (gGame->GetRandomArtifactId() == ARTIFACT_NONE)
                         goto goldReward;
-                    GiveExperience(visitingHero, DAEMON_EXPERIENCE, 0);
+                    GiveExperience(visitingHero, DAEMON_EXPERIENCE, false);
                     artifactId = GiveRandomArtifact(visitingHero);
                     EventWindow(
                         EVENT_TEXT_DAEMON_CAVE_ARTIFACT,
@@ -1045,7 +1045,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                         DAEMON_EXPERIENCE,
                         NORMAL_DIALOG_NO_OR_TEXT
                     );
-                    GiveExperience(visitingHero, DAEMON_EXPERIENCE, 0);
+                    GiveExperience(visitingHero, DAEMON_EXPERIENCE, false);
                     GiveResource(visitingHero, RESOURCE_GOLD, DAEMON_GOLD);
                     cell->m_objectMetadata = DAEMON_CAVE_EMPTY;
                     visitingHero->CheckLevel();
@@ -1175,29 +1175,29 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
         default:
             break;
     }
-    UpdateRadar(1, 0);
-    UpdateHeroLocators(1, 1);
-    UpdateTownLocators(1, 1);
-    UpdBottomView(1, 1, 1);
+    UpdateRadar(true, false);
+    UpdateHeroLocators(true, 1);
+    UpdateTownLocators(true, 1);
+    UpdBottomView(true, true, true);
     if (removeObj) {
         EraseObj(cell, x, y);
         FizzleCenter(fizzleEffect);
     } else {
-        CompleteDraw(0);
+        CompleteDraw(false);
     }
-    UpdateScreen(0, 0);
+    UpdateScreen(0, false);
     PlayMusic(TERRAIN_MUSIC_TRACK(m_currentTerrain));
     gMouseManager->ReallyShowPointer();
-    CheckEndGame(0);
+    CheckEndGame(false);
 }
 
 VA(0x004267ed, 0x1c8)
 void advManager::EraseObj(class mapCell* cell, i32 x, i32 y) {
-    i8 erased = 0;
+    b8 erased = false;
     i32 j;
     i32 i;
 
-    erased = 1;
+    erased = true;
     cell->m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_NONE);
     cell->m_objectIndex = MAP_CELL_NO_FRAME;
     if (cell->m_flags & MAP_CELL_OBJECT_ANIMATED)
@@ -1266,15 +1266,15 @@ void advManager::TownEvent(class mapCell* cell, i32 x, i32 y) {
             x,
             y,
             COMBAT_RANDOM_SEED_NEW,
-            1
+            true
         );
         if (combatOutcome == COMBAT_RESULT_ATTACKER)
             gGame->ClaimTown(eventTown->m_id, gCurPlayer);
     } else {
         gGame->ClaimTown(eventTown->m_id, gCurPlayer);
-        UpdateRadar(1, 0);
-        UpdateHeroLocators(1, 1);
-        UpdateTownLocators(1, 1);
+        UpdateRadar(true, false);
+        UpdateHeroLocators(true, 1);
+        UpdateTownLocators(true, 1);
         eventTown->m_occupyingHeroId = gCurPlayerData->CurrentHero();
         eventTown->View();
     }
@@ -1389,7 +1389,7 @@ void advManager::EventWindow(
 ) {
     i32 newValue1;
     i32 unusedValue7;
-    i32 stopOk;
+    b32 stopOk;
     i32 unusedValue8;
     i32 unusedValue9;
     i32 curUnusedValue11;
@@ -1397,7 +1397,7 @@ void advManager::EventWindow(
     char eventText[EVENT_TEXT_BUFFER_SIZE];
     i16 newUnused;
 
-    stopOk = 0;
+    stopOk = false;
     GrabScreen();
     newUnused = 1;
     if (eventId >= EVENT_TEXT_FIRST && eventId < EVENT_TEXT_WINDOW_END)
@@ -1439,7 +1439,7 @@ H1_ENUM_RETURN(ArtifactType, i32) advManager::GiveRandomArtifact(class hero* eve
 
 VA(0x00426f65, 0x9e)
 #line 1113 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\EVENTS.CPP"
-i32 advManager::GiveExperience(class hero* eventHero, i32 experience, i8 checkLevel) {
+i32 advManager::GiveExperience(class hero* eventHero, i32 experience, b8 checkLevel) {
     i32 prevLevel;
     i32 unusedValue1;
     i32 unusedValue2;
@@ -1698,8 +1698,8 @@ H1_ENUM_RETURN(CombatSide, i8) advManager::CombatMonsterEvent(
         m_combatMonsterX = combatX;
         m_combatMonsterY = combatY;
         m_combatMonsterFacingLeft = eventHero->m_x < combatX;
-        if (ComboDraw(0))
-            UpdateScreen(0, 0);
+        if (ComboDraw(false))
+            UpdateScreen(0, false);
         m_combatMonsterX = COMBAT_MONSTER_CELL_CLEARED;
     }
     CLEAR_ARMY_GROUP(*gMonGroup);
@@ -1725,7 +1725,7 @@ H1_ENUM_RETURN(CombatSide, i8) advManager::CombatMonsterEvent(
             x,
             y,
             COMBAT_RANDOM_SEED_NEW,
-            1
+            true
         );
     else
         combatRes = DoCombat(
@@ -1739,9 +1739,9 @@ H1_ENUM_RETURN(CombatSide, i8) advManager::CombatMonsterEvent(
             x,
             y,
             COMBAT_RANDOM_SEED_NEW,
-            1
+            true
         );
-    MobilizeCurrHero(0);
+    MobilizeCurrHero(false);
     return combatRes;
 }
 
@@ -1910,12 +1910,12 @@ VA(0x00427a8e, 0x6b)
 void advManager::HeroLoses(class hero* lostHero) {
     if (!lostHero)
         return;
-    CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
-    UpdateScreen(0, 0);
+    CompleteDraw(m_mapOriginX, m_mapOriginY, false);
+    UpdateScreen(0, false);
     lostHero->Deallocate();
     FizzleCenter(EVENT_FIZZLE_HERO_LOSS);
-    UpdateRadar(1, 0);
-    UpdateHeroLocators(1, 1);
+    UpdateRadar(true, false);
+    UpdateHeroLocators(true, 1);
 }
 
 VA(0x00427af9, 0x122)
@@ -1972,7 +1972,7 @@ void advManager::FizzleCenter(H1_ENUM_PARAM(EventFizzleType, i32) fizzleType) {
     fizzleSample = LoadPlaySample(gText);
     gWindowManager
         ->SaveFizzleSource(EVENT_FIZZLE_X, EVENT_FIZZLE_Y, EVENT_FIZZLE_WIDTH, EVENT_FIZZLE_HEIGHT);
-    CompleteDraw(0);
+    CompleteDraw(false);
     gWindowManager->FizzleForward(
         EVENT_FIZZLE_X,
         EVENT_FIZZLE_Y,
@@ -1989,11 +1989,11 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
     town* heroTown;
     playerData* ownerPlayerData;
     i32 purchaseValue;
-    i32 handled;
+    b32 handled;
     i32 c;
     i32 recruited;
     H1_ENUM_LOCAL(CreatureType, i32) recruitType;
-    i32 isFree;
+    b32 isFree;
     i32 oldPlayer;
     i32 eventWork[4];
     i8 removeEvent;
@@ -2018,7 +2018,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
     heroTown = NULL;
     eventType = MAP_TRIGGER_OBJECT(cell->m_triggerType);
     removeEvent = 0;
-    handled = 0;
+    handled = false;
     oldPlayer = gCurPlayer;
     ownerPlayerData = gCurPlayerData;
     --eventHero->m_remainingMobility;
@@ -2032,7 +2032,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                 // A hero's class names its sprite's icon slot.
                 m_cursorType = H1_ENUM_DECODE(AdventureHeroIcon, eventHero->m_heroClass);
                 m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
-                m_cursorActive = 1;
+                m_cursorActive = true;
                 CheckAdjacentMon(&guardMonster);
             }
             break;
@@ -2046,7 +2046,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
             m_cursorType = ADVMGR_HERO_ICON_BOAT;
             m_cursorDirection = boat->direction;
             m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
-            m_cursorActive = 1;
+            m_cursorActive = true;
             break;
         case MAP_OBJECT_ALCHEMIST_LAB:
         case MAP_OBJECT_MINE:
@@ -2102,7 +2102,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                     eventHero,
                     (cell->m_objectMetadata - CHEST_EXPERIENCE_LEVEL_OFFSET)
                         * CHEST_EXPERIENCE_MULTIPLIER,
-                    1
+                    true
                 );
             removeEvent = 1;
             break;
@@ -2163,7 +2163,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
             break;
         case MAP_OBJECT_GAZEBO:
             if (!(eventHero->m_visitedSites & (1 << cell->m_objectMetadata))) {
-                GiveExperience(eventHero, GAZEBO_EXPERIENCE, 1);
+                GiveExperience(eventHero, GAZEBO_EXPERIENCE, true);
                 eventHero->m_visitedSites |= 1 << cell->m_objectMetadata;
             }
             break;
@@ -2202,35 +2202,35 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
             break;
         case MAP_OBJECT_ANCIENT_LAMP:
             recruitType = CREATURE_GENIE;
-            isFree = 0;
+            isFree = false;
             goto recruit;
         case MAP_OBJECT_WAGON_CAMP:
             recruitType = CREATURE_ROGUE;
-            isFree = 0;
+            isFree = false;
             goto recruit;
         case MAP_OBJECT_DESERT_TENT:
             recruitType = CREATURE_NOMAD;
-            isFree = 0;
+            isFree = false;
             goto recruit;
         case MAP_OBJECT_STRAW_HUT:
             recruitType = CREATURE_GOBLIN;
-            isFree = 1;
+            isFree = true;
             goto recruit;
         case MAP_OBJECT_HOUSE:
             recruitType = CREATURE_PEASANT;
-            isFree = 1;
+            isFree = true;
             goto recruit;
         case MAP_OBJECT_CABIN:
             recruitType = CREATURE_ARCHER;
-            isFree = 1;
+            isFree = true;
             goto recruit;
         case MAP_OBJECT_DWARF_LOG_CABIN:
             recruitType = CREATURE_DWARF;
-            isFree = 1;
+            isFree = true;
             goto recruit;
         case MAP_OBJECT_PEASANT_LOG_CABIN:
             recruitType = CREATURE_PEASANT;
-            isFree = 1;
+            isFree = true;
             goto recruit;
         recruit:
             if (cell->m_objectMetadata) {
@@ -2275,7 +2275,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                 eventHero->AddSpell(
                     H1_ENUM_DECODE(SpellType, cell->m_objectMetadata - MAP_EVENT_SPELL_OFFSET),
                     eventHero->m_primaryStats[HERO_PRIMARY_KNOWLEDGE],
-                    0
+                    false
                 );
             break;
         case MAP_OBJECT_TOWN:
@@ -2312,7 +2312,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                     }
                 }
             teleport:
-                StopCursor(1);
+                StopCursor(true);
                 gAdvManager->TeleportTo(teleX, teleY, 0);
             }
             break;
@@ -2386,12 +2386,12 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                     x,
                     y,
                     COMBAT_RANDOM_SEED_NEW,
-                    1
+                    true
                 );
                 if (fightOutcome == COMBAT_RESULT_ATTACKER && heroTown)
                     gGame->ClaimTown(heroTown->m_id, gCurPlayer);
             }
-            CompleteDraw(0);
+            CompleteDraw(false);
             break;
         case MAP_OBJECT_SIGNPOST:
             break;
@@ -2400,14 +2400,14 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                 case DAEMON_CAVE_EMPTY:
                     break;
                 case DAEMON_REWARD_EXPERIENCE:
-                    GiveExperience(eventHero, DAEMON_EXPERIENCE, 1);
+                    GiveExperience(eventHero, DAEMON_EXPERIENCE, true);
                     break;
                 case DAEMON_REWARD_ARTIFACT:
-                    GiveExperience(eventHero, DAEMON_EXPERIENCE, 1);
+                    GiveExperience(eventHero, DAEMON_EXPERIENCE, true);
                     GiveRandomArtifact(eventHero);
                     break;
                 case DAEMON_REWARD_EXPERIENCE_GOLD:
-                    GiveExperience(eventHero, DAEMON_EXPERIENCE, 1);
+                    GiveExperience(eventHero, DAEMON_EXPERIENCE, true);
                     GiveResource(eventHero, RESOURCE_GOLD, DAEMON_GOLD);
                     break;
                 case DAEMON_REWARD_RANSOM:
@@ -2436,7 +2436,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
         EraseObj(cell, x, y);
     gCurPlayer = oldPlayer;
     gCurPlayerData = ownerPlayerData;
-    CheckEndGame(0);
+    CheckEndGame(false);
 }
 
 VA(0x00428ce2, 0x17d)
@@ -2455,7 +2455,7 @@ void advManager::PlayerMonsterInteract(
 
     unused = 0;
     if (cell->m_objectMetadata & MONSTER_WILLING_FLAG) {
-        if (gPhilAI->FightValueOfStack(&eventHero->m_army, eventHero, 0)
+        if (gPhilAI->FightValueOfStack(&eventHero->m_army, eventHero, false)
             > (cell->m_objectMetadata & MONSTER_COUNT_MASK)
                   * gMonsterDatabase[H1_ENUM_DECODE(CreatureType, cell->m_objectIndex)].fightValue
                   * 1.75) {
@@ -2528,7 +2528,7 @@ void advManager::ComputerMonsterInteract(
     i32 monsterCount;
 
     if (cell->m_objectMetadata & MONSTER_WILLING_FLAG
-        && gPhilAI->FightValueOfStack(&eventHero->m_army, eventHero, 0)
+        && gPhilAI->FightValueOfStack(&eventHero->m_army, eventHero, false)
                > (cell->m_objectMetadata & MONSTER_COUNT_MASK)
                      * gMonsterDatabase[H1_ENUM_DECODE(CreatureType, cell->m_objectIndex)]
                            .fightValue
@@ -2537,7 +2537,7 @@ void advManager::ComputerMonsterInteract(
             eventHero,
             H1_ENUM_DECODE(CreatureType, cell->m_objectIndex),
             cell->m_objectMetadata & MONSTER_COUNT_MASK,
-            1,
+            true,
             numToBuy,
             purchaseWorth,
             bestSlot
@@ -2620,7 +2620,7 @@ i32 advManager::DoNetCombat(RemoteMessage* packet) {
             sx,
             curStartY,
             randSeed,
-            0
+            false
         )
     );
     if (!gHumanPlayer[firstSide])
@@ -2666,7 +2666,7 @@ H1_ENUM_RETURN(CombatSide, i32) advManager::DoCombat(
     i32 setupCombatX,
     i32 setupCombatY,
     i32 randomSeed,
-    i8 processLosses
+    b8 processLosses
 ) {
     armyGroup* army2NetRec;
     hero* hero2NetItem;
@@ -2683,7 +2683,7 @@ H1_ENUM_RETURN(CombatSide, i32) advManager::DoCombat(
     i8 showItSaved;
     i32 unused;
 
-    gInCombat = 1;
+    gInCombat = true;
     attackPlayer = firstHero ? firstHero->m_owner : -1;
     if (secondHero)
         defenderSide = secondHero->m_owner;
@@ -2774,7 +2774,7 @@ H1_ENUM_RETURN(CombatSide, i32) advManager::DoCombat(
                     }
                     Process1WindowsMessage();
                     message = gInputManager->GetEvent();
-                    CheckHandleNetPlayerWait(message, 1);
+                    CheckHandleNetPlayerWait(message, true);
                 }
             }
         } else if (!gThisNetHumanPlayer[attackPlayer]) {
@@ -2846,10 +2846,10 @@ combatFinished:
     } else {
         SetNoDialogMenus(1);
     }
-    MobilizeCurrHero(0);
+    MobilizeCurrHero(false);
     if (processLosses)
         gRetreatWin = 0;
-    gInCombat = 0;
+    gInCombat = false;
     return gCombatManager->m_combatResult;
 }
 
@@ -2923,7 +2923,7 @@ void advManager::SendHeroTownData(
             remotePlayer,
             sizeof(combatRemoteHeroFragment),
             REMOTE_COMMAND_HERO_TOWN_DATA,
-            1
+            true
         );
         if (!result)
             ShutDown(NULL);
@@ -2936,7 +2936,7 @@ void advManager::SendHeroTownData(
             remotePlayer,
             sizeof(combatRemoteHeroFragment),
             REMOTE_COMMAND_HERO_TOWN_DATA,
-            1
+            true
         );
         if (!result)
             ShutDown(NULL);
@@ -2962,20 +2962,20 @@ void advManager::ReceiveHeroTownData(
     i8* retreatWin,
     i8* combatSurrender
 ) {
-    i8 hasTownOn;
+    b8 hasTownOn;
     i32 confirmSent;
     i32 lastReceiveTick;
     i8 firstOwner;
     i8 secondOwner;
-    i8 bFirstHero;
-    i8 hasSecondHero;
+    b8 bFirstHero;
+    b8 hasSecondHero;
 
     *firstHero = NULL;
     *firstArmy = NULL;
     *combatTown = NULL;
     *secondHero = NULL;
     *secondArmy = NULL;
-    bFirstHero = hasSecondHero = hasTownOn = 0;
+    bFirstHero = hasSecondHero = hasTownOn = false;
     *remotePlayer = packet->sender;
     *x = EVENTS_REMOTE_MESSAGE(packet)->combat.x;
     *y = EVENTS_REMOTE_MESSAGE(packet)->combat.y;
@@ -3006,7 +3006,8 @@ void advManager::ReceiveHeroTownData(
         memcpy(*combatTown, &EVENTS_REMOTE_MESSAGE(packet)->combat.combatTown, sizeof(town));
     }
 
-    confirmSent = TransmitRemoteData(NULL, *remotePlayer, 0, REMOTE_COMMAND_HERO_TOWN_CONFIRM, 1);
+    confirmSent =
+        TransmitRemoteData(NULL, *remotePlayer, 0, REMOTE_COMMAND_HERO_TOWN_CONFIRM, true);
     if (!confirmSent)
         ShutDown(NULL);
 
@@ -3023,7 +3024,7 @@ void advManager::ReceiveHeroTownData(
             else
                 ShutDown(localization::Tr("combat.network.canceled"));
         }
-        packet = GetRemoteData(1);
+        packet = GetRemoteData(true);
         if (packet && packet->type == REMOTE_MESSAGE_RELIABLE
             && packet->command == REMOTE_COMMAND_HERO_TOWN_DATA) {
             lastReceiveTick = KBTickCount();

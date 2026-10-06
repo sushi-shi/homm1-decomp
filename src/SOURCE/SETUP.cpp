@@ -32,7 +32,7 @@ i8 game::SetupCampaignGame(void) {
     heroWindow* window = new heroWindow(400, 35, "stpcmpgn.bin");
     if (!window)
         MemError();
-    gWindowManager->DoDialog(window, SetupCampaignGameHandler, 0);
+    gWindowManager->DoDialog(window, SetupCampaignGameHandler, false);
     delete window;
     switch (gWindowManager->m_dialogResult) {
         case CHOICE_ONE:
@@ -58,7 +58,7 @@ i8 game::SetupBaud(void) {
     heroWindow* window = new heroWindow(400, 35, "stpbaud.bin");
     if (!window)
         MemError();
-    gWindowManager->DoDialog(window, SetupBaudHandler, 0);
+    gWindowManager->DoDialog(window, SetupBaudHandler, false);
     delete window;
     switch (gWindowManager->m_dialogResult) {
         case CHOICE_ONE:
@@ -86,7 +86,7 @@ i8 game::SetupComPort(void) {
     heroWindow* setupWindow = new heroWindow(400, 35, "stpcom.bin");
     if (!setupWindow)
         MemError();
-    gWindowManager->DoDialog(setupWindow, SetupComPortHandler, 0);
+    gWindowManager->DoDialog(setupWindow, SetupComPortHandler, false);
     delete setupWindow;
     switch (gWindowManager->m_dialogResult) {
         case CHOICE_ONE:
@@ -121,7 +121,7 @@ i8 game::SetupHotSeatGame(void) {
     heroWindow* window = new heroWindow(400, 35, "stphotst.bin");
     if (!window)
         MemError();
-    gWindowManager->DoDialog(window, SetupHotSeatGameHandler, 0);
+    gWindowManager->DoDialog(window, SetupHotSeatGameHandler, false);
     delete window;
     switch (gWindowManager->m_dialogResult) {
         case CHOICE_ONE:
@@ -144,7 +144,7 @@ i8 game::SetupNetworkGame(void) {
     heroWindow* window = new heroWindow(400, 35, "stpnet.bin");
     if (!window)
         MemError();
-    gWindowManager->DoDialog(window, SetupNetworkGameHandler, 0);
+    gWindowManager->DoDialog(window, SetupNetworkGameHandler, false);
     delete window;
     switch (gWindowManager->m_dialogResult) {
         case CHOICE_ONE:
@@ -176,7 +176,7 @@ i8 game::SetupModemGame(void) {
     }
     if (!window)
         MemError();
-    gWindowManager->DoDialog(window, SetupModemGameHandler, 0);
+    gWindowManager->DoDialog(window, SetupModemGameHandler, false);
     delete window;
     switch (gWindowManager->m_dialogResult) {
         case CHOICE_ONE:
@@ -195,7 +195,7 @@ i8 game::SetupModemGame(void) {
                 return 0;
             break;
         case CHOICE_THREE:
-            gDoModemConfig = 1;
+            gDoModemConfig = true;
             break;
         case DIALOG_CANCEL:
             return 0;
@@ -205,12 +205,12 @@ i8 game::SetupModemGame(void) {
 
 VA(0x0045738b, 0x1a2)
 i8 game::SetupMultiPlayerGame(void) {
-    i32 loop;
+    b32 loop;
 
     heroWindow* window = new heroWindow(400, 35, "stpmp.bin");
     if (!window)
         MemError();
-    gWindowManager->DoDialog(window, SetupMultiPlayerGameHandler, 0);
+    gWindowManager->DoDialog(window, SetupMultiPlayerGameHandler, false);
     delete window;
 
     gDirectConnect = 0;
@@ -232,16 +232,16 @@ i8 game::SetupMultiPlayerGame(void) {
             gDirectConnect = 0;
         setupModem:
             gMapBaseType = MULTIPLAYER_BASE_MODEM;
-            loop = 1;
+            loop = true;
             while (loop) {
                 if (!SetupModemGame())
                     return 0;
                 if (gDoModemConfig) {
-                    gDoModemConfig = 0;
+                    gDoModemConfig = false;
                     if (!SetupComPort())
                         return 0;
                 } else {
-                    loop = 0;
+                    loop = false;
                 }
             }
             break;
@@ -253,17 +253,17 @@ i8 game::SetupMultiPlayerGame(void) {
 
 // The menu shortcuts keep separate restart and load command ids.
 VA(0x0045752d, 0x372)
-i8 game::SetupGame(i8 newGame) {
+i8 game::SetupGame(b8 newGame) {
     heroWindow* window;
-    i32 result;
+    b32 result;
 
-    result = 1;
+    result = true;
     gMapExtendedType = REMOTE_GAME_UNSET;
     gMapBaseType = MULTIPLAYER_BASE_UNSET;
     gNumHumanPlayers = 1;
     gWaitForRemoteReceive = 0;
     gDirectConnect = 0;
-    gInSetupDialog = 1;
+    gInSetupDialog = true;
 
     if (gMenuCommand != APP_MENU_NONE) {
         switch (gMenuCommand) {
@@ -341,14 +341,14 @@ i8 game::SetupGame(i8 newGame) {
                 break;
         }
         gMenuCommand = APP_MENU_NONE;
-        result = 1;
+        result = true;
         goto done;
     }
 
     window = new heroWindow(400, 35, "stpnewgm.bin");
     if (!window)
         MemError();
-    gWindowManager->DoDialog(window, SetupGameHandler, 0);
+    gWindowManager->DoDialog(window, SetupGameHandler, false);
     delete window;
 
     switch (static_cast<i16>(gWindowManager->m_dialogResult)) {
@@ -358,19 +358,19 @@ i8 game::SetupGame(i8 newGame) {
             gCampaignChoice = CAMPAIGN_IRONFIST;
             if (newGame) {
                 if (!SetupCampaignGame()) {
-                    result = 0;
+                    result = false;
                     goto done;
                 }
             }
             break;
         case CHOICE_THREE:
             if (!SetupMultiPlayerGame()) {
-                result = 0;
+                result = false;
                 goto done;
             }
             break;
         case DIALOG_CANCEL:
-            result = 0;
+            result = false;
             goto done;
     }
 
@@ -382,7 +382,7 @@ i8 game::SetupGame(i8 newGame) {
     }
 
 done:
-    gInSetupDialog = 0;
+    gInSetupDialog = false;
     return result;
 }
 
@@ -391,7 +391,7 @@ i8 game::PickLoadGame(void) {
     fileRequester* fileReq;
     i16 dialogResult;
 
-    if (!SetupGame(0))
+    if (!SetupGame(false))
         return 0;
     if (gWaitForRemoteReceive)
         return 1;
@@ -409,7 +409,7 @@ i8 game::PickLoadGame(void) {
     dialogResult = gExec->DoDialog(fileReq);
     gMouseManager->ReallyHidePointer();
     if (dialogResult == DIALOG_BUTTON_2) {
-        gGame->LoadGame(gLastFilename, 0, 0);
+        gGame->LoadGame(gLastFilename, false, 0);
         delete fileReq;
         return 1;
     } else {
@@ -658,14 +658,14 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) SetupGameHandler(tag_message& message
 
 VA(0x00458151, 0xb4)
 H1_ENUM_RETURN(MessageDispatchResult, i16) BaseSetupHandler(tag_message& message) {
-    i32 handled = 0;
+    b32 handled = false;
 
     PollSound();
     if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
             case WIDGET_NOTIFY_DESELECT:
                 if ((message.id > 0 && message.id <= CHOICE_ID_LAST) || message.id == DIALOG_CANCEL)
-                    handled = 1;
+                    handled = true;
         }
     }
 
@@ -681,4 +681,4 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) BaseSetupHandler(tag_message& message
 // Retail's SETUP object ends at 0x00458513; RemoteCleanup starts the REMOTE
 // object at 0x00458520.
 DATA(0x004cc8cc)
-i32 gDoModemConfig = 0;
+b32 gDoModemConfig = false;

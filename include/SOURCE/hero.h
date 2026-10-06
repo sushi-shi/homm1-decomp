@@ -138,11 +138,11 @@ public:
     i8 HasSpell(H1_ENUM_PARAM(SpellType, i8) spell);
     i16 GetNumSpells(H1_ENUM_PARAM(HeroSpellType, i8) type);
     void UseSpell(H1_ENUM_PARAM(SpellType, i8) spell);
-    i32 AddSpell(H1_ENUM_PARAM(SpellType, i8) spell, i8 charges, i32 checkOnly);
+    i32 AddSpell(H1_ENUM_PARAM(SpellType, i8) spell, i8 charges, b32 checkOnly);
     void HeroScreenUpdate(void);
     void UpdateArmies(void);
     void RedrawHeroScreen(void);
-    i8 HeroView(i8 viewOnly);
+    i8 HeroView(b8 viewOnly);
     void ViewStat(i8 stat, i8 quickView);
     void ViewArtifact(H1_ENUM_PARAM(ArtifactType, i8) artifact, i8 quickView);
     i8 Dismiss(void);

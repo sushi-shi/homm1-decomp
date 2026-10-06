@@ -243,7 +243,7 @@ long __stdcall AppWndProc(HWND window, u32 message, u32 messageParam, long messa
                 return 0;
             gTempValue = GetWindowLongA(gAppWindow, GWL_STYLE);
             if ((gTempValue & WS_MAXIMIZE) == 0 && (gTempValue & WS_MINIMIZE) == 0
-                && gClosingApp == 0 && CURRENT_GRAPHICS_CONFIG.fullScreen == 0) {
+                && gClosingApp == false && CURRENT_GRAPHICS_CONFIG.fullScreen == 0) {
                 GetWindowRect(window, &gTempRect);
                 CURRENT_GRAPHICS_CONFIG.x = gTempRect.left;
                 CURRENT_GRAPHICS_CONFIG.y = gTempRect.top;
@@ -274,7 +274,7 @@ long __stdcall AppWndProc(HWND window, u32 message, u32 messageParam, long messa
             if (gMainWinScreenHeight < 1)
                 gMainWinScreenHeight = 1;
             if (gAppWindow != NULL && (gTempValue & WS_MAXIMIZE) == 0
-                && (gTempValue & WS_MINIMIZE) == 0 && gClosingApp == 0
+                && (gTempValue & WS_MINIMIZE) == 0 && gClosingApp == false
                 && CURRENT_GRAPHICS_CONFIG.fullScreen == 0) {
                 CURRENT_GRAPHICS_CONFIG.width = gMainWinScreenWidth;
                 CURRENT_GRAPHICS_CONFIG.height = gMainWinScreenHeight;
@@ -305,7 +305,7 @@ long __stdcall AppWndProc(HWND window, u32 message, u32 messageParam, long messa
                 }
             }
         case WM_DESTROY:
-            gClosingApp = 1;
+            gClosingApp = true;
             PostQuitMessage(0);
         case WM_QUIT:
             ShutDown(NULL);
@@ -336,7 +336,7 @@ BOOL __stdcall AppAbout(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
 }
 
 DATA(0x004a9e4c)
-i32 gClosingApp = 0;
+b32 gClosingApp = false;
 // No retail code reads this; it holds its retail .bss place.
 DATA(0x004a9e50)
 i32 gUnusedWindowCount = 0;
@@ -610,7 +610,7 @@ void SetGameDefaults(void) {
     gConfig.currentMapOffset = 0;
     gConfig.firstMapOffset = Random(0, DEFAULT_MAP_OFFSET_LIMIT);
     gConfig.musicSource = SOUND_MUSIC_SOURCE_CD;
-    gFirstTimeThrough = 1;
+    gFirstTimeThrough = true;
     gConfig.walkSpeed = WALK_SPEED_CANTER;
 }
 

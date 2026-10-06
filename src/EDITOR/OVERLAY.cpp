@@ -45,7 +45,7 @@ overlayManager::overlayManager(void) {
 VA(0x0040ea3b, 0x372)
 H1_ENUM_RETURN(BaseManagerStatus, i16) overlayManager::Open(i16 priority) {
     gOverlayCategory = gOverlayShownCategory;
-    m_previewDrawn = 0;
+    m_previewDrawn = false;
     m_panel = new iconWidget(
         OVERLAY_PANEL_X,
         OVERLAY_PANEL_Y,
@@ -110,7 +110,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) overlayManager::Open(i16 priority) {
         ICON_DRAW_NORMAL,
         ICON_DRAW_OFFSET_FULL
     );
-    DrawCategoryName(1);
+    DrawCategoryName(true);
     gEditManager->m_placedY = -1;
     gEditManager->m_placedX = -1;
     LoadCategory(gOverlayCategory);
@@ -140,14 +140,14 @@ void overlayManager::Close(void) {
 
 VA(0x0040eef6, 0x601)
 H1_ENUM_RETURN(MessageDispatchResult, i16) overlayManager::Main(tag_message& message) {
-    i32 result;
+    b32 result;
     i32 objectPlaced;
     H1_ENUM_LOCAL(OverlayToolHelp, i32) helpItem;
     i8 previousCategory;
     i16 cellX;
     i16 cellY;
 
-    result = 0;
+    result = false;
     helpItem = OVERLAY_TOOL_HELP_NONE;
     if (!(message.type & m_dispatchMask))
         return MESSAGE_DISPATCH_CONTINUE;
@@ -176,7 +176,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) overlayManager::Main(tag_message& mes
                                     &m_types[gSelectedOverlay],
                                     gEditManager->m_viewX + gEditManager->m_cursorX,
                                     gEditManager->m_viewY + gEditManager->m_cursorY,
-                                    1
+                                    true
                                 );
                             else
                                 objectPlaced = PlaceOverlay(
@@ -212,14 +212,14 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) overlayManager::Main(tag_message& mes
                         showCategory:
                             gSelectedOverlay = OVERLAY_NO_SELECTION;
                             DrawSelectedOverlay();
-                            DrawCategoryName(1);
+                            DrawCategoryName(true);
                             break;
                         case OVERLAY_PREVIEW_BORDER:
                             previousCategory = gOverlayCategory;
                             gOverlayCategory = gOverlayShownCategory;
                             gSelectedOverlay = PickOverlay(gOverlayCategory);
                             DrawSelectedOverlay();
-                            DrawCategoryName(1);
+                            DrawCategoryName(true);
                             gInputManager->Flush();
                             break;
                     }
@@ -227,7 +227,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) overlayManager::Main(tag_message& mes
                 case WIDGET_COMMAND_HOVER:
                     if (message.id != EDIT_CONTROL_MAP) {
                         if (m_previewDrawn) {
-                            m_previewDrawn = 0;
+                            m_previewDrawn = false;
                             gEditManager->DrawMap();
                             gEditManager->UpdateMapView();
                             gEditManager->UpdateCursor();
@@ -281,9 +281,9 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) overlayManager::Main(tag_message& mes
                                             cellY,
                                             OVERLAY_FOOTPRINT_COLUMNS,
                                             OVERLAY_FOOTPRINT_ROWS + 1,
-                                            1
+                                            true
                                         );
-                                        m_previewDrawn = 1;
+                                        m_previewDrawn = true;
                                     }
                                     gEditManager->UpdateMapView();
                                     gEditManager->UpdateCursor();
@@ -299,7 +299,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) overlayManager::Main(tag_message& mes
             }
             break;
     }
-    if (result == 1) {
+    if (result == true) {
         message.type = MESSAGE_EXECUTIVE;
         message.executiveCommand = EXECUTIVE_COMMAND_TERMINATE_LOOP;
         return MESSAGE_DISPATCH_FORWARD;
@@ -532,13 +532,13 @@ i32 PlaceOverlay(overlayType* type, i16 x, i16 y) {
                     for (i = 0; i < OVERLAY_TYPE_COUNT; i++)
                         if ((gOverlayTypes[i].flags & OVERLAY_TYPE_MINE_RESOURCE)
                             && gOverlayTypes[i].frames[0] == type->resourceFrame) {
-                            PlaceMineResource(&gOverlayTypes[i], x + col, y - row, 0);
+                            PlaceMineResource(&gOverlayTypes[i], x + col, y - row, false);
                             i = 999;
                         }
                 } else {
                     for (i = 0; i < OVERLAY_TYPE_COUNT; i++)
                         if (gOverlayTypes[i].flags & OVERLAY_TYPE_MINE_RESOURCE) {
-                            PlaceMineResource(&gOverlayTypes[i], x + col, y - row, 0);
+                            PlaceMineResource(&gOverlayTypes[i], x + col, y - row, false);
                             i = 999;
                         }
                 }
@@ -549,17 +549,17 @@ i32 PlaceOverlay(overlayType* type, i16 x, i16 y) {
 }
 
 VA(0x0041016e, 0xf2)
-i32 PlaceMineResource(overlayType* type, i16 x, i16 y, i32 checkMine) {
-    i32 fits;
+i32 PlaceMineResource(overlayType* type, i16 x, i16 y, b32 checkMine) {
+    b32 fits;
     mapCell* target;
 
-    fits = 1;
+    fits = true;
     if (checkMine && (type->flags & OVERLAY_TYPE_MINE_RESOURCE)
         && (gEditManager->m_map.cells[x][y].m_triggerType != MAP_OBJECT_TRIGGER(MAP_OBJECT_MINE)
             || x < 1
             || gEditManager->m_map.cells[x - 1][y].m_triggerType
                    != MAP_EVENT_TRIGGER(MAP_OBJECT_MINE)))
-        fits = 0;
+        fits = false;
     if (!fits) {
         ShowStatusWarning(localization::Tr("editor.overlay.resource.unsuitable"));
         return 0;
@@ -579,7 +579,7 @@ void overlayManager::DrawOverlay(
     i16 y,
     i16 width,
     i16 height,
-    i32 update
+    b32 update
 ) {
     i16 cellSize;
     i16 cx;
@@ -745,7 +745,7 @@ i16 overlayManager::PickOverlay(i16 category) {
                     y,
                     OVERLAY_PICKER_FOOTPRINT_COLUMNS,
                     OVERLAY_PICKER_FOOTPRINT_ROWS,
-                    0
+                    false
                 );
                 slot++;
             }
@@ -851,7 +851,7 @@ void overlayManager::MeasureOverlay(overlayType* type) {
 }
 
 VA(0x00410dc4, 0x6f)
-void overlayManager::DrawCategoryName(i32) {
+void overlayManager::DrawCategoryName(b32) {
     FillBitmapArea(
         gWindowManager->m_screen,
         OVERLAY_CATEGORY_NAME_X,
@@ -903,7 +903,7 @@ void overlayManager::DrawSelectedOverlay(void) {
             OVERLAY_PREVIEW_OBJECT_Y,
             OVERLAY_FOOTPRINT_COLUMNS,
             OVERLAY_FOOTPRINT_ROWS + 1,
-            1
+            true
         );
         gWindowManager->UpdateScreenRegion(
             OVERLAY_PREVIEW_X,

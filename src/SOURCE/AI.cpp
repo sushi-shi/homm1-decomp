@@ -70,7 +70,7 @@ i32 combatManager::AICheckRetreat(void) {
                 thatArmy->m_creatureCounts[armyIndex] = 0;
             }
         }
-        theForces[owner] = gPhilAI->FightValueOfStack(thatArmy, curLeader, 1);
+        theForces[owner] = gPhilAI->FightValueOfStack(thatArmy, curLeader, true);
         if (m_combatTowns[owner])
             theForces[owner] = theForces[owner] * 1.1;
         artifactTotals[owner] = 0;
@@ -126,7 +126,7 @@ i32 combatManager::AICheckRetreat(void) {
 // the gate. The chosen move is nudged onto a free hex next to an enemy.
 VA(0x00411d88, 0x872)
 void combatManager::DoCompAI(H1_ENUM_PARAM(CombatSide, i8) side) {
-    i8 theyOutshoot;
+    b8 theyOutshoot;
     H1_ENUM_ARRAY(i16, mainShooters, CombatSide, COMBAT_SIDE_COUNT);
     H1_ENUM_ARRAY(i32, newStrengths, CombatSide, COMBAT_SIDE_COUNT);
     i32 theSum;
@@ -143,7 +143,7 @@ void combatManager::DoCompAI(H1_ENUM_PARAM(CombatSide, i8) side) {
     i8 ndx;
     i32 localDummy;
     i32 myShootPower;
-    i8 ourOutshoot;
+    b8 ourOutshoot;
     hexcell* tile;
     i32 wallStrength;
     town* castleCopy;
@@ -151,7 +151,7 @@ void combatManager::DoCompAI(H1_ENUM_PARAM(CombatSide, i8) side) {
     i32 targetHexValue;
     i32 keptAdj;
 
-    m_limitCreature = 0;
+    m_limitCreature = false;
     gMouseManager->ReallyHidePointer();
     curArmy = &m_armies[m_currentSide][m_currentArmyIndex];
     newPlan = COMBAT_AI_ATTACK_NONE;
@@ -169,8 +169,8 @@ void combatManager::DoCompAI(H1_ENUM_PARAM(CombatSide, i8) side) {
         mainShooters[m_currentSide] | flyerMask[m_currentSide] | walkerMask[m_currentSide]
     );
     minShootPowerVal = (theSum + COMBAT_AI_STRENGTH_ROUNDING) / COMBAT_AI_STRENGTH_FRACTION;
-    ourOutshoot = 0;
-    theyOutshoot = 0;
+    ourOutshoot = false;
+    theyOutshoot = false;
     myShootPower = GetStrength(m_currentSide, mainShooters[m_currentSide]);
     foeShootersNow = GetStrength(sideEnemy, mainShooters[sideEnemy]);
     if (m_castleSide[COMBAT_DEFENDER_SIDE]) {
@@ -193,9 +193,9 @@ void combatManager::DoCompAI(H1_ENUM_PARAM(CombatSide, i8) side) {
             foeShootersNow += wallStrength;
     }
     if ((theSum + COMBAT_AI_STRENGTH_ROUNDING) / COMBAT_AI_STRENGTH_FRACTION < myShootPower)
-        ourOutshoot = 1;
+        ourOutshoot = true;
     if (foeShootersNow > myShootPower)
-        theyOutshoot = 1;
+        theyOutshoot = true;
     if (curArmy->m_stats.attributes & MONSTER_FLAGS_SHOOTER) {
         if (curArmy->m_stats.shots > 0)
             newPlan = COMBAT_AI_ATTACK_SHOOT;

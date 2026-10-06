@@ -1087,11 +1087,18 @@ def is_counted(site: Site) -> bool:
 
 
 def open_sites(sites: list[Site], keeps: list[Keep]) -> tuple[list[Site], list[Keep]]:
-    """Counted sites no row keeps, and the rows that keep nothing (stale)."""
+    """Counted sites no row keeps, and the rows that keep nothing (stale).
+
+    A proven site (a 0/1 meeting a b8/b32 flag, a domain value, a null
+    pointer) is never kept: a row's reason cannot outrank the name its
+    destination's type gives it, so it stays open until it is spelled."""
     used: set[int] = set()
     out: list[Site] = []
     for site in sites:
         if not is_counted(site):
+            continue
+        if site.proven:
+            out.append(site)
             continue
         keep = next((k for k in keeps if k.matches(site)), None)
         if keep is None:

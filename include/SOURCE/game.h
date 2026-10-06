@@ -233,7 +233,7 @@ H1_ENUM_CONST_END(MapTownRecordConstant)
 // owner, buildings, mage-guild level and garrison.
 #pragma pack(push, 1)
 struct mapTownExtra {
-    i8 customized;
+    b8 customized;
     i8 owner;
     i16 buildings;
     i8 buildState;
@@ -338,7 +338,7 @@ public:
     // LoadGame sets it; ProcessMapExtra clears it for a 0xc7 (map hero)
     // trigger cell. While set, every player starts with a town hero;
     // otherwise the map's heroes are processed.
-    i8 m_noMapHeroes;
+    b8 m_noMapHeroes;
     hero* GetHero(i8 id) {
         return &m_heroRecs[id];
     }
@@ -361,13 +361,13 @@ public:
     i8 SetupNetworkGame(void);
     i8 SetupModemGame(void);
     i8 SetupMultiPlayerGame(void);
-    i8 SetupGame(i8 newGame);
+    i8 SetupGame(b8 newGame);
     i8 PickLoadGame(void);
-    void ShowCampaignInfo(i32 scenario, i32 viewOnly, i32);
+    void ShowCampaignInfo(i32 scenario, b32 viewOnly, i32);
     void InitEntireCampaign(i32 side);
     // Retail InitCampaignMap takes the scenario and an unused int (ret 8).
     void InitCampaignMap(i32 scenario, i32);
-    i8 IsMobile(i8 heroId);
+    b8 IsMobile(i8 heroId);
     class mapCell (*GetWorldMapData(void))[MAP_CELL_GRID_SIZE];
     // Inline world-map file I/O (LoadMap, SaveGame, LoadGame).
     void ReadWorldMap(i32 fd);
@@ -378,9 +378,9 @@ public:
     i8 GetNewHeroId(i8 heroClass);
     i8 GetTownId(i8 x, i8 y);
     i8 GetMineId(i8 x, i8 y);
-    i16 SaveGame(char* filename, i8 generateName);
+    i16 SaveGame(char* filename, b8 generateName);
     // HoMM1 retail returns 1 in AX (ret 0xc).
-    i16 LoadGame(char* filename, i32 origData, i32);
+    i16 LoadGame(char* filename, b32 origData, i32);
     void GiveTroopsToNeutralTowns(void);
     void NewMap(char* mapName);
     void RandomizeEvents(void);
@@ -407,7 +407,7 @@ public:
         H1_ENUM_PARAM(CreatureType, i8) monsterType,
         i16 numTroops,
         class town* castle,
-        i8 disableDismiss,
+        b8 disableDismiss,
         H1_ENUM_PARAM(ArmyFacing, i8) facing,
         i8 quickView,
         class hero* theHero,
@@ -424,16 +424,16 @@ public:
     void PerWeek(void);
     void PerMonth(void);
     // HoMM1 retail: byte x, y and castle flag (ret 0xc).
-    void RandomizeTown(i8 x, i8 y, i8 isCastle);
+    void RandomizeTown(i8 x, i8 y, b8 isCastle);
     // HoMM1 retail: byte x and y (ret 8).
     void RandomizeMine(i8 x, i8 y);
     // HoMM1 retail 0x00442fb4 (ret 8): default dwellings and mage-guild spells.
-    void SetupTown(i8 townId, i8 aiOwned);
+    void SetupTown(i8 townId, b8 aiOwned);
     H1_ENUM_RETURN(ArtifactType, i8) GetRandomArtifactId(void);
     void RandomizeHeroPool(void);
     void SetRandomHeroArmies(i16 heroId, i32 strongArmy);
     // HoMM1 retail: towns-only pass flag (ret 4).
-    void ProcessRandomObjects(i32 castlesOnly);
+    void ProcessRandomObjects(b32 castlesOnly);
     void SetVisibility(i16 x, i16 y, i16 player, i16 radius);
     void
     GiveArmy(class armyGroup* group, H1_ENUM_PARAM(CreatureType, i32) type, i32 count, i32 slot);
@@ -460,7 +460,7 @@ public:
     void ProcessOnMapHeroes(void);
     void CheckHeroConsistency(void);
     i32 TransmitSaveGame(i32 remotePlayer, i32 playerExited);
-    i32 ReceiveSaveGame(i32 dataSize, i32 remotePlayer);
+    b32 ReceiveSaveGame(i32 dataSize, i32 remotePlayer);
     void DoNewTurn(void);
     i32 GetBoatsBuilt(void);
     i32 GetNumThievesGuilds(i32 player);
@@ -494,7 +494,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) ViewSpellsHandler(struct tag_message&
 H1_ENUM_RETURN(MessageDispatchResult, i16) ViewSpecialHandler(struct tag_message& message);
 H1_ENUM_RETURN(MessageDispatchResult, i16) ViewArmyHandler(struct tag_message& message);
 i32 GetBaseScore(i32 days);
-extern i32 gGameOver;
+extern b32 gGameOver;
 // SaveGame files the current player through this byte.
 extern i8 gSavedCurPlayer;
 // NewGame remembers the last new-game settings for the next setup screen.
@@ -516,7 +516,7 @@ void SIncRandomize(i32 x, i32 y);
 void SRand(i32 seed);
 // GetMap raises gShowMapInfo around its .MAP requester and owns the
 // reqextra.bin side window the requester fills.
-extern i8 gShowMapInfo;
+extern b8 gShowMapInfo;
 extern heroWindow* gReqExtraWindow;
 extern char gCurMapName[];
 #define gDismissArmy gbDismissArmy // spelling fixes .bss order

@@ -16,9 +16,9 @@ font::font(i16 id) : resource(RESOURCE_CATEGORY_FONT, id, RESOURCE_REFERENCE_INI
     m_height = gResourceManager->ReadWord();
     m_headerWord = gResourceManager->ReadWord();
     gResourceManager->Read13(name);
-    gLoadingMonoIcon = 1;
+    gLoadingMonoIcon = true;
     m_glyphIcon = gResourceManager->GetIcon(name);
-    gLoadingMonoIcon = 0;
+    gLoadingMonoIcon = false;
 }
 
 VA(0x00471e97, 0x5b)
@@ -228,14 +228,14 @@ i32 font::LineWidth(char* text) {
     i32 curCh;
     i32 spare;
     i16* table;
-    i32 oldSpare;
+    b32 oldSpare;
     i16 theLen;
     i16 newSpare, mySpare, savedSpare, position, thisWidth;
     char* p;
 
     theLen = strlen(text);
     table = m_glyphIcon->m_frameWords;
-    oldSpare = 0;
+    oldSpare = false;
     newSpare = 0;
     mySpare = 0;
     savedSpare = 0;

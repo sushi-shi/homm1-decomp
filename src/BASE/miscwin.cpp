@@ -47,7 +47,7 @@ void BlitBitmapToScreen(
                 width
             );
     }
-    if (gEnlargeScreenBlit != 0) {
+    if (gEnlargeScreenBlit != false) {
         if (gMainWinScreenWidth == LOGICAL_SCREEN_WIDTH
             && gMainWinScreenHeight == LOGICAL_SCREEN_HEIGHT) {
             if (width < LOGICAL_SCREEN_WIDTH)
@@ -97,14 +97,14 @@ void BitmapToScreen(bitmap* image) {
 }
 
 VA(0x0046fa55, 0x50)
-void SetPalette(i8* paletteData, i32 updateDisplay) {
+void SetPalette(i8* paletteData, b32 updateDisplay) {
     memcpy(gBufferPalette->m_data, paletteData, PALETTE_DATA_SIZE);
     memcpy(
         gCyclePal,
         paletteData + PALETTE_CYCLE_FIRST * PALETTE_GRAPHICS_CHANNELS,
         sizeof(gCyclePal)
     );
-    if (updateDisplay != 0)
+    if (updateDisplay != false)
         UpdatePalette(gBufferPalette->m_data);
 }
 

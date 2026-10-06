@@ -16,7 +16,7 @@ hexcell::hexcell(void) {
     m_occupantIndex = 0;
     m_obstacleIndex = COMBAT_OBSTACLE_NONE;
     m_occupantFootprintHalf = ARMY_FACING_NONE;
-    m_pathFlag = 0;
+    m_pathFlag = false;
 }
 
 // Moves the live occupant from another cell into this one.
@@ -52,7 +52,7 @@ void hexcell::DrawOccupant(void) {
 #define mirrored level // frame-slot spelling
 VA(0x0043b832, 0x124)
 void hexcell::DrawTower(H1_ENUM_PARAM(CombatObstacleIndex, i8) frame) {
-    i8 mirrored;
+    b8 mirrored;
     i16 row;
 
     mirrored = gCombatManager->m_castleSide[COMBAT_ATTACKER_SIDE] == 1;
@@ -88,7 +88,7 @@ void hexcell::DrawTower(H1_ENUM_PARAM(CombatObstacleIndex, i8) frame) {
 
 VA(0x0043b956, 0x279)
 void hexcell::DrawWall(void) {
-    i8 level;
+    b8 level;
     i16 row;
     i16 rubbleFrame;
 
@@ -158,12 +158,12 @@ void hexcell::DrawObstacle(void) {
                 DrawTower(m_obstacleIndex);
                 break;
             case COMBAT_WALL_INTACT_HIT:
-                if (gCombatManager->m_wallFrame < 4 || gCombatManager->m_wallSurvives == 1)
+                if (gCombatManager->m_wallFrame < 4 || gCombatManager->m_wallSurvives == true)
                     DrawTower(COMBAT_WALL_INTACT);
                 DrawWall();
                 break;
             case COMBAT_WALL_DAMAGED_HIT:
-                if (gCombatManager->m_wallFrame < 4 || gCombatManager->m_wallSurvives == 1)
+                if (gCombatManager->m_wallFrame < 4 || gCombatManager->m_wallSurvives == true)
                     DrawTower(COMBAT_WALL_DAMAGED);
                 DrawWall();
                 break;

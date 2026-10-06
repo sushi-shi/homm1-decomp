@@ -29,7 +29,7 @@ public:
     // cell whose half differs from its facing, so it draws once.
     H1_ENUM_STORAGE(ArmyFacing, i8) m_occupantFootprintHalf;
     // army::ResetPath clears the per-cell path mark.
-    i8 m_pathFlag;
+    b8 m_pathFlag;
     // --- constructors ---
     hexcell(void);
     // --- methods ---

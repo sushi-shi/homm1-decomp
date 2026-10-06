@@ -55,7 +55,7 @@ void icon::DrawToBuffer(
             m_drawTop = y + m_frames[frame].y;
             m_drawBottom = m_drawTop + m_frames[frame].h;
         }
-        if (gSaveBiggestExtent != 0) {
+        if (gSaveBiggestExtent != false) {
             if (m_drawLeft < gMinExtentX)
                 gMinExtentX = m_drawLeft;
             if (m_drawTop < gMinExtentY)
@@ -67,7 +67,7 @@ void icon::DrawToBuffer(
         }
     }
     if (gLimitToExtent != 0
-        && (gCurrArmyDrawn == 0 || m_drawLeft > gMaxExtentX || m_drawRight < gMinExtentX
+        && (gCurrArmyDrawn == false || m_drawLeft > gMaxExtentX || m_drawRight < gMinExtentX
             || m_drawTop > gMaxExtentY || m_drawBottom < gMinExtentY))
         return;
     if (gIconClipOn != 0) {
@@ -170,7 +170,7 @@ void icon::DimToBuffer(
             m_drawTop = y + m_frames[frame].y;
             m_drawBottom = m_drawTop + m_frames[frame].h;
         }
-        if (gSaveBiggestExtent != 0) {
+        if (gSaveBiggestExtent != false) {
             if (m_drawLeft < gMinExtentX)
                 gMinExtentX = m_drawLeft;
             if (m_drawTop < gMinExtentY)
@@ -182,7 +182,7 @@ void icon::DimToBuffer(
         }
     }
     if (gLimitToExtent != 0
-        && (gCurrArmyDrawn == 0 || m_drawLeft > gMaxExtentX || m_drawRight < gMinExtentX
+        && (gCurrArmyDrawn == false || m_drawLeft > gMaxExtentX || m_drawRight < gMinExtentX
             || m_drawTop > gMaxExtentY || m_drawBottom < gMinExtentY))
         return;
     if (orientation == ICON_DRAW_NORMAL)

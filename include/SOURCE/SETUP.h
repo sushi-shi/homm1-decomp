@@ -18,24 +18,20 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) SetupMultiPlayerGameHandler(struct ta
 H1_ENUM_RETURN(MessageDispatchResult, i16) SetupNetworkGameHandler(struct tag_message& message);
 H1_ENUM_RETURN(MessageDispatchResult, i16) SetupGameHandler(struct tag_message& message);
 
-extern i32 gDoModemConfig;
+extern b32 gDoModemConfig;
 
 // The setup dialogs' results: the numbered choice buttons (BaseSetupHandler
 // accepts ids 1..1000; each game::Setup* maps CHOICE_n to its option and the
 // handlers show help row n - 1) or the cancel slot.
 H1_ENUM_ID_BEGIN(SetupDialogChoice)
-    DIALOG_CANCEL = DIALOG_BUTTON_1,
-    CHOICE_ONE = 1,
-    CHOICE_TWO = 2,
-    CHOICE_THREE = 3,
-    CHOICE_FOUR = 4,
-    CHOICE_ID_LAST = 1000
-H1_ENUM_ID_END(SetupDialogChoice)
+DIALOG_CANCEL = DIALOG_BUTTON_1,
+    CHOICE_ONE = 1, CHOICE_TWO = 2, CHOICE_THREE = 3, CHOICE_FOUR = 4,
+    CHOICE_ID_LAST = 1000 H1_ENUM_ID_END(SetupDialogChoice)
 
-// Each setup handler's right-click help row: NONE for a control without
-// help, otherwise a row of the handler's own gSetup*Help table from FIRST.
-// gSetupCampaignGameHelp: the four campaign heroes.
-H1_ENUM_BEGIN(SetupCampaignHelp)
+    // Each setup handler's right-click help row: NONE for a control without
+    // help, otherwise a row of the handler's own gSetup*Help table from FIRST.
+    // gSetupCampaignGameHelp: the four campaign heroes.
+    H1_ENUM_BEGIN(SetupCampaignHelp)
     SETUP_CAMPAIGN_HELP_NONE = -1,
     SETUP_CAMPAIGN_HELP_FIRST = 0,
     SETUP_CAMPAIGN_HELP_IRONFIST = 0,

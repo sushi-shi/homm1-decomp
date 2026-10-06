@@ -179,14 +179,14 @@ void swapManager::DrawSelector(void) {
 
 VA(0x0045d515, 0x88c)
 H1_ENUM_RETURN(MessageDispatchResult, i16) swapManager::Main(struct tag_message& message) {
-    i8 nowCloseRequested = 0;
-    i8 quickView;
+    b8 nowCloseRequested = false;
+    b8 quickView;
     i32 artIndex;
 
     if (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
-        quickView = 1;
+        quickView = true;
     else
-        quickView = 0;
+        quickView = false;
     if (!(message.type & m_messageFilter)) {
         if (message.type) {
             message.type = MESSAGE_NONE;
@@ -208,15 +208,15 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) swapManager::Main(struct tag_message&
                     if (quickView)
                         break;
                     if (message.id == DIALOG_BUTTON_0)
-                        nowCloseRequested = 1;
+                        nowCloseRequested = true;
                     break;
                 case WIDGET_NOTIFY_SELECT:
                     switch (message.id) {
                         case CONTROL_LEFT_HERO:
                             if (quickView)
                                 break;
-                            m_heroes[SWAP_SIDE_LEFT]->HeroView(1);
-                            gAdvManager->RedrawAdvScreen(1);
+                            m_heroes[SWAP_SIDE_LEFT]->HeroView(true);
+                            gAdvManager->RedrawAdvScreen(true);
                             Update();
                             m_window->DrawWindow();
                             Reset();
@@ -226,8 +226,8 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) swapManager::Main(struct tag_message&
                         case CONTROL_RIGHT_HERO:
                             if (quickView)
                                 break;
-                            m_heroes[SWAP_SIDE_RIGHT]->HeroView(1);
-                            gAdvManager->RedrawAdvScreen(1);
+                            m_heroes[SWAP_SIDE_RIGHT]->HeroView(true);
+                            gAdvManager->RedrawAdvScreen(true);
                             Update();
                             m_window->DrawWindow();
                             Reset();
@@ -378,7 +378,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) swapManager::Main(struct tag_message&
                                             ->m_army
                                             .m_creatureCounts[message.id - CONTROL_LEFT_ARMY_FIRST],
                                         NULL,
-                                        0,
+                                        false,
                                         ARMY_FACING_RIGHT,
                                         1,
                                         m_heroes[SWAP_SIDE_LEFT],
@@ -443,7 +443,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) swapManager::Main(struct tag_message&
                                         m_heroes[SWAP_SIDE_RIGHT]->m_army.m_creatureCounts
                                             [message.id - CONTROL_RIGHT_ARMY_FIRST],
                                         NULL,
-                                        0,
+                                        false,
                                         ARMY_FACING_RIGHT,
                                         1,
                                         m_heroes[SWAP_SIDE_RIGHT],
@@ -505,7 +505,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) swapManager::Main(struct tag_message&
         default:
             break;
     }
-    if (nowCloseRequested == 1) {
+    if (nowCloseRequested == true) {
         message.type = MESSAGE_EXECUTIVE;
         message.executiveCommand = EXECUTIVE_COMMAND_RETURN_RESULT;
         return MESSAGE_DISPATCH_FORWARD;
@@ -749,7 +749,7 @@ void swapManager::SplitMons(void) {
     message.id = TOWN_SPLIT_AMOUNT_CONTROL;
     message.text = gText;
     gTownManager->m_heroWindow1->BroadcastMessage(message);
-    gWindowManager->DoDialog(gTownManager->m_heroWindow1, SplitArmyHandler, 0);
+    gWindowManager->DoDialog(gTownManager->m_heroWindow1, SplitArmyHandler, false);
     delete gTownManager->m_heroWindow1;
     if (gWindowManager->m_dialogResult == DIALOG_BUTTON_2) {
         for (placeSlot = 0; placeSlot < ARMY_GROUP_SLOT_COUNT; placeSlot++) {

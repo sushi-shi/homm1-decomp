@@ -53,7 +53,7 @@ VA(0x00410fa0, 0x3c5)
 void editManager::GenerateRandomMap(void) {
     i32 attempt;
     H1_ENUM_LOCAL(TerrainType, i32) type;
-    i32 done;
+    b32 done;
     i32 unusedTries;
     double unusedPercent;
     // The terrain after the one painted over the whole map.
@@ -68,8 +68,8 @@ void editManager::GenerateRandomMap(void) {
     }
     if (gSaveUnseen)
         gGeneratingMaps = 1;
-    NewMap(1);
-    done = 0;
+    NewMap(true);
+    done = false;
     attempt = 0;
     while (!done && attempt < RANDOM_MAP_ATTEMPTS) {
         attempt++;
@@ -151,7 +151,8 @@ void editManager::GenerateRandomMap(void) {
             continue;
         if (gGeneratingMaps) {
             ShowStatusText(localization::Tr("editor.random.status.save_prompt"));
-            if (MapDetailsDialog(1) && !H1_ENUM_ENCODE(BaseManagerStatus, SaveMap(m_mapFileName))) {
+            if (MapDetailsDialog(true)
+                && !H1_ENUM_ENCODE(BaseManagerStatus, SaveMap(m_mapFileName))) {
                 sprintf(gText, localization::Tr("editor.random.saved"), gMapHeader->name[0]);
                 NormalDialog(gText, NORMAL_DIALOG_TYPE_OK);
             }
@@ -167,7 +168,7 @@ void editManager::GenerateRandomMap(void) {
 }
 
 VA(0x00411365, 0xd5)
-i32 editManager::HasEnoughCastles(void) {
+b32 editManager::HasEnoughCastles(void) {
     i32 count;
     i32 y;
     i32 x;
@@ -215,7 +216,7 @@ void editManager::PaintRandomTerrain(
     i32 total;
     i32 xBias;
     i32 reserve;
-    i32 looking;
+    b32 looking;
     i32 stepCount;
     i32 upperWeight;
     i32 yAxis;
@@ -239,10 +240,10 @@ void editManager::PaintRandomTerrain(
         balance = total;
         escapes = 0;
         lowerCap = gScatterTowns ? 2 : 3;
-        upperWeight = (gScatterTowns != 0) + 6;
+        upperWeight = (gScatterTowns != false) + 6;
         for (cluster = 0; cluster < patches; cluster++) {
             perSeed = balance / (patches - cluster);
-            looking = 1;
+            looking = true;
             guard = 0;
             while (guard < 200 && looking) {
                 guard++;
@@ -274,7 +275,7 @@ void editManager::PaintRandomTerrain(
                         m_map.cells[startX][sourceY].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN
                     )
                     == baseTerrain)
-                    looking = 0;
+                    looking = false;
             }
             xBias = Random(3, 7);
             turnWeight = Random(3, 7);
@@ -375,7 +376,7 @@ void editManager::PaintRandomTerrain(
 VA(0x00411a3b, 0x4bc)
 void editManager::RemoveSmallRegions(void) {
     i32 fromX;
-    i32 spread;
+    b32 spread;
     H1_ENUM_LOCAL(TerrainType, i32) other;
     i8* done;
     i32 tallyX;
@@ -401,7 +402,7 @@ void editManager::RemoveSmallRegions(void) {
             memset(inRegion, 0, MAP_CELL_GRID_SIZE * MAP_CELL_GRID_SIZE);
             (*(inRegion + startX + homeY * MAP_CELL_GRID_SIZE))++;
             ground = giGroundToTerrain[m_map.cells[startX][homeY].m_tileIndex];
-            spread = 1;
+            spread = true;
             extent = 1;
             fromX = startX - 1;
             maxX = startX + 1;
@@ -409,7 +410,7 @@ void editManager::RemoveSmallRegions(void) {
             y1 = homeY + 1;
             other = TERRAIN_INVALID;
             while (spread) {
-                spread = 0;
+                spread = false;
                 if (fromX < 0)
                     fromX = 0;
                 if (maxX >= MAP_CELL_GRID_SIZE)
@@ -439,7 +440,7 @@ void editManager::RemoveSmallRegions(void) {
                             (*(inRegion + n + j * MAP_CELL_GRID_SIZE))++;
                         else
                             continue;
-                        spread = 1;
+                        spread = true;
                         extent++;
                         if (n == fromX)
                             fromX--;
@@ -485,7 +486,7 @@ void editManager::RemoveSmallRegions(void) {
 VA(0x00411f59, 0x3ce)
 void editManager::PlaceObstacleChains(i32 density, H1_ENUM_PARAM(MapTileset, i32) tileset) {
     i32 chance;
-    i32 going;
+    b32 going;
     H1_ENUM_LOCAL(ChainDirection, i32) direction;
     i32 unusedStep;
     i32 unusedMask;
@@ -496,7 +497,7 @@ void editManager::PlaceObstacleChains(i32 density, H1_ENUM_PARAM(MapTileset, i32
     i32 ridges;
     i32 placed;
     i32 landCells;
-    i32 hunting;
+    b32 hunting;
     i32 rootY;
 
     placed = 0;
@@ -511,22 +512,22 @@ void editManager::PlaceObstacleChains(i32 density, H1_ENUM_PARAM(MapTileset, i32
     ScaleByDensity(&ridges, density);
     budget = ridges * 13;
     while (placed < budget) {
-        hunting = 1;
+        hunting = true;
         while (hunting) {
-            hunting = 0;
+            hunting = false;
             rootX = Random(0, MAP_CELL_GRID_SIZE - 1);
             rootY = Random(0, MAP_CELL_GRID_SIZE - 1);
             ground = giGroundToTerrain[m_map.cells[rootX][rootY].m_tileIndex];
             if (tileset == TILESET_TREE32 && ground == TERRAIN_LAVA && Random(0, 100) < 80)
-                hunting = 1;
+                hunting = true;
             if (tileset == TILESET_TREE32 && ground == TERRAIN_DESERT && Random(0, 100) < 70)
-                hunting = 1;
+                hunting = true;
         }
         // A random steep direction, made shallow one time in four.
         direction = H1_ENUM_DECODE(ChainDirection, Random(0, 3) * 2);
         if (Random(1, 100) <= 25)
             direction++;
-        going = 1;
+        going = true;
         variety = 0;
         if (tileset == TILESET_TREE32) {
             switch (H1_ENUM_DECODE(ChainTreeFamily, Random(0, 2))) {
@@ -566,10 +567,10 @@ void editManager::PlaceObstacleChains(i32 density, H1_ENUM_PARAM(MapTileset, i32
                 placed += 12;
                 if (tileset == TILESET_TREE32) {
                     if (Random(1, 100) < (H1_ENUM_ENCODE(ChainDirection, direction) % 1 ? 30 : 10))
-                        going = 0;
+                        going = false;
                 } else {
                     if (Random(1, 100) < (H1_ENUM_ENCODE(ChainDirection, direction) % 1 ? 40 : 20))
-                        going = 0;
+                        going = false;
                 }
                 if (tileset == TILESET_TREE32) {
                     if (Random(1, 100) < 35) {
@@ -602,7 +603,7 @@ void editManager::PlaceObstacleChains(i32 density, H1_ENUM_PARAM(MapTileset, i32
                     }
                 }
             } else {
-                going = 0;
+                going = false;
                 placed++;
             }
         }
@@ -709,11 +710,11 @@ void editManager::PlaceTowns(void) {
     double shareValue[RANDOM_MAP_REGION_LIMIT];
     i32 endY;
     overlayType* anyGate;
-    i32 coastAt;
+    b32 coastAt;
     i32 destX;
     i32 continents;
     mapStep keeps[RANDOM_MAP_CASTLE_SLOTS];
-    i32 tracing;
+    b32 tracing;
     i32 fromX;
     i32 roadMaskSet;
     overlayType* winterGate;
@@ -731,13 +732,13 @@ void editManager::PlaceTowns(void) {
     i32 slot;
     i32 tileY;
     i32 unusedIndex;
-    i32 filled;
+    b32 filled;
     i32 stepX;
     i32 stepY;
     u8* regionGrid;
     i32 y0;
     i16 regionSizes[RANDOM_MAP_REGION_LIMIT];
-    i32 meet;
+    b32 meet;
     i32 foundY;
     i32 top;
     overlayType* desertGateLiths;
@@ -786,9 +787,9 @@ void editManager::PlaceTowns(void) {
             }
         }
         if (freeX >= 0) {
-            filled = 1;
+            filled = true;
             while (filled) {
-                filled = 0;
+                filled = false;
                 for (tileX = 0; tileX < MAP_CELL_GRID_SIZE; tileX++) {
                     for (tileY = 0; tileY < MAP_CELL_GRID_SIZE; tileY++) {
                         if (m_map.cells[tileX][tileY].m_tileIndex >= MAP_CELL_TILES_PER_TERRAIN
@@ -812,7 +813,7 @@ void editManager::PlaceTowns(void) {
                                 *(regionGrid + tileX + tileY * MAP_CELL_GRID_SIZE) =
                                     *(regionGrid + tileX + (tileY + 1) * MAP_CELL_GRID_SIZE);
                             if (*(regionGrid + tileX + tileY * MAP_CELL_GRID_SIZE))
-                                filled = 1;
+                                filled = true;
                         }
                     }
                 }
@@ -923,7 +924,7 @@ void editManager::PlaceTowns(void) {
         if (top < 0)
             ShutDown(localization::Tr("editor.random.castles.failed"));
         terrain = m_map.cells[tileX][tileY].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN;
-        gEditManager->ClearArea(tileX - 2, tileY - 2, 5, 4, EDIT_CLEAR_ALL, 1);
+        gEditManager->ClearArea(tileX - 2, tileY - 2, 5, 4, EDIT_CLEAR_ALL, true);
         for (nearX = tileX - 2; nearX <= tileX + 2; nearX++)
             for (scanY = tileY - 2; scanY <= tileY + 1; scanY++)
                 m_map.cells[nearX][scanY].m_tileIndex = terrain * MAP_CELL_TILES_PER_TERRAIN;
@@ -937,7 +938,7 @@ void editManager::PlaceTowns(void) {
         else
             steps = 0;
         if (steps) {
-            coastAt = 0;
+            coastAt = false;
             nearX = tileX - 2;
             scanY = tileY + 1;
             ResetArea(tileX - 2, tileY + 1, 2, 2);
@@ -951,7 +952,7 @@ void editManager::PlaceTowns(void) {
                            TerrainType,
                            m_map.cells[nearX + 1][scanY].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN
                        ) == TERRAIN_WATER)
-                    coastAt = 1;
+                    coastAt = true;
                 else {
                     m_map.cells[nearX][scanY].m_tileIndex = 0;
                     m_map.cells[nearX + 1][scanY].m_tileIndex = 0;
@@ -960,7 +961,7 @@ void editManager::PlaceTowns(void) {
                     if (scanY < MAP_CELL_GRID_SIZE - 1)
                         scanY++;
                     if (nearX == 0 && scanY == MAP_CELL_GRID_SIZE - 1)
-                        coastAt = 1;
+                        coastAt = true;
                 }
             }
         }
@@ -990,10 +991,10 @@ void editManager::PlaceTowns(void) {
             }
             nearX = fromX;
             scanY = y0;
-            tracing = 1;
+            tracing = true;
             while (tracing) {
                 if (nearX == destX && scanY == endY)
-                    tracing = 0;
+                    tracing = false;
                 if (destX > nearX)
                     stepX = 1;
                 else if (destX < nearX)
@@ -1014,7 +1015,7 @@ void editManager::PlaceTowns(void) {
                                 >= MAP_CELL_TILES_PER_TERRAIN)
                     stepX = 0;
                 else {
-                    tracing = 0;
+                    tracing = false;
                     cutOff[c] = 1;
                     cutOff[peerIndex] = 1;
                 }
@@ -1024,7 +1025,7 @@ void editManager::PlaceTowns(void) {
                     nearX += stepX;
                     scanY += stepY;
                     roadMaskSet = RANDOM_MAP_ROAD_CLEAR_MASK;
-                    gEditManager->ClearArea(nearX, scanY, 1, 1, roadMaskSet, 0);
+                    gEditManager->ClearArea(nearX, scanY, 1, 1, roadMaskSet, false);
                 }
             }
         }
@@ -1045,9 +1046,9 @@ void editManager::PlaceTowns(void) {
             for (tileX = keeps[slot].x - 2; tileX <= keeps[slot].x + 2; tileX++)
                 for (tileY = keeps[slot].y - 2; tileY <= keeps[slot].y + 1; tileY++)
                     *(reachedGrids[slot] + tileX + tileY * MAP_CELL_GRID_SIZE) = 1;
-            filled = 1;
+            filled = true;
             while (filled) {
-                filled = 0;
+                filled = false;
                 for (tileX = 0; tileX < MAP_CELL_GRID_SIZE; tileX++) {
                     for (tileY = 0; tileY < MAP_CELL_GRID_SIZE; tileY++) {
                         if (m_map.cells[tileX][tileY].m_tileIndex >= MAP_CELL_TILES_PER_TERRAIN
@@ -1083,7 +1084,7 @@ void editManager::PlaceTowns(void) {
                                     *(reachedGrids[slot] + tileX
                                       + (tileY + 1) * MAP_CELL_GRID_SIZE);
                             if (*(reachedGrids[slot] + tileX + tileY * MAP_CELL_GRID_SIZE)) {
-                                filled = 1;
+                                filled = true;
                                 reachable[slot]++;
                             }
                         }
@@ -1094,12 +1095,12 @@ void editManager::PlaceTowns(void) {
         for (slot = 1; slot < RANDOM_MAP_CASTLE_SLOTS; slot++) {
             for (t = 0; t < slot; t++) {
                 if (belongs[slot] == belongs[t]) {
-                    meet = 0;
+                    meet = false;
                     for (tileX = 0; tileX < MAP_CELL_GRID_SIZE; tileX++)
                         for (tileY = 0; tileY < MAP_CELL_GRID_SIZE; tileY++)
                             if (*(reachedGrids[slot] + tileX + tileY * MAP_CELL_GRID_SIZE)
                                 && *(reachedGrids[t] + tileX + tileY * MAP_CELL_GRID_SIZE))
-                                meet = 1;
+                                meet = true;
                     if (!meet) {
                         cutOff[slot] = 1;
                         cutOff[t] = 1;
@@ -1110,30 +1111,30 @@ void editManager::PlaceTowns(void) {
         for (slot = 0; slot < RANDOM_MAP_CASTLE_SLOTS; slot++) {
             if (cutOff[slot] || extraRoads[slot]) {
                 steps = 20000;
-                tracing = 1;
+                tracing = true;
                 while (tracing) {
                     if (steps-- < 0)
-                        tracing = 0;
+                        tracing = false;
                     tileX = Random(0, MAP_CELL_GRID_SIZE - 1);
                     tileY = Random(0, MAP_CELL_GRID_SIZE - 1);
                     if (*(reachedGrids[slot] + tileX + tileY * MAP_CELL_GRID_SIZE)) {
                         dist = abs(tileX - keeps[slot].x) + abs(tileY - keeps[slot].y);
                         if (steps < 10000 || Random(0, 100) < dist) {
-                            tracing = 0;
+                            tracing = false;
                             for (nearX = 0; nearX < MAP_CELL_GRID_SIZE; nearX++) {
                                 for (scanY = 0; scanY < MAP_CELL_GRID_SIZE; scanY++) {
                                     if (m_map.cells[nearX][scanY].m_triggerType
                                         == MAP_EVENT_TRIGGER(MAP_OBJECT_STONE_LITHS)) {
                                         dist = abs(tileX - nearX) + abs(tileY - scanY);
                                         if (steps > 10000 && dist < 40 && Random(0, 100) > dist)
-                                            tracing = 1;
+                                            tracing = true;
                                     }
                                 }
                             }
                         }
                     }
                 }
-                gEditManager->ClearArea(tileX, tileY, 1, 1, EDIT_CLEAR_ALL, 1);
+                gEditManager->ClearArea(tileX, tileY, 1, 1, EDIT_CLEAR_ALL, true);
                 if (H1_ENUM_DECODE(
                         TerrainType,
                         m_map.cells[tileX][tileY].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN
@@ -1188,13 +1189,13 @@ void editManager::PlaceResourceSite(i32 x, i32 y, H1_ENUM_PARAM(RandomMapSiteKin
                 river = &gOverlayTypes[index];
         }
         PlaceOverlay(site, x, y);
-        PlaceMineResource(river, x + 1, y, 1);
+        PlaceMineResource(river, x + 1, y, true);
     }
 }
 
 VA(0x00414795, 0xbd6)
 void editManager::PlaceRandomObjects(i32 density, i32 strength) {
-    i32 valid;
+    b32 valid;
     H1_ENUM_LOCAL(RandomMapSiteKind, i32) siteIndex;
     overlayType* obeliskTypes[EDITOR_GENERATOR_TERRAIN_COUNT];
     i32 attempts;
@@ -1254,7 +1255,7 @@ void editManager::PlaceRandomObjects(i32 density, i32 strength) {
         towns--;
         x = Random(2, 69);
         y = Random(2, 70);
-        valid = 1;
+        valid = true;
         for (i = -2; i <= 2; i++) {
             for (j = -2; j <= 1; j++) {
                 if (m_map.cells[x + i][y + j].m_tileIndex < MAP_CELL_TILES_PER_TERRAIN
@@ -1262,7 +1263,7 @@ void editManager::PlaceRandomObjects(i32 density, i32 strength) {
                            == TILESET_TOWN32
                     || H1_ENUM_DECODE(MapTileset, m_map.cells[x + i][y + j].m_overlayTileset)
                            == TILESET_TOWN32)
-                    valid = 0;
+                    valid = false;
             }
         }
         for (i = 0; i < MAP_CELL_GRID_SIZE - 1; i++) {
@@ -1271,13 +1272,13 @@ void editManager::PlaceRandomObjects(i32 density, i32 strength) {
                     && m_map.cells[i][j].m_triggerType & MAP_TRIGGER_EVENT) {
                     spacing = abs(i - x) + abs(j - y);
                     if (spacing < 10 || spacing < Random(0, 40))
-                        valid = 0;
+                        valid = false;
                 }
             }
         }
         if (valid) {
             towns -= 100;
-            gEditManager->ClearArea(x - 2, y - 2, 5, 4, EDIT_CLEAR_ALL, 1);
+            gEditManager->ClearArea(x - 2, y - 2, 5, 4, EDIT_CLEAR_ALL, true);
             PlaceOverlay(townObject, x - 2, y);
         }
     }
@@ -1297,7 +1298,7 @@ void editManager::PlaceRandomObjects(i32 density, i32 strength) {
     mineTries *= 1000;
     while (mineTries > 0) {
         mineTries--;
-        valid = 1;
+        valid = true;
         x = Random(1, 70);
         y = Random(1, 70);
         if (valid && m_map.cells[x][y].m_tileIndex >= MAP_CELL_TILES_PER_TERRAIN
@@ -1310,7 +1311,7 @@ void editManager::PlaceRandomObjects(i32 density, i32 strength) {
             && m_map.cells[x][y].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN
                    == m_map.cells[x + 1][y].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN) {
             attempts = 0;
-            valid = 1;
+            valid = true;
             while (valid && attempts < 10) {
                 attempts++;
                 siteIndex = H1_ENUM_DECODE(
@@ -1351,15 +1352,15 @@ void editManager::PlaceRandomObjects(i32 density, i32 strength) {
                     }
                 }
                 if (Random(0, 40) < appeal) {
-                    gEditManager->ClearArea(x, y - 1, 2, 2, EDIT_CLEAR_ALL, 0);
-                    gEditManager->ClearArea(x - 1, y + 1, 1, 1, EDIT_CLEAR_ALL, 0);
+                    gEditManager->ClearArea(x, y - 1, 2, 2, EDIT_CLEAR_ALL, false);
+                    gEditManager->ClearArea(x - 1, y + 1, 1, 1, EDIT_CLEAR_ALL, false);
                     PlaceResourceSite(x, y, siteIndex);
                     laid++;
                     quota[siteIndex]--;
                     if (Random(0, 100) < strength)
                         PlaceOverlay(Random(0, 100) < 30 ? medium : strong, x - 1, y + 1);
                     mineTries -= 1000;
-                    valid = 0;
+                    valid = false;
                 }
             }
         }
@@ -1372,7 +1373,7 @@ void editManager::PlaceRandomObjects(i32 density, i32 strength) {
     obeliskTurns *= 100;
     while (obeliskTurns > 0) {
         obeliskTurns--;
-        valid = 1;
+        valid = true;
         x = Random(0, MAP_CELL_GRID_SIZE - 1);
         y = Random(0, MAP_CELL_GRID_SIZE - 1);
         if (m_map.cells[x][y].m_tileIndex >= MAP_CELL_TILES_PER_TERRAIN) {
@@ -1390,10 +1391,10 @@ void editManager::PlaceTreasures(i32 density, i32 strength) {
     overlayType* chest;
     overlayType* genieLamp;
     i32 caches;
-    i32 seOpen;
-    i32 down;
-    i32 neOpen;
-    i32 right;
+    b32 seOpen;
+    b32 down;
+    b32 neOpen;
+    b32 right;
     overlayType* veryStrong;
     i32 kindRoll;
     overlayType* strongMonster;
@@ -1401,11 +1402,11 @@ void editManager::PlaceTreasures(i32 density, i32 strength) {
     overlayType* anyMonster;
     overlayType* medium;
     i32 curX;
-    i32 nwOpen;
-    i32 swOpen;
+    b32 nwOpen;
+    b32 swOpen;
     overlayType* goods;
     overlayType* bonfire;
-    i32 up;
+    b32 up;
     i32 pilesSoFar;
     i32 wanderers;
     i32 k;
@@ -1413,7 +1414,7 @@ void editManager::PlaceTreasures(i32 density, i32 strength) {
     overlayType* bounty;
     i32 guardsDone;
     H1_ENUM_LOCAL(TreasureGuard, i32) layout;
-    i32 left;
+    b32 left;
 
     anyMonster = NULL;
     weak = NULL;
@@ -1458,9 +1459,9 @@ void editManager::PlaceTreasures(i32 density, i32 strength) {
         curY = Random(1, 70);
         if (m_map.cells[curX][curY].m_tileIndex >= MAP_CELL_TILES_PER_TERRAIN
             && !m_map.cells[curX][curY].m_objectTileset) {
-            gEditManager->ClearArea(curX, curY, 1, 1, EDIT_CLEAR_ALL, 0);
+            gEditManager->ClearArea(curX, curY, 1, 1, EDIT_CLEAR_ALL, false);
             kindRoll = Random(0, 100);
-            nwOpen = swOpen = neOpen = seOpen = up = down = right = left = 0;
+            nwOpen = swOpen = neOpen = seOpen = up = down = right = left = false;
             if (curY == 0 || m_map.cells[curX][curY - 1].m_tileIndex < MAP_CELL_TILES_PER_TERRAIN
                 || H1_ENUM_DECODE(MapTileset, m_map.cells[curX][curY - 1].m_objectTileset)
                            <= TILESET_TERRAIN_OBJECT_LAST
@@ -1468,7 +1469,7 @@ void editManager::PlaceTreasures(i32 density, i32 strength) {
                 || H1_ENUM_DECODE(MapTileset, m_map.cells[curX][curY - 1].m_overlayTileset)
                            <= TILESET_TERRAIN_OBJECT_LAST
                        && m_map.cells[curX][curY - 1].m_overlayTileset > 0)
-                up = 1;
+                up = true;
             if (curY == MAP_CELL_GRID_SIZE - 1
                 || m_map.cells[curX][curY + 1].m_tileIndex < MAP_CELL_TILES_PER_TERRAIN
                 || H1_ENUM_DECODE(MapTileset, m_map.cells[curX][curY + 1].m_objectTileset)
@@ -1477,7 +1478,7 @@ void editManager::PlaceTreasures(i32 density, i32 strength) {
                 || H1_ENUM_DECODE(MapTileset, m_map.cells[curX][curY + 1].m_overlayTileset)
                            <= TILESET_TERRAIN_OBJECT_LAST
                        && m_map.cells[curX][curY + 1].m_overlayTileset > 0)
-                down = 1;
+                down = true;
             if (curX == 0 || m_map.cells[curX - 1][curY].m_tileIndex < MAP_CELL_TILES_PER_TERRAIN
                 || H1_ENUM_DECODE(MapTileset, m_map.cells[curX - 1][curY].m_objectTileset)
                            <= TILESET_TERRAIN_OBJECT_LAST
@@ -1485,7 +1486,7 @@ void editManager::PlaceTreasures(i32 density, i32 strength) {
                 || H1_ENUM_DECODE(MapTileset, m_map.cells[curX - 1][curY].m_overlayTileset)
                            <= TILESET_TERRAIN_OBJECT_LAST
                        && m_map.cells[curX - 1][curY].m_overlayTileset > 0)
-                left = 1;
+                left = true;
             if (curX == MAP_CELL_GRID_SIZE - 1
                 || m_map.cells[curX + 1][curY].m_tileIndex < MAP_CELL_TILES_PER_TERRAIN
                 || H1_ENUM_DECODE(MapTileset, m_map.cells[curX + 1][curY].m_objectTileset)
@@ -1494,23 +1495,23 @@ void editManager::PlaceTreasures(i32 density, i32 strength) {
                 || H1_ENUM_DECODE(MapTileset, m_map.cells[curX + 1][curY].m_overlayTileset)
                            <= TILESET_TERRAIN_OBJECT_LAST
                        && m_map.cells[curX + 1][curY].m_overlayTileset > 0)
-                right = 1;
+                right = true;
             if (curX < MAP_CELL_GRID_SIZE + 1 && curY > 0
                 && m_map.cells[curX + 1][curY - 1].m_tileIndex >= MAP_CELL_TILES_PER_TERRAIN
                 && !m_map.cells[curX + 1][curY - 1].m_objectTileset)
-                neOpen = 1;
+                neOpen = true;
             if (curX < MAP_CELL_GRID_SIZE + 1 && curY < MAP_CELL_GRID_SIZE - 1
                 && m_map.cells[curX + 1][curY + 1].m_tileIndex >= MAP_CELL_TILES_PER_TERRAIN
                 && !m_map.cells[curX + 1][curY + 1].m_objectTileset)
-                seOpen = 1;
+                seOpen = true;
             if (curX > 0 && curY < MAP_CELL_GRID_SIZE - 1
                 && m_map.cells[curX - 1][curY + 1].m_tileIndex >= MAP_CELL_TILES_PER_TERRAIN
                 && !m_map.cells[curX - 1][curY + 1].m_objectTileset)
-                swOpen = 1;
+                swOpen = true;
             if (curX > 0 && curY > 0
                 && m_map.cells[curX - 1][curY - 1].m_tileIndex >= MAP_CELL_TILES_PER_TERRAIN
                 && !m_map.cells[curX - 1][curY - 1].m_objectTileset)
-                nwOpen = 1;
+                nwOpen = true;
             if (!right || !left || !up || !down) {
                 pilesSoFar++;
                 caches -= 100;
@@ -1532,28 +1533,28 @@ void editManager::PlaceTreasures(i32 density, i32 strength) {
                     else
                         PlaceOverlay(bounty, curX, curY);
                     if (layout == TREASURE_GUARD_NE) {
-                        gEditManager->ClearArea(curX + 1, curY - 1, 1, 1, EDIT_CLEAR_ALL, 0);
+                        gEditManager->ClearArea(curX + 1, curY - 1, 1, 1, EDIT_CLEAR_ALL, false);
                         PlaceOverlay(
                             Random(0, 100) < 50 ? strongMonster : veryStrong,
                             curX + 1,
                             curY - 1
                         );
                     } else if (layout == TREASURE_GUARD_SE) {
-                        gEditManager->ClearArea(curX + 1, curY + 1, 1, 1, EDIT_CLEAR_ALL, 0);
+                        gEditManager->ClearArea(curX + 1, curY + 1, 1, 1, EDIT_CLEAR_ALL, false);
                         PlaceOverlay(
                             Random(0, 100) < 50 ? strongMonster : veryStrong,
                             curX + 1,
                             curY + 1
                         );
                     } else if (layout == TREASURE_GUARD_SW) {
-                        gEditManager->ClearArea(curX - 1, curY + 1, 1, 1, EDIT_CLEAR_ALL, 0);
+                        gEditManager->ClearArea(curX - 1, curY + 1, 1, 1, EDIT_CLEAR_ALL, false);
                         PlaceOverlay(
                             Random(0, 100) < 50 ? strongMonster : veryStrong,
                             curX - 1,
                             curY + 1
                         );
                     } else {
-                        gEditManager->ClearArea(curX - 1, curY - 1, 1, 1, EDIT_CLEAR_ALL, 0);
+                        gEditManager->ClearArea(curX - 1, curY - 1, 1, 1, EDIT_CLEAR_ALL, false);
                         PlaceOverlay(
                             Random(0, 100) < 50 ? strongMonster : veryStrong,
                             curX - 1,
@@ -1590,7 +1591,7 @@ void editManager::PlaceTreasures(i32 density, i32 strength) {
         if (m_map.cells[curX][curY].m_tileIndex >= MAP_CELL_TILES_PER_TERRAIN
             && !m_map.cells[curX][curY].m_objectTileset) {
             wanderers -= 100;
-            gEditManager->ClearArea(curX, curY, 1, 1, EDIT_CLEAR_ALL, 0);
+            gEditManager->ClearArea(curX, curY, 1, 1, EDIT_CLEAR_ALL, false);
             k = Random(0, 100);
             if (k < 40)
                 PlaceOverlay(weak, curX, curY);

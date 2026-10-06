@@ -13,6 +13,6 @@ class bitmap;
 // Map-grid (taxicab) distance of an offset.
 #define MANHATTAN_LENGTH(dx, dy) (abs((dx)) + abs((dy)))
 
-void SetPalette(i8* paletteData, i32 updateDisplay);
+void SetPalette(i8* paletteData, b32 updateDisplay);
 
 #endif

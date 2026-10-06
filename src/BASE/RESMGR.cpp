@@ -37,7 +37,7 @@ resourceManager::resourceManager(void) : baseManager() {
     m_aggregateDir = NULL;
     m_aggregateFd = RESOURCE_MANAGER_INVALID_FILE;
     m_aggregateEntryCount = 0;
-    m_expunging = 0;
+    m_expunging = false;
     strcpy(m_lastFileName, "");
     m_lastFileId = 0;
 }
@@ -173,7 +173,7 @@ class sample* resourceManager::GetSample(char* name) {
 
 VA(0x0046c705, 0x75)
 void resourceManager::Dispose(class resource* resourceToDispose) {
-    if (m_expunging != 0)
+    if (m_expunging != false)
         return;
     if (resourceToDispose != NULL) {
         resourceToDispose->m_refCount--;
@@ -199,7 +199,7 @@ void resourceManager::AddResource(class resource* newResource) {
 
 VA(0x0046c7bd, 0x7e)
 void resourceManager::Expunge(void) {
-    m_expunging = 1;
+    m_expunging = true;
     resource* cur = m_resourceListHead;
     resource* next = NULL;
     while (cur != NULL) {
@@ -208,7 +208,7 @@ void resourceManager::Expunge(void) {
         delete cur;
         cur = next;
     }
-    m_expunging = 0;
+    m_expunging = false;
 }
 
 VA(0x0046c83b, 0x3b)

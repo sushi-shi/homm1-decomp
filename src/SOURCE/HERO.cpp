@@ -185,7 +185,7 @@ void hero::UseSpell(H1_ENUM_PARAM(SpellType, i8) spell) {
 }
 
 VA(0x0043949f, 0x1a7)
-i32 hero::AddSpell(H1_ENUM_PARAM(SpellType, i8) spell, i8 charges, i32 checkOnly) {
+i32 hero::AddSpell(H1_ENUM_PARAM(SpellType, i8) spell, i8 charges, b32 checkOnly) {
     i32 added = 0;
     i16 i;
 
@@ -231,7 +231,7 @@ void hero::RedrawHeroScreen(void) {
 }
 
 VA(0x0043968e, 0x64a)
-i8 hero::HeroView(i8 viewOnly) {
+i8 hero::HeroView(b8 viewOnly) {
     i32 heroLuck;
     i32 moraleValue;
     tag_message message;
@@ -239,7 +239,7 @@ i8 hero::HeroView(i8 viewOnly) {
     i32 magnitude;
 
     gAdvManager->TrimLoopingSounds(8);
-    gHeroWindShowing = 1;
+    gHeroWindShowing = true;
     gWindowManager->FadeScreen(WINDOW_FADE_OUT, 8, NULL);
     heroWin = new heroWindow(0, 0, "herowind.bin");
     if (!heroWin)
@@ -357,7 +357,7 @@ i8 hero::HeroView(i8 viewOnly) {
     RedrawHeroScreen();
     gWindowManager->FadeScreen(WINDOW_FADE_IN, 8, NULL);
     gInfoViewedHero = this;
-    gWindowManager->DoDialog(heroWin, HeroHandler, 0);
+    gWindowManager->DoDialog(heroWin, HeroHandler, false);
     gWindowManager->FadeScreen(WINDOW_FADE_OUT, 8, NULL);
     delete heroWin;
     gHeroWin = NULL;
@@ -368,7 +368,7 @@ i8 hero::HeroView(i8 viewOnly) {
         if (m_remainingMobility > m_mobility)
             m_remainingMobility = m_mobility;
     }
-    gHeroWindShowing = 0;
+    gHeroWindShowing = false;
     return 0;
 }
 
@@ -470,7 +470,7 @@ void hero::ViewStat(i8 stat, i8 quickView) {
     SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, HERO_STAT_VIEW_DESCRIPTION);
     message.text = gText;
     win->BroadcastMessage(message);
-    gWindowManager->DoDialog(win, TrueFalseDialogHandler, 0);
+    gWindowManager->DoDialog(win, TrueFalseDialogHandler, false);
     delete win;
 }
 
@@ -505,8 +505,8 @@ void hero::Deallocate(void) {
 
     oldOwner = m_owner;
     playerPtr = &gGame->m_players[m_owner];
-    gAdvManager->MobilizeCurrHero(0);
-    gAdvManager->HideRoute(0, 0, 0);
+    gAdvManager->MobilizeCurrHero(false);
+    gAdvManager->HideRoute(false, false, false);
     if (IsEmbarked()) {
         for (i = 0; i < GAME_BOAT_COUNT; i++) {
             if (gGame->m_boats[i].heroId == m_id) {
@@ -537,7 +537,7 @@ void hero::Deallocate(void) {
     if (playerPtr->m_currentHero == m_id) {
         playerPtr->m_currentHero = HERO_ID_NONE;
         if (gCurPlayer == m_owner) {
-            gAdvManager->m_cursorActive = 0;
+            gAdvManager->m_cursorActive = false;
             gGame->m_map[m_x][m_y].m_flags &= ~MAP_CELL_HERO_CURSOR;
         }
         if (oldOwner == gCurPlayer)
@@ -559,7 +559,7 @@ void hero::Deallocate(void) {
     m_destinationX = m_destinationY = HERO_DESTINATION_NONE;
     if (!gCombatSurrender)
         gGame->SetRandomHeroArmies(m_id, RANDOM_HERO_NORMAL_ARMY);
-    CheckEndGame(0);
+    CheckEndGame(false);
 }
 
 VA(0x0043a599, 0xb5)
@@ -864,7 +864,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) HeroHandler(struct tag_message& messa
     i32 curHeroLevel;
     i32 nextLevelExp;
     i8 quickViewVal;
-    i8 complete = 0;
+    b8 complete = false;
     i16 slot;
     // Integer storage that swaps a slot's creature type, then its count.
     i16 temporaryVal;
@@ -887,10 +887,10 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) HeroHandler(struct tag_message& messa
                     switch (message.id) {
                         case HERO_SCREEN_DISMISS:
                             if (gInfoViewedHero->Dismiss())
-                                complete = 1;
+                                complete = true;
                             break;
                         case HERO_SCREEN_EXIT:
-                            complete = 1;
+                            complete = true;
                             break;
                         default:
                             break;
@@ -973,7 +973,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) HeroHandler(struct tag_message& messa
                                 gInfoViewedHero->m_army.m_creatureTypes[slot],
                                 gInfoViewedHero->m_army.m_creatureCounts[slot],
                                 NULL,
-                                quickViewVal || gTownManager->m_castleDialogActive == 1
+                                quickViewVal || gTownManager->m_castleDialogActive == true
                                     || gInfoViewedHero->m_army.GetNumArmies() == 1,
                                 ARMY_FACING_RIGHT,
                                 quickViewVal,

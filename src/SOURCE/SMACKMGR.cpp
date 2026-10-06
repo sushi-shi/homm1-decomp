@@ -141,7 +141,7 @@ void ConvertSmackerPalette(u8* paletteData) {
 }
 
 VA(0x00458433, 0x13c)
-void DoAdvance(Smack* smack, i32 drawFrame, i32 advanceFrame, i32 updatePalette, i32 skipPalette) {
+void DoAdvance(Smack* smack, i32 drawFrame, b32 advanceFrame, b32 updatePalette, b32 skipPalette) {
     if (drawFrame && smack->NewPalette && !skipPalette) {
         memcpy(gPalette->m_data, smack->Palette, PALETTE_DATA_SIZE);
         // API-forced: ConvertSmackerPalette takes u8*.
@@ -177,9 +177,9 @@ VA(0x0045856f, 0x73c)
 void SmackMain() {
     i32 soundFlags;
     i32 preloadFlags;
-    i32 active;
-    i32 primaryOn;
-    i32 companionOn;
+    b32 active;
+    b32 primaryOn;
+    b32 companionOn;
     i32 unusedTrue = 1;
     gSmackPrevFrame = 0;
     i32 unusedPlaybackState = 0;
@@ -238,19 +238,25 @@ void SmackMain() {
     );
     if (SmackOptions[gMovieId].fadeIn)
         gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_NORMAL, NULL);
-    active = 1;
-    primaryOn = 0;
-    companionOn = 0;
+    active = true;
+    primaryOn = false;
+    companionOn = false;
     while (active) {
         if (!SmackWait(gSmackPrimary)) {
             if (!primaryOn || gSmackPrimary->Frames > 1)
-                DoAdvance(gSmackPrimary, 1, 1, primaryOn || !SmackOptions[gMovieId].fadeIn, 0);
+                DoAdvance(
+                    gSmackPrimary,
+                    1,
+                    true,
+                    primaryOn || !SmackOptions[gMovieId].fadeIn,
+                    false
+                );
             if (gSmackPrimary->FrameNum > 0 || gSmackPrimary->Frames <= 1) {
                 if (!primaryOn && SmackOptions[gMovieId].fadeIn) {
                     memcpy(gBufferPalette->m_data, gPalette->m_data, PALETTE_DATA_SIZE);
                     gWindowManager->FadeScreen(WINDOW_FADE_IN, 4, NULL);
                 }
-                primaryOn = 1;
+                primaryOn = true;
             }
         }
         if (gSmackCompanion && primaryOn && !SmackWait(gSmackCompanion)) {
@@ -260,15 +266,15 @@ void SmackMain() {
                     drawLastFrame = 1;
                 else
                     drawLastFrame = 0;
-                DoAdvance(gSmackCompanion, drawLastFrame, 0, 0, 1);
+                DoAdvance(gSmackCompanion, drawLastFrame, false, false, true);
                 gSmackPrevFrame = 1;
                 while (SmackWait(gSmackCompanion))
                     Process1WindowsMessage();
             } else {
-                DoAdvance(gSmackCompanion, SmackOptions[gMovieId].drawCompanion, 1, 0, 1);
+                DoAdvance(gSmackCompanion, SmackOptions[gMovieId].drawCompanion, true, false, true);
             }
             if (gSmackCompanion && gSmackCompanion->FrameNum > 0)
-                companionOn = 1;
+                companionOn = true;
         }
         Process1WindowsMessage();
         tag_message message;
@@ -279,7 +285,7 @@ void SmackMain() {
                     break;
             case MESSAGE_LEFT_BUTTON_DOWN:
             case MESSAGE_RIGHT_BUTTON_DOWN:
-                active = 0;
+                active = false;
                 continue;
         }
         if (!SmackOptions[gMovieId].waitForInput
@@ -290,7 +296,7 @@ void SmackMain() {
                 || (!gSmackCompanion
                     && (gSmackPrimary->FrameNum >= gSmackPrimary->Frames
                         || (gSmackPrimary->FrameNum <= 0 && primaryOn))))) {
-            active = 0;
+            active = false;
             gSmackEnded = 1;
         }
     }
@@ -366,7 +372,7 @@ VA(0x00458cf4, 0xa9)
 i32 PlaySmacker(H1_ENUM_PARAM(SmackVideo, i32) smackNumber) {
     i8 savedPalette[PALETTE_DATA_SIZE];
     i32 savedUpdateFlags;
-    gInSmacker = 1;
+    gInSmacker = true;
     gSmackEnded = 0;
     memcpy(savedPalette, gBufferPalette->m_data, PALETTE_DATA_SIZE);
     savedUpdateFlags = gWindowManager->m_updateFlags;
@@ -376,6 +382,6 @@ i32 PlaySmacker(H1_ENUM_PARAM(SmackVideo, i32) smackNumber) {
     SmackMain();
     memcpy(gBufferPalette->m_data, savedPalette, PALETTE_DATA_SIZE);
     gWindowManager->m_updateFlags = savedUpdateFlags;
-    gInSmacker = 0;
+    gInSmacker = false;
     return gSmackEnded;
 }

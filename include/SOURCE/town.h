@@ -106,7 +106,7 @@ public:
     // ProcessMapExtra files the cell's map-extra index here; SetupTowns
     // marks towns whose extra record carries a custom setup.
     u8 m_extraIndex;
-    i8 m_customized;
+    b8 m_customized;
     char m_unused28[4];
     H1_ENUM_STORAGE(SpellType, i8) m_mageGuildSpells[TOWN_MAGE_GUILD_SPELL_COUNT];
     // ClaimTown sets two turns for a town taken from no owner, else zero.

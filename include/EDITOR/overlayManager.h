@@ -155,7 +155,7 @@ public:
     u8 m_unknown16ca[4];
     font* m_font;
     // Main drew the selected object over the map view.
-    i32 m_previewDrawn;
+    b32 m_previewDrawn;
     i16 m_dispatchMask;
 
     overlayManager(void);
@@ -165,13 +165,13 @@ public:
     // Outlines a footprint at screen (x, y): groundMask cells, coloured by
     // overlayMask, within width columns and height rows.
     void DrawFootprint(i16 x, i16 y, i16 groundMask, i16 overlayMask, i16 width, i16 height);
-    void DrawOverlay(overlayType* type, i16 x, i16 y, i16 width, i16 height, i32 update);
+    void DrawOverlay(overlayType* type, i16 x, i16 y, i16 width, i16 height, b32 update);
     // Fills m_types with the category's objects; 0 when it has none.
     i16 LoadCategory(i16 category);
     // The full-screen object picker; returns the chosen m_types index or -1.
     i16 PickOverlay(i16 category);
     void MeasureOverlay(overlayType* type);
-    void DrawCategoryName(i32 update);
+    void DrawCategoryName(b32 update);
     void DrawSelectedOverlay(void);
 };
 #pragma pack(pop)
@@ -183,7 +183,7 @@ i16 CanPlaceOverlay(overlayType* type, i16 x, i16 y);
 i32 PlaceOverlay(overlayType* type, i16 x, i16 y);
 // Puts a resource marker on the mine at (x, y) (checkMine: require the mine's
 // marker cell there).
-i32 PlaceMineResource(overlayType* type, i16 x, i16 y, i32 checkMine);
+i32 PlaceMineResource(overlayType* type, i16 x, i16 y, b32 checkMine);
 
 // The editor's object table (EDITMGR's data).
 extern overlayType gOverlayTypes[];

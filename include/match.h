@@ -24,13 +24,18 @@ typedef unsigned __int64 u64;
 #ifndef HOMM1_BOOL_DEFINED
 #define HOMM1_BOOL_DEFINED
 #if defined(__cplusplus) && __cplusplus >= 202002L
+template<typename Storage> class H1Bool;
+template<typename T> constexpr bool H1IsBool = __is_same(T, bool);
+template<typename S> constexpr bool H1IsBool<H1Bool<S> > = true;
 template<typename Storage> class H1Bool {
 public:
     H1Bool() = default;
     constexpr H1Bool(bool value) : value_(value) {}
+    // A flag of the other width is still a flag (the retail store narrows
+    // or widens the 0/1 integer).
     template<typename Other>
-        requires(!__is_same(Other, bool))
-    H1Bool(Other) = delete;
+    constexpr H1Bool(H1Bool<Other> other) : value_(static_cast<bool>(other)) {}
+    template<typename Other> requires(!H1IsBool<Other>) H1Bool(Other) = delete;
     constexpr operator bool() const {
         return value_ != 0;
     }
@@ -39,8 +44,7 @@ private:
     Storage value_;
 };
 template<typename Storage, typename Other>
-    requires(!__is_same(Other, bool) && !__is_same(Other, H1Bool<Storage>))
-bool operator==(H1Bool<Storage>, Other) = delete;
+requires(!H1IsBool<Other>) bool operator==(H1Bool<Storage>, Other) = delete;
 typedef H1Bool<i8> b8;
 typedef H1Bool<i32> b32;
 #else
@@ -61,7 +65,7 @@ typedef i32 b32;
 // program compiles differently from the other (`image` is a targets.json key).
 #ifdef __clang__
 #define VA(address, size) __attribute__((annotate("va:" #address " size:" #size), used))
-#define VA_AT(image, address, size)                                                  \
+#define VA_AT(image, address, size)                                                                \
     __attribute__((annotate("va:" #address " size:" #size " image:" #image), used))
 #define VA_DECL(address) __attribute__((annotate("decl-va:" #address)))
 #define DATA(address) __attribute__((annotate("data-va:" #address), used))

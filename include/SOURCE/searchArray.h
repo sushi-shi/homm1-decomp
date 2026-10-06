@@ -104,13 +104,13 @@ public:
         i16 seedDirection,
         i16 maximumCost,
         i32 waterMode,
-        i32 findAdjacentMonster,
+        b32 findAdjacentMonster,
         i32 mobility,
         i32 heroClass,
         i32 targetX,
         i32 targetY,
-        i32 continueSeed,
-        i32 scanMap
+        b32 continueSeed,
+        b32 scanMap
     );
     // Seeds from a hero and builds the path to the nearest cell carrying the
     // trigger type (EVENTS finds a town with 0xa8).

@@ -164,7 +164,7 @@ extern HMENU gAdventureMenu;
 extern HMENU gDefaultMenu;
 extern HMENU gCombatMenu;
 extern HMENU gTownMenu;
-extern i32 gClosingApp;
+extern b32 gClosingApp;
 extern i32 gLastGetMessage;
 extern i32 gLastAilServe;
 i32 KBTickCount();

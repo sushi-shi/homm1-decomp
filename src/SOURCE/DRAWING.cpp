@@ -51,7 +51,7 @@ void combatManager::UpdateGridForMove(
 // bookkeeping.
 VA(0x00423707, 0xad)
 // clang-format on
-void combatManager::CombatMessage(char* text, i32 updateScreen) {
+void combatManager::CombatMessage(char* text, b32 updateScreen) {
     i32 oldCompute;
     tag_message message;
     i32 prevLimit;
@@ -135,7 +135,7 @@ void combatManager::CombatMessage(H1_ENUM_PARAM(CombatMessageCommand, i16) messa
                 sprintf(gText, "");
             break;
     }
-    CombatMessage(gText, 1);
+    CombatMessage(gText, true);
 }
 
 // Marks every live stack for redraw; dead ones stay hidden (-1).
@@ -144,8 +144,8 @@ void combatManager::ResetLimitCreature(void) {
     i32 j;
     H1_ENUM_LOCAL(CombatSide, i32) side;
 
-    m_computeExtent = 1;
-    m_extendLimitDown = 0;
+    m_computeExtent = true;
+    m_extendLimitDown = false;
     for (side = COMBAT_SIDE_FIRST; side < COMBAT_SIDE_COUNT; side++) {
         for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
             m_limitCreatureCount[side][j] =
@@ -178,9 +178,9 @@ void combatManager::UpdateCombatArea(void) {
     }
     if (height + baseY > COMBAT_VIEW_HEIGHT)
         height = COMBAT_VIEW_HEIGHT - baseY;
-    gEnlargeScreenBlit = 0;
+    gEnlargeScreenBlit = false;
     gWindowManager->UpdateScreenRegion(0, baseY, LOGICAL_SCREEN_WIDTH, height);
-    gEnlargeScreenBlit = 1;
+    gEnlargeScreenBlit = true;
     m_gridUpdateRow = COMBAT_GRID_ROWS;
 }
 
@@ -221,7 +221,7 @@ void combatManager::DrawBackground(void) {
     }
     gWindowManager->m_screen
         ->CopyTo(m_backgroundBuffer, 0, 0, 0, 0, LOGICAL_SCREEN_WIDTH, COMBAT_VIEW_HEIGHT);
-    m_backgroundDrawn = 1;
+    m_backgroundDrawn = true;
 }
 
 // Redraws the battlefield: only the boxes around the stacks marked in
@@ -230,9 +230,9 @@ void combatManager::DrawBackground(void) {
 // set), with the catapult (row 3) and the two heroes (rows 1 and 2).
 #define armyRight selBoxRight // frame-slot spelling
 VA(0x00423d6c, 0xca3)
-void combatManager::DrawFrame(i8 updateScreen) {
+void combatManager::DrawFrame(b8 updateScreen) {
     i16 col;
-    i8 anyLimited;
+    b8 anyLimited;
     i32 armyRight;
     i32 armyTop;
     i32 i;
@@ -248,11 +248,11 @@ void combatManager::DrawFrame(i8 updateScreen) {
         gMaxExtentX = gMaxExtentY = 0;
         gMinExtentX = LOGICAL_SCREEN_WIDTH - 1;
         gMinExtentY = COMBAT_VIEW_HEIGHT - 1;
-        anyLimited = 0;
+        anyLimited = false;
         for (side = COMBAT_SIDE_FIRST; side < COMBAT_SIDE_COUNT; side++) {
             for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
                 if (m_limitCreatureCount[side][i] > 0) {
-                    anyLimited = 1;
+                    anyLimited = true;
                     col = m_armies[side][i].m_hex % COMBAT_GRID_COLUMNS;
                     row = m_armies[side][i].m_hex / COMBAT_GRID_COLUMNS;
                     armyTop = row * COMBAT_HEX_HEIGHT;
@@ -307,7 +307,7 @@ void combatManager::DrawFrame(i8 updateScreen) {
             }
         }
         if (!anyLimited) {
-            m_computeExtent = 0;
+            m_computeExtent = false;
             return;
         }
         if (gMinExtentX < 0)
@@ -381,7 +381,7 @@ void combatManager::DrawFrame(i8 updateScreen) {
                 if (gLimitToExtent
                     && m_armies[m_currentSide][m_currentArmyIndex].m_hex
                            == row * COMBAT_GRID_COLUMNS + col)
-                    gCurrArmyDrawn = 1;
+                    gCurrArmyDrawn = true;
                 m_hexCells[row * COMBAT_GRID_COLUMNS + col].DrawOccupant();
             }
             if (row == COMBAT_DEFENDER_HERO_ROW
@@ -470,7 +470,7 @@ void combatManager::DrawFrame(i8 updateScreen) {
                 if (gLimitToExtent
                     && m_armies[m_currentSide][m_currentArmyIndex].m_hex
                            == row * COMBAT_GRID_COLUMNS + col)
-                    gCurrArmyDrawn = 1;
+                    gCurrArmyDrawn = true;
                 m_hexCells[row * COMBAT_GRID_COLUMNS + col].DrawOccupant();
             }
             if (row == COMBAT_ATTACKER_HERO_ROW
@@ -531,23 +531,23 @@ void combatManager::DrawFrame(i8 updateScreen) {
     }
     DrawCombatBorder();
     if (m_computeExtent || m_redrawExtent) {
-        m_computeExtent = 0;
-        m_redrawExtent = 0;
+        m_computeExtent = false;
+        m_redrawExtent = false;
         gLimitToExtent = 0;
         gComputeExtent = 0;
-        gFullCombatScreenDrawn = 0;
+        gFullCombatScreenDrawn = false;
         DelayTil(&gTimers[COMBAT_FRAME_TIMER_SLOT]);
         gTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
-        if (updateScreen == 1) {
+        if (updateScreen == true) {
             if (gMaxExtentY > COMBAT_VIEW_HEIGHT)
                 gMaxExtentY = COMBAT_VIEW_HEIGHT;
-            gEnlargeScreenBlit = 0;
+            gEnlargeScreenBlit = false;
             UPDATE_INCLUSIVE_REGION(gMinExtentX, gMinExtentY, gMaxExtentX, gMaxExtentY);
-            gEnlargeScreenBlit = 1;
+            gEnlargeScreenBlit = true;
             m_gridUpdateRow = COMBAT_GRID_ROWS;
         }
-    } else if (updateScreen == 1) {
-        gFullCombatScreenDrawn = 1;
+    } else if (updateScreen == true) {
+        gFullCombatScreenDrawn = true;
         DelayTil(&gTimers[COMBAT_FRAME_TIMER_SLOT]);
         gTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
         UpdateCombatArea();

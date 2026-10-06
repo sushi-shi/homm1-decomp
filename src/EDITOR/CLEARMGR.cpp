@@ -125,7 +125,8 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) clearManager::Main(tag_message& messa
                                         m_lastY = y;
                                         switch (dragMode) {
                                             case CLEAR_DRAG_CELLS:
-                                                gEditManager->ClearArea(x, y, 1, 1, gClearFlags, 0);
+                                                gEditManager
+                                                    ->ClearArea(x, y, 1, 1, gClearFlags, false);
                                                 break;
                                             case CLEAR_DRAG_RECTANGLE:
                                                 gSelectionX = x < anchorX ? x : anchorX;
@@ -143,7 +144,8 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) clearManager::Main(tag_message& messa
                             }
                             if (dragMode == CLEAR_DRAG_RECTANGLE) {
                                 if (gSelectionX < 0)
-                                    gEditManager->ClearArea(anchorX, anchorY, 1, 1, gClearFlags, 0);
+                                    gEditManager
+                                        ->ClearArea(anchorX, anchorY, 1, 1, gClearFlags, false);
                                 else
                                     gEditManager->ClearArea(
                                         gSelectionX,
@@ -151,7 +153,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) clearManager::Main(tag_message& messa
                                         gSelectionWidth,
                                         gSelectionHeight,
                                         gClearFlags,
-                                        0
+                                        false
                                     );
                             }
                             gSelectionX = gSelectionY = -1;

@@ -36,7 +36,7 @@ extern H1_ENUM_STORAGE(SmackVideo, i8) gMovieId;
 void InitSmackSound();
 void ShutdownSmackSound();
 void ConvertSmackerPalette(u8* paletteData);
-void DoAdvance(Smack* smack, i32 drawFrame, i32 advanceFrame, i32 updatePalette, i32 skipPalette);
+void DoAdvance(Smack* smack, i32 drawFrame, b32 advanceFrame, b32 updatePalette, b32 skipPalette);
 void SmackMain();
 void CloseSmackers();
 i32 PlaySmacker(H1_ENUM_PARAM(SmackVideo, i32) smackNumber);

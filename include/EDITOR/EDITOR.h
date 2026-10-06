@@ -17,7 +17,7 @@ H1_ENUM_CONST_BEGIN(EditorStatusBarConstant)
     EDITOR_STATUS_TEXT_HOLD_MILLISECONDS = 3000
 H1_ENUM_CONST_END(EditorStatusBarConstant)
 
-extern i8 gCommandLineInterpreted;
+extern b8 gCommandLineInterpreted;
 extern i32 gStatusTextShown;
 // When the status bar text is cleared (0: kept until replaced).
 extern i32 gStatusTextClearTime;
@@ -92,7 +92,7 @@ extern struct SMapHeader* gMapHeader;
 // scattered rather than centred; whether the map is saved unseen.
 extern double gTerrainPercent[EDITOR_GENERATOR_TERRAIN_COUNT];
 extern double gDensityPercent[EDITOR_GENERATOR_DENSITY_COUNT];
-extern i32 gScatterTowns;
+extern b32 gScatterTowns;
 extern i32 gSaveUnseen;
 // gDensityPercent's rows.
 H1_ENUM_BEGIN(GeneratorDensity)
@@ -111,7 +111,7 @@ extern i32 gLandCellCount;
 extern i32 gGeneratingMaps;
 // Cleared while a map without the editor's format word is loaded: such maps
 // keep no object ids, so the eraser clears whole cells.
-extern i32 gNewMapFormat;
+extern b32 gNewMapFormat;
 // The right-click help of editwind.bin's buttons and areas.
 extern char* gEditButtonHelp[];
 extern char* gEditAreaHelp[];

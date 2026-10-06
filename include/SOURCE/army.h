@@ -142,10 +142,10 @@ public:
     H1_ENUM_STORAGE(CombatEffectAnimation, i32) m_effectAnimation;
     // DrawToBuffer adds the shadow frames while set; Walk clears it to
     // redraw the field under the moving stack.
-    i8 m_drawShadow;
+    b8 m_drawShadow;
     // combatManager::ResetHitByCreature clears it; DoHydraAttack hits
     // each stack once.
-    i8 m_hitByCreature;
+    b8 m_hitByCreature;
     class icon* m_standIcon;
     class icon* m_walkIcon;
     class icon* m_attackIcon;
@@ -176,15 +176,15 @@ public:
     void FreeResources(void);
     void DrawToBuffer(i16 x, i16 y);
     // Back to the standing frame, optionally redrawing the combat screen.
-    void Stand(i8 redraw);
+    void Stand(b8 redraw);
     void Wince(void);
     // Direction, then the stand-after and continued-walk flags.
-    void Walk(H1_ENUM_PARAM(CombatHexDirection, i16) direction, i8 standAfter, i8 continued);
+    void Walk(H1_ENUM_PARAM(CombatHexDirection, i16) direction, b8 standAfter, b8 continued);
     void SpecialAttack(void);
     void DirDoAttack(H1_ENUM_PARAM(CombatHexDirection, i16) direction);
     void DoHydraAttack(void);
     // Nonzero for a retaliation strike.
-    void DoAttack(i32 retaliation);
+    void DoAttack(b32 retaliation);
     void ResetPath(void);
     i16 WalkTo(void);
     i16 WalkTo(i16 destination);
@@ -195,7 +195,7 @@ public:
         class army* target,
         i32* damageResult,
         i32* killedResult,
-        i32 rangedAttack,
+        b32 rangedAttack,
         i32 defenseModifier
     );
     i32 Damage(i32 damage);
@@ -203,7 +203,7 @@ public:
     u32 Strength(void);
     void SpellEffect(H1_ENUM_PARAM(CombatEffectAnimation, i16) effect, i32 frameDelay);
     void GoBerserk(void);
-    void MoveAttack(i32 destination, i32 moveOnly);
+    void MoveAttack(i32 destination, b32 moveOnly);
     // Undoes m_spellEffect when it expires.
     void CancelSpell(void);
     i16 CanFit(i16* hex);
@@ -214,7 +214,7 @@ public:
         i16 sourceHex,
         i16 targetHex,
         i8 speed,
-        i8 ignoreSpeed,
+        b8 ignoreSpeed,
         H1_ENUM_PARAM(ArmyPathTarget, i8) pathMode
     );
     i16 ValidPath(i16 targetHex, H1_ENUM_PARAM(ArmyPathTarget, i8) pathMode);

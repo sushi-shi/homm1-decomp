@@ -202,14 +202,14 @@ void executive::MainLoop(void) {
     i8 done = 0;
     tag_message message;
     i32 unusedMode; // dead local: retail's /Od frame holds its unreferenced slot
-    i8 dispatch = 1;
+    b8 dispatch = true;
     if (m_managerListHead == NULL)
         return;
     gInputManager->Flush();
     while (!done) {
         Process1WindowsMessage();
         message = gInputManager->GetEvent();
-        dispatch = 1;
+        dispatch = true;
         m_activeManager = m_managerListHead;
         if (m_activeManager == NULL)
             return;
@@ -217,7 +217,7 @@ void executive::MainLoop(void) {
             if (m_activeManager->m_active == 1) {
                 switch (m_activeManager->Main(message)) {
                     case MESSAGE_DISPATCH_CONSUME:
-                        dispatch = 0;
+                        dispatch = false;
                         break;
                     case MESSAGE_DISPATCH_FORWARD:
                         if ((message.type & MESSAGE_EXECUTIVE) != MESSAGE_NONE) {

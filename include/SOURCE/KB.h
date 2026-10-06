@@ -38,14 +38,14 @@ MAIN_MENU_NO_COMMAND = -1, MAIN_MENU_NEW_GAME = 1, MAIN_MENU_LOAD_GAME = 2, MAIN
                            MAIN_MENU_HIGH_SCORES = 5, MAIN_MENU_CREDITS = 6,
                            MAIN_MENU_LAST = MAIN_MENU_CREDITS H1_ENUM_ID_END(MainMenuControl)
 
-                               extern i8 gInPollSound;
+                               extern b8 gInPollSound;
 #define gNoSound gbNoSound // spelling fixes .bss order
 extern i8 gNoSound;
-extern i8 gShowHighScore;
+extern b8 gShowHighScore;
 // HeroView and the kingdom overview raise these while their screens are up;
 // NormalDialog only parks over the adventure map when neither is showing.
-extern i8 gHeroWindShowing;
-extern i8 gOverviewShowing;
+extern b8 gHeroWindShowing;
+extern b8 gOverviewShowing;
 #define gHighScoreType giHighScoreType // spelling fixes .bss order
 extern i8 gHighScoreType;
 extern i8 gTerrainCost[FINDPATH_TERRAIN_COUNT][FINDPATH_STEP_COST_COUNT];
@@ -69,7 +69,7 @@ extern char* gExtendedMemoryUnits;
 extern char* gConventionalMemoryUnits;
 extern i32 gRequiredExtendedMemory;
 extern i32 gRequiredConventionalMemory;
-extern i32 gLoadingMonoIcon;
+extern b32 gLoadingMonoIcon;
 extern struct configStruct gConfig;
 // Retail DoDimensionDoor walks gSearchArray paths through this delta table.
 extern struct tag_tilePoint normalDirTable[];
@@ -103,8 +103,8 @@ extern H1_ENUM_STORAGE(ResourceType, i32) gBottomViewResource;
 extern i32 gBottomViewResourceQty;
 #define gBottomViewText gcBottomViewText // spelling fixes .bss order
 extern char gBottomViewText[];
-extern i32 gHeroMoving;
-extern i32 gRemoteOn;
+extern b32 gHeroMoving;
+extern b32 gRemoteOn;
 extern class heroWindow* DataEntryWin;
 #define gDataEntryDest cDEDest // spelling fixes .bss order
 extern char* gDataEntryDest;
@@ -291,14 +291,14 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) TrueFalseDialogHandler(struct tag_mes
 // Town-name lookup by town id (retail 0x00455aaf); the inline game::GetTown
 // narrows the id.
 char* GetTownName(i32 i);
-void ReceiveRemotePlayerExit(i8 position, i8, i8 eliminated, i8 timedOut);
+void ReceiveRemotePlayerExit(i8 position, i8, b8 eliminated, b8 timedOut);
 void ShutDown(char* message);
 void HandleRemoteDeadPlayerExit(i32 position);
-void CheckEndGame(i32 forced);
+void CheckEndGame(b32 forced);
 void HandleRemoteSuddenExit(void);
 #define gRetreatWin gbRetreatWin // spelling fixes .bss order
 extern i8 gRetreatWin;
-extern i8 gGameInitialized;
+extern b8 gGameInitialized;
 extern H1_ENUM_STORAGE(MainMenuControl, i16) gGameCommand;
 #define gCombatSurrender gbCombatSurrender // spelling fixes .bss order
 extern i8 gCombatSurrender;
@@ -417,11 +417,11 @@ struct SPlayerExit {
     i8 player[7];
 };
 extern i32 gComputeExtent;
-extern i32 gCurrArmyDrawn;
+extern b32 gCurrArmyDrawn;
 #define gIconClipOn gbIconClipOn // spelling fixes .bss order
 extern i8 gIconClipOn;
 extern i32 gLimitToExtent;
-extern i32 gSaveBiggestExtent;
+extern b32 gSaveBiggestExtent;
 #define gMaxExtentX giMaxExtentX // spelling fixes .bss order
 extern i32 gMaxExtentX;
 #define gMaxExtentY giMaxExtentY // spelling fixes .bss order
@@ -465,12 +465,12 @@ extern char* gArtifactEvent[];
 extern char gMapPath[];
 extern char gSoundPath[];
 extern char gTracksPath[];
-extern i32 gInDialog;
+extern b32 gInDialog;
 extern class palette* gPalette;
 // Main: right-click help for the six adventure panel buttons, the typed
 // cheat-digit sequence and the pending menu command.
-extern i32 gAllBlack;
-extern i32 gNoBorder;
+extern b32 gAllBlack;
+extern b32 gNoBorder;
 // Per hero type scouting radius used by TeleportTo.
 extern i8 gHeroScoutRadius[];
 extern u8 gCloudType[];
@@ -504,7 +504,7 @@ extern struct campaignScenario gCampaignScenarios[];
 // Spell-book hover help lines (0x00493890).
 extern H1_ENUM_ARRAY(char*, gSpellHelp, SpellHelpText, SPELL_HELP_COUNT);
 // CheckHandleNet hands combat packets back while a battle is running.
-extern i8 gInCombat;
+extern b8 gInCombat;
 // Neighbour hex per combat hex and direction (0x00490fd8), -1 off grid.
 extern H1_ENUM_ARRAY(i8, gCombatAdjacency[45], CombatHexDirection, COMBAT_DIRECTION_ADJACENT_COUNT);
 // The loaded combat effect icon's file id (0x004c6d64).
@@ -544,7 +544,7 @@ extern class heroWindow* heroWin;
 extern i8 gHighScoreRank;
 i32 EarlySetup(void);
 i32 GameUnsaved(void);
-extern i8 gFirstTimeThrough;
+extern b8 gFirstTimeThrough;
 extern char gAnimPath[];
 #define gRegAppPath gcRegAppPath // spelling fixes .bss order
 extern char gRegAppPath[];
@@ -562,7 +562,7 @@ void UpdateAppSpecificMenus(void* hMenu);
 #define gSpecialHideCursor bSpecialHideCursor // spelling fixes .bss order
 extern i32 gSpecialHideCursor;
 extern H1_ENUM_ARRAY(i32, gArtifactBaseRV, ArtifactType, ARTIFACT_REGULAR_END);
-extern i8 gDrawSavedCursor;
+extern b8 gDrawSavedCursor;
 extern H1_ENUM_ARRAY(i8, gSpellAIFlags, SpellType, SPELL_COUNT);
 extern H1_ENUM_ARRAY_ROWS(
     H1_ENUM_STORAGE(CreatureType, i8),
@@ -606,7 +606,7 @@ extern i32 gThisNetPos;
 #define gMapBaseType iMPBaseType // spelling fixes .bss order
 extern H1_ENUM_STORAGE(MultiplayerBaseType, i8) gMapBaseType;
 i8 NetPosToGamePos(i32 netPos);
-i8 WaitForOtherPlayer(void);
+b8 WaitForOtherPlayer(void);
 // SeedPosition's seeding state.
 #define gSeedingValid giSeedingValid // spelling fixes .bss order
 extern i32 gSeedingValid;
@@ -615,7 +615,7 @@ extern i8 gDirectConnect;
 
 #define gMapExtendedType iMPExtendedType // spelling fixes .bss order
 extern H1_ENUM_STORAGE(RemoteGameMode, i8) gMapExtendedType;
-extern i32 gInSmacker;
+extern b32 gInSmacker;
 // Spells taught per mage-guild level (retail 0x492514).
 extern i8 gMageGuildSpellCount[];
 extern H1_ENUM_ARRAY2(
@@ -629,18 +629,18 @@ extern H1_ENUM_ARRAY2(
 // KB's tavern recruit dialog handler (retail 0x0045140e).
 H1_ENUM_RETURN(MessageDispatchResult, i16) RecruitHeroHandler(struct tag_message& message);
 extern H1_ENUM_ARRAY(i8, townTheme, TownType, TOWN_TYPE_COUNT);
-extern i32 gFullCombatScreenDrawn;
-extern i32 gLimitedCombatUpdatePalette;
+extern b32 gFullCombatScreenDrawn;
+extern b32 gLimitedCombatUpdatePalette;
 extern i32 gScrollX;
 extern i32 gScrollY;
 // CheckEndGame's re-entry guard and last offered score, the creature
 // alignment names (by type / 6) and the score labels.
-extern i8 gInCheckEndGame;
+extern b8 gInCheckEndGame;
 #define gScore giScore // spelling fixes .bss order
 extern i32 gScore;
 // oldmain's re-entry guard and the intro, end-sequence and remote state it
 // shares with the game screens.
-extern i8 gKBDone;
+extern b8 gKBDone;
 extern i16 boatFrameFlip[];
 // Combat ground tiles (0x00490e70) and obstacle icons (0x00490e90) per
 // combat terrain.
@@ -657,14 +657,14 @@ extern char* gAPanelHelp[];
 // Army info strings: attack, defense, shots (combat), damage, hit points,
 // speed, morale, luck, shots (adventure); then the speed names.
 extern char* gArmyStatText[];
-extern i32 gEnlargeScreenBlit;
-extern i32 gHeartbeatSeen;
+extern b32 gEnlargeScreenBlit;
+extern b32 gHeartbeatSeen;
 // Setup screens: the setup-dialog flag kbwin's menus check and the
 // right-click help of each setup dialog.
-extern i32 gInSetupDialog;
+extern b32 gInSetupDialog;
 // The other side's ready flag and the heartbeat-seen flag (REMOTE).
-extern i32 gRemoteReady;
-extern i8 gSkipIntro;
+extern b32 gRemoteReady;
+extern b8 gSkipIntro;
 #define gWaitForRemoteReceive gbWaitForRemoteReceive // spelling fixes .bss order
 extern i8 gWaitForRemoteReceive;
 extern char* gCampaignScenarioNames[];

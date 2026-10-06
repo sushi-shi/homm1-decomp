@@ -205,7 +205,7 @@ i32 ClearOptionsDialog(void);
 void UpdateClearWindow(void);
 H1_ENUM_RETURN(MessageDispatchResult, i16) ClearWindowHandler(tag_message& message);
 // Edits the map header (dtlwind.bin); returns 0 when cancelled.
-i32 MapDetailsDialog(i32 randomMap);
+i32 MapDetailsDialog(b32 randomMap);
 void UpdateMapDetailsWindow(void);
 H1_ENUM_RETURN(MessageDispatchResult, i16) MapDetailsWindowHandler(tag_message& message);
 // Sets up the random map generator (editnew.bin); returns 0 when cancelled.
@@ -216,7 +216,7 @@ void BalanceTerrainPercents(i32 fixed);
 H1_ENUM_RETURN(MessageDispatchResult, i16) NewMapWindowHandler(tag_message& message);
 // Drags a generator slider: a terrain row when `terrain` is set, else a
 // density row.
-void DragNewMapSlider(i32 terrain, i32 index);
+void DragNewMapSlider(b32 terrain, i32 index);
 
 extern editTownExtra gTownEdit;
 extern editHeroExtra gHeroEdit;

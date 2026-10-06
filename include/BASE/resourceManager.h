@@ -36,7 +36,7 @@ public:
     i32 m_aggregateFd;
     aggEntry* m_aggregateDir;
     i16 m_aggregateEntryCount;
-    i32 m_expunging;
+    b32 m_expunging;
     i32 m_savedPosition;
     char m_lastFileName[RESOURCE_MANAGER_FILENAME_CAPACITY];
     i32 m_lastFileId;

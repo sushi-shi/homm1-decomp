@@ -179,7 +179,7 @@ void armyGroup::DamageGroup(float casualtyFraction) {
     i32 killed;
     i32 killChance = casualtyFraction * 100.0f;
     i32 i;
-    i32 isFirstTroop = 1;
+    b32 isFirstTroop = true;
     i32 j;
 
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; ++i) {
@@ -196,7 +196,7 @@ void armyGroup::DamageGroup(float casualtyFraction) {
                 m_creatureCounts[i] = 0;
                 m_creatureTypes[i] = CREATURE_NONE;
             }
-            isFirstTroop = 0;
+            isFirstTroop = false;
         } else {
             m_creatureCounts[i] = 0;
         }

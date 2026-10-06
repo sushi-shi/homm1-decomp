@@ -97,13 +97,13 @@ void combatManager::DetermineEffectOfSpell(
 ) {
     H1_ENUM_LOCAL(CombatSide, i32) side;
     i32 firstDurMax;
-    i32 done;
+    b32 done;
     i32 effect;
     army* targetCreature;
     H1_ENUM_LOCAL(CombatSpellAITargetMode, i32) spellMode;
     i32 hex;
 
-    done = 0;
+    done = false;
     side = COMBAT_DEFENDER_SIDE;
     hex = COMBAT_SPELL_AI_HEX_FIRST;
     effect = 0;
@@ -153,10 +153,10 @@ void combatManager::DetermineEffectOfSpell(
         }
         switch (spell) {
             case SPELL_CURE:
-                EffectSpellCure(&effect, m_currentSide, 1);
+                EffectSpellCure(&effect, m_currentSide, true);
                 break;
             case SPELL_DISPEL_MAGIC:
-                EffectSpellCure(&effect, COMBAT_SIDE_ANY, 0);
+                EffectSpellCure(&effect, COMBAT_SIDE_ANY, false);
                 break;
             case SPELL_RESURRECT:
                 EffectSpellResurrect(&effect, hex);
@@ -219,7 +219,7 @@ void combatManager::DetermineEffectOfSpell(
         }
         switch (spellMode) {
             case SPELL_AI_GLOBAL:
-                done = 1;
+                done = true;
                 break;
             case SPELL_AI_FRIENDLY:
             case SPELL_AI_ENEMY:
@@ -228,7 +228,7 @@ void combatManager::DetermineEffectOfSpell(
             case SPELL_AI_AREA:
                 NextPos(&hex);
                 if (hex > COMBAT_SPELL_AI_HEX_LAST)
-                    done = 1;
+                    done = true;
                 break;
         }
     }
@@ -319,18 +319,18 @@ void combatManager::NextPos(i32* hex) {
 // The next hex at or after startHex holding a stack of the side (2: either
 // side).
 VA(0x00459678, 0x66)
-i32 combatManager::FirstArmy(i32 startHex, H1_ENUM_PARAM(CombatSide, i32) side, i32* hex) {
+b32 combatManager::FirstArmy(i32 startHex, H1_ENUM_PARAM(CombatSide, i32) side, i32* hex) {
     while (startHex <= COMBAT_SPELL_AI_HEX_LAST) {
         if (m_hexCells[startHex].m_occupantSide == side
             || (side == COMBAT_SIDE_ANY
                 && m_hexCells[startHex].m_occupantSide >= COMBAT_SIDE_FIRST)) {
             *hex = startHex;
-            return 0;
+            return false;
         }
         NextPos(&startHex);
     }
     *hex = ARMY_HEX_INVALID;
-    return 1;
+    return true;
 }
 
 // The value of cancelling a side's (2: both sides') spell effects; stacks
@@ -339,18 +339,18 @@ VA(0x004596de, 0x20c)
 void combatManager::EffectSpellCure(
     i32* effect,
     H1_ENUM_PARAM(CombatSide, i32) targetSide,
-    i8 cureOnly
+    b8 cureOnly
 ) {
     H1_ENUM_LOCAL(CombatSide, i32) sideIndex;
     i32 negTotal;
     i32 stackNum;
     army* creature;
     i32 posTotal;
-    i32 done;
+    b32 done;
     i32 armyWorth;
 
     *effect = 0;
-    done = 0;
+    done = false;
     if (targetSide == COMBAT_SIDE_ANY)
         sideIndex = m_currentSide;
     else
@@ -380,7 +380,7 @@ void combatManager::EffectSpellCure(
                 }
             }
         }
-        if (cureOnly == 1)
+        if (cureOnly == true)
             posTotal = 0;
         if (targetSide == COMBAT_SIDE_ANY) {
             if (sideIndex == m_currentSide)
@@ -392,7 +392,7 @@ void combatManager::EffectSpellCure(
         if (targetSide == COMBAT_SIDE_ANY && sideIndex == m_currentSide)
             sideIndex = COMBAT_OPPOSING_SIDE(m_currentSide);
         else
-            done = 1;
+            done = true;
     }
 }
 
@@ -432,7 +432,7 @@ void combatManager::EffectSpellDamage(
     i32 hitDamage;
     army* targetArmy;
     i32 hex;
-    i32 done;
+    b32 done;
     H1_ENUM_ARRAY(i32, damagedValue, CombatSide, COMBAT_SIDE_COUNT);
     H1_ENUM_LOCAL(CombatHexDirection, i32) neighborIndex;
     i32 killedCount;
@@ -440,7 +440,7 @@ void combatManager::EffectSpellDamage(
     baseDamage = m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * damagePerPower;
     hex = 0;
     neighborIndex = COMBAT_DIRECTION_NORTHEAST;
-    done = 0;
+    done = false;
     if (m_hexCells[targetHex].m_occupantIndex >= 0)
         targetArmy =
             &m_armies[m_hexCells[targetHex].m_occupantSide][m_hexCells[targetHex].m_occupantIndex];
@@ -463,11 +463,11 @@ void combatManager::EffectSpellDamage(
                     hex = GetAdjacentCellIndexNoArmy(targetHex, neighborIndex);
                     neighborIndex++;
                 } else
-                    done = 1;
+                    done = true;
                 break;
             case SPELL_LIGHTNING_BOLT:
                 if (hex == targetHex)
-                    done = 1;
+                    done = true;
                 else
                     hex = targetHex;
                 break;

@@ -47,7 +47,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) combatManager::Main(struct tag_messag
     CheckCastleAttack();
     if (CheckWin(&message))
         return MESSAGE_DISPATCH_FORWARD;
-    packet = GetRemoteData(1);
+    packet = GetRemoteData(true);
     if (packet && packet->type == REMOTE_MESSAGE_RELIABLE) {
         switch (packet->command) {
             case REMOTE_COMMAND_COMBAT_ACTION:
@@ -82,7 +82,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) combatManager::Main(struct tag_messag
                && message.type != MESSAGE_RIGHT_BUTTON_DOWN && message.type != MESSAGE_NONE)
             message = gInputManager->GetEvent();
         if (message.type != MESSAGE_NONE) {
-            m_gridSelectionDisabled = 0;
+            m_gridSelectionDisabled = false;
             gMouseManager->ReallyShowPointer();
         }
     }
@@ -485,11 +485,11 @@ H1_ENUM_RETURN(MessageDispatchResult, i32) combatManager::ProcessCombatMsg(struc
                         default:
                             gMouseManager->MouseCoords(mouseX, mouseY);
                             if (mouseX <= 0x32)
-                                CombatMessage(gCombatHelp[COMBAT_HELP_AUTO_COMBAT], 1);
+                                CombatMessage(gCombatHelp[COMBAT_HELP_AUTO_COMBAT], true);
                             else if (mouseX >= 0x24e)
-                                CombatMessage(gCombatHelp[COMBAT_HELP_SKIP_UNIT], 1);
+                                CombatMessage(gCombatHelp[COMBAT_HELP_SKIP_UNIT], true);
                             else
-                                CombatMessage(gCombatHelp[COMBAT_HELP_NONE], 1);
+                                CombatMessage(gCombatHelp[COMBAT_HELP_NONE], true);
                             gMouseManager->SetPointer(COMBAT_POINTER_DEFAULT);
                             m_selectedHex = ARMY_HEX_INVALID;
                             m_previousCommand = COMBAT_INVALID_COMMAND;
@@ -511,7 +511,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i32) combatManager::ProcessCombatMsg(struc
                     switch (message.id) {
                         case COMBAT_CONTROL_DISABLE_SELECTION:
                             if (!(message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)) {
-                                m_gridSelectionDisabled = 1;
+                                m_gridSelectionDisabled = true;
                                 gMouseManager->ReallyHidePointer();
                             }
                             break;
@@ -534,7 +534,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i32) combatManager::ProcessCombatMsg(struc
                 case INPUT_SCAN_H:
                     if (m_heroes[m_currentSide]) {
                         gMouseManager->SetPointer(COMBAT_POINTER_DEFAULT);
-                        ViewGeneral(m_currentSide, 1, 0);
+                        ViewGeneral(m_currentSide, true, false);
                         ResetMouse();
                     }
                     break;
@@ -619,21 +619,21 @@ void combatManager::ResetRound(void) {
 VA(0x0041ea22, 0x123)
 i32 combatManager::CheckWin(struct tag_message* message) {
     i32 pos;
-    i8 combatEnded;
+    b8 combatEnded;
     i32 unusedWinWordValue;
 
-    combatEnded = 0;
+    combatEnded = false;
     if (IsWinner(m_currentSide)) {
-        combatEnded = 1;
+        combatEnded = true;
         if (IsWinner(COMBAT_OPPOSING_SIDE(m_currentSide)))
             m_combatResult = COMBAT_RESULT_DRAW;
         else
             m_combatResult = m_currentSide;
     } else if (IsWinner(COMBAT_OPPOSING_SIDE(m_currentSide))) {
-        combatEnded = 1;
+        combatEnded = true;
         m_combatResult = COMBAT_OPPOSING_SIDE(m_currentSide);
     } else if (m_sideRetreated[COMBAT_ATTACKER_SIDE] || m_sideRetreated[COMBAT_DEFENDER_SIDE]) {
-        combatEnded = 1;
+        combatEnded = true;
         gRetreatWin = 1;
         m_combatResult = m_sideRetreated[COMBAT_ATTACKER_SIDE]
                              ? H1_ENUM_CAST(CombatSide, i8, COMBAT_RESULT_DEFENDER)
@@ -740,13 +740,13 @@ i8 combatManager::RightClick(i8 hex) {
     switch (hex) {
         case COMBAT_DEFENDER_HERO_HEX:
             if (m_heroes[COMBAT_DEFENDER_SIDE]) {
-                ViewGeneral(COMBAT_DEFENDER_SIDE, 0, 1);
+                ViewGeneral(COMBAT_DEFENDER_SIDE, false, true);
                 ResetMouse();
             }
             return 0;
         case COMBAT_ATTACKER_HERO_HEX:
             if (m_heroes[COMBAT_ATTACKER_SIDE]) {
-                ViewGeneral(COMBAT_ATTACKER_SIDE, 0, 1);
+                ViewGeneral(COMBAT_ATTACKER_SIDE, false, true);
                 ResetMouse();
             }
             return 0;
@@ -806,12 +806,12 @@ void combatManager::DoCommand(H1_ENUM_PARAM(CombatMessageCommand, i8) command) {
             break;
         case COMBAT_MESSAGE_COMMAND_OPTIONS:
             gMouseManager->SetPointer(COMBAT_POINTER_DEFAULT);
-            ViewGeneral(m_currentSide, 1, 0);
+            ViewGeneral(m_currentSide, true, false);
             ResetMouse();
             break;
         case COMBAT_MESSAGE_COMMAND_OPPOSING_OPTIONS:
             gMouseManager->SetPointer(COMBAT_POINTER_DEFAULT);
-            ViewGeneral(COMBAT_OPPOSING_SIDE(m_currentSide), 1, 0);
+            ViewGeneral(COMBAT_OPPOSING_SIDE(m_currentSide), true, false);
             ResetMouse();
             break;
         case COMBAT_MESSAGE_COMMAND_VIEW_INFO:
@@ -1164,7 +1164,7 @@ void combatManager::DoVictory(H1_ENUM_PARAM(CombatSide, i8) winningSide) {
     gMaxTransferArtifacts = 0;
     gCurTransferArtifact = -1;
     FreeArmies();
-    CombatMessage(" ", 1);
+    CombatMessage(" ", true);
     GrabScreenBitmap(gWindowManager->m_screen, 0, 0);
     gMouseManager->SetPointer(COMBAT_POINTER_DEFAULT);
     switch (winningSide) {
@@ -1252,7 +1252,7 @@ void combatManager::DoVictory(H1_ENUM_PARAM(CombatSide, i8) winningSide) {
                 message.text = gText;
                 m_winLoseWindow->BroadcastMessage(message);
                 ShowDeadArmies(m_winLoseWindow);
-                gWindowManager->DoDialog(m_winLoseWindow, WinCombatHandler, 0);
+                gWindowManager->DoDialog(m_winLoseWindow, WinCombatHandler, false);
                 delete m_winLoseWindow;
                 if (m_heroes[COMBAT_OPPOSING_SIDE(winningSide)])
                     m_heroes[COMBAT_OPPOSING_SIDE(winningSide)]->ApplyBattleLossTemps();
@@ -1321,9 +1321,9 @@ void combatManager::DoLoseWindow(void) {
     if (loseWindow == NULL)
         MemError();
     scrollBitmap = gResourceManager->GetBitmap("losecmbt.bmp");
-    gLoadingMonoIcon = 1;
+    gLoadingMonoIcon = true;
     walkIcon = gResourceManager->GetIcon("losewalk.icn");
-    gLoadingMonoIcon = 0;
+    gLoadingMonoIcon = false;
     if (m_heroes[losingParty]) {
         if (gCombatSurrender)
             sprintf(
@@ -1419,7 +1419,7 @@ i16 combatManager::DoSurrender(void) {
         gSurrenderCost
     );
     window->BroadcastMessage(message);
-    gWindowManager->DoDialog(window, TrueFalseDialogHandler, 0);
+    gWindowManager->DoDialog(window, TrueFalseDialogHandler, false);
     delete window;
     return gWindowManager->m_dialogResult == DIALOG_BUTTON_2;
 }
@@ -1436,8 +1436,8 @@ void combatManager::CheckChangeSelector(void) {
             1
         );
         m_limitCreatureHex = currentArmy->m_hex;
-        m_limitCreature = 1;
-        DrawFrame(1);
+        m_limitCreature = true;
+        DrawFrame(true);
     }
 }
 
@@ -1503,7 +1503,7 @@ void combatManager::ResetMouse(void) {
     if (gThisNetHasControl && m_playerId[m_currentSide] >= 0
         && gHumanPlayer[m_playerId[m_currentSide]]) {
         m_selectedHex = ARMY_HEX_INVALID;
-        CombatMessage("", 1);
+        CombatMessage("", true);
         gMouseManager->MouseCoords(x, y);
         message.type = MESSAGE_WIDGET;
         message.command = WIDGET_COMMAND_HOVER;
@@ -1520,7 +1520,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) combatManager::ProcessNextAction(stru
     CombatRemoteAction actionData;
     i32 transmitResult;
     i32 remoteIndex;
-    i8 doAdvance;
+    b8 doAdvance;
     army* actingArmy;
 
     if (gThisNetHasControl && gRemoteOn && m_playerId[COMBAT_ATTACKER_SIDE] >= 0
@@ -1538,13 +1538,13 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) combatManager::ProcessNextAction(stru
             remoteIndex,
             sizeof(actionData),
             REMOTE_COMMAND_COMBAT_ACTION,
-            1
+            true
         );
         if (!transmitResult)
             ShutDown(NULL);
     }
     actingArmy = &m_armies[m_currentSide][m_currentArmyIndex];
-    doAdvance = 0;
+    doAdvance = false;
     if (CheckWin(&message))
         return MESSAGE_DISPATCH_FORWARD;
     switch (gNextAction) {
@@ -1555,31 +1555,31 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) combatManager::ProcessNextAction(stru
             CastSpell(
                 H1_ENUM_DECODE(SpellType, gNextActionExtra),
                 gNextActionGridIndex,
-                0,
+                false,
                 gNextActionGridIndex2
             );
             if (m_armies[m_currentSide][m_currentArmyIndex].m_quantity <= 0)
-                doAdvance = 1;
+                doAdvance = true;
             break;
         case ACTION_MOVE:
             gMouseManager->ReallyHidePointer();
-            actingArmy->MoveAttack(gNextActionGridIndex, 0);
+            actingArmy->MoveAttack(gNextActionGridIndex, false);
             actingArmy->m_stats.attributes |= MONSTER_FLAGS_TURN_SPENT;
             if (CheckWin(&message))
                 return MESSAGE_DISPATCH_FORWARD;
             CheckApplyGoodMorale(m_currentSide, m_currentArmyIndex);
-            doAdvance = 1;
+            doAdvance = true;
             break;
         case ACTION_ATTACK:
             gMouseManager->ReallyHidePointer();
             if (gNextActionExtra != ARMY_HEX_INVALID && actingArmy->m_hex != gNextActionExtra)
-                actingArmy->MoveAttack(gNextActionExtra, 1);
-            actingArmy->MoveAttack(gNextActionGridIndex, 0);
+                actingArmy->MoveAttack(gNextActionExtra, true);
+            actingArmy->MoveAttack(gNextActionGridIndex, false);
             actingArmy->m_stats.attributes |= MONSTER_FLAGS_TURN_SPENT;
             if (CheckWin(&message))
                 return MESSAGE_DISPATCH_FORWARD;
             CheckApplyGoodMorale(m_currentSide, m_currentArmyIndex);
-            doAdvance = 1;
+            doAdvance = true;
             break;
         case ACTION_RETREAT:
             m_sideRetreated[m_currentSide] = 1;
@@ -1596,15 +1596,15 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) combatManager::ProcessNextAction(stru
             break;
         case ACTION_SKIP_TURN:
             actingArmy->m_stats.attributes |= MONSTER_FLAGS_TURN_SPENT;
-            doAdvance = 1;
+            doAdvance = true;
             break;
     }
     gNextAction = ACTION_NONE;
     if (CheckWin(&message))
         return MESSAGE_DISPATCH_FORWARD;
-    if (doAdvance && !GetNextArmy(1)) {
+    if (doAdvance && !GetNextArmy(true)) {
         ResetRound();
-        GetNextArmy(1);
+        GetNextArmy(true);
     }
     CheckChangeSelector();
     if (gThisNetHasControl && !m_gridSelectionDisabled

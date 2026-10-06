@@ -11,6 +11,7 @@ from pathlib import Path
 from homm1.core.paths import REPO
 
 _SOURCE = """
+#include <match.h>
 #include <Domains.h>
 H1_ENUM_BEGIN(Slot)
     SLOT_A = 0,
@@ -48,7 +49,9 @@ int Read(Record& record) {
     record.bits |= BIT_A;
     record.slot++;
     record.flag = true;
-    if (record.flag == false || !record.flag)
+    b32 wide = record.flag;
+    record.flag = wide;
+    if (record.flag == false || !record.flag || wide == record.flag)
         return CONTROL_OK;
     return gTable[record.slot];
 #elif PROBE == 1

@@ -16,7 +16,7 @@ extern i8 gBuildBoat[GAME_PLAYER_COUNT];
 #define gBuildBoatStuffTurn giBuildBoatStuffTurn // spelling fixes .bss order
 extern i8 gBuildBoatStuffTurn[GAME_PLAYER_COUNT];
 void ShowStatus();
-void CheckDoMain(i32, i32 doMain);
+void CheckDoMain(i32, b32 doMain);
 #define gDummy iDummy // spelling fixes .bss order
 extern i32 gDummy;
 #define gHeroBuiltThisTurn bHeroBuiltThisTurn // spelling fixes .bss order
@@ -150,7 +150,7 @@ public:
         class hero* aiHero,
         i16 targetX,
         i16 targetY,
-        i8 immediate,
+        b8 immediate,
         i32* liveChance
     );
     i32 ValueOfTown(class town* townPointer);
@@ -160,7 +160,7 @@ public:
     i32 FightValueOfStack(
         class armyGroup* group,
         class hero* heroPointer,
-        i32 useAdjustedFightValue,
+        b32 useAdjustedFightValue,
         i8 useTown = 0,
         i8 townId = 0
     );
@@ -168,7 +168,7 @@ public:
         class hero* aiHero,
         H1_ENUM_PARAM(CreatureType, i32) creature,
         i32 availableCount,
-        i32 useAvailableCount,
+        b32 useAvailableCount,
         i32& purchaseCount,
         i32& purchaseValue,
         i32& replacementSlot
@@ -186,7 +186,7 @@ public:
     void HeroInteractionAtTown(
         class hero* heroPointer,
         class town* townPointer,
-        i32 evaluateOnly,
+        b32 evaluateOnly,
         i32* value
     );
     i32 ChooseGoldOrExperience(class hero* heroPointer, i32 gold, i32 experience);
@@ -264,7 +264,7 @@ H1_ENUM_CONST_END(AIPlaceVisitConstant)
 extern i32 gPlacesVisited[AI_PLACE_VISIT_COUNT][AI_PLACE_COORDINATE_COUNT];
 #define gCurPlaceToVisit iCurPlaceToVisit // spelling fixes .bss order
 extern i32 gCurPlaceToVisit;
-void ResetHeroRVs(i32 resetAll, i32 x, i32 y);
+void ResetHeroRVs(b32 resetAll, i32 x, i32 y);
 // DetermineTargetPosition's shipyard search state.
 #define gBestShipyardId giBestShipyardId // spelling fixes .bss order
 extern i8 gBestShipyardId;
@@ -312,7 +312,7 @@ extern u8 gCurPlayerHighBit;
 extern u8 gCurWatchPlayerHighBit;
 void AiPrint(char* text);
 void AbsAiPrint(char* text);
-extern i8 gShowComputerRoute;
+extern b8 gShowComputerRoute;
 #define gCurWatchPlayerBit giCurWatchPlayerBit // spelling fixes .bss order
 extern u8 gCurWatchPlayerBit;
 #define gCurPlayerBit giCurPlayerBit // spelling fixes .bss order

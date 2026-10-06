@@ -280,7 +280,7 @@ VA(0x0046a740, 0x1a8)
 i16 heroWindowManager::DoDialog(
     heroWindow* window,
     H1_ENUM_RETURN(MessageDispatchResult, i16) (*handler)(tag_message&),
-    i32 fade
+    b32 fade
 ) {
     DATA(0x004ce174)
     static i32 gDialogNestCount = 0;
@@ -288,14 +288,14 @@ i16 heroWindowManager::DoDialog(
     i16 done;
     H1_ENUM_LOCAL(MessageDispatchResult, i32) result;
 
-    gInDialog = 1;
+    gInDialog = true;
     if (gDialogNestCount == 0)
         SetNoDialogMenus(0);
     gDialogNestCount++;
     m_lastHoverId = WINDOW_MANAGER_NO_HOVER_WIDGET;
     if (window != NULL)
         AddWindow(window, WINDOW_Z_ORDER_APPEND, 1);
-    if (fade != 0)
+    if (fade != false)
         gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, gPalette);
     gInputManager->Flush();
     m_dialogResult = WINDOW_MANAGER_NO_DIALOG_RESULT;
@@ -323,7 +323,7 @@ i16 heroWindowManager::DoDialog(
             RemoveWindow(window);
         gInputManager->Flush();
     }
-    gInDialog = 0;
+    gInDialog = false;
     gDialogNestCount--;
     if (gDialogNestCount == 0)
         SetNoDialogMenus(1);
@@ -394,7 +394,7 @@ void heroWindowManager::FadeScreen(
 #line 551
     H1_ASSERT(direction == WINDOW_FADE_IN || direction == WINDOW_FADE_OUT);
     if (currentPalette != NULL)
-        SetPalette(currentPalette->m_data, 0);
+        SetPalette(currentPalette->m_data, false);
     PollSound();
     switch (direction) {
         case WINDOW_FADE_IN: {
@@ -537,7 +537,7 @@ void heroWindowManager::FizzleForward(i16 x, i16 y, i16 width, i16 height, i32 d
     i32 saveFlags;
     if (gShowIt == 0)
         return;
-    gEnlargeScreenBlit = 0;
+    gEnlargeScreenBlit = false;
     tickStart = 0;
     saveFlags = gWindowManager->m_updateFlags;
     gWindowManager->m_updateFlags = 0;
@@ -572,7 +572,7 @@ void heroWindowManager::FizzleForward(i16 x, i16 y, i16 width, i16 height, i32 d
     }
     DelayTilMilli(tickStart + delay);
     BlitBitmapToScreen(m_fizzleWork, 0, 0, width, height, x, y);
-    gEnlargeScreenBlit = 1;
+    gEnlargeScreenBlit = true;
     gWindowManager->m_updateFlags = saveFlags;
     delete m_fizzleSource;
     m_fizzleSource = NULL;

@@ -248,7 +248,7 @@ void eventsManager::EditCell(i16 x, i16 y) {
     sprintf(text, "%d", gEditCellPair->overlayId);
     msg.id = firstByteId + 11;
     gEditDialog->BroadcastMessage(msg);
-    gWindowManager->DoDialog(gEditDialog, CellWindowHandler, 0);
+    gWindowManager->DoDialog(gEditDialog, CellWindowHandler, false);
     delete gEditDialog;
     if (gWindowManager->m_dialogResult == DIALOG_BUTTON_1)
         gEditManager->m_map.cells[x][y] = original;
@@ -391,7 +391,7 @@ void eventsManager::EditTown(i16 x, i16 y) {
     gEditDialog = new heroWindow(EVENTS_DIALOG_X, EVENTS_DIALOG_Y, "edittown.bin");
     SetWinText(gEditDialog, EVENTS_WINDOW_TEXT_TOWN);
     UpdateTownWindow(&gTownEdit);
-    gWindowManager->DoDialog(gEditDialog, TownWindowHandler, 0);
+    gWindowManager->DoDialog(gEditDialog, TownWindowHandler, false);
     delete gEditDialog;
     if (gWindowManager->m_dialogResult != DIALOG_BUTTON_1) {
         gEditManager->m_mapChanged = 1;
@@ -473,7 +473,7 @@ VA(0x0040a459, 0x39b)
 H1_ENUM_RETURN(MessageDispatchResult, i16) TownWindowHandler(tag_message& message) {
     const i16 escapeKey = INPUT_SCAN_ESCAPE;
     const i16 toggleBase = CELL_WINDOW_FIRST_FLAG;
-    i32 changed = 0;
+    b32 changed = false;
     i32 amount;
     i32 has;
     i32 bit;
@@ -494,7 +494,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) TownWindowHandler(tag_message& messag
                     switch (message.id) {
                         case TOWN_WINDOW_CUSTOMIZED:
                             gTownEdit.record.customized = !gTownEdit.record.customized;
-                            changed = 1;
+                            changed = true;
                             break;
                         case EXTRA_WINDOW_FIRST_COUNT:
                         case EXTRA_WINDOW_FIRST_COUNT + 1:
@@ -510,7 +510,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) TownWindowHandler(tag_message& messag
                                 amount = EXTRA_WINDOW_MAX_COUNT;
                             gTownEdit.record.troopCounts[message.id - EXTRA_WINDOW_FIRST_COUNT] =
                                 amount;
-                            changed = 1;
+                            changed = true;
                             break;
                         case EXTRA_WINDOW_FIRST_TYPE:
                         case EXTRA_WINDOW_FIRST_TYPE + 1:
@@ -529,7 +529,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) TownWindowHandler(tag_message& messag
                             }
                             gTownEdit.record.troopTypes[message.id - EXTRA_WINDOW_FIRST_TYPE] =
                                 H1_ENUM_DECODE(CreatureType, amount);
-                            changed = 1;
+                            changed = true;
                             break;
                         case EXTRA_WINDOW_FIRST_OWNER:
                         case EXTRA_WINDOW_FIRST_OWNER + 1:
@@ -538,7 +538,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) TownWindowHandler(tag_message& messag
                         case EXTRA_WINDOW_NEUTRAL_OWNER + 2:
                         case EXTRA_WINDOW_NEUTRAL_OWNER + 3:
                             gTownEdit.record.owner = message.id - EXTRA_WINDOW_NEUTRAL_OWNER;
-                            changed = 1;
+                            changed = true;
                             break;
                         case TOWN_WINDOW_FIRST_BUILDING:
                         case TOWN_WINDOW_FIRST_BUILDING + 1:
@@ -560,7 +560,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) TownWindowHandler(tag_message& messag
                                 gTownEdit.record.buildings -= bit;
                             else
                                 gTownEdit.record.buildings += bit;
-                            changed = 1;
+                            changed = true;
                             break;
                         case TOWN_WINDOW_MAGE_GUILD:
                             message.command = WIDGET_COMMAND_GET_TEXT;
@@ -574,7 +574,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) TownWindowHandler(tag_message& messag
                                 amount = 1;
                             }
                             gTownEdit.record.buildState = amount - 1;
-                            changed = 1;
+                            changed = true;
                             break;
                     }
                     break;
@@ -612,7 +612,7 @@ void eventsManager::EditMonster(i16 x, i16 y) {
     widgetMessage.id = MONSTER_WINDOW_COUNT;
     widgetMessage.text = text;
     gEditDialog->BroadcastMessage(widgetMessage);
-    gWindowManager->DoDialog(gEditDialog, MonsterWindowHandler, 0);
+    gWindowManager->DoDialog(gEditDialog, MonsterWindowHandler, false);
     delete gEditDialog;
     if (gWindowManager->m_dialogResult != DIALOG_BUTTON_1) {
         gEditManager->m_mapChanged = 1;
@@ -624,7 +624,7 @@ void eventsManager::EditMonster(i16 x, i16 y) {
 
 VA(0x0040a968, 0x1bd)
 H1_ENUM_RETURN(MessageDispatchResult, i16) MonsterWindowHandler(tag_message& message) {
-    i8 outOfRange;
+    b8 outOfRange;
     i32 value;
     tag_message reply;
 
@@ -643,12 +643,12 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) MonsterWindowHandler(tag_message& mes
                 case WIDGET_NOTIFY_SELECT:
                     switch (message.id) {
                         case MONSTER_WINDOW_COUNT:
-                            outOfRange = 0;
+                            outOfRange = false;
                             message.command = WIDGET_COMMAND_GET_TEXT;
                             gEditDialog->BroadcastMessage(message);
                             value = atoi(message.text);
                             if (value < 0 || value > MONSTER_WINDOW_MAX_COUNT)
-                                outOfRange = 1;
+                                outOfRange = true;
                             if (value < 0)
                                 value = 0;
                             if (value > MONSTER_WINDOW_MAX_COUNT)
@@ -699,7 +699,7 @@ void eventsManager::EditHero(i16 x, i16 y) {
     gEditDialog = new heroWindow(EVENTS_DIALOG_X, EVENTS_DIALOG_Y, "heroedit.bin");
     SetWinText(gEditDialog, EVENTS_WINDOW_TEXT_HERO);
     UpdateHeroWindow(&gHeroEdit);
-    gWindowManager->DoDialog(gEditDialog, HeroWindowHandler, 0);
+    gWindowManager->DoDialog(gEditDialog, HeroWindowHandler, false);
     delete gEditDialog;
     if (gWindowManager->m_dialogResult != DIALOG_BUTTON_1) {
         gEditManager->m_mapChanged = 1;
@@ -766,7 +766,7 @@ void eventsManager::UpdateHeroWindow(editHeroExtra* hero) {
 
 VA(0x0040afda, 0x34f)
 H1_ENUM_RETURN(MessageDispatchResult, i16) HeroWindowHandler(tag_message& message) {
-    i32 changed = 0;
+    b32 changed = false;
     i32 amount;
     i32 fieldIndex;
 
@@ -798,7 +798,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) HeroWindowHandler(tag_message& messag
                                 amount = EXTRA_WINDOW_MAX_COUNT;
                             gHeroEdit.record.troopCounts[message.id - EXTRA_WINDOW_FIRST_COUNT] =
                                 amount;
-                            changed = 1;
+                            changed = true;
                             break;
                         case EXTRA_WINDOW_FIRST_TYPE:
                         case EXTRA_WINDOW_FIRST_TYPE + 1:
@@ -817,14 +817,14 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) HeroWindowHandler(tag_message& messag
                             }
                             gHeroEdit.record.troopTypes[message.id - EXTRA_WINDOW_FIRST_TYPE] =
                                 H1_ENUM_DECODE(CreatureType, amount);
-                            changed = 1;
+                            changed = true;
                             break;
                         case EXTRA_WINDOW_NEUTRAL_OWNER:
                         case EXTRA_WINDOW_NEUTRAL_OWNER + 1:
                         case EXTRA_WINDOW_NEUTRAL_OWNER + 2:
                         case EXTRA_WINDOW_NEUTRAL_OWNER + 3:
                             gHeroEdit.record.owner = message.id - EXTRA_WINDOW_NEUTRAL_OWNER;
-                            changed = 1;
+                            changed = true;
                             break;
                         case HERO_WINDOW_HERO_ID:
                         case HERO_WINDOW_FIRST_ARTIFACT:
@@ -859,7 +859,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) HeroWindowHandler(tag_message& messag
                                     amount = HERO_WINDOW_MAX_EXPERIENCE;
                                 gHeroEdit.record.experience = amount;
                             }
-                            changed = 1;
+                            changed = true;
                             break;
                     }
                     break;
@@ -889,7 +889,7 @@ i32 ClearOptionsDialog(void) {
     gClearWindow = new heroWindow(EVENTS_DIALOG_X, EVENTS_DIALOG_Y, "clearwin.bin");
     SetWinText(gClearWindow, EVENTS_WINDOW_TEXT_CLEAR);
     UpdateClearWindow();
-    gWindowManager->DoDialog(gClearWindow, ClearWindowHandler, 0);
+    gWindowManager->DoDialog(gClearWindow, ClearWindowHandler, false);
     delete gClearWindow;
     if (gWindowManager->m_dialogResult == DIALOG_BUTTON_2 && (gClearFlags & CLEAR_FLAG_WHOLE_MAP)) {
         gEditManager->SaveUndo();
@@ -899,7 +899,7 @@ i32 ClearOptionsDialog(void) {
             MAP_CELL_GRID_SIZE,
             MAP_CELL_GRID_SIZE,
             gClearFlags & CLEAR_FLAG_CLASS_MASK,
-            0
+            false
         );
     }
     gEditManager->DrawMap();
@@ -930,7 +930,7 @@ void UpdateClearWindow(void) {
 VA(0x0040b4d3, 0x1a7)
 H1_ENUM_RETURN(MessageDispatchResult, i16) ClearWindowHandler(tag_message& message) {
     const i16 firstToggleId = CLEAR_WINDOW_FIRST_TOGGLE;
-    i32 set;
+    b32 set;
     i32 index;
 
     if (message.type != MESSAGE_WIDGET)
@@ -972,7 +972,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) ClearWindowHandler(tag_message& messa
 }
 
 VA(0x0040b67a, 0x152)
-i32 MapDetailsDialog(i32) {
+i32 MapDetailsDialog(b32) {
     SMapHeader saved;
 
     saved = *gMapHeader;
@@ -981,7 +981,7 @@ i32 MapDetailsDialog(i32) {
         MemError();
     SetWinText(gDetailsWindow, EVENTS_WINDOW_TEXT_MAP_DETAILS);
     UpdateMapDetailsWindow();
-    gWindowManager->DoDialog(gDetailsWindow, MapDetailsWindowHandler, 0);
+    gWindowManager->DoDialog(gDetailsWindow, MapDetailsWindowHandler, false);
     delete gDetailsWindow;
     gDetailsWindow = NULL;
     gEditManager->DrawMap();
@@ -1165,7 +1165,7 @@ i32 NewMapDialog(void) {
         gNewMapWindow->AddWidget(gDensityKnobs[i], -1);
     }
     UpdateNewMapWindow();
-    gWindowManager->DoDialog(gNewMapWindow, NewMapWindowHandler, 0);
+    gWindowManager->DoDialog(gNewMapWindow, NewMapWindowHandler, false);
     delete gNewMapWindow;
     gNewMapWindow = NULL;
     BalanceTerrainPercents(-1);
@@ -1287,16 +1287,16 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) NewMapWindowHandler(tag_message& mess
         case WIDGET_NOTIFY_SELECT:
             if (message.id >= NEW_MAP_FIRST_TERRAIN_TRACK
                 && message.id < NEW_MAP_FIRST_TERRAIN_TRACK + EDITOR_GENERATOR_TERRAIN_COUNT)
-                DragNewMapSlider(1, message.id - NEW_MAP_FIRST_TERRAIN_TRACK);
+                DragNewMapSlider(true, message.id - NEW_MAP_FIRST_TERRAIN_TRACK);
             else if (message.id >= NEW_MAP_FIRST_TERRAIN_KNOB
                      && message.id < NEW_MAP_FIRST_TERRAIN_KNOB + EDITOR_GENERATOR_TERRAIN_COUNT)
-                DragNewMapSlider(1, message.id - NEW_MAP_FIRST_TERRAIN_KNOB);
+                DragNewMapSlider(true, message.id - NEW_MAP_FIRST_TERRAIN_KNOB);
             else if (message.id >= NEW_MAP_FIRST_DENSITY_TRACK
                      && message.id < NEW_MAP_FIRST_DENSITY_TRACK + EDITOR_GENERATOR_TERRAIN_COUNT)
-                DragNewMapSlider(0, message.id - NEW_MAP_FIRST_DENSITY_TRACK);
+                DragNewMapSlider(false, message.id - NEW_MAP_FIRST_DENSITY_TRACK);
             else if (message.id >= NEW_MAP_FIRST_DENSITY_KNOB
                      && message.id < NEW_MAP_FIRST_DENSITY_KNOB + EDITOR_GENERATOR_TERRAIN_COUNT)
-                DragNewMapSlider(0, message.id - NEW_MAP_FIRST_DENSITY_KNOB);
+                DragNewMapSlider(false, message.id - NEW_MAP_FIRST_DENSITY_KNOB);
             if (message.id >= NEW_MAP_SCATTER_TOWNS && message.id <= NEW_MAP_CENTRE_TOWNS) {
                 gScatterTowns = message.id == NEW_MAP_SCATTER_TOWNS;
                 redraw = true;
@@ -1315,7 +1315,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) NewMapWindowHandler(tag_message& mess
 }
 
 VA(0x0040c705, 0x25e)
-void DragNewMapSlider(i32 terrain, i32 index) {
+void DragNewMapSlider(b32 terrain, i32 index) {
     tag_message last;
     double knobPercent;
     i16 x;

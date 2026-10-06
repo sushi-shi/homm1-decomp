@@ -75,7 +75,7 @@ public:
     i16 DoDialog(
         class heroWindow* window,
         H1_ENUM_RETURN(MessageDispatchResult, i16) (*handler)(struct tag_message&),
-        i32 fade
+        b32 fade
     );
     void UpdateScreen(void);
     void UpdateScreenRegion(i16 x, i16 y, i16 width, i16 height);

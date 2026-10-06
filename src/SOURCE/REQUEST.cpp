@@ -231,7 +231,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) fileRequester::Open(i16 priority) {
     i32 i;
     const i16 nameLabelId = FILE_REQUESTER_FILENAME_LABEL;
     char* dotPtr;
-    i8 enable;
+    b8 enable;
 
     strcpy(gLastMapName, "");
     strcpy(gLastFilename, "");
@@ -257,14 +257,14 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) fileRequester::Open(i16 priority) {
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_TEXT;
 #ifdef HOMM1_EDITOR
-    enable = 0;
+    enable = false;
     message.id = nameLabelId;
     sprintf(gText, localization::Tr("file.load.label"));
     message.text = gText;
     m_window->BroadcastMessage(message);
 #else
     if (m_mode == FILE_REQUESTER_SAVE) {
-        enable = 1;
+        enable = true;
         const i16 textEntryId = FILE_REQUESTER_FILENAME_ENTRY;
         strcpy(m_filename, gGame->m_saveName);
         dotPtr = FindLastToken(m_filename, '.');
@@ -284,12 +284,12 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) fileRequester::Open(i16 priority) {
                 m_selectedIndex = i;
         }
     } else {
-        enable = 0;
+        enable = false;
         if (m_mode == FILE_REQUESTER_LOAD && m_defaultExtension[1] == 'M') {
             for (i = 0; i < m_fileCount; i++) {
                 if (!strnicmp(m_fileNames[i].text, gMapName, SAVE_FILE_BASE_NAME_LENGTH)) {
                     m_selectedIndex = i;
-                    enable = 1;
+                    enable = true;
                 }
             }
         }
@@ -303,7 +303,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) fileRequester::Open(i16 priority) {
     SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_MAX_LENGTH, entryId);
     message.value = FILE_REQUESTER_FILENAME_MAX_LENGTH;
     m_window->BroadcastMessage(message);
-    Update(0);
+    Update(false);
 #ifndef HOMM1_EDITOR
     if (gShowMapInfo)
         gWindowManager->AddWindow(gReqExtraWindow, WINDOW_Z_ORDER_APPEND, 1);
@@ -320,7 +320,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) fileRequester::Open(i16 priority) {
 
 // Uses fixed dimming flags.
 VA(0x00454826, 0x67)
-void fileRequester::SetOK(i8 enabled) {
+void fileRequester::SetOK(b8 enabled) {
     tag_message message;
 
     SET_WIDGET_MESSAGE(
@@ -347,7 +347,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) fileRequester::Main(tag_message& mess
     tag_message reply;
     i16 length;
     i16 key;
-    i32 handled;
+    b32 handled;
     i16 ptrY;
     i16 ptrX;
     char nameBuffer[FILE_REQUESTER_LOCAL_NAME_SIZE];
@@ -357,7 +357,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) fileRequester::Main(tag_message& mess
     const i16 scrollerId = FILE_REQUESTER_SCROLL_KNOB;
     const i16 fileNameId = FILE_REQUESTER_FILENAME_ENTRY;
 
-    handled = 0;
+    handled = false;
     if (!(message.type & m_acceptMask)) {
         if (message.type) {
             message.type = MESSAGE_NONE;
@@ -376,7 +376,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) fileRequester::Main(tag_message& mess
                         m_selectedIndex--;
                         if (m_topIndex > m_selectedIndex)
                             m_topIndex--;
-                        Update(1);
+                        Update(true);
                     }
                     break;
                 case INPUT_SCAN_NUMPAD_2:
@@ -384,7 +384,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) fileRequester::Main(tag_message& mess
                         m_selectedIndex++;
                         if (m_topIndex + FILE_REQUESTER_VISIBLE_ROWS <= m_selectedIndex)
                             m_topIndex++;
-                        Update(1);
+                        Update(true);
                     }
                     break;
             }
@@ -403,12 +403,12 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) fileRequester::Main(tag_message& mess
                                 break;
                             } else {
                                 message.value = message.id;
-                                handled = 1;
+                                handled = true;
                             }
                             break;
                         case DIALOG_BUTTON_1:
                             message.value = message.id;
-                            handled = 1;
+                            handled = true;
                             break;
                     }
                     break;
@@ -447,18 +447,18 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) fileRequester::Main(tag_message& mess
                             if (strlen(nameBuffer) > 0 && static_cast<u8>(nameBuffer[0]) > ' ') {
                                 m_selectedIndex = FILE_REQUESTER_SELECTION_NONE;
                                 strcpy(m_filename, nameBuffer);
-                                SetOK(1);
+                                SetOK(true);
                             }
                             reply.command = WIDGET_COMMAND_SET_TEXT;
                             reply.id = fileNameId;
                             reply.text = m_filename;
                             m_window->BroadcastMessage(reply);
-                            Update(1);
+                            Update(true);
                             break;
                         case arrowUpId:
                             if (m_topIndex > 0) {
                                 m_topIndex--;
-                                Update(1);
+                                Update(true);
                             }
                             break;
                         case downId:
@@ -466,7 +466,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) fileRequester::Main(tag_message& mess
                                 m_topIndex++;
                                 if (m_topIndex + FILE_REQUESTER_LAST_ROW_OFFSET >= m_fileCount)
                                     m_topIndex = m_fileCount - FILE_REQUESTER_VISIBLE_ROWS;
-                                Update(1);
+                                Update(true);
                             }
                             break;
                         case scrollBarId:
@@ -483,7 +483,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) fileRequester::Main(tag_message& mess
                                 m_topIndex = m_fileCount - FILE_REQUESTER_VISIBLE_ROWS;
                             if (m_topIndex < 0)
                                 m_topIndex = 0;
-                            Update(1);
+                            Update(true);
                             break;
                         case scrollerId:
                             DoKnob();
@@ -501,17 +501,17 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) fileRequester::Main(tag_message& mess
                             if (message.id - firstItemId + m_topIndex == m_selectedIndex) {
                                 message.value = DIALOG_BUTTON_2;
                                 message.id = DIALOG_BUTTON_2;
-                                handled = 1;
+                                handled = true;
                                 break;
                             }
                             m_selectedIndex = message.id - firstItemId + m_topIndex;
                             if (m_selectedIndex >= m_fileCount) {
                                 m_selectedIndex = FILE_REQUESTER_SELECTION_NONE;
-                                SetOK(0);
+                                SetOK(false);
                             } else {
-                                SetOK(1);
+                                SetOK(true);
                             }
-                            Update(1);
+                            Update(true);
                             break;
                     }
                     break;
@@ -523,7 +523,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) fileRequester::Main(tag_message& mess
             break;
     }
 
-    if (handled == 1) {
+    if (handled == true) {
 #ifndef HOMM1_EDITOR
         if (gCampaignChoice <= CAMPAIGN_NONE && m_mode == FILE_REQUESTER_LOAD
             && m_selectedIndex >= 0 && gRequestingGames && message.value != FILE_REQUESTER_CANCEL) {
@@ -532,7 +532,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) fileRequester::Main(tag_message& mess
                 && gDebugLevel < FILE_REQUESTER_DEBUG_ALLOW_PLAYER_MISMATCH_MIN) {
                 sprintf(gText, localization::Tr("file.humans.minimum"), key, gNumHumanPlayers);
                 NormalDialog(gText, NORMAL_DIALOG_TYPE_OK);
-                handled = 0;
+                handled = false;
             }
             if (key > gNumHumanPlayers) {
                 sprintf(
@@ -543,7 +543,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) fileRequester::Main(tag_message& mess
                 );
                 NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO);
                 if (gWindowManager->m_dialogResult != NORMAL_DIALOG_CONFIRM)
-                    handled = 0;
+                    handled = false;
             }
         }
 #endif
@@ -606,7 +606,7 @@ void fileRequester::DoKnob(void) {
                     if (pos < 0)
                         pos = 0;
                     m_topIndex = pos;
-                    Update(0);
+                    Update(false);
                     m_scrollKnob->m_y = event.y - offset;
                     m_window->DrawWindow();
                     lastTop = pos;
@@ -622,7 +622,7 @@ void fileRequester::DoKnob(void) {
     }
     gMouseManager->SetCursorShape(6);
     m_scrollKnob->m_flags &= ~WIDGET_FLAG_SELECTED;
-    Update(1);
+    Update(true);
 }
 
 // Ten text rows; saved games append their human count and map lists show
@@ -630,10 +630,10 @@ void fileRequester::DoKnob(void) {
 // The editor lists no saved games, so it shows no player-count suffix.
 VA(0x00455602, 0x49e)
 VA_AT(editor, 0x00417e5c, 0x476)
-void fileRequester::Update(i8 drawWindow) {
+void fileRequester::Update(b8 drawWindow) {
     double gutterFactor;
     i32 oldHumans;
-    i32 newPlayers;
+    b32 newPlayers;
     i32 limit;
     i32 newPos;
     const i16 firstIdIdx = FILE_REQUESTER_LIST_FIRST;
@@ -664,10 +664,10 @@ void fileRequester::Update(i8 drawWindow) {
                 sprintf(gText, "%s", m_fileNames[m_topIndex + y].text);
             oldHumans =
                 m_extensions[m_topIndex + y].text[FILE_REQUESTER_EXTENSION_PLAYER_DIGIT] - '0';
-            newPlayers = 0;
+            newPlayers = false;
 #ifndef HOMM1_EDITOR
             if (oldHumans != 1 && gCampaignChoice <= CAMPAIGN_NONE && gRequestingGames) {
-                newPlayers = 1;
+                newPlayers = true;
                 sprintf(prevExtra, " (%d %s)", oldHumans, localization::Tr("file.players.label"));
                 theSuffixWidth = bigFont->LineWidth(prevExtra);
             }

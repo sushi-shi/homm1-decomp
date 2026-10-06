@@ -118,7 +118,7 @@ VA(0x0046677b, 0x7d)
 void CreatePrimary(void) {
     i32 result;
 
-    gDDSPrimary = DDCreateSurface(LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT, 1);
+    gDDSPrimary = DDCreateSurface(LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT, true);
     if (gClipper != NULL) {
         result = gDDSPrimary->SetClipper(NULL);
         if (result != DD_OK && result != DDERR_NOCLIPPERATTACHED)
@@ -183,7 +183,7 @@ void DDInitGraphics(void) {
     }
     CreatePrimary();
     SetupClipper();
-    gDDSOne = DDCreateSurface(LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT, 0);
+    gDDSOne = DDCreateSurface(LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT, false);
     InitializePalette();
 }
 
@@ -363,7 +363,7 @@ BOOL DDSetPalette() {
 VA(0x0046706a, 0x100)
 VA_AT(editor, 0x00419de9, 0xfe)
 #line 417 WINGRAPH_CPP_PATH
-struct IDirectDrawSurface* DDCreateSurface(u32 width, u32 height, i32 primary) {
+struct IDirectDrawSurface* DDCreateSurface(u32 width, u32 height, b32 primary) {
     _DDSURFACEDESC ddsd;
     IDirectDrawSurface* lpSurface;
     i32 i;
@@ -372,7 +372,7 @@ struct IDirectDrawSurface* DDCreateSurface(u32 width, u32 height, i32 primary) {
 
     memset(&ddsd, 0, sizeof(ddsd));
     ddsd.dwSize = sizeof(ddsd);
-    if (primary != 0) {
+    if (primary != false) {
         // Retail stores no DDSD_CAPS bit for the primary surface.
         ddsd.dwFlags = 0;
         ddsd.ddsCaps.dwCaps = DDSCAPS_PRIMARYSURFACE;
@@ -387,7 +387,7 @@ struct IDirectDrawSurface* DDCreateSurface(u32 width, u32 height, i32 primary) {
     if (ddrval != DD_OK)
 #line 427
         DDSD(ddrval, __FILE__, __LINE__);
-    if (primary == 0) {
+    if (primary == false) {
         ddrval = lpSurface->Lock(NULL, &ddsd, DDLOCK_WAIT, NULL);
         if (ddrval != DD_OK)
 #line 435
@@ -752,8 +752,8 @@ void WGUpdatePalette(i8* paletteData) {
         // The editor has no combat screen to redraw partially.
         {
 #else
-        if (gLimitedCombatUpdatePalette != 0) {
-            if (gFullCombatScreenDrawn != 0)
+        if (gLimitedCombatUpdatePalette != false) {
+            if (gFullCombatScreenDrawn != false)
                 BlitBitmapToScreen(
                     gWindowManager->m_screen,
                     0,
@@ -1012,7 +1012,7 @@ void CleanUpWinGraphics() {
 
 VA(0x0046833c, 0x84)
 void SetFullScreenStatus(i32 fullScreen) {
-    if (gInSmacker != 0)
+    if (gInSmacker != false)
         return;
     if (fullScreen == CURRENT_GRAPHICS_CONFIG.fullScreen)
         return;

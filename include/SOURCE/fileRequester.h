@@ -178,10 +178,10 @@ public:
     virtual void Close(void) OVERRIDE;
     virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
-    void SetOK(i8 enabled);
+    void SetOK(b8 enabled);
     void UpdateMapInfo(void);
     void DoKnob(void);
-    void Update(i8 drawWindow);
+    void Update(b8 drawWindow);
     char* GetMapName(void);
     char* GetFilename(void);
     void ShowMapInfo(void);

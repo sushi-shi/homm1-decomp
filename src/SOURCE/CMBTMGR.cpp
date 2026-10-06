@@ -39,7 +39,7 @@
 
 // CheckApplyGoodMorale grants one extra turn at a time.
 DATA(0x004a67dc)
-i32 gInHighMoraleBonus = 0;
+b32 gInHighMoraleBonus = false;
 // SetupCombat saves the adventure random seed here; GenerateMap restores it.
 #define gSavedSeed gSeed // spelling fixes .data order
 DATA(0x0048f060)
@@ -51,8 +51,8 @@ combatManager::combatManager(void) {
     m_unknown6f9 = -1;
     m_currentSide = COMBAT_DEFENDER_SIDE;
     m_limitCreatureHex = 0;
-    m_limitCreature = 0;
-    m_showArmyQuantities = 1;
+    m_limitCreature = false;
+    m_showArmyQuantities = true;
     m_gridUpdateRow = 0;
     m_currentCommand = COMBAT_MESSAGE_COMMAND_DEFAULT;
     m_unknown6e8 = 0;
@@ -63,7 +63,7 @@ combatManager::combatManager(void) {
             m_wallFrame = m_wallDamage = COMBAT_WALL_DAMAGE_NONE;
     m_unknown6d9 = m_unknown6db = 0;
     m_castleSide[COMBAT_DEFENDER_SIDE] = m_castleSide[COMBAT_ATTACKER_SIDE] = 0;
-    m_combatWindowOpen = 0;
+    m_combatWindowOpen = false;
 }
 
 VA(0x00418cbb, 0x118)
@@ -183,7 +183,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) combatManager::Open(i16 priority) {
     m_messageTypeMask = MESSAGE_KEY_DOWN | MESSAGE_KEY_UP | MESSAGE_MOUSE_MOVE
                         | MESSAGE_LEFT_BUTTON_DOWN | MESSAGE_RIGHT_BUTTON_DOWN | 0x100
                         | MESSAGE_WIDGET;
-    m_combatWindowOpen = 0;
+    m_combatWindowOpen = false;
     m_savedBorder = NULL;
     m_restoreMusicSuspension = MusicSuspended();
     m_restoreSampleSuspension = SamplesSuspended();
@@ -197,7 +197,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) combatManager::Open(i16 priority) {
     }
     StopMusic();
     m_backgroundBuffer = new bitmap(BITMAP_TYPE_NONE, LOGICAL_SCREEN_WIDTH, COMBAT_VIEW_HEIGHT);
-    m_backgroundDrawn = 0;
+    m_backgroundDrawn = false;
     sample = LoadPlaySample("PREBATTL.82M");
     gNextAction = ACTION_NONE;
     gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
@@ -205,8 +205,8 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) combatManager::Open(i16 priority) {
     m_sideRetreated[COMBAT_ATTACKER_SIDE] = 0;
     m_combatResult = COMBAT_RESULT_PENDING;
     gIconClipOn = 0;
-    m_computeExtent = 0;
-    m_redrawExtent = 0;
+    m_computeExtent = false;
+    m_redrawExtent = false;
     gCurLoadedSpellIcon = NULL;
     gCurLoadedSpellFileId = 0;
     gMouseManager->SetPointer("cmbtmous.mse", COMBAT_POINTER_DEFAULT);
@@ -225,24 +225,24 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) combatManager::Open(i16 priority) {
     gCombatSurrender = 0;
     m_sideSurrendered[COMBAT_DEFENDER_SIDE] = 0;
     m_sideSurrendered[COMBAT_ATTACKER_SIDE] = 0;
-    m_limitCreature = 1;
+    m_limitCreature = true;
     SetDrawRightToLeft(0);
     m_gridUpdateRow = 0;
-    m_combatWindowOpen = 1;
-    DrawFrame(1);
+    m_combatWindowOpen = true;
+    DrawFrame(true);
     gTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
     m_combatPalette = gResourceManager->GetPalette("kb.pal");
     KBChangeMenu(gCombatMenu);
-    CombatMessage("", 1);
+    CombatMessage("", true);
     gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, m_combatPalette);
-    gLimitedCombatUpdatePalette = 1;
+    gLimitedCombatUpdatePalette = true;
     gMouseManager->NewUpdate(1);
     gMouseManager->WarpPointer(
         m_hexCells[m_limitCreatureHex].m_x,
         m_hexCells[m_limitCreatureHex].m_y - 50
     );
     gMouseManager->ReallyShowPointer();
-    m_gridSelectionDisabled = 0;
+    m_gridSelectionDisabled = false;
     WaitSample(sample);
     musicList[0] = MUSIC_TRACK_BATTLE_2;
     musicList[1] = MUSIC_TRACK_BATTLE_3;
@@ -285,7 +285,7 @@ void combatManager::Close(void) {
         m_savedMusicTrack = MUSIC_TRACK_NONE;
     }
     DrawCombatBorder();
-    gLimitedCombatUpdatePalette = 0;
+    gLimitedCombatUpdatePalette = false;
     gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
     delete m_backgroundBuffer;
     for (i = COMBAT_SIDE_FIRST; i < COMBAT_SIDE_COUNT; i++)
@@ -310,7 +310,7 @@ void combatManager::Close(void) {
     if (m_savedBorder)
         free(m_savedBorder);
     m_active = 0;
-    m_combatWindowOpen = 0;
+    m_combatWindowOpen = false;
 }
 #undef i
 
@@ -379,7 +379,7 @@ void combatManager::GenerateMap(void) {
             m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_occupantIndex = COMBAT_ARMY_INDEX_NONE;
             m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_occupantFootprintHalf = ARMY_FACING_NONE;
             m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_obstacleIndex = COMBAT_OBSTACLE_NONE;
-            m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_pathFlag = 0;
+            m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_pathFlag = false;
         }
     }
     count = SRandom(8, 15);
@@ -471,7 +471,7 @@ void combatManager::GenerateMap(void) {
     }
     m_currentSide = COMBAT_DEFENDER_SIDE;
     m_currentSpeed = CREATURE_SPEED_BLAZING;
-    GetNextArmy(0);
+    GetNextArmy(false);
     m_gridUpdateRow = 0;
     SRand(gSavedSeed);
 }
@@ -723,16 +723,16 @@ VA(0x0041a8f6, 0x1a5)
 void combatManager::CheckApplyGoodMorale(H1_ENUM_PARAM(CombatSide, i32) side, i32 index) {
     armyGroup* group;
     army* currentArmy;
-    class moraleSound* moraleSound;
+    class sample* moraleSound;
     i32 moraleLevel;
 
     if (side < COMBAT_SIDE_FIRST || index < 0)
         return;
     if (gInHighMoraleBonus) {
-        gInHighMoraleBonus = 0;
+        gInHighMoraleBonus = false;
         return;
     }
-    gInHighMoraleBonus = 0;
+    gInHighMoraleBonus = false;
     group = m_armyGroups[side];
     currentArmy = &m_armies[side][index];
     if (!currentArmy->m_quantity)
@@ -740,7 +740,7 @@ void combatManager::CheckApplyGoodMorale(H1_ENUM_PARAM(CombatSide, i32) side, i3
     moraleLevel = group->GetMorale(m_heroes[side], m_combatTowns[side]);
     if (moraleLevel <= 0 || SRandom(1, 24) > moraleLevel)
         return;
-    gInHighMoraleBonus = 1;
+    gInHighMoraleBonus = true;
     sprintf(gText, "goodmrle.82M");
     moraleSound = LoadPlaySample(gText);
     if (currentArmy->m_quantity <= 1)
@@ -755,9 +755,9 @@ void combatManager::CheckApplyGoodMorale(H1_ENUM_PARAM(CombatSide, i32) side, i3
             localization::Tr("combat.morale.good"),
             gArmyNamesPlural[currentArmy->m_creatureType]
         );
-    CombatMessage(gText, 1);
+    CombatMessage(gText, true);
     currentArmy->SpellEffect(COMBAT_EFFECT_GOOD_MORALE, 180);
-    currentArmy->Stand(1);
+    currentArmy->Stand(true);
     if (currentArmy->m_stats.attributes & MONSTER_FLAGS_TURN_SPENT)
         currentArmy->m_stats.attributes -= MONSTER_FLAGS_TURN_SPENT;
     currentArmy->m_stats.attributes |= MONSTER_FLAGS_HIGH_MORALE;
@@ -771,7 +771,7 @@ VA(0x0041aa9b, 0x173)
 i32 combatManager::CheckApplyBadMorale(H1_ENUM_PARAM(CombatSide, i32) side, i32 index) {
     armyGroup* group;
     army* currentArmy;
-    class moraleSound* moraleSound;
+    class sample* moraleSound;
     i32 moraleLevel;
 
     if (side < COMBAT_SIDE_FIRST || index < 0)
@@ -796,10 +796,10 @@ i32 combatManager::CheckApplyBadMorale(H1_ENUM_PARAM(CombatSide, i32) side, i32 
             localization::Tr("combat.morale.bad"),
             gArmyNamesPlural[currentArmy->m_creatureType]
         );
-    CombatMessage(gText, 1);
+    CombatMessage(gText, true);
     currentArmy->m_animationFrame = 2;
     currentArmy->SpellEffect(COMBAT_EFFECT_BAD_MORALE, 180);
-    currentArmy->Stand(1);
+    currentArmy->Stand(true);
     currentArmy->m_stats.attributes |= MONSTER_FLAGS_TURN_SPENT;
     WaitSample(moraleSound);
     return 1;
@@ -810,21 +810,21 @@ i32 combatManager::CheckApplyBadMorale(H1_ENUM_PARAM(CombatSide, i32) side, i32 
 // stacks first.
 #define unused temp // frame-slot spelling
 VA(0x0041ac0e, 0x1d9)
-i8 combatManager::GetNextArmy(i32 checkMorale) {
+i8 combatManager::GetNextArmy(b32 checkMorale) {
     army* checkArmy;
     i8 speedLevelIndex;
     H1_ENUM_LOCAL(CombatSide, i32) sideIter;
     i16 unused;
     i8 armyCounter;
     H1_ENUM_LOCAL(CombatSide, i8) stackSide;
-    i32 skip;
+    b32 skip;
 
     stackSide = m_currentSide;
     for (speedLevelIndex = 0; speedLevelIndex < 5; speedLevelIndex++) {
         for (sideIter = COMBAT_SIDE_FIRST; sideIter < COMBAT_SIDE_COUNT; sideIter++) {
             COMBAT_SWITCH_SIDE(stackSide);
             for (armyCounter = 0; armyCounter < m_numArmies[stackSide]; armyCounter++) {
-                skip = 0;
+                skip = false;
                 checkArmy = &m_armies[stackSide][armyCounter];
                 if ((checkArmy->m_stats.attributes
                      & (MONSTER_FLAGS_DEAD | MONSTER_FLAGS_TURN_SPENT))
@@ -832,12 +832,12 @@ i8 combatManager::GetNextArmy(i32 checkMorale) {
                     || checkArmy->m_spellEffect == SPELL_BLIND
                     || (H1_ENUM_DECODE(CreatureSpeed, checkArmy->m_stats.speed) != m_currentSpeed
                         && !(checkArmy->m_stats.attributes & MONSTER_FLAGS_HIGH_MORALE)))
-                    skip = 1;
+                    skip = true;
                 if (!skip && !speedLevelIndex
                     && !(checkArmy->m_stats.attributes & MONSTER_FLAGS_HIGH_MORALE))
-                    skip = 1;
+                    skip = true;
                 if (!skip && checkMorale && CheckApplyBadMorale(stackSide, armyCounter))
-                    skip = 1;
+                    skip = true;
                 if (!skip)
                     break;
             }
@@ -862,7 +862,7 @@ i8 combatManager::GetNextArmy(i32 checkMorale) {
 // IsWinner: the other side surrendered, retreated or has no live stack left.
 VA(0x0041ade7, 0xb5)
 i8 combatManager::IsWinner(H1_ENUM_PARAM(CombatSide, i8) side) {
-    i8 isWinner;
+    b8 isWinner;
     i16 i;
 
     if (m_sideSurrendered[COMBAT_OPPOSING_SIDE(side)])
@@ -870,10 +870,10 @@ i8 combatManager::IsWinner(H1_ENUM_PARAM(CombatSide, i8) side) {
     if (m_sideRetreated[COMBAT_OPPOSING_SIDE(side)])
         return 1;
     COMBAT_SWITCH_SIDE(side);
-    isWinner = 1;
+    isWinner = true;
     for (i = 0; i < m_numArmies[side]; i++) {
         if (!(m_armies[side][i].m_stats.attributes & MONSTER_FLAGS_DEAD))
-            isWinner = 0;
+            isWinner = false;
     }
     return isWinner;
 }
@@ -898,7 +898,7 @@ void combatManager::CatAttack(H1_ENUM_PARAM(CombatSide, i8) side) {
     i16 xDelta;
     i16 startX;
     class sample* catapultSound;
-    i8 anyStanding;
+    b8 anyStanding;
     i16 startY;
     i16 topPosY;
 
@@ -908,11 +908,11 @@ void combatManager::CatAttack(H1_ENUM_PARAM(CombatSide, i8) side) {
     castleColumn = side == COMBAT_ATTACKER_SIDE
                        ? COMBAT_CASTLE_WALL_COLUMN
                        : COMBAT_GRID_LAST_COLUMN - COMBAT_CASTLE_WALL_COLUMN;
-    anyStanding = 0;
+    anyStanding = false;
     for (i = 0; i < COMBAT_GRID_ROWS; i++) {
         if (m_hexCells[i * COMBAT_GRID_COLUMNS + castleColumn].m_obstacleIndex
             != COMBAT_OBSTACLE_NONE)
-            anyStanding = 1;
+            anyStanding = true;
     }
     if (!anyStanding)
         return;
@@ -926,8 +926,8 @@ void combatManager::CatAttack(H1_ENUM_PARAM(CombatSide, i8) side) {
     gMaxExtentY = 420;
     m_catapultFrame[side] = 0;
     while (m_catapultFrame[side] < 8) {
-        m_redrawExtent = 1;
-        DrawFrame(1);
+        m_redrawExtent = true;
+        DrawFrame(true);
         m_catapultFrame[side]++;
     }
     if ((m_hexCells[castleColumn + COMBAT_GRID_COLUMNS].m_obstacleIndex == COMBAT_WALL_DAMAGED
@@ -969,7 +969,7 @@ void combatManager::CatAttack(H1_ENUM_PARAM(CombatSide, i8) side) {
         yDelta = (endY - startY) / 12;
         i = 0;
         while (i < 12) {
-            m_redrawExtent = 1;
+            m_redrawExtent = true;
             if (i) {
                 gMinExtentX = xPos - xDelta - 20;
                 gMaxExtentX = xPos + 75;
@@ -984,7 +984,7 @@ void combatManager::CatAttack(H1_ENUM_PARAM(CombatSide, i8) side) {
                 if (gMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
                     gMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
             }
-            DrawFrame(0);
+            DrawFrame(false);
             boulderIcon
                 ->DrawToBuffer(xPos, yPos, frameIndex, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
             UPDATE_INCLUSIVE_REGION(gMinExtentX, gMinExtentY, gMaxExtentX, gMaxExtentY);
@@ -1009,7 +1009,7 @@ void combatManager::CatAttack(H1_ENUM_PARAM(CombatSide, i8) side) {
         xDelta = (topPosX - startX) / 12;
         yDelta = (topPosY - startY) / 78;
         for (i = 0; i < 12; i++) {
-            m_redrawExtent = 1;
+            m_redrawExtent = true;
             if (i) {
                 gMinExtentX = xPos - xDelta - 20;
                 gMaxExtentX = xPos + 75;
@@ -1024,7 +1024,7 @@ void combatManager::CatAttack(H1_ENUM_PARAM(CombatSide, i8) side) {
                 if (gMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
                     gMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
             }
-            DrawFrame(0);
+            DrawFrame(false);
             boulderIcon
                 ->DrawToBuffer(xPos, yPos, frameIndex, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
             UPDATE_INCLUSIVE_REGION(gMinExtentX, gMinExtentY, gMaxExtentX, gMaxExtentY);
@@ -1038,7 +1038,7 @@ void combatManager::CatAttack(H1_ENUM_PARAM(CombatSide, i8) side) {
         xDelta = (endX - xPos) / 8;
         yDelta = (endY - yPos) / 36;
         for (i = 1; i <= 8; i++) {
-            m_redrawExtent = 1;
+            m_redrawExtent = true;
             gMinExtentX = xPos - xDelta - 20;
             gMaxExtentX = xPos + 75;
             gMinExtentY = yPos - 75;
@@ -1051,7 +1051,7 @@ void combatManager::CatAttack(H1_ENUM_PARAM(CombatSide, i8) side) {
                 gMaxExtentX = LOGICAL_SCREEN_WIDTH - 1;
             if (gMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
                 gMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
-            DrawFrame(0);
+            DrawFrame(false);
             boulderIcon
                 ->DrawToBuffer(xPos, yPos, frameIndex, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
             UPDATE_INCLUSIVE_REGION(gMinExtentX, gMinExtentY, gMaxExtentX, gMaxExtentY);
@@ -1077,7 +1077,7 @@ void combatManager::CatAttack(H1_ENUM_PARAM(CombatSide, i8) side) {
     if (collapseChance < 30
         || m_hexCells[m_catapultTargetRow * COMBAT_GRID_COLUMNS + castleColumn].m_obstacleIndex
                == COMBAT_WALL_DAMAGED_HIT) {
-        m_wallSurvives = 0;
+        m_wallSurvives = false;
         m_wallFrame = 0;
         gMinExtentX = 300;
         gMaxExtentX = 490;
@@ -1092,18 +1092,18 @@ void combatManager::CatAttack(H1_ENUM_PARAM(CombatSide, i8) side) {
             if (m_wallFrame == COMBAT_WALL_COLLAPSE_FRAME)
                 m_hexCells[m_catapultTargetRow * COMBAT_GRID_COLUMNS + castleColumn]
                     .m_obstacleIndex = COMBAT_WALL_COLLAPSING;
-            m_redrawExtent = 1;
+            m_redrawExtent = true;
             m_gridUpdateRow = m_catapultTargetRow - 2;
             if (m_gridUpdateRow < 0)
                 m_gridUpdateRow = 0;
-            DrawFrame(1);
+            DrawFrame(true);
             m_wallFrame++;
         }
         m_wallFrame = m_wallDamage = COMBAT_WALL_DAMAGE_NONE;
         m_hexCells[m_catapultTargetRow * COMBAT_GRID_COLUMNS + castleColumn].m_obstacleIndex =
             COMBAT_OBSTACLE_NONE;
     } else {
-        m_wallSurvives = 1;
+        m_wallSurvives = true;
         m_wallFrame = 0;
         gMinExtentX = 300;
         gMaxExtentX = 490;
@@ -1117,28 +1117,28 @@ void combatManager::CatAttack(H1_ENUM_PARAM(CombatSide, i8) side) {
             if (m_wallFrame == COMBAT_WALL_COLLAPSE_FRAME)
                 m_hexCells[m_catapultTargetRow * COMBAT_GRID_COLUMNS + castleColumn]
                     .m_obstacleIndex = COMBAT_WALL_DAMAGED_HIT;
-            m_redrawExtent = 1;
-            DrawFrame(1);
+            m_redrawExtent = true;
+            DrawFrame(true);
             m_wallFrame++;
         }
         m_hexCells[m_catapultTargetRow * COMBAT_GRID_COLUMNS + castleColumn].m_obstacleIndex =
             COMBAT_WALL_DAMAGED;
         m_wallFrame = COMBAT_WALL_FRAME_NONE;
     }
-    m_redrawExtent = 1;
-    DrawFrame(1);
+    m_redrawExtent = true;
+    DrawFrame(true);
     gMinExtentX = 0;
     gMaxExtentX = 200;
     gMinExtentY = 220;
     gMaxExtentY = 420;
     while (m_catapultFrame[side] < 14) {
-        m_redrawExtent = 1;
-        DrawFrame(1);
+        m_redrawExtent = true;
+        DrawFrame(true);
         m_catapultFrame[side]++;
     }
     m_catapultFrame[side] = 0;
-    m_redrawExtent = 1;
-    DrawFrame(1);
+    m_redrawExtent = true;
+    DrawFrame(true);
     gResourceManager->Dispose(boulderIcon);
     gMouseManager->ReallyShowPointer();
     WaitSample(catapultSound);
@@ -1156,7 +1156,7 @@ void combatManager::RegenerateField(void) {
     GenerateMap();
     SetDrawRightToLeft(0);
     m_gridUpdateRow = 0;
-    DrawFrame(1);
+    DrawFrame(true);
 }
 
 // HoMM1 castle keep: shoots the attacker's most dangerous stack (shooters,
@@ -1343,13 +1343,13 @@ void combatManager::KeepAttack(void) {
             arrowDamage,
             localization::Tr("combat.fragment.damage_points")
         );
-    gCombatManager->CombatMessage(gText, 1);
+    gCombatManager->CombatMessage(gText, true);
     hisStack->PowEffect(H1_ENUM_DECODE(CombatPowEffect, hisStack->m_stats.powEffect));
     if (!(hisStack->m_stats.attributes & MONSTER_FLAGS_DEAD))
-        hisStack->Stand(0);
+        hisStack->Stand(false);
     WaitSample(sample);
     if (hisStack->m_quantity > 0)
-        hisStack->Stand(1);
+        hisStack->Stand(true);
     gMouseManager->ReallyShowPointer();
 }
 
@@ -1378,7 +1378,7 @@ void combatManager::ResetHitByCreature(void) {
 
     for (i = COMBAT_SIDE_FIRST; i < COMBAT_SIDE_COUNT; i++) {
         for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++)
-            m_armies[i][j].m_hitByCreature = 0;
+            m_armies[i][j].m_hitByCreature = false;
     }
 }
 

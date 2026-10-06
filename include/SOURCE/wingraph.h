@@ -148,7 +148,7 @@ void InitGraphics();
 void DDInitGraphics();
 void CreatePrimary();
 void SetupClipper();
-IDirectDrawSurface* DDCreateSurface(u32 width, u32 height, i32 primary);
+IDirectDrawSurface* DDCreateSurface(u32 width, u32 height, b32 primary);
 void RestoreDisplayMode();
 void InitializePalette();
 BOOL AppPaint(HWND window, HDC paintDC);

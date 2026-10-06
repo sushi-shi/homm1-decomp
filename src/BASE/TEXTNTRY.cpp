@@ -334,7 +334,7 @@ void textEntryWidget::Draw(void) {
 
 VA(0x00476838, 0x23d)
 void textEntryWidget::SetupDisplayString(char* source, u16 cursor) {
-    i32 changed;
+    b32 changed;
     char display[TEXT_ENTRY_DISPLAY_CAPACITY];
     if (cursor > 0)
         strncpy(m_text, source, cursor);
@@ -344,29 +344,29 @@ void textEntryWidget::SetupDisplayString(char* source, u16 cursor) {
     else
         m_text[cursor + 1] = 0;
     if (m_entryType == TEXT_ENTRY_READ_MULTILINE) {
-        changed = 1;
+        changed = true;
         while (changed) {
-            changed = 0;
+            changed = false;
             strcpy(display, m_text + m_displayOffset);
             if (m_font->LineWidth(display) > m_width) {
                 display[cursor - m_displayOffset + 1] = 0;
                 if (m_font->LineWidth(display) > m_width) {
                     m_displayOffset++;
-                    changed = 1;
+                    changed = true;
                 }
             }
         }
         if (m_displayOffset > 0) {
-            changed = 1;
+            changed = true;
             while (changed) {
-                changed = 0;
+                changed = false;
                 strcpy(display, m_text + m_displayOffset - 1);
                 if (m_font->LineWidth(display) <= m_width)
                     m_displayOffset--;
                 else
-                    changed = 0;
+                    changed = false;
                 if (m_displayOffset == 0)
-                    changed = 0;
+                    changed = false;
             }
         }
     }

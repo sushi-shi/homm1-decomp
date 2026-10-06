@@ -296,10 +296,10 @@ public:
     H1_ENUM_STORAGE(TownArmyCommand, i8) m_command;
     // Set once RecruitHero hires a hero this visit (SetupCastle, CastleHandler
     // and Main read it), then SetupCastle's affordable/buildable masks.
-    i8 m_recruitResult;
+    b8 m_recruitResult;
     u16 m_affordableBuildings;
     u16 m_buildableBuildings;
-    i8 m_castleDialogActive;
+    b8 m_castleDialogActive;
     H1_ENUM_STORAGE(BuildingSlotType, i16) m_selectedBuilding;
     heroWindow* m_heroWindow0;
     heroWindow* m_heroWindow1;
@@ -329,11 +329,11 @@ public:
     void ShiftQualChange(void);
     void ResetStrips(void);
     void Toggle(H1_ENUM_PARAM(BuildingSlotType, i8) building);
-    void DrawTown(i8 updateScreen, i32 advanceAnimation);
-    i16 BuyBuild(H1_ENUM_PARAM(BuildingSlotType, i16) building, i8 cannotBuy, i8 quickView);
+    void DrawTown(b8 updateScreen, i32 advanceAnimation);
+    i16 BuyBuild(H1_ENUM_PARAM(BuildingSlotType, i16) building, b8 cannotBuy, i8 quickView);
     void BuildObj(H1_ENUM_PARAM(BuildingSlotType, i16) building);
     void SetupMage(class heroWindow* window);
-    i8 RecruitHero(i8 quickView);
+    b8 RecruitHero(b8 quickView);
     void DoTavern(void);
     void SetupWell(class heroWindow* window);
     void

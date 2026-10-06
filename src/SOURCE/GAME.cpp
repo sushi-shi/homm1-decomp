@@ -285,9 +285,9 @@ void game::VisitObelisk(i8 player) {
 }
 
 VA(0x0042bf56, 0x98)
-i8 game::IsMobile(i8 heroId) {
+b8 game::IsMobile(i8 heroId) {
     if (heroId == HERO_ID_NONE)
-        return 0;
+        return false;
     hero* mobileHero = &m_heroRecs[heroId];
     H1_ENUM_LOCAL(TerrainType, i32)
     terrainValue = CELL_TERRAIN(gAdvManager->GetCell(mobileHero->m_x, mobileHero->m_y));
@@ -439,7 +439,7 @@ inline void game::WriteWorldMap(i32 fd) {
 // Single save layout: name, globals, campaign state, map header, players,
 // world map, records and visibility.
 VA(0x0042c4dd, 0x796)
-i16 game::SaveGame(char* filename, i8 generateName) {
+i16 game::SaveGame(char* filename, b8 generateName) {
     i32 unusedIndex;
     i32 nHuman;
     i32 unusedName;
@@ -543,7 +543,7 @@ i16 game::SaveGame(char* filename, i8 generateName) {
 // origdata.bin restores the default hero names and blank visibility, and
 // the seats are re-dealt to this session's human players.
 VA(0x0042cc73, 0x87f)
-i16 game::LoadGame(char* filename, i32 origData, i32) {
+i16 game::LoadGame(char* filename, b32 origData, i32) {
     i32 junk2;
     i32 numHumans;
     i32 ix;
@@ -554,8 +554,8 @@ i16 game::LoadGame(char* filename, i32 origData, i32) {
     char buffer[0x2c];
 
     numHumans = 0;
-    gGameOver = 0;
-    m_noMapHeroes = 1;
+    gGameOver = false;
+    m_noMapHeroes = true;
     if (origData || !strcmp(filename, "REMOTE.GAM"))
         sprintf(pathName, "%s%s", gDataPath, filename);
     else
@@ -986,7 +986,7 @@ char gCurMapName[16] = "";
 DATA(0x004a6c20)
 H1_ENUM_STORAGE(GameEndSequence, i32) gEndSequence = GAME_END_LOST;
 DATA(0x004a6c24)
-i32 gGameOver = 0;
+b32 gGameOver = false;
 
 // Starts campaigns directly, restores the previous setup choices and falls
 // back to a default map when the remembered one does not fit the human
@@ -994,9 +994,9 @@ i32 gGameOver = 0;
 VA(0x0042dec4, 0x3e9)
 i8 game::NewGame(void) {
     DATA(0x004a6c28)
-    static i8 gNewGameSettingsSaved = 0;
+    static b8 gNewGameSettingsSaved = false;
     i32 player;
-    if (!SetupGame(1))
+    if (!SetupGame(true))
         return 0;
     if (gCampaignChoice > CAMPAIGN_NONE) {
         InitEntireCampaign(H1_ENUM_ENCODE(CampaignChoice, gCampaignChoice));
@@ -1004,7 +1004,7 @@ i8 game::NewGame(void) {
     }
     if (gWaitForRemoteReceive)
         return 1;
-    LoadGame("origdata.bin", 1, 0);
+    LoadGame("origdata.bin", true, 0);
     m_newGameWindow = new heroWindow(310, 14, "newgame.bin");
     if (!m_newGameWindow)
         MemError();
@@ -1042,7 +1042,7 @@ i8 game::NewGame(void) {
     }
     UpdateNewGameWindow();
     gMouseManager->ReallyShowPointer();
-    gWindowManager->DoDialog(m_newGameWindow, NewGameHandler, 0);
+    gWindowManager->DoDialog(m_newGameWindow, NewGameHandler, false);
     delete m_newGameWindow;
     if (gWindowManager->m_dialogResult == DIALOG_BUTTON_1)
         return 0;
@@ -1051,7 +1051,7 @@ i8 game::NewGame(void) {
     m_mapSize = gMapSize;
     m_mapDifficulty = gMapDifficulty;
     strcpy(m_mapName, gFullMapName);
-    gNewGameSettingsSaved = 1;
+    gNewGameSettingsSaved = true;
     gSavedDifficulty = gGame->m_difficulty;
     gSavedDifficulties[1] = m_players[1].m_difficulty;
     gSavedDifficulties[2] = m_players[2].m_difficulty;
@@ -1063,7 +1063,7 @@ i8 game::NewGame(void) {
 }
 
 VA(0x0042e2ad, 0x274)
-void game::ShowCampaignInfo(i32 scenario, i32 viewOnly, i32) {
+void game::ShowCampaignInfo(i32 scenario, b32 viewOnly, i32) {
     heroWindow* window;
     tag_message message;
 
@@ -1100,7 +1100,7 @@ void game::ShowCampaignInfo(i32 scenario, i32 viewOnly, i32) {
     }
     if (!viewOnly)
         PlayMusic(MUSIC_TRACK_MAIN_MENU);
-    gWindowManager->DoDialog(window, EventWindowHandler, 0);
+    gWindowManager->DoDialog(window, EventWindowHandler, false);
     delete window;
     if (gWindowManager->m_dialogResult == CAMPAIGN_INFO_RESTART) {
         NormalDialog(localization::Tr("campaign.restart.confirm"), NORMAL_DIALOG_TYPE_YES_NO);
@@ -1110,7 +1110,7 @@ void game::ShowCampaignInfo(i32 scenario, i32 viewOnly, i32) {
             gBottomViewOverride = BOTTOM_VIEW_NONE;
             gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, gPalette);
             gAdvManager->SetInitialMapOrigin();
-            gAdvManager->RedrawAdvScreen(1);
+            gAdvManager->RedrawAdvScreen(true);
             gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, gPalette);
         }
     }
@@ -1119,7 +1119,7 @@ void game::ShowCampaignInfo(i32 scenario, i32 viewOnly, i32) {
 // Reloads origdata.bin first and starts the campaign calendar on day 1.
 VA(0x0042e521, 0x74)
 void game::InitEntireCampaign(i32 side) {
-    LoadGame("origdata.bin", 1, 0);
+    LoadGame("origdata.bin", true, 0);
     strcpy(gFullMapName, "");
     gGame->m_difficulty = DIFFICULTY_EXPERT;
     m_campaignType = side;
@@ -1144,7 +1144,7 @@ void game::InitCampaignMap(i32 scenario, i32) {
     firstSavedScenario = m_campaignScenario;
     savedWon = m_campaignScenariosWon;
     savedDay = m_campaignDay;
-    LoadGame("origdata.bin", 1, 0);
+    LoadGame("origdata.bin", true, 0);
     m_campaignType = saveTypeValue;
     m_campaignScenario = firstSavedScenario;
     m_campaignScenariosWon = savedWon;
@@ -1185,7 +1185,7 @@ void game::NewMap(char* mapName) {
     i8 myPosX;
     i8 yTown;
     i8 xTownVal;
-    i32 prevHeroNo;
+    b32 prevHeroNo;
     i32 i;
     i32 j;
     i8 theTownId;
@@ -1221,8 +1221,8 @@ void game::NewMap(char* mapName) {
     RandomizePlayerCrests();
     ProcessMapExtra();
     allNeutralVal = SetupTowns();
-    ProcessRandomObjects(1);
-    ProcessRandomObjects(0);
+    ProcessRandomObjects(true);
+    ProcessRandomObjects(false);
     RandomizeEvents();
     m_deadPlayerCount = 0;
     for (i = m_playerCount; i < GAME_PLAYER_COUNT; i++)
@@ -1231,7 +1231,7 @@ void game::NewMap(char* mapName) {
         m_players[i].m_ultimateArtifactHintChance = 0;
         m_players[i].m_ultimateArtifactHintX = PLAYER_ULTIMATE_HINT_NONE;
         m_players[i].m_ultimateArtifactHintY = PLAYER_ULTIMATE_HINT_NONE;
-        prevHeroNo = 0;
+        prevHeroNo = false;
         if (allNeutralVal) {
             if (m_campaignType <= 0 || m_campaignScenario < CAMPAIGN_SCENARIO_LORD_FIRST
                 || m_campaignScenario > CAMPAIGN_SCENARIO_LORD_LAST) {
@@ -1308,7 +1308,7 @@ void game::NewMap(char* mapName) {
                 if (m_castleRecs[k].m_type == TOWN_TYPE_BARBARIAN)
                     m_castleRecs[k].m_buildings |=
                         H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_SPECIAL);
-                SetupTown(k, 0);
+                SetupTown(k, false);
             }
         }
     }
@@ -1676,7 +1676,7 @@ void game::RandomizeEvents(void) {
                                     .m_objectMetadata = id;
                         }
                     }
-                    SetupTown(id, 0);
+                    SetupTown(id, false);
                     break;
                 case MAP_EVENT_TRIGGER(MAP_OBJECT_ALCHEMIST_LAB):
                 case MAP_EVENT_TRIGGER(MAP_OBJECT_MINE):
@@ -1902,7 +1902,7 @@ void game::ClaimTown(i8 townId, i8 player) {
                              << MAP_CELL_EXTRA_TILESET_SHIFT;
     cell->m_extraFrame = H1_ENUM_ENCODE(PlayerColor, m_players[player].Color()) * 2 + 1;
     SetVisibility(m_castleRecs[townId].m_x, m_castleRecs[townId].m_y, player, gVisRangeTown);
-    CheckEndGame(0);
+    CheckEndGame(false);
 }
 
 // Flag placement: the flag cell sits beside the mine by type and shows the
@@ -1996,7 +1996,7 @@ H1_ENUM_RETURN(SpellType, i8) game::ViewSpells(
             m_viewSpellsWindow->BroadcastMessage(msg);
         }
         UpdateSpellWidgets();
-        gWindowManager->DoDialog(m_viewSpellsWindow, ViewSpellsHandler, 0);
+        gWindowManager->DoDialog(m_viewSpellsWindow, ViewSpellsHandler, false);
         delete m_viewSpellsWindow;
     }
     return m_viewSpell;
@@ -2235,7 +2235,7 @@ void game::ViewArmy(
     H1_ENUM_PARAM(CreatureType, i8) monsterType,
     i16 numTroops,
     class town* castle,
-    i8 disableDismiss,
+    b8 disableDismiss,
     H1_ENUM_PARAM(ArmyFacing, i8) facing,
     i8 quickView,
     class hero* theHero,
@@ -2417,7 +2417,7 @@ void game::ViewArmy(
         gWindowManager->RemoveWindow(m_viewArmyWindow);
         gMouseManager->ReallyShowPointer();
     } else {
-        gWindowManager->DoDialog(m_viewArmyWindow, ViewArmyHandler, 0);
+        gWindowManager->DoDialog(m_viewArmyWindow, ViewArmyHandler, false);
         if (gDismissArmy && theGroup) {
             for (m = 0; m < ARMY_GROUP_SLOT_COUNT; m++) {
                 if (theGroup->m_creatureTypes[m] == monsterType) {
@@ -2487,7 +2487,7 @@ VA(0x00432089, 0xc81)
 void game::Overview(void) {
     i16 activeTextW;
     i16 mineRowYVal;
-    i8 redrawRequested;
+    b8 redrawRequested;
     i16 firstIncomeWidget;
     i16 numTowns;
     i16 heroRowY;
@@ -2532,7 +2532,7 @@ void game::Overview(void) {
     i16 savedFieldH;
 
     gAdvManager->TrimLoopingSounds(8);
-    gOverviewShowing = 1;
+    gOverviewShowing = true;
     oldGy = 82;
     shieldDXXVal = 49;
     spare1 = 73;
@@ -2556,7 +2556,7 @@ void game::Overview(void) {
     activeBadge = 15;
     lineH = 16;
     allLimitYOff = 544;
-    redrawRequested = 1;
+    redrawRequested = true;
     one = 1;
     dayIdYValue = 64;
     firstIncomeWidget = 65;
@@ -2740,13 +2740,13 @@ void game::Overview(void) {
         gWindowManager->UpdateScreenRegion(100, 465, 400, 12);
     }
     gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
-    gWindowManager->DoDialog(baseWin, TrueFalseDialogHandler, 0);
+    gWindowManager->DoDialog(baseWin, TrueFalseDialogHandler, false);
     delete baseWin;
     gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
     gResourceManager->Dispose(ovIconRef);
     gResourceManager->Dispose(smallFontItem);
     gResourceManager->Dispose(bigFont);
-    gOverviewShowing = 0;
+    gOverviewShowing = false;
 }
 
 // Covers the 28 creatures.
@@ -2841,12 +2841,12 @@ void game::NextPlayer(void) {
             if (!m_playerDead[ii] && gHumanPlayer[ii])
                 numHumans++;
         }
-        SaveGame(localization::Tr("save.name.autosave"), 1);
+        SaveGame(localization::Tr("save.name.autosave"), true);
     }
     if (gGame->m_players[gCurPlayer].m_daysLeft > 0)
         gGame->m_players[gCurPlayer].m_daysLeft--;
-    CheckEndGame(0);
-    gAdvManager->m_identifyHeroActive = 0;
+    CheckEndGame(false);
+    gAdvManager->m_identifyHeroActive = false;
     gAdvManager->DeactivateCurrTown();
     gAdvManager->DeactivateCurrHero();
     do {
@@ -2870,7 +2870,7 @@ void game::NextPlayer(void) {
     }
     if (!gThisNetHumanPlayer[gCurPlayer]) {
         gMouseManager->SetPointer(ADVENTURE_POINTER_WAIT);
-        gAdvManager->HideRoute(1, 0, 1);
+        gAdvManager->HideRoute(true, false, true);
         gAdvManager->CheckDimNextHeroBut();
         TurnOnAIMusic();
         SetNoDialogMenus(0);
@@ -2907,7 +2907,7 @@ void game::NextPlayer(void) {
     }
     DoNewTurn();
     gMouseManager->ReallyShowPointer();
-    CheckEndGame(0);
+    CheckEndGame(false);
     if (gThisNetHumanPlayer[gCurPlayer] && gRemoteOn && m_day != 1 && gForceSwitchMusic == -1) {
         PlayMusic(MUSIC_TRACK_NETWORK_TURN);
         gForceSwitchMusic = KBTickCount();
@@ -3213,22 +3213,22 @@ void game::PerMonth(void) {
             }
         }
     }
-    gAdvManager->CompleteDraw(0);
+    gAdvManager->CompleteDraw(false);
 }
 
 // 4x3 town footprint: the town type comes from the campaign crest, a
 // distinct roll for the first four towns or a plain roll, and shifts every
 // town frame to that type.
 VA(0x0043461e, 0x569)
-void game::RandomizeTown(i8 x, i8 y, i8 isCastle) {
+void game::RandomizeTown(i8 x, i8 y, b8 isCastle) {
     i8 j;
-    i8 curUnique;
+    b8 curUnique;
     town* town;
     i8 i;
     u8 activeFrameShift;
     i8 townNum;
     H1_ENUM_LOCAL(TownType, i8) race;
-    i8 plain;
+    b8 plain;
 
     townNum = GetTownId(x, y);
     for (j = 0; j < TOWN_FOOTPRINT_HEIGHT; j++) {
@@ -3256,7 +3256,7 @@ void game::RandomizeTown(i8 x, i8 y, i8 isCastle) {
         && m_campaignScenario <= CAMPAIGN_SCENARIO_LORD_LAST && town->m_owner == 0) {
         race = gCrestTownTypes[m_players[0].m_color];
     } else if (townNum < GAME_PLAYER_COUNT) {
-        curUnique = 0;
+        curUnique = false;
         race = TOWN_TYPE_KNIGHT;
         while (!curUnique) {
             race = H1_ENUM_DECODE(
@@ -3266,10 +3266,10 @@ void game::RandomizeTown(i8 x, i8 y, i8 isCastle) {
                     H1_ENUM_ENCODE(TownType, TOWN_TYPE_WARLOCK)
                 )
             );
-            curUnique = 1;
+            curUnique = true;
             for (i = 0; i < GAME_PLAYER_COUNT; i++) {
                 if (gRandomTownTypes[i] == race)
-                    curUnique = 0;
+                    curUnique = false;
             }
         }
         gRandomTownTypes[townNum] = race;
@@ -3290,10 +3290,10 @@ void game::RandomizeTown(i8 x, i8 y, i8 isCastle) {
         m_map[x - TOWN_FOOTPRINT_LEFT + i][y].m_objectIndex -= activeFrameShift;
     }
     m_castleRecs[townNum].m_type = race;
-    plain = 1;
+    plain = true;
     if (town->m_extraIndex >= 1
         && static_cast<mapTownExtra*>(gMapExtraBlocks[town->m_extraIndex])->customized)
-        plain = 0;
+        plain = false;
     if (plain) {
         m_castleRecs[townNum].m_buildings =
             race == TOWN_TYPE_BARBARIAN ? H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_SPECIAL) : 0;
@@ -3311,7 +3311,7 @@ void game::RandomizeTown(i8 x, i8 y, i8 isCastle) {
         if (m_castleRecs[townNum].m_buildings & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_CASTLE))
             m_castleRecs[townNum].m_buildings -=
                 H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_CASTLE);
-        SetupTown(townNum, 0);
+        SetupTown(townNum, false);
     }
 }
 
@@ -3319,7 +3319,7 @@ void game::RandomizeTown(i8 x, i8 y, i8 isCastle) {
 // uncustomized, then nine distinct mage-guild spells; computer owners
 // favour the stronger spells.
 VA(0x00434b87, 0x318)
-void game::SetupTown(i8 townId, i8 aiOwned) {
+void game::SetupTown(i8 townId, b8 aiOwned) {
     i16 dwellingCount;
     char rollList[10];
     i32 n;
@@ -3645,7 +3645,7 @@ void game::SetRandomHeroArmies(i16 heroId, i32 strongArmy) {
 // Random towns, castles, monsters by strength band, resources, artifacts
 // and mines; NewMap runs the castles-only pass first.
 VA(0x004357f5, 0x27f)
-void game::ProcessRandomObjects(i32 castlesOnly) {
+void game::ProcessRandomObjects(b32 castlesOnly) {
     mapCell* cellPtrItem;
     i32 lowFVVal;
     i32 y;
@@ -3665,10 +3665,10 @@ void game::ProcessRandomObjects(i32 castlesOnly) {
                 || cellPtrItem->m_triggerType == MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_CASTLE)) {
                 switch (cellPtrItem->m_triggerType) {
                     case MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_TOWN):
-                        RandomizeTown(x, y, 0);
+                        RandomizeTown(x, y, false);
                         break;
                     case MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_CASTLE):
-                        RandomizeTown(x, y, 1);
+                        RandomizeTown(x, y, true);
                         break;
                     case MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_MONSTER):
                         lowFVVal = 80;
@@ -4006,13 +4006,13 @@ void game::ShowComputerScreen(void) {
                 WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED
             );
         gMouseManager->ReallyHidePointer();
-        gAllBlack = 1;
-        gAdvManager->CompleteDraw(1);
-        gAdvManager->UpdateHeroLocators(1, 1);
-        gAdvManager->UpdateTownLocators(1, 1);
-        gAdvManager->UpdBottomView(1, 1, 1);
-        gAdvManager->UpdateScreen(0, 1);
-        gAllBlack = 0;
+        gAllBlack = true;
+        gAdvManager->CompleteDraw(true);
+        gAdvManager->UpdateHeroLocators(true, 1);
+        gAdvManager->UpdateTownLocators(true, 1);
+        gAdvManager->UpdBottomView(true, true, true);
+        gAdvManager->UpdateScreen(0, true);
+        gAllBlack = false;
         gThisNetHumanPlayer[gCurPlayer] = saved;
         gMouseManager->ReallyShowPointer();
     }
@@ -4025,7 +4025,7 @@ void game::ShowHeroesLogo(void) {
     tileset* logo;
     if (!gAdvManager->m_heroesLogoShown) {
         gMouseManager->ReallyHidePointer();
-        gAdvManager->m_heroesLogoShown = 1;
+        gAdvManager->m_heroesLogoShown = true;
         logo = gResourceManager->GetTileset("herologo.til");
         TileToBitmap(logo, 0, gWindowManager->m_screen, 480, 16);
         gWindowManager->UpdateScreenRegion(480, 16, 144, 144);
@@ -4038,7 +4038,7 @@ VA(0x004365d2, 0x124)
 void game::WaitForPlayer(char* text, i32 player) {
     if (gBlackoutPlayer && gNumHumanPlayers > 1 && !gRemoteOn) {
         gMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
-        gAllBlack = 1;
+        gAllBlack = true;
         gBottomViewOverrideEndTime = KBTickCount() + 9999999;
         if (gThisNetHumanPlayer[gCurPlayer])
             gBottomViewOverride = BOTTOM_VIEW_NEW_TURN;
@@ -4046,12 +4046,12 @@ void game::WaitForPlayer(char* text, i32 player) {
             gBottomViewOverride = BOTTOM_VIEW_NONE;
         PlayMusic(MUSIC_TRACK_NETWORK_TURN);
         gMouseManager->ReallyHidePointer();
-        gAdvManager->CompleteDraw(1);
-        gAdvManager->UpdateHeroLocators(1, 1);
-        gAdvManager->UpdateTownLocators(1, 1);
-        gAdvManager->UpdateScreen(0, 1);
+        gAdvManager->CompleteDraw(true);
+        gAdvManager->UpdateHeroLocators(true, 1);
+        gAdvManager->UpdateTownLocators(true, 1);
+        gAdvManager->UpdateScreen(0, true);
         ShowHeroesLogo();
-        gAllBlack = 0;
+        gAllBlack = false;
         gMouseManager->ReallyShowPointer();
         NormalDialog(
             text,
@@ -4103,7 +4103,7 @@ void game::ProcessMapExtra(void) {
                     cell->m_objectMetadata = townNum;
                     break;
                 case MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_HERO):
-                    m_noMapHeroes = 0;
+                    m_noMapHeroes = false;
                     break;
             }
         }
@@ -4116,16 +4116,16 @@ VA(0x0043689d, 0x1cf)
 i8 game::SetupTowns(void) {
     mapTownExtra* newExtra;
     i32 curOwn;
-    i8 isUnowned;
+    b8 isUnowned;
     town* town;
     i32 j;
     i32 i;
     i32 mask;
-    isUnowned = 1;
+    isUnowned = true;
     mask = MAP_TOWN_EXTRA_BUILDING_MASK;
     for (i = 0; i < GAME_TOWN_COUNT; i++) {
         town = GetTown(i);
-        town->m_customized = 0;
+        town->m_customized = false;
         if (town->m_extraIndex >= 1) {
             newExtra = static_cast<mapTownExtra*>(gMapExtraBlocks[town->m_extraIndex]);
             if (newExtra->customized && newExtra->owner != MAP_TOWN_OWNER_UNSET) {
@@ -4133,12 +4133,12 @@ i8 game::SetupTowns(void) {
                     curOwn = gGame->m_playerCount - 1;
                 else
                     curOwn = newExtra->owner;
-                isUnowned = 0;
+                isUnowned = false;
                 if (curOwn != GAME_PLAYER_NONE)
                     ClaimTown(i, curOwn);
             }
             if (newExtra->customized) {
-                town->m_customized = 1;
+                town->m_customized = true;
                 for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
                     town->m_army.m_creatureCounts[j] = newExtra->troopCounts[j];
                     if (town->m_army.m_creatureCounts[j] > 0)
@@ -4197,7 +4197,7 @@ void game::ProcessOnMapHeroes(void) {
                         gAdvManager->GiveArtifact(theHeroEntry, extra->artifacts[jx]);
                 }
                 theHeroEntry->m_experience = 0;
-                gAdvManager->GiveExperience(theHeroEntry, extra->experience, 1);
+                gAdvManager->GiveExperience(theHeroEntry, extra->experience, true);
                 theHeroEntry->CheckLevel();
                 theHeroEntry->m_x = posX;
                 theHeroEntry->m_y = posY;
@@ -4308,7 +4308,7 @@ void game::CheckHeroConsistency(void) {
 // segments, 100 segments per acknowledged block.
 VA(0x004370d2, 0x5fd)
 i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
-    i32 okay;
+    b32 okay;
     char curPathname[452];
     i32 unusedSum;
     char* mainOutData;
@@ -4325,16 +4325,16 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
     RemoteMessage* incomingNow;
     char ackedArray[500];
     i32 unusedY;
-    i32 replyState;
+    b32 replyState;
     i32 unusedSeq;
     i32 dataSize;
     i32 length;
     char* dataObj;
-    i8 wasFinished;
+    b8 wasFinished;
 
     gAdvManager->TrimLoopingSounds(REMOTE_SAVE_TRANSFER_SOUNDS);
-    okay = 0;
-    replyState = 0;
+    okay = false;
+    replyState = false;
     oldTrackVal = MUSIC_TRACK_NONE;
     oldTrackVal = GetCurrentTrack();
     StopMusic();
@@ -4347,7 +4347,7 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
     }
     AiPrint("Transmit Start");
     memset(ackedArray, 0, sizeof(ackedArray));
-    SaveGame("REMOTE.GAM", 0);
+    SaveGame("REMOTE.GAM", false);
     sprintf(curPathname, "%s%s", gDataPath, "REMOTE.GAM");
     dataSize = FileSize(curPathname);
     sendPacket = static_cast<RemotePayload*>(malloc(REMOTE_MESSAGE_SIZE));
@@ -4388,13 +4388,13 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
                 segmentsInBlock = totalSegments - block * REMOTE_SAVE_BATCH_SIZE;
             else
                 segmentsInBlock = REMOTE_SAVE_BATCH_SIZE;
-            wasFinished = 0;
+            wasFinished = false;
             while (!wasFinished) {
                 for (entry = block * REMOTE_SAVE_BATCH_SIZE;
                      entry < block * REMOTE_SAVE_BATCH_SIZE + segmentsInBlock;
                      entry++) {
                     PollSound();
-                    CheckDoMain(0, 1);
+                    CheckDoMain(0, true);
                     if (!ackedArray[entry]) {
                         if (entry + 1 == totalSegments)
                             length = dataSize - entry * REMOTE_SAVE_SEGMENT_SIZE;
@@ -4411,7 +4411,7 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
                             remotePlayer,
                             length + REMOTE_SAVE_INDEX_SIZE,
                             REMOTE_COMMAND_SAVE_DATA,
-                            0
+                            false
                         );
                         if (!replyState)
                             ShutDown(NULL);
@@ -4432,19 +4432,19 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
                     if (incomingNow->payload.data[entry] > 0)
                         ackedArray[entry + block * REMOTE_SAVE_BATCH_SIZE] = 1;
                 }
-                wasFinished = 1;
+                wasFinished = true;
                 for (entry = block * REMOTE_SAVE_BATCH_SIZE;
                      entry < block * REMOTE_SAVE_BATCH_SIZE + segmentsInBlock;
                      entry++) {
                     if (!ackedArray[entry])
-                        wasFinished = 0;
+                        wasFinished = false;
                 }
             }
         }
-        replyState = TransmitRemoteData(NULL, remotePlayer, 0, REMOTE_COMMAND_SAVE_FINISH, 1);
+        replyState = TransmitRemoteData(NULL, remotePlayer, 0, REMOTE_COMMAND_SAVE_FINISH, true);
         if (!replyState)
             ShutDown(NULL);
-        okay = 1;
+        okay = true;
     }
 
 cleanup:
@@ -4455,7 +4455,7 @@ cleanup:
     AiPrint("Transmit End");
     if (gAdvManager->m_active == 1) {
         gBottomViewOverride = BOTTOM_VIEW_NONE;
-        gAdvManager->UpdBottomView(1, 1, 1);
+        gAdvManager->UpdBottomView(true, true, true);
     }
     if (oldTrackVal != MUSIC_TRACK_NONE) {
         PlayMusic(oldTrackVal);
@@ -4466,15 +4466,15 @@ cleanup:
 // Collects the remote save in 200-byte segments, acknowledging each block
 // of 100, then decodes it and writes REMOTE.GAM.
 VA(0x004376cf, 0x4b0)
-i32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
-    i32 oldUnused1;
-    i32 okay;
+b32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
+    b32 oldUnused1;
+    b32 okay;
     char pathname[452];
     char* curInData;
     i32 i;
     H1_ENUM_LOCAL(MusicTrack, i32) trackOld;
     i32 handleValue;
-    i8 done;
+    b8 done;
     char* sendPacket;
     RemoteMessage* receivedPacketObj;
     i32 curRet;
@@ -4485,9 +4485,9 @@ i32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
 
     gAdvManager->TrimLoopingSounds(REMOTE_SAVE_TRANSFER_SOUNDS);
     handleValue = 0;
-    done = 0;
-    oldUnused1 = 0;
-    okay = 0;
+    done = false;
+    oldUnused1 = false;
+    okay = false;
     trackOld = MUSIC_TRACK_NONE;
     if (gAdvManager->m_active == 1)
         BVResMsg(localization::Tr("network.receive.title"), RESOURCE_NONE, 0);
@@ -4497,7 +4497,7 @@ i32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
         PollSound();
         Process1WindowsMessage();
     }
-    curRet = TransmitRemoteData(NULL, remotePlayer, 0, REMOTE_COMMAND_SAVE_INIT_RESPONSE, 1);
+    curRet = TransmitRemoteData(NULL, remotePlayer, 0, REMOTE_COMMAND_SAVE_INIT_RESPONSE, true);
     if (!curRet)
         ShutDown(NULL);
     memset(myGotIt, 0, sizeof(myGotIt));
@@ -4508,7 +4508,7 @@ i32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
     lastPacketTimeNum = KBTickCount();
     while (!done) {
         PollSound();
-        CheckDoMain(0, 1);
+        CheckDoMain(0, true);
         if (lastPacketTimeNum + REMOTE_WAIT_TIMEOUT < KBTickCount()) {
             NormalDialog(
                 localization::Tr("combat.network.receive_error"),
@@ -4519,7 +4519,7 @@ i32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
             else
                 ShutDown(NULL);
         }
-        receivedPacketObj = GetRemoteData(1);
+        receivedPacketObj = GetRemoteData(true);
         if (receivedPacketObj
             && (receivedPacketObj->type == REMOTE_MESSAGE_RELIABLE
                 || receivedPacketObj->type == REMOTE_MESSAGE_UNRELIABLE)) {
@@ -4543,13 +4543,13 @@ i32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
                         remotePlayer,
                         REMOTE_SAVE_ACK_MAP_SIZE,
                         REMOTE_COMMAND_SAVE_ACK_RESPONSE,
-                        1
+                        true
                     );
                     if (!curRet)
                         ShutDown(NULL);
                     break;
                 case REMOTE_COMMAND_SAVE_FINISH:
-                    done = 1;
+                    done = true;
                     break;
             }
         }
@@ -4564,7 +4564,7 @@ i32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
         FileError(pathname);
     write(handleValue, decodedData, dataSize);
     close(handleValue);
-    okay = 1;
+    okay = true;
     free(sendPacket);
     free(curInData);
     if (REMOTE_SAVE_ENCODED())
@@ -4572,7 +4572,7 @@ i32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
     AiPrint("Receive End");
     if (gAdvManager->m_active == 1) {
         gBottomViewOverride = BOTTOM_VIEW_NONE;
-        gAdvManager->UpdBottomView(1, 1, 1);
+        gAdvManager->UpdBottomView(true, true, true);
     }
     if (trackOld != MUSIC_TRACK_NONE) {
         PlayMusic(trackOld);
@@ -4586,16 +4586,16 @@ void game::DoNewTurn(void) {
     char monsterName[52];
 
     if (!gThisNetHumanPlayer[gCurPlayer]) {
-        CheckEndGame(0);
+        CheckEndGame(false);
         return;
     }
     gBottomViewOverrideEndTime = KBTickCount() + 3000;
     gBottomViewOverride = BOTTOM_VIEW_NEW_TURN;
-    gAdvManager->UpdBottomView(1, 1, 1);
+    gAdvManager->UpdBottomView(true, true, true);
     gAdvManager->SetInitialMapOrigin();
-    gAdvManager->CompleteDraw(0);
-    gAdvManager->UpdateScreen(0, 0);
-    CheckEndGame(0);
+    gAdvManager->CompleteDraw(false);
+    gAdvManager->UpdateScreen(0, false);
+    CheckEndGame(false);
     if (gCurPlayerData->m_daysLeft >= 0) {
         if (gCurPlayerData->m_daysLeft == 1) {
             sprintf(
@@ -4623,7 +4623,7 @@ void game::DoNewTurn(void) {
         );
     }
     if (gCurPlayerData->m_heroCount > 0)
-        gAdvManager->SetHeroContext(gCurPlayerData->NextHero(0), 0);
+        gAdvManager->SetHeroContext(gCurPlayerData->NextHero(0), false);
     else if (gCurPlayerData->m_townCount > 0)
         gAdvManager->SetTownContext(gCurPlayerData->m_townIds[0]);
     gAdvManager->CheckDimNextHeroBut();
@@ -4696,7 +4696,7 @@ i32 game::GetBoatsBuilt(void) {
 }
 
 DATA(0x004a6c29)
-i8 gShowMapInfo = 0;
+b8 gShowMapInfo = false;
 
 // Player-count file masks and the reqextra.bin map-info window; a
 // cancelled pick restores the previous map's texts.
@@ -4712,7 +4712,7 @@ void game::GetMap(void) {
     strcpy(oldMapName, gMapName);
     strcpy(saveFullName, gFullMapName);
     strcpy(oldDescription, gMapDescription);
-    gShowMapInfo = 1;
+    gShowMapInfo = true;
     strcpy(gCurMapName, "");
     gReqExtraWindow = new heroWindow(310, 332, "reqextra.bin");
     if (!gReqExtraWindow)
@@ -4741,7 +4741,7 @@ void game::GetMap(void) {
         delete theRequest;
     }
     delete gReqExtraWindow;
-    gShowMapInfo = 0;
+    gShowMapInfo = false;
 }
 
 VA(0x004384f3, 0x80)
@@ -4943,7 +4943,7 @@ void game::ShowScenInfo(void) {
         packet.value = H1_ENUM_ENCODE(PlayerColor, m_players[gCurPlayer].m_color) * 2 + 11;
         scenWindow->BroadcastMessage(packet);
     }
-    gWindowManager->DoDialog(scenWindow, EventWindowHandler, 0);
+    gWindowManager->DoDialog(scenWindow, EventWindowHandler, false);
 }
 
 // Keeps the human's crest and gives each opponent a free one: the campaign

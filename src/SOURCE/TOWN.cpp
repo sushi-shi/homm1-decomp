@@ -53,7 +53,7 @@ void town::GiveSpells(void) {
             visitingHero->AddSpell(
                 m_mageGuildSpells[i],
                 visitingHero->m_primaryStats[HERO_PRIMARY_KNOWLEDGE],
-                0
+                false
             );
     }
 }
@@ -84,7 +84,7 @@ void town::View(void) {
     gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
     gExec->CallManager(gTownManager);
     if (m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE)
-        gAdvManager->SetHeroContext(m_occupyingHeroId, 0);
+        gAdvManager->SetHeroContext(m_occupyingHeroId, false);
     gAdvDisposeLevel = ADV_DISPOSE_NONE;
 }
 

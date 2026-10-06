@@ -140,7 +140,7 @@ townManager::townManager(void) {
     m_heroWindow0 = NULL;
     m_coverWindow = NULL;
     m_selectedBuilding = BUILDING_SLOT_NONE;
-    m_castleDialogActive = 0;
+    m_castleDialogActive = false;
     m_dispatchMask = TOWN_MANAGER_DISPATCH_MASK;
 }
 
@@ -259,15 +259,15 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) townManager::Open(i16 priority) {
         MemError();
     m_selectedStrip = m_swapStrip = m_pendingStrip = NULL;
     m_selectedArmySlot = m_swapArmySlot = m_pendingArmySlot = STRIP_SLOT_NONE;
-    DrawTown(0, 0);
+    DrawTown(false, 0);
     gWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
     gMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
     gMouseManager->ReallyShowPointer();
     gMouseManager->NewUpdate(1);
     KBChangeMenu(gTownMenu);
     gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
-    m_castleDialogActive = 0;
-    m_recruitResult = 0;
+    m_castleDialogActive = false;
+    m_recruitResult = false;
     m_lastHoverId = WINDOW_MANAGER_NO_HOVER_WIDGET;
     m_messageMask = BASE_MANAGER_ACCEPT_TOWN_EVENT;
     m_priority = priority;
@@ -580,7 +580,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) townManager::Main(struct tag_message&
     else
         rightButton = 0;
     if (gTimers[TOWN_FRAME_TIMER_SLOT] < KBTickCount()) {
-        DrawTown(1, 1);
+        DrawTown(true, 1);
         gTimers[TOWN_FRAME_TIMER_SLOT] = KBTickCount() + TOWN_REDRAW_INTERVAL;
     }
     if ((message.type & m_dispatchMask) == 0) {
@@ -612,7 +612,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) townManager::Main(struct tag_message&
                                 break;
                             }
                             gMouseManager->ReallyHidePointer();
-                            DrawTown(1, 1);
+                            DrawTown(true, 1);
                             recruitMgr = new recruitUnit(
                                 m_town,
                                 H1_ENUM_DECODE(BuildingSlotType, message.id)
@@ -654,9 +654,9 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) townManager::Main(struct tag_message&
                                         MemError();
                                     SetWinText(m_heroWindow0, WINDOW_TEXT_CASTLE);
                                     SetupCastle(m_heroWindow0);
-                                    m_castleDialogActive = 1;
-                                    gWindowManager->DoDialog(m_heroWindow0, CastleHandler, 0);
-                                    m_castleDialogActive = 0;
+                                    m_castleDialogActive = true;
+                                    gWindowManager->DoDialog(m_heroWindow0, CastleHandler, false);
+                                    m_castleDialogActive = false;
                                     break;
                                 case BUILDING_SLOT_MAGE_GUILD:
                                     if (m_town->m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE
@@ -695,7 +695,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) townManager::Main(struct tag_message&
                                             gWindowManager->DoDialog(
                                                 m_heroWindow0,
                                                 TrueFalseDialogHandler,
-                                                0
+                                                false
                                             );
                                             if (gWindowManager->m_dialogResult == DIALOG_BUTTON_2) {
                                                 gAdvManager->GiveArtifact(
@@ -716,7 +716,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) townManager::Main(struct tag_message&
                                         SetWinText(m_heroWindow0, WINDOW_TEXT_MAGE_GUILD);
                                         SetupMage(m_heroWindow0);
                                         gWindowManager
-                                            ->DoDialog(m_heroWindow0, MageGuildHandler, 0);
+                                            ->DoDialog(m_heroWindow0, MageGuildHandler, false);
                                     }
                                     m_town->GiveSpells();
                                     break;
@@ -726,7 +726,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) townManager::Main(struct tag_message&
                                         MemError();
                                     SetupWell(m_heroWindow0);
                                     gWindowManager
-                                        ->DoDialog(m_heroWindow0, TrueFalseDialogHandler, 0);
+                                        ->DoDialog(m_heroWindow0, TrueFalseDialogHandler, false);
                                     break;
                                 case BUILDING_SLOT_THIEVES_GUILD:
                                     m_heroWindow0 = new heroWindow(0, 0, "thiefwin.bin");
@@ -735,7 +735,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) townManager::Main(struct tag_message&
                                     SetWinText(m_heroWindow0, WINDOW_TEXT_THIEVES_GUILD);
                                     SetupThievesGuild(m_heroWindow0, THIEVES_CATEGORIES_BY_GUILDS);
                                     gWindowManager
-                                        ->DoDialog(m_heroWindow0, TrueFalseDialogHandler, 0);
+                                        ->DoDialog(m_heroWindow0, TrueFalseDialogHandler, false);
                                     break;
                             }
                             if (m_heroWindow0 != NULL)
@@ -758,7 +758,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) townManager::Main(struct tag_message&
                                         width = i + 1;
                                 }
                                 width = width * 88 + 0x70;
-                                DrawTown(1, 1);
+                                DrawTown(true, 1);
                                 gWindowManager->FizzleForward(
                                     0,
                                     0x100,
@@ -767,7 +767,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) townManager::Main(struct tag_message&
                                     FIZZLE_USE_DEFAULT_DELAY
                                 );
                                 WaitSample(res);
-                                m_recruitResult = 0;
+                                m_recruitResult = false;
                                 gMouseManager->ReallyShowPointer();
                             }
                             gWindowManager->ReleaseFizzleSource();
@@ -829,7 +829,8 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) townManager::Main(struct tag_message&
                                     message.value = WIDGET_FLAG_ENABLED;
                                     m_heroWindow0->BroadcastMessage(message);
                                 }
-                                gWindowManager->DoDialog(m_heroWindow0, TrueFalseDialogHandler, 0);
+                                gWindowManager
+                                    ->DoDialog(m_heroWindow0, TrueFalseDialogHandler, false);
                                 delete m_heroWindow0;
                                 if (gWindowManager->m_dialogResult == DIALOG_BUTTON_2) {
                                     if (gGame->CreateBoat(m_town->m_x - 1, m_town->m_y + 1)
@@ -864,21 +865,21 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) townManager::Main(struct tag_message&
                             break;
                         default:
                             if (rightButton) {
-                                i32 isArmySlot;
+                                b32 isArmySlot;
                                 hero* viewHero;
 
-                                isArmySlot = 0;
+                                isArmySlot = false;
                                 if (message.id >= TOWN_GARRISON_SLOT_FIRST
                                     && message.id <= TOWN_GARRISON_SLOT_FIRST + 4) {
                                     m_selectedStrip = m_garrisonStrip;
                                     m_selectedArmySlot = message.id - TOWN_GARRISON_SLOT_FIRST;
-                                    isArmySlot = 1;
+                                    isArmySlot = true;
                                 }
                                 if (message.id >= TOWN_HERO_SLOT_FIRST
                                     && message.id <= TOWN_HERO_SLOT_FIRST + 4) {
                                     m_selectedStrip = m_heroStrip;
                                     m_selectedArmySlot = message.id - TOWN_HERO_SLOT_FIRST;
-                                    isArmySlot = 1;
+                                    isArmySlot = true;
                                 }
                                 if (isArmySlot
                                     && m_selectedStrip->m_army->m_creatureTypes[m_selectedArmySlot]
@@ -894,7 +895,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) townManager::Main(struct tag_message&
                                         m_selectedStrip->m_army
                                             ->m_creatureCounts[m_selectedArmySlot],
                                         m_town,
-                                        1,
+                                        true,
                                         ARMY_FACING_RIGHT,
                                         1,
                                         viewHero,
@@ -985,7 +986,7 @@ void townManager::DoCommand(H1_ENUM_PARAM(TownArmyCommand, i8) command) {
                 m_selectedStrip->m_army->m_creatureTypes[m_selectedArmySlot],
                 m_selectedStrip->m_army->m_creatureCounts[m_selectedArmySlot],
                 m_town,
-                m_castleDialogActive == 1
+                m_castleDialogActive == true
                     || (m_selectedStrip == m_heroStrip
                         && m_selectedStrip->m_army->GetNumArmies() == 1),
                 ARMY_FACING_RIGHT,
@@ -1051,7 +1052,7 @@ void townManager::DoCommand(H1_ENUM_PARAM(TownArmyCommand, i8) command) {
             break;
         case TOWN_ARMY_COMMAND_VIEW_HERO:
             visitor = gGame->GetHero(m_town->m_occupyingHeroId);
-            visitor->HeroView(1);
+            visitor->HeroView(true);
             RedrawTownScreen();
             gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
             break;
@@ -1073,7 +1074,7 @@ VA(0x00461fb6, 0x9d)
 void townManager::RedrawTownScreen(void) {
     tag_message message;
 
-    DrawTown(1, 1);
+    DrawTown(true, 1);
     m_garrisonStrip->DrawIcons(1);
     m_heroStrip->DrawIcons(1);
     SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, TOWN_STATUS_TEXT_CONTROL);
@@ -1117,7 +1118,7 @@ void townManager::SplitArmy(void) {
     message.id = TOWN_SPLIT_SETUP_AMOUNT_CONTROL;
     message.text = gText;
     m_heroWindow1->BroadcastMessage(message);
-    gWindowManager->DoDialog(m_heroWindow1, SplitArmyHandler, 0);
+    gWindowManager->DoDialog(m_heroWindow1, SplitArmyHandler, false);
     delete m_heroWindow1;
     if (gWindowManager->m_dialogResult == DIALOG_BUTTON_2) {
         theMerge = 0;
@@ -1184,7 +1185,7 @@ void townManager::Toggle(H1_ENUM_PARAM(BuildingSlotType, i8) building) {
 // Draws a bitmap background and folds the mouse pointer into the screen
 // buffer around the viewport blit.
 VA(0x0046254d, 0xe3)
-void townManager::DrawTown(i8 updateScreen, i32 advanceAnimation) {
+void townManager::DrawTown(b8 updateScreen, i32 advanceAnimation) {
     i16 index;
     i16 x;
     i16 y;
@@ -1217,7 +1218,7 @@ VA(0x00462630, 0xdd2)
 #line 1483 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\TOWNMGR.CPP"
 i16 townManager::BuyBuild(
     H1_ENUM_PARAM(BuildingSlotType, i16) building,
-    i8 cannotBuy,
+    b8 cannotBuy,
     i8 quickView
 ) {
     i32 entryWidth;
@@ -1522,7 +1523,7 @@ i16 townManager::BuyBuild(
             msg.value = WIDGET_FLAG_DIM_REQUEST;
             panel->BroadcastMessage(msg);
         }
-        gWindowManager->DoDialog(panel, TrueFalseDialogHandler, 0);
+        gWindowManager->DoDialog(panel, TrueFalseDialogHandler, false);
         if (gWindowManager->m_dialogResult == DIALOG_BUTTON_2) {
             m_selectedBuilding = building;
             for (i = 0; i < requiredCount; i++)
@@ -1550,7 +1551,7 @@ void townManager::BuildObj(H1_ENUM_PARAM(BuildingSlotType, i16) building) {
     class sample* sample;
 
     gMouseManager->ReallyHidePointer();
-    DrawTown(1, 1);
+    DrawTown(true, 1);
     if (building == BUILDING_SLOT_MAGE_GUILD) {
         if (m_town->m_buildings & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_MAGE_GUILD))
             m_town->m_buildState++;
@@ -1583,7 +1584,7 @@ void townManager::BuildObj(H1_ENUM_PARAM(BuildingSlotType, i16) building) {
         gTownBuildingExtents[m_town->m_type][building].width,
         gTownBuildingExtents[m_town->m_type][building].height
     );
-    DrawTown(0, 1);
+    DrawTown(false, 1);
     sample = LoadPlaySample("buildtwn.82M");
     gWindowManager->FizzleForward(
         gTownBuildingExtents[m_town->m_type][building].x,
@@ -2057,13 +2058,17 @@ void townManager::GetCategoryStats(
                     strengthValue = 0;
                     for (index = 0; index < gGame->m_players[player].m_heroCount; index++) {
                         playerHeroData = gGame->GetPlayerHero(player, index);
-                        strengthValue +=
-                            gPhilAI->FightValueOfStack(&playerHeroData->m_army, playerHeroData, 0);
+                        strengthValue += gPhilAI->FightValueOfStack(
+                            &playerHeroData->m_army,
+                            playerHeroData,
+                            false
+                        );
                     }
                     for (index = 0; index < gGame->m_players[player].m_townCount; index++) {
                         townItem = gGame->GetPlayerTown(player, index);
                         if (townItem->HasGarrison())
-                            strengthValue += gPhilAI->FightValueOfStack(&townItem->m_army, NULL, 0);
+                            strengthValue +=
+                                gPhilAI->FightValueOfStack(&townItem->m_army, NULL, false);
                     }
                     stats[player] = strengthValue;
                     break;
@@ -2102,7 +2107,7 @@ char* townManager::GetBuildingName(H1_ENUM_PARAM(BuildingSlotType, i16) building
 // The castle's recruit window shows both candidate heroes, a right-click
 // view is a timed quick view, and the town strips are rebuilt.
 VA(0x00464a47, 0x92f)
-i8 townManager::RecruitHero(i8 quickView) {
+b8 townManager::RecruitHero(b8 quickView) {
     tag_message evtCopy;
     i16 unusedButtonTextVal = 1;
     i16 oldState = 2;
@@ -2154,7 +2159,7 @@ i8 townManager::RecruitHero(i8 quickView) {
         gWindowManager->RemoveWindow(m_heroWindow1);
         gMouseManager->ReallyShowPointer();
     } else
-        gWindowManager->DoDialog(m_heroWindow1, RecruitHeroHandler, 0);
+        gWindowManager->DoDialog(m_heroWindow1, RecruitHeroHandler, false);
     delete m_heroWindow1;
     if (m_recruitState != RECRUIT_HERO_NONE) {
         i32 newHeroClass;
@@ -2181,7 +2186,7 @@ i8 townManager::RecruitHero(i8 quickView) {
         gGame->m_map[townX][townY].m_triggerType = MAP_EVENT_TRIGGER(MAP_OBJECT_HERO);
         gGame->m_map[townX][townY].m_objectMetadata =
             gCurPlayerData->m_availableHeroIds[m_recruitState];
-        m_recruitResult = 1;
+        m_recruitResult = true;
         m_town->m_occupyingHeroId = m_recruitHeroes[m_recruitState]->m_id;
         gGame->m_availableHeroes[gCurPlayerData->m_availableHeroIds[m_recruitState]] = gCurPlayer;
         delete m_garrisonStrip;
@@ -2289,7 +2294,7 @@ void townManager::DoTavern(void) {
         MemError();
     SetWinText(m_heroWindow0, WINDOW_TEXT_TAVERN);
     PlayMusic(MUSIC_TRACK_TAVERN);
-    gWindowManager->DoDialog(m_heroWindow0, TavernHandler, 0);
+    gWindowManager->DoDialog(m_heroWindow0, TavernHandler, false);
     delete m_heroWindow0;
     PlayMusic(townTheme[m_town->m_type] + MUSIC_TRACK_TOWN_FIRST);
 }
@@ -2462,13 +2467,13 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) CastleHandler(struct tag_message& mes
                         break;
                     case TOWN_CASTLE_HERO_CONTROL:
                         if (quickViewVal)
-                            gTownManager->RecruitHero(1);
+                            gTownManager->RecruitHero(true);
                         else if (!gTownManager->m_recruitResult
                                  && gCurPlayerData->m_resources[RESOURCE_GOLD] >= gHeroGoldCost
                                  && gCurPlayerData->m_heroCount < PLAYER_HERO_CAPACITY
                                  && gTownManager->m_town->m_occupyingHeroId
                                         == TOWN_OCCUPYING_HERO_NONE)
-                            result = gTownManager->RecruitHero(0);
+                            result = gTownManager->RecruitHero(false);
                         break;
                     default:
                         break;
@@ -2496,7 +2501,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) SplitArmyHandler(struct tag_message& 
     i32 unusedActionVal;
     i16 minusButton = TOWN_SPLIT_DECREASE_CONTROL;
     i16 amountText = TOWN_SPLIT_AMOUNT_CONTROL;
-    i32 handled = 0;
+    b32 handled = false;
 
     if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
@@ -2529,14 +2534,14 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) SplitArmyHandler(struct tag_message& 
                     case DIALOG_BUTTON_1:
                         gTownManager->m_splitAmount = 0;
                         gWindowManager->m_dialogResult = message.id;
-                        handled = 1;
+                        handled = true;
                         break;
                     case DIALOG_BUTTON_2:
                         if (gTownManager->m_splitAmount == 0)
                             gWindowManager->m_dialogResult = DIALOG_BUTTON_1;
                         else
                             gWindowManager->m_dialogResult = DIALOG_BUTTON_2;
-                        handled = 1;
+                        handled = true;
                         break;
                 }
                 break;
@@ -2545,7 +2550,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) SplitArmyHandler(struct tag_message& 
         }
     }
 
-    if (handled == 1) {
+    if (handled == true) {
         message.command = H1_ENUM_DECODE(
             BaseWidgetCommand,
             message.id = H1_ENUM_ENCODE(BaseWidgetCommand, WIDGET_COMMAND_DIALOG_SELECT)

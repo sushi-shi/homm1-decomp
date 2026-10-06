@@ -364,14 +364,14 @@ public:
     i32 IsCleared(H1_ENUM_PARAM(MapTileset, i32) tileset, i32 index, i32 mask, i32 x, i32 y);
     // Erases the object classes in mask from the width x height cells at
     // (x, y): each cell's first layer, and its second when secondLayer is set.
-    void ClearArea(i32 x, i32 y, i32 width, i32 height, u16 mask, i32 secondLayer);
+    void ClearArea(i32 x, i32 y, i32 width, i32 height, u16 mask, b32 secondLayer);
     void ResetArea(i32 x, i32 y, i32 width, i32 height);
     void FreeMapExtras(void);
-    void NewMap(i32 random);
+    void NewMap(b32 random);
     // The random map generator (src/EDITOR/MAPOBJ.cpp).
     void GenerateRandomMap(void);
     // At least four castles stand on the map.
-    i32 HasEnoughCastles(void);
+    b32 HasEnoughCastles(void);
     // Grows `percent` of the map's cells of terrain from random seeds over
     // cells of baseTerrain (100: the whole map).
     void PaintRandomTerrain(

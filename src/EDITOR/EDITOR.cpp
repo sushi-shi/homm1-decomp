@@ -45,7 +45,7 @@
 #define EDITOR_CPP_PATH "U:\\HMM\\VSS\\HMM1\\Source\\Editor\\EDITOR.CPP"
 
 DATA(0x0043ede4)
-i8 gCommandLineInterpreted = 1;
+b8 gCommandLineInterpreted = true;
 DATA(0x00451ea4)
 editManager* gEditManager;
 DATA(0x004528d0)
@@ -57,7 +57,7 @@ i32 gStatusTextHoldTime;
 DATA(0x00451ea8)
 char gStatusText[EDITOR_STATUS_TEXT_CAPACITY];
 DATA(0x0043f398)
-i32 gNewMapFormat = 1;
+b32 gNewMapFormat = true;
 DATA(0x004528e4)
 i32 gGeneratingMaps;
 DATA(0x0043f744)
@@ -177,7 +177,7 @@ void ShutDown(char* message) {
         SetFullScreenStatus(0);
         MessageBoxA(gAppWindow, buffer, localization::Tr("shutdown.unexpected.title"), MB_ICONHAND);
     }
-    gClosingApp = 1;
+    gClosingApp = true;
     gExec->ShutDownSystem();
     if (gEventHandle) {
         CloseHandle(gEventHandle);
@@ -211,14 +211,14 @@ i32 InterpretCommandLine(void) {
             }
         }
     }
-    gCommandLineInterpreted = 1;
+    gCommandLineInterpreted = true;
     return 1;
 }
 
 VA(0x0040881f, 0x164)
 i32 EarlySetup(void) {
     DATA(0x004528f5)
-    static i8 gEarlySetupDone = 0;
+    static b8 gEarlySetupDone = false;
     i32 i;
 
     if (gEarlySetupDone)
@@ -418,7 +418,7 @@ void NormalDialog(
         gWindowManager->RemoveWindow(gNormalDialogWindow);
         gMouseManager->ReallyShowPointer();
     } else {
-        gWindowManager->DoDialog(gNormalDialogWindow, EventWindowHandler, 0);
+        gWindowManager->DoDialog(gNormalDialogWindow, EventWindowHandler, false);
     }
     delete gNormalDialogWindow;
 }
@@ -452,7 +452,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) EventWindowHandler(tag_message& messa
 VA(0x00409056, 0x7a)
 void QuickViewWait(void) {
     tag_message event;
-    i32 done = 0;
+    b32 done = false;
     while (!done) {
         PollSound();
         Process1WindowsMessage();
@@ -613,7 +613,7 @@ double gTerrainPercent[EDITOR_GENERATOR_TERRAIN_COUNT] = {30.0, 30.0, 20.0, 0.0,
 DATA(0x0043f3e0)
 double gDensityPercent[EDITOR_GENERATOR_DENSITY_COUNT] = {50.0, 50.0, 50.0, 50.0, 50.0};
 DATA(0x0043f408)
-i32 gScatterTowns = 1;
+b32 gScatterTowns = true;
 DATA(0x004528e0)
 i32 gSaveUnseen;
 DATA(0x0045259c)

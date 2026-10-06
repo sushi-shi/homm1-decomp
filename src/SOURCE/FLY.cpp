@@ -207,7 +207,7 @@ VA(0x0042acac, 0x70c)
 i16 army::FlyTo(i16 destination) {
     i32 boxRightX;
     i8 sourceColumn;
-    i8 flyBackwards;
+    b8 flyBackwards;
     i32 boxTop;
     i8 sourceRow;
     i32 boxLeft;
@@ -264,9 +264,9 @@ i16 army::FlyTo(i16 destination) {
     launchY = startY + gainY;
     landPosY = landY - flightSteps * 6 * gainY;
     adjustY = (launchY + landPosY) / 2 - launchY;
-    flyBackwards = 0;
+    flyBackwards = false;
     if ((gainX < 0 && m_facing == ARMY_FACING_RIGHT) || (gainX > 0 && m_facing == ARMY_FACING_LEFT))
-        flyBackwards = 1;
+        flyBackwards = true;
     hexcell frontCell;
     hexcell rearCell;
     frontCell.TakeOccupant(&gCombatManager->m_hexCells[m_hex]);
@@ -277,11 +277,11 @@ i16 army::FlyTo(i16 destination) {
     inFlightX = startX + adjustX;
     inFlightY = startY + adjustY;
     m_animationSequence = ARMY_ANIMATION_WALK;
-    m_animationFrame = flyBackwards == 1 ? 5 : 0;
+    m_animationFrame = flyBackwards == true ? 5 : 0;
     frontCell.m_occupantSide = COMBAT_SIDE_NONE;
     if (m_stats.attributes & MONSTER_FLAGS_WIDE)
         rearCell.m_occupantSide = COMBAT_SIDE_NONE;
-    gCombatManager->DrawFrame(0);
+    gCombatManager->DrawFrame(false);
     gWindowManager->m_screen->CopyTo(
         gCombatManager->m_backgroundBuffer,
         0,
@@ -291,7 +291,7 @@ i16 army::FlyTo(i16 destination) {
         LOGICAL_SCREEN_WIDTH,
         COMBAT_VIEW_HEIGHT
     );
-    gCombatManager->m_backgroundDrawn = 0;
+    gCombatManager->m_backgroundDrawn = false;
     for (step = 0; step < flightSteps * 6; step++) {
         if (step % 6 == 1)
             PlaySample(m_samples[ARMY_SAMPLE_MOVE]);
@@ -320,10 +320,10 @@ i16 army::FlyTo(i16 destination) {
         gMaxExtentY = 0;
         gMaxExtentX = gMaxExtentY;
         gComputeExtent = 1;
-        gSaveBiggestExtent = 1;
+        gSaveBiggestExtent = true;
         DrawToBuffer(inFlightX, inFlightY);
         gComputeExtent = 0;
-        gSaveBiggestExtent = 0;
+        gSaveBiggestExtent = false;
         if (gMinExtentX < 0)
             gMinExtentX = 0;
         if (gMinExtentY < 0)
@@ -343,7 +343,7 @@ i16 army::FlyTo(i16 destination) {
         DelayTil(&gTimers[COMBAT_FRAME_TIMER_SLOT]);
         gTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
         UPDATE_INCLUSIVE_REGION(boxLeft, boxTop, boxRightX, boxBottom);
-        m_animationFrame += flyBackwards == 1 ? -1 : 1;
+        m_animationFrame += flyBackwards == true ? -1 : 1;
         if (m_animationFrame > 5)
             m_animationFrame = 0;
         else if (m_animationFrame < 0)
@@ -364,7 +364,7 @@ i16 army::FlyTo(i16 destination) {
     m_animationSequence = ARMY_ANIMATION_STAND;
     m_animationFrame = 1;
     gCombatManager->UpdateGrid(destination, m_stats.attributes);
-    gCombatManager->DrawFrame(1);
+    gCombatManager->DrawFrame(true);
     return 1;
 }
 #undef sourceColumn

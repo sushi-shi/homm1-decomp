@@ -50,7 +50,14 @@ A flag stored in an integer keeps the integer's width: `b8` and `b32`
 plain integer, so codegen is that of the integer flag (C++ `bool` would
 normalize stores); the strict view is a wrapper that converts only to and
 from `bool`. A `0`/`1` stored to, passed as, returned as or compared with a
-`b8`/`b32` declaration is proven `false`/`true`.
+`b8`/`b32` declaration is proven `false`/`true`. Fields, globals, locals,
+parameters and returns are flags when every store is 0/1, a comparison, a
+logical expression or another flag and every read is a truth test; a flag
+of one width converts to the other. A flag that only an `i16` (or a Win32
+`BOOL`) carries keeps its integer and its 0/1 literals.
+
+A row in `config/constants.tsv` never keeps a proven site: retyping a
+destination makes its rows stale, and `--fix` spells the sites.
 
 ### VC4 booleans
 

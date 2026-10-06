@@ -250,8 +250,8 @@ public:
     class icon* m_shadowIcon;
     H1_ENUM_ARRAY(class icon*, m_flagIcons, PlayerColor, ADVMGR_PLAYER_COLOR_COUNT);
     H1_ENUM_ARRAY(class icon*, m_boatFlagIcons, PlayerColor, ADVMGR_PLAYER_COLOR_COUNT);
-    i8 m_cursorActive;
-    i8 m_drawHeroShadows;
+    b8 m_cursorActive;
+    b8 m_drawHeroShadows;
     H1_ENUM_STORAGE(AdventureHeroIcon, u8) m_cursorType;
     H1_ENUM_STORAGE(MapDirection, i8) m_cursorDirection;
     i16 m_cursorFrame;
@@ -262,19 +262,19 @@ public:
     i16 m_previousCursorMapX;
     i16 m_cursorMapY;
     i16 m_previousCursorMapY;
-    i8 m_comboHeroDrawn;
+    b8 m_comboHeroDrawn;
     i32 m_heroContextLocked;
-    i32 m_townContextLocked;
-    i8 m_forceCompleteDraw;
+    b32 m_townContextLocked;
+    b8 m_forceCompleteDraw;
     i8 m_combatMonsterX;
     i8 m_combatMonsterY;
-    i8 m_combatMonsterFacingLeft;
+    b8 m_combatMonsterFacingLeft;
     i32 m_activeSoundMask;
     adventureSoundCell m_activeSounds[ADVMGR_ACTIVE_SOUND_COUNT];
     class sample* m_loopingSamples[ADVMGR_ENVIRONMENT_SOUND_COUNT];
     H1_ENUM_ARRAY(class sample*, m_cursorSamples, TerrainType, ADVMGR_CURSOR_SAMPLE_COUNT);
-    i8 m_identifyHeroActive;
-    i8 m_heroesLogoShown;
+    b8 m_identifyHeroActive;
+    b8 m_heroesLogoShown;
     // Main drops message types outside this mask (Open sets 0x32f).
     i16 m_messageTypeMask;
     // --- constructors ---
@@ -286,7 +286,7 @@ public:
     virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
     void StartCursor(H1_ENUM_PARAM(MapDirection, i8) direction);
-    void StopCursor(i8 stopSound);
+    void StopCursor(b8 stopSound);
     void DrawCursor(void);
     i16 GetCursorBaseFrame(H1_ENUM_PARAM(MapDirection, i16) direction);
     void TurnTo(H1_ENUM_PARAM(MapDirection, i8) direction);
@@ -294,18 +294,18 @@ public:
     // HoMM1 retail 0x0043ab9c: byte direction/flags, seven arguments (ret 0x1c).
     class mapCell* MoveHero(
         H1_ENUM_PARAM(MapDirection, i8) direction,
-        i8 stopAfterMove,
+        b8 stopAfterMove,
         i32* eventX,
         i32* eventY,
         i32* outOfMobility,
-        i8 processEvent,
+        b8 processEvent,
         i8* adjacentMonster
     );
     void CheckAdjacentMon(i8* adjacentMonster);
     i16 ValidMoveWithEvent(class hero* movingHero, H1_ENUM_PARAM(MapDirection, i16) direction);
     i16 ValidMove(H1_ENUM_PARAM(MapDirection, i16) direction);
     void MoveOrigin(i16 directionX, i16 directionY);
-    void ViewWorld(H1_ENUM_PARAM(SpellType, i8) spellType, i8 drawAllObjects, i8 drawAllTerrains);
+    void ViewWorld(H1_ENUM_PARAM(SpellType, i8) spellType, b8 drawAllObjects, b8 drawAllTerrains);
     void GetCursorSampleSet(i32 sampleSet);
     class mapCell* DoAdvCommand(void);
     i32 GetCommandTargetX(void) {
@@ -319,9 +319,9 @@ public:
     H1_ENUM_RETURN(MessageDispatchResult, i32) ProcessDeSelect(struct tag_message* message, i32* result, class mapCell** eventCell);
     i32 ProcessSearch(i32 x, i32 y);
     H1_ENUM_RETURN(MessageDispatchResult, i32) ProcessHover(struct tag_message* message);
-    void UpdateScreen(i8 cursorUpdate, i8 forceUpdate);
-    void CompleteDraw(i16 originX, i16 originY, i32 forceDraw);
-    void CompleteDraw(i32 forceDraw);
+    void UpdateScreen(i8 cursorUpdate, b8 forceUpdate);
+    void CompleteDraw(i16 originX, i16 originY, b32 forceDraw);
+    void CompleteDraw(b32 forceDraw);
     i32 GetCloudLookup(i32 x, i32 y);
     void DrawCell(
         i16 mapX,
@@ -329,26 +329,26 @@ public:
         i16 screenX,
         i16 screenY,
         H1_ENUM_PARAM(AdventureDrawMask, i8) drawMask,
-        i8 drawingPuzzle,
-        i8 forceDraw
+        b8 drawingPuzzle,
+        b8 forceDraw
     );
     class mapCell* GetCell(i16 x, i16 y);
-    void UpdateRadar(i8 updateScreen, i32 partial);
+    void UpdateRadar(b8 updateScreen, b32 partial);
     void QuickInfo(i16 cellX, i16 cellY);
-    void UpdateHeroLocator(i32 locatorSlot, i8 drawWindow, i8 updateScreen);
-    void UpdateHeroLocators(i8 drawWindow, i8 updateScreen);
-    void UpdateTownLocators(i8 drawWindow, i8 updateScreen);
-    void UpdBottomView(i8 forceUpdate, i8 drawWindow, i8 updateScreen);
+    void UpdateHeroLocator(i32 locatorSlot, b8 drawWindow, b8 updateScreen);
+    void UpdateHeroLocators(b8 drawWindow, i8 updateScreen);
+    void UpdateTownLocators(b8 drawWindow, i8 updateScreen);
+    void UpdBottomView(b8 forceUpdate, b8 drawWindow, b8 updateScreen);
     void ClearBottomView(void);
-    i8 UpdBottomViewEnemyTurn(void);
-    i8 UpdBottomViewNewTurn(void);
-    i8 UpdBottomViewResMsg(void);
-    i8 UpdBottomViewKingdom(void);
-    i8 UpdBottomViewHero(void);
+    b8 UpdBottomViewEnemyTurn(void);
+    b8 UpdBottomViewNewTurn(void);
+    b8 UpdBottomViewResMsg(void);
+    b8 UpdBottomViewKingdom(void);
+    b8 UpdBottomViewHero(void);
     void HeroQuickView(i8 heroId, i8 locatorSlot, i16 windowX, i16 windowY);
     char* GetArmySizeName(i16 armySize, H1_ENUM_PARAM(ArmySizeNameVariant, i8) grammar);
     void TownQuickView(i8 townId, i8 locatorSlot, i16 windowX, i16 windowY);
-    void RedrawAdvScreen(i32 update);
+    void RedrawAdvScreen(b32 update);
     void GiveTakeArtifactStat(
         class hero* targetHero,
         H1_ENUM_PARAM(ArtifactType, i8) artifact,
@@ -356,17 +356,17 @@ public:
     );
     void DeactivateCurrTown(void);
     void DeactivateCurrHero(void);
-    void MobilizeCurrHero(i32 update);
+    void MobilizeCurrHero(b32 update);
     void DemobilizeCurrHero(void);
     void SetTownContext(i8 townId);
-    void SetHeroContext(i8 heroId, i8 update);
+    void SetHeroContext(i8 heroId, b8 update);
     void DoHeroKnob(void);
     void DoTownKnob(void);
     void CastSpell(H1_ENUM_PARAM(SpellType, i8) spell);
     void GrabScreen(void);
     void CheckCastSpell(void);
-    i8 ComboDraw(i16 originX, i16 originY, i8 animate);
-    i8 ComboDraw(i32 animate);
+    i8 ComboDraw(i16 originX, i16 originY, b8 animate);
+    i8 ComboDraw(b32 animate);
     void SetEnvironmentOrigin(i16 originX, i16 originY, i16 stopSounds);
     void CheckLoadSample(i32 index);
     void InsertSound(i16 x, i16 y, i16 distance, i8 soundLayer);
@@ -374,19 +374,19 @@ public:
     void DimensionDoor(void);
     void TownGate(void);
     void SummonBoat(void);
-    void ShowRoute(i32 redraw, i32, i32 updateButton);
-    void HideRoute(i32 redraw, i32 clearDestination, i32 updateButton);
+    void ShowRoute(b32 redraw, i32, b32 updateButton);
+    void HideRoute(b32 redraw, b32 clearDestination, b32 updateButton);
     void CheckDimHero(void);
     void CheckDimNextHeroBut(void);
     void SeedTo(i32 targetX, i32 targetY);
     void ForceNewHover(void);
-    void ScreenScroll(H1_ENUM_PARAM(MapDirection, i8) direction, i32 updatePointer);
+    void ScreenScroll(H1_ENUM_PARAM(MapDirection, i8) direction, b32 updatePointer);
     void CheckScreenScroll(void);
     i32 MouseInScrollZone(void);
     void SetInitialMapOrigin(void);
     void LoadRemote(void);
     RemoteMessage* CheckHandleNet(void);
-    H1_ENUM_RETURN(MessageDispatchResult, i16) CheckHandleNetPlayerWait(struct tag_message& message, i8 doMain);
+    H1_ENUM_RETURN(MessageDispatchResult, i16) CheckHandleNetPlayerWait(struct tag_message& message, b8 doMain);
     void TrimLoopingSounds(i32 maxSamples);
     void DisableButtons(void);
     void EnableButtons(void);
@@ -420,7 +420,7 @@ public:
         H1_ENUM_PARAM(NormalDialogOrText, i32) showOrText
     );
     H1_ENUM_RETURN(ArtifactType, i32) GiveRandomArtifact(class hero* eventHero);
-    i32 GiveExperience(class hero* eventHero, i32 experience, i8 checkLevel);
+    i32 GiveExperience(class hero* eventHero, i32 experience, b8 checkLevel);
     // HoMM1 retail: byte resource, word amount (ret 0xc).
     void GiveResource(class hero* eventHero, H1_ENUM_PARAM(ResourceType, i8) resource, i16 amount);
     i16 GiveArtifact(class hero* eventHero, H1_ENUM_PARAM(ArtifactType, i8) artifact);
@@ -479,7 +479,7 @@ public:
         i32 setupCombatX,
         i32 setupCombatY,
         i32 randomSeed,
-        i8 processLosses
+        b8 processLosses
     );
     void SendHeroTownData(
         i32 x,
@@ -518,7 +518,7 @@ public:
 #pragma pack(pop)
 
 H1_ENUM_RETURN(MessageDispatchResult, i16) APanelHandler(struct tag_message& message);
-void UpdateCPanel(i8 initialDraw);
+void UpdateCPanel(b8 initialDraw);
 i8 SaveGame(void);
 H1_ENUM_RETURN(MessageDispatchResult, i16) CPanelHandler(struct tag_message& message);
 
@@ -528,7 +528,7 @@ H1_ENUM_CONST_BEGIN(ForcedMusicConstant)
     FORCED_MUSIC_IDLE = -1
 H1_ENUM_CONST_END(ForcedMusicConstant)
 extern i32 gLastScrollTime;
-extern i32 gForceUpdate;
+extern b32 gForceUpdate;
 // The adventure music for a terrain: MusicTrack's first seven tracks are
 // the TerrainType themes in terrain order, so m_currentTerrain plays as its
 // own track (advManager, game, hero and KB restart the terrain music).
@@ -596,7 +596,7 @@ extern i32 gTriggerX;
 extern i32 gTriggerY;
 // CURSOR globals: the footstep and alternate-frame flags, and the hero cursor
 // state DrawCursor saves and restores around gDrawSavedCursor.
-extern i8 gMoveSoundMade;
+extern b8 gMoveSoundMade;
 
 #define gEveryOther EveryOther // spelling fixes .bss order
 extern i8 gEveryOther;

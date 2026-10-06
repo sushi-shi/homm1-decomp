@@ -113,8 +113,8 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) recruitUnit::Open(i16 priority) {
         m_maximum = goldMaximum;
     if (m_maximum > *m_available)
         m_maximum = *m_available;
-    m_recruited = 0;
-    m_noRoom = 0;
+    m_recruited = false;
+    m_noRoom = false;
     if (*m_available == 0) {
         gWindowManager->BroadcastMessage(
             MESSAGE_WIDGET,
@@ -193,11 +193,11 @@ void recruitUnit::Update(void) {
 // through a zero MoveWindow.
 VA(0x00451325, 0x372)
 H1_ENUM_RETURN(MessageDispatchResult, i16) recruitUnit::Main(struct tag_message& message) {
-    i32 done;
+    b32 done;
     i32 cost;
     i8 quickView;
 
-    done = 0;
+    done = false;
     if (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
         quickView = 1;
     else
@@ -238,7 +238,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) recruitUnit::Main(struct tag_message&
                             m_creatureType,
                             0,
                             NULL,
-                            1,
+                            true,
                             ARMY_FACING_RIGHT,
                             quickView,
                             NULL,
@@ -265,20 +265,20 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) recruitUnit::Main(struct tag_message&
                         if (quickView)
                             break;
                         m_quantity = 0;
-                        done = 1;
+                        done = true;
                         break;
                     case RECRUIT_CONFIRM_CONTROL:
                         if (quickView)
                             break;
                         if (m_quantity == 0) {
-                            done = 1;
+                            done = true;
                             goto checkClose;
                         }
                         if (m_army->CanJoin(m_creatureType)) {
                             m_army->Add(m_creatureType, m_quantity, ARMY_GROUP_EMPTY_SLOT);
                         } else {
-                            done = 1;
-                            m_noRoom = 1;
+                            done = true;
+                            m_noRoom = true;
                             goto checkClose;
                         }
                         gCurPlayerData->m_resources[RESOURCE_GOLD] -= m_quantity * m_goldCost;
@@ -286,8 +286,8 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) recruitUnit::Main(struct tag_message&
                             gCurPlayerData->m_resources[m_resourceType] -=
                                 m_quantity * m_resourceCost;
                         *m_available -= m_quantity;
-                        m_recruited = 1;
-                        done = 1;
+                        m_recruited = true;
+                        done = true;
                         break;
                 }
                 break;
@@ -296,7 +296,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) recruitUnit::Main(struct tag_message&
         }
 
     checkClose:
-        if (done == 1) {
+        if (done == true) {
             message.type = MESSAGE_EXECUTIVE;
             message.executiveCommand = EXECUTIVE_COMMAND_RETURN_RESULT;
             return MESSAGE_DISPATCH_FORWARD;

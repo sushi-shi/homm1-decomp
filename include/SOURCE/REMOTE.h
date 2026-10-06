@@ -138,7 +138,7 @@ struct RemoteMessage {
 };
 #pragma pack(pop)
 
-extern i8 gInNetSetup;
+extern b8 gInNetSetup;
 extern i32 gIDCtr;
 extern H1_ENUM_STORAGE(RemoteGameMode, u8) GameMode;
 extern u8 gPacketSequence;
@@ -152,21 +152,21 @@ extern i32 gInOrder[REMOTE_QUEUE_CAPACITY];
 extern RemoteMessage rcvBuf[REMOTE_QUEUE_CAPACITY];
 extern RemoteMessage rcvBufOut;
 
-i32 SendRemoteData(RemoteMessage* dataToSend, u8*, i32 destination, i32 length);
-i32 ReceiveRemoteData(u8*, RemoteMessage* data, i32 decodeType);
+b32 SendRemoteData(RemoteMessage* dataToSend, u8*, i32 destination, i32 length);
+b32 ReceiveRemoteData(u8*, RemoteMessage* data, i32 decodeType);
 // The trailing destination flag defaults to game-position addressing.
-i32 TransmitRemoteData(
+b32 TransmitRemoteData(
     void* data,
     i32 destination,
     i32 length,
     i8 command,
-    i8 reliable,
+    b8 reliable,
     i8 allowRetryDialog = 1,
     H1_ENUM_PARAM(RemoteMessageType, i8) messageType = REMOTE_MESSAGE_DEFAULT,
     i8 gamePosDestination = 1
 );
-RemoteMessage* GetRemoteData(i8 remove);
-i32 TransmitAndWait(
+RemoteMessage* GetRemoteData(b8 remove);
+b32 TransmitAndWait(
     void* bytes,
     i32 destination,
     i32 length,
@@ -181,11 +181,11 @@ void WriteModemPacket(char* buffer, i32 length);
 char ReadPacket(void);
 void calc_crc(u16* crc, u8* data, i32 length);
 i32 EncodePacket(RemoteMessage* data, i8 source, i8 destination, i32 length);
-i32 DecodePacket(RemoteMessage* data, i32 source);
-i8 InitNetHost(void);
-i8 InitNetGuest(void);
-i8 WaitForHost(void);
-i8 WaitForGuest(void);
+b32 DecodePacket(RemoteMessage* data, i32 source);
+b8 InitNetHost(void);
+b8 InitNetGuest(void);
+b8 WaitForHost(void);
+b8 WaitForGuest(void);
 
 // PollRemote's heartbeat clocks, timeout latch, recent-id ring and the
 // incoming/outgoing message buffers.
@@ -250,8 +250,8 @@ extern inque_t inque;
 // completes its type.
 extern struct outque_t outque;
 extern i32 gBaudBits;
-extern i32 inescape;
-extern i32 newpacket;
+extern b32 inescape;
+extern b32 newpacket;
 extern i32 packetlen;
 extern char packet[];
 extern char idstr[];
@@ -272,9 +272,9 @@ i8 GUIModemResponse(char* message, char* response);
 i32 write_buffer(char* buffer, i32 length);
 i32 read_byte(void);
 // Modem.cpp's wait-loop steps that KB's WaitHandler drives.
-i8 GUIModemCommandExec(void);
-i8 GUIModemResponseExec(void);
-i32 WaitForDirectConnect(void);
+b8 GUIModemCommandExec(void);
+b8 GUIModemResponseExec(void);
+b32 WaitForDirectConnect(void);
 
 // Moved from REMOTE.cpp.
 // CRC-16/CCITT over the packet bytes, most significant bit first.

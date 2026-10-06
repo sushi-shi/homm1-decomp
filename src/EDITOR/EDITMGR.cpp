@@ -8963,7 +8963,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) editManager::Open(i16 priority) {
     bitmap* borderImage;
     i32 i;
 
-    NewMap(0);
+    NewMap(false);
     borderImage = gResourceManager->GetBitmap("bordedit.bmp");
     BlitBitmapToScreen(borderImage, 0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT, 0, 0);
     gResourceManager->Dispose(borderImage);
@@ -9064,7 +9064,7 @@ VA(0x00401e96, 0x11e)
 void editManager::Close(void) {
     i32 i;
 
-    NewMap(0);
+    NewMap(false);
     ClearErrors();
     SelectTool(EDIT_TOOL_NONE);
     gWindowManager->RemoveWindow(m_window);
@@ -9152,7 +9152,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) editManager::Main(tag_message& messag
                                 return MESSAGE_DISPATCH_CONSUME;
                             break;
                         case EDIT_CONTROL_MAP_INFO:
-                            MapDetailsDialog(0);
+                            MapDetailsDialog(false);
                             break;
                         case EDIT_CONTROL_RANDOM_MAP:
                             GenerateRandomMap();
@@ -9160,7 +9160,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) editManager::Main(tag_message& messag
                         case EDIT_CONTROL_NEW:
                             if (Confirm(localization::Tr("editor.map.new.confirm"))) {
                                 ResetArea(0, 0, MAP_CELL_GRID_SIZE, MAP_CELL_GRID_SIZE);
-                                NewMap(0);
+                                NewMap(false);
                                 DrawMap();
                                 UpdateMapView();
                                 DrawRadar(1);
@@ -9812,7 +9812,7 @@ void editManager::PaintGround(i16 column, i16 row, i16 width, i16 height, i16 te
     startX = m_viewX + column;
     startY = m_viewY + row;
     spacing = m_zoomedOut == EDIT_ZOOM_OUT ? EDIT_VIEW_ZOOMED_CELL_PIXELS : EDIT_VIEW_CELL_PIXELS;
-    gEditManager->ClearArea(startX, startY, width, height, EDIT_CLEAR_ALL, 0);
+    gEditManager->ClearArea(startX, startY, width, height, EDIT_CLEAR_ALL, false);
     for (i = 0; i < width; i++) {
         for (j = 0; j < height; j++) {
             m_map.cells[startX + i][startY + j].m_tileIndex = terrain * MAP_CELL_TILES_PER_TERRAIN;
@@ -9840,7 +9840,7 @@ void editManager::FillGround(i16 x, i16 y, i16 width, i16 height, i16 terrain) {
     i32 i;
     i32 j;
 
-    gEditManager->ClearArea(x, y, width, height, EDIT_CLEAR_ALL, 0);
+    gEditManager->ClearArea(x, y, width, height, EDIT_CLEAR_ALL, false);
     for (i = x; i < x + width; i++) {
         for (j = y; j < y + height; j++) {
             m_map.cells[i][j].m_tileIndex = terrain * MAP_CELL_TILES_PER_TERRAIN + Random(0, 3);
@@ -10461,7 +10461,7 @@ void editManager::CheckObjects(void) {
                  || m_map.cells[x][y].m_triggerType
                         == MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_CASTLE))
                 && x > 1 && y > 1)
-                ClearArea(x - 2, y - 2, 4, 1, EDIT_CLEAR_ALL, 0);
+                ClearArea(x - 2, y - 2, 4, 1, EDIT_CLEAR_ALL, false);
             if ((m_map.cells[x][y].m_triggerType & MAP_TRIGGER_TYPE_MASK)
                 == MAP_OBJECT_TRIGGER(MAP_FILE_OBJECT_HERO)) {
                 heroRecord =
@@ -10915,13 +10915,13 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) editManager::LoadMap(char* name) {
         read(handle, &gEditMapHeader.difficulty, sizeof(gEditMapHeader) - sizeof(i16));
         read(handle, &headerId, sizeof(headerId));
     } else {
-        NewMap(0);
+        NewMap(false);
     }
     mapFormat = gEditMapHeader.format;
     if (mapFormat >= MAP_HEADER_ID && mapFormat <= MAP_HEADER_ID + 10)
-        gNewMapFormat = 1;
+        gNewMapFormat = true;
     else
-        gNewMapFormat = 0;
+        gNewMapFormat = false;
     gMouseManager->SetPointer(1);
     read(handle, &width, sizeof(width));
     read(handle, &height, sizeof(height));
@@ -10956,14 +10956,14 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) editManager::LoadMap(char* name) {
 VA(0x00407539, 0x12e)
 i16 editManager::PickMap(char*, char*, H1_ENUM_PARAM(FileRequesterMode, i16) mode) {
     fileRequester* requester;
-    i32 picked;
+    b32 picked;
     i16 dialogResult;
 
-    picked = 0;
+    picked = false;
     requester = new fileRequester(160, 40, mode, "*.MAP", ".\\MAPS\\", ".MAP");
     dialogResult = gExec->DoDialog(requester);
     if (dialogResult == FILE_REQUESTER_OK) {
-        picked = 1;
+        picked = true;
         strcpy(m_mapFileName, gLastFilename);
     }
     delete requester;
@@ -11064,7 +11064,7 @@ i32 editManager::IsCleared(
 }
 
 VA(0x004078e5, 0x504)
-void editManager::ClearArea(i32 x, i32 y, i32 width, i32 height, u16 mask, i32 secondLayer) {
+void editManager::ClearArea(i32 x, i32 y, i32 width, i32 height, u16 mask, b32 secondLayer) {
     i32 i;
     editMapCellPair* ownerRec;
     u16 tag;
@@ -11227,12 +11227,12 @@ void editManager::FreeMapExtras(void) {
 // A new map is a normal-difficulty medium map with placeholder names and
 // descriptions, named after the next map serial.
 VA(0x004080fc, 0x12f)
-void editManager::NewMap(i32 random) {
+void editManager::NewMap(b32 random) {
     i32 i;
 
     gMapHeader->size = MAP_SIZE_MEDIUM;
     gMapHeader->difficulty = MAP_DIFFICULTY_NORMAL;
-    gNewMapFormat = 1;
+    gNewMapFormat = true;
     gConfig.currentMapOffset++;
     if (gConfig.firstMapOffset + gConfig.currentMapOffset > 65000)
         gConfig.currentMapOffset = 0;

@@ -48,9 +48,9 @@ void advManager::StartCursor(H1_ENUM_PARAM(MapDirection, i8) direction) {
 
 // Also forgets the footstep samples.
 VA(0x00421703, 0x11d)
-void advManager::StopCursor(i8 stopSound) {
+void advManager::StopCursor(b8 stopSound) {
     if (stopSound) {
-        gMoveSoundMade = 1;
+        gMoveSoundMade = true;
         m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
         m_cursorFrameCount = 0;
         gEveryOther = 0;
@@ -191,7 +191,7 @@ void advManager::DrawCursor(void) {
     if (!m_cursorTurning) {
         if (m_cursorFrameCount == FOOTSTEP_ANIMATION_FRAME
             || (gConfig.walkSpeed == WALK_SPEED_JUMP && !gMoveSoundMade)) {
-            gMoveSoundMade = 1;
+            gMoveSoundMade = true;
             if (!gEveryOther)
                 PlaySample(
                     m_cursorSamples[CELL_TERRAIN(GetCell(
@@ -255,8 +255,8 @@ void advManager::TurnTo(H1_ENUM_PARAM(MapDirection, i8) direction) {
         m_cursorFrameCount = 0;
         gTimers[CURSOR_TURN_TIMER_SLOT] = KBTickCount() + delayTime;
         if (gConfig.walkSpeed != WALK_SPEED_JUMP) {
-            if (ComboDraw(m_mapOriginX, m_mapOriginY, 0))
-                UpdateScreen(0, 0);
+            if (ComboDraw(m_mapOriginX, m_mapOriginY, false))
+                UpdateScreen(0, false);
             if (gShowIt)
                 DelayTil(&gTimers[CURSOR_TURN_TIMER_SLOT]);
         }
@@ -266,11 +266,11 @@ void advManager::TurnTo(H1_ENUM_PARAM(MapDirection, i8) direction) {
         frameIndex %= CURSOR_TURN_FRAME_COUNT;
     } while (frameIndex != H1_ENUM_ENCODE(MapDirection, direction) * TURN_FRAME_MULTIPLIER);
     m_cursorDirection = direction;
-    StopCursor(1);
+    StopCursor(true);
     if (gShowIt)
         DelayTil(&gTimers[CURSOR_TURN_TIMER_SLOT]);
-    if (ComboDraw(m_mapOriginX, m_mapOriginY, 0))
-        UpdateScreen(0, 0);
+    if (ComboDraw(m_mapOriginX, m_mapOriginY, false))
+        UpdateScreen(0, false);
 }
 
 // Reads the current hero itself and tests the watch player's high bit
@@ -301,11 +301,11 @@ i32 advManager::GetMoveShowIt(H1_ENUM_PARAM(MapDirection, i8) direction) {
 VA(0x00422127, 0xccd)
 mapCell* advManager::MoveHero(
     H1_ENUM_PARAM(MapDirection, i8) direction,
-    i8 stopAfterMove,
+    b8 stopAfterMove,
     i32* eventX,
     i32* eventY,
     i32* outOfMobility,
-    i8 processEvent,
+    b8 processEvent,
     i8* adjacentMonster
 ) {
     mapCell* cellPtr;
@@ -326,7 +326,7 @@ mapCell* advManager::MoveHero(
         SetNoDialogMenus(0);
     *adjacentMonster = 0;
     *outOfMobility = 0;
-    gHeroMoving = 1;
+    gHeroMoving = true;
     retCell = NULL;
     champion = gGame->GetHero(gCurPlayerData->m_currentHero);
     posX = champion->m_x;
@@ -343,10 +343,10 @@ mapCell* advManager::MoveHero(
             champion->m_heroClass
         )) {
         *outOfMobility = 1;
-        StopCursor(1);
+        StopCursor(true);
         goto movementDone;
     }
-    MobilizeCurrHero(0);
+    MobilizeCurrHero(false);
     *eventX = champion->m_x + xInc;
     *eventY = champion->m_y + yInc;
     if (m_cursorDirection != direction)
@@ -371,25 +371,25 @@ mapCell* advManager::MoveHero(
         boatCell->m_objectMetadata = inc;
         boat->x = champion->m_x;
         boat->y = champion->m_y;
-        StopCursor(1);
-        CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
-        UpdateScreen(0, 0);
-        m_cursorActive = 0;
+        StopCursor(true);
+        CompleteDraw(m_mapOriginX, m_mapOriginY, false);
+        UpdateScreen(0, false);
+        m_cursorActive = false;
     }
     if (nextCellItem->m_triggerType & MAP_TRIGGER_EVENT) {
         switch (MAP_TRIGGER_OBJECT(nextCellItem->m_triggerType)) {
             case MAP_OBJECT_SHIP:
                 if (champion->IsEmbarked())
                     goto movementDone;
-                StopCursor(1);
-                m_cursorActive = 0;
+                StopCursor(true);
+                m_cursorActive = false;
                 gWindowManager->SaveFizzleSource(
                     COAST_FIZZLE_X,
                     COAST_FIZZLE_Y,
                     COAST_FIZZLE_WIDTH,
                     COAST_FIZZLE_HEIGHT
                 );
-                CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
+                CompleteDraw(m_mapOriginX, m_mapOriginY, false);
                 gWindowManager->FizzleForward(
                     COAST_FIZZLE_X,
                     COAST_FIZZLE_Y,
@@ -426,9 +426,9 @@ mapCell* advManager::MoveHero(
                 if (champion->IsEmbarked())
                     goto movementDone;
             stoppingEvent:
-                StopCursor(1);
-                CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
-                UpdateScreen(0, 0);
+                StopCursor(true);
+                CompleteDraw(m_mapOriginX, m_mapOriginY, false);
+                UpdateScreen(0, false);
                 champion->m_remainingMobility -= CalcTerrainCost(
                     H1_ENUM_ENCODE(TerrainType, theTerrain),
                     H1_ENUM_ENCODE(MapDirection, direction) & CURSOR_DIAGONAL_DIRECTION_BIT,
@@ -442,16 +442,16 @@ mapCell* advManager::MoveHero(
                         champion->m_heroClass
                     )) {
                     champion->m_remainingMobility = 0;
-                    stopAfterMove = 1;
+                    stopAfterMove = true;
                 }
                 retCell = nextCellItem;
                 goto movementDone;
             case MAP_OBJECT_TOWN:
                 if (gGame->GetTown(nextCellItem->m_objectMetadata)->m_owner != gCurPlayer
                     && gGame->GetTown(nextCellItem->m_objectMetadata)->HasGarrison()) {
-                    StopCursor(1);
-                    CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
-                    UpdateScreen(0, 0);
+                    StopCursor(true);
+                    CompleteDraw(m_mapOriginX, m_mapOriginY, false);
+                    UpdateScreen(0, false);
                     champion->m_remainingMobility -= CalcTerrainCost(
                         H1_ENUM_ENCODE(TerrainType, theTerrain),
                         H1_ENUM_ENCODE(MapDirection, direction) & CURSOR_DIAGONAL_DIRECTION_BIT,
@@ -465,7 +465,7 @@ mapCell* advManager::MoveHero(
                             champion->m_heroClass
                         )) {
                         champion->m_remainingMobility = 0;
-                        stopAfterMove = 1;
+                        stopAfterMove = true;
                     }
                     retCell = nextCellItem;
                     goto movementDone;
@@ -492,23 +492,23 @@ mapCell* advManager::MoveHero(
         gCurPlayer,
         gHeroScoutRadius[champion->m_heroClass]
     );
-    m_forceCompleteDraw = 1;
+    m_forceCompleteDraw = true;
     pixelsPerStep = gPixelsPerStep[gConfig.walkSpeed];
     delayNum = gStepDelay[gConfig.walkSpeed];
     StartCursor(direction);
     if (gConfig.walkSpeed == WALK_SPEED_JUMP) {
         if (gEveryOther)
             m_cursorFrame--;
-        gMoveSoundMade = 0;
+        gMoveSoundMade = false;
         MoveOrigin(xInc, yInc);
         champion->m_x += xInc;
         champion->m_y += yInc;
-        if (ComboDraw(0))
-            UpdateScreen(0, 0);
+        if (ComboDraw(false))
+            UpdateScreen(0, false);
         gEveryOther = 1 - gEveryOther;
     } else {
-        gEnlargeScreenBlit = 0;
-        gNoBorder = 1;
+        gEnlargeScreenBlit = false;
+        gNoBorder = true;
         numSteps = CURSOR_MOVE_HALF_TILE_PIXELS / pixelsPerStep;
         for (inc = 0; inc < numSteps * MOVE_TILE_HALF_COUNT; inc++) {
             i32 tick;
@@ -528,16 +528,16 @@ mapCell* advManager::MoveHero(
                 m_scrollOffsetX += xInc * pixelsPerStep;
                 m_scrollOffsetY += yInc * pixelsPerStep;
             }
-            if (ComboDraw(0)) {
+            if (ComboDraw(false)) {
                 gLimitUpdMinX = UPDATE_NONE;
-                UpdateScreen(0, 0);
+                UpdateScreen(0, false);
             }
             if (gShowIt)
                 DelayTilMilli(tick + delayNum);
         }
-        gNoBorder = 0;
+        gNoBorder = false;
         DrawAdventureBorder();
-        gEnlargeScreenBlit = 1;
+        gEnlargeScreenBlit = true;
     }
     champion->m_remainingMobility -= CalcTerrainCost(
         H1_ENUM_ENCODE(TerrainType, theTerrain),
@@ -552,11 +552,11 @@ mapCell* advManager::MoveHero(
             champion->m_heroClass
         )) {
         champion->m_remainingMobility = 0;
-        stopAfterMove = 1;
+        stopAfterMove = true;
     }
     StopCursor(stopAfterMove);
-    if (processEvent && stopAfterMove && ComboDraw(0))
-        UpdateScreen(0, 0);
+    if (processEvent && stopAfterMove && ComboDraw(false))
+        UpdateScreen(0, false);
     SetEnvironmentOrigin(m_mapOriginX + ADVMGR_VIEW_CENTER, m_mapOriginY + ADVMGR_VIEW_CENTER, 0);
     inc =
         GetCell(m_mapOriginX + ADVMGR_VIEW_CENTER, m_mapOriginY + ADVMGR_VIEW_CENTER)->m_tileIndex;
@@ -595,8 +595,8 @@ mapCell* advManager::MoveHero(
     } else
         goto movementDone;
 movementDone:
-    UpdateRadar(1, 1);
-    gHeroMoving = 0;
+    UpdateRadar(true, true);
+    gHeroMoving = false;
     if (posX != champion->m_x || startY != champion->m_y) {
         if (mapExtra[champion->m_x][champion->m_y] & MAP_EXTRA_MONSTER_ADJACENT) {
             if (champion->IsEmbarked())
@@ -634,9 +634,9 @@ void advManager::CheckAdjacentMon(i8* adjacentMonster) {
             SEARCH_INVALID_COORDINATE,
             SEARCH_INVALID_COORDINATE
         )) {
-        StopCursor(1);
-        CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
-        UpdateScreen(0, 0);
+        StopCursor(true);
+        CompleteDraw(m_mapOriginX, m_mapOriginY, false);
+        UpdateScreen(0, false);
         monCell = GetCell(monsterX, monsterY);
         heroCell = GetCell(curHero->m_x, curHero->m_y);
         if (gThisNetHumanPlayer[gCurPlayer])
@@ -792,12 +792,12 @@ void advManager::MoveOrigin(i16 directionX, i16 directionY) {
             m_mapData[cellX][cellY].m_flags |= MAP_CELL_HERO_CURSOR;
         }
     }
-    m_forceCompleteDraw = 1;
+    m_forceCompleteDraw = true;
 }
 
 // Movement tables and cursor state.
 DATA(0x0048fa5c)
-i8 gMoveSoundMade = 1;
+b8 gMoveSoundMade = true;
 DATA(0x0048fa60)
 H1_ENUM_ARRAY(i16, gPixelsPerStep, WalkSpeed, WALK_SPEED_COUNT) = {1, 4, 6, 8, 16};
 DATA(0x0048fa6c)

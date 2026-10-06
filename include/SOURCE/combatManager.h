@@ -171,7 +171,7 @@ public:
     // army::DoAttack sets it when the strike reaches the stack behind on a
     // downward diagonal; DrawFrame then grows each limited redraw box 60 rows
     // down. ResetLimitCreature clears it.
-    i8 m_extendLimitDown;
+    b8 m_extendLimitDown;
     // SetupCombat keeps the defending town here as well.
     class town* m_originalCombatTown;
     // Open's small font; army::DrawToBuffer prints stack quantities with it.
@@ -184,7 +184,7 @@ public:
     H1_ENUM_ARRAY(class icon*, m_combatIcons, CombatIconSlot, COMBAT_ICON_COUNT);
     // Clean combat background: FlyTo and army::Walk restore the screen from it.
     class bitmap* m_backgroundBuffer;
-    i8 m_backgroundDrawn;
+    b8 m_backgroundDrawn;
     // GetBackgroundName reads the trigger of the cell the battle is on.
     class mapCell* m_battlefieldCell;
     // Per side: the town fought in. DoVictory gives the defender's winner
@@ -208,11 +208,11 @@ public:
     H1_ENUM_STORAGE(CombatSide, i8) m_currentSide;
     i8 m_currentArmyIndex;
     H1_ENUM_STORAGE(CreatureSpeed, i8) m_currentSpeed;
-    i8 m_gridSelectionDisabled;
-    i8 m_limitCreature;
+    b8 m_gridSelectionDisabled;
+    b8 m_limitCreature;
     i8 m_limitCreatureHex;
     // army::DrawToBuffer draws the quantity box.
-    i8 m_showArmyQuantities;
+    b8 m_showArmyQuantities;
     i8 m_selectedHex;
     i8 m_directionTargetHex;
     H1_ENUM_STORAGE(CombatMessageCommand, i8) m_previousCommand;
@@ -236,7 +236,7 @@ public:
     i16 m_catapultTargetRow;
     // CatAttack: 1 when the shot only damages the wall, 0 when it falls;
     // hexcell::DrawObstacle keeps the tower during the impact frames.
-    i8 m_wallSurvives;
+    b8 m_wallSurvives;
     i16 m_wallFrame;
     i16 m_wallDamage;
     i8 m_unknown6e8;
@@ -261,10 +261,10 @@ public:
     // DrawFrame's extent modes: the first limits the redraw to the boxes of
     // stacks in m_limitCreatureCount, the second restores only the current
     // extent from the background buffer.
-    i32 m_computeExtent;
-    i32 m_redrawExtent;
+    b32 m_computeExtent;
+    b32 m_redrawExtent;
     // UpdateCombatArea does nothing until the combat window is up.
-    i32 m_combatWindowOpen;
+    b32 m_combatWindowOpen;
     class widget* m_winLoseBottomWidgets[15];
     class widget* m_winLoseBottomTextWidgets[15];
     // MoreTreesNear surveys the map around this adventure cell.
@@ -288,7 +288,7 @@ public:
     virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
     void NoShowCombatLog(char* message);
-    void CombatMessage(char* text, i32 updateScreen);
+    void CombatMessage(char* text, b32 updateScreen);
     void CombatMessage(H1_ENUM_PARAM(CombatMessageCommand, i16) messageType);
     void ResetLimitCreature(void);
     void UpdateCombatArea(void);
@@ -297,15 +297,15 @@ public:
     UpdateGridForMove(i16 hex, H1_ENUM_PARAM(CombatHexDirection, i8) direction, i16 attributes);
     void UpdateGrid(i16 hex, i16 attributes);
     void DrawBackground(void);
-    void DrawFrame(i8 updateScreen);
+    void DrawFrame(b8 updateScreen);
     void SetDrawRightToLeft(i8 rightToLeft);
-    i8 ViewGeneral(H1_ENUM_PARAM(CombatSide, i32) side, i32 allowActions, i32 quickView);
+    i8 ViewGeneral(H1_ENUM_PARAM(CombatSide, i32) side, b32 allowActions, b32 quickView);
     void ViewArmy(class army* viewedArmy, H1_ENUM_PARAM(CombatSide, i32) side, i32 quickView);
     i8 ViewSpells(i32);
     i8 ValidSpellTarget(H1_ENUM_PARAM(SpellType, i8) spell, i8 hex);
     void SpellMessage(H1_ENUM_PARAM(SpellType, i8) spell, i8 hex);
     void
-    CastSpell(H1_ENUM_PARAM(SpellType, i8) spell, i8 targetHex, i8 castByCreature, i8 teleportDest);
+    CastSpell(H1_ENUM_PARAM(SpellType, i8) spell, i8 targetHex, b8 castByCreature, i8 teleportDest);
     void DefaultSpell(i8 targetHex);
     // Cure (one side) and Dispel (both sides) animation; side 2 means both.
     void CastMassSpell(H1_ENUM_PARAM(CombatSide, i8) castSide, i8 cureOnly);
@@ -343,11 +343,11 @@ public:
     i32 RawEffectSpellInfluence(class army* target, H1_ENUM_PARAM(SpellType, i32) spell);
     void ClearEffects(void);
     void NextPos(i32* hex);
-    i32 FirstArmy(i32 startHex, H1_ENUM_PARAM(CombatSide, i32) side, i32* hex);
+    b32 FirstArmy(i32 startHex, H1_ENUM_PARAM(CombatSide, i32) side, i32* hex);
     i32 FirstResurrectable(i32 startHex, i32* hex, i32 spell);
     // DetermineEffectOfSpell passes the effect, then a side and flag, a hex,
     // or the spell, base damage and hex.
-    void EffectSpellCure(i32* effect, H1_ENUM_PARAM(CombatSide, i32) targetSide, i8 cureOnly);
+    void EffectSpellCure(i32* effect, H1_ENUM_PARAM(CombatSide, i32) targetSide, b8 cureOnly);
     void EffectSpellResurrect(i32* effect, i32 hex);
     void EffectSpellDamage(
         i32* effect,
@@ -381,7 +381,7 @@ public:
     i16 GetGridIndex(i16 x, i16 y);
     void CheckApplyGoodMorale(H1_ENUM_PARAM(CombatSide, i32) side, i32 index);
     i32 CheckApplyBadMorale(H1_ENUM_PARAM(CombatSide, i32) side, i32 index);
-    i8 GetNextArmy(i32 checkMorale);
+    i8 GetNextArmy(b32 checkMorale);
     i8 IsWinner(H1_ENUM_PARAM(CombatSide, i8) side);
     void CatAttack(H1_ENUM_PARAM(CombatSide, i8) side);
     // A town has a single keep.
@@ -412,7 +412,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) CombatSpecialHandler(struct tag_messa
 H1_ENUM_RETURN(MessageDispatchResult, i16) HandleCastSpell(struct tag_message& message);
 // HandleCastSpell: the hex under the spell pointer (0x004906b4) and the
 // teleport second-click state (0x00490690).
-extern i8 gInTeleportGetDest;
+extern b8 gInTeleportGetDest;
 // Frame of the mass-spell glow drawn by DrawFrame (0x004c78b4).
 extern i16 gCombatFxFrame;
 // Captured artifacts shown page by page on the victory window.

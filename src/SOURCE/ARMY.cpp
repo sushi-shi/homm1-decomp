@@ -46,7 +46,7 @@ army::army(void) {
     for (i = ARMY_SAMPLE_MOVE; i < ARMY_SAMPLE_COUNT; i++)
         m_samples[i] = NULL;
     m_effectAnimation = COMBAT_EFFECT_NONE;
-    m_drawShadow = 1;
+    m_drawShadow = true;
     gCurLoadedSpellIcon = NULL;
     gCurLoadedSpellFileId = 0;
     gSpellEffectFrame = 0;
@@ -63,7 +63,7 @@ void army::InitClean(void) {
     for (i = ARMY_SAMPLE_MOVE; i < ARMY_SAMPLE_COUNT; i++)
         m_samples[i] = NULL;
     m_effectAnimation = COMBAT_EFFECT_NONE;
-    m_drawShadow = 1;
+    m_drawShadow = true;
     m_attackIcon = NULL;
     m_walkIcon = NULL;
     m_standIcon = NULL;
@@ -173,14 +173,14 @@ VA(0x00413834, 0x7a5)
 void army::DrawToBuffer(i16 x, i16 y) {
     i16 effectPosX;
     H1_ENUM_LOCAL(IconDrawOffsetMode, i8) offsetMode;
-    i8 outlined;
+    b8 outlined;
     i16 spellOutlineColor;
     char countText[ARMY_QUANTITY_TEXT_SIZE];
     i16 spellMarkerX;
     i16 countX;
 
     offsetMode = ICON_DRAW_OFFSET_FULL;
-    outlined = 0;
+    outlined = false;
     if ((m_animationFrame == ARMY_EDGE_CLIP_FRAME || m_animationFrame >= ARMY_EDGE_CLIP_LATER_FRAME)
         && ((m_stats.attributes & MONSTER_FLAGS_WIDE)
                 && (m_hex % COMBAT_GRID_COLUMNS <= 2 || m_hex % COMBAT_GRID_COLUMNS >= 6)
@@ -238,7 +238,7 @@ void army::DrawToBuffer(i16 x, i16 y) {
                 offsetMode
             );
             if (m_hex == gCombatManager->m_limitCreatureHex
-                && gCombatManager->m_limitCreature == 1) {
+                && gCombatManager->m_limitCreature == true) {
                 m_standIcon->FillToBuffer(
                     x,
                     y,
@@ -247,7 +247,7 @@ void army::DrawToBuffer(i16 x, i16 y) {
                     ARMY_FACING_ORIENTATION(m_facing),
                     offsetMode
                 );
-                outlined = 1;
+                outlined = true;
             }
             if (m_spellEffect != SPELL_NONE) {
                 switch (m_spellEffect) {
@@ -420,13 +420,13 @@ void army::DrawToBuffer(i16 x, i16 y) {
 }
 
 VA(0x00413fd9, 0x55)
-void army::Stand(i8 redraw) {
+void army::Stand(b8 redraw) {
     m_animationSequence = ARMY_ANIMATION_STAND;
     m_animationFrame = 1;
     m_walkYStep = 0;
     gCombatManager->UpdateGrid(m_hex, m_stats.attributes);
     if (redraw)
-        gCombatManager->DrawFrame(1);
+        gCombatManager->DrawFrame(true);
 }
 
 VA(0x0041402e, 0x56)
@@ -445,7 +445,7 @@ void army::Wince(void) {
 #define occupantCell tempCell   // frame-slot spelling
 #define unusedDistance moveDist // frame-slot spelling
 VA(0x00414084, 0x7d0)
-void army::Walk(H1_ENUM_PARAM(CombatHexDirection, i16) direction, i8 standAfter, i8 continued) {
+void army::Walk(H1_ENUM_PARAM(CombatHexDirection, i16) direction, b8 standAfter, b8 continued) {
     i32 boundMaxX;
     i32 boundBottom;
     i16 unusedDistance;
@@ -465,9 +465,9 @@ void army::Walk(H1_ENUM_PARAM(CombatHexDirection, i16) direction, i8 standAfter,
         gMinExtentX = gMinExtentY = COMBAT_EXTENT_MIN_START;
         gMaxExtentX = gMaxExtentY = 0;
         gComputeExtent = 1;
-        gSaveBiggestExtent = 1;
+        gSaveBiggestExtent = true;
         DrawToBuffer(gCombatManager->m_hexCells[m_hex].m_x, gCombatManager->m_hexCells[m_hex].m_y);
-        gSaveBiggestExtent = 0;
+        gSaveBiggestExtent = false;
         gComputeExtent = 0;
     }
     if (gMinExtentX < 0)
@@ -539,7 +539,7 @@ void army::Walk(H1_ENUM_PARAM(CombatHexDirection, i16) direction, i8 standAfter,
     if (!continued) {
         if (ValidHex(m_hex))
             gCombatManager->m_hexCells[m_hex].m_occupantSide = COMBAT_SIDE_NONE;
-        gCombatManager->DrawFrame(0);
+        gCombatManager->DrawFrame(false);
         if (ValidHex(m_hex))
             gCombatManager->m_hexCells[m_hex].m_occupantSide = gCombatManager->m_currentSide;
         gWindowManager->m_screen->CopyTo(
@@ -551,7 +551,7 @@ void army::Walk(H1_ENUM_PARAM(CombatHexDirection, i16) direction, i8 standAfter,
             LOGICAL_SCREEN_WIDTH,
             COMBAT_VIEW_HEIGHT
         );
-        gCombatManager->m_backgroundDrawn = 0;
+        gCombatManager->m_backgroundDrawn = false;
     }
     for (i = 0; i < 6; i++) {
         if (continued || i) {
@@ -572,10 +572,10 @@ void army::Walk(H1_ENUM_PARAM(CombatHexDirection, i16) direction, i8 standAfter,
         gMinExtentX = gMinExtentY = COMBAT_EXTENT_MIN_START;
         gMaxExtentX = gMaxExtentY = 0;
         gComputeExtent = 1;
-        gSaveBiggestExtent = 1;
+        gSaveBiggestExtent = true;
         DrawToBuffer(gCombatManager->m_hexCells[m_hex].m_x, gCombatManager->m_hexCells[m_hex].m_y);
         gComputeExtent = 0;
-        gSaveBiggestExtent = 0;
+        gSaveBiggestExtent = false;
         if (gMinExtentX < 0)
             gMinExtentX = 0;
         if (gMinExtentY < 0)
@@ -584,15 +584,15 @@ void army::Walk(H1_ENUM_PARAM(CombatHexDirection, i16) direction, i8 standAfter,
             gMaxExtentX = LOGICAL_SCREEN_WIDTH - 1;
         if (gMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
             gMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
-        gCurrArmyDrawn = 0;
+        gCurrArmyDrawn = false;
         gComputeExtent = 1;
         gLimitToExtent = 1;
-        m_drawShadow = 0;
-        gCombatManager->DrawFrame(0);
-        m_drawShadow = 1;
+        m_drawShadow = false;
+        gCombatManager->DrawFrame(false);
+        m_drawShadow = true;
         gLimitToExtent = 0;
         gComputeExtent = 0;
-        gCurrArmyDrawn = 1;
+        gCurrArmyDrawn = true;
         if (gMinExtentX < boundMinX)
             boundMinX = gMinExtentX;
         if (gMinExtentY < boundTop)
@@ -620,8 +620,8 @@ void army::Walk(H1_ENUM_PARAM(CombatHexDirection, i16) direction, i8 standAfter,
             m_hex = newHex;
         }
     }
-    if (standAfter == 1)
-        Stand(1);
+    if (standAfter == true)
+        Stand(true);
 }
 #undef occupantCell
 #undef unusedDistance
@@ -638,7 +638,7 @@ void army::Walk(H1_ENUM_PARAM(CombatHexDirection, i16) direction, i8 standAfter,
 VA(0x00414854, 0xc74)
 void army::SpecialAttack(void) {
     DATA(0x004a67d8)
-    static i32 gSecondShot = 0;
+    static b32 gSecondShot = false;
     i8 missileFrame;
     i32 oldTipX;
     i8 originalColumn;
@@ -677,7 +677,7 @@ void army::SpecialAttack(void) {
     i32 landPosX;
     i32 landPosY;
     i32 maxY;
-    i8 wallPenalty;
+    b8 wallPenalty;
     i32 damageDone;
 
     wasFacing = m_facing;
@@ -703,7 +703,7 @@ void army::SpecialAttack(void) {
     for (i = 0; i < 4; i++) {
         m_animationFrame = i + 1;
         gCombatManager->UpdateGrid(m_hex, m_stats.attributes);
-        gCombatManager->DrawFrame(1);
+        gCombatManager->DrawFrame(true);
     }
     aimColumn = targetColumn;
     if (enemyStack->m_stats.attributes & MONSTER_FLAGS_WIDE) {
@@ -815,7 +815,7 @@ void army::SpecialAttack(void) {
     );
     delete backing;
     m_stats.shots--;
-    wallPenalty = 0;
+    wallPenalty = false;
     if (gCombatManager->m_castleSide[COMBAT_DEFENDER_SIDE]
         && m_hex % COMBAT_GRID_COLUMNS <= COMBAT_CASTLE_WALL_COLUMN - 1
         && enemyStack->m_hex % COMBAT_GRID_COLUMNS >= COMBAT_CASTLE_WALL_COLUMN + 1) {
@@ -864,7 +864,7 @@ void army::SpecialAttack(void) {
         enemyStack,
         &damageDone,
         &killed,
-        1,
+        true,
         wallPenalty ? ARMY_CASTLE_WALL_DEFENSE_BONUS : 0
     );
     if (killed > 0) {
@@ -894,21 +894,21 @@ void army::SpecialAttack(void) {
             localization::Tr("combat.fragment.damage_points")
         );
     gText[0] = CyrillicToUpper(gText[0]);
-    gCombatManager->CombatMessage(gText, 1);
+    gCombatManager->CombatMessage(gText, true);
     PowEffect(H1_ENUM_DECODE(CombatPowEffect, m_stats.powEffect));
     if (!(enemyStack->m_stats.attributes & MONSTER_FLAGS_DEAD))
-        enemyStack->Stand(0);
+        enemyStack->Stand(false);
     if (m_spellEndCondition == ARMY_CANCEL_SPELLS_AFTER_ATTACK)
         CancelSpell();
     WaitSample(m_samples[ARMY_SAMPLE_SHOOT]);
     m_facing = wasFacing;
-    Stand(1);
+    Stand(true);
     if (enemyStack->m_quantity > 0)
-        enemyStack->Stand(1);
+        enemyStack->Stand(true);
     if (!gSecondShot && m_creatureType == CREATURE_ELF && enemyStack->m_quantity > 0) {
-        gSecondShot = 1;
+        gSecondShot = true;
         SpecialAttack();
-        gSecondShot = 0;
+        gSecondShot = false;
     }
 }
 #undef launchY
@@ -941,9 +941,9 @@ void army::DoHydraAttack(void) {
     gCombatManager->ResetLimitCreature();
     gCombatManager->m_limitCreatureCount[m_side][m_index]++;
     for (i = 0; i < 5; i++) {
-        gCombatManager->m_computeExtent = 1;
+        gCombatManager->m_computeExtent = true;
         m_animationFrame = i + 3;
-        gCombatManager->DrawFrame(1);
+        gCombatManager->DrawFrame(true);
     }
     if (m_spellEffect == SPELL_BERZERKER)
         attackMask = GetAttackMask(m_hex, ARMY_ATTACK_TARGET_OCCUPIED, ARMY_HEX_INVALID);
@@ -973,8 +973,8 @@ void army::DoHydraAttack(void) {
                     gCombatManager->m_limitCreatureCount[occupantSideIndex][armyIndex]++;
                     struckArmy = &gCombatManager->m_armies[occupantSideIndex][armyIndex];
                     if (!struckArmy->m_hitByCreature) {
-                        struckArmy->m_hitByCreature = 1;
-                        DamageEnemy(struckArmy, &damage, &killedNow, 0, 0);
+                        struckArmy->m_hitByCreature = true;
+                        DamageEnemy(struckArmy, &damage, &killedNow, false, 0);
                         totalDamageDone += damage;
                         totalDead += killedNow;
                     }
@@ -1008,16 +1008,16 @@ void army::DoHydraAttack(void) {
             localization::Tr("combat.fragment.damage_points")
         );
     gText[0] = CyrillicToUpper(gText[0]);
-    gCombatManager->CombatMessage(gText, 1);
+    gCombatManager->CombatMessage(gText, true);
     PowEffect(H1_ENUM_DECODE(CombatPowEffect, m_stats.powEffect));
     WaitSample(m_samples[ARMY_SAMPLE_ATTACK]);
     m_animationSequence = ARMY_ANIMATION_STAND;
     gCombatManager->ResetLimitCreature();
     gCombatManager->m_limitCreatureCount[m_side][m_index]++;
     for (i = 4; i >= 0; i--) {
-        gCombatManager->m_computeExtent = 1;
+        gCombatManager->m_computeExtent = true;
         m_animationFrame = i + 3;
-        gCombatManager->DrawFrame(1);
+        gCombatManager->DrawFrame(true);
     }
     if (m_spellEffect == SPELL_BERZERKER)
         attackMask = GetAttackMask(m_hex, ARMY_ATTACK_TARGET_OCCUPIED, ARMY_HEX_INVALID);
@@ -1044,13 +1044,13 @@ void army::DoHydraAttack(void) {
                     gCombatManager->m_limitCreatureCount[occupantSideIndex][armyIndex]++;
                     struckArmy = &gCombatManager->m_armies[occupantSideIndex][armyIndex];
                     if (!(struckArmy->m_stats.attributes & MONSTER_FLAGS_DEAD))
-                        struckArmy->Stand(0);
+                        struckArmy->Stand(false);
                 }
             }
         }
     }
     m_targetSide = H1_ENUM_DECODE(CombatSide, hitHex = ARMY_HEX_INVALID);
-    gCombatManager->m_computeExtent = 0;
+    gCombatManager->m_computeExtent = false;
     for (occupantSideIndex = COMBAT_SIDE_FIRST; occupantSideIndex < COMBAT_SIDE_COUNT;
          occupantSideIndex++) {
         for (armyIndex = 0; armyIndex < gCombatManager->m_numArmies[occupantSideIndex];
@@ -1058,10 +1058,10 @@ void army::DoHydraAttack(void) {
             currentStack = &gCombatManager->m_armies[occupantSideIndex][armyIndex];
             if (!(currentStack->m_stats.attributes & MONSTER_FLAGS_DEAD)
                 || currentStack->m_powFrames == ARMY_POW_NONE)
-                currentStack->Stand(0);
+                currentStack->Stand(false);
         }
     }
-    gCombatManager->DrawFrame(1);
+    gCombatManager->DrawFrame(true);
 }
 
 // @dead-code
@@ -1069,16 +1069,16 @@ void army::DoHydraAttack(void) {
 VA(0x00415c2b, 0x22)
 void army::DirDoAttack(H1_ENUM_PARAM(CombatHexDirection, i16) direction) {
     m_attackDirection = direction;
-    DoAttack(0);
+    DoAttack(false);
 }
 
 // A melee strike in m_attackDirection: breath attackers (attribute 8) also
 // hit the hex behind, some creatures cast on the target, the target
 // retaliates once, and creatures 5 and 8 strike twice.
 VA(0x00415c4d, 0x1092)
-void army::DoAttack(i32 retaliation) {
+void army::DoAttack(b32 retaliation) {
     i32 ignored;
-    i32 prevExtendDown;
+    b32 prevExtendDown;
     i16 frameBase;
     army* rearVictim;
     i32 damageDone;
@@ -1086,14 +1086,14 @@ void army::DoAttack(i32 retaliation) {
     H1_ENUM_LOCAL(CombatHexDirection, i32) savedAttackDirection;
     H1_ENUM_LOCAL(ArmyFacing, i16) originalFacing;
     H1_ENUM_LOCAL(CombatHexDirection, i32) initialAttackDirection;
-    i32 specialWorked;
+    b32 specialWorked;
     army* struckArmy;
     i32 killed;
 
-    prevExtendDown = 0;
+    prevExtendDown = false;
     damageDone = 0;
     killed = 0;
-    specialWorked = 0;
+    specialWorked = false;
     if (retaliation)
         gCombatManager->m_currentSide = COMBAT_OPPOSING_SIDE(gCombatManager->m_currentSide);
     if (m_creatureType == CREATURE_HYDRA) {
@@ -1156,27 +1156,27 @@ void army::DoAttack(i32 retaliation) {
                                       [gCombatManager->m_hexCells[behindHex].m_occupantIndex]++;
             if (m_attackDirection == COMBAT_DIRECTION_SOUTHEAST
                 || m_attackDirection == COMBAT_DIRECTION_SOUTHWEST)
-                gCombatManager->m_extendLimitDown = 1;
+                gCombatManager->m_extendLimitDown = true;
         }
     }
     prevExtendDown = gCombatManager->m_extendLimitDown;
     m_animationSequence = ARMY_ANIMATION_STAND;
     m_animationFrame = 3;
-    gCombatManager->DrawFrame(1);
+    gCombatManager->DrawFrame(true);
     gTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 105;
     PlaySample(m_samples[ARMY_SAMPLE_ATTACK]);
     m_animationFrame = 4;
-    gCombatManager->m_computeExtent = 1;
-    gCombatManager->DrawFrame(1);
+    gCombatManager->m_computeExtent = true;
+    gCombatManager->DrawFrame(true);
     gTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 105;
     m_animationFrame = frameBase;
-    gCombatManager->m_computeExtent = 1;
-    gCombatManager->DrawFrame(1);
+    gCombatManager->m_computeExtent = true;
+    gCombatManager->DrawFrame(true);
     gTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 105;
     if (m_stats.attributes & MONSTER_FLAGS_BREATH_ATTACK) {
         m_animationFrame = frameBase + 3;
-        gCombatManager->m_computeExtent = 1;
-        gCombatManager->DrawFrame(1);
+        gCombatManager->m_computeExtent = true;
+        gCombatManager->DrawFrame(true);
         gTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 105;
     }
     rearVictim = NULL;
@@ -1191,8 +1191,8 @@ void army::DoAttack(i32 retaliation) {
                 &gCombatManager->m_armies[gCombatManager->m_hexCells[lastHex].m_occupantSide]
                                          [gCombatManager->m_hexCells[lastHex].m_occupantIndex];
             gCombatManager->m_limitCreatureCount[struckArmy->m_side][struckArmy->m_index]++;
-            gCombatManager->m_computeExtent = 1;
-            DamageEnemy(struckArmy, &damageDone, &killed, 0, 0);
+            gCombatManager->m_computeExtent = true;
+            DamageEnemy(struckArmy, &damageDone, &killed, false, 0);
         }
         targetKilled = killed;
         breathHex = GetAdjacentCellIndex(lastHex, m_attackDirection);
@@ -1210,14 +1210,14 @@ void army::DoAttack(i32 retaliation) {
                 && gCombatManager->m_hexCells[lastHex].m_occupantSide != COMBAT_SIDE_NONE
                 && gCombatManager->m_hexCells[lastHex].m_occupantIndex != COMBAT_ARMY_INDEX_NONE) {
                 m_animationFrame = frameBase + 6;
-                gCombatManager->m_computeExtent = 1;
-                gCombatManager->DrawFrame(1);
+                gCombatManager->m_computeExtent = true;
+                gCombatManager->DrawFrame(true);
                 rearVictim =
                     &gCombatManager->m_armies[gCombatManager->m_hexCells[lastHex].m_occupantSide]
                                              [gCombatManager->m_hexCells[lastHex].m_occupantIndex];
-                DamageEnemy(rearVictim, &damageDone, &killed, 0, 0);
+                DamageEnemy(rearVictim, &damageDone, &killed, false, 0);
                 if (rearVictim->m_quantity > 0)
-                    rearVictim->Stand(1);
+                    rearVictim->Stand(true);
             }
         }
         killed = targetKilled;
@@ -1257,7 +1257,7 @@ void army::DoAttack(i32 retaliation) {
             localization::Tr("combat.fragment.damage_points")
         );
     gText[0] = CyrillicToUpper(gText[0]);
-    gCombatManager->CombatMessage(gText, 1);
+    gCombatManager->CombatMessage(gText, true);
     PowEffect(H1_ENUM_DECODE(CombatPowEffect, m_stats.powEffect));
     gCombatManager->m_extendLimitDown = prevExtendDown;
     switch (m_creatureType) {
@@ -1268,16 +1268,17 @@ void army::DoAttack(i32 retaliation) {
                     && (struckArmy->m_creatureType != CREATURE_DWARF || SRandom(0, 4) != 1)
                     && !(struckArmy->m_stats.attributes & MONSTER_FLAGS_DEAD)) {
                     gCombatManager
-                        ->CastSpell(SPELL_PARALYZE, struckArmy->m_hex, 1, ARMY_HEX_INVALID);
-                    specialWorked = 1;
+                        ->CastSpell(SPELL_PARALYZE, struckArmy->m_hex, true, ARMY_HEX_INVALID);
+                    specialWorked = true;
                 }
             } else if (SRandom(1, ARMY_SPECIAL_ROLL_MAX) == ARMY_SPECIAL_ROLL_HIT && rearVictim
                        && rearVictim->m_spellEffect != SPELL_ANTI_MAGIC
                        && rearVictim->m_creatureType != CREATURE_DRAGON
                        && (rearVictim->m_creatureType != CREATURE_DWARF || SRandom(0, 4) != 1)
                        && !(rearVictim->m_stats.attributes & MONSTER_FLAGS_DEAD)) {
-                gCombatManager->CastSpell(SPELL_PARALYZE, rearVictim->m_hex, 1, ARMY_HEX_INVALID);
-                specialWorked = 1;
+                gCombatManager
+                    ->CastSpell(SPELL_PARALYZE, rearVictim->m_hex, true, ARMY_HEX_INVALID);
+                specialWorked = true;
             }
             break;
         case CREATURE_UNICORN:
@@ -1286,8 +1287,8 @@ void army::DoAttack(i32 retaliation) {
                 && struckArmy->m_creatureType != CREATURE_DRAGON
                 && (struckArmy->m_creatureType != CREATURE_DWARF || SRandom(0, 127) % 4 != 1)
                 && !(struckArmy->m_stats.attributes & MONSTER_FLAGS_DEAD)) {
-                gCombatManager->CastSpell(SPELL_BLIND, struckArmy->m_hex, 1, ARMY_HEX_INVALID);
-                specialWorked = 1;
+                gCombatManager->CastSpell(SPELL_BLIND, struckArmy->m_hex, true, ARMY_HEX_INVALID);
+                specialWorked = true;
             }
             break;
         case CREATURE_GHOST:
@@ -1302,47 +1303,47 @@ void army::DoAttack(i32 retaliation) {
     if (struckArmy) {
         gCombatManager->m_limitCreatureCount[struckArmy->m_side][struckArmy->m_index] = 1;
         if (!(struckArmy->m_stats.attributes & MONSTER_FLAGS_DEAD))
-            struckArmy->Stand(0);
+            struckArmy->Stand(false);
     }
     if (rearVictim) {
         gCombatManager->m_limitCreatureCount[rearVictim->m_side][rearVictim->m_index] = 1;
         if (!(rearVictim->m_stats.attributes & MONSTER_FLAGS_DEAD))
-            rearVictim->Stand(0);
+            rearVictim->Stand(false);
     }
     WaitSample(m_samples[ARMY_SAMPLE_ATTACK]);
     if (m_stats.attributes & MONSTER_FLAGS_BREATH_ATTACK) {
         if (rearVictim) {
             m_animationFrame = frameBase + 6;
-            gCombatManager->m_computeExtent = 1;
-            gCombatManager->DrawFrame(1);
+            gCombatManager->m_computeExtent = true;
+            gCombatManager->DrawFrame(true);
         }
         m_animationFrame = frameBase + 3;
-        gCombatManager->m_computeExtent = 1;
-        gCombatManager->DrawFrame(1);
+        gCombatManager->m_computeExtent = true;
+        gCombatManager->DrawFrame(true);
         m_animationFrame = frameBase;
-        gCombatManager->m_computeExtent = 1;
-        gCombatManager->DrawFrame(1);
+        gCombatManager->m_computeExtent = true;
+        gCombatManager->DrawFrame(true);
     }
     m_animationFrame = 4;
-    gCombatManager->m_computeExtent = 1;
-    gCombatManager->DrawFrame(1);
+    gCombatManager->m_computeExtent = true;
+    gCombatManager->DrawFrame(true);
     m_animationFrame = 3;
-    gCombatManager->m_computeExtent = 1;
-    gCombatManager->DrawFrame(1);
-    gCombatManager->m_computeExtent = 1;
-    Stand(1);
+    gCombatManager->m_computeExtent = true;
+    gCombatManager->DrawFrame(true);
+    gCombatManager->m_computeExtent = true;
+    Stand(true);
     m_facing = originalFacing;
-    gCombatManager->m_computeExtent = 1;
+    gCombatManager->m_computeExtent = true;
     if (m_spellEndCondition == ARMY_CANCEL_SPELLS_AFTER_ATTACK && !retaliation)
         CancelSpell();
-    gCombatManager->m_computeExtent = 1;
-    Stand(1);
+    gCombatManager->m_computeExtent = true;
+    Stand(true);
     if (m_creatureType == CREATURE_GHOST)
         m_quantity +=
             gCombatManager->m_ghostKills[gCombatManager->m_hexCells[m_hex].m_occupantSide];
     if (struckArmy && struckArmy->m_quantity > 0) {
-        gCombatManager->m_computeExtent = 1;
-        struckArmy->Stand(1);
+        gCombatManager->m_computeExtent = true;
+        struckArmy->Stand(true);
         if (struckArmy->m_spellEffect == SPELL_PARALYZE
             || struckArmy->m_creatureType != CREATURE_GRIFFIN
                    && (struckArmy->m_stats.attributes & MONSTER_FLAGS_RETALIATED)
@@ -1371,7 +1372,7 @@ void army::DoAttack(i32 retaliation) {
                 if (checkHex == m_hex)
                     struckArmy->m_attackDirection = COMBAT_DIRECTION_WIDE_EAST;
             }
-            struckArmy->DoAttack(1);
+            struckArmy->DoAttack(true);
             struckArmy->m_stats.attributes |= MONSTER_FLAGS_RETALIATED;
             if (struckArmy->m_creatureType == CREATURE_GHOST)
                 struckArmy->m_quantity +=
@@ -1385,7 +1386,7 @@ secondStrike:
         && m_quantity > 0) {
         savedAttackDirection = m_attackDirection;
         m_attackDirection = initialAttackDirection;
-        DoAttack(1);
+        DoAttack(true);
         m_attackDirection = savedAttackDirection;
     }
     m_targetSide = H1_ENUM_DECODE(CombatSide, lastHex = ARMY_HEX_INVALID);
@@ -1400,7 +1401,7 @@ void army::ResetPath(void) {
     i16 i;
 
     for (i = 0; i < COMBAT_HEX_COUNT; i++)
-        gCombatManager->m_hexCells[i].m_pathFlag = 0;
+        gCombatManager->m_hexCells[i].m_pathFlag = false;
 }
 
 // @dead-code
@@ -1417,13 +1418,13 @@ i16 army::WalkTo(i16 destination) {
     i8 pathIndex;
 
     m_targetSide = H1_ENUM_DECODE(CombatSide, m_targetIndex = COMBAT_ARMY_INDEX_NONE);
-    if (!FindPath(m_hex, destination, m_stats.speed, 1, ARMY_PATH_ANY_TARGET_HEX))
+    if (!FindPath(m_hex, destination, m_stats.speed, true, ARMY_PATH_ANY_TARGET_HEX))
         return ARMY_PATH_BLOCKED;
     stepCount = 0;
     for (pathIndex = gSearchArray->m_pathLength - 1; pathIndex >= 0; pathIndex--) {
         Walk(
             H1_ENUM_DECODE(CombatHexDirection, gSearchArray->m_directions[pathIndex]),
-            0,
+            false,
             pathIndex != gSearchArray->m_pathLength - 1
         );
         stepCount++;
@@ -1432,7 +1433,7 @@ i16 army::WalkTo(i16 destination) {
     }
     if (!H1_ENUM_ENCODE(ArmySpellCancelType, m_spellEndCondition))
         CancelSpell();
-    Stand(1);
+    Stand(true);
     return 0;
 }
 
@@ -1450,36 +1451,36 @@ i16 army::AttackTo(i16 destination) {
     if (m_stats.attributes & MONSTER_FLAGS_FLYING) {
         if (m_hex != destination)
             FlyTo(destination);
-        DoAttack(0);
+        DoAttack(false);
         return 0;
     }
     if ((m_stats.attributes & MONSTER_FLAGS_BREATH_ATTACK) && m_moveTargetHex == m_hex) {
-        DoAttack(0);
+        DoAttack(false);
         return 0;
     }
-    if (FindPath(m_hex, destination, m_stats.speed, 1, ARMY_PATH_ANY_TARGET_HEX)) {
+    if (FindPath(m_hex, destination, m_stats.speed, true, ARMY_PATH_ANY_TARGET_HEX)) {
         if (gSearchArray->m_pathLength == 1) {
             m_attackDirection = H1_ENUM_DECODE(CombatHexDirection, gSearchArray->m_directions[0]);
-            DoAttack(0);
+            DoAttack(false);
         } else {
             pathIndex = 0;
             stepCount = 0;
             for (pathIndex = gSearchArray->m_pathLength - 1; pathIndex; pathIndex--) {
                 Walk(
                     H1_ENUM_DECODE(CombatHexDirection, gSearchArray->m_directions[pathIndex]),
-                    0,
+                    false,
                     pathIndex != gSearchArray->m_pathLength - 1
                 );
                 stepCount++;
                 if (stepCount >= m_stats.speed && pathIndex != 1) {
-                    Stand(1);
+                    Stand(true);
                     return ARMY_PATH_BLOCKED;
                 }
             }
             if (!H1_ENUM_ENCODE(ArmySpellCancelType, m_spellEndCondition))
                 CancelSpell();
             m_attackDirection = H1_ENUM_DECODE(CombatHexDirection, gSearchArray->m_directions[0]);
-            DoAttack(0);
+            DoAttack(false);
         }
         return 0;
     }
@@ -1511,7 +1512,7 @@ void army::CheckLuck(void) {
                 localization::Tr("combat.luck.bad.buka"),
                 gArmyNamesPlural[m_creatureType]
             );
-            gCombatManager->CombatMessage(gText, 1);
+            gCombatManager->CombatMessage(gText, true);
             Wince();
             SpellEffect(COMBAT_EFFECT_BAD_LUCK, 180);
         } else {
@@ -1520,11 +1521,11 @@ void army::CheckLuck(void) {
                 localization::Tr("combat.luck.good.buka"),
                 gArmyNamesPlural[m_creatureType]
             );
-            gCombatManager->CombatMessage(gText, 1);
-            Stand(1);
+            gCombatManager->CombatMessage(gText, true);
+            Stand(true);
             SpellEffect(COMBAT_EFFECT_GOOD_LUCK, 180);
         }
-        Stand(1);
+        Stand(true);
         WaitSample(luckSample);
     }
 }
@@ -1535,7 +1536,7 @@ void army::DamageEnemy(
     class army* target,
     i32* damageResult,
     i32* killedResult,
-    i32 rangedAttack,
+    b32 rangedAttack,
     i32 defenseModifier
 ) {
     i16 defenseExtra;
@@ -1633,7 +1634,7 @@ i32 army::Damage(i32 damage) {
     );
     Wince();
     m_facing = oldFacing;
-    gCombatManager->DrawFrame(1);
+    gCombatManager->DrawFrame(true);
     if (m_spellEndCondition == ARMY_CANCEL_SPELLS_AFTER_DAMAGE) {
         m_stats.attributes |= MONSTER_FLAGS_TURN_SPENT;
         if (m_spellEffect != SPELL_BLIND)
@@ -1682,7 +1683,7 @@ void army::PowEffect(H1_ENUM_PARAM(CombatPowEffect, i8) effect) {
     effectFrame = 0;
     gCombatManager->ResetLimitCreature();
     while (effectFrame < frames && effectFrame < 5) {
-        gCombatManager->m_computeExtent = 1;
+        gCombatManager->m_computeExtent = true;
         gTimers[COMBAT_EFFECT_TIMER_SLOT] = KBTickCount() + 30;
         for (stackSide = COMBAT_SIDE_FIRST; stackSide < COMBAT_SIDE_COUNT; stackSide++) {
             for (armyIndex = 0; armyIndex < gCombatManager->m_numArmies[stackSide]; armyIndex++) {
@@ -1705,11 +1706,11 @@ void army::PowEffect(H1_ENUM_PARAM(CombatPowEffect, i8) effect) {
             }
         }
         gSpellEffectFrame = effectFrame;
-        gCombatManager->DrawFrame(1);
+        gCombatManager->DrawFrame(true);
         effectFrame++;
     }
     while (effectFrame < frames && effectFrame < 10) {
-        gCombatManager->m_computeExtent = 1;
+        gCombatManager->m_computeExtent = true;
         gTimers[COMBAT_EFFECT_TIMER_SLOT] = KBTickCount() + 30;
         for (stackSide = COMBAT_SIDE_FIRST; stackSide < COMBAT_SIDE_COUNT; stackSide++) {
             for (armyIndex = 0; armyIndex < gCombatManager->m_numArmies[stackSide]; armyIndex++) {
@@ -1735,7 +1736,7 @@ void army::PowEffect(H1_ENUM_PARAM(CombatPowEffect, i8) effect) {
             }
         }
         gSpellEffectFrame = effectFrame;
-        gCombatManager->DrawFrame(1);
+        gCombatManager->DrawFrame(true);
         effectFrame++;
     }
     while (++effectFrame < 10)
@@ -1759,7 +1760,7 @@ void army::PowEffect(H1_ENUM_PARAM(CombatPowEffect, i8) effect) {
             gCombatManager->UpdateGrid(currentArmy->m_hex, currentArmy->m_stats.attributes);
         }
     }
-    gCombatManager->DrawFrame(1);
+    gCombatManager->DrawFrame(true);
     for (stackSide = COMBAT_SIDE_FIRST; stackSide < COMBAT_SIDE_COUNT; stackSide++)
         for (armyIndex = 0; armyIndex < gCombatManager->m_numArmies[stackSide]; armyIndex++)
             WaitSample(gCombatManager->m_armies[stackSide][armyIndex].m_samples[ARMY_SAMPLE_WINCE]);
@@ -1789,10 +1790,10 @@ void army::SpellEffect(H1_ENUM_PARAM(CombatEffectAnimation, i16) effect, i32 fra
     gCombatManager->ResetLimitCreature();
     gCombatManager->m_limitCreatureCount[m_side][m_index] = 1;
     for (effectFrame = 0; effectFrame < frameCount; effectFrame++) {
-        gCombatManager->m_computeExtent = 1;
+        gCombatManager->m_computeExtent = true;
         gTimers[COMBAT_EFFECT_TIMER_SLOT] = KBTickCount() + frameDelay;
         gSpellEffectFrame = effectFrame;
-        gCombatManager->DrawFrame(1);
+        gCombatManager->DrawFrame(true);
         DelayTil(gTimers + COMBAT_EFFECT_TIMER_SLOT);
     }
     m_effectAnimation = COMBAT_EFFECT_NONE;
@@ -1892,7 +1893,7 @@ void army::GoBerserk(void) {
 // direction) or moves there; a second argument forbids attacking.
 #define adjacentCell cellItem // frame-slot spelling
 VA(0x0041811f, 0x34a)
-void army::MoveAttack(i32 destination, i32 moveOnly) {
+void army::MoveAttack(i32 destination, b32 moveOnly) {
     hexcell* adjacentCell;
     i32 attackFromHex;
     i16 baseAttackMask;
@@ -1900,7 +1901,7 @@ void army::MoveAttack(i32 destination, i32 moveOnly) {
     i32 neighborHex;
     H1_ENUM_LOCAL(CombatHexDirection, i32) direction;
 
-    gCombatManager->m_limitCreature = 0;
+    gCombatManager->m_limitCreature = false;
     CLEAR_ARMY_TARGET(this);
     if (!ValidHex(destination))
         return;
@@ -1950,7 +1951,7 @@ void army::MoveAttack(i32 destination, i32 moveOnly) {
                     }
                 }
             }
-            DoAttack(0);
+            DoAttack(false);
         }
     } else if (m_stats.attributes & MONSTER_FLAGS_FLYING) {
         m_moveTargetHex = destination;
@@ -1960,7 +1961,7 @@ void army::MoveAttack(i32 destination, i32 moveOnly) {
     } else {
         WalkTo(destination);
     }
-    gCombatManager->m_limitCreature = 1;
+    gCombatManager->m_limitCreature = true;
 }
 #undef adjacentCell
 

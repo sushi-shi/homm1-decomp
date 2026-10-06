@@ -140,13 +140,13 @@ void searchArray::SeedPosition(
     i16 seedDirection,
     i16 maximumCost,
     i32 waterMode,
-    i32 findAdjacentMonster,
+    b32 findAdjacentMonster,
     i32 mobility,
     i32 heroClass,
     i32 targetX,
     i32 targetY,
-    i32 continueSeed,
-    i32 scanMap
+    b32 continueSeed,
+    b32 scanMap
 ) {
 #define s_direction s_direction_4 // spelling fixes .bss order
     DATA(0x004cc85c)

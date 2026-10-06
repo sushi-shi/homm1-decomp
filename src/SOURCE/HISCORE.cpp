@@ -63,13 +63,13 @@ void highScoreManager::Close(void) {
 
 VA(0x0043bf85, 0x1fa)
 H1_ENUM_RETURN(MessageDispatchResult, i16) highScoreManager::Main(struct tag_message& message) {
-    i32 result;
+    b32 result;
     i32 entry;
     tag_message windowMessage;
 
-    result = 0;
-    if (gShowHighScore != 0)
-        gShowHighScore = 0;
+    result = false;
+    if (gShowHighScore != false)
+        gShowHighScore = false;
 
     if (gTimers[HIGH_SCORE_TIMER_SLOT] < KBTickCount()) {
         gTimers[HIGH_SCORE_TIMER_SLOT] = KBTickCount() + HIGH_SCORE_ANIMATION_DELAY;
@@ -116,7 +116,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) highScoreManager::Main(struct tag_mes
                             break;
                         case HIGH_SCORE_CLOSE_BUTTON:
                             message.value = message.id;
-                            result = 1;
+                            result = true;
                             break;
                     }
                     break;
@@ -126,7 +126,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) highScoreManager::Main(struct tag_mes
             break;
     }
 
-    if (result == 1) {
+    if (result == true) {
         message.type = MESSAGE_EXECUTIVE;
         message.executiveCommand = EXECUTIVE_COMMAND_RETURN_RESULT;
         return MESSAGE_DISPATCH_FORWARD;
@@ -141,18 +141,18 @@ void highScoreManager::Update(void) {
     HighScoreEntry highScore;
     i32 rank;
     i32 inputFile;
-    i8 noScoreFile;
+    b8 noScoreFile;
     tag_message hsMessage;
     char scorePath[HIGH_SCORE_FILENAME_LENGTH];
 
-    noScoreFile = 0;
+    noScoreFile = false;
     if (m_showCampaignScores)
         sprintf(scorePath, "%sCAMPAIGN.HS", gDataPath);
     else
         sprintf(scorePath, "%sSTANDARD.HS", gDataPath);
     inputFile = open(scorePath, _O_BINARY);
     if (inputFile == -1)
-        noScoreFile = 1;
+        noScoreFile = true;
 
     sprintf(gText, "hiscore.bmp");
     gResourceManager->GetBackdrop(gText, gWindowManager->m_screen);

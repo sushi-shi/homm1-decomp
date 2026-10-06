@@ -49,7 +49,7 @@ i8 combatManager::ViewSpells(i32) {
                     "spelmous.mse",
                     H1_ENUM_ENCODE(SpellType, m_selectedSpell)
                 );
-                gWindowManager->DoDialog(NULL, HandleCastSpell, 0);
+                gWindowManager->DoDialog(NULL, HandleCastSpell, false);
                 break;
         }
         gMouseManager->SetPointer("cmbtmous.mse", 0);
@@ -70,22 +70,25 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) CombatSpecialHandler(struct tag_messa
                 gWindowManager->m_lastHoverId = message.id;
                 switch (message.id) {
                     case SPELL_BOOK_PREVIOUS_PAGE:
-                        gCombatManager->CombatMessage(gSpellHelp[SPELL_HELP_PREVIOUS_PAGE], 1);
+                        gCombatManager->CombatMessage(gSpellHelp[SPELL_HELP_PREVIOUS_PAGE], true);
                         break;
                     case SPELL_BOOK_NEXT_PAGE:
-                        gCombatManager->CombatMessage(gSpellHelp[SPELL_HELP_NEXT_PAGE], 1);
+                        gCombatManager->CombatMessage(gSpellHelp[SPELL_HELP_NEXT_PAGE], true);
                         break;
                     case DIALOG_BUTTON_0:
-                        gCombatManager->CombatMessage(gSpellHelp[SPELL_HELP_CLOSE], 1);
+                        gCombatManager->CombatMessage(gSpellHelp[SPELL_HELP_CLOSE], true);
                         break;
                     case SPELL_BOOK_ENTRY_FIRST:
                     case SPELL_BOOK_ENTRY_FIRST + 1:
                     case SPELL_BOOK_ENTRY_FIRST + 2:
                     case SPELL_BOOK_ENTRY_LAST:
-                        gCombatManager->CombatMessage(gSpellHelp[SPELL_HELP_SELECT_SPELL], 1);
+                        gCombatManager->CombatMessage(gSpellHelp[SPELL_HELP_SELECT_SPELL], true);
                         break;
                     default:
-                        gCombatManager->CombatMessage(gSpellHelp[SPELL_HELP_VIEW_COMBAT_SPELLS], 1);
+                        gCombatManager->CombatMessage(
+                            gSpellHelp[SPELL_HELP_VIEW_COMBAT_SPELLS],
+                            true
+                        );
                         break;
                 }
                 return MESSAGE_DISPATCH_CONSUME;
@@ -113,10 +116,13 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) HandleCastSpell(struct tag_message& m
                     if (gCombatManager->m_selectedSpell == SPELL_TELEPORT && gInTeleportGetDest)
                         gCombatManager->CombatMessage(
                             localization::Tr("spell.teleport.invalid"),
-                            1
+                            true
                         );
                     else
-                        gCombatManager->CombatMessage(localization::Tr("spell.target.select"), 1);
+                        gCombatManager->CombatMessage(
+                            localization::Tr("spell.target.select"),
+                            true
+                        );
                 } else {
                     gSpellTargetHex = hex;
                     gMouseManager->SetPointer(
@@ -133,16 +139,19 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) HandleCastSpell(struct tag_message& m
                 else {
                     gNextActionGridIndex = gSpellTargetHex;
                     if (gCombatManager->m_selectedSpell == SPELL_TELEPORT) {
-                        gInTeleportGetDest = 1;
+                        gInTeleportGetDest = true;
                         gSpellTargetHex = ARMY_HEX_INVALID;
                         message.type = MESSAGE_MOUSE_MOVE;
                         gMouseManager->MouseCoords(message.x, message.y);
                         HandleCastSpell(message);
-                        gCombatManager->CombatMessage(localization::Tr("spell.teleport.select"), 1);
+                        gCombatManager->CombatMessage(
+                            localization::Tr("spell.teleport.select"),
+                            true
+                        );
                         return MESSAGE_DISPATCH_CONSUME;
                     }
                 }
-                gInTeleportGetDest = 0;
+                gInTeleportGetDest = false;
                 message.type = MESSAGE_WIDGET;
                 message.command = WIDGET_COMMAND_DIALOG_SELECT;
                 return MESSAGE_DISPATCH_FORWARD;
@@ -156,7 +165,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) HandleCastSpell(struct tag_message& m
             gNextAction = ACTION_NONE;
             message.type = MESSAGE_WIDGET;
             message.command = WIDGET_COMMAND_DIALOG_SELECT;
-            gInTeleportGetDest = 0;
+            gInTeleportGetDest = false;
             return MESSAGE_DISPATCH_FORWARD;
     }
     return MESSAGE_DISPATCH_CONSUME;
@@ -251,7 +260,7 @@ void combatManager::SpellMessage(H1_ENUM_PARAM(SpellType, i8) spell, i8 hex) {
             );
             break;
     }
-    CombatMessage(gText, 1);
+    CombatMessage(gText, true);
 }
 
 // HoMM1 has nineteen spells, a single timed effect per stack and no eagle
@@ -264,7 +273,7 @@ VA(0x0045a668, 0xc5e)
 void combatManager::CastSpell(
     H1_ENUM_PARAM(SpellType, i8) spell,
     i8 targetHex,
-    i8 castByCreature,
+    b8 castByCreature,
     i8 teleportDest
 ) {
     army* target;
@@ -286,9 +295,9 @@ void combatManager::CastSpell(
             && m_hexCells[m_limitCreatureHex].m_occupantSide >= COMBAT_SIDE_FIRST)
             m_limitCreatureCount[m_hexCells[m_limitCreatureHex].m_occupantSide]
                                 [m_hexCells[m_limitCreatureHex].m_occupantIndex]++;
-        m_limitCreature = 0;
+        m_limitCreature = false;
         m_limitCreatureHex = ARMY_HEX_INVALID;
-        gCombatManager->DrawFrame(1);
+        gCombatManager->DrawFrame(true);
     }
     gMouseManager->ReallyHidePointer();
     if (!castByCreature && m_heroes[m_currentSide])
@@ -326,9 +335,9 @@ void combatManager::CastSpell(
                     || (target->m_creatureType == CREATURE_DWARF && SRandom(0, 4) == 1))) {
                 immuneSample = LoadPlaySample("RSBRYFZL.82M");
                 if (target->m_creatureType == CREATURE_DRAGON)
-                    CombatMessage(localization::Tr("spell.dragon.immune"), 1);
+                    CombatMessage(localization::Tr("spell.dragon.immune"), true);
                 else
-                    CombatMessage(localization::Tr("spell.dwarf.resisted"), 1);
+                    CombatMessage(localization::Tr("spell.dwarf.resisted"), true);
                 WaitSample(immuneSample);
                 goto done;
             }
@@ -403,7 +412,7 @@ void combatManager::CastSpell(
                 m_hexCells[teleportArmy->m_hex].m_occupantFootprintHalf = ARMY_FACING_NONE;
                 teleportArmy->SpellEffect(COMBAT_EFFECT_TELEPORT, 0);
             }
-            teleportArmy->Stand(1);
+            teleportArmy->Stand(true);
             break;
         case SPELL_LIGHTNING_BOLT:
             sprintf(
@@ -412,12 +421,12 @@ void combatManager::CastSpell(
                 m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 25,
                 CREATURE_DISPLAY_NAME(target->m_creatureType, target->m_quantity)
             );
-            CombatMessage(gText, 1);
+            CombatMessage(gText, true);
             target->SpellEffect(COMBAT_EFFECT_LIGHTNING_BOLT, 0);
             target->Damage(m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 25);
             target->PowEffect(COMBAT_POW_RED_FIRE);
             if (!(target->m_stats.attributes & MONSTER_FLAGS_DEAD))
-                target->Stand(1);
+                target->Stand(true);
             break;
         case SPELL_CURE:
             CastMassSpell(m_currentSide, 1);
@@ -444,8 +453,8 @@ void combatManager::CastSpell(
                     target->m_quantity - quantityBefore,
                     gArmyNames[target->m_creatureType]
                 );
-            CombatMessage(gText, 1);
-            target->Stand(1);
+            CombatMessage(gText, true);
+            target->Stand(true);
             break;
         case SPELL_SLOW:
             target->CancelSpell();
@@ -456,7 +465,7 @@ void combatManager::CastSpell(
                 target->m_stats.attributes -= MONSTER_FLAGS_FLYING;
             target->m_spellEffect = SPELL_SLOW;
             target->m_spellEndCondition = ARMY_CANCEL_SPELLS_ROUNDS_ONLY;
-            target->Stand(1);
+            target->Stand(true);
             break;
         case SPELL_HASTE:
             gCombatManager->m_currentSpeed = CREATURE_SPEED_BLAZING;
@@ -466,7 +475,7 @@ void combatManager::CastSpell(
             target->m_stats.speed = H1_ENUM_ENCODE(CreatureSpeed, CREATURE_SPEED_BLAZING);
             target->m_spellEffect = SPELL_HASTE;
             target->m_spellEndCondition = ARMY_CANCEL_SPELLS_ROUNDS_ONLY;
-            target->Stand(1);
+            target->Stand(true);
             break;
         case SPELL_BLESS:
             target->CancelSpell();
@@ -475,7 +484,7 @@ void combatManager::CastSpell(
             target->m_damageMode = ARMY_DAMAGE_MAXIMUM;
             target->m_spellEffect = SPELL_BLESS;
             target->m_spellEndCondition = ARMY_CANCEL_SPELLS_ROUNDS_ONLY;
-            target->Stand(1);
+            target->Stand(true);
             break;
         case SPELL_PROTECTION:
             target->CancelSpell();
@@ -484,7 +493,7 @@ void combatManager::CastSpell(
             target->m_spellEffect = SPELL_PROTECTION;
             target->m_spellEndCondition = ARMY_CANCEL_SPELLS_ROUNDS_ONLY;
             target->m_stats.defense += ARMY_PROTECTION_DEFENSE_BONUS;
-            target->Stand(1);
+            target->Stand(true);
             break;
         case SPELL_CURSE:
             target->CancelSpell();
@@ -494,7 +503,7 @@ void combatManager::CastSpell(
             target->m_damageMode = ARMY_DAMAGE_MINIMUM;
             target->m_spellEffect = SPELL_CURSE;
             target->m_spellEndCondition = ARMY_CANCEL_SPELLS_ROUNDS_ONLY;
-            target->Stand(1);
+            target->Stand(true);
             break;
         case SPELL_BERZERKER:
             target->CancelSpell();
@@ -503,7 +512,7 @@ void combatManager::CastSpell(
             target->SpellEffect(COMBAT_EFFECT_BERZERKER, 0);
             target->m_spellEffect = SPELL_BERZERKER;
             target->m_spellEndCondition = ARMY_CANCEL_SPELLS_AFTER_ATTACK;
-            target->Stand(1);
+            target->Stand(true);
             break;
         case SPELL_PARALYZE:
             target->CancelSpell();
@@ -513,7 +522,7 @@ void combatManager::CastSpell(
             target->m_damageMode = ARMY_DAMAGE_MINIMUM;
             target->m_spellEffect = SPELL_PARALYZE;
             target->m_spellEndCondition = ARMY_CANCEL_SPELLS_AFTER_DAMAGE;
-            target->Stand(1);
+            target->Stand(true);
             break;
         case SPELL_BLIND:
             target->CancelSpell();
@@ -523,7 +532,7 @@ void combatManager::CastSpell(
             target->m_damageMode = ARMY_DAMAGE_MINIMUM;
             target->m_spellEffect = SPELL_BLIND;
             target->m_spellEndCondition = ARMY_CANCEL_SPELLS_AFTER_DAMAGE;
-            target->Stand(1);
+            target->Stand(true);
             break;
         case SPELL_TURN_UNDEAD:
             target->m_animationFrame = 2;
@@ -540,7 +549,7 @@ void combatManager::CastSpell(
             target->SpellEffect(COMBAT_EFFECT_ANTI_MAGIC, 0);
             target->m_spellEffect = SPELL_ANTI_MAGIC;
             target->m_spellEndCondition = ARMY_CANCEL_SPELLS_ROUNDS_ONLY;
-            target->Stand(1);
+            target->Stand(true);
             break;
         case SPELL_FIREBALL:
             Fireball(targetHex);
@@ -592,7 +601,7 @@ void combatManager::DefaultSpell(i8 targetHex) {
         H1_ENUM_DECODE(CombatEffectAnimation, H1_ENUM_ENCODE(SpellType, m_selectedSpell)),
         0
     );
-    target->Stand(1);
+    target->Stand(true);
 }
 
 // HoMM1 Cure and Dispel Magic: one glow over every affected stack, then the
@@ -606,7 +615,7 @@ void combatManager::CastMassSpell(H1_ENUM_PARAM(CombatSide, i8) castSide, i8 cur
     H1_ENUM_LOCAL(CombatSide, i16) side;
     H1_ENUM_LOCAL(CombatSide, i32) firstSide;
 
-    m_computeExtent = m_redrawExtent = 0;
+    m_computeExtent = m_redrawExtent = false;
     effectFile = MAKEFILEID(gCombatFxNames[COMBAT_EFFECT_DISPEL_MAGIC]);
     if (gCurLoadedSpellFileId != effectFile) {
         gResourceManager->Dispose(gCurLoadedSpellIcon);
@@ -642,19 +651,19 @@ void combatManager::CastMassSpell(H1_ENUM_PARAM(CombatSide, i8) castSide, i8 cur
     for (armyIndex = 0; armyIndex < 10; armyIndex++) {
         m_gridUpdateRow = 0;
         gSpellEffectFrame = armyIndex;
-        DrawFrame(1);
+        DrawFrame(true);
     }
     for (armyIndex = 0; armyIndex < 10; armyIndex++) {
         m_gridUpdateRow = 0;
         gSpellEffectFrame = armyIndex;
-        DrawFrame(1);
+        DrawFrame(true);
     }
     if (castSide == COMBAT_SIDE_ANY) {
         CancelSideSpells(COMBAT_DEFENDER_SIDE, cureOnly);
         CancelSideSpells(COMBAT_ATTACKER_SIDE, cureOnly);
     } else
         CancelSideSpells(castSide, cureOnly);
-    DrawFrame(1);
+    DrawFrame(true);
 }
 
 // HoMM1: lifts every stack of one side out of the glow and cancels its
@@ -702,7 +711,7 @@ void combatManager::Fireball(i8 targetHex) {
     // The frame and area-hex counter, and the direction of each neighbour.
     H1_ENUM_SHARED(CombatHexDirection, i16) i;
     i16 affectedHexes[H1_ENUM_ENCODE(CombatHexDirection, COMBAT_DIRECTION_ADJACENT_COUNT) + 1];
-    i8 anyAffected;
+    b8 anyAffected;
 
     if (!ValidHex(targetHex))
         return;
@@ -722,7 +731,7 @@ void combatManager::Fireball(i8 targetHex) {
             ICON_DRAW_OFFSET_FULL
         );
         UpdateCombatArea();
-        DrawFrame(0);
+        DrawFrame(false);
         DelayTil(&gTimers[COMBAT_FRAME_TIMER_SLOT]);
     }
     gResourceManager->Dispose(fireballIcon);
@@ -733,7 +742,7 @@ void combatManager::Fireball(i8 targetHex) {
             target->GetAdjacentCellIndex(targetHex, i);
     baseDamage = m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 10;
     ClearEffects();
-    anyAffected = 0;
+    anyAffected = false;
     for (i = 0; i < COMBAT_DIRECTION_ADJACENT_COUNT + 1; i++) {
         if (affectedHexes[i] != ARMY_HEX_INVALID
             && m_hexCells[affectedHexes[i]].m_occupantSide != COMBAT_SIDE_NONE) {
@@ -747,14 +756,14 @@ void combatManager::Fireball(i8 targetHex) {
                              [m_hexCells[affectedHexes[i]].m_occupantIndex] = 1;
                 if (target->m_powFrames == ARMY_POW_NONE) {
                     target->Damage(baseDamage);
-                    anyAffected = 1;
+                    anyAffected = true;
                 }
             }
         }
     }
     if (anyAffected) {
         sprintf(gText, localization::Tr("spell.fireball.damage"), baseDamage);
-        CombatMessage(gText, 1);
+        CombatMessage(gText, true);
     }
     target->PowEffect(COMBAT_POW_RED_FIRE);
     for (i = 0; i < COMBAT_DIRECTION_ADJACENT_COUNT + 1; i++) {
@@ -763,10 +772,10 @@ void combatManager::Fireball(i8 targetHex) {
             target = &m_armies[m_hexCells[affectedHexes[i]].m_occupantSide]
                               [m_hexCells[affectedHexes[i]].m_occupantIndex];
             if (!(target->m_stats.attributes & MONSTER_FLAGS_DEAD))
-                target->Stand(1);
+                target->Stand(true);
         }
     }
-    DrawFrame(1);
+    DrawFrame(true);
 }
 #undef x
 #undef anyAffected
@@ -783,7 +792,7 @@ void combatManager::MeteorShower(i8 targetHex) {
     i16 affectedHexes[H1_ENUM_ENCODE(CombatHexDirection, COMBAT_DIRECTION_ADJACENT_COUNT) + 1];
     // The area-hex counter, and the direction of each neighbour.
     H1_ENUM_SHARED(CombatHexDirection, i16) i;
-    i8 anyAffected;
+    b8 anyAffected;
 
     if (!ValidHex(targetHex))
         return;
@@ -796,7 +805,7 @@ void combatManager::MeteorShower(i8 targetHex) {
     for (frame = 0; frame < 10; frame++) {
         gTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 112.5;
         m_gridUpdateRow = 0;
-        DrawFrame(0);
+        DrawFrame(false);
         for (i = 0; i < COMBAT_DIRECTION_ADJACENT_COUNT + 1; i++) {
             if (affectedHexes[i] != ARMY_HEX_INVALID)
                 meteorIcon->DrawToBuffer(
@@ -813,7 +822,7 @@ void combatManager::MeteorShower(i8 targetHex) {
     gResourceManager->Dispose(meteorIcon);
     baseDamage = m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 25;
     ClearEffects();
-    anyAffected = 0;
+    anyAffected = false;
     for (i = 0; i < COMBAT_DIRECTION_ADJACENT_COUNT + 1; i++) {
         if (affectedHexes[i] != ARMY_HEX_INVALID
             && m_hexCells[affectedHexes[i]].m_occupantSide != COMBAT_SIDE_NONE) {
@@ -827,14 +836,14 @@ void combatManager::MeteorShower(i8 targetHex) {
                              [m_hexCells[affectedHexes[i]].m_occupantIndex] = 1;
                 if (target->m_powFrames == ARMY_POW_NONE) {
                     target->Damage(baseDamage);
-                    anyAffected = 1;
+                    anyAffected = true;
                 }
             }
         }
     }
     if (anyAffected) {
         sprintf(gText, localization::Tr("spell.meteor.damage"), baseDamage);
-        CombatMessage(gText, 1);
+        CombatMessage(gText, true);
     }
     target->PowEffect(COMBAT_POW_PHYSICAL);
     for (i = 0; i < COMBAT_DIRECTION_ADJACENT_COUNT + 1; i++) {
@@ -843,10 +852,10 @@ void combatManager::MeteorShower(i8 targetHex) {
             target = &m_armies[m_hexCells[affectedHexes[i]].m_occupantSide]
                               [m_hexCells[affectedHexes[i]].m_occupantIndex];
             if (!(target->m_stats.attributes & MONSTER_FLAGS_DEAD))
-                target->Stand(1);
+                target->Stand(true);
         }
     }
-    DrawFrame(1);
+    DrawFrame(true);
 }
 #undef anyAffected
 #undef meteorIcon
@@ -863,14 +872,14 @@ void combatManager::ElementalStorm(void) {
     icon* storm;
     i32 damage;
     H1_ENUM_LOCAL(CombatSide, i16) side;
-    i8 anyAffected;
+    b8 anyAffected;
 
     storm = gResourceManager->GetIcon("storm.icn");
     for (stormRound = 0; stormRound < 5; stormRound++) {
         for (frame = 0; frame < 10; frame++) {
             gTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
             m_gridUpdateRow = 0;
-            DrawFrame(0);
+            DrawFrame(false);
             for (y = 0; y < 7; y++) {
                 for (x = 0; x < 10; x++)
                     storm->DrawToBuffer(
@@ -886,7 +895,7 @@ void combatManager::ElementalStorm(void) {
         }
     }
     gResourceManager->Dispose(storm);
-    anyAffected = 0;
+    anyAffected = false;
     damage = m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 25;
     for (side = COMBAT_SIDE_FIRST; side < COMBAT_SIDE_COUNT; side++) {
         for (armyIdx = 0; armyIdx < m_numArmies[side]; armyIdx++) {
@@ -895,23 +904,23 @@ void combatManager::ElementalStorm(void) {
                 && (target->m_creatureType != CREATURE_DWARF || SRandom(0, 127) % 4 != 1)
                 && !(target->m_stats.attributes & MONSTER_FLAGS_DEAD)) {
                 target->Damage(damage);
-                anyAffected = 1;
+                anyAffected = true;
             }
         }
     }
     if (anyAffected) {
         sprintf(gText, localization::Tr("spell.storm.damage"), damage);
-        CombatMessage(gText, 1);
+        CombatMessage(gText, true);
     }
     target->PowEffect(COMBAT_POW_ELECTRIC);
     for (side = COMBAT_SIDE_FIRST; side < COMBAT_SIDE_COUNT; side++) {
         for (armyIdx = 0; armyIdx < m_numArmies[side]; armyIdx++) {
             target = &m_armies[side][armyIdx];
             if (!(target->m_stats.attributes & MONSTER_FLAGS_DEAD))
-                target->Stand(0);
+                target->Stand(false);
         }
     }
-    DrawFrame(1);
+    DrawFrame(true);
 }
 
 // Armageddon fades a copy of kb.pal to red.
@@ -927,10 +936,10 @@ void combatManager::Armageddon(void) {
     palette* gamePal;
     i16 color;
     i16 armyIdx;
-    i8 hit;
+    b8 hit;
 
     damage = m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 50;
-    hit = 0;
+    hit = false;
     for (combatSideIndex = COMBAT_SIDE_FIRST; combatSideIndex < COMBAT_SIDE_COUNT;
          combatSideIndex++) {
         for (armyIdx = 0; armyIdx < m_numArmies[combatSideIndex]; armyIdx++) {
@@ -939,13 +948,13 @@ void combatManager::Armageddon(void) {
                 && (stack->m_creatureType != CREATURE_DWARF || SRandom(0, 127) % 4 != 1)
                 && !(stack->m_stats.attributes & MONSTER_FLAGS_DEAD)) {
                 stack->Damage(damage);
-                hit = 1;
+                hit = true;
             }
         }
     }
     if (hit) {
         sprintf(gText, localization::Tr("combat.armageddon.damage"), damage);
-        CombatMessage(gText, 1);
+        CombatMessage(gText, true);
     }
     gWindowManager->m_updateFlags = 0;
     gamePal = gResourceManager->GetPalette("kb.pal");
@@ -963,7 +972,7 @@ void combatManager::Armageddon(void) {
                 paletteBytes[color * 3 + 2]--;
         }
         DelayTil(&gTimers[COMBAT_FRAME_TIMER_SLOT]);
-        SetPalette(paletteBytes, 1);
+        SetPalette(paletteBytes, true);
         gTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
     }
     stack->PowEffect(COMBAT_POW_RED_FIRE);
@@ -972,11 +981,11 @@ void combatManager::Armageddon(void) {
         for (armyIdx = 0; armyIdx < m_numArmies[combatSideIndex]; armyIdx++) {
             stack = &m_armies[combatSideIndex][armyIdx];
             if (!(stack->m_stats.attributes & MONSTER_FLAGS_DEAD))
-                stack->Stand(0);
+                stack->Stand(false);
         }
     }
-    DrawFrame(1);
-    SetPalette(gamePal->Data(), 1);
+    DrawFrame(true);
+    SetPalette(gamePal->Data(), true);
     gWindowManager->m_updateFlags = 1;
     gResourceManager->Dispose(gamePal);
     delete effectPalette;
@@ -987,4 +996,4 @@ void combatManager::Armageddon(void) {
 // gSpellTargetHex (0x004906b4) is its local static: /Gi emits it at the head
 // of that function's literals.
 DATA(0x004cccb8)
-i8 gInTeleportGetDest = 0;
+b8 gInTeleportGetDest = false;
