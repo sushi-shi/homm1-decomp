@@ -1174,11 +1174,15 @@ void philAI::ProbableOutcomeOfBattle(
             if (ARTIFACT_HAS_BASE_VALUE(defenderHero->m_artifacts[artifactSlot]))
                 defArts += gArtifactBaseRV[defenderHero->m_artifacts[artifactSlot]];
         }
-        outcomeValue =
-            outcomeValue
-            + (defArts + 1250)
-                  * (gHumanPlayer[defenderHero->m_owner] ? gAttackHumanBonus : gAttackComputerBonus)
-                  * winChance;
+        // A hero valued in the tavern has no owner (-1); the original read
+        // the variable before the human player table for it. No owner is
+        // not a human player.
+        outcomeValue = outcomeValue
+                       + (defArts + 1250)
+                             * (defenderHero->m_owner >= 0 && gHumanPlayer[defenderHero->m_owner]
+                                    ? gAttackHumanBonus
+                                    : gAttackComputerBonus)
+                             * winChance;
     }
 }
 
@@ -2043,9 +2047,11 @@ float philAI::TurnValueOfObelisk(i32 player) {
     playerAIData* aiData;
     i32 each;
     aiData = &gGame->m_players[player].m_aiData;
-    each = gArtifactBaseRV[gGame->m_ultimateArtifactId] / 110;
+    // The original read the base value before testing for no artifact; the
+    // value of index -1 was never used.
     if (gGame->m_ultimateArtifactId == ARTIFACT_NONE)
         return 0.0f;
+    each = gArtifactBaseRV[gGame->m_ultimateArtifactId] / 110;
     aiData->m_obeliskValue = each * 48 / gGame->m_obeliskCount;
     aiData->m_obeliskValue =
         aiData->m_obeliskValue
@@ -2254,8 +2260,12 @@ void philAI::EvaluateOneTimeCreaturePurchase(
     }
     if (replacementSlot != -1)
         purchasedValue -= leastStackValue;
-    purchaseValue =
-        purchasedValue * gGame->m_players[aiHero->m_owner].m_aiData.m_upgradeValueWeight;
+    // A hero in the tavern, valued for buying, has no owner yet; the original
+    // read the weight from before the player table. The buyer is the
+    // current player.
+    purchaseValue = purchasedValue
+                    * gGame->m_players[aiHero->m_owner >= 0 ? aiHero->m_owner : gCurPlayer]
+                          .m_aiData.m_upgradeValueWeight;
     if (useAvailableCount == false) {
         GetMonsterCost(creature, gCreatureCost);
         purchaseValue -= purchaseCount * RVConversion(gCreatureCost);
@@ -3264,7 +3274,8 @@ i32 philAI::ValueOfEventAtPosition(hero* aiHero, i16 x, i16 y, i32 immediate, i3
                 *liveChance = gWinChance * 100.0f;
                 if (gEventTownScore > 0)
                     gVisitResult = gVisitResult + gEventTownScore * gWinChance;
-                if (immediate && gHumanPlayer[gEventHero->m_owner] && gVisitResult > 200)
+                if (immediate && gEventHero->m_owner >= 0 && gHumanPlayer[gEventHero->m_owner]
+                    && gVisitResult > 200)
                     gVisitResult = gVisitResult * 1.5;
                 if (gWinChance > 0.75)
                     gHeroLiveChance[gEventLocation->m_objectMetadata] = AI_CHANCE_CERTAIN;
@@ -3433,7 +3444,7 @@ i32 philAI::ValueOfEventAtPosition(hero* aiHero, i16 x, i16 y, i32 immediate, i3
             }
             break;
         case MAP_OBJECT_GAZEBO:
-            if (aiHero->m_visitedSites & (1 << gEventLocation->m_objectMetadata))
+            if (aiHero->m_visitedSites & (1 << (gEventLocation->m_objectMetadata & 31)))
                 gVisitResult = 0;
             else
                 gVisitResult = aiHero->m_aiFightValue * 1000.0f;

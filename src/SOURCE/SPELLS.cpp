@@ -126,6 +126,13 @@ i16 HandleCastSpell(struct tag_message& message) {
             }
             break;
         case MESSAGE_LEFT_BUTTON_DOWN:
+            // The target is remembered from the last pointer move, across
+            // casts and combats; a click without moving cast at a hex that
+            // may since have emptied, and the spell then used a missing
+            // target. It is checked again.
+            if (gSpellTargetHex != ARMY_HEX_INVALID
+                && !gCombatManager->ValidSpellTarget(gCombatManager->m_selectedSpell, gSpellTargetHex))
+                gSpellTargetHex = ARMY_HEX_INVALID;
             if (gSpellTargetHex != ARMY_HEX_INVALID) {
                 if (gInTeleportGetDest)
                     gNextActionGridIndex2 = gSpellTargetHex;

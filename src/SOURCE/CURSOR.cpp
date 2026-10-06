@@ -335,8 +335,12 @@ mapCell* advManager::MoveHero(
     if (m_cursorDirection != direction)
         TurnTo(direction);
     champion->m_direction = direction;
-    if (champion->IsEmbarked()
-        && nextCellItem->m_triggerType == MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST)) {
+    // A step off the map's edge: GetCell gives cell (0,0) for it, and the
+    // original ran that cell's event (with coordinates -1 or 72) before
+    // ValidMove refused the step. The step is refused here first.
+    if (*eventX < 0 || *eventY < 0 || *eventX >= MAP_CELL_GRID_SIZE || *eventY >= MAP_CELL_GRID_SIZE)
+        goto movementDone;
+    if (champion->IsEmbarked() && nextCellItem->m_triggerType == MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST)) {
         boatRecord* boat;
         mapCell* boatCell;
 

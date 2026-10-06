@@ -400,7 +400,12 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                     );
                     break;
                 case SKELETON_ARTIFACT:
-                    if (visitingHero->NumArtifacts() == HERO_ARTIFACT_SLOT_COUNT) {
+                    // With every artifact in play GiveRandomArtifact pays
+                    // gold instead and returns no artifact; the original then
+                    // named artifact -1 (the bytes before the name table).
+                    // The gold is now shown as for a hero with no free slot.
+                    if (visitingHero->NumArtifacts() == HERO_ARTIFACT_SLOT_COUNT
+                        || (artifactId = GiveRandomArtifact(visitingHero)) == ARTIFACT_NONE) {
                         sprintf(gText, "%s.", localization::Tr("event.skeleton.treasure"));
                         EventWindow(
                             EVENT_TEXT_CUSTOM,
@@ -413,7 +418,6 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                             NORMAL_DIALOG_NO_OR_TEXT
                         );
                     } else {
-                        artifactId = GiveRandomArtifact(visitingHero);
                         sprintf(
                             gText,
                             "%s %s",
@@ -469,7 +473,11 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
             );
             break;
         case MAP_OBJECT_GAZEBO:
-            if (visitingHero->m_visitedSites & (1 << cell->m_objectMetadata)) {
+            // Sites are numbered from 1 into a 32-bit mask; on a map with 32
+            // or more the shift was 32 or more, which x86 masks to its low
+            // five bits. The mask is written out (also in DoAIEvent and
+            // philAI::ValueOfEventAtPosition).
+            if (visitingHero->m_visitedSites & (1 << (cell->m_objectMetadata & 31))) {
                 EventWindow(
                     EVENT_TEXT_GAZEBO_VISITED,
                     NORMAL_DIALOG_TYPE_OK,
@@ -492,7 +500,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                     NORMAL_DIALOG_NO_OR_TEXT
                 );
                 GiveExperience(visitingHero, GAZEBO_EXPERIENCE, false);
-                visitingHero->m_visitedSites |= 1 << cell->m_objectMetadata;
+                visitingHero->m_visitedSites |= 1 << (cell->m_objectMetadata & 31);
                 visitingHero->CheckLevel();
             }
             break;
@@ -1408,7 +1416,10 @@ i16 advManager::GiveArtifact(class hero* eventHero, i8 artifact) {
     if (slot == HERO_ARTIFACT_SLOT_COUNT)
         return GIVE_ARTIFACT_NO_SLOT;
     eventHero->m_artifacts[slot] = artifact;
-    gGame->m_randomArtifacts[artifact] = eventHero->m_id;
+    // The table has no entry for the spell book; the original wrote its
+    // owner over the first byte after the table (the first boat's id).
+    if (artifact >= 0 && artifact < ARTIFACT_REGULAR_END)
+        gGame->m_randomArtifacts[artifact] = eventHero->m_id;
     GiveTakeArtifactStat(eventHero, artifact, EVENT_ARTIFACT_GIVE);
     return slot;
 }
@@ -2142,9 +2153,9 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                               [m_mapOriginY + ADVMGR_VIEW_CENTER] = MAP_SOUND_NONE;
             break;
         case MAP_OBJECT_GAZEBO:
-            if (!(eventHero->m_visitedSites & (1 << cell->m_objectMetadata))) {
+            if (!(eventHero->m_visitedSites & (1 << (cell->m_objectMetadata & 31)))) {
                 GiveExperience(eventHero, GAZEBO_EXPERIENCE, true);
-                eventHero->m_visitedSites |= 1 << cell->m_objectMetadata;
+                eventHero->m_visitedSites |= 1 << (cell->m_objectMetadata & 31);
             }
             break;
         case MAP_OBJECT_WATERWHEEL:

@@ -382,7 +382,7 @@ void advManager::Close(void) {
     delete m_adventureWindow;
     m_adventureWindow = NULL;
     if (m_routeMap)
-        delete m_routeMap;
+        delete[] m_routeMap;
     m_routeMap = NULL;
     gCurBottomView = BOTTOM_VIEW_NONE;
     m_active = 0;
@@ -866,7 +866,9 @@ i16 advManager::Main(struct tag_message& message) {
                             gGame->ShowScenInfo();
                         break;
                     case INPUT_SCAN_T:
-                        if (gCurPlayerData->m_townCount >= 0) {
+                        // The original tested >= 0 and, for a player without
+                        // towns, selected the stale or empty (-1) first entry.
+                        if (gCurPlayerData->m_townCount > 0) {
                             if (gCurPlayerData->CurrentTown() == GAME_TOWN_NONE) {
                                 townIndex = gCurPlayerData->m_townIds[0];
                             } else {
@@ -1053,8 +1055,16 @@ i32 advManager::ProcessSelect(struct tag_message* message, class mapCell** event
             }
             break;
         case ADVENTURE_CONTROL_MAP_VIEW:
-            if (!(gGame->m_mapExtra[m_mapOriginX + m_hoverCellX][m_mapOriginY + m_hoverCellY]
-                  & gCurPlayerBit))
+            // At the map's edge the view shows the border beyond it. The
+            // original looked such a cell up in the visibility table outside
+            // the grid; it now counts as unexplored, so a right click shows
+            // the border text and a left click does nothing.
+            if (m_mapOriginX + m_hoverCellX < 0 || m_mapOriginY + m_hoverCellY < 0
+                || m_mapOriginX + m_hoverCellX >= MAP_CELL_GRID_SIZE
+                || m_mapOriginY + m_hoverCellY >= MAP_CELL_GRID_SIZE)
+                visible = false;
+            else if (!(gGame->m_mapExtra[m_mapOriginX + m_hoverCellX][m_mapOriginY + m_hoverCellY]
+                       & gCurPlayerBit))
                 visible = false;
             theCell = GetCell(m_mapOriginX + m_hoverCellX, m_mapOriginY + m_hoverCellY);
             if (message->modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
@@ -2428,6 +2438,18 @@ void advManager::UpdateRadar(b8 updateScreen, b32 partial) {
         );
 }
 
+// The name of an object type for the quick info. The table has 63 entries,
+// but map cells carry types up to 127; the original read on into the tables
+// the linker placed after it (the 36 town names, then the event texts), and
+// so showed those. The same text is chosen here without leaving the tables.
+static char* QuickInfoObjectName(i32 type) {
+    if (type < 63)
+        return gObjectNames[type];
+    if (type < 63 + GAME_TOWN_COUNT)
+        return gTownNames[type - 63];
+    return gEventText[type - 63 - GAME_TOWN_COUNT];
+}
+
 void advManager::QuickInfo(i16 cellX, i16 cellY) {
     mapCell* currentCell;
     i16 posX;
@@ -2478,7 +2500,15 @@ void advManager::QuickInfo(i16 cellX, i16 cellY) {
                         gMineNames[gGame->m_mines[currentCell->m_objectMetadata].type]
                     );
                     break;
+                // A resource or monster cell whose picture is not one of
+                // theirs (some shipped maps have such cells) indexed the name
+                // tables far past their end; it gets the object type's name.
                 case MAP_OBJECT_RESOURCE:
+                    if (currentCell->m_objectIndex < RESOURCE_PILE_OBJECT_BASE
+                        || currentCell->m_objectIndex >= RESOURCE_PILE_OBJECT_BASE + RESOURCE_COUNT) {
+                        sprintf(gText, "\n\n%s", QuickInfoObjectName(MAP_OBJECT_RESOURCE));
+                        break;
+                    }
                     sprintf(
                         gText,
                         "\n\n%s",
@@ -2486,13 +2516,17 @@ void advManager::QuickInfo(i16 cellX, i16 cellY) {
                     );
                     break;
                 case MAP_OBJECT_RESOURCE_SHADOW:
-                    sprintf(
-                        gText,
-                        "\n\n%s",
-                        gResourceNames[(currentCell->m_objectIndex + 2)]
-                    );
+                    if (currentCell->m_objectIndex + 2 >= RESOURCE_COUNT) {
+                        sprintf(gText, "\n\n%s", QuickInfoObjectName(MAP_OBJECT_RESOURCE));
+                        break;
+                    }
+                    sprintf(gText, "\n\n%s", gResourceNames[(currentCell->m_objectIndex + 2)]);
                     break;
                 case MAP_OBJECT_MONSTER:
+                    if (currentCell->m_objectIndex >= CREATURE_COUNT) {
+                        sprintf(gText, "\n\n%s", QuickInfoObjectName(MAP_OBJECT_MONSTER));
+                        break;
+                    }
                     sprintf(
                         gText,
                         "\n\n%s %s",
@@ -2507,7 +2541,7 @@ void advManager::QuickInfo(i16 cellX, i16 cellY) {
                     sprintf(
                         gText,
                         "\n\n%s",
-                        gObjectNames[currentCell->m_triggerType & MAP_TRIGGER_TYPE_MASK]
+                        QuickInfoObjectName(currentCell->m_triggerType & MAP_TRIGGER_TYPE_MASK)
                     );
                     break;
             }
@@ -4509,9 +4543,12 @@ void advManager::ViewWorld(
                     ICON_DRAW_OFFSET_FULL
                 );
                 if (cell->m_objectIndex != MAP_CELL_NO_FRAME) {
-                    tileset =
-                        (cell->m_objectTileset & MAP_CELL_TILESET_MASK);
-                    if ((1 << tileset) & mask)
+                    tileset = (cell->m_objectTileset & MAP_CELL_TILESET_MASK);
+                    // The small trees have fewer frames than the map's
+                    // trees (98 against 101); the original drew the last
+                    // three from a frame entry past the table.
+                    if (((1 << tileset) & mask)
+                        && cell->m_objectIndex < mapTilesets[tileset]->m_frameCount)
                         mapTilesets[tileset]->DrawToBuffer(
                             screenX,
                             rowPixelY,
@@ -4626,10 +4663,17 @@ void advManager::ViewWorld(
                                             ICON_DRAW_NORMAL,
                                             ICON_DRAW_OFFSET_FULL
                                         );
+                                        // A hero's cell holds the hero, not the mine
+                                        // (Tournament Edition TE-FIX-8); the original
+                                        // drew the letter of mine record number
+                                        // hero id, up to frame 23 of 7.
                                         lettersIcons->DrawToBuffer(
                                             screenX,
                                             rowPixelY,
-                                            (gGame->m_mines[cell->m_objectMetadata].type),
+                                            (gGame
+                                                ->m_mines[gGame->m_heroRecs[cell->m_objectMetadata]
+                                                              .m_occupiedTown]
+                                                .type),
                                             ICON_DRAW_NORMAL,
                                             ICON_DRAW_OFFSET_FULL
                                         );
@@ -4698,10 +4742,17 @@ void advManager::ViewWorld(
                                             ICON_DRAW_NORMAL,
                                             ICON_DRAW_OFFSET_FULL
                                         );
+                                        // A hero's cell holds the hero, not the mine
+                                        // (Tournament Edition TE-FIX-8); the original
+                                        // drew the letter of mine record number
+                                        // hero id, up to frame 23 of 7.
                                         lettersIcons->DrawToBuffer(
                                             screenX,
                                             rowPixelY,
-                                            (gGame->m_mines[cell->m_objectMetadata].type),
+                                            (gGame
+                                                ->m_mines[gGame->m_heroRecs[cell->m_objectMetadata]
+                                                              .m_occupiedTown]
+                                                .type),
                                             ICON_DRAW_NORMAL,
                                             ICON_DRAW_OFFSET_FULL
                                         );
@@ -4825,9 +4876,12 @@ void advManager::ViewWorld(
                 screenX = x * VIEW_WORLD_CELL_PIXELS + VIEW_WORLD_ORIGIN;
                 rowPixelY = y * VIEW_WORLD_CELL_PIXELS + VIEW_WORLD_ORIGIN;
                 if (cell->m_overlayIndex != MAP_CELL_NO_FRAME) {
-                    tileset =
-                        (cell->m_overlayTileset & MAP_CELL_TILESET_MASK);
-                    if ((1 << tileset) & mask)
+                    tileset = (cell->m_overlayTileset & MAP_CELL_TILESET_MASK);
+                    // The small trees have fewer frames than the map's
+                    // trees (98 against 101); the original drew the last
+                    // three from a frame entry past the table.
+                    if (((1 << tileset) & mask)
+                        && cell->m_objectIndex < mapTilesets[tileset]->m_frameCount)
                         mapTilesets[tileset]->DrawToBuffer(
                             screenX,
                             rowPixelY,
@@ -5840,7 +5894,11 @@ void advManager::DimensionDoor(void) {
         newX = m_mapOriginX + m_hoverCellX;
         newY = m_mapOriginY + m_hoverCellY;
         targetCell = GetCell(newX, newY);
-        if ((targetHero->IsEmbarked() && targetCell->m_tileIndex >= MAP_CELL_TILES_PER_TERRAIN)
+        // The view can show the border beyond the map's edge. The original
+        // tested the clamped cell (0,0) for such a target and teleported the
+        // hero off the map (Tournament Edition X28); it now fails.
+        if (newX < 0 || newY < 0 || newX >= MAP_CELL_GRID_SIZE || newY >= MAP_CELL_GRID_SIZE
+            || (targetHero->IsEmbarked() && targetCell->m_tileIndex >= MAP_CELL_TILES_PER_TERRAIN)
             || (!targetHero->IsEmbarked()
                 && targetCell->m_tileIndex < MAP_CELL_TILES_PER_TERRAIN)) {
             NormalDialog(
@@ -5888,8 +5946,12 @@ void advManager::TownGate(void) {
             selectedTown = i;
         }
     }
-    if (selectedTown == TOWN_GATE_NO_TOWN)
+    // The original went on after this message and teleported the hero into
+    // the town named by the byte before the town list.
+    if (selectedTown == TOWN_GATE_NO_TOWN) {
         NormalDialog(localization::Tr("adventure.town_gate.no_town"), NORMAL_DIALOG_TYPE_OK);
+        return;
+    }
     if (gGame->m_castleRecs[gCurPlayerData->m_townIds[selectedTown]].m_occupyingHeroId
         != TOWN_OCCUPYING_HERO_NONE) {
         NormalDialog(localization::Tr("adventure.town_gate.occupied"), NORMAL_DIALOG_TYPE_OK, 0x61);

@@ -312,7 +312,10 @@ void searchArray::TestPossibleDirections(
          gSearchDirection++) {
         gSearchNextX = x + gNormalDirTable[gSearchDirection].x;
         gSearchNextY = y + gNormalDirTable[gSearchDirection].y;
-        if (gSearchNextX <= -7 || gSearchNextX >= MAP_CELL_GRID_SIZE || gSearchNextY <= -7
+        // The original let up to six cells beyond the west and north edges
+        // through (x <= -7) and read the visibility table outside the grid
+        // for them; PushPoint refuses such cells, so they were never reached.
+        if (gSearchNextX < 0 || gSearchNextX >= MAP_CELL_GRID_SIZE || gSearchNextY < 0
             || gSearchNextY >= MAP_CELL_GRID_SIZE) {
             gSearchTerrain = TERRAIN_INVALID;
             goto storeDirection;

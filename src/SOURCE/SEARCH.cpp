@@ -102,9 +102,21 @@ i32 searchArray::BuildPath(
     u8* pathDirection = m_directions;
     m_pathLength = 0;
     while (destinationX != startX || destinationY != startY) {
-        searchNode* node = &m_cells[destinationX][destinationY];
-        if (node->x != destinationX && node->y != destinationY)
+        // A route traced back through a cell the search did not reach can
+        // leave the grid; the original read the nodes beyond it.
+        // A failed trace also forgets the steps it collected: the original
+        // left them in m_pathLength, and ShowRoute drew them from a start
+        // outside the grid, writing before the route map.
+        if (destinationX < 0 || destinationX >= MAP_CELL_GRID_SIZE || destinationY < 0
+            || destinationY >= MAP_CELL_GRID_SIZE) {
+            m_pathLength = 0;
             return 0;
+        }
+        searchNode* node = &m_cells[destinationX][destinationY];
+        if (node->x != destinationX && node->y != destinationY) {
+            m_pathLength = 0;
+            return 0;
+        }
         if (node->distance <= maximumCost) {
             *pathDirection = node->direction;
             ++pathDirection;
@@ -199,7 +211,8 @@ void searchArray::SeedPosition(
     }
     if (!continueSeed)
         PushPoint(seedX, seedY, seedDirection, 0, maximumCost, 0, 0, 0, 0, 0, 0, 0);
-    s_currentHero = gGame->GetHero(gCurPlayerData->m_currentHero);
+    s_currentHero = gCurPlayerData->m_currentHero >= 0 ? gGame->GetHero(gCurPlayerData->m_currentHero)
+                                                       : NULL;
     while (m_queueCount > 0) {
         --m_queueCount;
         s_currentNode = m_queue[m_queueCount];
@@ -373,12 +386,14 @@ void searchArray::SeedPosition(
             for (s_mapY = 0; s_mapY < MAP_CELL_GRID_SIZE; s_mapY++) {
                 if (MAP_TRIGGER_OBJECT(gAdvManager->GetCell(s_mapX, s_mapY)->m_triggerType)
                     == MAP_OBJECT_MONSTER) {
-                    for (s_direction = MAP_DIRECTION_FIRST; s_direction < MAP_DIRECTION_COUNT;
-                         s_direction++) {
-                        s_adjacentX =
-                            s_mapX + gNormalDirTable[s_direction].x;
-                        s_adjacentY =
-                            s_mapY + gNormalDirTable[s_direction].y;
+                    for (s_direction = MAP_DIRECTION_FIRST; s_direction < MAP_DIRECTION_COUNT; s_direction++) {
+                        s_adjacentX = s_mapX + gNormalDirTable[s_direction].x;
+                        s_adjacentY = s_mapY + gNormalDirTable[s_direction].y;
+                        // The original read search nodes outside the grid for
+                        // monsters on the map's edge.
+                        if (s_adjacentX < 0 || s_adjacentX >= MAP_CELL_GRID_SIZE || s_adjacentY < 0
+                            || s_adjacentY >= MAP_CELL_GRID_SIZE)
+                            continue;
                         s_targetCell = gAdvManager->GetCell(s_adjacentX, s_adjacentY);
                         s_directionBlocked = true;
                         if (((1 << s_direction) & MAP_DIRECTION_SOUTH_MASK)

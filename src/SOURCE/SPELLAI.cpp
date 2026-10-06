@@ -121,7 +121,10 @@ void combatManager::DetermineEffectOfSpell(
     if (spellMode == SPELL_AI_FRIENDLY || spellMode == SPELL_AI_ENEMY)
         done = FirstArmy(COMBAT_SPELL_AI_HEX_FIRST, side, &hex);
     while (!done) {
-        if (m_hexCells[hex].m_occupantIndex >= 0) {
+        // A hex a stack has left keeps its index with no side (-1); the
+        // original formed a pointer before the army table for it, used only
+        // by the spells that walk the stacks of one side, which skip it.
+        if (m_hexCells[hex].m_occupantIndex >= 0 && m_hexCells[hex].m_occupantSide >= 0) {
             targetCreature =
                 &m_armies[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex];
             gSpellAITargetSide = m_hexCells[hex].m_occupantSide;
@@ -399,7 +402,8 @@ void combatManager::EffectSpellDamage(
     hex = 0;
     neighborIndex = COMBAT_DIRECTION_NORTHEAST;
     done = false;
-    if (m_hexCells[targetHex].m_occupantIndex >= 0)
+    // Overwritten below before any use; a vacated hex has no side (-1).
+    if (m_hexCells[targetHex].m_occupantIndex >= 0 && m_hexCells[targetHex].m_occupantSide >= 0)
         targetArmy =
             &m_armies[m_hexCells[targetHex].m_occupantSide][m_hexCells[targetHex].m_occupantIndex];
     for (side = COMBAT_SIDE_FIRST; side < COMBAT_SIDE_COUNT; side++) {
@@ -430,7 +434,9 @@ void combatManager::EffectSpellDamage(
                     hex = targetHex;
                 break;
         }
-        if (!done && m_hexCells[hex].m_occupantIndex >= 0
+        // A fireball's neighbour off the battlefield is hex -1; the original
+        // read the bytes before the hex table for it (Tournament Edition X17).
+        if (!done && hex >= 0 && m_hexCells[hex].m_occupantIndex >= 0
             && m_hexCells[hex].m_occupantSide >= COMBAT_SIDE_FIRST) {
             targetArmy = &m_armies[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex];
             if (targetArmy->m_stats.hitPoints > 0

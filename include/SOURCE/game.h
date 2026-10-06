@@ -352,6 +352,7 @@ public:
     void SettleOverlay(i32 x, i32 y);
     void RandomizeTerrainTiles(void);
     void ProcessMapExtra(void);
+    i32 MapDataValid(void);
     i8 SetupTowns(void);
     void ProcessOnMapHeroes(void);
     void CheckHeroConsistency(void);

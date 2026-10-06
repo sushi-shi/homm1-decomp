@@ -459,8 +459,17 @@ i16 game::SaveGame(char* filename, b8 generateName) {
     outFile.Put(&m_mapSounds[0][0], sizeof(m_mapSounds));
     outFile.Put(&m_mapExtra[0][0], sizeof(m_mapExtra));
     outFile.Put(&gMapVisitFlags[0][0], sizeof(gMapVisitFlags));
-    if (!outFile.SaveFile(savePath))
-        FileError(savePath);
+    if (!outFile.SaveFile(savePath)) {
+        // The original ended the program when the file could not be created
+        // and ignored failed writes (a full disk left a cut-off save). The
+        // game now reports it and goes on; the previous save is kept. The
+        // network transfer file is still fatal: the other players wait on it.
+        if (!stricmp(genName, "REMOTE.GAM"))
+            FileError(savePath);
+        sprintf(gText, localization::Tr("file.open.failed"), savePath);
+        NormalDialog(gText, NORMAL_DIALOG_TYPE_OK);
+        return 0;
+    }
     return 1;
 }
 
@@ -1105,6 +1114,10 @@ void game::NewMap(char* mapName) {
     if (mapName != gMapName)
         strcpy(gMapName, mapName);
     LoadMap(gMapName);
+    if (!MapDataValid()) {
+        sprintf(gText, "%s%s", gMapPath, gMapName);
+        FileError(gText);
+    }
     RandomizeTerrainTiles();
     RandomizePlayerCrests();
     ProcessMapExtra();
@@ -1144,9 +1157,14 @@ void game::NewMap(char* mapName) {
                     SetupTown(j, !gHumanPlayer[i]);
             }
         }
-        if (m_noMapHeroes
-            || (m_campaignType > 0 && m_campaignScenario >= CAMPAIGN_SCENARIO_LORD_FIRST
-                && m_campaignScenario <= CAMPAIGN_SCENARIO_LORD_LAST && i == 0)) {
+        // The starting hero stands at the player's first town. A player
+        // without one (a map that names its towns' owners and leaves a
+        // player none) has an empty entry (-1); the original placed the hero
+        // at the record before the town table. Such a player gets no hero.
+        if ((m_noMapHeroes
+             || (m_campaignType > 0 && m_campaignScenario >= CAMPAIGN_SCENARIO_LORD_FIRST
+                 && m_campaignScenario <= CAMPAIGN_SCENARIO_LORD_LAST && i == 0))
+            && m_players[i].m_townIds[0] >= 0 && m_players[i].m_townIds[0] < GAME_TOWN_COUNT) {
             m_players[i].m_heroCount = 1;
             if (m_campaignType > 0)
                 m_players[i].m_heroIds[0] = GetNewHeroId(gCrestHeroClass[m_players[i].m_color]);
@@ -1222,7 +1240,7 @@ void game::NewMap(char* mapName) {
     while (m_map[i][j].m_objectIndex != MAP_CELL_NO_FRAME
            || m_map[i][j].m_overlayIndex != MAP_CELL_NO_FRAME
            || m_map[i][j].m_tileIndex < MAP_CELL_TILES_PER_TERRAIN
-           || (gNumHumanPlayers == 1
+           || (gNumHumanPlayers == 1 && m_players[0].m_heroCount > 0
                && ultimateSpread >= MANHATTAN_LENGTH(
                       i - m_heroRecs[m_players[0].m_heroIds[0]].m_x,
                       j - m_heroRecs[m_players[0].m_heroIds[0]].m_y
@@ -1776,6 +1794,8 @@ void game::ClaimTown(i8 townId, i8 player) {
 void game::ClaimMine(i8 mineId, i8 player) {
     i16 frame;
     mapCell* cellPtr;
+    i32 flagX;
+    i32 flagY;
     m_mines[mineId].owner = player;
     m_mineOwners[mineId] = player;
     switch ((m_mines[mineId].type)) {
@@ -1795,20 +1815,30 @@ void game::ClaimMine(i8 mineId, i8 player) {
             frame = 8;
             break;
     }
+    flagX = m_mines[mineId].x;
+    flagY = m_mines[mineId].y;
     switch ((m_mines[mineId].type)) {
         case RESOURCE_MERCURY:
-            cellPtr = &m_map[m_mines[mineId].x][m_mines[mineId].y - 2];
+            flagY -= 2;
             break;
         case MAP_OBJECT_DRAGON_CITY:
-            cellPtr = &m_map[m_mines[mineId].x - 1][m_mines[mineId].y - 3];
+            flagX -= 1;
+            flagY -= 3;
             break;
         case MAP_OBJECT_LIGHTHOUSE:
-            cellPtr = &m_map[m_mines[mineId].x - 2][m_mines[mineId].y];
+            flagX -= 2;
             break;
         default:
-            cellPtr = &m_map[m_mines[mineId].x][m_mines[mineId].y - 1];
+            flagY -= 1;
             break;
     }
+    // The flag goes on a cell above or left of the site. For a site on the
+    // map's top rows or left columns the original wrote it outside the grid
+    // (onto the bottom cell of the column to the left, or before the grid);
+    // such a site shows no flag.
+    if (flagX < 0 || flagY < 0)
+        return;
+    cellPtr = &m_map[flagX][flagY];
     if (player == GAME_PLAYER_NONE) {
         cellPtr->m_flags ^= MAP_CELL_OVERLAY_EXTRA;
     } else {
@@ -2894,8 +2924,12 @@ void game::PerWeek(void) {
     for (i = 0; i < GAME_PLAYER_COUNT; i++) {
         for (j = 0; j < PLAYER_TAVERN_HERO_COUNT; j++) {
             heroClass = (Random(1, 3) + heroClass) % HERO_CLASS_COUNT;
-            if (gGame->m_availableHeroes[gGame->m_players[i].m_availableHeroIds[j]]
-                == HERO_AVAILABILITY_RETREATED)
+            // The tavern slots of a player not in the game are empty (-1)
+            // until the first week; the original tested the byte before the
+            // table for them.
+            if (gGame->m_players[i].m_availableHeroIds[j] != HERO_ID_NONE
+                && gGame->m_availableHeroes[gGame->m_players[i].m_availableHeroIds[j]]
+                       == HERO_AVAILABILITY_RETREATED)
                 gGame->m_availableHeroes[gGame->m_players[i].m_availableHeroIds[j]] =
                     HERO_AVAILABILITY_UNAVAILABLE;
             gGame->m_players[i].m_availableHeroIds[j] = gGame->GetNewHeroId(heroClass);
@@ -3447,11 +3481,17 @@ void game::ProcessRandomObjects(b32 castlesOnly) {
                         break;
                     case MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_ARTIFACT):
                         cellPtrItem->m_triggerType = MAP_EVENT_TRIGGER(MAP_OBJECT_ARTIFACT);
-                        cellPtrItem->m_objectIndex =
-                            (GetRandomArtifactId());
-                        m_randomArtifacts
-                            [cellPtrItem->m_objectIndex] =
-                                GAME_ARTIFACT_ON_MAP;
+                        cellPtrItem->m_objectIndex = (GetRandomArtifactId());
+                        // With more random artifacts on the map than artifacts
+                        // the draw finds none (-1, stored as 255); the original
+                        // wrote entry 255 of the 37-entry table, into the boats.
+                        // Such a site is left empty.
+                        if (cellPtrItem->m_objectIndex >= ARTIFACT_REGULAR_END) {
+                            cellPtrItem->m_triggerType = MAP_OBJECT_NONE;
+                            cellPtrItem->m_objectIndex = MAP_CELL_NO_FRAME;
+                            break;
+                        }
+                        m_randomArtifacts[cellPtrItem->m_objectIndex] = GAME_ARTIFACT_ON_MAP;
                         break;
                     case MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_MINE):
                         RandomizeMine(x, y);
@@ -3790,6 +3830,134 @@ void game::RandomizeTerrainTiles(void) {
                     + Random(0, TERRAIN_TILE_VARIANT_COUNT - 1);
         }
     }
+}
+
+// The map's contents index the game's tables: object types, picture
+// numbers, town, mine and obelisk numbers, extra records and the hero and
+// town fields in them. The original trusted them; a map that breaks them (an
+// edited or damaged file) indexed outside the tables and the map. Such a map
+// is refused like an unreadable one. Every shipped map passes.
+static i32 ExtraRecordValid(i32 index) {
+    return index >= 1 && index < gMaxMapExtra && index < MAP_EXTRA_RECORD_CAPACITY
+           && gMapExtraBlocks[index] != NULL;
+}
+
+static i32 TroopsValid(const i8* types, const i16* counts) {
+    i32 slot;
+    for (slot = 0; slot < ARMY_GROUP_SLOT_COUNT; slot++) {
+        if (counts[slot] > 0 && (types[slot] < 0 || types[slot] >= CREATURE_COUNT))
+            return 0;
+    }
+    return 1;
+}
+
+i32 game::MapDataValid(void) {
+    i32 x;
+    i32 y;
+    i32 i;
+    i32 type;
+    i32 owner;
+    i32 heroes[GAME_PLAYER_COUNT];
+    mapCell* cell;
+    mapHeroExtra* heroExtra;
+    mapTownExtra* townExtra;
+    i8 townId;
+    i8 mineId;
+    i32 obelisks;
+
+    obelisks = 0;
+    for (i = 0; i < GAME_PLAYER_COUNT; i++) {
+        heroes[i] = 0;
+        // NewMap gives the players their towns from the first four records.
+        if (m_castleRecs[i].m_x <= 0 && m_castleRecs[i].m_y <= 0)
+            return 0;
+    }
+    for (i = 0; i < GAME_TOWN_COUNT; i++) {
+        if (m_castleRecs[i].m_x <= 0 && m_castleRecs[i].m_y <= 0)
+            continue;
+        if (m_castleRecs[i].m_x < TOWN_FOOTPRINT_LEFT
+            || m_castleRecs[i].m_x - TOWN_FOOTPRINT_LEFT + TOWN_FOOTPRINT_WIDTH > MAP_CELL_GRID_SIZE
+            || m_castleRecs[i].m_y < TOWN_FOOTPRINT_TOP || m_castleRecs[i].m_y >= MAP_CELL_GRID_SIZE)
+            return 0;
+    }
+    if (m_obeliskCount < 0 || m_obeliskCount > PLAYER_PUZZLE_PIECE_COUNT)
+        return 0;
+    for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
+        for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
+            cell = &m_map[x][y];
+            if (cell->m_tileIndex >= MAP_CELL_GROUND_TILE_COUNT)
+                return 0;
+            if (!(cell->m_triggerType & MAP_TRIGGER_EVENT))
+                continue;
+            type = cell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
+            switch (type) {
+                case MAP_OBJECT_TOWN:
+                case MAP_FILE_OBJECT_RANDOM_TOWN:
+                case MAP_FILE_OBJECT_RANDOM_CASTLE:
+                    townId = GetTownId(x, y);
+                    if (townId == GAME_TOWN_NONE)
+                        return 0;
+                    if (type == MAP_OBJECT_TOWN
+                        && (m_castleRecs[townId].m_type & MAP_TOWN_TYPE_MASK) >= TOWN_TYPE_COUNT)
+                        return 0;
+                    if (cell->m_objectMetadata != 0) {
+                        if (!ExtraRecordValid(cell->m_objectMetadata))
+                            return 0;
+                        townExtra = static_cast<mapTownExtra*>(gMapExtraBlocks[cell->m_objectMetadata]);
+                        if (townExtra->owner < MAP_TOWN_OWNER_UNSET
+                            || !TroopsValid(townExtra->troopTypes, townExtra->troopCounts))
+                            return 0;
+                    }
+                    break;
+                case MAP_FILE_OBJECT_HERO:
+                    if (!ExtraRecordValid(cell->m_objectMetadata))
+                        return 0;
+                    heroExtra = static_cast<mapHeroExtra*>(gMapExtraBlocks[cell->m_objectMetadata]);
+                    if (heroExtra->heroId < 0 || heroExtra->heroId >= GAME_HERO_COUNT
+                        || heroExtra->owner < 0 || heroExtra->experience < 0
+                        || !TroopsValid(heroExtra->troopTypes, heroExtra->troopCounts))
+                        return 0;
+                    for (i = 0; i < MAP_HERO_EXTRA_ARTIFACT_COUNT; i++) {
+                        if (heroExtra->artifacts[i] > ARTIFACT_MAGIC_BOOK)
+                            return 0;
+                    }
+                    owner = heroExtra->owner >= m_playerCount ? m_playerCount - 1 : heroExtra->owner;
+                    if (owner >= 0 && ++heroes[owner] > PLAYER_HERO_CAPACITY)
+                        return 0;
+                    break;
+                case MAP_FILE_OBJECT_RANDOM_MINE:
+                    mineId = GetMineId(x, y);
+                    if (mineId == GAME_MINE_NONE || x + 1 >= MAP_CELL_GRID_SIZE || y < 1)
+                        return 0;
+                    break;
+                case MAP_OBJECT_MINE:
+                case MAP_OBJECT_SAWMILL:
+                case MAP_OBJECT_ALCHEMIST_LAB:
+                    if (cell->m_objectMetadata >= GAME_MINE_COUNT)
+                        return 0;
+                    break;
+                case MAP_OBJECT_OBELISK:
+                    // RandomizeEvents numbers them from 1 into a 48-entry
+                    // visitor table; VisitObelisk divides by the count.
+                    if (++obelisks > PLAYER_PUZZLE_PIECE_COUNT || m_obeliskCount < 1)
+                        return 0;
+                    break;
+                case MAP_OBJECT_MONSTER:
+                    if (cell->m_objectIndex >= CREATURE_COUNT)
+                        return 0;
+                    break;
+                case MAP_OBJECT_ARTIFACT:
+                    if (cell->m_objectIndex > ARTIFACT_MAGIC_BOOK)
+                        return 0;
+                    break;
+                case MAP_OBJECT_SHIP:
+                    if (cell->m_objectMetadata >= GAME_BOAT_COUNT)
+                        return 0;
+                    break;
+            }
+        }
+    }
+    return 1;
 }
 
 void game::ProcessMapExtra(void) {
@@ -4632,7 +4800,10 @@ void game::RandomizePlayerCrests(void) {
     taken[m_players[0].m_color] = 1;
     for (i = 1; i < m_playerCount; i++) {
         do {
-            if (m_campaignType > 0
+            // The table has crests for three players; for the fourth the
+            // original read the next field (the first starting resource, 30
+            // in every scenario), which is no crest, so the crest is random.
+            if (m_campaignType > 0 && i < 3
                 && (gCampaignScenarios[m_campaignScenario].playerCrests[i]) < PLAYER_COLOR_COUNT
                 && gCampaignScenarios[m_campaignScenario].playerCrests[i] >= 0)
                 m_players[i].m_color = (gCampaignScenarios[m_campaignScenario].playerCrests[i]);
