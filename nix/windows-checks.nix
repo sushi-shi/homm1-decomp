@@ -5,8 +5,9 @@
 # smoke: plays the part of a Windows player: the package's bin/ copied into a
 #   game folder, started from that folder, from another one, and with a quoted
 #   HOMM1_DATA (as cmd's `set HOMM1_DATA="C:\..."` leaves it) from a separate
-#   program folder. Each start has to reach the main menu. Game data cannot be
-#   in a flake check, so this is an app:
+#   program folder; then the scenario editor from the game folder. Each start
+#   has to reach the main menu (the editor's map). Game data cannot be in a
+#   flake check, so this is an app:
 #     HOMM1_DATA=/path/to/game nix run .#windows-smoke
 { pkgs, windows }:
 
@@ -94,7 +95,8 @@ in
         (cd "$directory" && env HOMM1_INPUT_REPLAY="$(winepath -w "$replay")" \
           HOMM1_CONFIG="$(winepath -w "$work/config-$name")" "$@" \
           timeout -k 5 90 wine "$program" /I0 >"$work/$name.log" 2>&1) || status=$?
-        # The main menu: a full picture, not an empty screen or a message.
+        # The main menu (or the editor's map): a full picture, not an empty
+        # screen or a message.
         if [ "$status" = 0 ] && [ -s "$shot" ] && python3 - "$shot" <<'PYTHON'
       import sys
       data = open(sys.argv[1], "rb").read()
@@ -114,6 +116,7 @@ in
       start other-folder "$work/elsewhere" "$game/heroes.exe"
       start quoted-HOMM1_DATA "$work/elsewhere" "$work/program/heroes.exe" \
         HOMM1_DATA="\"$(winepath -w "$game")\""
+      start editor "$game" "$game/heroes-editor.exe"
       [ "$failures" = 0 ]
     '';
   };
