@@ -1,0 +1,5 @@
+# A hero on the map (cell 10,10) that names no extra record: the editor's
+# checks read the hero record through a null pointer.
+base MAPS\AES31000.MAP
+set 8678 C7 00
+expect refused

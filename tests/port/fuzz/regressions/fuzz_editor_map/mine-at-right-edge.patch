@@ -1,0 +1,5 @@
+# A mine in the last column (71,10): the writer read its resource marker
+# from the cell to its right, past the map.
+base MAPS\AES31000.MAP
+set 52598 99
+expect refused

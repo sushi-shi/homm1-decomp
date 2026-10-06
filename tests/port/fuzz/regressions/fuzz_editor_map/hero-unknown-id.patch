@@ -1,0 +1,6 @@
+# A hero whose record names hero 99 of 36: the checks indexed their table of
+# heroes in use with it.
+base MAPS\AES31000.MAP
+set 8678 C7 01
+set 58672 63        # extra record 1, read as a hero: its hero id
+expect refused
