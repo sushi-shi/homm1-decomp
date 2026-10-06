@@ -258,6 +258,8 @@ extern i16 gHeroEventStratRVOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 // from; a target already in it ends the hero's turn.
 H1_ENUM_CONST_BEGIN(AIPlaceVisitConstant)
     AI_PLACE_VISIT_COUNT = 30,
+    AI_PLACE_X = 0,
+    AI_PLACE_Y = 1,
     AI_PLACE_COORDINATE_COUNT = 2
 H1_ENUM_CONST_END(AIPlaceVisitConstant)
 #define gPlacesVisited iPlacesVisited // spelling fixes .bss order
@@ -323,13 +325,16 @@ extern i8 gCurPlayer;
 #define gCurTurn giCurTurn // spelling fixes .bss order
 extern i32 gCurTurn;
 
-// The AI's hourglass: phases 0..LAST, advanced faster with fewer heroes
-// (PHASE_1/3/6 are the steps a two- or three-hero turn skips).
+// The AI's hourglass: phases FIRST..LAST, GetTurnAIVars resets it and
+// IncrementHourGlass advances it faster with fewer heroes (one hero takes
+// three steps; PHASE_1/3/6 are the steps a two- or three-hero turn skips).
 H1_ENUM_CONST_BEGIN(AIHourGlassConstant)
+    AI_HOUR_GLASS_PHASE_FIRST = 0,
     AI_HOUR_GLASS_PHASE_1 = 1,
     AI_HOUR_GLASS_PHASE_3 = 3,
     AI_HOUR_GLASS_PHASE_6 = 6,
     AI_HOUR_GLASS_PHASE_LAST = 9,
+    AI_HOUR_GLASS_ONE_HERO = 1,
     AI_HOUR_GLASS_TWO_HEROES = 2,
     AI_HOUR_GLASS_THREE_HEROES = 3
 H1_ENUM_CONST_END(AIHourGlassConstant)
@@ -341,5 +346,30 @@ H1_ENUM_CONST_BEGIN(AIEventValueConstant)
     AI_CHANCE_CERTAIN = 100,
     AI_DEBUG_TRACE_COLUMN = 15
 H1_ENUM_CONST_END(AIEventValueConstant)
+
+// ValueOfEventAtPosition's evaluation mode (its `immediate` argument): STRATEGIC
+// (StrategicValueOfPosition's survey) reads and fills the per-cell event
+// cache; any other mode evaluates the event afresh. RVOfPosition passes
+// IMMEDIATE for the events and guards on the way; GoodAdjacent's step and
+// DetermineTargetPosition's candidate cells pass TARGET.
+H1_ENUM_CONST_BEGIN(AIEventEvaluation)
+    AI_EVENT_STRATEGIC = 0,
+    AI_EVENT_IMMEDIATE = 1,
+    AI_EVENT_TARGET = 2
+H1_ENUM_CONST_END(AIEventEvaluation)
+
+// ProbableOutcomeOfBattle's raw fight values, attacker first.
+H1_ENUM_CONST_BEGIN(AIBattleSideConstant)
+    AI_BATTLE_ATTACKER = 0,
+    AI_BATTLE_DEFENDER = 1,
+    AI_BATTLE_SIDE_COUNT = 2
+H1_ENUM_CONST_END(AIBattleSideConstant)
+
+// CheckReload and CheckBerserk weigh the hero's army at least FIGHT_VALUE_MIN;
+// CheckBerserk only considers an army of BERSERK_FIGHT_VALUE_MIN or more.
+H1_ENUM_CONST_BEGIN(AIFightValueConstant)
+    AI_FIGHT_VALUE_MIN = 100,
+    AI_BERSERK_FIGHT_VALUE_MIN = 30000
+H1_ENUM_CONST_END(AIFightValueConstant)
 
 #endif // HOMM1_SOURCE_PHILAI_H

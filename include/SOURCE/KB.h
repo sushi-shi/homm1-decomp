@@ -579,6 +579,16 @@ extern float gSpellCastNumMod[];
 // FightValueOfStack's primary-stat power curve, per-spell AI flags and
 // values, spell-power duration scale and per-charge cast weights.
 extern float gStatPower[];
+// gBattleStat and gStatPower hold STAT_CURVE_LAST + 1 entries. A stat
+// indexes them directly, capped at the last entry; an attack/defence
+// difference (army::DamageEnemy, KeepAttack) or FightValueOfStack's stat sum
+// is clamped to +-STAT_CURVE_OFFSET and shifted by it. gSpellCastNumMod
+// weighs up to SPELL_CAST_COUNT_LAST spell charges or knowledge points.
+H1_ENUM_CONST_BEGIN(StatCurveConstant)
+    STAT_CURVE_OFFSET = 20,
+    STAT_CURVE_LAST = 40,
+    SPELL_CAST_COUNT_LAST = 20
+H1_ENUM_CONST_END(StatCurveConstant)
 // DoAI: the single player the AI may run for, and the places each hero has
 // already started from this turn.
 

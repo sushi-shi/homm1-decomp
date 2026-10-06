@@ -1568,11 +1568,11 @@ void army::DamageEnemy(
     defenseExtra = 0;
     battleDiff =
         m_stats.attack + attackAdd - (target->m_stats.defense + defenseExtra + defenseModifier);
-    if (battleDiff > 20)
-        battleDiff = 20;
-    if (battleDiff < -20)
-        battleDiff = -20;
-    rolledTotal *= gBattleStat[battleDiff + 20];
+    if (battleDiff > STAT_CURVE_OFFSET)
+        battleDiff = STAT_CURVE_OFFSET;
+    if (battleDiff < -STAT_CURVE_OFFSET)
+        battleDiff = -STAT_CURVE_OFFSET;
+    rolledTotal *= gBattleStat[battleDiff + STAT_CURVE_OFFSET];
     if (m_luck > ARMY_LUCK_NONE)
         rolledTotal *= 2;
     if (m_luck < ARMY_LUCK_NONE)
