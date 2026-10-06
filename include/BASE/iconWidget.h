@@ -44,7 +44,7 @@ public:
         i16 y,
         i16 width,
         i16 height,
-        char* name,
+        char* iconName,
         i8 frame,
         i8 orientation,
         i16 id,

@@ -250,10 +250,10 @@ void combatManager::SpellMessage(i8 spell, i8 hex) {
 
 // HoMM1 has nineteen spells, a single timed effect per stack and no eagle
 // eye, mirror image or elementals.
-#define target targetCreature // frame-slot spelling
-#define targetSide armySide // frame-slot spelling
+#define target targetCreature     // frame-slot spelling
+#define targetSide armySide       // frame-slot spelling
 #define targetIndex occupantIndex // frame-slot spelling
-#define teleportArmy teleported // frame-slot spelling
+#define teleportArmy teleported   // frame-slot spelling
 VA(0x0045a668, 0xc5e)
 void combatManager::CastSpell(i8 spell, i8 targetHex, i8 castByCreature, i8 teleportDest) {
     army* target;
@@ -332,7 +332,8 @@ void combatManager::CastSpell(i8 spell, i8 targetHex, i8 castByCreature, i8 tele
             CLEAR_HEX_OCCUPANT(m_hexCells[teleportArmy->m_hex]);
             if (m_hexCells[teleportArmy->m_hex].m_occupantFootprintHalf == ARMY_FACING_LEFT) {
                 CLEAR_HEX_OCCUPANT(m_hexCells[teleportArmy->m_hex + 1]);
-            } else if (m_hexCells[teleportArmy->m_hex].m_occupantFootprintHalf == ARMY_FACING_RIGHT) {
+            } else if (m_hexCells[teleportArmy->m_hex].m_occupantFootprintHalf
+                       == ARMY_FACING_RIGHT) {
                 CLEAR_HEX_OCCUPANT(m_hexCells[teleportArmy->m_hex - 1]);
             }
             teleportArmy->SpellEffect(COMBAT_EFFECT_TELEPORT, 0);
@@ -387,7 +388,8 @@ void combatManager::CastSpell(i8 spell, i8 targetHex, i8 castByCreature, i8 tele
                 teleportArmy->m_hex = targetHex;
                 m_hexCells[teleportArmy->m_hex].m_occupantSide = targetSide;
                 m_hexCells[teleportArmy->m_hex].m_occupantIndex = targetIndex;
-                m_hexCells[teleportArmy->m_hex].m_occupantFootprintHalf = HEXCELL_FOOTPRINT_HALF_NONE;
+                m_hexCells[teleportArmy->m_hex].m_occupantFootprintHalf =
+                    HEXCELL_FOOTPRINT_HALF_NONE;
                 teleportArmy->SpellEffect(COMBAT_EFFECT_TELEPORT, 0);
             }
             teleportArmy->Stand(1);
@@ -401,9 +403,7 @@ void combatManager::CastSpell(i8 spell, i8 targetHex, i8 castByCreature, i8 tele
             );
             CombatMessage(gText, 1);
             target->SpellEffect(COMBAT_EFFECT_LIGHTNING_BOLT, 0);
-            target->Damage(
-                m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 25
-            );
+            target->Damage(m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 25);
             target->PowEffect(COMBAT_POW_RED_FIRE);
             if (!(target->m_stats.attributes & MONSTER_FLAGS_DEAD))
                 target->Stand(1);
@@ -415,9 +415,8 @@ void combatManager::CastSpell(i8 spell, i8 targetHex, i8 castByCreature, i8 tele
             target->SpellEffect(COMBAT_EFFECT_RESURRECT, 0);
             target->SpellEffect(COMBAT_EFFECT_RESURRECT, 0);
             quantityBefore = target->m_quantity;
-            target->m_quantity +=
-                m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 50
-                / target->m_stats.hitPoints;
+            target->m_quantity += m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER]
+                                  * 50 / target->m_stats.hitPoints;
             if (target->m_quantity > target->m_initialQuantity)
                 target->m_quantity = target->m_initialQuantity;
             if (target->m_quantity - quantityBefore > 1)
@@ -674,7 +673,7 @@ void combatManager::CancelSideSpells(i8 side, i8 cureOnly) {
 
 // Fireball draws the clipped ball and its mirror and always hits the target
 // hex and its six neighbours.
-#define x xPos // frame-slot spelling
+#define x xPos          // frame-slot spelling
 #define anyAffected hit // frame-slot spelling
 VA(0x0045b7e8, 0x403)
 void combatManager::Fireball(i8 targetHex) {
@@ -747,7 +746,7 @@ void combatManager::Fireball(i8 targetHex) {
 #undef anyAffected
 
 // MeteorShower drops a meteor on each of the seven hexes in turn.
-#define anyAffected hit // frame-slot spelling
+#define anyAffected hit     // frame-slot spelling
 #define meteorIcon rockIcon // frame-slot spelling
 VA(0x0045bbeb, 0x402)
 void combatManager::MeteorShower(i8 targetHex) {

@@ -212,13 +212,12 @@ void ComputeUALoc(i32 player) {
                 y = PLAYER_ULTIMATE_HINT_NONE;
                 heading = 0;
                 triesCount = 0;
-                while (
-                    !(MAP_CELL_IN_BOUNDS(x, y)
-                      && gGame->m_map[x][y].m_triggerType == MAP_OBJECT_NONE
-                      && gGame->m_map[x][y].m_objectIndex == MAP_CELL_NO_FRAME
-                      && gGame->m_map[x][y].m_overlayIndex == MAP_CELL_NO_FRAME
-                      && gGame->m_map[x][y].m_tileIndex >= MAP_CELL_TILES_PER_TERRAIN)
-                ) {
+                while (!(
+                    MAP_CELL_IN_BOUNDS(x, y) && gGame->m_map[x][y].m_triggerType == MAP_OBJECT_NONE
+                    && gGame->m_map[x][y].m_objectIndex == MAP_CELL_NO_FRAME
+                    && gGame->m_map[x][y].m_overlayIndex == MAP_CELL_NO_FRAME
+                    && gGame->m_map[x][y].m_tileIndex >= MAP_CELL_TILES_PER_TERRAIN
+                )) {
                     triesCount++;
                     heading = 0;
                     while (heading == 0)
@@ -652,7 +651,7 @@ i16 game::LoadGame(char* filename, i32 origData, i32) {
     gCurPlayerHighBit = 1 << (gCurPlayer + GAME_PLAYER_HIGH_BIT_SHIFT);
     gCurWatchPlayerHighBit = 1 << (gCurWatchPlayer + GAME_PLAYER_HIGH_BIT_SHIFT);
     gShowIt = gThisNetHumanPlayer[gCurPlayer];
-    memset(mapExtra, 0, sizeof(mapExtra));
+    memset(gMapExtra, 0, sizeof(gMapExtra));
     if (!origData)
         SetupAdjacentMons();
     return 1;
@@ -1080,10 +1079,10 @@ void game::ShowCampaignInfo(i32 scenario, i32 viewOnly, i32) {
             InitCampaignMap(m_campaignScenario, 0);
             gAdvManager->m_routeShown = 0;
             gBottomViewOverride = BOTTOM_VIEW_NONE;
-            gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, gPalette);
+            gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, gPalette);
             gAdvManager->SetInitialMapOrigin();
             gAdvManager->RedrawAdvScreen(1);
-            gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, gPalette);
+            gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, gPalette);
         }
     }
 }
@@ -1141,7 +1140,8 @@ void game::InitCampaignMap(i32 scenario, i32) {
     NewMap(gMapName);
     for (i = 0; i < GAME_PLAYER_COUNT; i++) {
         for (resourceIdx = 0; resourceIdx < RESOURCE_COUNT; resourceIdx++)
-            m_players[i].m_resources[resourceIdx] = gCampaignScenarios[scenario].resources[i][resourceIdx];
+            m_players[i].m_resources[resourceIdx] =
+                gCampaignScenarios[scenario].resources[i][resourceIdx];
     }
 }
 
@@ -2497,7 +2497,7 @@ void game::Overview(void) {
     gMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
     bigFont = gResourceManager->GetFont("bigfont.fnt");
     smallFontItem = gResourceManager->GetFont("smalfont.fnt");
-    gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
+    gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, NULL);
     gResourceManager->GetBackdropAtLoc("overmain.bmp", gWindowManager->m_screen, 96, 0);
     sprintf(gText, "overban%01d.bmp", gCurPlayerData->m_color);
     gResourceManager->GetBackdropAtLoc(gText, gWindowManager->m_screen, 0, 0);
@@ -2668,10 +2668,10 @@ void game::Overview(void) {
         smallFontItem->DrawBoundedString(gText, 100, 465, 400, 12, 1, FONT_ALIGN_LEFT);
         gWindowManager->UpdateScreenRegion(100, 465, 400, 12);
     }
-    gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
+    gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);
     gWindowManager->DoDialog(baseWin, TrueFalseDialogHandler, 0);
     delete baseWin;
-    gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
+    gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, NULL);
     gResourceManager->Dispose(ovIconRef);
     gResourceManager->Dispose(smallFontItem);
     gResourceManager->Dispose(bigFont);
@@ -3186,7 +3186,8 @@ void game::RandomizeTown(i8 x, i8 y, i8 isCastle) {
     if (isCastle) {
         m_castleRecs[townNum].m_buildings |=
             ((1 << BUILDING_SLOT_CASTLE) | (1 << BUILDING_SLOT_DWELLING_1));
-        m_castleRecs[townNum].m_dwellingAvailable[0] = gMonsterDatabase[gDwellingType[race][0]].growth;
+        m_castleRecs[townNum].m_dwellingAvailable[0] =
+            gMonsterDatabase[gDwellingType[race][0]].growth;
         if (m_castleRecs[townNum].m_buildings & (1 << BUILDING_SLOT_TENT))
             m_castleRecs[townNum].m_buildings -= (1 << BUILDING_SLOT_TENT);
     } else {
@@ -3232,7 +3233,8 @@ void game::SetupTown(i8 townId, i8 aiOwned) {
     }
     if (!m_castleRecs[townId].m_customized) {
         m_castleRecs[townId].m_buildings |= (1 << BUILDING_SLOT_DWELLING_1);
-        m_castleRecs[townId].m_dwellingAvailable[0] = gMonsterDatabase[gDwellingType[curTownType][0]].growth;
+        m_castleRecs[townId].m_dwellingAvailable[0] =
+            gMonsterDatabase[gDwellingType[curTownType][0]].growth;
         if (aiOwned && dwellingCount == 1 && Random(1, 10) < 4)
             dwellingCount++;
         if (--dwellingCount) {
@@ -3799,9 +3801,9 @@ void game::SetupAdjacentMons(void) {
     for (x = 0; x < MAP_CELL_GRID_SIZE; ++x) {
         for (y = 0; y < MAP_CELL_GRID_SIZE; ++y) {
             if (gAdvManager->FindAdjacentMonster(x, y, &monX, &monY, -1, -1))
-                mapExtra[x][y] |= MAP_EXTRA_MONSTER_ADJACENT;
+                gMapExtra[x][y] |= MAP_EXTRA_MONSTER_ADJACENT;
             else
-                mapExtra[x][y] &= oldMask;
+                gMapExtra[x][y] &= oldMask;
         }
     }
 }

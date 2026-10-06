@@ -114,8 +114,8 @@ H1_ENUM_BEGIN(EditTool)
 H1_ENUM_END(EditTool)
 
 H1_ENUM_CONST_BEGIN(EditToolButtonConstant)
-    // buttons.icn: the terrain tool button's frame pair; each tool's pair
-    // follows (normal, selected).
+// buttons.icn: the terrain tool button's frame pair; each tool's pair
+// follows (normal, selected).
     EDIT_TOOL_BUTTON_FRAME = 26
 H1_ENUM_CONST_END(EditToolButtonConstant)
 

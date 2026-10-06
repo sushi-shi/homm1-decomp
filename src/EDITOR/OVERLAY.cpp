@@ -237,9 +237,8 @@ i16 overlayManager::Main(tag_message& message) {
                                 || gEditManager->m_cursorY != cellY) {
                                 if (gSelectedOverlay != OVERLAY_NO_SELECTION) {
                                     if (cellX + m_width
-                                        > (gEditManager->m_zoomedOut
-                                               ? EDIT_VIEW_ZOOMED_CELLS
-                                               : EDIT_VIEW_CELLS))
+                                        > (gEditManager->m_zoomedOut ? EDIT_VIEW_ZOOMED_CELLS
+                                                                     : EDIT_VIEW_CELLS))
                                         cellX = !gEditManager->m_zoomedOut
                                                     ? EDIT_VIEW_CELLS - m_width
                                                     : EDIT_VIEW_ZOOMED_CELLS - m_width;
@@ -314,8 +313,7 @@ void overlayManager::DrawFootprint(
     i16 cy;
 
     frame = !gEditManager->m_zoomedOut;
-    cellSize =
-        gEditManager->m_zoomedOut ? EDIT_VIEW_ZOOMED_CELL_PIXELS : EDIT_VIEW_CELL_PIXELS;
+    cellSize = gEditManager->m_zoomedOut ? EDIT_VIEW_ZOOMED_CELL_PIXELS : EDIT_VIEW_CELL_PIXELS;
     for (cy = 0; cy < OVERLAY_FOOTPRINT_ROWS; cy++)
         for (cx = 0; cx < OVERLAY_FOOTPRINT_COLUMNS; cx++)
             if (cy < height && cx < width
@@ -353,7 +351,8 @@ i16 CanPlaceOverlay(overlayType* type, i16 x, i16 y) {
             if (type->overlayMask & 1 << (cy * OVERLAY_FOOTPRINT_COLUMNS + cx)) {
                 if (x + cx < 0 || x + cx > MAP_CELL_GRID_SIZE - 1 || y - cy < 0
                     || y - cy > MAP_CELL_GRID_SIZE - 1
-                    || gEditManager->m_map.cells[x + cx][y - cy].m_overlayIndex != MAP_CELL_NO_FRAME)
+                    || gEditManager->m_map.cells[x + cx][y - cy].m_overlayIndex
+                           != MAP_CELL_NO_FRAME)
                     return 0;
             }
             if (!(type->overlayMask & 1 << (cy * OVERLAY_FOOTPRINT_COLUMNS + cx))
@@ -374,9 +373,8 @@ i16 CanPlaceOverlay(overlayType* type, i16 x, i16 y) {
             || x + OVERLAY_FOOTPRINT_CORNER_COLUMN > MAP_CELL_GRID_SIZE - 1
             || y - OVERLAY_FOOTPRINT_CORNER_ROW < 0
             || y - OVERLAY_FOOTPRINT_CORNER_ROW > MAP_CELL_GRID_SIZE - 1
-            || gEditManager
-                       ->m_map.cells[x + OVERLAY_FOOTPRINT_CORNER_COLUMN]
-                                [y - OVERLAY_FOOTPRINT_CORNER_ROW]
+            || gEditManager->m_map
+                       .cells[x + OVERLAY_FOOTPRINT_CORNER_COLUMN][y - OVERLAY_FOOTPRINT_CORNER_ROW]
                        .m_overlayIndex
                    != MAP_CELL_NO_FRAME)
             return 0;
@@ -387,16 +385,15 @@ i16 CanPlaceOverlay(overlayType* type, i16 x, i16 y) {
             || x + OVERLAY_FOOTPRINT_CORNER_COLUMN > MAP_CELL_GRID_SIZE - 1
             || y - OVERLAY_FOOTPRINT_CORNER_ROW < 0
             || y - OVERLAY_FOOTPRINT_CORNER_ROW > MAP_CELL_GRID_SIZE - 1
-            || gEditManager
-                       ->m_map.cells[x + OVERLAY_FOOTPRINT_CORNER_COLUMN]
-                                [y - OVERLAY_FOOTPRINT_CORNER_ROW]
+            || gEditManager->m_map
+                       .cells[x + OVERLAY_FOOTPRINT_CORNER_COLUMN][y - OVERLAY_FOOTPRINT_CORNER_ROW]
                        .m_objectIndex
                    != MAP_CELL_NO_FRAME
             || !(
                 type->terrainMask
-                & 1 << gEditManager
-                               ->m_map.cells[x + OVERLAY_FOOTPRINT_CORNER_COLUMN]
-                                        [y - OVERLAY_FOOTPRINT_CORNER_ROW]
+                & 1 << gEditManager->m_map
+                               .cells[x + OVERLAY_FOOTPRINT_CORNER_COLUMN]
+                                     [y - OVERLAY_FOOTPRINT_CORNER_ROW]
                                .m_tileIndex
                            / MAP_CELL_TILES_PER_TERRAIN
             ))
@@ -576,8 +573,7 @@ void overlayManager::DrawOverlay(
     i16 cx;
     i16 cy;
 
-    cellSize =
-        gEditManager->m_zoomedOut ? EDIT_VIEW_ZOOMED_CELL_PIXELS : EDIT_VIEW_CELL_PIXELS;
+    cellSize = gEditManager->m_zoomedOut ? EDIT_VIEW_ZOOMED_CELL_PIXELS : EDIT_VIEW_CELL_PIXELS;
     for (cy = 0; cy < OVERLAY_FOOTPRINT_ROWS; cy++)
         for (cx = 0; cx < OVERLAY_FOOTPRINT_COLUMNS; cx++)
             if (cy < height && cx < width

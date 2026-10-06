@@ -452,7 +452,8 @@ public:
         i32 combatX,
         i32 combatY
     );
-    void ComputerMonsterInteract(class mapCell* cell, class hero* eventHero, i8* removeMonsterObject);
+    void
+    ComputerMonsterInteract(class mapCell* cell, class hero* eventHero, i8* removeMonsterObject);
     i32 DoNetCombat(RemoteMessage* packet);
     i32 DoCombat(
         i32 x,

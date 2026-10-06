@@ -372,10 +372,10 @@ i32 philAI::GoodAdjacent(hero* aiHero, i32* direction) {
         return 0;
     for (heading = 0; heading < MAP_DIRECTION_COUNT; heading++) {
         if (gAdvManager->ValidMoveWithEvent(aiHero, heading)) {
-            cellX = aiHero->m_x + normalDirTable[heading].x;
-            cellY = aiHero->m_y + normalDirTable[heading].y;
+            cellX = aiHero->m_x + gNormalDirTable[heading].x;
+            cellY = aiHero->m_y + gNormalDirTable[heading].y;
             if ((gAdvManager->GetCell(cellX, cellY)->m_triggerType & MAP_TRIGGER_EVENT)
-                && !(mapExtra[cellX][cellY] & MAP_EXTRA_MONSTER_ADJACENT)
+                && !(gMapExtra[cellX][cellY] & MAP_EXTRA_MONSTER_ADJACENT)
                 && (gAdvManager->GetCell(cellX, cellY)->m_triggerType & MAP_TRIGGER_TYPE_MASK)
                        != MAP_OBJECT_STONE_LITHS
                 && (gAdvManager->GetCell(cellX, cellY)->m_triggerType & MAP_TRIGGER_TYPE_MASK)
@@ -556,8 +556,8 @@ i8 philAI::DoDimensionDoor(hero* aiHero) {
     cellX = aiHero->m_x;
     cellY = aiHero->m_y;
     for (pathIndex = gSearchArray->m_pathLength - 1; pathIndex >= 1; pathIndex--) {
-        cellX += normalDirTable[gSearchArray->m_directions[pathIndex]].x;
-        cellY += normalDirTable[gSearchArray->m_directions[pathIndex]].y;
+        cellX += gNormalDirTable[gSearchArray->m_directions[pathIndex]].x;
+        cellY += gNormalDirTable[gSearchArray->m_directions[pathIndex]].y;
         if (abs(cellX - aiHero->m_x) <= 7 && abs(cellY - aiHero->m_y) <= 7) {
             cell = gAdvManager->GetCell(cellX, cellY);
             if (!(cell->m_triggerType & MAP_TRIGGER_EVENT)
@@ -581,7 +581,7 @@ i8 philAI::DoDimensionDoor(hero* aiHero) {
 
 #define savedShowIt nextOldShowIt // frame-slot spelling
 #define unusedValue newDummyValue // frame-slot spelling
-#define unusedFlags flagsState // frame-slot spelling
+#define unusedFlags flagsState    // frame-slot spelling
 #define unusedArray tempArrayData // frame-slot spelling
 VA(0x00448a6f, 0x72f)
 void philAI::DoAI(i32 player) {
@@ -787,12 +787,12 @@ void philAI::GetGameAIVars(void) {
         GetGameAttentionValue(i);
 }
 
-#define heroX xPosVal // frame-slot spelling
-#define heroY theYPos // frame-slot spelling
+#define heroX xPosVal          // frame-slot spelling
+#define heroY theYPos          // frame-slot spelling
 #define enemyPlayer basePlayer // frame-slot spelling
-#define playerIndex indexNum // frame-slot spelling
-#define townPointer townPtr // frame-slot spelling
-#define fightValue fightVal // frame-slot spelling
+#define playerIndex indexNum   // frame-slot spelling
+#define townPointer townPtr    // frame-slot spelling
+#define fightValue fightVal    // frame-slot spelling
 VA(0x004491dd, 0x5eb)
 void philAI::GetTurnAIVars(i32 player) {
     i32 fightTotalSum;
@@ -860,8 +860,7 @@ void philAI::GetTurnAIVars(i32 player) {
                 for (nearX = heroX - 10; nearX <= heroX + 10; nearX++) {
                     for (y = heroY - 10; y <= heroY + 10; y++) {
                         if (MAP_CELL_IN_BOUNDS(nearX, y)) {
-                            turnDistance =
-                                abs(MANHATTAN_LENGTH(nearX - heroX, y - heroY) - 4) >> 2;
+                            turnDistance = abs(MANHATTAN_LENGTH(nearX - heroX, y - heroY) - 4) >> 2;
                             if (turnDistance < gTurnValueOfMine[nearX][y])
                                 gTurnValueOfMine[nearX][y] = turnDistance;
                         }
@@ -1074,19 +1073,17 @@ void philAI::DetermineTargetPosition(hero* aiHero, i8& targetX, i8& targetY, i16
                     if (gSearchArray->m_cells[searchX][searchY].distance > mobility * 2)
                         good = 0;
                     else
-                        good =
-                            cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)
-                            || cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
-                            || (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP)
-                                && !aiHero->IsEmbarked());
+                        good = cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)
+                               || cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
+                               || (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP)
+                                   && !aiHero->IsEmbarked());
                 } else {
                     good =
                         (cell->m_triggerType & MAP_TRIGGER_EVENT)
                         || (cell->m_triggerType == MAP_OBJECT_COAST && aiHero->IsEmbarked())
                         || (searchX % gridStep == 0 && searchY % gridStep == 0
                             && ((aiHero->IsEmbarked() && CELL_TERRAIN(cell) == TERRAIN_WATER)
-                                || (!aiHero->IsEmbarked()
-                                    && CELL_TERRAIN(cell) != TERRAIN_WATER)))
+                                || (!aiHero->IsEmbarked() && CELL_TERRAIN(cell) != TERRAIN_WATER)))
                         || (searchX == gCurPlayerData->m_ultimateArtifactHintX
                             && searchY == gCurPlayerData->m_ultimateArtifactHintY);
                 }
@@ -1168,8 +1165,8 @@ void philAI::DetermineTargetPosition(hero* aiHero, i8& targetX, i8& targetY, i16
 }
 #undef cell
 
-#define defStr curDefStr // frame-slot spelling
-#define defenderPower defP // frame-slot spelling
+#define defStr curDefStr     // frame-slot spelling
+#define defenderPower defP   // frame-slot spelling
 #define artifactSlot slotNum // frame-slot spelling
 VA(0x0044a69b, 0x55f)
 void philAI::ProbableOutcomeOfBattle(
@@ -2603,8 +2600,7 @@ void philAI::HeroInteractionAtTown(
     else
         targetShare = 0.33 - statSum * 0.01;
     townShareDiff =
-        (targetShare < garrisonShare ? garrisonShare - targetShare
-                                       : targetShare - garrisonShare);
+        (targetShare < garrisonShare ? garrisonShare - targetShare : targetShare - garrisonShare);
     if (townShareDiff < targetShare * 0.15)
         return;
     moveToHero = 0;
@@ -2985,7 +2981,7 @@ i8 philAI::CombatMonsterEvent(hero* heroPointer, i8 monsterType, i32* monsterCou
     return 0;
 }
 
-#define netValue theWorth // frame-slot spelling
+#define netValue theWorth             // frame-slot spelling
 #define rewardValue activeRewardValue // frame-slot spelling
 VA(0x0044ea2c, 0x22f)
 void philAI::FightEvent(hero* heroPointer, mapCell* cell) {
@@ -3021,7 +3017,7 @@ void philAI::FightEvent(hero* heroPointer, mapCell* cell) {
             break;
         case GHOST_SITE_HUGE:
             rewardValue = 2000.0f * gAITurnCostResource[RESOURCE_GOLD]
-                                + gCurPlayerData->m_aiData.m_artifactValue;
+                          + gCurPlayerData->m_aiData.m_artifactValue;
             break;
         default:
             return;
@@ -3216,9 +3212,9 @@ i32 gEventTownScore;
 DATA(0x004b4ba4)
 hero* gEventHero;
 
-#define windmillResources theList // frame-slot spelling
+#define windmillResources theList    // frame-slot spelling
 #define replacementSlot theArmySlot2 // frame-slot spelling
-#define unusedChance tempChance // frame-slot spelling
+#define unusedChance tempChance      // frame-slot spelling
 VA(0x0044efb4, 0x1d37)
 i32 philAI::ValueOfEventAtPosition(hero* aiHero, i16 x, i16 y, i32 immediate, i32* liveChance) {
     DATA(0x0049ef80)
@@ -3851,7 +3847,8 @@ i32 philAI::ValueOfEventAtPosition(hero* aiHero, i16 x, i16 y, i32 immediate, i3
                     }
                 }
             }
-            stayWorth = StrategicValueOfPosition(aiHero, aiHero->m_x, aiHero->m_y, 0, &unusedChance);
+            stayWorth =
+                StrategicValueOfPosition(aiHero, aiHero->m_x, aiHero->m_y, 0, &unusedChance);
             if (bestExitValue > stayWorth + 200)
                 gVisitResult = bestExitValue - stayWorth - 200;
             else
@@ -3896,7 +3893,7 @@ i32 philAI::ValueOfEventAtPosition(hero* aiHero, i16 x, i16 y, i32 immediate, i3
     if (gBerserk && gReduceByBerserk)
         gVisitResult = gVisitResult * gBerserkFactor;
     if (!immediate) {
-        if (gVisitResult > 0 && (mapExtra[x][y] & MAP_EXTRA_MONSTER_ADJACENT)
+        if (gVisitResult > 0 && (gMapExtra[x][y] & MAP_EXTRA_MONSTER_ADJACENT)
             && (gEventLocation->m_triggerType & MAP_TRIGGER_TYPE_MASK) != MAP_OBJECT_MONSTER)
             gVisitResult = 0;
         if (gVisitResult < 0

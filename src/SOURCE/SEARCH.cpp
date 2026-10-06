@@ -63,8 +63,8 @@ i16 searchArray::FindNearestObject(
                     SEARCH_UNLIMITED_COST,
                     0
                 );
-                neighborX = node.x + normalDirTable[i].x;
-                neighborY = node.y + normalDirTable[i].y;
+                neighborX = node.x + gNormalDirTable[i].x;
+                neighborY = node.y + gNormalDirTable[i].y;
                 PushPoint(
                     neighborX,
                     neighborY,
@@ -93,8 +93,8 @@ i16 searchArray::FindNearestObject(
         if (++m_pathLength >= SEARCH_PATH_CAPACITY)
             break;
         i16 backDirection = OppositeMapDirection(pathNode->direction);
-        destinationX += normalDirTable[backDirection].x;
-        destinationY += normalDirTable[backDirection].y;
+        destinationX += gNormalDirTable[backDirection].x;
+        destinationY += gNormalDirTable[backDirection].y;
     }
     return m_pathLength;
 }
@@ -124,8 +124,8 @@ i32 searchArray::BuildPath(
             }
         }
         i16 backDirection = OppositeMapDirection(node->direction);
-        destinationX += normalDirTable[backDirection].x;
-        destinationY += normalDirTable[backDirection].y;
+        destinationX += gNormalDirTable[backDirection].x;
+        destinationY += gNormalDirTable[backDirection].y;
     }
     return m_pathLength;
 }
@@ -303,7 +303,7 @@ void searchArray::SeedPosition(
             if (s_triggerType == MAP_OBJECT_COAST)
                 goto point_complete;
         } else {
-            if ((mapExtra[s_currentNode.x][s_currentNode.y] & MAP_EXTRA_MONSTER_ADJACENT)
+            if ((gMapExtra[s_currentNode.x][s_currentNode.y] & MAP_EXTRA_MONSTER_ADJACENT)
                 && (s_currentNode.x != seedX || s_currentNode.y != seedY)) {
                 if (!findAdjacentMonster)
                     goto point_complete;
@@ -354,10 +354,10 @@ void searchArray::SeedPosition(
         for (s_direction = 0; s_direction < MAP_DIRECTION_COUNT; s_direction++) {
             if (s_possibleDirections[s_direction] == TERRAIN_INVALID)
                 continue;
-            s_neighborX = s_currentNode.x + normalDirTable[s_direction].x;
-            s_neighborY = s_currentNode.y + normalDirTable[s_direction].y;
+            s_neighborX = s_currentNode.x + gNormalDirTable[s_direction].x;
+            s_neighborY = s_currentNode.y + gNormalDirTable[s_direction].y;
             if (findAdjacentMonster
-                && (mapExtra[s_neighborX][s_neighborY] & MAP_EXTRA_MONSTER_ADJACENT)
+                && (gMapExtra[s_neighborX][s_neighborY] & MAP_EXTRA_MONSTER_ADJACENT)
                 && m_cells[s_neighborX][s_neighborY].visited
                 && m_cells[s_neighborX][s_neighborY].rvFlag1
                 && m_cells[s_neighborX][s_neighborY].distance
@@ -387,8 +387,8 @@ void searchArray::SeedPosition(
                 s_currentNode.previousX,
                 s_currentNode.previousY
             );
-            if (s_hasTarget && s_currentNode.x + normalDirTable[s_direction].x == targetX
-                && s_currentNode.y + normalDirTable[s_direction].y == targetY
+            if (s_hasTarget && s_currentNode.x + gNormalDirTable[s_direction].x == targetX
+                && s_currentNode.y + gNormalDirTable[s_direction].y == targetY
                 && !s_currentNode.rvFlag1) {
                 if (s_currentNode.distance
                         + CalcTerrainCost(
@@ -416,8 +416,8 @@ void searchArray::SeedPosition(
                 if ((gAdvManager->GetCell(s_mapX, s_mapY)->m_triggerType & MAP_TRIGGER_TYPE_MASK)
                     == MAP_OBJECT_MONSTER) {
                     for (s_direction = 0; s_direction < MAP_DIRECTION_COUNT; s_direction++) {
-                        s_adjacentX = s_mapX + normalDirTable[s_direction].x;
-                        s_adjacentY = s_mapY + normalDirTable[s_direction].y;
+                        s_adjacentX = s_mapX + gNormalDirTable[s_direction].x;
+                        s_adjacentY = s_mapY + gNormalDirTable[s_direction].y;
                         s_targetCell = gAdvManager->GetCell(s_adjacentX, s_adjacentY);
                         s_directionBlocked = 1;
                         if (((1 << s_direction) & MAP_DIRECTION_SOUTH_MASK)

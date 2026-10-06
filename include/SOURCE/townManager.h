@@ -220,7 +220,7 @@ H1_ENUM_BEGIN(TownCastleInfoText)
 H1_ENUM_END(TownCastleInfoText)
 
 // The tavern window and its animation (the tavern plays MUSIC_TRACK_TAVERN;
-// MUSIC_TRACK_TOWN_FIRST + townTheme[type] is a town's ambient track).
+// MUSIC_TRACK_TOWN_FIRST + gTownTheme[type] is a town's ambient track).
 H1_ENUM_CONST_BEGIN(TownTavernConstant)
     TOWN_TAVERN_WINDOW_X = 0xa2,
     TOWN_TAVERN_WINDOW_Y = 0xa,

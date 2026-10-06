@@ -207,25 +207,25 @@ i32 Random(i32 low, i32 high) {
 
 // Called on the loaded kb.pal data before SetPalette.
 VA(0x0046fdc3, 0x95)
-void PostprocessPalette(i8* data) {
+void PostprocessPalette(i8* paletteData) {
     PaletteColor* remapped = static_cast<PaletteColor*>(malloc(PALETTE_DATA_SIZE));
     memset(remapped, 0, PALETTE_DATA_SIZE);
     for (i32 index = 0; index < PALETTE_COLOR_COUNT; index++)
         memcpy(
             &remapped[gMonoColorMap[index]],
             // byte-evidenced: RGB triples of the raw palette.
-            &reinterpret_cast<PaletteColor*>(data)[index],
+            &reinterpret_cast<PaletteColor*>(paletteData)[index],
             sizeof(PaletteColor)
         );
-    memcpy(data, remapped, PALETTE_DATA_SIZE);
+    memcpy(paletteData, remapped, PALETTE_DATA_SIZE);
     free(remapped);
 }
 
 VA(0x0046fe58, 0x5)
-void PostprocessBitmap(u8*, i32, i32) {}
+void PostprocessBitmap(u8* pixels, i32 width, i32 height) {}
 
 VA(0x0046fe5d, 0x5)
-void PostprocessIcon(icon*) {}
+void PostprocessIcon(icon* loadedIcon) {}
 
 // HoMM1's C++ mono clipping path.
 
@@ -235,6 +235,7 @@ void PostprocessIcon(icon*) {}
 
 #include <string.h>
 
+#define clipBottom clipLast // frame-slot spelling
 VA(0x0046fe62, 0x214)
 void ClippedMonoIconToBitmap(
     icon* sourceIcon,
@@ -243,14 +244,14 @@ void ClippedMonoIconToBitmap(
     i32 y,
     i32 frame,
     i32 color,
-    i32 mode,
+    i32 offsetMode,
     i32 clipX,
     i32 clipY,
     i32 clipW,
     i32 clipH
 ) {
     i32 clipRight = clipX + clipW - 1;
-    i32 clipLast = clipY + clipH - 1;
+    i32 clipBottom = clipY + clipH - 1;
     IconEntry* entry = sourceIcon->m_frames + frame;
     u8* source = sourceIcon->m_data + entry->srcOffset;
     i32 curX = x + entry->x;
@@ -264,7 +265,8 @@ void ClippedMonoIconToBitmap(
             } else
                 decoding = FALSE;
         } else if (*source != ICON_MONO_NEWLINE_COMMAND) {
-            if (curY >= clipY && curY <= clipLast && curX + *source >= clipX && curX <= clipRight) {
+            if (curY >= clipY && curY <= clipBottom && curX + *source >= clipX
+                && curX <= clipRight) {
                 if (curX >= clipX) {
                     if (curX + *source <= clipRight)
                         memset(
@@ -302,38 +304,48 @@ void ClippedMonoIconToBitmap(
         }
     }
 }
+#undef clipBottom
 
 // Clipped colour icon blit kept beside the mono path. Retail keeps every
 // working value in file statics, as in the assembly renderers.
-#define sClipY sClipPosY // spelling fixes .bss order
+#define gClipY sClipPosY // spelling fixes .bss order
 // No retail code reads this; it holds its retail .bss place.
+#define gMiscOldField sMiscOldField // spelling fixes .bss order
 DATA(0x004cfb4c)
-static i32 sMiscOldField;
+static i32 gMiscOldField;
 DATA(0x004cfb50)
-static i32 sClipY;
+static i32 gClipY;
+#define gClipLimitY sClipLimitY // spelling fixes .bss order
 DATA(0x004cfb58)
-static i32 sClipLimitY;
-#define sClipRowStart sClipLeft // spelling fixes .bss order
+static i32 gClipLimitY;
+#define gClipRowStart sClipLeft // spelling fixes .bss order
 DATA(0x004cfbb4)
-static i32 sClipRowStart;
+static i32 gClipRowStart;
+#define gClipRow sClipRow // spelling fixes .bss order
 DATA(0x004cfb64)
-static u8* sClipRow;
+static u8* gClipRow;
+#define gClipFrameEntry sClipFrameEntry // spelling fixes .bss order
 DATA(0x004cfb68)
-static IconEntry* sClipFrameEntry;
-#define sClipSource sClipSrcPtr // spelling fixes .bss order
+static IconEntry* gClipFrameEntry;
+#define gClipSource sClipSrcPtr // spelling fixes .bss order
 DATA(0x004cfb5c)
-static u8* sClipSource;
+static u8* gClipSource;
+#define gClipLimitX sClipLimitX // spelling fixes .bss order
 DATA(0x004cfb54)
-static i32 sClipLimitX;
+static i32 gClipLimitX;
+#define gClipX sClipX // spelling fixes .bss order
 DATA(0x004cfb60)
-static i32 sClipX;
+static i32 gClipX;
+#define gClipRun sClipRun // spelling fixes .bss order
 DATA(0x004cfb6c)
-static u32 sClipRun;
+static u32 gClipRun;
+#define gClipInside sClipInside // spelling fixes .bss order
 DATA(0x004cfbb0)
-static BOOL sClipInside;
+static BOOL gClipInside;
 // No retail code reads this; it holds its retail .bss place.
+#define gMiscScanTable sMiscScanTable // spelling fixes .bss order
 DATA(0x004cfb70)
-static u8 sMiscScanTable[64];
+static u8 gMiscScanTable[64];
 
 VA(0x00470076, 0x307)
 void ClipIconToBitmap(
@@ -342,63 +354,63 @@ void ClipIconToBitmap(
     i32 x,
     i32 y,
     i32 frame,
-    i32 mode,
+    i32 offsetMode,
     i32 clipX,
     i32 clipY,
     i32 clipW,
     i32 clipH
 ) {
-    sClipFrameEntry = sourceIcon->m_frames + frame;
-    sClipSource = sourceIcon->m_data + sClipFrameEntry->srcOffset;
-    sClipX = sClipRowStart = x + sClipFrameEntry->x;
-    sClipY = y + sClipFrameEntry->y;
+    gClipFrameEntry = sourceIcon->m_frames + frame;
+    gClipSource = sourceIcon->m_data + gClipFrameEntry->srcOffset;
+    gClipX = gClipRowStart = x + gClipFrameEntry->x;
+    gClipY = y + gClipFrameEntry->y;
     if (ICON_FITS_CLIP(
-            sClipRowStart,
-            sClipY,
-            sClipFrameEntry->w,
-            sClipFrameEntry->h,
+            gClipRowStart,
+            gClipY,
+            gClipFrameEntry->w,
+            gClipFrameEntry->h,
             clipX,
             clipY,
             clipW,
             clipH
         )) {
-        sClipInside = TRUE;
+        gClipInside = TRUE;
     } else {
-        sClipInside = FALSE;
-        sClipLimitX = clipX + clipW - 1;
-        sClipLimitY = clipY + clipH - 1;
+        gClipInside = FALSE;
+        gClipLimitX = clipX + clipW - 1;
+        gClipLimitY = clipY + clipH - 1;
     }
-    sClipRow = destination->m_pixels + sClipY * destination->m_width;
+    gClipRow = destination->m_pixels + gClipY * destination->m_width;
     for (;;) {
-        sClipRun = *sClipSource++;
-        if (static_cast<i8>(sClipRun) < 0) {
-            if (sClipRun & ICON_MONO_SKIP_MASK)
-                sClipX += sClipRun & ICON_MONO_SKIP_MASK;
+        gClipRun = *gClipSource++;
+        if (static_cast<i8>(gClipRun) < 0) {
+            if (gClipRun & ICON_MONO_SKIP_MASK)
+                gClipX += gClipRun & ICON_MONO_SKIP_MASK;
             else
                 break;
-        } else if (sClipRun != 0) {
-            if (sClipInside) {
-                memcpy(sClipRow + sClipX, sClipSource, sClipRun);
-            } else if (sClipY >= clipY && sClipY <= sClipLimitY && sClipX + sClipRun >= clipX
-                       && sClipX <= sClipLimitX) {
-                if (sClipX >= clipX) {
-                    if (sClipX + sClipRun <= sClipLimitX)
-                        memcpy(sClipRow + sClipX, sClipSource, sClipRun);
+        } else if (gClipRun != 0) {
+            if (gClipInside) {
+                memcpy(gClipRow + gClipX, gClipSource, gClipRun);
+            } else if (gClipY >= clipY && gClipY <= gClipLimitY && gClipX + gClipRun >= clipX
+                       && gClipX <= gClipLimitX) {
+                if (gClipX >= clipX) {
+                    if (gClipX + gClipRun <= gClipLimitX)
+                        memcpy(gClipRow + gClipX, gClipSource, gClipRun);
                     else
-                        memcpy(sClipRow + sClipX, sClipSource, sClipLimitX - sClipX + 1);
+                        memcpy(gClipRow + gClipX, gClipSource, gClipLimitX - gClipX + 1);
                 } else {
-                    if (sClipX + *sClipSource <= sClipLimitX)
-                        memcpy(sClipRow + sClipX, sClipSource, sClipX + sClipRun - clipX);
+                    if (gClipX + *gClipSource <= gClipLimitX)
+                        memcpy(gClipRow + gClipX, gClipSource, gClipX + gClipRun - clipX);
                     else
-                        memcpy(sClipRow + sClipX, sClipSource, clipW);
+                        memcpy(gClipRow + gClipX, gClipSource, clipW);
                 }
             }
-            sClipX += sClipRun;
-            sClipSource += sClipRun;
+            gClipX += gClipRun;
+            gClipSource += gClipRun;
         } else {
-            sClipX = sClipRowStart;
-            sClipY++;
-            sClipRow += destination->m_width;
+            gClipX = gClipRowStart;
+            gClipY++;
+            gClipRow += destination->m_width;
         }
     }
 }
