@@ -20,18 +20,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-DATA(0x004a1360)
-char gDefaultConstruct[] = "Default Construct";
-DATA(0x004a1374)
-char gDynamicConstruct[] = "Dynamic Construct";
-
 // Default heroWindow constructor: a full-screen fixed-layer
 // window. No retail caller survives.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0046d020, 0x92)
 heroWindow::heroWindow(void) {
-    strcpy(m_name, gDefaultConstruct);
+    strcpy(m_name, "Default Construct");
     m_nextWindow = m_prevWindow = NULL;
     m_zOrder = WINDOW_Z_ORDER_APPEND;
     m_posX = m_posY = 0;
@@ -45,7 +40,7 @@ heroWindow::heroWindow(void) {
 
 VA(0x0046d0b2, 0x9e)
 heroWindow::heroWindow(i16 x, i16 y, i16 width, i16 height, i16 flags) {
-    strcpy(m_name, gDynamicConstruct);
+    strcpy(m_name, "Dynamic Construct");
     m_nextWindow = m_prevWindow = NULL;
     m_zOrder = WINDOW_Z_ORDER_APPEND;
     m_posX = x;

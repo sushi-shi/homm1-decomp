@@ -39,6 +39,7 @@ Short observations, not a wall database. [Scope and admission rules](README.md).
 - [VC6 `throw()` functions keep new-expression temporaries without an EH frame (HoMM1 Buka, measured)](vc6-throw-spec-eh-frame.md).
 - [VC6 /Od frame slots follow the folded name hash (HoMM1 Buka, measured)](vc6-od-frame-slots.md).
 - [VC6 /Ob2 emits file-scope initializer literals in source order (HoMM1 Buka, measured)](vc6-ob2-literal-order.md).
+- [VC6 string literal or named array (HoMM1 Buka, measured)](vc6-literal-vs-named-string.md) — named initialized data precedes the unit's unpooled literals, so `.data` order shows which a single-use string was.
 - [VC6 parenthesized cast operands keep a separate fild (HoMM1 Buka, measured)](vc6-parenthesized-cast-operand.md).
 - [LINK 6.00 import order follows the C runtime's `qsort` (HoMM1 Buka, measured)](link6-iat-qsort-runtime.md) — equal-key DLL imports end in the IAT order the linker's `MSVCRT` `qsort` leaves; the editor's retail order is the VC6 runtime's.
 - [VC6 helper forms: expression macros and value inlines are byte-neutral, statement macros and reference accessors are not (HoMM1 Buka, measured)](vc6-helper-forms.md).

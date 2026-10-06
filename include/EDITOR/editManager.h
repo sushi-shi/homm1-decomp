@@ -590,7 +590,6 @@ extern i32 gEditErrorCount;
 // Set while the random-map generator lays terrain: SetTileVariant then
 // re-rolls every border tile's variant.
 extern b32 gVaryTiles;
-extern char gPickMapNameDummy[];
 
 void SetTileVariant(mapCell* cell, i32 tile);
 char* MakeMapCode(i32 serial);

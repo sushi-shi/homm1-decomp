@@ -21,6 +21,7 @@ rg '\bm_(unknown|unk|pad|field)[A-Za-z0-9_]*' include
 rg '\[\s*-\s*[0-9]' src include                    # negative indexing
 rg 'CONTAINING_RECORD|container_of|\bthis\)\s*-' src include
 rg 'va_start' src
+rg '^(static )?(const )?char \w+\[[^]]*\] = ' src include   # text in named arrays
 ```
 
 ## Categories
@@ -436,6 +437,18 @@ shows up in the measuring commands above.
   four spans after it, are named from their DOS readers; thirteen members
   with no reader in any build are `m_unused*`, as are the other spans no code
   reads.
+- Single-use strings in named globals: **15** inlined at their call sites
+  (the 12 `BASE/EXEC` start-up and manager errors, the 2 `BASE/WINDOW`
+  constructor names and the editor's empty `PickMap` file name), with both
+  programs still identical. **18** text-holding globals stay named: the window
+  class name and title, which retail places among named variables (the class
+  name has two users); 9 pointer variables, whose users load the pointer; and
+  7 path and map-name buffers that the programs write. The rule is in
+  [string literal or named array](patterns/vc6-literal-vs-named-string.md).
+  Single-use lookup tables keep their file-scope definitions, because retail
+  does not distinguish them from function-local statics. The named float
+  modifiers stay as well: two of them share a value at separate retail
+  addresses, and a unit emits one `__real` constant per value.
 - Name bare constants (`homm1 verify constants`, floor 0): every numeric
   literal in both programs is either a named constant or domain member, or
   kept as a plain number with its reason in `config/constants.tsv` (1,513

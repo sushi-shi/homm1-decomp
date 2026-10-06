@@ -8,18 +8,6 @@
 // forward declarations:
 class baseManager;
 
-extern char gResourceManagerInitError[];
-extern char gInputManagerInitError[];
-extern char gSoundManagerInitError[];
-extern char gMouseManagerInitError[];
-extern char gWindowManagerInitError[];
-extern char gCallManagerError1[];
-extern char gCallManagerError2[];
-extern char gDialogManagerError1[];
-extern char gDialogManagerError2[];
-extern char gDialogManagerError3[];
-extern char gDialogManagerError4[];
-
 H1_ENUM_CONST_BEGIN(ExecutiveConstant)
     EXECUTIVE_DIALOG_MANAGER_CAPACITY = 20
 H1_ENUM_CONST_END(ExecutiveConstant)

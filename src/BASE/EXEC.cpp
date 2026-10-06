@@ -13,32 +13,6 @@
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
 
-// Executive start-up and manager-list failure texts (retail .data 0x004a1820..).
-DATA(0x004a15cc)
-char gResourceManagerInitError[] = localization::Tr("startup.resources.failed");
-DATA(0x004a1604)
-char gInputManagerInitError[] = localization::Tr("startup.input.failed");
-DATA(0x004a162c)
-char gSoundManagerInitError[] = localization::Tr("startup.sound.failed");
-DATA(0x004a1644)
-char gMouseManagerInitError[] = localization::Tr("startup.mouse.failed");
-DATA(0x004a165c)
-char gWindowManagerInitError[] = localization::Tr("startup.windows.failed");
-DATA(0x004a1680)
-char gDialogManagerError1[] = localization::Tr("startup.manager.failed");
-DATA(0x004a169c)
-char gDialogManagerError2[] = localization::Tr("startup.manager.failed");
-DATA(0x004a16b8)
-char gDialogManagerError3[] = localization::Tr("startup.manager.failed");
-DATA(0x004a16d4)
-char gDialogManagerError4[] = localization::Tr("startup.manager.failed");
-DATA(0x004a16f0)
-char gCallManagerError1[] = localization::Tr("startup.manager.failed");
-DATA(0x004a170c)
-char gCallManagerError2[] = localization::Tr("startup.manager.failed");
-DATA(0x004a1728)
-char gTerminationMessage[] = "Terminated";
-
 VA(0x004729f0, 0x35)
 executive::executive(void) {
     m_managerListHead = NULL;
@@ -51,15 +25,15 @@ executive::executive(void) {
 VA(0x00472a25, 0xbd)
 H1_ENUM_RETURN(BaseManagerStatus, i16) executive::InitSystem(void) {
     if (gResourceManager->Open(BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
-        ShutDown(gResourceManagerInitError);
+        ShutDown(localization::Tr("startup.resources.failed"));
     if (gInputManager->Open(BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
-        ShutDown(gInputManagerInitError);
+        ShutDown(localization::Tr("startup.input.failed"));
     if (!InitAudio())
-        ShutDown(gSoundManagerInitError);
+        ShutDown(localization::Tr("startup.sound.failed"));
     if (AddManager(gMouseManager, BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
-        ShutDown(gMouseManagerInitError);
+        ShutDown(localization::Tr("startup.mouse.failed"));
     if (AddManager(gWindowManager, BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
-        ShutDown(gWindowManagerInitError);
+        ShutDown(localization::Tr("startup.windows.failed"));
     return BASE_MANAGER_SUCCESS;
 }
 
@@ -108,16 +82,16 @@ i16 executive::DoDialog(baseManager* manager) {
         count++;
     }
     if (AddManager(manager, BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
-        ShutDown(gDialogManagerError1);
+        ShutDown(localization::Tr("startup.manager.failed"));
     if (nestedExecutive.AddManager(gMouseManager, BASE_MANAGER_PRIORITY_UNASSIGNED)
         != BASE_MANAGER_SUCCESS)
-        ShutDown(gDialogManagerError2);
+        ShutDown(localization::Tr("startup.manager.failed"));
     if (nestedExecutive.AddManager(gWindowManager, BASE_MANAGER_PRIORITY_UNASSIGNED)
         != BASE_MANAGER_SUCCESS)
-        ShutDown(gDialogManagerError3);
+        ShutDown(localization::Tr("startup.manager.failed"));
     if (nestedExecutive.AddManager(manager, BASE_MANAGER_PRIORITY_UNASSIGNED)
         != BASE_MANAGER_SUCCESS)
-        ShutDown(gDialogManagerError4);
+        ShutDown(localization::Tr("startup.manager.failed"));
     nestedExecutive.MainLoop();
     RemoveManager(manager);
     for (index = 0; index < count; index++) {
@@ -201,11 +175,11 @@ void executive::CallManager(baseManager* manager) {
     baseManager* saved = m_activeManager;
     RemoveManager(m_activeManager);
     if (AddManager(manager, BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
-        ShutDown(gCallManagerError1);
+        ShutDown(localization::Tr("startup.manager.failed"));
     MainLoop();
     RemoveManager(manager);
     if (AddManager(saved, BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
-        ShutDown(gCallManagerError2);
+        ShutDown(localization::Tr("startup.manager.failed"));
     m_activeManager = saved;
 }
 
@@ -261,5 +235,5 @@ void executive::MainLoop(void) {
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x00473120, 0x18)
 void executive::Terminate(void) {
-    ShutDown(gTerminationMessage);
+    ShutDown("Terminated");
 }

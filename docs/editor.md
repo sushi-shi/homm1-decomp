@@ -191,7 +191,6 @@ placeholder at its retail place:
 | `SMapHeader` (shared with the game) | NWC's maps fill ten name and ten description slots (`"??? name"`, `"??? description"`); the editor's format word overwrites the last two bytes of the tenth description | typed: `name[10]`, `description[9]`, `lastDescription`, `format`; slots 8–9 are read by no code of either program |
 | `gEditMapHeader` (0x0045121c) | 4-byte aligned, which VC6 gives no record-typed object; 0x7d0 bytes up to `gEditErrors` | a 2000-byte character buffer viewed as `SMapHeader` through `EDIT_MAP_HEADER()`; its last 636 bytes (0x00451770-0x004519eb) are unread |
 | EDITMGR `.data` 0x0043ed9c | EDITMGR's `.data` ends at 0x0043ed9b; EDITOR's `.data` is 8-byte aligned | section alignment, not a datum |
-| `gPickMapNameDummy` (0x00451b84) | Main passes its address as PickMap's file name, which PickMap ignores | `char[4]`; its true extent (1 to 4 bytes) is not established |
 | `editTownExtra::unused14`, `editHeroExtra::unused19` | the dialogs copy and SaveMap writes them; no code reads them, and every shipped map holds zeros there | 50 unread bytes each |
 | `gUnusedData452ef4` (MAPOBJ) | MAPOBJ's empty status text sits at 0x00452ef8, four bytes into its `.bss` | an unread `i32` |
 | `gUnusedData453444` (wingraph, editor only) | BUTTON's `.bss` starts at 0x00453448 | an unread `i32` ending the editor's wingraph `.bss` |
@@ -201,10 +200,11 @@ The game's `Audio` opens its `.bss` with `gAudioOldStore`; the editor's
 compile of that file (another checkout) has no such object.
 
 `.bss` order follows the [VC6 emission rules](patterns/vc6-bss-emission-order.md):
-EDITMGR's `gEditErrors`, `gEditErrorCount`, `gVaryTiles` and
-`gPickMapNameDummy`, EVENTMGR's dialog state and EDITOR.CPP's tail are
-zero-initialized and follow their units' uninitialized objects in definition
-order.
+EDITMGR's `gEditErrors`, `gEditErrorCount` and `gVaryTiles`, EVENTMGR's
+dialog state and EDITOR.CPP's tail are zero-initialized and follow their
+units' uninitialized objects in definition order. The empty file name Main
+passes to PickMap (0x00451b84) is a `""` literal, which VC6 places in `.bss`
+after them.
 
 ## Generated source
 

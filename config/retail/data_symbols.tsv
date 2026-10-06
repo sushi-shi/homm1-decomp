@@ -3,18 +3,6 @@ rva	size	symbol	provenance
 0x000a0ff8	12	?gMouseOffset@@3PAHA	Unique typed payload and cursor-family argument/index flow
 0x000cfb40	4	?gMouseCursorType@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000a1004	150	?gHotSpot@@3PAY01EA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000a1374	18	?gDynamicConstruct@@3PADA	Typed initializer, pointer payload and retail caller/member/index dataflow
-0x000a15cc	56	?gResourceManagerInitError@@3PADA	Buka localized char-array initializer and executive::InitSystem operand; buka-localization.tsv
-0x000a1604	39	?gInputManagerInitError@@3PADA	Buka localized char-array initializer and executive::InitSystem operand; buka-localization.tsv
-0x000a162c	24	?gSoundManagerInitError@@3PADA	Buka localized char-array initializer and executive::InitSystem operand; buka-localization.tsv
-0x000a1644	24	?gMouseManagerInitError@@3PADA	Buka localized char-array initializer and executive::InitSystem operand; buka-localization.tsv
-0x000a165c	35	?gWindowManagerInitError@@3PADA	Buka localized char-array initializer and executive::InitSystem operand; buka-localization.tsv
-0x000a1680	28	?gDialogManagerError1@@3PADA	Localized manager error array and ordered retail call use
-0x000a169c	28	?gDialogManagerError2@@3PADA	Localized manager error array and ordered retail call use
-0x000a16b8	28	?gDialogManagerError3@@3PADA	Localized manager error array and ordered retail call use
-0x000a16d4	28	?gDialogManagerError4@@3PADA	Localized manager error array and ordered retail call use
-0x000a16f0	28	?gCallManagerError1@@3PADA	Localized manager error array and ordered retail call use
-0x000a170c	28	?gCallManagerError2@@3PADA	Localized manager error array and ordered retail call use
 0x000a14b8	256	_gDimPalette	Buka typed MASM initializer and every complete-body reference checked
 0x000a15b8	4	_gBitmapSourceSkip	Buka typed MASM initializer and every complete-body reference checked
 0x000a15bc	4	_gBitmapRowSkip	Buka typed MASM initializer and every complete-body reference checked

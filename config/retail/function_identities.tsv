@@ -1491,7 +1491,6 @@ rva	name
 0x000a0f0c	_gVolumeLevels
 0x000a0ff8	?gMouseOffset@@3PAHA
 0x000a1004	?gHotSpot@@3PAY01EA
-0x000a1374	?gDynamicConstruct@@3PADA
 0x000a1388	_gInputCharacterMap
 0x000a1484	_gIconXAdjust
 0x000a1488	_gIconYAdjust
@@ -1508,12 +1507,6 @@ rva	name
 0x000a14b8	_gDimPalette
 0x000a15b8	_gBitmapSourceSkip
 0x000a15bc	_gBitmapRowSkip
-0x000a1680	?gDialogManagerError1@@3PADA
-0x000a169c	?gDialogManagerError2@@3PADA
-0x000a16b8	?gDialogManagerError3@@3PADA
-0x000a16d4	?gDialogManagerError4@@3PADA
-0x000a16f0	?gCallManagerError1@@3PADA
-0x000a170c	?gCallManagerError2@@3PADA
 0x000a1740	_d_code
 0x000a1840	_d_len
 0x000a1940	_initialSon

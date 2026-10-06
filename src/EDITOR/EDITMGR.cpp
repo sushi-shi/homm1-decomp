@@ -6,7 +6,7 @@
 // SelectTool, Open, Close and Main; SetTileVariant, MakeMapCode,
 // ShowStatusWarning, ScatterDetails, gMapCodeLetters, gEditMapHeader,
 // gSelectionColor, gEditErrors, gEditErrorCount, gVaryTiles,
-// gPickMapNameDummy, gOverlayTypes.
+// gOverlayTypes.
 
 #include <match.h>
 
@@ -8948,8 +8948,6 @@ DATA(0x00451b7c)
 i32 gEditErrorCount = 0;
 DATA(0x00451b80)
 b32 gVaryTiles = false;
-DATA(0x00451b84)
-char gPickMapNameDummy[4] = "";
 
 VA(0x004017e0, 0xfb)
 editManager::editManager(void) {
@@ -9143,7 +9141,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) editManager::Main(tag_message& messag
                             SelectTool(EDIT_TOOL_ERASER);
                             break;
                         case EDIT_CONTROL_LOAD:
-                            if (!PickMap(gPickMapNameDummy, "map", FILE_REQUESTER_LOAD))
+                            if (!PickMap("", "map", FILE_REQUESTER_LOAD))
                                 break;
                             if (!H1_ENUM_ENCODE(BaseManagerStatus, LoadMap(m_mapFileName))) {
                                 m_mapChanged = 0;
