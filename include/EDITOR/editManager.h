@@ -523,12 +523,13 @@ public:
     void RemoveSmallRegions(void);
     // Lays chains of the tileset's mountains or trees.
     void PlaceObstacleChains(i32 density, i32 tileset);
-    // Places one chain link at (*x, *y) facing `direction` and steps on.
-    i32 PlaceChainLink(i32* x, i32* y, i32 direction, i32 tileset, char kind);
+    // Places one chain link at (*x, *y) facing `direction` and steps on; a
+    // tree chain keeps to treeFamily (its objects' first letter, 0: any).
+    i32 PlaceChainLink(i32* x, i32* y, i32 direction, i32 tileset, char treeFamily);
     void PlaceTowns(void);
-    // Places a sawmill (kind 0), an alchemist's lab (1) or the mine of
-    // resource `kind` with its river at (x, y).
-    void PlaceResourceSite(i32 x, i32 y, i32 kind);
+    // Places the site producing `resource` at (x, y): a sawmill, an
+    // alchemist's lab, or a mine with the resource's marker to its right.
+    void PlaceResourceSite(i32 x, i32 y, i32 resource);
     // Places towns, mines and obelisks.
     void PlaceRandomObjects(i32 density, i32 strength);
     // Places treasure (guarded in map corners) and wandering monsters.
