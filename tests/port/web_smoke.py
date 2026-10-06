@@ -229,13 +229,13 @@ def main() -> int:
 
         # 3. Reload: the stored files are still there; the game starts with
         # sound (the edition's intro movie is off by default).
-        print("3. reload, intro movie and audio")
+        print("3. reload, start and audio")
         page.goto(url + "?quiet=1")
         wait_status(page, "The game files are stored")
         page.click("#play")
         page.wait_for_timeout(2500)
         session.check_running()
-        session.shot("intro-movie")
+        session.shot("restart")
         audio = page.evaluate(
             "() => Module.SDL3 && Module.SDL3.audioContext ? Module.SDL3.audioContext.state : 'none'")
         print(f"  audio context: {audio}")
