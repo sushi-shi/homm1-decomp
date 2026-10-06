@@ -31,7 +31,11 @@ build/port/heroes-editor --data ~/.local/share/homm1-buka/game   # the editor
 ```
 
 `nix run .#native` and `nix run .#native-editor` build and run them from the
-flake (pass `-- --data DIR`).
+flake (pass `-- --data DIR`). To install them with your game data as
+`heroes` and `heroes-editor`, with a NixOS or home-manager module, see
+[Install with a NixOS flake](../../README.md#install-with-a-nixos-flake);
+the launchers and the data import are `nix/game.nix`, `nix/launch.sh` and
+`nix/game-data.py`.
 
 Without Nix: CMake 3.20, Ninja or Make, a C++20 compiler (GCC 12+ or Clang
 15+), Python 3, pkg-config, SDL 3.2+ and the FFmpeg libraries `libavformat`,
@@ -290,7 +294,8 @@ fought, heroes); the hashes must agree at every hand-off.
 The `*_replay` tests replay the fuzz harnesses' regression inputs (see
 [Fuzzing the file parsers](#fuzzing-the-file-parsers)).
 `nix flake check` builds the native and sanitizer builds and runs their tests
-(without game data), and builds the Windows programs.
+(without game data), builds the Windows programs and the `heroes`
+launchers (`nix/game.nix`) without game data.
 `-DHOMM1_SANITIZERS_RECOVER=ON` keeps going after undefined behaviour, to
 survey a whole session.
 

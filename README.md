@@ -77,6 +77,97 @@ source-win95-1.0                                             |                  
 
 This branch is `port`: the native build is described in [docs/port/README.md](docs/port/README.md).
 
+## Install with a NixOS flake
+
+The native game and its scenario editor install as `heroes` and
+`heroes-editor` on x86_64 Linux. Add this flake and a local folder holding
+your copy of the Buka 2003 game (its CD image, the CD's files or an installed
+game folder; a `.zip` or `.7z` of one works too) to your flake inputs:
+
+```nix
+inputs.homm1.url = "github:sushi-shi/homm1-decomp/port";
+inputs.homm1-game = {
+  url = "path:/path/to/folder-with-the-iso";
+  flake = false;
+};
+```
+
+Import the module and name your copy:
+
+```nix
+outputs = { nixpkgs, homm1, homm1-game, ... }: {
+  nixosConfigurations."<host>" = nixpkgs.lib.nixosSystem {
+    modules = [
+      ./configuration.nix
+      homm1.nixosModules.default
+      {
+        programs.homm1 = {
+          enable = true;
+          game = "${homm1-game}/heroes.iso";   # your image's file name
+        };
+      }
+    ];
+  };
+};
+```
+
+`game` may also be the input itself (`game = homm1-game;`) when the folder
+holds only the image, or the folder of an installed game. Nix checks the copy
+(the resource archive by SHA-256, the other files by name and size) and lays
+its data out in its store when the configuration is built; nothing is fetched
+from a binary cache. Rebuild, replacing `<host>` with your host's name, then
+launch:
+
+```sh
+sudo nixos-rebuild switch --flake '.#<host>'
+heroes             # the game
+heroes-editor      # the scenario editor
+```
+
+Both are in the desktop's application menu too, with the icons of your copy's
+programs. Saved games, the editor's maps and the high scores are written to
+`~/.local/share/homm1/game` (`$XDG_DATA_HOME`), where the game's read-only
+files are links into the store; settings are kept in `~/.config/homm1`.
+
+With home-manager, the same options install the game for one user:
+
+```nix
+homeConfigurations."<user>" = home-manager.lib.homeManagerConfiguration {
+  pkgs = nixpkgs.legacyPackages.x86_64-linux;
+  modules = [
+    homm1.homeManagerModules.default
+    {
+      programs.homm1 = {
+        enable = true;
+        game = "${homm1-game}/heroes.iso";
+      };
+    }
+  ];
+};
+```
+
+Other options: `programs.homm1.locale = "en"` builds the programs with English
+text and menus (the game's pictures stay as installed; default `"ru"`), and
+`programs.homm1.editor.enable = false` leaves the editor out. Without `game`
+the programs are installed alone, and the first start imports your copy from
+`HOMM1_GAME` into `~/.local/share/homm1/data`:
+
+```sh
+HOMM1_GAME=/path/to/heroes.iso heroes
+```
+
+To try it without installing:
+
+```sh
+HOMM1_GAME=/path/to/heroes.iso nix run github:sushi-shi/homm1-decomp/port
+nix run github:sushi-shi/homm1-decomp/port#heroes-editor
+nix run github:sushi-shi/homm1-decomp/port -- --window /I0   # options go after --
+```
+
+`heroes --help` lists the options. The package is also
+`packages.x86_64-linux.default`, overridable with
+`.override { game = ...; locale = "en"; editor = false; }`.
+
 ## Build
 
 On x86-64 Linux with Nix flakes enabled, from this directory:

@@ -74,6 +74,65 @@
         # reports would be noise; the build sandbox also blocks LeakSanitizer.
         preCheck = "export ASAN_OPTIONS=detect_leaks=0";
       });
+      # The installable game: `heroes` and `heroes-editor` on the native
+      # programs, with the player's game data laid out in the store when
+      # `game` is given (nix/game.nix; README, "Install with a NixOS flake").
+      game = pkgs.lib.makeOverridable (import ./nix/game.nix {
+        inherit pkgs native;
+        runner = ./play.py;
+      }) { };
+      # The game as a NixOS or home-manager option set. `edition` picks the
+      # programs; the Tournament Edition can join `editions` later.
+      editions = system: { buka = self.packages.${system}.default; };
+      module = target: { config, lib, pkgs, ... }:
+        let
+          cfg = config.programs.homm1;
+          package = cfg.package.override {
+            inherit (cfg) game locale;
+            editor = cfg.editor.enable;
+          };
+        in {
+          options.programs.homm1 = {
+            enable = lib.mkEnableOption "Heroes of Might and Magic (native port)";
+            edition = lib.mkOption {
+              type = lib.types.enum [ "buka" ];
+              default = "buka";
+              description = "The edition to install: buka (the Buka 2003 edition).";
+            };
+            game = lib.mkOption {
+              type = lib.types.nullOr lib.types.path;
+              default = null;
+              example = lib.literalExpression ''"''${homm1-game}/heroes.iso"'';
+              description = ''
+                Your copy of the game: its CD image, the CD, an installed game folder or a
+                .zip/.7z of one, or a folder holding only the image. It is checked and its
+                data laid out in the store on installation. If unset, set HOMM1_GAME when
+                launching for the first time.
+              '';
+            };
+            locale = lib.mkOption {
+              type = lib.types.str;
+              default = "ru";
+              example = "en";
+              description = "Language compiled into the programs (locales/<LANG>.json).";
+            };
+            editor.enable = lib.mkOption {
+              type = lib.types.bool;
+              default = true;
+              description = "Whether to install the scenario editor (heroes-editor).";
+            };
+            package = lib.mkOption {
+              type = lib.types.package;
+              default = (editions pkgs.stdenv.hostPlatform.system).${cfg.edition};
+              defaultText = lib.literalMD "the package of `edition`";
+              description = "The game package; the options above are applied to it with `override`.";
+            };
+          };
+          config = lib.mkIf cfg.enable (
+            if target == "nixos"
+            then { environment.systemPackages = [ package ]; }
+            else { home.packages = [ package ]; });
+        };
       # The browser build (nix/wasm.nix).
       wasm = import ./nix/wasm.nix { inherit pkgs; src = self; };
       # The native port for 64-bit Windows, cross-compiled (nix/windows.nix).
@@ -89,7 +148,17 @@
     in {
       apps.${system} = {
         inherit play editor;
-        default = play;
+        default = self.apps.${system}.heroes;
+        heroes = {
+          type = "app";
+          program = "${game}/bin/heroes";
+          meta.description = "The native game; HOMM1_GAME=PATH (your Buka 2003 game) on first run";
+        };
+        heroes-editor = {
+          type = "app";
+          program = "${game}/bin/heroes-editor";
+          meta.description = "The native scenario editor; HOMM1_GAME=PATH on first run";
+        };
         native = {
           type = "app";
           program = "${native}/bin/homm1";
@@ -113,11 +182,15 @@
       };
       packages.${system} = {
         inherit native sanitized windows;
+        default = game;
         wasm = wasm.site;
       };
       checks.${system} = {
         inherit native sanitized windows;
+        launcher = game;
       };
+      nixosModules.default = module "nixos";
+      homeManagerModules.default = module "home-manager";
       devShells.${system} = {
         default = pkgs.mkShell ({
           packages = tools;
