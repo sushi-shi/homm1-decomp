@@ -479,7 +479,7 @@ local	philAI::FightEvent	localWon	heroVictory	QuickCombat result
 local	philAI::FightEvent	defenderLoss	heroCasualtyFraction	receives QuickCombat's attacker fraction (names were swapped)
 local	philAI::FightEvent	attackerLoss	ghostLossFraction	receives the defender (ghost) fraction
 local	philAI::FightEvent	curGuards	ghostCounts	ghosts per stack by site size
-local	philAI::FightEvent	bit	canFight	ChooseEvaluateBattle worthFighting out
+local	philAI::FightEvent	bit	canFight	ChooseEvaluateBattle canWin out
 kept	philAI::FightEvent	theWorth	theWorth	netValue out; bucket 15 has no fitting name
 kept	philAI::FightEvent	activeRewardValue	activeRewardValue	site reward; bucket 15
 local	philAI::TownEvent	quickResult	heroVictory	QuickCombat result
@@ -499,14 +499,14 @@ local	philAI::ValueOfEventAtPosition	newPrize5	captureValue	dragon city capture 
 local	philAI::ValueOfEventAtPosition	gateX1Val	twinX	column of a candidate twin gate/whirlpool
 local	philAI::ValueOfEventAtPosition	gateY28Val	twinY	row of a candidate twin gate
 local	philAI::ValueOfEventAtPosition	origExitRV5	gateStrategicValue	StrategicValueOfPosition at the candidate, *0.85
-local	philAI::ValueOfEventAtPosition	bBattleWon9	dragonBattle	ChooseEvaluateBattle worthFighting out (dragon city)
+local	philAI::ValueOfEventAtPosition	bBattleWon9	dragonBattle	ChooseEvaluateBattle canWin out (dragon city)
 local	philAI::ValueOfEventAtPosition	guardCount1Value	ghostCount	ghosts per stack by site size
 local	philAI::ValueOfEventAtPosition	loc	candidateCell	cell scanned for a matching gate
 local	philAI::ValueOfEventAtPosition	chosenExitY27Value	bestGateY	row of the best exit
 local	philAI::ValueOfEventAtPosition	prevChosenExitX0	bestGateX	column of the best exit
 local	philAI::ValueOfEventAtPosition	nextGoldCost	lootGold	graveyard/shipwreck gold reward
 local	philAI::ValueOfEventAtPosition	lastPositionValue	stayWorth	strategic value of staying at the hero's cell
-local	philAI::ValueOfEventAtPosition	won9Requested	shouldBattle	ChooseEvaluateBattle worthFighting out (ghost sites)
+local	philAI::ValueOfEventAtPosition	won9Requested	shouldBattle	ChooseEvaluateBattle canWin out (ghost sites)
 local	philAI::ValueOfEventAtPosition	origBestRV	bestExitValue	best exit value so far
 kept	philAI::ValueOfEventAtPosition	theList	theList	windmill resource array; no fitting bucket-13 name
 kept	philAI::ValueOfEventAtPosition	theArmySlot2	theArmySlot2	replacementSlot out; bucket 13 forced
@@ -514,5 +514,16 @@ kept	philAI::ValueOfEventAtPosition	tempChance	tempChance	ignored liveChance; un
 param	philAI	(unnamed i32 in MeanRVOfUnexploredTerritory)	player	GetTurnAIVars passes player
 enum	AIPlaceVisitConstant	ADVMGR_PLACE_VISIT_COUNT	AI_PLACE_VISIT_COUNT	declared in philAI.h for DoAI's iPlacesVisited; ADVMGR_ prefix is the other game's header (update enum-reuse.tsv row 347)
 enum	AIPlaceVisitConstant	ADVMGR_PLACE_COORDINATE_COUNT	AI_PLACE_COORDINATE_COUNT	same
-param	philAI::ChooseEvaluateBattle	outFlag	worthFighting	1 when the rated outcome plus reward is positive
-param	philAI::ChooseEvaluateBattle	outValue	battleValue	the positive rating handed back to the caller
+param	philAI::ChooseEvaluateBattle	outFlag	canWin	1 when the rated outcome plus reward is positive
+param	philAI::ChooseEvaluateBattle	outValue	rating	the positive rating handed back to the caller
+global	PHILAI	gAttackerRemaining	gExpectedAttackerLoss	receives ProbableOutcomeOfBattle's expected attacker loss (alias keeps the storage spelling)
+global	PHILAI	gDefenderRemaining	gExpectedDefenderLoss	receives ProbableOutcomeOfBattle's expected defender loss
+global	PHILAI	gArtifactChoice1	gArtifactPickupValue	ValueOfEventAtPosition: worth of an unguarded artifact (ARTIFACT_EVENT_MODE_PICKUP)
+global	PHILAI	gArtifactChoice2	gArtifactGuardedValue	worth of an artifact guarded by rogues: battle outcome plus win-weighted value (MODE_GUARDED)
+global	PHILAI	gArtifactChoice3	gArtifactPurchaseValue	worth less the 2000 gold price (MODE_GOLD)
+global	PHILAI	costTemp	gCreatureCost	GetMonsterCost fills it with the creature's resource cost; alias keeps .bss order
+global	PHILAI	SVSearchArray	gStrategicSearchArray	StrategicValueOfPosition's shared searchArray; alias keeps .bss order
+static	combatManager::HandleCastSpell	indexToCastOn	gSpellTargetHex	hex under the spell pointer queued as the cast target; alias keeps .data order
+global	CMBTMGR	gSeed	gSavedSeed	SetupCombat saves the adventure random seed, GenerateMap restores it; alias keeps the symbol
+param	army::FindPath	(unnamed)	speed	every caller passes m_stats.speed; unused
+param	combatManager::DoCompAI	(unnamed)	side	CheckGetAIMove passes m_currentSide; unused

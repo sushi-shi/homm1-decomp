@@ -83,7 +83,7 @@ i32 gHumanTownConquered;
 DATA(0x004c8cc4)
 i32 gCurTurn;
 DATA(0x004bb100)
-i32 costTemp[RESOURCE_COUNT];
+i32 gCreatureCost[RESOURCE_COUNT];
 DATA(0x004b9cc0)
 i8 gTurnValueOfMine[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 DATA(0x004b221c)
@@ -1661,18 +1661,18 @@ void philAI::ValueOfBuyingHero(
 }
 
 // ValueOfEventAtPosition module state.
-#define gAttackerRemaining gEstOurForce // spelling fixes .bss order
+#define gExpectedAttackerLoss gEstOurForce // spelling fixes .bss order
 DATA(0x004bb124)
-i32 gAttackerRemaining;
-#define gDefenderRemaining gEstGuardPower // spelling fixes .bss order
+i32 gExpectedAttackerLoss;
+#define gExpectedDefenderLoss gEstGuardPower // spelling fixes .bss order
 DATA(0x004bb128)
-i32 gDefenderRemaining;
+i32 gExpectedDefenderLoss;
 #define gOutcome gSimOutcome // spelling fixes .bss order
 DATA(0x004bb12c)
 i32 gOutcome;
-#define gArtifactChoice1 gPrizeUnguardedValue // spelling fixes .bss order
+#define gArtifactPickupValue gPrizeUnguardedValue // spelling fixes .bss order
 DATA(0x004bb130)
-i32 gArtifactChoice1;
+i32 gArtifactPickupValue;
 
 VA(0x0044b891, 0x12c)
 void philAI::GetBestHero(town* townPointer, BHC& best, float& bestValue) {
@@ -1943,11 +1943,11 @@ i32 philAI::RVOfPosition(
 // StrategicValueOfPosition's shared search, constructed by its dynamic
 // initializer between RVOfPosition and its first user.
 DATA(0x004bb160)
-searchArray SVSearchArray;
-RVA_DYNINIT(0x0004c208, 0xf, SVSearchArray)
+searchArray gStrategicSearchArray;
+RVA_DYNINIT(0x0004c208, 0xf, gStrategicSearchArray)
 // Its .CRT$XCU thunk (0x0048e008 -> 0x00427d90) opens this retail object:
 // int3 padding precedes it and LogTruncate follows without a gap.
-RVA_DYNINIT(0x0004c1fe, 0xa, SVSearchArray)
+RVA_DYNINIT(0x0004c1fe, 0xa, gStrategicSearchArray)
 
 VA(0x0044c217, 0x83a)
 i32 philAI::StrategicValueOfPosition(
@@ -1989,7 +1989,7 @@ i32 philAI::StrategicValueOfPosition(
         activeSearchArray = ownSearch;
     } else {
         gSVSearchArrayInUse = 1;
-        activeSearchArray = &SVSearchArray;
+        activeSearchArray = &gStrategicSearchArray;
     }
     wasInBoat = aiHero->IsEmbarked();
     if (wasInBoat && gAdvManager->GetCell(targetX, targetY)->m_triggerType == MAP_OBJECT_COAST)
@@ -2102,9 +2102,9 @@ i32 philAI::StrategicValueOfPosition(
 }
 
 // ValueOfEventAtPosition module state.
-#define gArtifactChoice2 gPrizeGuardedWorth // spelling fixes .bss order
+#define gArtifactGuardedValue gPrizeGuardedWorth // spelling fixes .bss order
 DATA(0x004bb134)
-i32 gArtifactChoice2;
+i32 gArtifactGuardedValue;
 
 // Built structures' base values plus a fixed gold-turn allowance.
 VA(0x0044ca51, 0xb9)
@@ -2377,8 +2377,8 @@ void philAI::EvaluateOneTimeCreaturePurchase(
         purchasedValue * gGame->m_players[aiHero->m_owner].m_aiData.m_upgradeValueWeight
     );
     if (useAvailableCount == 0) {
-        GetMonsterCost(creature, costTemp);
-        purchaseValue -= purchaseCount * RVConversion(costTemp);
+        GetMonsterCost(creature, gCreatureCost);
+        purchaseValue -= purchaseCount * RVConversion(gCreatureCost);
     }
     if (purchaseValue < 0) {
         purchaseValue = 0;
@@ -2767,8 +2767,8 @@ void philAI::ChooseEvaluateBattle(
     i32 isCastle,
     i32 castleId,
     i32 rewardValue,
-    i32& worthFighting,
-    i32& battleValue
+    i32& canWin,
+    i32& rating
 ) {
     float winChance;
     i32 attackLossValue;
@@ -2796,11 +2796,11 @@ void philAI::ChooseEvaluateBattle(
     );
     netValue = static_cast<i32>(netValue + rewardValue * winChance);
     if (netValue <= 0) {
-        battleValue = 0;
-        worthFighting = 0;
+        rating = 0;
+        canWin = 0;
     } else {
-        battleValue = netValue;
-        worthFighting = 1;
+        rating = netValue;
+        canWin = 1;
     }
 }
 
@@ -3167,9 +3167,9 @@ void philAI::TownEvent(mapCell* cell, hero* heroPointer, i32 x, i32 y) {
 }
 
 // ValueOfEventAtPosition module state.
-#define gArtifactChoice3 gItemPurchaseScore // spelling fixes .bss order
+#define gArtifactPurchaseValue gItemPurchaseScore // spelling fixes .bss order
 DATA(0x004bb138)
-i32 gArtifactChoice3;
+i32 gArtifactPurchaseValue;
 #define gEventTownId gHeroGarrisonId // spelling fixes .bss order
 DATA(0x004c8cb4)
 i32 gEventTownId;
@@ -3236,7 +3236,7 @@ i32 philAI::ValueOfEventAtPosition(hero* aiHero, i16 x, i16 y, i32 immediate, i3
     gCellSeen = gMapVisitFlags[x][y] && gCurPlayerBit;
     switch (gEventLocation->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
         case MAP_OBJECT_ARTIFACT:
-            gArtifactChoice1 = gArtifactBaseRV[gEventLocation->m_objectIndex];
+            gArtifactPickupValue = gArtifactBaseRV[gEventLocation->m_objectIndex];
             for (gEventSlot = 0; gEventSlot < ARMY_GROUP_SLOT_COUNT; gEventSlot++) {
                 gMonGroup->m_creatureTypes[gEventSlot] = CREATURE_ROGUE;
                 gMonGroup->m_creatureCounts[gEventSlot] = 10;
@@ -3253,34 +3253,35 @@ i32 philAI::ValueOfEventAtPosition(hero* aiHero, i16 x, i16 y, i32 immediate, i3
                 gWinChance,
                 gAttackerLoss,
                 gDefenderLoss,
-                gAttackerRemaining,
-                gDefenderRemaining,
+                gExpectedAttackerLoss,
+                gExpectedDefenderLoss,
                 gOutcome
             );
-            gArtifactChoice2 = static_cast<i32>(
+            gArtifactGuardedValue = static_cast<i32>(
                 gOutcome + gArtifactBaseRV[gEventLocation->m_objectIndex] * gWinChance
             );
-            gArtifactChoice3 = static_cast<i32>(
+            gArtifactPurchaseValue = static_cast<i32>(
                 gArtifactBaseRV[gEventLocation->m_objectIndex]
                 - 2000.0f * gAITurnCostResource[RESOURCE_GOLD]
             );
-            if (gArtifactChoice3 < 0)
-                gArtifactChoice3 = 0;
+            if (gArtifactPurchaseValue < 0)
+                gArtifactPurchaseValue = 0;
             if (gCellSeen) {
                 switch (gEventLocation->m_objectMetadata) {
                     case ARTIFACT_EVENT_MODE_PICKUP:
-                        gVisitResult = gArtifactChoice1;
+                        gVisitResult = gArtifactPickupValue;
                         break;
                     case ARTIFACT_EVENT_MODE_GUARDED:
-                        gVisitResult = gArtifactChoice2;
+                        gVisitResult = gArtifactGuardedValue;
                         break;
                     case ARTIFACT_EVENT_MODE_GOLD:
-                        gVisitResult = gArtifactChoice3;
+                        gVisitResult = gArtifactPurchaseValue;
                         break;
                 }
             } else {
                 gVisitResult = static_cast<i32>(
-                    gArtifactChoice1 * 0.6 + gArtifactChoice2 * 0.2 + gArtifactChoice3 * 0.2
+                    gArtifactPickupValue * 0.6 + gArtifactGuardedValue * 0.2
+                    + gArtifactPurchaseValue * 0.2
                 );
             }
             break;
@@ -3340,8 +3341,8 @@ i32 philAI::ValueOfEventAtPosition(hero* aiHero, i16 x, i16 y, i32 immediate, i3
                 gWinChance,
                 gAttackerLoss,
                 gDefenderLoss,
-                gAttackerRemaining,
-                gDefenderRemaining,
+                gExpectedAttackerLoss,
+                gExpectedDefenderLoss,
                 gOutcome
             );
             EvaluateOneTimeCreaturePurchase(
@@ -3417,8 +3418,8 @@ i32 philAI::ValueOfEventAtPosition(hero* aiHero, i16 x, i16 y, i32 immediate, i3
                     gWinChance,
                     gAttackerLoss,
                     gDefenderLoss,
-                    gAttackerRemaining,
-                    gDefenderRemaining,
+                    gExpectedAttackerLoss,
+                    gExpectedDefenderLoss,
                     gVisitResult
                 );
                 if (immediate && gDebugLevel == AI_DEBUG_LEVEL_BATTLE)
@@ -3489,8 +3490,8 @@ i32 philAI::ValueOfEventAtPosition(hero* aiHero, i16 x, i16 y, i32 immediate, i3
                         gWinChance,
                         gAttackerLoss,
                         gDefenderLoss,
-                        gAttackerRemaining,
-                        gDefenderRemaining,
+                        gExpectedAttackerLoss,
+                        gExpectedDefenderLoss,
                         gOutcome
                     );
                 else if (gEventTown->HasGarrison())
@@ -3506,8 +3507,8 @@ i32 philAI::ValueOfEventAtPosition(hero* aiHero, i16 x, i16 y, i32 immediate, i3
                         gWinChance,
                         gAttackerLoss,
                         gDefenderLoss,
-                        gAttackerRemaining,
-                        gDefenderRemaining,
+                        gExpectedAttackerLoss,
+                        gExpectedDefenderLoss,
                         gOutcome
                     );
                 else {

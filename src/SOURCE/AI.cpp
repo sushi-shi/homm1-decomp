@@ -126,7 +126,7 @@ i32 combatManager::AICheckRetreat(void) {
 // target class, walkers otherwise close in; a castle attacker steps toward
 // the gate. The chosen move is nudged onto a free hex next to an enemy.
 VA(0x00411d88, 0x872)
-void combatManager::DoCompAI(i8) {
+void combatManager::DoCompAI(i8 side) {
     i8 theyOutshoot;
     i16 mainShooters[COMBAT_SIDE_COUNT];
     i32 newStrengths[COMBAT_SIDE_COUNT];

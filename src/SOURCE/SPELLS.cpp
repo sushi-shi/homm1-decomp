@@ -92,18 +92,19 @@ i16 CombatSpecialHandler(struct tag_message& message) {
 
 // HandleCastSpell refreshes the coordinates from the mouse manager before
 // re-entering for the teleport destination.
+#define gSpellTargetHex indexToCastOn // spelling fixes .data order
 VA(0x0045a0b0, 0x25d)
 i16 HandleCastSpell(struct tag_message& message) {
     DATA(0x0049f97c)
-    static i8 indexToCastOn = -1;
+    static i8 gSpellTargetHex = -1;
     i16 hex;
 
     switch (message.type) {
         case MESSAGE_MOUSE_MOVE:
             hex = gCombatManager->GetGridIndex(message.x, message.y);
-            if (hex != indexToCastOn) {
+            if (hex != gSpellTargetHex) {
                 if (!gCombatManager->ValidSpellTarget(gCombatManager->m_selectedSpell, hex)) {
-                    indexToCastOn = ARMY_HEX_INVALID;
+                    gSpellTargetHex = ARMY_HEX_INVALID;
                     gMouseManager->SetPointer(SPELL_POINTER_NO_TARGET);
                     if (gCombatManager->m_selectedSpell == SPELL_TELEPORT && gInTeleportGetDest)
                         gCombatManager->CombatMessage(
@@ -113,21 +114,21 @@ i16 HandleCastSpell(struct tag_message& message) {
                     else
                         gCombatManager->CombatMessage(localization::Tr("spell.target.select"), 1);
                 } else {
-                    indexToCastOn = hex;
+                    gSpellTargetHex = hex;
                     gMouseManager->SetPointer(gCombatManager->m_selectedSpell);
                     gCombatManager->SpellMessage(gCombatManager->m_selectedSpell, hex);
                 }
             }
             break;
         case MESSAGE_LEFT_BUTTON_DOWN:
-            if (indexToCastOn != ARMY_HEX_INVALID) {
+            if (gSpellTargetHex != ARMY_HEX_INVALID) {
                 if (gInTeleportGetDest)
-                    gNextActionGridIndex2 = indexToCastOn;
+                    gNextActionGridIndex2 = gSpellTargetHex;
                 else {
-                    gNextActionGridIndex = indexToCastOn;
+                    gNextActionGridIndex = gSpellTargetHex;
                     if (gCombatManager->m_selectedSpell == SPELL_TELEPORT) {
                         gInTeleportGetDest = 1;
-                        indexToCastOn = ARMY_HEX_INVALID;
+                        gSpellTargetHex = ARMY_HEX_INVALID;
                         message.type = MESSAGE_MOUSE_MOVE;
                         gMouseManager->MouseCoords(message.x, message.y);
                         HandleCastSpell(message);
@@ -936,7 +937,7 @@ void combatManager::Armageddon(void) {
 }
 
 // SPELLS owns retail .data 0x00490690-0x0048f4d3. HandleCastSpell's
-// indexToCastOn (0x004906b4) is its local static: /Gi emits it at the head
+// gSpellTargetHex (0x004906b4) is its local static: /Gi emits it at the head
 // of that function's literals.
 DATA(0x004cccb8)
 i8 gInTeleportGetDest = 0;

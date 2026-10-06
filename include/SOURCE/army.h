@@ -188,7 +188,7 @@ public:
     i16 ValidFlight(i16 destination, i8 pathMode);
     i16 FlyTo(void);
     i16 FlyTo(i16 destination);
-    i16 FindPath(i16 sourceHex, i16 targetHex, i8, i8 ignoreSpeed, i8 pathMode);
+    i16 FindPath(i16 sourceHex, i16 targetHex, i8 speed, i8 ignoreSpeed, i8 pathMode);
     i16 ValidPath(i16 targetHex, i8 pathMode);
     i16 GetMoveMask(i16 sourceHex);
     i16 GetAttackMask(i16 sourceHex, i8 targetMode, i8 targetHex);

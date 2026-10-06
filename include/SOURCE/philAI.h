@@ -197,8 +197,8 @@ public:
         i32 isCastle,
         i32 castleId,
         i32 rewardValue,
-        i32& worthFighting,
-        i32& battleValue
+        i32& canWin,
+        i32& rating
     );
     i32 ChooseToBuyArtifact(class hero* heroPointer, i32 artifact, i32 goldCost);
     i32 ChooseToPayRansomOnHero(class hero* heroPointer, i32 goldCost);
@@ -224,7 +224,8 @@ public:
     void TownEvent(class mapCell* cell, class hero* heroPointer, i32 x, i32 y);
     i32 ValueOfEventAtPosition(class hero* aiHero, i16 x, i16 y, i32 immediate, i32* liveChance);
 };
-extern i32 costTemp[];
+#define gCreatureCost costTemp // spelling fixes .bss order
+extern i32 gCreatureCost[];
 #define gLastFrameRateTimer iLastFrameRateTimer // spelling fixes .bss order
 extern i32 gLastFrameRateTimer;
 extern i32 gHumanTownConquered;
@@ -277,7 +278,8 @@ extern i16 gHeroStrategicRVOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 extern i16 gLiveChanceOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 #define gHeroLiveChance gaiHeroLiveChance // spelling fixes .bss order
 extern i16 gHeroLiveChance[];
-extern class searchArray SVSearchArray;
+#define gStrategicSearchArray SVSearchArray // spelling fixes .bss order
+extern class searchArray gStrategicSearchArray;
 #define gReduceFactor fReduceFactor // spelling fixes .bss order
 extern float gReduceFactor;
 // The per-cell/per-hero resource-value caches (gHeroStrategicRVOfPos,

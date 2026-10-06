@@ -41,8 +41,9 @@
 DATA(0x004a67dc)
 i32 gInHighMoraleBonus = 0;
 // SetupCombat saves the adventure random seed here; GenerateMap restores it.
+#define gSavedSeed gSeed // spelling fixes .data order
 DATA(0x0048f060)
-i32 gSeed = 1;
+i32 gSavedSeed = 1;
 
 VA(0x00418b30, 0x18b)
 combatManager::combatManager(void) {
@@ -111,7 +112,7 @@ void combatManager::SetupCombat(
 ) {
     i32 i;
 
-    gSeed = randomSeed;
+    gSavedSeed = randomSeed;
     SRand(combatX * 100 + combatY);
     m_combatX = combatX;
     m_combatY = combatY;
@@ -466,7 +467,7 @@ void combatManager::GenerateMap(void) {
     m_currentSpeed = CREATURE_SPEED_BLAZING;
     GetNextArmy(0);
     m_gridUpdateRow = 0;
-    SRand(gSeed);
+    SRand(gSavedSeed);
 }
 
 // A graveyard (or a hero standing on one) forces the graveyard field.

@@ -418,7 +418,7 @@ public:
     void SaveCombatBorder(void);
     void DrawCombatBorder(void);
     i32 AICheckRetreat(void);
-    void DoCompAI(i8);
+    void DoCompAI(i8 side);
     i16 GetShooterMask(i8 side);
     i16 GetFlyerMask(i8 side);
     i16 GetWalkerMask(i8 side);
