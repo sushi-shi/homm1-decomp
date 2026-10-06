@@ -460,6 +460,18 @@ b32 PlaceOverlay(overlayType* type, i16 x, i16 y) {
         ShowStatusWarning(gText);
         return false;
     }
+    // A town or a hero takes a record of the extra table: the records of
+    // erased objects are given back first, and a table still full refuses
+    // the object.
+    i = type->trigger & MAP_TRIGGER_TYPE_MASK;
+    if (i == MAP_OBJECT_TOWN || i == MAP_FILE_OBJECT_RANDOM_TOWN
+        || i == MAP_FILE_OBJECT_RANDOM_CASTLE || i == MAP_FILE_OBJECT_HERO) {
+        gEditManager->FreeUnusedExtras();
+        if (gEditManager->m_extraCount >= MAP_EXTRA_RECORD_CAPACITY) {
+            ShowStatusWarning(localization::Tr("editor.overlay.place.unsuitable"));
+            return false;
+        }
+    }
     gNextObjectId++;
     for (piece = 0; piece < OVERLAY_FOOTPRINT_CELLS; piece++) {
         if (piece == OVERLAY_FOOTPRINT_CORNER) {

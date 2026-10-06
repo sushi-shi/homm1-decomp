@@ -365,6 +365,7 @@ public:
     void ClearArea(i32 x, i32 y, i32 width, i32 height, u16 mask, b32 secondLayer);
     void ResetArea(i32 x, i32 y, i32 width, i32 height);
     void FreeMapExtras(void);
+    void FreeUnusedExtras(void);
     void NewMap(b32 random);
     void GenerateRandomMap(void);
     b32 HasEnoughCastles(void);
