@@ -1,0 +1,8 @@
+# A saved game with no players whose current player is not human: the search
+# for the player to watch took the next player modulo the player count, a
+# division by zero.
+base DATA\REMOTE.GAM
+set 225 00
+set 232 00 01 00 00
+bytes 00            # one human player
+expect refused

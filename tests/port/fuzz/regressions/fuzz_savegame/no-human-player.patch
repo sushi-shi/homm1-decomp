@@ -1,0 +1,6 @@
+# No human among the players: the search for the player to watch never
+# ended.
+base DATA\REMOTE.GAM
+set 232 00 00 00 00
+bytes 00
+expect refused

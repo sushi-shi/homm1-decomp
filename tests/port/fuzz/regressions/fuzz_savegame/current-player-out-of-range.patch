@@ -1,0 +1,5 @@
+# The current player indexed the four-entry player table with 56.
+base DATA\REMOTE.GAM
+set 226 38
+bytes 00
+expect refused

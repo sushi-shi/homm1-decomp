@@ -571,7 +571,13 @@ i16 game::LoadGame(char* filename, b32 origData, b32) {
         if (strcmp(filename, "REMOTE.GAM"))
             strcpy(gGame->m_saveName, filename);
     }
-    if (!theLoadHandle.Ok())
+    // The player count and the current player index the player tables, and
+    // the search for the player to watch below needs a human among the
+    // players.
+    for (ix = 0; ix < m_playerCount && ix < GAME_PLAYER_COUNT && !gThisNetHumanPlayer[ix]; ix++)
+        ;
+    if (!theLoadHandle.Ok() || m_playerCount < 1 || m_playerCount > GAME_PLAYER_COUNT
+        || gCurPlayer < 0 || gCurPlayer >= m_playerCount || ix >= m_playerCount)
         FileError(pathName);
     gAdvManager->m_heroContextLocked = false;
     gCurPlayerData = &gGame->m_players[gCurPlayer];

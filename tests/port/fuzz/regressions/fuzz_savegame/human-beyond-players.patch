@@ -1,0 +1,7 @@
+# Two players, the only human is the fourth: the search for the player to
+# watch cycled through the first two forever.
+base DATA\REMOTE.GAM
+set 225 02
+set 232 00 00 00 01
+bytes 03            # four human players chosen, so the fourth counts
+expect refused
