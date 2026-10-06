@@ -6,7 +6,7 @@
 # (tab-separated; every field is an fnmatch glob, `*` matches anything; the
 # first matching row wins): file owner spelling group detail reason.
 # group/detail are the census' review_group/review_context columns.
-#floor	2686
+#floor	2558
 *	*	0	trivial-function-literal	0 for-init	a for loop's counter starts at zero
 *	*	0	trivial-function-literal	0 initializer*	an accumulator or counter declared at zero
 *	*	1	trivial-function-literal	1 arithmetic*	a one-step offset: the next index, element or count
@@ -1315,3 +1315,20 @@ src/EDITOR/OVERLAY.cpp	PlaceMineResource	1	trivial-function-literal	1 bound x	th
 src/EDITOR/OVERLAY.cpp	overlayManager::PickOverlay	0	call-argument	heroWindow(i16, i16, i16, i16, i16) argument [12]	the full-screen picker window's origin
 src/EDITOR/OVERLAY.cpp	overlayManager::MeasureOverlay	[1-5]	*	*	the footprint's extent in cells: its highest occupied row or rightmost column, plus one
 src/EDITOR/OVERLAY.cpp	overlayManager::DrawCategoryName	1	call-argument	DrawString(* argument 4	the category name's font colour index
+src/EDITOR/EVENTMGR.cpp	eventsManager::*	[25]0	store	initializer of text	a local text buffer's extent: a field's number or a creature or hero name formatted for its text widget
+src/EDITOR/EVENTMGR.cpp	CellWindowHandler	[2-7]	arithmetic	operator + CELL_WINDOW_FIRST_FLAG	cellwin.bin's toggle of m_flags bit n (one toggle per bit, in bit order)
+src/EDITOR/EVENTMGR.cpp	*Window*	1	trivial-function-literal	1 bitwise	the single bit (1 << n) of a toggle: an m_flags, building or gClearFlags bit
+src/EDITOR/EVENTMGR.cpp	eventsManager::EditTown	0	trivial-function-literal	0 equality m_objectMetadata	a town cell without a map-extra record (record 0 is never allocated): a town the old editor placed
+src/EDITOR/EVENTMGR.cpp	eventsManager::Update*Window	0	trivial-function-literal	0 array-index text	the first character of the troop's creature name, which the window capitalizes
+src/EDITOR/EVENTMGR.cpp	eventsManager::Update*Window	0	call-argument	CyrillicToUpper(char) argument 1	the first character of the troop's creature name, which the window capitalizes
+src/EDITOR/EVENTMGR.cpp	eventsManager::UpdateTownWindow	0	trivial-function-literal	0 store toggleIndex	the first building toggle
+src/EDITOR/EVENTMGR.cpp	*WindowHandler	[2-4]	arithmetic	operator + EXTRA_WINDOW_FIRST_[CT]*	the garrison field of army slot n (one per ARMY_GROUP_SLOT_COUNT slot)
+src/EDITOR/EVENTMGR.cpp	*WindowHandler	[23]	arithmetic	operator + EXTRA_WINDOW_FIRST_PLAYER	the owner radio button of player n
+src/EDITOR/EVENTMGR.cpp	TownWindowHandler	*	arithmetic	operator + TOWN_WINDOW_FIRST_BUILDING	the n-th building toggle (building slots without the tent and castle)
+src/EDITOR/EVENTMGR.cpp	HeroWindowHandler	[23]	arithmetic	operator + HERO_WINDOW_FIRST_ARTIFACT	the field of the hero's n-th starting artifact (MAP_HERO_EXTRA_ARTIFACT_COUNT)
+src/EDITOR/EVENTMGR.cpp	*WindowHandler	0	trivial-function-literal	0 store amount	a field's lower bound: a negative entry is clamped to zero
+src/EDITOR/EVENTMGR.cpp	MonsterWindowHandler	0	trivial-function-literal	0 store value	a field's lower bound: a negative entry is clamped to zero
+src/EDITOR/EVENTMGR.cpp	UpdateMapDetailsWindow	0	trivial-function-literal	0 array-index *	the first language's name and description: the window edits language 0 and its handler copies the text to every language
+src/EDITOR/EVENTMGR.cpp	BalanceTerrainPercents	*.*	store	*	a generator percentage: a total's reset and the one percent floor of the water or grass share
+src/EDITOR/EVENTMGR.cpp	NewMapWindowHandler	*.*	store	*	a generator percentage: a slider row's 0..100 range
+src/EDITOR/EVENTMGR.cpp	DragNewMapSlider	100	arithmetic	operator *	the knob's position along its travel as a percentage
