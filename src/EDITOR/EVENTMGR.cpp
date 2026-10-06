@@ -1179,7 +1179,10 @@ void BalanceTerrainPercents(i32 changedTerrain) {
     i32 i;
     double landTotal;
 
-    remaining = 100.0 - gTerrainPercent[changedTerrain];
+    // Called with TERRAIN_INVALID (-1) when the dialog closes; the original
+    // read the double before the table, which in the shipped editor was
+    // about 2e-314, so nothing was taken away.
+    remaining = 100.0 - (changedTerrain >= 0 ? gTerrainPercent[changedTerrain] : 0.0);
     othersTotal = 0.0;
     landTotal = 0.0;
     for (i = 0; i < EDITOR_TERRAIN_COUNT; i++)

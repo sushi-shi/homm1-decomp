@@ -9153,6 +9153,11 @@ i16 editManager::Main(tag_message& message) {
                             if (Confirm(localization::Tr("editor.map.new.confirm"))) {
                                 ResetArea(0, 0, MAP_CELL_GRID_SIZE, MAP_CELL_GRID_SIZE);
                                 NewMap(false);
+                                // NewMap frees the extra records the undo copy
+                                // still names; the original's Undo brought back
+                                // cells pointing at them. The empty map is the
+                                // undo state now.
+                                SaveUndo();
                                 DrawMap();
                                 UpdateMapView();
                                 DrawRadar(true);

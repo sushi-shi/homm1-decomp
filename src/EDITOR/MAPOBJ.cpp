@@ -61,6 +61,9 @@ void editManager::GenerateRandomMap(void) {
     while (!done && attempt < RANDOM_MAP_ATTEMPTS) {
         attempt++;
         ResetArea(0, 0, MAP_CELL_GRID_SIZE, MAP_CELL_GRID_SIZE);
+        // NewMap freed the extra records the undo copy names (see
+        // EDIT_CONTROL_NEW); the empty map is the undo state.
+        SaveUndo();
         DrawMap();
         UpdateMapView();
         DrawRadar(true);
@@ -868,10 +871,15 @@ void editManager::PlaceTowns(void) {
                 }
             }
         }
+        // When every site in the region rates 0 or less (crowded by the
+        // castles already placed), the original went on with the site left
+        // uninitialised; its "no site" check (top < 0) could not fire. This
+        // attempt now ends here: without all its castles HasEnoughCastles
+        // fails and GenerateRandomMap tries again.
+        if (top <= 0)
+            return;
         tileX = keeps[c].x;
         tileY = keeps[c].y;
-        if (top < 0)
-            ShutDown(localization::Tr("editor.random.castles.failed"));
         terrain = m_map.cells[tileX][tileY].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN;
         gEditManager->ClearArea(
             tileX - RANDOM_MAP_SITE_LEFT,

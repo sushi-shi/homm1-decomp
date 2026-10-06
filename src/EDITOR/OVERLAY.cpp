@@ -23,6 +23,7 @@
 #include <SOURCE/mapObjectTypes.h>
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #define OVERLAY_CPP_PATH "U:\\HMM\\VSS\\HMM1\\Source\\Editor\\OVERLAY.CPP"
@@ -460,6 +461,17 @@ b32 PlaceOverlay(overlayType* type, i16 x, i16 y) {
         ShowStatusWarning(gText);
         return false;
     }
+    // Each town or hero placed takes an extra record, and records are not
+    // given back when the object is erased. The original went on past the
+    // 255-entry record table (its size table then overwrote the record
+    // pointers); a full table now refuses the object.
+    i = type->trigger & MAP_TRIGGER_TYPE_MASK;
+    if ((i == MAP_OBJECT_TOWN || i == MAP_FILE_OBJECT_RANDOM_TOWN
+         || i == MAP_FILE_OBJECT_RANDOM_CASTLE || i == MAP_FILE_OBJECT_HERO)
+        && gEditManager->m_extraCount >= MAP_EXTRA_RECORD_CAPACITY) {
+        ShowStatusWarning(localization::Tr("editor.overlay.place.unsuitable"));
+        return 0;
+    }
     gNextObjectId++;
     for (piece = 0; piece < OVERLAY_FOOTPRINT_CELLS; piece++) {
         if (piece == OVERLAY_FOOTPRINT_CORNER) {
@@ -469,6 +481,13 @@ b32 PlaceOverlay(overlayType* type, i16 x, i16 y) {
             row = piece / OVERLAY_FOOTPRINT_COLUMNS;
             col = piece - row * OVERLAY_FOOTPRINT_COLUMNS;
         }
+        // CanPlaceOverlay checks only the cells the object stands on; its
+        // other pieces (shadows) can fall outside the map at its edges. The
+        // original wrote them there: past the last column into the object
+        // id table, above the top row onto the previous column's bottom cell.
+        if (x + col < 0 || x + col > MAP_CELL_GRID_SIZE - 1 || y - row < 0
+            || y - row > MAP_CELL_GRID_SIZE - 1)
+            continue;
         dest = &gEditManager->m_map.cells[x + col][y - row];
         placedIds = &gEditManager->m_map.cellPairs[x + col][y - row];
         footBit = OVERLAY_CELL_BIT(piece);
@@ -507,7 +526,9 @@ b32 PlaceOverlay(overlayType* type, i16 x, i16 y) {
             if (dest->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN)
                 || dest->m_triggerType == MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_TOWN)
                 || dest->m_triggerType == MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_CASTLE)) {
-                newTown = new editTownExtra;
+                // Allocated as the map reader allocates them: FreeMapExtras
+                // frees with free(), and the original's new did not match.
+                newTown = static_cast<editTownExtra*>(malloc(sizeof(editTownExtra)));
                 memset(newTown, 0, sizeof(editTownExtra));
                 dest->m_objectMetadata = gEditManager->m_extraCount;
                 gEditManager->m_extras[gEditManager->m_extraCount] = newTown;
@@ -515,7 +536,7 @@ b32 PlaceOverlay(overlayType* type, i16 x, i16 y) {
                 gEditManager->m_extraCount++;
             }
             if (dest->m_triggerType == MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_HERO)) {
-                newHero = new editHeroExtra;
+                newHero = static_cast<editHeroExtra*>(malloc(sizeof(editHeroExtra)));
                 memset(newHero, 0, sizeof(editHeroExtra));
                 newHero->record.artifacts[0] = ARTIFACT_NONE;
                 newHero->record.artifacts[1] = ARTIFACT_NONE;
