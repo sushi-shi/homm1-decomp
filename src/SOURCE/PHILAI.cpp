@@ -2172,12 +2172,12 @@ float philAI::TurnValueOfObelisk(i32 player) {
     each = gArtifactBaseRV[gGame->m_ultimateArtifactId] / 110;
     if (gGame->m_ultimateArtifactId == ARTIFACT_NONE)
         return 0.0f;
-    ai->m_obeliskValue = each * 48 / gGame->m_obeliskCount;
-    ai->m_obeliskValue =
-        ai->m_obeliskValue
+    aiData->m_obeliskValue = each * 48 / gGame->m_obeliskCount;
+    aiData->m_obeliskValue =
+        aiData->m_obeliskValue
         * (1.5 - abs(32 - gGame->m_players[player].CountPuzzlePiecesRemoved()) / 48.0f);
-    ai->m_obeliskValue = ai->m_obeliskValue * (ai->m_attentionWeights.heroValue + 0.66);
-    return ai->m_obeliskValue;
+    aiData->m_obeliskValue = aiData->m_obeliskValue * (aiData->m_attentionWeights.heroValue + 0.66);
+    return aiData->m_obeliskValue;
 }
 #undef aiData
 
@@ -3011,16 +3011,16 @@ void philAI::FightEvent(hero* heroPointer, mapCell* cell) {
     }
     switch (cell->m_objectMetadata) {
         case GHOST_SITE_SMALL:
-            activeRewardValue = 1000.0f * gAITurnCostResource[RESOURCE_GOLD];
+            rewardValue = 1000.0f * gAITurnCostResource[RESOURCE_GOLD];
             break;
         case GHOST_SITE_MEDIUM:
-            activeRewardValue = 2000.0f * gAITurnCostResource[RESOURCE_GOLD];
+            rewardValue = 2000.0f * gAITurnCostResource[RESOURCE_GOLD];
             break;
         case GHOST_SITE_LARGE:
-            activeRewardValue = 5000.0f * gAITurnCostResource[RESOURCE_GOLD];
+            rewardValue = 5000.0f * gAITurnCostResource[RESOURCE_GOLD];
             break;
         case GHOST_SITE_HUGE:
-            activeRewardValue = 2000.0f * gAITurnCostResource[RESOURCE_GOLD]
+            rewardValue = 2000.0f * gAITurnCostResource[RESOURCE_GOLD]
                                 + gCurPlayerData->m_aiData.m_artifactValue;
             break;
         default:
@@ -3841,7 +3841,7 @@ i32 philAI::ValueOfEventAtPosition(hero* aiHero, i16 x, i16 y, i32 immediate, i3
                                    : 3)
                         && candidateCell->m_triggerType == gEventLocation->m_triggerType) {
                         gateStrategicValue =
-                            StrategicValueOfPosition(aiHero, twinX, twinY, 0, &tempChance);
+                            StrategicValueOfPosition(aiHero, twinX, twinY, 0, &unusedChance);
                         gateStrategicValue = gateStrategicValue * 0.85;
                         if (gateStrategicValue > bestExitValue) {
                             bestExitValue = gateStrategicValue;
