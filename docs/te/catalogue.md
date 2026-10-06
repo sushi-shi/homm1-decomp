@@ -941,3 +941,4 @@ section 1, each with the reproduction it was checked against.
 - *Adventure map (BUG-ADV-1–5):* the skeleton's unpaid gold, Summon Boat at
   the map's edge, the campfire's sound, the puzzle's off-map cells, and
   heroes and towns without records under other objects.
+- *Campaign (BUG-CAM-1):* the enemy lords' crests, read one entry late.
