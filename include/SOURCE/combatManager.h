@@ -73,7 +73,9 @@ enum CombatDrawStateConstant {
     COMBAT_CATAPULT_FRAME_FIRST = 0,
     COMBAT_LIMIT_CREATURE_HIDDEN = -1,
     COMBAT_WALL_DAMAGE_NONE = -1,
-    COMBAT_WALL_FRAME_NONE = -1
+    COMBAT_WALL_FRAME_NONE = -1,
+    // A wandering monster's cell keeps at most this many survivors.
+    COMBAT_MAP_MONSTER_COUNT_MAX = 127
 };
 
 enum CombatAIConstant {

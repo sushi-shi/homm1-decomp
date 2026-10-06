@@ -873,7 +873,8 @@ void army::SpecialAttack(void) {
     Stand(true);
     if (enemyStack->m_quantity > 0)
         enemyStack->Stand(true);
-    if (!gSecondShot && m_creatureType == CREATURE_ELF && enemyStack->m_quantity > 0) {
+    if (!gSecondShot && m_creatureType == CREATURE_ELF && m_stats.shots >= 1
+        && enemyStack->m_quantity > 0) {
         gSecondShot = true;
         SpecialAttack();
         gSecondShot = false;
@@ -1327,10 +1328,6 @@ void army::DoAttack(b32 retaliation) {
             }
             struckArmy->DoAttack(true);
             struckArmy->m_stats.attributes |= MONSTER_FLAGS_RETALIATED;
-            if (struckArmy->m_creatureType == CREATURE_GHOST)
-                struckArmy->m_quantity +=
-                    gCombatManager->m_ghostKills[gCombatManager->m_hexCells[struckArmy->m_hex]
-                                                     .m_occupantSide];
         }
     }
 secondStrike:
@@ -1438,7 +1435,7 @@ void army::CheckLuck(void) {
     luck = gGame->GetLuck(gCombatManager->m_heroes[m_side], this);
     if (luck > 0 && SRandom(1, 12) <= luck)
         m_luck = ARMY_LUCK_GOOD;
-    if (luck < 0 && SRandom(1, 12) < -luck)
+    if (luck < 0 && SRandom(1, 12) <= -luck)
         m_luck = ARMY_LUCK_BAD;
     if (m_luck) {
         class sample* luckSample;

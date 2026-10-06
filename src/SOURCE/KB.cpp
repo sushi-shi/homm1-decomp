@@ -1393,7 +1393,7 @@ char* gPowEffectNames[16] = {
     "cloud.icn",
 };
 char* gCombatFxNames[COMBAT_EFFECT_COUNT] = {
-    "redfire.icn", "elecfire.icn", "magic04.icn", "magic01.icn", "magic01.icn",  "magic02.icn",
+    "redfire.icn", "elecfire.icn", "magic04.icn", "magic01.icn", "magic05.icn",  "magic02.icn",
     "magic02.icn", "magic06.icn",  "magic07.icn", "magic01.icn", "magic06.icn",  "magic08.icn",
     "magic07.icn", "magic01.icn",  "magic01.icn", "magic02.icn", "reddeath.icn", "magic03.icn",
     "magic03.icn", "magic06.icn",  "magic01.icn", "magic01.icn", "rainbluk.icn", "cloudluk.icn",
