@@ -51,8 +51,10 @@ What the game needs at run time, all from the source:
   `SOUND` file that holds the same piece.
 - WinG is Wine's built-in `wing32`; the game ships its own Smacker, Miles and
   Audiere DLLs and loads DirectDraw from Wine.
-- The Russian program's window title and message boxes are Windows-1251, so it
-  runs under `ru_RU.UTF-8` (the flake supplies the locale archive).
+- Each language runs under its descriptor's `system_locale` (`ru_RU.UTF-8` for
+  Russian), so the window title and message boxes show its Windows code page
+  text. The flake builds the locale archive from the descriptors
+  ([localization](localization.md)).
 
 Full screen, the game asks DirectDraw for 640x480 in 8 bits. When the display
 cannot switch to that mode (an X server without the mode, such as Xvfb at

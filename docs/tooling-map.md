@@ -17,6 +17,7 @@ All Python commands use `scripts/homm1` and the shared usage logger.
 | `tool` | `tool` | Individual external-tool drivers and manifest merge |
 | `workflow` | `workflow` | Repository hooks and safe staged formatting |
 | `clean` | `clean` | Clean source tree, VC4 verification and snapshot branch ([clean source](clean-source.md)) |
+| `localization`, `verify localization` | `graph.localization`, `graph.catalog`, `verify.localization` | Message template and `.po` maintenance; the catalog gate ([localization](localization.md)) |
 | `audit usage`, `audit dna-bands` | `audit` | Usage-logging coverage, DNA census |
 | `audit census`, `audit placements` | `audit` | An image's structural census; game identities placed in another image ([editor](editor.md)) |
 | `verify lzhuf-oracle` | `verify.lzhuf_oracle` | Runs the retail LZHUF codec under Wine against the Rust port in [`tools/`](../tools/README.md) |

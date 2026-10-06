@@ -1,19 +1,28 @@
 """The clean generator's variants, classic rendering and verification helpers."""
+import json
 import unittest
 
 from homm1.clean import classic, source, verify
-from homm1.graph.catalog import Catalog, literal, resource_literal
+from homm1.graph.catalog import Catalog, Entry, literal, resource_literal, template_text, write_po
 
-REGISTRY = ('HOMM1_MESSAGE("ui.gold", "Gold")\n'
-            'HOMM1_MESSAGE("ui.quote", "Say \\"hi\\"\\n")\n')
-PO = ('msgid ""\nmsgstr ""\n"Language: ru\\n"\n'
-      '"Content-Type: text/plain; charset=UTF-8\\n"\n\n'
-      'msgctxt "ui.gold"\nmsgid "Gold"\nmsgstr "Золото"\n\n'
-      'msgctxt "ui.quote"\nmsgid "Say \\"hi\\"\\n"\nmsgstr "Скажи \\"да\\"\\n"\n')
+MESSAGES = {'ru': {'ui.gold': 'Золото', 'ui.quote': 'Скажи "да"\n'},
+            'en': {'ui.gold': 'Gold', 'ui.quote': 'Say "hi"\n'}}
+DESCRIPTORS = {'ru': {'name': 'Russian', 'codepage': 1251, 'resource_language': '0x0419',
+                      'system_locale': 'ru_RU.UTF-8', 'glyphs': 'cyrillic',
+                      'keyboard': {'keys': '', 'typed': ''}},
+               'en': {'name': 'English', 'codepage': 1252, 'resource_language': '0x0409',
+                      'system_locale': 'en_US.UTF-8', 'glyphs': 'ascii',
+                      'keyboard': {'keys': '', 'typed': ''}}}
 
 
 def catalog():
-    return Catalog.parse(REGISTRY, PO)
+    files = {'messages.pot': template_text({key: {'files': ['src/x.cpp'], 'chars': False}
+                                            for key in MESSAGES['ru']})}
+    for code, messages in MESSAGES.items():
+        files[f'{code}.po'] = write_po([('Language', code)], (),
+                                       [Entry(k, v) for k, v in messages.items()])
+        files[f'{code}.json'] = json.dumps(DESCRIPTORS[code])
+    return Catalog.parse(files)
 
 
 class ClassicRenderingTests(unittest.TestCase):
@@ -24,34 +33,24 @@ class ClassicRenderingTests(unittest.TestCase):
     def test_resource_literal_doubles_quotes(self):
         self.assertEqual(classic.resource_literal('a "b"\nc'), '"a ""b""\\nc"')
 
-    def test_cpp_references_become_russian_literals(self):
+    def test_cpp_references_become_literals_of_the_language(self):
         text = 'const char *g = localization::Tr("ui.gold");\n'
-        self.assertEqual(classic.render_cpp(text, catalog()),
+        self.assertEqual(classic.render_cpp(text, catalog(), 'ru'),
                          'const char *g = "Золото";\n')
+        self.assertEqual(classic.render_cpp(text, catalog(), 'en'),
+                         'const char *g = "Gold";\n')
 
     def test_rc_strings_language_and_code_page(self):
-        text = ('LANGUAGE HOMM1_RESOURCE_LANGUAGE, 1\n'
+        text = ('LANGUAGE HOMM1_RESOURCE_LANGUAGE, HOMM1_RESOURCE_SUBLANGUAGE\n'
                 'STRINGTABLE { 1, localization::Tr("ui.quote") }\n')
-        rendered = classic.render_rc(text, catalog())
+        rendered = classic.render_rc(text, catalog(), 'ru')
         self.assertTrue(rendered.startswith('#pragma code_page(65001)\n'))
-        self.assertIn('LANGUAGE 0x19, 1', rendered)
+        self.assertIn('LANGUAGE 0x19, 0x1', rendered)
         self.assertIn('"Скажи ""да""\\n"', rendered)
 
     def test_rc_rejects_character_arrays(self):
         with self.assertRaises(ValueError):
-            classic.render_rc('localization::Chars("ui.gold")', catalog())
-
-    def test_russian_branches_are_kept(self):
-        text = ('a\n#if HOMM1_RUSSIAN\nru\n#ifdef X\nx\n#else\ny\n#endif\n#else\nen\n#endif\n'
-                '#if !HOMM1_RUSSIAN\nen2\n#else\nru2\n#endif\n#if Y\ny\n#endif\nb')
-        self.assertEqual(classic.resolve_conditionals(text),
-                         'a\nru\n#ifdef X\nx\n#else\ny\n#endif\nru2\n#if Y\ny\n#endif\nb')
-
-    def test_unsupported_conditionals_fail(self):
-        for text in ('#if HOMM1_RUSSIAN\n#elif X\n#endif', '#if HOMM1_RUSSIAN\nx',
-                     'int x = HOMM1_RUSSIAN;', '#endif'):
-            with self.subTest(text=text), self.assertRaises(ValueError):
-                classic.resolve_conditionals(text)
+            classic.render_rc('localization::Chars("ui.gold")', catalog(), 'ru')
 
 
 class EquivalenceTests(unittest.TestCase):
@@ -63,6 +62,10 @@ class EquivalenceTests(unittest.TestCase):
         self.assertIsNone(verify._equivalent_cpp('const char *g = "Золото";', reference))
         self.assertIsNotNone(verify._equivalent_cpp('const char *g = "Злато";', reference))
 
+    def test_classic_literal_in_another_code_page(self):
+        reference = 'const char *g = ' + literal('Café', 1252) + ';'
+        self.assertIsNone(verify._equivalent_cpp('const char *g = "Café";', reference, 1252))
+
     def test_classic_literal_equals_character_initializer(self):
         self.assertIsNone(verify._equivalent_cpp('char g[2] = "Да";',
                                                  "char g[2] = {'\\xc4', '\\xe0'};"))
@@ -70,13 +73,16 @@ class EquivalenceTests(unittest.TestCase):
                                                     "char g[2] = {'\\xc4', '\\xe1'};"))
 
     def test_rc_classic_against_rendered_resource(self):
-        text = ('LANGUAGE HOMM1_RESOURCE_LANGUAGE, 1\n'
+        text = ('LANGUAGE HOMM1_RESOURCE_LANGUAGE, HOMM1_RESOURCE_SUBLANGUAGE\n'
                 'STRINGTABLE { 1, localization::Tr("ui.quote") }\n')
+        for locale in ('ru', 'en'):
+            reference = catalog().render_resource(text, locale=locale)
+            self.assertIn('L"', reference)
+            rendered = classic.render_rc(text, catalog(), locale)
+            self.assertIsNone(verify._equivalent_rc(rendered, reference, catalog(), locale))
+        changed = classic.render_rc(text, catalog(), 'ru').replace('да', 'нет')
         reference = catalog().render_resource(text, locale='ru')
-        self.assertIn('L"', reference)
-        self.assertIsNone(verify._equivalent_rc(classic.render_rc(text, catalog()), reference))
-        changed = classic.render_rc(text, catalog()).replace('да', 'нет')
-        self.assertIsNotNone(verify._equivalent_rc(changed, reference))
+        self.assertIsNotNone(verify._equivalent_rc(changed, reference, catalog(), 'ru'))
         self.assertTrue(resource_literal('x').startswith('L"'))
 
 
