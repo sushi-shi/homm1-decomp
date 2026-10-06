@@ -176,7 +176,10 @@ banks it). The link line is `graph/link.py`'s `editor` profile:
   editor's is the VC6 runtime's middle-pivot `qsort`
   ([LINK import order](patterns/link6-iat-qsort-runtime.md)). The editor's
   LINK therefore runs against the VC6 SP5 `MSVCRT.DLL` (pinned in
-  `config/toolchains.json`, `linker_runtime_files`).
+  `config/toolchains.json`, `linker_runtime_files`, and carried by the
+  release bundle). That runtime's `time()` reads the wineserver's local
+  time, so every wine process the tooling starts runs in UTC, and a candidate
+  whose link stamps differ from retail's fails its link.
 
 ## Data debt
 

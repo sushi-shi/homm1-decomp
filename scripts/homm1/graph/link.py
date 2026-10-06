@@ -25,6 +25,7 @@ run. HoMM1 retail is non-incremental, so the default is `/INCREMENTAL:NO`.
 from __future__ import annotations
 
 import collections
+import os
 import re
 import struct
 import sys
@@ -136,6 +137,16 @@ def profile() -> dict:
     from homm1.core.paths import image_key
     return PROFILES[image_key()]
 
+def link_stamps(data: bytes) -> tuple[int, int, int]:
+    """(header TimeDateStamp, NB10 PDB signature, NB10 PDB age) of an image."""
+    import struct
+    pe = struct.unpack_from("<I", data, 0x3C)[0]
+    stamp = struct.unpack_from("<I", data, pe + 8)[0]
+    nb10 = data.rindex(b"NB10")
+    sig, age = struct.unpack_from("<II", data, nb10 + 8)
+    return stamp, sig, age
+
+
 def retail_link_times() -> tuple[str, int, str]:
     """(PDB creation time, PDB age, link time) read from the retail image.
 
@@ -146,19 +157,42 @@ def retail_link_times() -> tuple[str, int, str]:
     links at the PDB time against a fresh PDB, then one at the link time.
     """
     import datetime
-    import struct
     from homm1.core.pe import image
-    data = image().data
     # the editor's single link stamped the PDB and the image alike
-    pe = struct.unpack_from("<I", data, 0x3C)[0]
-    stamp = struct.unpack_from("<I", data, pe + 8)[0]
-    nb10 = data.rindex(b"NB10")
-    sig, age = struct.unpack_from("<II", data, nb10 + 8)
+    stamp, sig, age = link_stamps(image().data)
 
     def utc(t: int) -> str:
         return datetime.datetime.fromtimestamp(
             t, datetime.timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
     return utc(sig), age, utc(stamp)
+
+
+def check_link_stamps(out: Path) -> None:
+    """Fail unless the linked `out` carries the retail image's link stamps,
+    the times retail_link_times froze LINK's clock at.
+
+    The game's LINK reads the clock through wine's builtin C runtime, in
+    UTC; the editor's native runtime reads the wineserver's local time and
+    converts it with its own zone (homm1.tool.wine.native_crt_linker). A
+    mismatch of whole hours is a wineserver outside WINE_ZONE; the image is
+    set aside rather than left for link-diff to count as a few header bytes.
+    """
+    from homm1.core.pe import image
+    from homm1.tool.wine import WINE_ZONE
+    want = link_stamps(image().data)
+    got = link_stamps(out.read_bytes())
+    if got == want:
+        return
+    aside = out.with_name(out.stem + ".stamp-mismatch" + out.suffix)
+    os.replace(out, aside)
+    drift = got[0] - want[0]
+    hours = (f" ({drift / 3600:+g} h: the wineserver was not in TZ={WINE_ZONE})"
+             if drift and drift % 3600 == 0 else "")
+    raise ToolError(
+        f"{out.name}: linked with TimeDateStamp {got[0]:#010x}, PDB signature "
+        f"{got[1]:#010x} age {got[2]}, but the retail image has {want[0]:#010x}, "
+        f"{want[1]:#010x} age {want[2]}: LINK's clock drifted by {drift:+d} s"
+        f"{hours}. The image was moved to {aside.name}.")
 
 
 def retail_pdb_drive() -> Path:
@@ -454,6 +488,7 @@ def candidate(out: Path, objs_dir: Path, *, mapfile: Path | None = None,
                 print(f"[link]   {n:5d}  {bucket}")
         raise
     logf.write_text(output)
+    check_link_stamps(out)
 
     if res is not None and not has_rsrc(out):
         raise ToolError(

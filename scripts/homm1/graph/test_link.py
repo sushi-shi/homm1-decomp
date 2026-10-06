@@ -1,5 +1,6 @@
 """Candidate object order: the game reads its own claims, another image its
 reviewed link_order.tsv (its shared units' claims spell game addresses)."""
+import struct
 import tempfile
 import unittest
 from pathlib import Path
@@ -25,6 +26,42 @@ class FirstClaimedRvaTests(unittest.TestCase):
                     mock.patch.object(link, "_image_unit_starts",
                                       return_value={"SOURCE/kbwin": 0xc9a0}):
                 self.assertEqual(link.first_claimed_rva(obj, claims), 0xc9a0)
+
+
+def stamped(stamp: int, sig: int, age: int) -> bytes:
+    """A minimal image: the header TimeDateStamp and a trailing NB10 record."""
+    data = bytearray(0x100)
+    struct.pack_into("<I", data, 0x3C, 0x40)
+    struct.pack_into("<I", data, 0x48, stamp)
+    return bytes(data) + b"NB10" + struct.pack("<III", 0, sig, age)
+
+
+class LinkStampTests(unittest.TestCase):
+    def test_reads_header_and_pdb_stamps(self):
+        self.assertEqual(link.link_stamps(stamped(0x3e96d447, 0x3e5cda55, 2)),
+                         (0x3e96d447, 0x3e5cda55, 2))
+
+    def test_matching_candidate_passes(self):
+        retail = stamped(0x3e96d447, 0x3e5cda55, 2)
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "EDITOR.candidate.EXE"
+            out.write_bytes(retail)
+            with mock.patch("homm1.core.pe.image",
+                            return_value=mock.Mock(data=retail)):
+                link.check_link_stamps(out)
+            self.assertTrue(out.exists())
+
+    def test_zone_drift_fails_and_sets_the_image_aside(self):
+        retail = stamped(0x3e96d447, 0x3e96d447, 1)
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "EDITOR.candidate.EXE"
+            out.write_bytes(stamped(0x3e96d447 + 7200, 0x3e96d447 + 7200, 1))
+            with mock.patch("homm1.core.pe.image",
+                            return_value=mock.Mock(data=retail)):
+                with self.assertRaisesRegex(Exception, r"\+2 h: the wineserver"):
+                    link.check_link_stamps(out)
+            self.assertFalse(out.exists())
+            self.assertTrue((Path(tmp) / "EDITOR.candidate.stamp-mismatch.EXE").exists())
 
 
 if __name__ == "__main__":

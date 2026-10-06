@@ -27,8 +27,18 @@ order; only the `.idata$4`/`.idata$5` slots are permuted.
   Running the editor's LINK against the VC6 SP5 `MSVCRT.DLL` makes every slot
   equal retail; the game links byte-identically against wine's builtin.
 - A native `MSVCRT.DLL`'s `time()` converts the wine session's local time with
-  its own `TZ` parse, so the wineserver runs in UTC, the zone the faked link
-  clock uses.
+  its own `TZ` parse. With LINK's clock frozen at the editor's retail link
+  time, the stamps (header, debug directory, PDB signature) moved with the
+  wineserver's zone (a Europe/Warsaw server: +2 h, America/New_York: -4 h,
+  both in daylight time) and, independently, with the linker process's `TZ`
+  (Europe/Warsaw: -1 h, America/New_York: +5 h; the VC6 parser does not read
+  zoneinfo names). Only a UTC server and a UTC linker reproduce retail.
+- The server's zone is that of whichever wine process started it: a client
+  that finds no server starts one with its own environment. Every wine
+  process the tooling starts therefore runs with `TZ=UTC`
+  (`homm1.tool.wine.wine_env`); a starting `wineserver` cannot take over a
+  running one, so a server in another zone is waited out, and the candidate
+  link fails when its stamps differ from retail's.
 
 ## Use
 
