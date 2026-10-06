@@ -8935,9 +8935,9 @@ DATA(0x0043e5d4)
 char* gMapCodeLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 DATA(0x00451218)
 i32 gSelectionColor;
-// The edited map's header lives in a 2000-byte character buffer: retail
-// places it 4-byte aligned, which VC6 gives no record-typed object, and no
-// code reads past the header's 0x554 bytes. Its users view it as SMapHeader.
+// The edited map's header: a character buffer rather than an SMapHeader, as
+// retail aligns it to 4 bytes (editManager.h explains). Its users view it
+// through EDIT_MAP_HEADER().
 DATA(0x0045121c)
 char gEditMapHeader[EDIT_MAP_HEADER_BUFFER_SIZE];
 // Zero-initialized: .bss after the uninitialized objects, in definition order.
@@ -8962,7 +8962,7 @@ editManager::editManager(void) {
     m_zoomedOut = EDIT_ZOOM_OUT;
     ResetArea(0, 0, MAP_CELL_GRID_SIZE, MAP_CELL_GRID_SIZE);
     SaveUndo();
-    gMapHeader = (SMapHeader*)gEditMapHeader;
+    gMapHeader = EDIT_MAP_HEADER();
     m_animationFrame = 0;
     m_tool = EDIT_MANAGER_NO_TOOL;
     m_toolManager = NULL;
@@ -10898,13 +10898,13 @@ i16 editManager::SaveMap(char* name) {
     if (gNewMapFormat) {
         write(
             handle,
-            &((SMapHeader*)gEditMapHeader)->difficulty,
+            &EDIT_MAP_HEADER()->difficulty,
             offsetof(SMapHeader, format) - offsetof(SMapHeader, difficulty)
         );
         formatWord = MAP_HEADER_ID;
         write(handle, &formatWord, sizeof(formatWord));
     } else {
-        write(handle, gEditMapHeader, offsetof(SMapHeader, format));
+        write(handle, EDIT_MAP_HEADER(), offsetof(SMapHeader, format));
     }
     data = EDIT_MAP_VERSION;
     write(handle, &data, sizeof(data));
@@ -10956,17 +10956,17 @@ i16 editManager::LoadMap(char* name) {
         return BASE_MANAGER_ERROR;
     read(handle, &headerId, sizeof(headerId));
     if (headerId == MAP_HEADER_ID) {
-        ((SMapHeader*)gEditMapHeader)->id = headerId;
+        EDIT_MAP_HEADER()->id = headerId;
         read(
             handle,
-            &((SMapHeader*)gEditMapHeader)->difficulty,
+            &EDIT_MAP_HEADER()->difficulty,
             sizeof(SMapHeader) - offsetof(SMapHeader, difficulty)
         );
         read(handle, &headerId, sizeof(headerId));
     } else {
         NewMap(0);
     }
-    mapFormat = ((SMapHeader*)gEditMapHeader)->format;
+    mapFormat = EDIT_MAP_HEADER()->format;
     if (mapFormat >= MAP_HEADER_ID && mapFormat <= MAP_HEADER_ID + EDIT_MAP_FORMAT_RANGE)
         gNewMapFormat = 1;
     else

@@ -551,7 +551,14 @@ public:
 extern editManager* gEditManager;
 extern char* gMapCodeLetters;
 extern i32 gSelectionColor;
+// The edited map's header (gMapHeader points here) is stored in an
+// EDIT_MAP_HEADER_BUFFER_SIZE-byte character buffer rather than an
+// SMapHeader object: retail places it 4-byte aligned, which VC6 never does
+// for a record-typed global. No code reads past the header's first
+// sizeof(SMapHeader) bytes.
 extern char gEditMapHeader[];
+// byte-evidenced: every user views the buffer as the header through this.
+#define EDIT_MAP_HEADER() (reinterpret_cast<SMapHeader*>(gEditMapHeader))
 extern char* gEditErrors[];
 extern i32 gEditErrorCount;
 // Set while the random-map generator lays terrain: SetTileVariant then
