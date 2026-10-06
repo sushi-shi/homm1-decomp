@@ -32,6 +32,8 @@ Four checks, all of which must pass:
 * For the classic variant, every classic file must equal the source tree's
   Russian compiler input token for token once its UTF-8 literals are read as
   the Windows-1251 bytes they show (classic_equivalence).
+* The source tree's own catalog tool must find its locales/ complete and
+  current for the sources it carries (`catalog.py check`, `update --check`).
 * The source tree's own build.py, run through its flake (which fetches the
   hash-pinned toolchain release), must produce HEROES.EXE and EDITOR.EXE in
   every language of its catalog, and its runners (`nix run .#play` and
@@ -563,7 +565,7 @@ def verify(tree: Path, inputs: dict[str, bytes], variant: str = "source") -> int
             print("[clean] verify: classic: every file equals the source tree's Russian "
                   "compiler input, its UTF-8 literals read as Windows-1251")
     else:
-        status = standalone(tree) or play_dry_run(tree, work) or status
+        status = catalog_check(tree) or standalone(tree) or play_dry_run(tree, work) or status
     return status
 
 
@@ -732,6 +734,27 @@ def _equivalent_rc(classic: str, reference: str, catalog, locale: str) -> str | 
             continue
         return f"{spelling!r} against {their_spelling!r}"
     return None
+
+
+def catalog_check(tree: Path) -> int:
+    """The tree's own catalog tool must find its locales/ complete and current
+    for the sources it carries (`catalog.py check`, `catalog.py update --check`):
+    an ID only an unexported source uses would be stale there."""
+    import os
+    import subprocess
+    env = {key: value for key, value in os.environ.items() if key != "PYTHONPATH"}
+    for arguments in (["check"], ["update", "--check"]):
+        result = subprocess.run([sys.executable, "catalog.py", *arguments], cwd=tree, env=env,
+                                capture_output=True, text=True)
+        if result.returncode:
+            print("\n".join((result.stdout + result.stderr).strip().splitlines()[-20:]),
+                  file=sys.stderr)
+            print(f"[clean] verify: FAIL: python3 catalog.py {' '.join(arguments)} fails in "
+                  "the generated tree", file=sys.stderr)
+            return 1
+    print("[clean] verify: catalog: python3 catalog.py check and update --check pass in the "
+          "generated tree")
+    return 0
 
 
 def standalone(tree: Path) -> int:
