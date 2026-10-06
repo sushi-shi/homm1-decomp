@@ -581,10 +581,6 @@ void SetGameDefaults(void) {
     gConfig.musicSource = SOUND_MUSIC_SOURCE_CD;
     gFirstTimeThrough = true;
     gConfig.walkSpeed = WALK_SPEED_CANTER;
-    SetEditionDefaults();
-}
-
-void SetEditionDefaults(void) {
     gConfig.showEnemyMobility = 0;
     gConfig.softRetreatSurrender = 0;
     gConfig.slightlyHarderAI = 0;
@@ -625,6 +621,8 @@ void ReadPrefs(void) {
             WritePrefs();
             return;
         }
+        // Values missing from older preferences keep their defaults.
+        SetGameDefaults();
         RegQueryValueExA(
             key,
             "HMM1 MusicVolume",
@@ -643,8 +641,6 @@ void ReadPrefs(void) {
         );
         gConfig.musicVolume = savedMusic;
         gConfig.soundVolume = effectsVolume;
-        // Edition values missing from older preferences keep their defaults.
-        SetEditionDefaults();
         RegQueryValueExA(
             key,
             "HMM1 WalkSpeed",

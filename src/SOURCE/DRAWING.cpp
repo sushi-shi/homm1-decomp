@@ -201,7 +201,7 @@ static void AppendHitPoints(army* stack) {
         strcat(gText, "  |  ");
     sprintf(
         gText + strlen(gText),
-        localization::Tr("te.combat.status.hit_points"),
+        localization::Tr("combat.status.hit_points"),
         stack->m_stats.hitPoints - stack->m_hitPointsLost,
         stack->m_stats.hitPoints
     );
@@ -210,7 +210,7 @@ static void AppendHitPoints(army* stack) {
 // A count's grammatical form, from the catalog's table by the count's last
 // two digits: 0 for the "one" form, 1 for "few", 2 for "many".
 static i32 CountForm(i32 count) {
-    return localization::Tr("te.grammar.count_forms")[count % 100] - '0';
+    return localization::Tr("common.count_forms")[count % 100] - '0';
 }
 
 void combatManager::CombatMessage(i16 messageType) {
@@ -265,13 +265,13 @@ void combatManager::CombatMessage(i16 messageType) {
                 if (forecast.damageMin == forecast.damageMax)
                     sprintf(
                         gText + strlen(gText),
-                        localization::Tr("te.combat.forecast.damage"),
+                        localization::Tr("combat.forecast.damage"),
                         forecast.damageMin
                     );
                 else
                     sprintf(
                         gText + strlen(gText),
-                        localization::Tr("te.combat.forecast.damage_range"),
+                        localization::Tr("combat.forecast.damage_range"),
                         forecast.damageMin,
                         forecast.damageMax
                     );
@@ -280,13 +280,13 @@ void combatManager::CombatMessage(i16 messageType) {
                     if (forecast.killsMin == forecast.killsMax)
                         sprintf(
                             gText + strlen(gText),
-                            localization::Tr("te.combat.forecast.kills"),
+                            localization::Tr("combat.forecast.kills"),
                             forecast.killsMin
                         );
                     else
                         sprintf(
                             gText + strlen(gText),
-                            localization::Tr("te.combat.forecast.kills_range"),
+                            localization::Tr("combat.forecast.kills_range"),
                             forecast.killsMin,
                             forecast.killsMax
                         );
@@ -303,9 +303,9 @@ void combatManager::CombatMessage(i16 messageType) {
                 sprintf(
                     gText,
                     CountForm(currentArmy->m_stats.shots) == 0
-                        ? localization::Tr("te.combat.shoot.one")
+                        ? localization::Tr("combat.shoot.one")
                     : CountForm(currentArmy->m_stats.shots) == 1
-                        ? localization::Tr("te.combat.shoot.few")
+                        ? localization::Tr("combat.shoot.few")
                         : gCombatMessage[COMBAT_TEXT_SHOOT],
                     gArmyNamesPlural[targetMonsterType],
                     currentArmy->m_stats.shots

@@ -575,8 +575,8 @@ u8 gNetbiosAvail = 0;
 u8 gNbShutdown = 0;
 u8 gNbMaxSess = 255;
 u8 gNetStatus[7] = {0, 0, 0, 0, 0, 0, 0};
-// The edition's protocol version is part of the group name, so it never
-// pairs with other versions on the network.
+// The protocol version is part of the group name, so the game never pairs
+// with other versions on the network.
 char* gNbGroupName = "Empire TE1 ";
 u8* gNbListenName =
     reinterpret_cast<u8*>(const_cast<char*>("*"));

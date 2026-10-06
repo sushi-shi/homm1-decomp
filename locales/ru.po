@@ -44,6 +44,23 @@ msgid "adventure.quick_info.uncharted"
 msgstr "Неизученная земля"
 
 #: src/SOURCE/ADVMGR.cpp
+#, c-format
+msgid "adventure.quick_info.visited"
+msgstr "\n\n%s\n(Посещено)"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.quick_load.confirm"
+msgstr "Вы действительно хотите загрузить быстрое сохранение?"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.quick_load.missing"
+msgstr "Быстрое сохранение не найдено."
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.quick_save.done"
+msgstr "Игра успешно сохранена."
+
+#: src/SOURCE/ADVMGR.cpp
 msgid "adventure.save.success"
 msgstr "Игра успешно сохранена."
 
@@ -58,6 +75,11 @@ msgstr "О, ужас — враг нашёл первым Око Гороса! �
 #: src/SOURCE/ADVMGR.cpp
 msgid "adventure.search.eye_of_goros_found"
 msgstr "Проведя многие часы в поисках, вы таки нашли Око Гороса!"
+
+#: src/SOURCE/ADVMGR.cpp
+#, c-format
+msgid "adventure.search.found_format"
+msgstr "%s«%s»"
 
 #: src/SOURCE/ADVMGR.cpp
 msgid "adventure.search.found_prefix"
@@ -204,6 +226,26 @@ msgstr "Потери"
 msgid "combat.confirm.retreat"
 msgstr "Вы действительно хотите отступить?"
 
+#: src/SOURCE/DRAWING.cpp
+#, c-format
+msgid "combat.forecast.damage"
+msgstr "Урон: %d"
+
+#: src/SOURCE/DRAWING.cpp
+#, c-format
+msgid "combat.forecast.damage_range"
+msgstr "Урон: %d - %d"
+
+#: src/SOURCE/DRAWING.cpp
+#, c-format
+msgid "combat.forecast.kills"
+msgstr "Убитых: %d"
+
+#: src/SOURCE/DRAWING.cpp
+#, c-format
+msgid "combat.forecast.kills_range"
+msgstr "Убитых: %d - %d"
+
 #: src/SOURCE/ARMY.cpp
 msgid "combat.fragment.attack"
 msgstr "Атака"
@@ -262,8 +304,18 @@ msgstr "Низкая мораль заставляет %s замереть в п
 
 #: src/SOURCE/CMBTMGR.cpp
 #, c-format
+msgid "combat.morale.bad_single"
+msgstr "%s замирает в панике из-за низкой морали."
+
+#: src/SOURCE/CMBTMGR.cpp
+#, c-format
 msgid "combat.morale.good"
 msgstr "Высокая мораль %s дает отряду еще одну атаку!"
+
+#: src/SOURCE/CMBTMGR.cpp
+#, c-format
+msgid "combat.morale.good_single"
+msgstr "%s может атаковать еще раз из-за высокой морали!"
 
 #: src/SOURCE/EVENTS.cpp
 #, c-format
@@ -285,6 +337,16 @@ msgstr "Ошибка получения информации. Продолжат
 #: src/SOURCE/EVENTS.cpp
 msgid "combat.network.town"
 msgstr "Город"
+
+#: src/SOURCE/DRAWING.cpp
+#, c-format
+msgid "combat.shoot.few"
+msgstr "Стрелять в %s (осталось %d выстрела)"
+
+#: src/SOURCE/DRAWING.cpp
+#, c-format
+msgid "combat.shoot.one"
+msgstr "Стрелять в %s (остался %d выстрел)"
 
 #: src/SOURCE/COMMAND.cpp
 msgid "combat.spell.already_cast"
@@ -308,6 +370,16 @@ msgstr "У вас нет героя, чтобы направлять закли�
 msgid "combat.spell.teleport_here"
 msgstr "Переместиться сюда"
 
+#: src/SOURCE/DRAWING.cpp
+#, c-format
+msgid "combat.status.hit_points"
+msgstr "Здоровье: %d (%d)"
+
+#: src/SOURCE/COMMAND.cpp
+#, c-format
+msgid "combat.surrender.computer_offer"
+msgstr "%s говорит:\n\n\"Пропустите меня и моих воинов, и я заплачу вам %d золотых.\""
+
 #: src/SOURCE/COMMAND.cpp
 #, c-format
 msgid "combat.surrender.offer"
@@ -316,6 +388,10 @@ msgstr "%s говорит:\n\n«Я приму вашу капитуляцию и
 #: src/SOURCE/CMBTMGR.cpp
 msgid "combat.tower.garrison.damage.prefix"
 msgstr "Гарнизон наносит"
+
+#: src/SOURCE/DRAWING.cpp
+msgid "common.count_forms"
+msgstr "2011122222222222222220111222222011122222201112222220111222222011122222201112222220111222222011122222"
 
 #: src/SOURCE/COMMAND.cpp
 msgid "common.none"
@@ -1024,8 +1100,50 @@ msgid "event.shrine.rankings"
 msgstr "Оракул — информация об игроках"
 
 #: src/SOURCE/EVENTS.cpp
+#, c-format
+msgid "event.shrine.spell_format"
+msgstr "%s «%s»."
+
+#: src/SOURCE/EVENTS.cpp
 msgid "event.skeleton.treasure"
 msgstr "Сокровище"
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.abandoned"
+msgstr "Похоже, хозяева покинули эту крепость."
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.approach"
+msgstr "Перед вами хорошо укрепленная крепость. Мост опущен. Вы стучите в ворота, но никто не отвечает. Тишина.\n\nВы уверены, что хотите войти?"
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.attacked"
+msgstr "Пока вы пытаетесь выломать ворота крепости, на вас нападают разъяренные паладины, выкрикивая что-то на незнакомом вам языке.  И все же вам кажется, что это было своего рода предупреждение..."
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.ghosts_join"
+msgstr "Вы победили паладинов и освободили злых призраков, которых они стерегли.  Как ни странно, призраки молча присоединяются к вам."
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.ghosts_still_wait"
+msgstr "Призраки все еще ждут, чтобы присоединиться к вам, но в вашей армии нет для них места."
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.ghosts_wait"
+msgstr "Вы победили паладинов и освободили злых призраков, которых они стерегли.  Как ни странно, призраки готовы присоединиться к вам, как только в вашей армии найдется для них место."
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.waiting_ghosts_join"
+msgstr "Призраки молча присоединяются к вам."
+
+#: src/SOURCE/EVENTS.cpp
+#, c-format
+msgid "event.unknown"
+msgstr "Событие №%d"
+
+#: src/BASE/RESMGR.cpp
+msgid "file.aggregate.invalid"
+msgstr "Ошибка файла: некорректный файл .AGG"
 
 #: src/BASE/RESMGR.cpp
 #, c-format
@@ -1045,6 +1163,10 @@ msgstr "Выбранная вами игра позволяет играть т�
 #: src/SOURCE/REQUEST.cpp
 msgid "file.load.label"
 msgstr "Загрузить:"
+
+#: src/SOURCE/REQUEST.cpp
+msgid "file.name.punctuation"
+msgstr "$%'-_@~`!(){}^#&+,;=[].«»№"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 #, c-format
@@ -1106,6 +1228,68 @@ msgstr "Набор номера..."
 msgid "modem.initializing"
 msgstr "Инициирование модема..."
 
+#: src/SOURCE/comwin.cpp
+msgid "modem.port_error.baud_rate"
+msgstr "\n4) Рассмотрите вариант снижения скорости передачи данных в «Настройках» до 19200 или 9600 бод."
+
+#: src/SOURCE/comwin.cpp
+msgid "modem.port_error.cables"
+msgstr "\n1) Убедитесь, что все кабели надёжно подключены."
+
+#: src/SOURCE/comwin.cpp
+msgid "modem.port_error.clear_break"
+msgstr "Удаление сигнала «Break»"
+
+#: src/SOURCE/comwin.cpp
+msgid "modem.port_error.clear_errors"
+msgstr "Очистка очереди сообщений об ошибках"
+
+#: src/SOURCE/comwin.cpp
+msgid "modem.port_error.configure"
+msgstr "Настройка устройства связи"
+
+#: src/SOURCE/comwin.cpp
+#, c-format
+msgid "modem.port_error.header"
+msgstr "Произошла ошибка при попытке %s\n\nКод ошибки Win95: %d\nОписание ошибки Win95: %s\n\n"
+
+#: src/SOURCE/comwin.cpp
+msgid "modem.port_error.initialize"
+msgstr "Инициализация параметров сеанса связи"
+
+#: src/SOURCE/comwin.cpp
+#, c-format
+msgid "modem.port_error.open_port"
+msgstr "открытия порта COM%d"
+
+#: src/SOURCE/comwin.cpp
+msgid "modem.port_error.port"
+msgstr "\n3) Убедитесь, что вы задали правильные параметры COM-порта в «Настройках» (третья кнопка сверху на экране, где вы выбираете «Хост» или «Гость»)."
+
+#: src/SOURCE/comwin.cpp
+msgid "modem.port_error.read"
+msgstr "Чтение данных сеанса связи"
+
+#: src/SOURCE/comwin.cpp
+msgid "modem.port_error.reboot"
+msgstr "\n2) Перезагрузите компьютер."
+
+#: src/SOURCE/comwin.cpp
+msgid "modem.port_error.set_break"
+msgstr "Установка сигнала «Break»"
+
+#: src/SOURCE/comwin.cpp
+msgid "modem.port_error.solutions"
+msgstr "Предлагаемые решения:\n"
+
+#: src/SOURCE/comwin.cpp
+msgid "modem.port_error.timeouts"
+msgstr "Установка тайм-аутов сеанса связи"
+
+#: src/SOURCE/comwin.cpp
+msgid "modem.port_error.write"
+msgstr "Запись данных сеанса связи"
+
 #: src/SOURCE/REMOTE.cpp
 msgid "modem.ring.wait"
 msgstr "Ожидание звонка..."
@@ -1113,6 +1297,10 @@ msgstr "Ожидание звонка..."
 #: src/SOURCE/SETUP.cpp
 msgid "modem.telephone.required"
 msgstr "Укажите номер телефона."
+
+#: src/SOURCE/REMOTE.cpp
+msgid "network.direct.duplicate_id"
+msgstr "Дублирующиеся строки ID!\nИзвините, попытайтесь снова, пожалуйста\n"
 
 #: src/SOURCE/REMOTE.cpp
 msgid "network.direct.wait"
@@ -1179,6 +1367,10 @@ msgstr "Передача данных"
 #: src/SOURCE/KB.cpp
 msgid "network.setup.wait"
 msgstr "Ожидаю других игроков для установки игры."
+
+#: src/SOURCE/GAME.cpp
+msgid "network.version.mismatch"
+msgstr "У другого игрока другая версия игры \"Герои Меча и Магии\"."
 
 #: src/SOURCE/KB.cpp
 #, c-format
@@ -2200,6 +2392,118 @@ msgstr "Призрак"
 msgid "table.gArmyNames.27"
 msgstr "Джинн"
 
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.0"
+msgstr "крестьян"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.1"
+msgstr "лучников"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.2"
+msgstr "копейщиков"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.3"
+msgstr "мечников"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.4"
+msgstr "всадников"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.5"
+msgstr "паладинов"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.6"
+msgstr "гоблинов"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.7"
+msgstr "орков"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.8"
+msgstr "волков"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.9"
+msgstr "огров"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.10"
+msgstr "троллей"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.11"
+msgstr "циклопов"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.12"
+msgstr "фей"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.13"
+msgstr "гномов"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.14"
+msgstr "эльфов"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.15"
+msgstr "друидов"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.16"
+msgstr "единорогов"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.17"
+msgstr "фениксов"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.18"
+msgstr "кентавров"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.19"
+msgstr "горгулий"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.20"
+msgstr "грифонов"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.21"
+msgstr "минотавров"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.22"
+msgstr "гидр"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.23"
+msgstr "драконов"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.24"
+msgstr "разбойников"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.25"
+msgstr "кочевников"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.26"
+msgstr "призраков"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.27"
+msgstr "джиннов"
+
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArmyNamesPlural.0"
 msgstr "крестьян"
@@ -3133,6 +3437,22 @@ msgstr "Волшебница"
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gClassNames.3"
 msgstr "Чернокнижник"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gClassNamesAccusative.0"
+msgstr "рыцаря"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gClassNamesAccusative.1"
+msgstr "варвара"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gClassNamesAccusative.2"
+msgstr "волшебницу"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gClassNamesAccusative.3"
+msgstr "чернокнижника"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gColorNames.0"
@@ -4131,6 +4451,294 @@ msgstr "Виспер"
 msgid "table.gHeroNames.35.1"
 msgstr "Виспер"
 
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.0"
+msgstr "Лорда Килбурна"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.1"
+msgstr "Лорда Хаарта"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.2"
+msgstr "Сэра Галланта"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.3"
+msgstr "Артуриуса"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.4"
+msgstr "Тиро"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.5"
+msgstr "Максимуса"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.6"
+msgstr "Эктора"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.7"
+msgstr "Димитрия"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.8"
+msgstr "Амброзия"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.9"
+msgstr "Сундакса"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.10"
+msgstr "Эргона"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.11"
+msgstr "Келзена"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.12"
+msgstr "Тсабу"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.13"
+msgstr "Крэга Хака"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.14"
+msgstr "Джоджоша"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.15"
+msgstr "Атласа"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.16"
+msgstr "Йога"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.17"
+msgstr "Антония"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.18"
+msgstr "Ариэль"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.19"
+msgstr "Ватавну"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.20"
+msgstr "Карлавн"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.21"
+msgstr "Ребекку"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.22"
+msgstr "Луну"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.23"
+msgstr "Астру"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.24"
+msgstr "Наташу"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.25"
+msgstr "Гем"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.26"
+msgstr "Троян"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.27"
+msgstr "Агара"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.28"
+msgstr "Кродо"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.29"
+msgstr "Фалагара"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.30"
+msgstr "Барока"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.31"
+msgstr "Ария"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.32"
+msgstr "Кастора"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.33"
+msgstr "Сандро"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.34"
+msgstr "Расмонта"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.35"
+msgstr "Виспера"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.0"
+msgstr "Лорда Килбурна"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.1"
+msgstr "Лорда Хаарта"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.2"
+msgstr "Сэра Галланта"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.3"
+msgstr "Артуриуса"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.4"
+msgstr "Тиро"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.5"
+msgstr "Максимуса"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.6"
+msgstr "Эктора"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.7"
+msgstr "Димитрия"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.8"
+msgstr "Амброзия"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.9"
+msgstr "Сундакса"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.10"
+msgstr "Эргона"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.11"
+msgstr "Келзена"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.12"
+msgstr "Тсабу"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.13"
+msgstr "Крэга Хака"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.14"
+msgstr "Джоджоша"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.15"
+msgstr "Атласа"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.16"
+msgstr "Йога"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.17"
+msgstr "Антония"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.18"
+msgstr "Ариэль"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.19"
+msgstr "Ватавны"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.20"
+msgstr "Карлавн"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.21"
+msgstr "Ребекки"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.22"
+msgstr "Луны"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.23"
+msgstr "Астры"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.24"
+msgstr "Наташи"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.25"
+msgstr "Гем"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.26"
+msgstr "Троян"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.27"
+msgstr "Агара"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.28"
+msgstr "Кродо"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.29"
+msgstr "Фалагара"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.30"
+msgstr "Барока"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.31"
+msgstr "Ария"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.32"
+msgstr "Кастора"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.33"
+msgstr "Сандро"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.34"
+msgstr "Расмонта"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.35"
+msgstr "Виспера"
+
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gHeroScreen.0"
 msgstr "Обзор королевства"
@@ -4297,6 +4905,10 @@ msgstr "\nФонтан +1"
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gLuckInfoText.10"
 msgstr "\nНет"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gLuckInfoText.11"
+msgstr "\nФизбин неудачи -3"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gLuckText.0"
@@ -6233,622 +6845,6 @@ msgstr "Галопом"
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.walkSpeedText.4"
 msgstr "Прыжками"
-
-#: src/SOURCE/ADVMGR.cpp
-#, c-format
-msgid "te.adventure.quick_info.visited"
-msgstr "\n\n%s\n(Посещено)"
-
-#: src/SOURCE/ADVMGR.cpp
-msgid "te.adventure.quick_load.confirm"
-msgstr "Вы действительно хотите загрузить быстрое сохранение?"
-
-#: src/SOURCE/ADVMGR.cpp
-msgid "te.adventure.quick_load.missing"
-msgstr "Быстрое сохранение не найдено."
-
-#: src/SOURCE/ADVMGR.cpp
-msgid "te.adventure.quick_save.done"
-msgstr "Игра успешно сохранена."
-
-#: src/SOURCE/ADVMGR.cpp
-#, c-format
-msgid "te.adventure.search.found_format"
-msgstr "%s«%s»"
-
-#: src/SOURCE/DRAWING.cpp
-#, c-format
-msgid "te.combat.forecast.damage"
-msgstr "Урон: %d"
-
-#: src/SOURCE/DRAWING.cpp
-#, c-format
-msgid "te.combat.forecast.damage_range"
-msgstr "Урон: %d - %d"
-
-#: src/SOURCE/DRAWING.cpp
-#, c-format
-msgid "te.combat.forecast.kills"
-msgstr "Убитых: %d"
-
-#: src/SOURCE/DRAWING.cpp
-#, c-format
-msgid "te.combat.forecast.kills_range"
-msgstr "Убитых: %d - %d"
-
-#: src/SOURCE/CMBTMGR.cpp
-#, c-format
-msgid "te.combat.morale.bad_single"
-msgstr "%s замирает в панике из-за низкой морали."
-
-#: src/SOURCE/CMBTMGR.cpp
-#, c-format
-msgid "te.combat.morale.good_single"
-msgstr "%s может атаковать еще раз из-за высокой морали!"
-
-#: src/SOURCE/DRAWING.cpp
-#, c-format
-msgid "te.combat.shoot.few"
-msgstr "Стрелять в %s (осталось %d выстрела)"
-
-#: src/SOURCE/DRAWING.cpp
-#, c-format
-msgid "te.combat.shoot.one"
-msgstr "Стрелять в %s (остался %d выстрел)"
-
-#: src/SOURCE/DRAWING.cpp
-#, c-format
-msgid "te.combat.status.hit_points"
-msgstr "Здоровье: %d (%d)"
-
-#: src/SOURCE/COMMAND.cpp
-#, c-format
-msgid "te.combat.surrender.computer_offer"
-msgstr "%s говорит:\n\n\"Пропустите меня и моих воинов, и я заплачу вам %d золотых.\""
-
-#: src/SOURCE/EVENTS.cpp
-#, c-format
-msgid "te.event.spell_shrine.format"
-msgstr "%s «%s»."
-
-#: src/SOURCE/EVENTS.cpp
-msgid "te.event.stronghold.abandoned"
-msgstr "Похоже, хозяева покинули эту крепость."
-
-#: src/SOURCE/EVENTS.cpp
-msgid "te.event.stronghold.approach"
-msgstr "Перед вами хорошо укрепленная крепость. Мост опущен. Вы стучите в ворота, но никто не отвечает. Тишина.\n\nВы уверены, что хотите войти?"
-
-#: src/SOURCE/EVENTS.cpp
-msgid "te.event.stronghold.attacked"
-msgstr "Пока вы пытаетесь выломать ворота крепости, на вас нападают разъяренные паладины, выкрикивая что-то на незнакомом вам языке.  И все же вам кажется, что это было своего рода предупреждение..."
-
-#: src/SOURCE/EVENTS.cpp
-msgid "te.event.stronghold.ghosts_join"
-msgstr "Вы победили паладинов и освободили злых призраков, которых они стерегли.  Как ни странно, призраки молча присоединяются к вам."
-
-#: src/SOURCE/EVENTS.cpp
-msgid "te.event.stronghold.ghosts_still_wait"
-msgstr "Призраки все еще ждут, чтобы присоединиться к вам, но в вашей армии нет для них места."
-
-#: src/SOURCE/EVENTS.cpp
-msgid "te.event.stronghold.ghosts_wait"
-msgstr "Вы победили паладинов и освободили злых призраков, которых они стерегли.  Как ни странно, призраки готовы присоединиться к вам, как только в вашей армии найдется для них место."
-
-#: src/SOURCE/EVENTS.cpp
-msgid "te.event.stronghold.waiting_ghosts_join"
-msgstr "Призраки молча присоединяются к вам."
-
-#: src/SOURCE/EVENTS.cpp
-#, c-format
-msgid "te.event.unknown"
-msgstr "Событие №%d"
-
-#: src/SOURCE/REQUEST.cpp
-msgid "te.file.name.punctuation"
-msgstr "$%'-_@~`!(){}^#&+,;=[].«»№"
-
-#: src/SOURCE/DRAWING.cpp
-msgid "te.grammar.count_forms"
-msgstr "2011122222222222222220111222222011122222201112222220111222222011122222201112222220111222222011122222"
-
-#: src/SOURCE/GAME.cpp
-msgid "te.network.version.mismatch"
-msgstr "У другого игрока другая версия игры \"Герои Меча и Магии\"."
-
-#: include/SOURCE/kbwin.h
-msgid "te.prefs.registry_key"
-msgstr "SOFTWARE\\Buka\\3DO\\Heroes of Might and Magic\\HeroesWorld TE\\RU"
-
-#: src/BASE/RESMGR.cpp
-msgid "te.resource.aggregate.invalid"
-msgstr "Ошибка файла: некорректный файл .AGG"
-
-#: src/SOURCE/REMOTE.cpp
-msgid "te.serial.connect.duplicate_id"
-msgstr "Дублирующиеся строки ID!\nИзвините, попытайтесь снова, пожалуйста\n"
-
-#: src/SOURCE/comwin.cpp
-msgid "te.serial.error.baud_rate"
-msgstr "\n4) Рассмотрите вариант снижения скорости передачи данных в «Настройках» до 19200 или 9600 бод."
-
-#: src/SOURCE/comwin.cpp
-msgid "te.serial.error.cables"
-msgstr "\n1) Убедитесь, что все кабели надёжно подключены."
-
-#: src/SOURCE/comwin.cpp
-msgid "te.serial.error.clear_break"
-msgstr "Удаление сигнала «Break»"
-
-#: src/SOURCE/comwin.cpp
-msgid "te.serial.error.clear_errors"
-msgstr "Очистка очереди сообщений об ошибках"
-
-#: src/SOURCE/comwin.cpp
-msgid "te.serial.error.configure"
-msgstr "Настройка устройства связи"
-
-#: src/SOURCE/comwin.cpp
-#, c-format
-msgid "te.serial.error.header"
-msgstr "Произошла ошибка при попытке %s\n\nКод ошибки Win95: %d\nОписание ошибки Win95: %s\n\n"
-
-#: src/SOURCE/comwin.cpp
-msgid "te.serial.error.initialize"
-msgstr "Инициализация параметров сеанса связи"
-
-#: src/SOURCE/comwin.cpp
-#, c-format
-msgid "te.serial.error.open_port"
-msgstr "открытия порта COM%d"
-
-#: src/SOURCE/comwin.cpp
-msgid "te.serial.error.port"
-msgstr "\n3) Убедитесь, что вы задали правильные параметры COM-порта в «Настройках» (третья кнопка сверху на экране, где вы выбираете «Хост» или «Гость»)."
-
-#: src/SOURCE/comwin.cpp
-msgid "te.serial.error.read"
-msgstr "Чтение данных сеанса связи"
-
-#: src/SOURCE/comwin.cpp
-msgid "te.serial.error.reboot"
-msgstr "\n2) Перезагрузите компьютер."
-
-#: src/SOURCE/comwin.cpp
-msgid "te.serial.error.set_break"
-msgstr "Установка сигнала «Break»"
-
-#: src/SOURCE/comwin.cpp
-msgid "te.serial.error.solutions"
-msgstr "Предлагаемые решения:\n"
-
-#: src/SOURCE/comwin.cpp
-msgid "te.serial.error.timeouts"
-msgstr "Установка тайм-аутов сеанса связи"
-
-#: src/SOURCE/comwin.cpp
-msgid "te.serial.error.write"
-msgstr "Запись данных сеанса связи"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.0"
-msgstr "крестьян"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.1"
-msgstr "лучников"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.2"
-msgstr "копейщиков"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.3"
-msgstr "мечников"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.4"
-msgstr "всадников"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.5"
-msgstr "паладинов"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.6"
-msgstr "гоблинов"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.7"
-msgstr "орков"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.8"
-msgstr "волков"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.9"
-msgstr "огров"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.10"
-msgstr "троллей"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.11"
-msgstr "циклопов"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.12"
-msgstr "фей"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.13"
-msgstr "гномов"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.14"
-msgstr "эльфов"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.15"
-msgstr "друидов"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.16"
-msgstr "единорогов"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.17"
-msgstr "фениксов"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.18"
-msgstr "кентавров"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.19"
-msgstr "горгулий"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.20"
-msgstr "грифонов"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.21"
-msgstr "минотавров"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.22"
-msgstr "гидр"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.23"
-msgstr "драконов"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.24"
-msgstr "разбойников"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.25"
-msgstr "кочевников"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.26"
-msgstr "призраков"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gArmyNamesMoved.27"
-msgstr "джиннов"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gClassNamesAccusative.0"
-msgstr "рыцаря"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gClassNamesAccusative.1"
-msgstr "варвара"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gClassNamesAccusative.2"
-msgstr "волшебницу"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gClassNamesAccusative.3"
-msgstr "чернокнижника"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.0"
-msgstr "Лорда Килбурна"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.1"
-msgstr "Лорда Хаарта"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.2"
-msgstr "Сэра Галланта"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.3"
-msgstr "Артуриуса"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.4"
-msgstr "Тиро"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.5"
-msgstr "Максимуса"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.6"
-msgstr "Эктора"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.7"
-msgstr "Димитрия"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.8"
-msgstr "Амброзия"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.9"
-msgstr "Сундакса"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.10"
-msgstr "Эргона"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.11"
-msgstr "Келзена"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.12"
-msgstr "Тсабу"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.13"
-msgstr "Крэга Хака"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.14"
-msgstr "Джоджоша"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.15"
-msgstr "Атласа"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.16"
-msgstr "Йога"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.17"
-msgstr "Антония"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.18"
-msgstr "Ариэль"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.19"
-msgstr "Ватавну"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.20"
-msgstr "Карлавн"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.21"
-msgstr "Ребекку"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.22"
-msgstr "Луну"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.23"
-msgstr "Астру"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.24"
-msgstr "Наташу"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.25"
-msgstr "Гем"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.26"
-msgstr "Троян"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.27"
-msgstr "Агара"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.28"
-msgstr "Кродо"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.29"
-msgstr "Фалагара"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.30"
-msgstr "Барока"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.31"
-msgstr "Ария"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.32"
-msgstr "Кастора"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.33"
-msgstr "Сандро"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.34"
-msgstr "Расмонта"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesAccusative.35"
-msgstr "Виспера"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.0"
-msgstr "Лорда Килбурна"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.1"
-msgstr "Лорда Хаарта"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.2"
-msgstr "Сэра Галланта"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.3"
-msgstr "Артуриуса"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.4"
-msgstr "Тиро"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.5"
-msgstr "Максимуса"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.6"
-msgstr "Эктора"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.7"
-msgstr "Димитрия"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.8"
-msgstr "Амброзия"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.9"
-msgstr "Сундакса"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.10"
-msgstr "Эргона"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.11"
-msgstr "Келзена"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.12"
-msgstr "Тсабу"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.13"
-msgstr "Крэга Хака"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.14"
-msgstr "Джоджоша"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.15"
-msgstr "Атласа"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.16"
-msgstr "Йога"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.17"
-msgstr "Антония"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.18"
-msgstr "Ариэль"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.19"
-msgstr "Ватавны"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.20"
-msgstr "Карлавн"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.21"
-msgstr "Ребекки"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.22"
-msgstr "Луны"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.23"
-msgstr "Астры"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.24"
-msgstr "Наташи"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.25"
-msgstr "Гем"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.26"
-msgstr "Троян"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.27"
-msgstr "Агара"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.28"
-msgstr "Кродо"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.29"
-msgstr "Фалагара"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.30"
-msgstr "Барока"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.31"
-msgstr "Ария"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.32"
-msgstr "Кастора"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.33"
-msgstr "Сандро"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.34"
-msgstr "Расмонта"
-
-#: src/SOURCE/KB.cpp
-msgid "te.table.gHeroNamesGenitive.35"
-msgstr "Виспера"
-
-#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
-msgid "te.table.gLuckInfoText.11"
-msgstr "\nФизбин неудачи -3"
 
 #: src/SOURCE/TOWNMGR.cpp
 msgid "town.boat.unavailable"

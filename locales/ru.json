@@ -4,6 +4,7 @@
   "resource_language": "0x0419",
   "system_locale": "ru_RU.UTF-8",
   "glyphs": "cyrillic",
+  "registry_key": "SOFTWARE\\Buka\\3DO\\Heroes of Might and Magic\\HeroesWorld TE\\RU",
   "keyboard": {
     "keys":  "qwertyuiop[]asdfghjkl;'zxcvbnm,./QWERTYUIOP{}ASDFGHJKL:\"ZXCVBNM<>?`~#",
     "typed": "йцукенгшщзхъфывапролджэячсмитьбю«ЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ»ёЁ№"

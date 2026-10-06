@@ -14,7 +14,8 @@ source under `src/`. `changes.tsv` (next to this file) holds one row per
 change with the columns `id, component, kind, va_or_key, function, category,
 description, recommendation, risk, status, status_note`; `status` records how
 this branch implements the row (implemented, differs, deferred,
-skipped-out-of-scope).
+skipped-out-of-scope, or build choice for a row that belongs to how the
+program is built rather than to its source).
 
 ## 1. Summary
 
@@ -884,12 +885,14 @@ does not fit source, this branch implements the intended behaviour:
   campaign and uses the attacking hero.
 - **Fonts and keyboard (PL-TXT-4, PL-YO-1, PL-TXT-3).** The new glyphs are
   drawn only by fonts that have them (`catalog.py` lists them in the Russian
-  glyph set); the keyboard mapping lives in `locales/ru.json` and all edition
-  text in the catalogs under `te.*` ids, so the source has one code path for
-  every language.
+  glyph set); the keyboard mapping and the registry key live in the locale
+  descriptors (`locales/<lang>.json`) and all new text in the catalogs under
+  ids of the game's scheme, so the source has one code path for every
+  language.
 - **Save format.** The reserved header block of a save starts with
-  `SaveFormatTag` {"H1TE", version}. Version 1 is this edition; version 0
-  (original game) loads and has its tavern heroes reserved.
+  `SaveFormatTag` {"H1TE", version}. Version 1 (`SAVE_FORMAT_FLED_STATE`)
+  adds the heroes' fled state, live cowardice and reserved tavern heroes;
+  version 0 (original game) loads and has its tavern heroes reserved.
 - **Multiplayer.** `REMOTE_PROTOCOL_VERSION` 1 changes the serial handshake tag
   (`TE`), the NetBIOS group (`Empire TE1 `) and the packet checksum seed, so
   the edition never pairs with the original game.
@@ -902,3 +905,21 @@ excludes the castle code; the F9 guard is `gFreshSave`; MinerTexts has no
 general plural rule and its glyph hooks add « » — № (Ё/ё were already
 supported).
 
+## 8. The editor
+
+The edition shipped no editor; `EDITOR.EXE` is built from this tree
+(`build.py --target editor`) and shares `kbwin`, `REQUEST`, `Audio` and the
+BASE library with the game. It shares their behaviour as one release would:
+the per-language registry key and the windowed default, the message pump
+with its idle sleep and 1 ms timer period, the CD music from the game folder,
+the Russian file-name punctuation, the keyboard mapping and the revised
+texts, and the original assertions. Only the `HOMM1_EDITOR` checks of the
+original source separate the two programs.
+
+The edition does not change the map format. A megalith
+(`MAP_OBJECT_MEGALITH`) placed in the editor becomes a Paladin stronghold in
+the game; its cell metadata starts at 0 (guarded) as the editor writes it,
+and only the game sets 1 (abandoned) and 2 (ghosts waiting). The save-format
+tag, the fled-state byte, reserved tavern heroes, per-cell random artifacts
+and the town footprint metadata exist only in saved games and at game start,
+which the editor never reads.
