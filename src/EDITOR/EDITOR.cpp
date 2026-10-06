@@ -613,6 +613,18 @@ DATA(0x0043f408)
 i32 gScatterTowns = 1;
 DATA(0x004528e0)
 i32 gSaveUnseen;
+DATA(0x0045259c)
+i32 gLandCellCount;
+DATA(0x0043f78c)
+char* gGeneratorTerrainNames[EDITOR_GENERATOR_TERRAIN_COUNT] = {
+    localization::Tr("editor.terrain.name.0"),
+    localization::Tr("editor.terrain.name.1"),
+    localization::Tr("editor.terrain.name.2"),
+    localization::Tr("editor.terrain.name.3"),
+    localization::Tr("editor.terrain.name.4"),
+    localization::Tr("editor.terrain.name.5"),
+    localization::Tr("editor.terrain.name.6")
+};
 // The eventsManager dialogs' edited cell, map header and window.
 DATA(0x00451e98)
 SMapHeader* gMapHeader;

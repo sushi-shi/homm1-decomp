@@ -10,6 +10,7 @@
 #include <Domains.h>
 #include <H1/Macros.h>
 #include <SOURCE/game.h>
+#include <SOURCE/mapCell.h>
 
 class border;
 class button;
@@ -44,10 +45,11 @@ H1_ENUM_CONST_END(OverlayTypeConstant)
 struct overlayType {
     char name[OVERLAY_TYPE_NAME_LENGTH];
     // The object tileset (editManager::m_objectIcons).
-    i8 tileset;
+    H1_ENUM_STORAGE(MapTileset, i8) tileset;
     // The category class (gOverlayCategoryKinds); 0 for terrain objects.
     i8 kind;
-    i16 unknown0b;
+    // How often the generator's ScatterDecorations picks it (in 100).
+    u16 frequency;
     // Cells on the object layer, which need free ground of a terrainMask
     // terrain.
     u16 groundMask;
