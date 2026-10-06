@@ -103,7 +103,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) CombatSpecialHandler(struct tag_messa
 VA(0x0045a0b0, 0x25d)
 H1_ENUM_RETURN(MessageDispatchResult, i16) HandleCastSpell(struct tag_message& message) {
     DATA(0x0049f97c)
-    static i8 gSpellTargetHex = -1;
+    static i8 gSpellTargetHex = ARMY_HEX_INVALID;
     i16 hex;
 
     switch (message.type) {

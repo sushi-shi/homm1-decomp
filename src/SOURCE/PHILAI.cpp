@@ -2335,11 +2335,11 @@ i32 philAI::FightValueOfStack(
     }
     if (useAdjustedFightValue && heroPointer) {
         combatStatSum = heroPointer->m_primaryStats[HERO_PRIMARY_ATTACK]
-                        + heroPointer->m_primaryStats[HERO_PRIMARY_DEFENSE] + 20;
+                        + heroPointer->m_primaryStats[HERO_PRIMARY_DEFENSE] + STAT_CURVE_OFFSET;
         if (combatStatSum < 0)
             combatStatSum = 0;
-        if (combatStatSum > 40)
-            combatStatSum = 40;
+        if (combatStatSum > STAT_CURVE_LAST)
+            combatStatSum = STAT_CURVE_LAST;
         armyValue = armyValue * gStatPower[combatStatSum];
         castleValue = castleValue * gStatPower[combatStatSum];
         morale = heroPointer->m_army.GetMorale(heroPointer, NULL);
@@ -2364,16 +2364,17 @@ i32 philAI::FightValueOfStack(
                     gSpellAIValue[heroPointer->m_spells[slot]]
                     * ((gSpellAIFlags[heroPointer->m_spells[slot]]
                         & SPELL_AI_FLAG_SCALES_WITH_POWER)
-                           ? (heroPointer->m_primaryStats[HERO_PRIMARY_SPELL_POWER] <= 40
+                           ? (heroPointer->m_primaryStats[HERO_PRIMARY_SPELL_POWER]
+                                      <= STAT_CURVE_LAST
                                   ? gBattleStat[heroPointer
                                                     ->m_primaryStats[HERO_PRIMARY_SPELL_POWER]]
-                                  : gBattleStat[40])
+                                  : gBattleStat[STAT_CURVE_LAST])
                            : spellMultiplier);
-                magicTotal +=
-                    spellScore
-                    * gSpellCastNumMod
-                        [heroPointer->m_spellCharges[slot] <= 20 ? heroPointer->m_spellCharges[slot]
-                                                                 : 20];
+                magicTotal += spellScore
+                              * gSpellCastNumMod
+                                  [heroPointer->m_spellCharges[slot] <= SPELL_CAST_COUNT_LAST
+                                       ? heroPointer->m_spellCharges[slot]
+                                       : SPELL_CAST_COUNT_LAST];
                 if (spellScore > bestScore)
                     bestScore = spellScore;
             }
@@ -3161,8 +3162,10 @@ i32 philAI::DamageGroup(armyGroup* group, hero* loser, hero* winner, float casua
 // twenty) less that of the old one; used for hero stat gains.
 VA(0x0044ecb0, 0x4f)
 float philAI::StatChangeValue(i32 oldValue, i32 newValue) {
-    return (newValue > 20 ? gSpellCastNumMod[20] : gSpellCastNumMod[newValue])
-           - (oldValue > 20 ? gSpellCastNumMod[20] : gSpellCastNumMod[oldValue]);
+    return (newValue > SPELL_CAST_COUNT_LAST ? gSpellCastNumMod[SPELL_CAST_COUNT_LAST]
+                                             : gSpellCastNumMod[newValue])
+           - (oldValue > SPELL_CAST_COUNT_LAST ? gSpellCastNumMod[SPELL_CAST_COUNT_LAST]
+                                               : gSpellCastNumMod[oldValue]);
 }
 
 // The AI-turn hourglass advances faster with fewer (prospective) heroes and
@@ -3678,9 +3681,9 @@ i32 philAI::ValueOfEventAtPosition(hero* aiHero, i16 x, i16 y, i32 immediate, i3
                     & SPELL_AI_FLAG_SCALES_WITH_POWER)
                     gVisitResult =
                         gVisitResult
-                        * (aiHero->m_primaryStats[HERO_PRIMARY_KNOWLEDGE] <= 40
+                        * (aiHero->m_primaryStats[HERO_PRIMARY_KNOWLEDGE] <= STAT_CURVE_LAST
                                ? gStatPower[aiHero->m_primaryStats[HERO_PRIMARY_KNOWLEDGE]]
-                               : gStatPower[40]);
+                               : gStatPower[STAT_CURVE_LAST]);
             } else {
                 gVisitResult = 0;
             }
@@ -3880,7 +3883,8 @@ i32 philAI::ValueOfEventAtPosition(hero* aiHero, i16 x, i16 y, i32 immediate, i3
                 1000.0f * gAITurnCostResource[RESOURCE_GOLD] * gTurnValueOfMine[x][y] * 1.5;
             for (gEventSlot = 0; gEventSlot < ARMY_GROUP_SLOT_COUNT; gEventSlot++) {
                 gMonGroup->m_creatureTypes[gEventSlot] = CREATURE_DRAGON;
-                gMonGroup->m_creatureCounts[gEventSlot] = 1;
+                gMonGroup->m_creatureCounts[gEventSlot] =
+                    DRAGON_CITY_DRAGON_COUNT / ARMY_GROUP_SLOT_COUNT;
             }
             if (gGame->m_mineOwners[MINE_SLOT_DRAGON_CITY] == aiHero->m_owner)
                 gVisitResult = 0;

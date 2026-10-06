@@ -6,7 +6,7 @@
 # (tab-separated; every field is an fnmatch glob, `*` matches anything; the
 # first matching row wins): file owner spelling group detail reason.
 # group/detail are the census' review_group/review_context columns.
-#floor	1545
+#floor	1537
 *	*	0	trivial-function-literal	0 for-init	a for loop's counter starts at zero
 *	*	0	trivial-function-literal	0 initializer*	an accumulator or counter declared at zero
 *	*	1	trivial-function-literal	1 arithmetic*	a one-step offset: the next index, element or count
@@ -86,9 +86,7 @@
 *	*	*	call-argument	SRand(* argument 1	the seed (battle position mixed into one number)
 *	*	*	call-argument	EffectSpellDamage(* argument 3	the spell's damage per spell-power point (CastSpell's multipliers)
 src/SOURCE/FINDPATH.cpp	TerrainStepCost	*	store	store to cost	the movement cost of one step on that terrain (Buka TerrainStepCost table)
-src/SOURCE/ARMY.cpp	army::DamageEnemy	*20	*	*	the attack/defence difference clamp (+-20) and gBattleStat offset
 src/SOURCE/ARMY.cpp	army::DamageEnemy	32000	*	*	the damage cap (stays within the short quantity arithmetic)
-src/SOURCE/CMBTMGR.cpp	combatManager::KeepAttack	*20	*	*	the attack/defence difference clamp (+-20) and gBattleStat offset (as DamageEnemy)
 src/SOURCE/ARMY.cpp	army::DrawToBuffer	*	arithmetic	*	the quantity box / spell icon pixel offsets beside the sprite
 src/SOURCE/CMBTMGR.cpp	combatManager::GetGridIndex	*	arithmetic	*	the hex grid's pixel geometry (field origin, row height 80, column step 78, odd-row offset 27)
 src/SOURCE/CMBTMGR.cpp	combatManager::GetGridIndex	*	comparison-or-bound	*	the hex grid's left pixel edge
@@ -953,20 +951,14 @@ src/SOURCE/PHILAI.cpp	philAI::TurnValueOfObelisk	*	return	return value	an AI tun
 src/SOURCE/PHILAI.cpp	philAI::TurnValueOfObelisk	*	arithmetic	operator [*] each	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::FightValueOfStack	*	comparison-or-bound	operator > m_creatureCounts[[][]]	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::FightValueOfStack	*	store	store to countMod	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::FightValueOfStack	*	arithmetic	operator +	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::FightValueOfStack	*	arithmetic	operator + morale	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::FightValueOfStack	*	arithmetic	operator /	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::FightValueOfStack	*	array-index	array subscript gBattleStat	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::FightValueOfStack	*	array-index	array subscript gSpellCastNumMod	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::EvaluateOneTimeCreaturePurchase	*	store	store to leastStackValue	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::QuickCombat	*	store	store to defenderCasualtyFraction	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::QuickCombat	*	store	store to attackerCasualtyFraction	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	*	comparison-or-bound	operator > statSum	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	*	store	store to statSum	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	*	comparison-or-bound	operator <= m_remainingMobility	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::StatChangeValue	*	comparison-or-bound	operator > newValue	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::StatChangeValue	*	array-index	array subscript gSpellCastNumMod	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::StatChangeValue	*	comparison-or-bound	operator > oldValue	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::IncrementHourGlass	*	comparison-or-bound	operator < heroCount	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::IncrementHourGlass	*	comparison-or-bound	operator >= m_resources[[][]]	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	*	store	store to m_creatureCounts[[][]]	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
@@ -975,7 +967,6 @@ src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	*	arithmetic	operator - m_p
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	*	comparison-or-bound	operator > gVisitResult	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	*	comparison-or-bound	operator > gaiHeroLiveChance[[][]]	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	*	store	store to gCombatWinningFraction	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	*	array-index	array subscript gStatPower	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	*	comparison-or-bound	operator >	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	*	arithmetic	operator -	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	*	comparison-or-bound	operator > m_ultimateArtifactHintChance	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)

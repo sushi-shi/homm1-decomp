@@ -1306,10 +1306,10 @@ void combatManager::KeepAttack(void) {
     if (m_combatTowns[COMBAT_DEFENDER_SIDE]->m_buildings & 1)
         mod += m_combatTowns[COMBAT_DEFENDER_SIDE]->m_buildState + 1;
     mod -= hisStack->m_stats.defense;
-    if (mod > 20)
-        mod = 20;
-    if (mod < -20)
-        mod = -20;
+    if (mod > STAT_CURVE_OFFSET)
+        mod = STAT_CURVE_OFFSET;
+    if (mod < -STAT_CURVE_OFFSET)
+        mod = -STAT_CURVE_OFFSET;
     numRolls = 5;
     for (k = H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_DWELLING_FIRST);
          k <= H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_DWELLING_LAST);
@@ -1326,7 +1326,7 @@ void combatManager::KeepAttack(void) {
     arrowDamage = 0;
     for (k = 0; k < numRolls; k++)
         arrowDamage += SRandom(2, 3);
-    arrowDamage = arrowDamage * gBattleStat[mod + 20];
+    arrowDamage = arrowDamage * gBattleStat[mod + STAT_CURVE_OFFSET];
     if (arrowDamage <= 0)
         arrowDamage = 1;
     stackKilled = hisStack->Damage(arrowDamage);
