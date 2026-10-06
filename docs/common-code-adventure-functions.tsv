@@ -334,7 +334,7 @@ src/SOURCE/CURSOR.cpp	0x22f55	advManager::ValidMoveWithEvent	read	hero-embarked	
 src/SOURCE/CURSOR.cpp	0x230f8	advManager::ValidMove	read	non-shadow-object	North/south blocking tests use CELL_HAS_NON_SHADOW_OBJECT (shared with helpers worker B); the whirlpool exception stays at the caller.	CELL_HAS_NON_SHADOW_OBJECT	retained-exact	100	100
 src/SOURCE/CURSOR.cpp	0x23344	advManager::MoveOrigin	read	none	Origin shift with cursor-flag moves; single site.		kept-existing-source	100	100
 src/SOURCE/EVENTS.cpp	0x24a50	advManager::DoEvent	read	hero-embarked;event-window-args;flag-reward-visit;memerror-check	IsEmbarked for the boat landing. EventWindow keeps its eight explicit arguments. The visited-flag reward arms (buoy, faerie ring, fountain, oasis, statue) differ in stat and text; kept as written.	hero::IsEmbarked;NormalDialog defaults	retained-exact	100	100
-src/SOURCE/EVENTS.cpp	0x267ed	advManager::EraseObj	read	none	Object erase with sound grid update.		kept-existing-source	100	100
+src/SOURCE/EVENTS.cpp	0x267ed	advManager::EraseObj	read	map-cell-in-bounds	Object erase with sound grid update.	MAP_CELL_IN_BOUNDS	retained-exact	100	100
 src/SOURCE/EVENTS.cpp	0x269b5	advManager::HeroSwap	read	none	Hero meeting through swapManager.		kept-existing-source	100	100
 src/SOURCE/EVENTS.cpp	0x26a58	advManager::TownEvent	read	current-hero	Town visit; current hero read through GetHero(gpCurPlayer->m_currentHero).		kept-existing-source	100	100
 src/SOURCE/EVENTS.cpp	0x26be9	advManager::EventSound	read	none	Event sound selection.		kept-existing-source	100	100
@@ -366,7 +366,7 @@ src/SOURCE/GAME.cpp	0x2b8d3	playerData::HasMobileHero	read	none	Mobility scan.		
 src/SOURCE/GAME.cpp	0x2b929	playerData::CountVisitedObelisks	read	none	Bit count.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x2b97f	playerData::BuildingsOwned	read	town-building-bit	Building-mask counts; typed building flags are deferred.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x2ba35	playerData::NumOfGivenArtifact	read	none	Artifact count.		kept-existing-source	100	100
-src/SOURCE/GAME.cpp	0x2bab9	ComputeUALoc	read	none	Hint placement.		kept-existing-source	100	100
+src/SOURCE/GAME.cpp	0x2bab9	ComputeUALoc	read	map-cell-in-bounds	Hint placement.	MAP_CELL_IN_BOUNDS	retained-exact	100	100
 src/SOURCE/GAME.cpp	0x2bdda	game::VisitObelisk	read	none	Obelisk piece pick.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x2bf56	game::IsMobile	read	none	Mobility test; CELL_TERRAIN already used.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x2bfee	game::GetWorldMapData	read	none	Accessor.		kept-existing-source	100	100

@@ -1191,7 +1191,7 @@ void advManager::EraseObj(class mapCell* cell, i32 x, i32 y) {
         cell->m_secondaryTrigger -= cell->m_triggerType;
         for (i = x - 1; i <= x + 1; i++) {
             for (j = y - 1; j <= y + 1; j++) {
-                if (i >= 0 && i < MAP_CELL_GRID_SIZE && j >= 0 && j < MAP_CELL_GRID_SIZE
+                if (MAP_CELL_IN_BOUNDS(i, j)
                     && gpGame->m_map[i][j].m_triggerType == cell->m_triggerType)
                     cell->m_objectMetadata = gpGame->m_map[i][j].m_objectMetadata;
             }

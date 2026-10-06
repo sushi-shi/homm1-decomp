@@ -61,18 +61,19 @@ review inputs, not defect totals. Preserve banked matches.
   casts and unexplained casts.
 - [ ] Recover unknown members: **19** `m_unknown*`/`m_field_0x*` placeholders
   remain; each is only ever cleared, initialized or saved, so no code user
-  names it. The mouse's saved area and the player's unused save span are
+  names it, and neither the game nor the editor image reads one. The mouse's saved area and the player's unused save span are
   named from their code users, and 20 spans with no user at all are `m_unused*`/`m_padding*`.
 - [x] Review gotos: **204 statements**, all kept because retail's block layout
   requires them. Replacing them with `break`, `else if` or nothing breaks an
-  exact match, because VC6 `/Od` emits a `jmp` for every `goto`
+  exact match, because VC6 `/Od` emits a `jmp` for every `goto`; each site was
+  also tried as `break` and `continue`, and none compiles identically
   ([classes](docs/reconstruction-debt.md)).
-- [x] Review dead locals: **116** never-read locals. The 75 without an
-  initializer were removed together as a control, and every affected function
-  lost its exact frame. The 41 with an initializer emit retail stores.
-- [x] Review `static_cast`: **246 lines** (from 410). Casts that only hid a
+- [x] Review dead locals: **116** never-read locals. Each of the 75 without
+  an initializer was removed alone, and every removal changes its function's
+  frame. The 41 with an initializer emit retail stores.
+- [x] Review `static_cast`: **245 lines** (from 410). Casts that only hid a
   wrong declared type are gone, including the `void*` Win32 handles, which are
-  now `STRICT`, and so are the 167 that restated the conversion an assignment,
+  now `STRICT`, and so are the 168 that restated the conversion an assignment,
   initialization, argument, return or arithmetic operand already performs; the
   remaining classes are listed in the [debt notes](docs/reconstruction-debt.md).
 - [x] Review unions: **8 definitions**, each one shared storage with typed
@@ -90,10 +91,10 @@ review inputs, not defect totals. Preserve banked matches.
   where a unit parses.
 - [ ] Common-code review (helpers, accessors, macros): every source unit is
   read. Combat and AI (**233 functions**, [ledger](docs/common-code-combat.tsv)):
-  **14 families** retained at **77 sites** (22 of them calls shortened by
+  **15 families** retained at **81 sites** (22 of them calls shortened by
   declared defaults), 4 rejected by measurement, 25 kept explicit, 4 deferred.
-  Adventure, town, hero, network, Windows and BASE (**764 functions**, [ledger](docs/common-code-adventure.tsv)): **16 families**
-  retained at **301 sites** (65 of them calls shortened by declared defaults),
+  Adventure, town, hero, network, Windows and BASE (**764 functions**, [ledger](docs/common-code-adventure.tsv)): **17 families**
+  retained at **307 sites** (65 of them calls shortened by declared defaults),
   1 rejected by measurement, 77 kept explicit, 5 deferred to typed enum domains
   or another unit's owner.
 

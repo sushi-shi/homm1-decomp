@@ -112,8 +112,11 @@ placeholders remain:
 - playerData `m_unknown00`/`m_unknown99`: only copied raw by Write/Read;
   `m_unknown99[1]` is written twice.
 
-Inventing a meaning for them is not evidence, so they stay placeholders until
-a reader is found.
+The editor image compiles the same BASE managers, so it was searched too:
+no instruction in `EDITOR.EXE` or `HEROES.EXE` loads `gpInputManager`,
+`gpMouseManager` or `gpWindowManager` and then reads one of these offsets.
+Inventing a meaning for them is not
+evidence, so they stay placeholders until a reader is found.
 
 **`goto`.** A `goto` stays when retail's block layout requires it; it is
 replaced only when a structured form compiles to identical bytes.
@@ -131,6 +134,15 @@ scan, and each class was checked by compiling a structured replacement:
 | Single-loop exit | 12 | `fileRequester::fileRequester` `goto insert` and `ReceiveRemoteData` loop `goto done` as `break` | 1056/1057 for each. `break` emits a different jump than the retail `goto`. |
 | Multi-level loop exit | 2 | (no structured form) | `break` leaves only the inner loop. |
 
+Every site was also tried in place as `break;` and as `continue;`, one
+compile per trial against the unchanged object (408 trials). 161 do not
+compile, because the `goto` is not inside a loop, and none of the 247 that
+compile leaves the object identical. The loop exits show why: VC6 `/Od`
+compiles `if (c) break;` to one conditional jump to the loop exit, while
+`if (c) goto L;` keeps a conditional jump around an unconditional `jmp L`.
+`advManager::DoAdvCommand`'s route loop shrinks from 1345 to 1340 bytes with
+`break`; retail has the `jmp` at every site.
+
 Every goto is kept because retail's block layout requires it.
 
 **Dead locals.** Every never-referenced local must correspond to an
@@ -141,9 +153,12 @@ The audit lists locals with `clang-cl /Zs -Wunused-variable` after replacing
 each `#line` with an empty line, so diagnostics keep the file's own numbering.
 It found 116 such locals. The 41 with an initializer emit retail stores. A
 control removed the 75 initializer-free declarations together: every function
-that contained one lost its exact frame, and the others were unchanged. Under
-`/Od`, VC6 gives each declared local its own slot, so each of these maps to an
-unread slot in retail's frame.
+that contained one lost its exact frame, and the others were unchanged. Each
+of the 75 was then removed alone (its line blanked, so `#line` pins hold), and
+every single removal changes its function. Under `/Od`, VC6 gives each
+declared local its own slot, so each of these maps to an unread slot in
+retail's frame. The 101 locals that are only written (`-Wunused-but-set-variable`)
+are retail stores.
 
 **`static_cast`.** Narrowing and signedness conversions are often required for
 retail's widths; the review removes the ones that only paper over a wrong
@@ -173,7 +188,8 @@ object byte-identical except one: `ScaleSampleVolume`'s
 `GetEffectsVolume() * static_cast<float>(volume)` becomes an `fimul` from
 memory without the cast, so it stays. Casts of names declared through the
 `H1_ENUM_*` storage macros are excluded, because the strict view types them
-as enums.
+as enums. `highScoreManager::Main`'s one cast of a `MessageModifier` mask is
+gone too: every other modifier test in the tree is written without it.
 
 The remaining casts are:
 

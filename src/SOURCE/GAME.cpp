@@ -212,13 +212,12 @@ void ComputeUALoc(i32 player) {
                 y = PLAYER_ULTIMATE_HINT_NONE;
                 heading = 0;
                 triesCount = 0;
-                while (
-                    !(x >= 0 && x < MAP_CELL_GRID_SIZE && y >= 0 && y < MAP_CELL_GRID_SIZE
-                      && gpGame->m_map[x][y].m_triggerType == MAP_OBJECT_NONE
-                      && gpGame->m_map[x][y].m_objectIndex == MAP_CELL_NO_FRAME
-                      && gpGame->m_map[x][y].m_overlayIndex == MAP_CELL_NO_FRAME
-                      && gpGame->m_map[x][y].m_tileIndex >= MAP_CELL_TILES_PER_TERRAIN)
-                ) {
+                while (!(
+                    MAP_CELL_IN_BOUNDS(x, y) && gpGame->m_map[x][y].m_triggerType == MAP_OBJECT_NONE
+                    && gpGame->m_map[x][y].m_objectIndex == MAP_CELL_NO_FRAME
+                    && gpGame->m_map[x][y].m_overlayIndex == MAP_CELL_NO_FRAME
+                    && gpGame->m_map[x][y].m_tileIndex >= MAP_CELL_TILES_PER_TERRAIN
+                )) {
                     triesCount++;
                     heading = 0;
                     while (heading == 0)

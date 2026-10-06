@@ -27,6 +27,7 @@ town-building-bit	deferred	include/SOURCE/town.h	typed flag helper	26	t->m_build
 monster-flag-test	keep	army	existing source	131	m_stats.attributes & MONSTER_FLAGS_*: a wrapper would only hide the flag conversion; plain tests stay.
 calendar-turn	retained	include/SOURCE/game.h	existing macro	1	GetTurnAIVars' giCurTurn is GAME_DAY_NUMBER(*gpGame): day first, u16 fields promoted to int. Byte-identical.
 artifact-value-sum	keep	AI/PHILAI	existing source	4	Regular-artifact gArtifactBaseRV sums (AICheckRetreat, ProbableOutcomeOfBattle x2, ValueOfBuyingHero): accumulators and guards differ.
+artifact-base-value	retained	include/SOURCE/artifactTypes.h	macro	4	New ARTIFACT_HAS_BASE_VALUE(id): id >= 0 && id < ARTIFACT_REGULAR_END, the guard before each gArtifactBaseRV read of a hero artifact slot. AI AICheckRetreat 1, PHILAI ProbableOutcomeOfBattle 2, ValueOfBuyingHero 1. The accumulating loops stay explicit (artifact-value-sum). Byte-identical.
 attack-bonus	keep	PHILAI	existing source	5	gbHumanPlayer[p] ? gAttackHumanBonus : gAttackComputerBonus: four ternaries and one if/else in ProbableOutcomeOfBattle, each a single selection.
 monster-group-fill	keep	PHILAI	existing source	2	CombatMonsterEvent and ValueOfEventAtPosition spread a count over five slots with a local versus the gEventLoop global counter.
 stack-fight-value	keep	army	existing source	18	quantity * gMonsterDatabase[t].fightValue (18 fightValue reads); army::Strength is an out-of-line call with the reversed product.

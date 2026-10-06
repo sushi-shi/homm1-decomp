@@ -76,8 +76,7 @@ i32 combatManager::AICheckRetreat(void) {
         artifactTotals[owner] = 0;
         if (curLeader) {
             for (armyIndex = 0; armyIndex < HERO_ARTIFACT_SLOT_COUNT; armyIndex++) {
-                if (curLeader->m_artifacts[armyIndex] >= 0
-                    && curLeader->m_artifacts[armyIndex] < ARTIFACT_REGULAR_END)
+                if (ARTIFACT_HAS_BASE_VALUE(curLeader->m_artifacts[armyIndex]))
                     artifactTotals[owner] += gArtifactBaseRV[curLeader->m_artifacts[armyIndex]];
             }
         }

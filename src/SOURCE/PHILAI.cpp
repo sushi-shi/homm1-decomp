@@ -828,8 +828,7 @@ void philAI::GetTurnAIVars(i32 player) {
                 theYPos = gpGame->GetHero(basePlayer->m_heroIds[entry])->m_y;
                 for (oldX = xPosVal - 10; oldX <= xPosVal + 10; oldX++) {
                     for (y = theYPos - 10; y <= theYPos + 10; y++) {
-                        if (oldX >= 0 && oldX < MAP_CELL_GRID_SIZE && y >= 0
-                            && y < MAP_CELL_GRID_SIZE) {
+                        if (MAP_CELL_IN_BOUNDS(oldX, y)) {
                             mineTotal = abs(MANHATTAN_LENGTH(oldX - xPosVal, y - theYPos) - 4) >> 2;
                             if (mineTotal < gaiTurnValueOfMine[oldX][y])
                                 gaiTurnValueOfMine[oldX][y] = mineTotal;
@@ -1224,8 +1223,7 @@ void philAI::ProbableOutcomeOfBattle(
     outcomeValue = outcomeValue * gpCurPlayer->m_aiData.m_upgradeValueWeight;
     if (attackerHero) {
         for (slotNum = 0; slotNum < HERO_ARTIFACT_SLOT_COUNT; slotNum++) {
-            if (attackerHero->m_artifacts[slotNum] >= 0
-                && attackerHero->m_artifacts[slotNum] < ARTIFACT_REGULAR_END)
+            if (ARTIFACT_HAS_BASE_VALUE(attackerHero->m_artifacts[slotNum]))
                 attArts += gArtifactBaseRV[attackerHero->m_artifacts[slotNum]];
         }
         outcomeValue = outcomeValue - (attArts + 1400) * (1.0f - winChance);
@@ -1234,8 +1232,7 @@ void philAI::ProbableOutcomeOfBattle(
     }
     if (defenderHero) {
         for (slotNum = 0; slotNum < HERO_ARTIFACT_SLOT_COUNT; slotNum++) {
-            if (defenderHero->m_artifacts[slotNum] >= 0
-                && defenderHero->m_artifacts[slotNum] < ARTIFACT_REGULAR_END)
+            if (ARTIFACT_HAS_BASE_VALUE(defenderHero->m_artifacts[slotNum]))
                 artsD += gArtifactBaseRV[defenderHero->m_artifacts[slotNum]];
         }
         outcomeValue = outcomeValue
@@ -1617,7 +1614,7 @@ void philAI::ValueOfBuyingHero(
     costRVVal = RVConversion(heroCost);
     heroRV = heroPointer->m_experience + 2000;
     for (i = 0; i < HERO_ARTIFACT_SLOT_COUNT; i++) {
-        if (heroPointer->m_artifacts[i] >= 0 && heroPointer->m_artifacts[i] < ARTIFACT_REGULAR_END)
+        if (ARTIFACT_HAS_BASE_VALUE(heroPointer->m_artifacts[i]))
             heroRV += gArtifactBaseRV[heroPointer->m_artifacts[i]];
     }
     heroRV += heroPointer->m_experience / 2;
