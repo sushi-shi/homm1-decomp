@@ -1255,6 +1255,10 @@ msgstr "Sending Data"
 msgid "network.setup.wait"
 msgstr "Waiting for other remote player to set up game."
 
+#: src/SOURCE/GAME.cpp
+msgid "network.version.mismatch"
+msgstr "The other player is running a different version of Heroes of Might and Magic."
+
 #: src/SOURCE/KB.cpp
 #, c-format
 msgid "player.vanquished"

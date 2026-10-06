@@ -1255,6 +1255,10 @@ msgstr "Пересылка данных"
 msgid "network.setup.wait"
 msgstr "Ожидаю других игроков для установки игры."
 
+#: src/SOURCE/GAME.cpp
+msgid "network.version.mismatch"
+msgstr "У другого игрока другая версия игры \"Герои Меча и Магии\"."
+
 #: src/SOURCE/KB.cpp
 #, c-format
 msgid "player.vanquished"

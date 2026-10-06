@@ -159,8 +159,8 @@ i32 EncodePacket(RemoteMessage* data, i8 source, i8 destination, i32 length) {
     REMOTE_PACKET(gPacketSend)->destination = destination;
     REMOTE_PACKET(gPacketSend)->sequence = gPacketSequence;
     REMOTE_PACKET(gPacketSend)->payloadSize = length;
-    crc = 0;
-    REMOTE_PACKET(gPacketSend)->crc = crc;
+    REMOTE_PACKET(gPacketSend)->crc = 0;
+    crc = REMOTE_PROTOCOL_CRC_SEED;
     memcpy(gPacketSend + sizeof(RemotePacketHeader), data, length);
     calc_crc(&crc, reinterpret_cast<u8*>(gPacketSend), length + sizeof(RemotePacketHeader));
     REMOTE_PACKET(gPacketSend)->crc = crc;
@@ -173,7 +173,7 @@ b32 DecodePacket(RemoteMessage* data, i32 source) {
     i32 i;
     u32 dataSize;
 
-    computedCrc = 0;
+    computedCrc = REMOTE_PROTOCOL_CRC_SEED;
     if (REMOTE_PACKET(gPacket)->source != source && source != REMOTE_BROADCAST_PLAYER) {
         return false;
     }
@@ -616,7 +616,7 @@ void Connect(void) {
             gPacket[gModemPacketLength] = 0;
             if (gModemPacketLength != DIRECT_CONNECT_ID_PACKET_LENGTH)
                 continue;
-            if (strncmp(gPacket, "ID", 2))
+            if (strncmp(gPacket, REMOTE_PROTOCOL_CONNECT_TAG, 2))
                 continue;
             if (!strncmp(gPacket + 2, gModemIdString, 6)) {
                 sprintf(gText, "Duplicate ID Strings!\nSorry Please Try Again\n");
@@ -631,7 +631,13 @@ void Connect(void) {
         gConnectTick = KBTickCount();
         if (gConnectTick / 1000 != gLastIdSendTime / 1000) {
             gLastIdSendTime = gConnectTick;
-            sprintf(idMessage, "ID%s_%i", gModemIdString, gLocalConnectStage);
+            sprintf(
+                idMessage,
+                "%s%s_%i",
+                REMOTE_PROTOCOL_CONNECT_TAG,
+                gModemIdString,
+                gLocalConnectStage
+            );
             WriteModemPacket(idMessage, strlen(idMessage));
         }
         PollSound();
@@ -669,7 +675,7 @@ b32 WaitForDirectConnect(void) {
                 gPacket[gModemPacketLength] = 0;
                 if (gModemPacketLength != DIRECT_CONNECT_ID_PACKET_LENGTH)
                     return false;
-                if (strncmp(gPacket, "ID", 2))
+                if (strncmp(gPacket, REMOTE_PROTOCOL_CONNECT_TAG, 2))
                     return false;
                 if (!strncmp(gPacket + 2, gModemIdString, 6)) {
                     sprintf(gText, "Duplicate ID Strings!\nSorry Please Try Again\n");
@@ -684,7 +690,13 @@ b32 WaitForDirectConnect(void) {
             gConnectTick = KBTickCount();
             if (gConnectTick / 1000 != gLastIdSendTime / 1000) {
                 gLastIdSendTime = gConnectTick;
-                sprintf(idMessage, "ID%s_%i", gModemIdString, gLocalConnectStage);
+                sprintf(
+                    idMessage,
+                    "%s%s_%i",
+                    REMOTE_PROTOCOL_CONNECT_TAG,
+                    gModemIdString,
+                    gLocalConnectStage
+                );
                 WriteModemPacket(idMessage, strlen(idMessage));
             }
             if (gLocalConnectStage >= 2)

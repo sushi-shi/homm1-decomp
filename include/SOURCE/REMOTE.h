@@ -1,6 +1,16 @@
 #ifndef HOMM1_SOURCE_REMOTE_H
 #define HOMM1_SOURCE_REMOTE_H
 
+// The edition plays by different rules, so its multiplayer protocol is
+// versioned: peers of another version do not find each other (serial
+// connection tag, NetBIOS group name) and do not accept each other's
+// packets (checksum seed).
+#define REMOTE_PROTOCOL_CONNECT_TAG "TE"
+enum RemoteProtocolConstant {
+    REMOTE_PROTOCOL_VERSION = 1,
+    REMOTE_PROTOCOL_CRC_SEED = 0x5400 + REMOTE_PROTOCOL_VERSION
+};
+
 enum RemoteMessageType {
     REMOTE_MESSAGE_DEFAULT = -1,
     REMOTE_MESSAGE_NONE = 0,
