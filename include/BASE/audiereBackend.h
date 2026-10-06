@@ -10,25 +10,34 @@
 
 audiere::AudioDevicePtr GetAudioDevice();
 
-struct AudiereSampleNode {
+// A playing-sample list node. As a class template its destructor is emitted
+// after the RefPtr instances, as in retail (0x00469f80 follows them).
+template <class Resource> struct AudiereNode {
     audiere::OutputStreamPtr stream;
-    sample* resource;
-    AudiereSampleNode* next;
+    Resource* resource;
+    AudiereNode* next;
 
-    AudiereSampleNode(sample* sampleResource, AudiereSampleNode* nextNode) {
+    AudiereNode(Resource* sampleResource, AudiereNode* nextNode) {
         stream = NULL;
         resource = sampleResource;
         next = nextNode;
     }
-    inline ~AudiereSampleNode();
+    ~AudiereNode() {}
 };
+typedef AudiereNode<sample> AudiereSampleNode;
 
 struct AudiereMusic {
-    static audiere::OutputStreamPtr stream;
-    static audiere::SampleSourcePtr source;
+    static audiere::OutputStreamPtr channel;
+    static audiere::SampleSourcePtr origin;
 };
+// Retail declares one more static data member than the device and music
+// pointers: VC6 numbers the destroy-once guards from a TU counter that every
+// static data member declaration advances, and only with a fourth declaration
+// does the music guard (0x004cdf70) sort before the device guard (0x004cdf71).
+// The 4 bytes after the device pointer, which no retail code reads, are it.
 struct AudiereDevice {
-    static audiere::AudioDevicePtr device;
+    static audiere::AudioDevicePtr driver;
+    static int dummy;
 };
 
 #endif

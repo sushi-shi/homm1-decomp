@@ -14,6 +14,10 @@
 
 // HoMM1: flood from the hero until a cell carrying the trigger type turns
 // up, then walk the directions back into the path buffer.
+// No retail code reads this; it holds its retail .bss place.
+DATA(0x004cc878)
+static i32 gSearchDeadInt;
+
 VA(0x00455e50, 0x22b)
 i16 searchArray::FindNearestObject(
     i16 startX,
