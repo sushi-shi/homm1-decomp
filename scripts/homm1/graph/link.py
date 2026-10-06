@@ -357,6 +357,25 @@ def retail_code_order(objs: list[Path], claims_dir: Path | None = None
     return [o for _lo, _i, o in sorted(keyed)] + unplaced, unplaced
 
 
+def library_paths(*, dry_run: bool = False) -> list[str]:
+    """The image's library line and CRT in link order, each name replaced in
+    place by its synthesized vendor import library or the pinned toolchain's
+    copy."""
+    from homm1.graph import implib
+
+    names = (*profile()["libs"], CRT_LIBRARY)
+    made = implib.on_disk() if dry_run else implib.ensure_all()
+    available = {p.name.lower(): str(p) for p in made}
+    available.update({p.name.lower(): str(p)
+                      for _dll, _names, p in implib.survey() if p is not None})
+    for name in names:
+        if name not in available:
+            path = implib.toolchain_lib(Path(name).stem)
+            if path is not None:
+                available[name] = str(path)
+    return [available.get(n, n) for n in names]
+
+
 def candidate(out: Path, objs_dir: Path, *, mapfile: Path | None = None,
               res: Path | None = None, order: Path | None = None,
               explicit: list[str] = (), extra_libs: list[str] = (),
@@ -369,7 +388,6 @@ def candidate(out: Path, objs_dir: Path, *, mapfile: Path | None = None,
     `dry_run` assembles the response file and stops before link.exe - the way
     to inspect the object order and the library line without a linker.
     """
-    from homm1.graph import implib
     from homm1.tool import link as link_tool
 
     prof = profile()
@@ -413,17 +431,7 @@ def candidate(out: Path, objs_dir: Path, *, mapfile: Path | None = None,
     rsp_lines.append(f"/NODEFAULTLIB:{CRT_REPLACES}")
     rsp_lines += list(extra_flags)
 
-    libs = list(extra_libs)
-    made = implib.on_disk() if dry_run else implib.ensure_all()
-    available = {p.name.lower(): str(p) for p in made}
-    available.update({p.name.lower(): str(p)
-                      for _dll, _names, p in implib.survey() if p is not None})
-    for name in (*prof["libs"], CRT_LIBRARY):
-        if name not in available:
-            path = implib.toolchain_lib(Path(name).stem)
-            if path is not None:
-                available[name] = str(path)
-    libs += [available.get(n, n) for n in (*prof["libs"], CRT_LIBRARY)]  # substitute IN PLACE
+    libs = list(extra_libs) + library_paths(dry_run=dry_run)
     if members:
         base_lib = out.parent / BASE_LIBRARY
         at = next((i + 1 for i, x in enumerate(libs)

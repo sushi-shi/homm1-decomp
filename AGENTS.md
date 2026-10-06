@@ -13,6 +13,9 @@ editor (`EDITOR.EXE`) as a second target.
 - Every commit keeps `homm1 compare --baseline` at 100% and `homm1 build
   verify` passing. `homm1 link` builds the candidate executable; never use
   `/FORCE`.
+- `homm1 build verify` includes `homm1 verify behaviour`, the game-behaviour
+  tests ([workflow](docs/workflow.md#game-behaviour-gate)). Their expected
+  outputs are snapshots of retail behaviour, so change one only on purpose.
 - The README status block is generated (`homm1 verify readme`); never edit
   it by hand. `homm1 verify bank` updates the score ledger.
 

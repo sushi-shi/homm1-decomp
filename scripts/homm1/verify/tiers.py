@@ -4,8 +4,10 @@
           #line/__LINE__ placement, include order, localization catalogs) -
           seconds, no build artifacts.
   normal  code/model joins (unique names, library overlap, TU order, dead
-          code, undefined closure) - needs bindings + base/target objs - and
-          the linked candidate's per-region diff against its banked ceiling.
+          code, undefined closure) - needs bindings + base/target objs - the
+          linked candidate's per-region diff against its banked ceiling, and
+          the game-behaviour tests (homm1.verify.behaviour), which link the
+          game objects into a contracts program and run it under Wine.
   full    slower code-evidence audits (assert relocs and caller/callee).
   data    data/vtable audits, deliberately opt-in until the data campaign.
   link    candidate-EXE audits (sections, image diff, link defects) - needs
@@ -168,6 +170,11 @@ def _link_diff():
     return link_diff.gate_findings(relink=False)
 
 
+def _behaviour():
+    from homm1.verify import behaviour
+    return behaviour.gate_findings()
+
+
 def _link_tier():
     from homm1.verify import link_tier
     return link_tier.gate_findings()
@@ -195,6 +202,7 @@ TIERS: dict[str, list[tuple[str, object]]] = {
         ("review-claims", _review_claims),
         ("strict-view", _strict_view),
         ("link-diff", _link_diff),
+        ("behaviour", _behaviour),
     ],
     "full": [
         ("assert-relocs", _assert_relocs),

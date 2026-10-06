@@ -84,7 +84,8 @@ _GATES = {"data-identity": "homm1.verify.data_identity", "enum-reuse": "homm1.ve
           "layout": "homm1.verify.layout",
           "link-tier": "homm1.verify.link_tier",
           "link-diff": "homm1.verify.link_diff",
-          "lzhuf-oracle": "homm1.verify.lzhuf_oracle"}
+          "lzhuf-oracle": "homm1.verify.lzhuf_oracle",
+          "behaviour": "homm1.verify.behaviour"}
 
 #: runnable as `homm1 verify <name>` but in NO tier: read-only oracles, not
 #: gates. `vtable-scan` enumerates the image's vtables (verify.vtables is the

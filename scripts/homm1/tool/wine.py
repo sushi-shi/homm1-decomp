@@ -37,6 +37,34 @@ def wine_env(env: dict[str, str] | None = None) -> dict[str, str]:
     return {**(os.environ if env is None else env), "TZ": WINE_ZONE}
 
 
+#: Display variables a headless wine process must not inherit.
+DISPLAY_VARIABLES = ("DISPLAY", "WAYLAND_DISPLAY")
+#: The wine debugger's crash dialog switch (0: report on stderr only).
+CRASH_DIALOG_KEY = r"HKEY_CURRENT_USER\Software\Wine\WineDbg"
+
+
+def headless_env(env: dict[str, str] | None = None, *,
+                 quiet: bool = True) -> dict[str, str]:
+    """wine_env for a program the tooling runs, never shows: no X11 or
+    Wayland display, so a window, message box or crash dialog cannot reach
+    the user's screen. `quiet` also silences every wine debug channel (a
+    test program's output is then its own)."""
+    out = {k: v for k, v in wine_env(env).items() if k not in DISPLAY_VARIABLES}
+    if quiet:
+        out["WINEDEBUG"] = "-all"
+    return out
+
+
+def disable_crash_dialog() -> None:
+    """Set the prefix's WineDbg ShowCrashDialog to 0 (idempotent): an
+    unhandled exception is then reported on stderr, never in a window."""
+    got = _reg("query", CRASH_DIALOG_KEY, "/v", "ShowCrashDialog", capture=True)
+    if not any("REG_DWORD" in line and line.split()[-1] in ("0x0", "0")
+               for line in got.stdout.splitlines()):
+        _reg("add", CRASH_DIALOG_KEY, "/v", "ShowCrashDialog", "/t", "REG_DWORD",
+             "/d", "0", "/f")
+
+
 def find_ci(d: Path, name: str) -> Path | None:
     """Case-insensitive lookup (the toolchain mixes CL.EXE / cl.exe case)."""
     if not d.is_dir():
@@ -147,7 +175,7 @@ def run(argv: list[str], *, cwd: Path | None = None,
     decide the verdict.
     """
     os.environ.setdefault("WINEDEBUG", "fixme-all,err-kerberos")
-    env = wine_env(env)
+    env = headless_env(env, quiet=False)
     ensure_wineserver()
     if timeout is None:
         timeout = float(os.environ.get("HOMM1_WINE_TIMEOUT", "300"))
@@ -187,7 +215,7 @@ def _reg(*args: str, capture: bool = False) -> subprocess.CompletedProcess:
     quiet = {} if capture else {"stdout": subprocess.DEVNULL,
                                 "stderr": subprocess.DEVNULL}
     return subprocess.run([require("wine"), "reg", *args], check=False,
-                          text=True, capture_output=capture, env=wine_env(),
+                          text=True, capture_output=capture, env=headless_env(),
                           **quiet)
 
 
@@ -224,6 +252,7 @@ def init_prefix(force: bool = False) -> None:
              "/d", f"{vc_bin};{cur_path}", "/f")
     _reg("add", _ENV_KEY, "/v", "INCLUDE", "/t", "REG_SZ", "/d", include, "/f")
     _reg("add", _ENV_KEY, "/v", "LIB", "/t", "REG_SZ", "/d", lib, "/f")
+    disable_crash_dialog()
 
 
 def verify_prefix() -> None:

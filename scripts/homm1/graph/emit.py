@@ -130,6 +130,14 @@ LINK_MODS = _mods("graph/link.py", "graph/implib.py", "delink/implib.py", "tool/
     "config/heroes.def", "config/retail/function_referents.tsv",
     "config/retail/import_libraries.tsv", "config/retail/import_symbols.json"]
 VERIFY_MODS = _mods("verify/", "model.py", "core/tsv.py", "core/paths.py")
+#: the behaviour gate's tests, contracts program and snapshots, and the
+#: tooling that builds and runs it (the game objects reach the check edge
+#: through the candidate image).
+BEHAVIOUR_INPUTS = sorted(
+    str(q.relative_to(REPO)) for q in (REPO / SCRIPTS / "verify/behaviour").glob("*")
+    if q.is_file() and q.suffix in (".py", ".cpp", ".expected")
+) + _mods("graph/link.py", "graph/implib.py", "graph/play.py", "tool/link.py", "tool/wine.py",
+          "tool/cl.py", "manifest.py")
 #: committed inputs of the default-tier verify gates (fast+normal): the MAX
 #: ledger and every gate's own baseline/allowlist. Named so a bless re-runs
 #: the check edge.
@@ -758,7 +766,8 @@ def emit(out: Path | None = None) -> tuple[int, int]:
                 inputs=[G.REPORT_JSON, FINGERPRINTS],
                 # the fast tier's localization gate reads the catalogs
                 implicit=[MANIFEST, G.CANDIDATE_EXE, *image_candidates,
-                          *VERIFY_BASELINES, *VERIFY_MODS, *LOCALIZATION_MODS])
+                          *VERIFY_BASELINES, *VERIFY_MODS, *LOCALIZATION_MODS,
+                          *BEHAVIOUR_INPUTS])
         w.newline()
 
         image_outputs = []

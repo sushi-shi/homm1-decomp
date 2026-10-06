@@ -1,0 +1,154 @@
+creature  0: cost [0,0,0,0,0,0,20] fight 18 growth 12 hp 1 speed 1 att 1 def 1 dmg 1-1 shots 0 missile 0 pow 5 attr 0x00
+creature  1: cost [0,0,0,0,0,0,150] fight 256 growth 8 hp 10 speed 1 att 5 def 3 dmg 2-3 shots 12 missile 3 pow 5 attr 0x04
+creature  2: cost [0,0,0,0,0,0,200] fight 399 growth 5 hp 15 speed 2 att 5 def 9 dmg 3-4 shots 0 missile 0 pow 6 attr 0x00
+creature  3: cost [0,0,0,0,0,0,250] fight 768 growth 4 hp 25 speed 2 att 7 def 9 dmg 4-6 shots 0 missile 0 pow 3 attr 0x00
+creature  4: cost [0,0,0,0,0,0,300] fight 1274 growth 3 hp 30 speed 3 att 10 def 9 dmg 5-10 shots 0 missile 0 pow 6 attr 0x01
+creature  5: cost [0,0,0,0,0,0,600] fight 4014 growth 2 hp 50 speed 3 att 11 def 12 dmg 10-20 shots 0 missile 0 pow 3 attr 0x00
+creature  6: cost [0,0,0,0,0,0,40] fight 57 growth 10 hp 3 speed 2 att 3 def 1 dmg 1-2 shots 0 missile 0 pow 2 attr 0x00
+creature  7: cost [0,0,0,0,0,0,140] fight 241 growth 8 hp 10 speed 1 att 3 def 4 dmg 2-3 shots 8 missile 2 pow 3 attr 0x04
+creature  8: cost [0,0,0,0,0,0,200] fight 482 growth 5 hp 20 speed 3 att 6 def 2 dmg 3-5 shots 0 missile 0 pow 4 attr 0x01
+creature  9: cost [0,0,0,0,0,0,300] fight 902 growth 4 hp 40 speed 1 att 9 def 5 dmg 4-6 shots 0 missile 0 pow 2 attr 0x00
+creature 10: cost [0,0,0,0,0,0,600] fight 2627 growth 3 hp 40 speed 2 att 10 def 5 dmg 5-7 shots 8 missile 5 pow 2 attr 0x04
+creature 11: cost [0,0,0,0,1,0,750] fight 5721 growth 2 hp 80 speed 2 att 12 def 9 dmg 12-24 shots 0 missile 0 pow 7 attr 0x08
+creature 12: cost [0,0,0,0,0,0,50] fight 74 growth 8 hp 2 speed 2 att 4 def 2 dmg 1-2 shots 0 missile 0 pow 8 attr 0x02
+creature 13: cost [0,0,0,0,0,0,200] fight 380 growth 6 hp 20 speed 1 att 6 def 5 dmg 2-4 shots 0 missile 0 pow 3 attr 0x00
+creature 14: cost [0,0,0,0,0,0,250] fight 567 growth 4 hp 15 speed 2 att 4 def 3 dmg 2-3 shots 24 missile 5 pow 5 attr 0x04
+creature 15: cost [0,0,0,0,0,0,350] fight 1019 growth 3 hp 25 speed 3 att 7 def 5 dmg 5-8 shots 8 missile 5 pow 9 attr 0x04
+creature 16: cost [0,0,0,0,0,0,500] fight 1866 growth 2 hp 40 speed 2 att 10 def 9 dmg 7-14 shots 0 missile 0 pow 10 attr 0x01
+creature 17: cost [0,1,0,0,0,0,1500] fight 11177 growth 1 hp 100 speed 3 att 12 def 10 dmg 20-40 shots 0 missile 0 pow 11 attr 0x0b
+creature 18: cost [0,0,0,0,0,0,60] fight 94 growth 8 hp 5 speed 2 att 3 def 1 dmg 1-2 shots 8 missile 1 pow 5 attr 0x05
+creature 19: cost [0,0,0,0,0,0,200] fight 379 growth 6 hp 15 speed 3 att 4 def 7 dmg 2-3 shots 0 missile 0 pow 12 attr 0x02
+creature 20: cost [0,0,0,0,0,0,300] fight 739 growth 4 hp 25 speed 2 att 6 def 6 dmg 3-5 shots 0 missile 0 pow 4 attr 0x03
+creature 21: cost [0,0,0,0,0,0,400] fight 1248 growth 3 hp 35 speed 2 att 9 def 8 dmg 5-10 shots 0 missile 0 pow 2 attr 0x00
+creature 22: cost [0,0,0,0,0,0,800] fight 3142 growth 2 hp 75 speed 1 att 8 def 9 dmg 6-12 shots 0 missile 0 pow 4 attr 0x01
+creature 23: cost [0,0,0,1,0,0,3000] fight 45258 growth 1 hp 200 speed 2 att 12 def 12 dmg 25-50 shots 0 missile 0 pow 13 attr 0x0b
+creature 24: cost [0,0,0,0,0,0,50] fight 112 growth 12 hp 4 speed 3 att 6 def 1 dmg 1-2 shots 0 missile 0 pow 5 attr 0x00
+creature 25: cost [0,0,0,0,0,0,200] fight 544 growth 4 hp 20 speed 3 att 7 def 6 dmg 2-5 shots 0 missile 0 pow 3 attr 0x01
+creature 26: cost [0,0,0,0,0,0,250] fight 1263 growth 3 hp 20 speed 2 att 8 def 7 dmg 4-6 shots 0 missile 0 pow 14 attr 0x02
+creature 27: cost [0,0,0,0,0,1,650] fight 3831 growth 2 hp 50 speed 3 att 10 def 9 dmg 20-30 shots 0 missile 0 pow 15 attr 0x02
+creature table digest ddf3bf21
+mage guild level 1: cost [5,0,5,0,0,0,2000] value 4000 spells 3
+mage guild level 2: cost [5,4,5,4,4,4,1000] value 6500 spells 5
+mage guild level 3: cost [5,6,5,6,6,6,1000] value 8500 spells 7
+mage guild level 4: cost [5,10,5,10,10,10,1000] value 10500 spells 9
+building 1: cost [5,0,0,0,0,0,750] value 1500
+building 2: cost [5,0,0,0,0,0,500] value 500
+building 3: cost [20,0,0,0,0,0,2000] value 2000
+building 4: cost [0,0,0,0,0,0,500] value 3000
+building 5: cost [5,0,5,0,0,0,2000] value 0
+building 6: cost [20,0,20,0,0,0,5000] value 12000
+town 0 dwelling 0: creature 0 requires 0x0000 cost [0,0,0,0,0,0,200] value 858
+town 0 dwelling 1: creature 1 requires 0x0080 cost [0,0,0,0,0,0,1000] value 2225
+town 0 dwelling 2: creature 2 requires 0x0090 cost [0,0,5,0,0,0,1000] value 2816
+town 0 dwelling 3: creature 3 requires 0x0084 cost [10,0,10,0,0,0,2000] value 7385
+town 0 dwelling 4: creature 4 requires 0x0600 cost [20,0,0,0,0,0,3000] value 13754
+town 0 dwelling 5: creature 5 requires 0x0600 cost [20,0,0,0,20,0,5000] value 29785
+town 1 dwelling 0: creature 12 requires 0x0000 cost [5,0,0,0,0,0,500] value 1684
+town 1 dwelling 1: creature 13 requires 0x0084 cost [5,0,0,0,0,0,1000] value 2256
+town 1 dwelling 2: creature 14 requires 0x0080 cost [0,0,0,0,0,0,1500] value 3736
+town 1 dwelling 3: creature 15 requires 0x0201 cost [0,10,10,0,0,0,2500] value 7213
+town 1 dwelling 4: creature 16 requires 0x0400 cost [10,0,0,0,0,10,3000] value 15181
+town 1 dwelling 5: creature 17 requires 0x0800 cost [0,20,30,0,0,0,10000] value 27684
+town 2 dwelling 0: creature 6 requires 0x0000 cost [0,0,0,0,0,0,300] value 1802
+town 2 dwelling 1: creature 7 requires 0x0080 cost [5,0,0,0,0,0,800] value 2615
+town 2 dwelling 2: creature 8 requires 0x0080 cost [0,0,0,0,0,0,1000] value 3414
+town 2 dwelling 3: creature 9 requires 0x0080 cost [10,0,10,0,0,0,2000] value 6967
+town 2 dwelling 4: creature 10 requires 0x0400 cost [0,0,20,0,0,0,4000] value 12212
+town 2 dwelling 5: creature 11 requires 0x0800 cost [0,0,20,0,20,0,6000] value 38141
+town 3 dwelling 0: creature 18 requires 0x0000 cost [0,0,0,0,0,0,500] value 1956
+town 3 dwelling 1: creature 19 requires 0x0080 cost [0,0,10,0,0,0,1000] value 2607
+town 3 dwelling 2: creature 20 requires 0x0080 cost [0,0,0,0,0,0,2000] value 3869
+town 3 dwelling 3: creature 21 requires 0x0100 cost [0,0,0,0,0,10,3000] value 7510
+town 3 dwelling 4: creature 22 requires 0x0200 cost [0,0,0,10,0,0,4000] value 16002
+town 3 dwelling 5: creature 23 requires 0x0c00 cost [0,0,30,20,0,0,15000] value 111967
+town 0: hero class 0 theme 3
+town 1: hero class 2 theme 0
+town 2: hero class 1 theme 2
+town 3: hero class 3 theme 1
+crest 0: town 3 hero class 3
+crest 1: town 2 hero class 1
+crest 2: town 0 hero class 0
+crest 3: town 1 hero class 2
+starting resources difficulty 0: [30,10,30,10,10,10,10000]
+starting resources difficulty 1: [20,5,20,5,5,5,7500]
+starting resources difficulty 2: [10,0,10,0,0,0,5000]
+starting resources difficulty 3: [0,0,0,0,0,0,0]
+mine income: [2,1,2,1,1,1,1000]
+resource base value: [250,250,200,250,250,250,1]
+hero gold cost 2500, town vision 5
+class 0: min exp 0 1000 2000 3200 4500 6000 7700 9000 11000 13200 15500 18500; skill rows 20/60/10/10 60/20/10/10 20/60/10/10 25/25/25/25 20/60/10/10 60/20/10/10 20/60/10/10 20/60/10/10 25/25/25/25
+class 1: min exp 0 1000 2000 3200 4500 6000 7700 9000 11000 13200 15500 18500; skill rows 70/20/5/5 20/70/5/5 70/20/5/5 40/40/10/10 70/20/5/5 20/70/5/5 70/20/5/5 70/20/5/5 40/40/10/10
+class 2: min exp 0 1000 2000 3200 4500 6000 7700 9000 11000 13200 15500 18500; skill rows 5/5/20/70 5/5/70/20 5/5/20/70 10/10/40/40 10/10/30/50 10/10/50/30 10/10/30/50 10/10/30/50 20/20/30/30
+class 3: min exp 0 1000 2000 3200 4500 6000 7700 9000 11000 13200 15500 18500; skill rows 5/5/70/20 5/5/20/70 5/5/70/20 10/10/40/40 10/10/50/30 10/10/30/50 10/10/50/30 10/10/50/30 20/20/30/30
+class navigation: 1.00 1.00 2.00 1.00 1.00 1.30 1.00 1.00; scout radius: 4 4 4 6 4 0 0 0
+spell AI value/flags: 500/3 350/3 300/2 400/2 550/3 900/2 400/2 500/2 300/2 350/2 250/2 0/2 100/2 150/2 1000/2 2000/3 1700/3 700/3 700/2 0/4 0/4 0/4 0/4 0/4 0/4 0/4 0/4 1200/4 0/4
+mage guild pool level 1: 9 13 6 8 10 20 19 8
+mage guild pool level 2: 1 5 3 7 11 21 26 12
+mage guild pool level 3: 0 18 14 16 22 25 23 2
+mage guild pool level 4: 27 4 15 17 28 24 28 27
+spell cast count weight: 0.000 1.000 1.700 2.200 2.600 2.950 3.270 3.560 3.810 4.040 4.250 4.450 4.640 4.830 5.010 5.190 5.360 5.530 5.680 5.820 5.960
+artifact base value: 9000 22000 18000 14000 6000 4000 4000 5600 1200 1200 1200 1200 -1200 2000 1800 1800 2000 1000 3600 5600 4000 5040 2700 3900 4950 5850 7000 6000 4000 4500 2250 1200 1200 1200 1200 3500 1500; ultimate average 16200
+battle stat curve: 0.200 0.200 0.200 0.200 0.200 0.210 0.230 0.250 0.280 0.310 0.350 0.390 0.430 0.480 0.530 0.590 0.660 0.730 0.810 0.900 1.000 1.100 1.210 1.330 1.460 1.610 1.770 1.950 2.140 2.360 2.590 2.850 3.140 3.450 3.800 4.180 4.590 5.000 5.000 5.000 5.000
+fight stat power curve: 0.630 0.630 0.630 0.630 0.630 0.630 0.640 0.650 0.670 0.680 0.700 0.720 0.740 0.760 0.780 0.810 0.840 0.870 0.910 0.950 1.000 1.050 1.100 1.150 1.220 1.280 1.360 1.440 1.530 1.630 1.740 1.860 1.990 2.140 2.300 2.480 2.670 2.860 2.860 2.860 2.860
+terrain 0: step 4/6 table 4/6; class 0 4/6 4/6 4/4 4/6 4/6 4/6 4/6 class 1 4/6 4/6 4/4 4/6 4/6 4/6 4/6
+terrain 1: step 4/6 table 4/6; class 0 4/6 4/6 4/4 4/6 4/6 4/6 4/6 class 1 4/6 4/6 4/4 4/6 4/6 4/6 4/6
+terrain 2: step 6/9 table 6/9; class 0 6/9 6/9 6/9 6/6 6/6 6/9 6/9 class 1 4/6 4/6 4/4 4/6 4/6 4/6 4/6
+terrain 3: step 6/9 table 6/9; class 0 6/9 6/9 6/9 6/6 6/6 6/9 6/9 class 1 4/6 4/6 4/4 4/6 4/6 4/6 4/6
+terrain 4: step 4/6 table 4/6; class 0 4/6 4/6 4/4 4/6 4/6 4/6 4/6 class 1 4/6 4/6 4/4 4/6 4/6 4/6 4/6
+terrain 5: step 8/12 table 8/12; class 0 8/12 8/12 8/12 8/12 8/8 8/8 8/12 class 1 4/6 4/6 4/4 4/6 4/6 4/6 4/6
+terrain 6: step 4/6 table 4/6; class 0 4/6 4/6 4/4 4/6 4/6 4/6 4/6 class 1 4/6 4/6 4/4 4/6 4/6 4/6 4/6
+class 0 experience by level: 0 1000 2000 3200 4500 6000 7700 9000 11000 13200 15500 18500 22100 26420 31604 37824 45288 54244 64991 77887; level of 0=1 999=1 1000=2 5000=5 20000=12 100000=21 1000000=34
+class 1 experience by level: 0 1000 2000 3200 4500 6000 7700 9000 11000 13200 15500 18500 22100 26420 31604 37824 45288 54244 64991 77887; level of 0=1 999=1 1000=2 5000=5 20000=12 100000=21 1000000=34
+class 2 experience by level: 0 1000 2000 3200 4500 6000 7700 9000 11000 13200 15500 18500 22100 26420 31604 37824 45288 54244 64991 77887; level of 0=1 999=1 1000=2 5000=5 20000=12 100000=21 1000000=34
+class 3 experience by level: 0 1000 2000 3200 4500 6000 7700 9000 11000 13200 15500 18500 22100 26420 31604 37824 45288 54244 64991 77887; level of 0=1 999=1 1000=2 5000=5 20000=12 100000=21 1000000=34
+mobility: peasants 40, swordsmen 50, cavalry 60, phoenix 60, nomad boots 64, traveler boots 52, true compass 60, knight at sea 60, sorceress at sea 120, sea with lighthouse 80, sea with astrolabe 240, average computer 40, smart computer 43
+luck: -4+0=-3 -4+1=-3 -4+2=-2 -4+3=-1 -4+4=0 -2+0=-2 -2+1=-1 -2+2=0 -2+3=1 -2+4=2 0+0=0 0+1=1 0+2=2 0+3=3 0+4=3 2+0=2 2+1=3 2+2=3 2+3=3 2+4=3; no hero 0
+morale: one race no hero 1/1, two races 0/0, three races -1/-1, four races -2/-2, five races -3/-3, knight one race 1/2, medals 0/2, fizbin 0/-2, hero morale -2 tavern -1/-2, clamped high 1/3, clamped low -3/-3
+luck rolls from seed 1: 6 5 6 11 2 10 10 2 10 3 7 6 9 11 7 2 2 1 12 5 3 1 7 9
+morale rolls from seed 1: 18 18 20 16 11 19 12 12 10 12 13 20 21 9 16 16 15 6 23 14 16 15 8 10
+seeded rolls from seed 4242: 15 4 86 18 49 24 99 5 46 39 43 8 65 92 32 4
+seed after them 2896
+Random(0, 99) after srand(1): 41 67 34 0 69 24 78 58 62 64 5 45 81 27 61 91
+attack 10 swordsmen on 20 orcs: damage 64 killed 6 left 14 hp lost 4 luck after 0
+attack same, seed 99: damage 68 killed 6 left 14 hp lost 8 luck after 0
+attack minimum roll: damage 53 killed 5 left 15 hp lost 3 luck after 0
+attack maximum roll: damage 80 killed 8 left 12 hp lost 0 luck after 0
+attack halved: damage 32 killed 3 left 17 hp lost 2 luck after 0
+attack good luck: damage 160 killed 16 left 4 hp lost 0 luck after 0
+attack bad luck: damage 40 killed 4 left 16 hp lost 0 luck after 0
+attack hero attack 5: damage 128 killed 12 left 8 hp lost 8 luck after 0
+attack castle wall defense: damage 54 killed 5 left 15 hp lost 4 luck after 0
+attack archers shooting: damage 53 killed 53 left 47 hp lost 0 luck after 0
+attack archers in melee: damage 26 killed 26 left 74 hp lost 0 luck after 0
+attack peasants on a dragon: damage 16 killed 0 left 1 hp lost 16 luck after 0
+attack dragons on peasants: damage 274 killed 200 left 0 hp lost 0 luck after 0
+attack one peasant on a dragon: damage 1 killed 0 left 1 hp lost 1 luck after 0
+genie halves the cavalry on 19 of seeds 1..100, first 8
+attack genie on cavalry, no special: damage 52 killed 1 left 29 hp lost 22 luck after 0
+attack genie on cavalry, special: damage 450 killed 15 left 15 hp lost 0 luck after 0
+fight value knights: raw 26844 adjusted 31033 with warrior 48708
+fight value goblins: raw 20818 adjusted 32448 with mage 35951
+fight value dragons: raw 92736 adjusted 80637; garrison in castle 3: 15345
+experience value: knights 830, knights with hero 1330, goblins 940; stack strength 7662
+outcome knights vs neutral goblins: win 0.4694 loss 14243/9771 expected 20929/14956 value -14417
+outcome warrior vs neutral goblins: win 0.7534 loss 6618/15685 expected 11604/19552 value -8264
+outcome genius warrior vs neutral goblins: win 0.8628 loss 3683/17961 expected 6861/20425 value -4543
+outcome warrior vs human mage: win 0.6165 loss 10294/12834 expected 16640/17756 value 37268
+outcome dumb warrior vs human mage: win 0.8306 loss 4547/17291 expected 8324/20220 value 51138
+outcome warrior vs computer mage: win 0.6974 loss 8121/14519 expected 13785/18912 value 11333
+outcome warrior vs mage in castle: win 0.9299 loss 1881/9275 expected 3630/9925 value 9524
+outcome goblins vs dragons: win 0.0000 loss 20818/0 expected 20818/0 value -14341
+town 0 can build: 0000001000000 1111101100000 1111101110100
+town 1 can build: 0000001000000 1111101100000 1111101111000
+town 2 can build: 0000001000000 1111101100000 1111101111100
+town 3 can build: 0000001000000 1111101100000 1111101111100
+town built today can build a tavern: 0
+path town from 4,12: length 28 cost 156 target 32,12 steps 2233233322223333321111111111
+path town from 40,40: length 28 cost 128 target 32,12 steps 0000000000000000000077777777
+path town from 4,12 within 60: length 0 cost -1 target -1,-1 steps 
+path mine from 4,12: length 48 cost 194 target 5,60 steps 444444444444444444444444444444444444444444444443
+path town from the lake shore 23,9: length 14 cost 64 target 32,12 steps 44444322222111
+quick distance: 10 15 21
+save record FIXTURE.GM2: 77663 bytes digest 0a39bf1b, current player 1 watch 1, reload and resave identical
+map record: cells read sounds read artifacts read; towns 10,20 type 0 buildings 0x0020 15,21 type 1 buildings 0x0040 20,22 type 2 buildings 0x2020 25,23 type 3 buildings 0x0040 30,24 type 0 buildings 0x0020 35,25 type 1 buildings 0x0040; mines 50,5 type 0 51,8 type 1 52,11 type 2 53,14 type 3; extras 3 sizes 16 24
+map fixture: towns 6 castles 3 mines 4 obelisks 4 extras 2 state 865a4977

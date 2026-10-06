@@ -23,6 +23,11 @@ output is replaced only when it carries the generator's marker.
 `source-buka-2003` is the base for later branches (a cross-platform port and
 `source-te`). Change the source on `decomp-buka-2003`, then regenerate.
 
+The trees carry their own build, not this branch's tooling. The
+game-behaviour gate (`homm1 verify behaviour`,
+[workflow](workflow.md#game-behaviour-gate)) and its contracts program stay on
+this branch: they check the reconstruction before it is exported.
+
 ## What is removed
 
 | Construct | Becomes |
