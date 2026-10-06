@@ -42,18 +42,19 @@ DATA(0x004cccb0)
 i32 gSpellAITargetSide;
 
 // Heroes memorize spells with charges.
+#define bestHex bestHexWork // frame-slot spelling
 VA(0x00458de0, 0x196)
 i32 combatManager::DoSpellAI(i8 side) {
     i32 chosenSpell;
     i32 bestValue;
     i32 effect;
     i32 slot;
-    i32 bestHexWork;
+    i32 bestHex;
     i32 hex;
 
     bestValue = 0;
     chosenSpell = SPELL_NONE;
-    bestHexWork = -1;
+    bestHex = -1;
     if (m_heroes[side] == NULL)
         return 0;
     if (m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] == HERO_SPELL_POWER_ONE)
@@ -71,32 +72,34 @@ i32 combatManager::DoSpellAI(i8 side) {
             if (effect > bestValue) {
                 bestValue = effect;
                 chosenSpell = m_heroes[side]->m_spells[slot];
-                bestHexWork = hex;
+                bestHex = hex;
             }
         }
     }
     if (bestValue > 0) {
         gNextAction = ACTION_CAST_SPELL;
         gNextActionExtra = chosenSpell;
-        gNextActionGridIndex = bestHexWork;
+        gNextActionGridIndex = bestHex;
         return 1;
     }
     return 0;
 }
+#undef bestHex
 
 // HoMM1's nineteen combat spells: each spell is scored once, across the area
 // grid, or over one side's stacks.
+#define done bDone // frame-slot spelling
 VA(0x00458f76, 0x42d)
 void combatManager::DetermineEffectOfSpell(i32 spell, i32* bestEffect, i32* bestHex) {
     i32 side;
     i32 firstDurMax;
-    i32 bDone;
+    i32 done;
     i32 effect;
     army* targetCreature;
     i32 spellMode;
     i32 hex;
 
-    bDone = 0;
+    done = 0;
     side = COMBAT_DEFENDER_SIDE;
     hex = COMBAT_SPELL_AI_HEX_FIRST;
     effect = 0;
@@ -137,8 +140,8 @@ void combatManager::DetermineEffectOfSpell(i32 spell, i32* bestEffect, i32* best
             return;
     }
     if (spellMode == SPELL_AI_FRIENDLY || spellMode == SPELL_AI_ENEMY)
-        bDone = FirstArmy(COMBAT_SPELL_AI_HEX_FIRST, side, &hex);
-    while (!bDone) {
+        done = FirstArmy(COMBAT_SPELL_AI_HEX_FIRST, side, &hex);
+    while (!done) {
         if (m_hexCells[hex].m_occupantIndex >= 0) {
             targetCreature =
                 &m_armies[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex];
@@ -211,20 +214,21 @@ void combatManager::DetermineEffectOfSpell(i32 spell, i32* bestEffect, i32* best
         }
         switch (spellMode) {
             case SPELL_AI_GLOBAL:
-                bDone = 1;
+                done = 1;
                 break;
             case SPELL_AI_FRIENDLY:
             case SPELL_AI_ENEMY:
-                bDone = FirstArmy(hex + 1, side, &hex);
+                done = FirstArmy(hex + 1, side, &hex);
                 break;
             case SPELL_AI_AREA:
                 NextPos(&hex);
                 if (hex > COMBAT_SPELL_AI_HEX_LAST)
-                    bDone = 1;
+                    done = 1;
                 break;
         }
     }
 }
+#undef done
 
 // A spell's value as a share of the stack's fight value.
 VA(0x004593a3, 0x246)

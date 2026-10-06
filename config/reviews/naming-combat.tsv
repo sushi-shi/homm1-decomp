@@ -78,15 +78,15 @@ member	hexcell	m_obstacleType	m_obstacleIcon	stores a CombatIconSlot (COMBAT_ICO
 enum	HexcellConstant	HEXCELL_OCCUPANT_FRAME_NONE	HEXCELL_FOOTPRINT_HALF_NONE	sentinel of m_occupantFootprintHalf for one-hex stacks
 static	SPELLAI file static (0x0048a6ec)	SPELL_AI_STONESKIN_MODIFIER	SPELL_AI_PROTECTION_MODIFIER	only reader is RawEffectSpellInfluence SPELL_PROTECTION; the game has no stoneskin spell
 static	SPELLAI file static (0x0048a6f0)	SPELL_AI_SHIELD_MODIFIER	SPELL_AI_ANTI_MAGIC_MODIFIER	only reader is RawEffectSpellInfluence SPELL_ANTI_MAGIC; the game has no shield spell
-kept	hexcell::DrawTower	level	level	it is the castle mirror flag
-kept	combatManager::DetermineEffectOfSpell	bDone	bDone	no bucket-3..4 'done' spelling reads well (done=7)
-kept	combatManager::DoSpellAI	bestHexWork	bestHexWork	bestHex is the out-param name elsewhere; no fit for bestTargetHex
-kept	combatManager::Fireball	xPos,hit	xPos,hit	x / anyAffected do not fit slots [0-1]/[0-0]
-kept	combatManager::MeteorShower	hit,rockIcon	hit,rockIcon	anyAffected/meteorIcon do not fit [0-1]
-kept	combatManager::CastSpell	targetCreature,armySide,occupantIndex,teleported	targetCreature,armySide,occupantIndex,teleported	acceptable; target/targetSide/targetIndex/teleportArmy do not fit
-kept	combatManager::Armageddon	dmg	dmg	damage (bucket 8) does not fit [3-6]
-kept	army::FlyTo	colFrom,curRow,headOccupant,tailSlot,k,y1,y2	colFrom,curRow,headOccupant,tailSlot,k,y1,y2	sourceColumn/sourceRow/frontCell/rearCell/step/launchY/landPosY do not fit the [3-4]/[4-4]/[11-12]/[10-11]/[11]/[12]/[13] slots; names are understandable
-kept	army::ValidFlight	n,heldTemp,k,m	n,heldTemp,k,m	n is a direction loop index (direction=7, dir=13 do not fit [14-15]); heldTemp/k/m are dead
+aliased	hexcell::DrawTower	level	mirrored	it is the castle mirror flag; readable name aliased over the frame-slot spelling
+aliased	combatManager::DetermineEffectOfSpell	bDone	done	no bucket-3..4 'done' spelling reads well (done=7); readable name aliased over the frame-slot spelling
+aliased	combatManager::DoSpellAI	bestHexWork	bestHex	bestHex is the out-param name elsewhere; no fit for bestTargetHex; readable name aliased over the frame-slot spelling
+aliased	combatManager::Fireball	xPos,hit	x,anyAffected	x / anyAffected do not fit slots [0-1]/[0-0]; readable name aliased over the frame-slot spelling
+aliased	combatManager::MeteorShower	hit,rockIcon	anyAffected,meteorIcon	anyAffected/meteorIcon do not fit [0-1]; readable name aliased over the frame-slot spelling
+aliased	combatManager::CastSpell	targetCreature,armySide,occupantIndex,teleported	target,targetSide,targetIndex,teleportArmy	acceptable; target/targetSide/targetIndex/teleportArmy do not fit; readable name aliased over the frame-slot spelling
+aliased	combatManager::Armageddon	dmg	damage	damage (bucket 8) does not fit [3-6]; readable name aliased over the frame-slot spelling
+aliased	army::FlyTo	colFrom,curRow,headOccupant,tailSlot,k,y1,y2	sourceColumn,sourceRow,frontCell,rearCell,step,launchY,landPosY	sourceColumn/sourceRow/frontCell/rearCell/step/launchY/landPosY do not fit the [3-4]/[4-4]/[11-12]/[10-11]/[11]/[12]/[13] slots; names are understandable; readable name aliased over the frame-slot spelling
+aliased	army::ValidFlight	n,heldTemp,k,m	direction,unusedHex,unusedStep,unusedIndex	n is a direction loop index (direction=7, dir=13 do not fit [14-15]); heldTemp/k/m are dead; readable name aliased over the frame-slot spelling
 static	SPELLAI file statics	SPELL_AI_PARALYZE_MODIFIER/SPELL_AI_BERSERK_MODIFIER	SPELL_AI_BERSERK_MODIFIER/SPELL_AI_PARALYZE_MODIFIER	RawEffectSpellInfluence reads 0x0048a6dc for SPELL_BERZERKER and 0x0048a6e0 for SPELL_PARALYZE
 param	army::Init	type	creatureType	LoadArmies passes armyGroup m_creatureTypes; stored in m_creatureType
 param	army::WalkTo(i16)	destHex	destination	same concept as FlyTo/ValidFlight(destination)
@@ -151,18 +151,18 @@ local	army::MoveAttack	meleeMask	baseAttackMask	GetAttackMask(ASSIGNED)
 local	army::MoveAttack	atkMaskNum	enemyAttackMask	GetAttackMask(ENEMY/OCCUPIED)
 local	army::MoveAttack	baseHexVal	attackFromHex	hex the direction is measured from (front or rear half)
 enum	ArmyMessageConstant	TARGET_NAME_SIZE	ARMY_TARGET_NAME_SIZE	unprefixed; ARMY_ prefix like the other army.h constants
-kept	army::Walk	tempCell	tempCell	Walk: accurate enough (temporary hexcell); hexcell decl cannot move (ctor timing)
-kept	army::Walk	moveDist	moveDist	Walk: dead local (=16), no fitting name worth the churn
-kept	army::SpecialAttack	y1/y2	y1/y2	launch/land Y pair; launchY/landPosY don't fit buckets 12/13
-kept	army::SpecialAttack	srcCol/aimRow/targetCol/hitRow	srcCol/aimRow/targetCol/hitRow	inner block: no fitting archerColumn/wallRow set; names readable
-kept	army::DamageEnemy	hurt	hurt	genie halving damage; slot needs bucket 15, no genie*/half* name fits
-kept	army::MoveAttack	cellItem	cellItem	adjacentCell(4) out of [7-8]; no clean fit
+aliased	army::Walk	tempCell	occupantCell	Walk: accurate enough (temporary hexcell); hexcell decl cannot move (ctor timing); readable name aliased over the frame-slot spelling
+aliased	army::Walk	moveDist	unusedDistance	Walk: dead local (=16), no fitting name worth the churn; readable name aliased over the frame-slot spelling
+aliased	army::SpecialAttack	y1/y2	launchY/landPosY	launch/land Y pair; launchY/landPosY don't fit buckets 12/13; readable name aliased over the frame-slot spelling
+aliased	army::SpecialAttack	srcCol/aimRow/targetCol/hitRow	archerColumn/defenderRow/defenderColumn/wallRow	inner block: no fitting archerColumn/wallRow set; names readable; readable name aliased over the frame-slot spelling
+aliased	army::DamageEnemy	hurt	genieDamage	genie halving damage; slot needs bucket 15, no genie*/half* name fits; readable name aliased over the frame-slot spelling
+aliased	army::MoveAttack	cellItem	adjacentCell	adjacentCell(4) out of [7-8]; no clean fit; readable name aliased over the frame-slot spelling
 local	army::Walk	col	boundMinX	left edge of the union redraw rectangle (giMinExtentX), not a column
 local	army::Walk	rectMaxX	boundMaxX	right edge of the union redraw rectangle
 local	army::Walk	ourMinY	boundTop	top edge of the union redraw rectangle
 local	army::Walk	ourMaxY	boundBottom	bottom edge of the union redraw rectangle
 local	combatManager::Close	survivor	monsterSide	side whose group count refills the wandering-monster cell (defender w/o player -> side 0)
-kept	combatManager::Close	ii	ii	used for side and slot loops; i/index/side do not fit slot range [0-6]
+aliased	combatManager::Close	ii	i	used for side and slot loops; i/index/side do not fit slot range [0-6]; readable name aliased over the frame-slot spelling
 local	combatManager::MoreTreesNear	posX	originX	copy of m_combatX, origin of the survey; reorder needed
 local	combatManager::MoreTreesNear	homeY	originY	copy of m_combatY, origin of the survey
 local	combatManager::MoreTreesNear	curNumMountains	mountainCount	count of mountain cells
@@ -170,20 +170,20 @@ local	combatManager::MoreTreesNear	numTrees	treeCount	count of tree cells
 local	combatManager::MoreTreesNear	tile	cell	mapCell* from GetCell
 local	combatManager::MoreTreesNear	lastTypeTable	nearbyTypeGrid	per ring/direction: 0 mountain, 1 tree, -1 none; nothing 'last' about it
 local	combatManager::MoreTreesNear	n	dir	MAP direction index into normalDirTable
-kept	combatManager::MoreTreesNear	pass	pass	ring radius; 'radius' conflicts with originY bucket order
+aliased	combatManager::MoreTreesNear	pass	radius	ring radius; 'radius' conflicts with originY bucket order; readable name aliased over the frame-slot spelling
 local	combatManager::CheckApplyGoodMorale	theGroup	group	the side's armyGroup; drop 'the' prefix
 local	combatManager::CheckApplyGoodMorale	activeArmyRef	currentArmy	&m_armies[side][index], the acting stack; same name as COMMAND/DRAWING
 local	combatManager::CheckApplyGoodMorale	moraleVal	moraleLevel	armyGroup::GetMorale result
-kept	combatManager::CheckApplyGoodMorale	sample	sample	only 'sample' fits slot range [0-11] among morale-sound names
+aliased	combatManager::CheckApplyGoodMorale	sample	moraleSound	only 'sample' fits slot range [0-11] among morale-sound names; readable name aliased over the frame-slot spelling
 local	combatManager::CheckApplyBadMorale	theGroup	group	the side's armyGroup; drop 'the' prefix
 local	combatManager::CheckApplyBadMorale	activeArmyRef	currentArmy	&m_armies[side][index], the acting stack; same name as COMMAND/DRAWING
 local	combatManager::CheckApplyBadMorale	moraleVal	moraleLevel	armyGroup::GetMorale result
-kept	combatManager::CheckApplyBadMorale	sample	sample	only 'sample' fits slot range [0-11] among morale-sound names
+aliased	combatManager::CheckApplyBadMorale	sample	moraleSound	only 'sample' fits slot range [0-11] among morale-sound names; readable name aliased over the frame-slot spelling
 local	combatManager::GetNextArmy	oldSpeed	speedLevelIndex	loop 0..4 over speed levels; pass 0 takes only high-morale stacks, later passes lower m_currentSpeed - not a saved speed
 local	combatManager::GetNextArmy	theArmy	checkArmy	the stack being tested for eligibility
 local	combatManager::GetNextArmy	counterValue	armyCounter	army index within stackSide; becomes m_currentArmyIndex
 local	combatManager::GetNextArmy	bSkip	skip	Hungarian b-prefix; skip flag
-kept	combatManager::GetNextArmy	temp	temp	unused dead local
+aliased	combatManager::GetNextArmy	temp	unused	unused dead local; readable name aliased over the frame-slot spelling
 local	combatManager::ExperienceValueOfStack	num	sideExperience	experience the side's losses (lost HP) plus a hero are worth
 local	combatManager::CatAttack	prevFrm	frameIndex	boulder spin frame 0..2 drawn each step, not a previous frame
 local	combatManager::CatAttack	dxVal	xDelta	x pixels the boulder moves per step
@@ -197,7 +197,7 @@ local	combatManager::CatAttack	activeForce	collapseChance	SRandom(0,150) (-15 fo
 local	combatManager::CatAttack	theLeft	anyStanding	set when any wall piece in the castle column still stands
 local	combatManager::CatAttack	nextCol	castleColumn	the wall column for the side (5 or 3); not a 'next' column
 local	combatManager::CatAttack	boulderRef	boulderIcon	icon* boulder.icn
-kept	combatManager::CatAttack	sampleInfo	sampleInfo	'sample' collides with the class name; other sound names miss slot range [0-1]
+aliased	combatManager::CatAttack	sampleInfo	catapultSound	'sample' collides with the class name; other sound names miss slot range [0-1]; readable name aliased over the frame-slot spelling
 local	combatManager::Main	thisArmy	currentArmy	&m_armies[m_currentSide][m_currentArmyIndex]; same name as the other combat handlers
 local	combatManager::SetCombatDirections	owner	enemySide	the current stack's m_targetSide, restored at the end; not an owner
 local	combatManager::SetCombatDirections	mainTarget	enemyArmy	&m_armies[enemySide][targetIndex], the stack being attacked
@@ -214,14 +214,14 @@ local	combatManager::CheckSetMouseDirection	alternate	alternateDirection	second-
 local	combatManager::CheckSetMouseDirection	curArmyRef	movingUnit	acting stack; currentArmy/actingArmy miss the slot range
 local	combatManager::CheckSetMouseDirection	targetObj	enemyArmy	the (unused) target stack
 local	combatManager::CheckSetMouseDirection	backHexVal	rearHex	rear hex of a wide attacker at the destination
-kept	combatManager::CheckSetMouseDirection	slot	slot	pointer sector 0..23; 'sector' misses bucket 4
+aliased	combatManager::CheckSetMouseDirection	slot	sector	pointer sector 0..23; 'sector' misses bucket 4; readable name aliased over the frame-slot spelling
 local	combatManager::ProcessCombatMsg	selectedHexVal	hoverGridIndex	GetGridIndex of the hovered pointer position
 local	combatManager::GetCommand	oldArmy	attackingStack	the current stack whose target is set; nothing 'old'
-kept	combatManager::GetCommand	indexNum	indexNum	occupant army index; targetIndex/occupantIndex miss bucket 15
+aliased	combatManager::GetCommand	indexNum	enemyIndex	occupant army index; targetIndex/occupantIndex miss bucket 15; readable name aliased over the frame-slot spelling
 local	combatManager::ShowDeadArmies	casualtyTypeStr	deadMonsters	i32 creature types of the lost stacks, not strings
 local	combatManager::ShowDeadArmies	theIconSpacing	iconDeltaX	x step between casualty icons
 local	combatManager::ShowDeadArmies	rowYVal	sectionPosY	y of the side's casualty heading/row
-kept	combatManager::ShowDeadArmies	team	team	side loop; side misses bucket range [4-5] under initializer-pinned order
+aliased	combatManager::ShowDeadArmies	team	side	side loop; side misses bucket range [4-5] under initializer-pinned order; readable name aliased over the frame-slot spelling
 local	combatManager::DoLoseWindow	party	losingParty	side whose loss is shown to the local human
 local	combatManager::DoLoseWindow	packet	msg	tag_message used for the text broadcast and the event loop, not a net packet
 local	combatManager::DoLoseWindow	newBmp	scrollBitmap	losecmbt.bmp, the scrolling backdrop
@@ -234,8 +234,8 @@ local	combatManager::DoLoseWindow	curWalkX	walkPosX	dead: walker x 0x6f
 local	combatManager::DoLoseWindow	curUnusedWalkY	walkY	dead: walker y 0x8a
 local	combatManager::DoLoseWindow	iAreaWidthVal	areaWidth	dead: blit width 0xdf; Hungarian i-prefix
 local	combatManager::DoLoseWindow	blitHeightVal	animHeight	dead: blit height 0x7d
-kept	combatManager::DoLoseWindow	nextWidth	nextWidth	dead 0x280 (backdrop width); bitmapWidth/screenWidth miss the slot range
-kept	combatManager::DoLoseWindow	walkFrameNum	walkFrameNum	walkFrame misses bucket 5
+aliased	combatManager::DoLoseWindow	nextWidth	screenWidth	dead 0x280 (backdrop width); bitmapWidth/screenWidth miss the slot range; readable name aliased over the frame-slot spelling
+aliased	combatManager::DoLoseWindow	walkFrameNum	walkFrame	walkFrame misses bucket 5; readable name aliased over the frame-slot spelling
 local	combatManager::DoSurrender	win	window	surrendr.bin heroWindow
 local	combatManager::DrawFrame	curCol	col	grid column of the stack / drawing loop column; Hungarian cur-prefix
 local	combatManager::DrawFrame	savedDrawn	anyLimited	set when any stack is marked in m_limitCreatureCount; nothing is saved or drawn
@@ -243,7 +243,7 @@ local	combatManager::DrawFrame	boxTopNum	armyTop	top of the stack's redraw box (
 local	combatManager::DrawFrame	boxBottomValue	armyBottom	bottom of the stack's redraw box
 local	combatManager::DrawFrame	theLeft	armyLeft	left of the stack's redraw box
 local	combatManager::DrawFrame	sideDeltaVal	rearDelta	column offset of a wide stack's second hex (-1 defender, +1 attacker)
-kept	combatManager::DrawFrame	selBoxRight	selBoxRight	right edge of the box; armyRight misses bucket range [2-3]
+aliased	combatManager::DrawFrame	selBoxRight	armyRight	right edge of the box; armyRight misses bucket range [2-3]; readable name aliased over the frame-slot spelling
 member	combatManager	m_sideDefeated	m_sideSurrendered	only ACTION_SURRENDER sets it (ProcessNextAction); IsWinner reads it as the other side surrendering
 member	combatManager	m_humanSide	m_humanPlayerSide	SetupCombat copies gbHumanPlayer[m_playerId[side]]
 member	combatManager	m_heroType	m_heroClass	SetupCombat copies hero::m_heroClass; DrawFrame uses it as the tent frame (class and class+8)
@@ -271,7 +271,7 @@ param	philAI::CheckBerserk	pHero	aiHero	DoAI passes the hero it is moving
 local	philAI::CheckBerserk	enemy	enemyStrength	enemy town/hero fight value
 local	philAI::CheckBerserk	theBest	strongest	strongest enemy fight value found
 local	philAI::CheckBerserk	val	ownFightValue	the moving hero's own fight value
-kept	philAI::CheckBerserk	theHero	theHero	enemy hero on the cell; no enemy-hero spelling fits bucket 14-15 after cell(14) with initialized decls (no reorder)
+aliased	philAI::CheckBerserk	theHero	enemyHero	enemy hero on the cell; no enemy-hero spelling fits bucket 14-15 after cell(14) with initialized decls (no reorder); readable name aliased over the frame-slot spelling
 param	philAI::DoDimensionDoor	pHero	aiHero	DoAI passes the hero it is moving
 local	philAI::DoDimensionDoor	x	cellX	walked path cell x
 local	philAI::DoDimensionDoor	y	cellY	walked path cell y
@@ -286,10 +286,10 @@ local	philAI::DoAI	origStep	stepQuota	steps allowed before re-targeting (5, 15 a
 local	philAI::DoAI	baseSteps	stepCount	steps taken this leg
 local	philAI::DoAI	code	exhaustedMobility	MoveHero outOfMobility out-param
 local	philAI::DoAI	moveInterrupt	nearMonster	MoveHero adjacentMonster out-param
-kept	philAI::DoAI	nextOldShowIt	nextOldShowIt	saved bShowIt; savedShowIt does not fit with the set
-kept	philAI::DoAI	newDummyValue	newDummyValue	dead slot
-kept	philAI::DoAI	flagsState	flagsState	dead slot
-kept	philAI::DoAI	tempArrayData	tempArrayData	dead slot
+aliased	philAI::DoAI	nextOldShowIt	savedShowIt	saved bShowIt; savedShowIt does not fit with the set; readable name aliased over the frame-slot spelling
+aliased	philAI::DoAI	newDummyValue	unusedValue	dead slot; readable name aliased over the frame-slot spelling
+aliased	philAI::DoAI	flagsState	unusedFlags	dead slot; readable name aliased over the frame-slot spelling
+aliased	philAI::DoAI	tempArrayData	unusedArray	dead slot; readable name aliased over the frame-slot spelling
 param	philAI::DetermineTargetPosition	pHero	aiHero	DoAI passes the hero it is moving
 local	philAI::DetermineTargetPosition	selCnt	rowCounter	per-row spacing counter
 local	philAI::DetermineTargetPosition	validFlag	good	cell worth scoring
@@ -301,17 +301,17 @@ local	philAI::DetermineTargetPosition	mainValue	posValue	RVOfPosition score of t
 local	philAI::DetermineTargetPosition	lastType	ground	terrain of the hero's cell
 local	philAI::DetermineTargetPosition	colPhase	colCounter	per-column spacing counter
 local	philAI::DetermineTargetPosition	theBestRV	maxRV	best position value so far
-kept	philAI::DetermineTargetPosition	thisCellRec	thisCellRec	scanned cell; cell/cellRec do not fit with the set
+aliased	philAI::DetermineTargetPosition	thisCellRec	cell	scanned cell; cell/cellRec do not fit with the set; readable name aliased over the frame-slot spelling
 local	philAI::GetTurnAIVars	oldX	nearX	map column within 10 of an enemy hero (was named old)
 local	philAI::GetTurnAIVars	entry	heroIndex	index into the other player's m_heroIds
 local	philAI::GetTurnAIVars	artTotal	artifactValueSum	sum of gArtifactBaseRV
 local	philAI::GetTurnAIVars	mineTotal	turnDistance	enemy-hero turn distance stored in gaiTurnValueOfMine
-kept	philAI::GetTurnAIVars	xPosVal	xPosVal	enemy hero x; no x/y name pair fits buckets 15/15
-kept	philAI::GetTurnAIVars	theYPos	theYPos	enemy hero y; same
-kept	philAI::GetTurnAIVars	basePlayer	basePlayer	other player's playerData; no fitting name in bucket 0
-kept	philAI::GetTurnAIVars	indexNum	indexNum	player index; no fitting name in 14-15
-kept	philAI::GetTurnAIVars	townPtr	townPtr	bucket 0-1 range, townPointer=12
-kept	philAI::GetTurnAIVars	fightVal	fightVal	float fight value; no fit
+aliased	philAI::GetTurnAIVars	xPosVal	heroX	enemy hero x; no x/y name pair fits buckets 15/15; readable name aliased over the frame-slot spelling
+aliased	philAI::GetTurnAIVars	theYPos	heroY	enemy hero y; same; readable name aliased over the frame-slot spelling
+aliased	philAI::GetTurnAIVars	basePlayer	enemyPlayer	other player's playerData; no fitting name in bucket 0; readable name aliased over the frame-slot spelling
+aliased	philAI::GetTurnAIVars	indexNum	playerIndex	player index; no fitting name in 14-15; readable name aliased over the frame-slot spelling
+aliased	philAI::GetTurnAIVars	townPtr	townPointer	bucket 0-1 range, townPointer=12; readable name aliased over the frame-slot spelling
+aliased	philAI::GetTurnAIVars	fightVal	fightValue	float fight value; no fit; readable name aliased over the frame-slot spelling
 param	philAI::GetBestBHC	(unnamed i32)	player	CheckBuyStuff passes giCurPlayer; unused
 local	philAI::GetBestBHC	total	totalStrength	sum of town fight values
 local	philAI::GetBestBHC	ideal	idealStrength	per-town target strength
@@ -329,9 +329,9 @@ local	philAI::ProbableOutcomeOfBattle	curFactorValue	lossWeight	attention-weight
 local	philAI::ProbableOutcomeOfBattle	power	powCurve	exponent of the strength ratio (2.75 / 2.0)
 local	philAI::ProbableOutcomeOfBattle	attackStrengthValue	attStr	difficulty-scaled attacker strength
 local	philAI::ProbableOutcomeOfBattle	rawFightArray	rawFight	unadjusted fight values per side
-kept	philAI::ProbableOutcomeOfBattle	curDefStr	curDefStr	no defender-strength spelling fits 8-9
-kept	philAI::ProbableOutcomeOfBattle	defP	defP	defender pow() term; no fit
-kept	philAI::ProbableOutcomeOfBattle	slotNum	slotNum	artifact slot loop
+aliased	philAI::ProbableOutcomeOfBattle	curDefStr	defStr	no defender-strength spelling fits 8-9; readable name aliased over the frame-slot spelling
+aliased	philAI::ProbableOutcomeOfBattle	defP	defenderPower	defender pow() term; no fit; readable name aliased over the frame-slot spelling
+aliased	philAI::ProbableOutcomeOfBattle	slotNum	artifactSlot	artifact slot loop; readable name aliased over the frame-slot spelling
 local	philAI::ValueOfBuyingBuilding	nextBenefit	score	the building's benefit being scaled
 local	philAI::ValueOfBuyingBuilding	theSlots	filledStackCount	count of garrison slots with creatures
 local	philAI::ValueOfBuyingBuilding	idx	level	dwelling level loop
@@ -369,7 +369,7 @@ local	philAI::ValueOfBuyingCreature	pointsValue	weightedAttack	weightedAttack ou
 local	philAI::ValueOfBuyingCreature	nWeeks	weekCount	attackWeeks out
 local	philAI::ValueOfBuyingCreature	archers	breathStacks	counts MONSTER_FLAGS_BREATH_ATTACK stacks (bit 8), not shooters
 local	philAI::ValueOfBuyingCreature	activeSlotNum	townSlot	garrison slot loop
-kept	philAI::ValueOfBuyingCreature	n	n	occupant army slot loop; no fitting slot name in 13-15
+aliased	philAI::ValueOfBuyingCreature	n	slot	occupant army slot loop; no fitting slot name in 13-15; readable name aliased over the frame-slot spelling
 local	philAI::GetBestCreature	bestCostVal	bestRaw	benefitCost of the best dwelling before jitter
 local	philAI::GetBestCreature	bestBuyValue	bestNumber	creature count for the chosen dwelling, not a value
 local	philAI::GetBestCreature	baseDwelling	bestDwelling	chosen dwelling level
@@ -392,7 +392,7 @@ local	philAI::GetBestHero	prevWorth	rawBenefitCost	ValueOfBuyingHero benefitCost
 local	philAI::GetBestHero	points	maxScore	best jittered score
 local	philAI::GetBestHero	adjusted	randomScore	jittered benefitCost
 local	philAI::GetBestHero	availHero	candidate	hero offered for hire
-kept	philAI::GetBestHero	activeCostVal	activeCostVal	ValueOfBuyingHero resourceValue out; no value spelling fits 14-15
+aliased	philAI::GetBestHero	activeCostVal	resourceValue	ValueOfBuyingHero resourceValue out; no value spelling fits 14-15; readable name aliased over the frame-slot spelling
 local	philAI::TurnsToBuy	fTurns	turnCount	turns of income for one resource; no Hungarian
 param	philAI::RVOfPosition	pHero	aiHero	DetermineTargetPosition passes the moving hero
 local	philAI::RVOfPosition	xPos	monsterX	FindAdjacentMonster x out
@@ -422,7 +422,7 @@ local	philAI::StrategicValueOfPosition	curReach	reach	enemy hero mobility
 local	philAI::StrategicValueOfPosition	searchData	activeSearchArray	the search in use (own or SVSearchArray)
 local	philAI::StrategicValueOfPosition	nGap	gap	distance between destinations; no Hungarian
 local	philAI::StrategicValueOfPosition	baseTerrainNum	targetTerrain	terrain at the target
-kept	philAI::StrategicValueOfPosition	nextExtra2	nextExtra2	dead slot
+aliased	philAI::StrategicValueOfPosition	nextExtra2	unusedValue	dead slot; readable name aliased over the frame-slot spelling
 param	philAI::FightValueOfStack	useHero	useAdjustedFightValue	also gates the quantity curve, not only the hero bonuses (all callers pass 0/1 for raw/adjusted)
 local	philAI::FightValueOfStack	theArmyWorth	armyValue	running army fight value returned
 local	philAI::FightValueOfStack	worthValue	stackWorth	one stack's fight value
@@ -435,7 +435,7 @@ local	philAI::FightValueOfStack	theValue	bestScore	best single spell score
 local	philAI::FightValueOfStack	newLuck	heroLuck	GetLuck result
 local	philAI::FightValueOfStack	savedMod	spellMultiplier	0.25/0.5/1.0 by spell power
 local	philAI::FightValueOfStack	nextStats	combatStatSum	attack+defense+20 clamped, gStatPower index
-kept	philAI::TurnValueOfObelisk	ai	ai	playerAIData* local; playerAI/aiData do not fit, playerAIData is the type name
+aliased	philAI::TurnValueOfObelisk	ai	aiData	playerAIData* local; playerAI/aiData do not fit, playerAIData is the type name; readable name aliased over the frame-slot spelling
 param	philAI::EvaluateOneTimeCreaturePurchase	pHero	aiHero	the computer hero offered the creatures (EVENTS passes eventHero)
 local	philAI::EvaluateOneTimeCreaturePurchase	num	purchasedValue	fight value of the purchased creatures
 local	philAI::EvaluateOneTimeCreaturePurchase	n	index	army slot loop
@@ -457,7 +457,7 @@ param	philAI::HeroInteractionAtTown	doInteraction	evaluateOnly	inverted: nonzero
 local	philAI::HeroInteractionAtTown	stackCount	heroTroops	sums the hero's creature counts, not stacks
 local	philAI::HeroInteractionAtTown	battlePower	heroArmyValue	hero army fight value (pairs townFV)
 local	philAI::HeroInteractionAtTown	otherIndex	moveToHero	1 when the garrison share exceeds the target, troops move town->hero
-kept	philAI::HeroInteractionAtTown	myTargetShare	myTargetShare	bucket-9 cluster; no target-share spelling in bucket 9
+aliased	philAI::HeroInteractionAtTown	myTargetShare	targetShare	bucket-9 cluster; no target-share spelling in bucket 9; readable name aliased over the frame-slot spelling
 param	philAI::ChooseGoldOrExperience	thisHero	heroPointer	the hero choosing (EVENTS passes eventHero); philAI's hero-parameter name
 local	philAI::ChooseEvaluateBattle	chance	winChance	ProbableOutcomeOfBattle winChance out
 local	philAI::ChooseEvaluateBattle	curA	attackLossValue	attackerLoss out
@@ -480,8 +480,8 @@ local	philAI::FightEvent	defenderLoss	heroCasualtyFraction	receives QuickCombat'
 local	philAI::FightEvent	attackerLoss	ghostLossFraction	receives the defender (ghost) fraction
 local	philAI::FightEvent	curGuards	ghostCounts	ghosts per stack by site size
 local	philAI::FightEvent	bit	canFight	ChooseEvaluateBattle canWin out
-kept	philAI::FightEvent	theWorth	theWorth	netValue out; bucket 15 has no fitting name
-kept	philAI::FightEvent	activeRewardValue	activeRewardValue	site reward; bucket 15
+aliased	philAI::FightEvent	theWorth	netValue	netValue out; bucket 15 has no fitting name; readable name aliased over the frame-slot spelling
+aliased	philAI::FightEvent	activeRewardValue	rewardValue	site reward; bucket 15; readable name aliased over the frame-slot spelling
 local	philAI::TownEvent	quickResult	heroVictory	QuickCombat result
 local	philAI::TownEvent	townPointerPtr	targetCastle	town on the cell (Ptr suffix junk)
 local	philAI::TownEvent	defenderLoss	heroCasualtyFraction	receives QuickCombat's attacker fraction (names were swapped)
@@ -508,9 +508,9 @@ local	philAI::ValueOfEventAtPosition	nextGoldCost	lootGold	graveyard/shipwreck g
 local	philAI::ValueOfEventAtPosition	lastPositionValue	stayWorth	strategic value of staying at the hero's cell
 local	philAI::ValueOfEventAtPosition	won9Requested	shouldBattle	ChooseEvaluateBattle canWin out (ghost sites)
 local	philAI::ValueOfEventAtPosition	origBestRV	bestExitValue	best exit value so far
-kept	philAI::ValueOfEventAtPosition	theList	theList	windmill resource array; no fitting bucket-13 name
-kept	philAI::ValueOfEventAtPosition	theArmySlot2	theArmySlot2	replacementSlot out; bucket 13 forced
-kept	philAI::ValueOfEventAtPosition	tempChance	tempChance	ignored liveChance; unusedChance breaks order with the set
+aliased	philAI::ValueOfEventAtPosition	theList	windmillResources	windmill resource array; no fitting bucket-13 name; readable name aliased over the frame-slot spelling
+aliased	philAI::ValueOfEventAtPosition	theArmySlot2	replacementSlot	replacementSlot out; bucket 13 forced; readable name aliased over the frame-slot spelling
+aliased	philAI::ValueOfEventAtPosition	tempChance	unusedChance	ignored liveChance; unusedChance breaks order with the set; readable name aliased over the frame-slot spelling
 param	philAI	(unnamed i32 in MeanRVOfUnexploredTerritory)	player	GetTurnAIVars passes player
 enum	AIPlaceVisitConstant	ADVMGR_PLACE_VISIT_COUNT	AI_PLACE_VISIT_COUNT	declared in philAI.h for DoAI's iPlacesVisited; ADVMGR_ prefix is the other game's header (update enum-reuse.tsv row 347)
 enum	AIPlaceVisitConstant	ADVMGR_PLACE_COORDINATE_COUNT	AI_PLACE_COORDINATE_COUNT	same
