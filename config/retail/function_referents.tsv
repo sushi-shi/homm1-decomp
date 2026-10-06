@@ -251,7 +251,7 @@ rva	name	provenance
 0x00029da0	?FindCombatPath@searchArray@@QAEFFFPAVarmy@@C@Z	Buka combat-AI instruction/CFG/EH review: 0x13030, 0x131c6, 0x13238
 0x0002a070	?PushCombatPoint@searchArray@@QAEXFFGG@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency
 0x0002a1a0	?PushPoint@searchArray@@QAEXFFGGGCCCCCCC@Z	Buka exact pathfinding instruction correspondence: 0x55e95, 0x55fbf, 0x562b7, 0x567d7, 0x56a97
-0x0002a440	?TestPossibleDirections@searchArray@@QAEXFFQAC0FH@Z	Buka exact pathfinding instruction correspondence: 0x55f47, 0x565ef
+0x0002a440	?TestPossibleDirections@searchArray@@QAEXFFQACQAEFH@Z	Buka exact pathfinding instruction correspondence: 0x55f47, 0x565ef
 0x0002a6a0	?CanFit@army@@QAEFPAF@Z	Buka TU-order, instruction/call or constructor-vtable identity review (identity only, strict body/reference comparison unchanged).
 0x0002a8a0	?ValidFlight@army@@QAEFFC@Z	Buka army effects/movement complete instruction and CFG review: 0x1806b, 0x18249, 0x18429
 0x0002ac90	?FlyTo@army@@QAEFXZ	Buka TU-order, instruction/call or constructor-vtable identity review (identity only, strict body/reference comparison unchanged).

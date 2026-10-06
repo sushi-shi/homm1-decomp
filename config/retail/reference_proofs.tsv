@@ -9137,7 +9137,7 @@ site_rva	target_rva	symbol
 0x00055e6a	0x00029c70	?Clear@searchArray@@QAEXXZ
 0x00055e95	0x0002a1a0	?PushPoint@searchArray@@QAEXFFGGGCCCCCCC@Z
 0x00055ef2	0x000a7ba0	?gpGame@@3PAVgame@@A
-0x00055f47	0x0002a440	?TestPossibleDirections@searchArray@@QAEXFFQAC0FH@Z
+0x00055f47	0x0002a440	?TestPossibleDirections@searchArray@@QAEXFFQACQAEFH@Z
 0x00055f50	0x00090a9c	?normalDirTable@@3PAUtag_tilePoint@@A
 0x00055f72	0x00029d50	?CalcTerrainCost@@YAHHHHH@Z
 0x00055fbf	0x0002a1a0	?PushPoint@searchArray@@QAEXFFGGGCCCCCCC@Z
@@ -9221,7 +9221,7 @@ site_rva	target_rva	symbol
 0x000565d9	0x000cc888	_?s_currentNode@?1??SeedPosition@searchArray@@QAEXFFFFHHHHHHHH@Z@4UsearchNode@@A
 0x000565e1	0x000cc8b4	_?s_directionOccupied_g@?1??SeedPosition@searchArray@@QAEXFFFFHHHHHHHH@Z@4PAEA
 0x000565e6	0x000cc86c	_?s_possibleDirections@?1??SeedPosition@searchArray@@QAEXFFFFHHHHHHHH@Z@4PACA
-0x000565ef	0x0002a440	?TestPossibleDirections@searchArray@@QAEXFFQAC0FH@Z
+0x000565ef	0x0002a440	?TestPossibleDirections@searchArray@@QAEXFFQACQAEFH@Z
 0x000565f7	0x000cc889	_?s_currentNode@?1??SeedPosition@searchArray@@QAEXFFFFHHHHHHHH@Z@4UsearchNode@@A
 0x000565ff	0x000cc888	_?s_currentNode@?1??SeedPosition@searchArray@@QAEXFFFFHHHHHHHH@Z@4UsearchNode@@A
 0x00056607	0x000a7480	?gpAdvManager@@3PAVadvManager@@A

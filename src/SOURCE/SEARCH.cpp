@@ -24,7 +24,7 @@ i16 searchArray::FindNearestObject(
 ) {
     searchNode node;
     i8 possibleDirections[MAP_DIRECTION_COUNT];
-    i8 directionCosts[MAP_DIRECTION_COUNT];
+    u8 directionCosts[MAP_DIRECTION_COUNT];
     i16 i;
     i16 terrain;
     i16 cost;
@@ -324,13 +324,11 @@ void searchArray::SeedPosition(
                     s_hasAdjacentMonster = 1;
             }
         }
-        // byte-evidenced: read back zero-extended, filled as signed bytes.
         TestPossibleDirections(
             s_currentNode.x,
             s_currentNode.y,
             s_possibleDirections,
-            // API-forced: the occupancy array is passed as i8*.
-            reinterpret_cast<i8*>(s_directionOccupied),
+            s_directionOccupied,
             1,
             waterMode
         );

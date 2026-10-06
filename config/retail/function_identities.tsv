@@ -249,7 +249,7 @@ rva	name
 0x00029da0	?FindCombatPath@searchArray@@QAEFFFPAVarmy@@C@Z
 0x0002a070	?PushCombatPoint@searchArray@@QAEXFFGG@Z
 0x0002a1a0	?PushPoint@searchArray@@QAEXFFGGGCCCCCCC@Z
-0x0002a440	?TestPossibleDirections@searchArray@@QAEXFFQAC0FH@Z
+0x0002a440	?TestPossibleDirections@searchArray@@QAEXFFQACQAEFH@Z
 0x0002a6a0	?CanFit@army@@QAEFPAF@Z
 0x0002a8a0	?ValidFlight@army@@QAEFFC@Z
 0x0002ac90	?FlyTo@army@@QAEFXZ

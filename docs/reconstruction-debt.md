@@ -53,7 +53,10 @@ not yet modelled:
   `tileset::m_data` are `u8*`, because they hold palette indices.
   This removed 15 casts, including the fizzle loop's byte views, and the code is
   unchanged;
-- remaining views, each a different typed read of the same storage (10
+- the adventure search's occupancy flags (resolved): `TestPossibleDirections`
+  only clears and sets them, and `SeedPosition` reads them zero-extended, so
+  the parameter and both callers' arrays are `u8`;
+- remaining views, each a different typed read of the same storage (9
   sites, each with its reason at the cast):
   - `EVENTS_REMOTE_MESSAGE`/`EVENTS_REMOTE_HERO` overlay a received record's
     payload as the combat record or a hero fragment. `combatRemoteData` holds
@@ -66,8 +69,6 @@ not yet modelled:
     channels signed; `PostprocessPalette` moves `PaletteColor` triples,
     `CreateFizzleTables` reads the channels zero-extended as RGB
     rows, and `ConvertSmackerPalette` scales Smacker's 8-bit channels as `u8`;
-  - the adventure search fills `s_directionOccupied` through
-    `TestPossibleDirections`' `i8*` and reads it back zero-extended;
   - `DoAdvance`'s win-text assertion passes the pointer to `ProcessAssert`'s
     `i32` condition, as retail pushes the pointer itself.
 

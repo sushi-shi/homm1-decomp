@@ -42,12 +42,12 @@ Manually maintained cleanup checklist; see the [review rules and measuring
 commands](docs/reconstruction-debt.md). Counts cover `src` and `include` and are
 review inputs, not defect totals. Preserve banked matches.
 
-- [x] Review game-type `reinterpret_cast`: **10 sites** (from 36): two
+- [x] Review game-type `reinterpret_cast`: **9 sites** (from 36): two
   combat-transfer payload overlays, the wire packet header and its two CRC
-  byte walks, three palette channel views, the search occupancy byte view and
-  one pointer assertion. The icon frame directory, the remote message queue
-  (typed `RemoteMessage` records and payloads), the combat and save transfer
-  buffers, resource reads and pixel buffers are typed. 77 further casts are
+  byte walks, three palette channel views and one pointer assertion. The icon
+  frame directory, the remote message queue (typed `RemoteMessage` records and
+  payloads), the combat and save transfer buffers, the search occupancy flags,
+  resource reads and pixel buffers are typed. 77 further casts are
   Win32 API boundaries, including the handle assertions and comparisons.
   Every remaining cast carries its reason (cast ledger OPEN = 0).
 - [x] Replace manual byte layouts with named types: the font reads

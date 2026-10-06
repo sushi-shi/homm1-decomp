@@ -236,7 +236,7 @@ old_rva	new_rva	unit	symbol	body_class	mapping_evidence	review
 0x00024950	0x0004e820	SOURCE/FINDPATH	?FindCombatPath@searchArray@@QAEFFFPAVarmy@@C@Z	same-masked-body	unique-body>=80	Discovery classification; masked operands do not prove referent equivalence.
 0x00024c50	0x0004eb20	SOURCE/FINDPATH	?PushCombatPoint@searchArray@@QAEXFFGG@Z	same-masked-body	unique-body>=80	Discovery classification; masked operands do not prove referent equivalence.
 0x00024d90	0x0004ec60	SOURCE/FINDPATH	?PushPoint@searchArray@@QAEXFFGGGCCCCCCC@Z	same-masked-body	unique-body>=80	Discovery classification; masked operands do not prove referent equivalence.
-0x00025040	0x0004ef10	SOURCE/FINDPATH	?TestPossibleDirections@searchArray@@QAEXFFQAC0FH@Z	same-masked-body	unique-body>=80	Discovery classification; masked operands do not prove referent equivalence.
+0x00025040	0x0004ef10	SOURCE/FINDPATH	?TestPossibleDirections@searchArray@@QAEXFFQACQAEFH@Z	same-masked-body	unique-body>=80	Discovery classification; masked operands do not prove referent equivalence.
 0x000252c0	0x00052ec0	SOURCE/ADVMGR	??0advManager@@QAE@XZ	same-masked-body	unique-body>=80	Discovery classification; masked operands do not prove referent equivalence.
 0x0002558c	0x0005318c	SOURCE/ADVMGR	??1advManager@@QAE@XZ	same-masked-body	references:1	Discovery classification; masked operands do not prove referent equivalence.
 0x000255ab	0x000531ab	SOURCE/ADVMGR	?Open@advManager@@UAEFF@Z	changed-body	paired-pointer-array:0x8c3c8	Compiler, layout or source difference; see behavior notes and strict comparison.

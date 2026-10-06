@@ -432,7 +432,7 @@ old_rva	new_rva	name	note
 0x0002a070	0x0002a070	?PushCombatPoint@searchArray@@QAEXFFGG@Z	
 0x0002a1a0	0x0002a1a0	?PushPoint@searchArray@@QAEXFFGGGCCCCCCC@Z	
 0x0002a40d	0x000497c8	?GetBestBHC@philAI@@QAEXHAAUBHC@@@Z	
-0x0002a440	0x0002a440	?TestPossibleDirections@searchArray@@QAEXFFQAC0FH@Z	
+0x0002a440	0x0002a440	?TestPossibleDirections@searchArray@@QAEXFFQACQAEFH@Z	
 0x0002a9dd	0x00049d14	?DetermineHeroToMove@philAI@@QAEPAVhero@@H@Z	
 0x0002aaf9	0x00049dfe	?DetermineTargetPosition@philAI@@QAEXPAVhero@@AAC1F@Z	
 0x0002ac90	0x0002ac90	?FlyTo@army@@QAEFXZ	

@@ -328,7 +328,7 @@ void searchArray::TestPossibleDirections(
     i16 x,
     i16 y,
     i8* const terrain,
-    i8* const occupied,
+    u8* const occupied,
     i16 allowOccupied,
     i32 waterMode
 ) {
