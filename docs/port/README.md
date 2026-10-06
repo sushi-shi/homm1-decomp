@@ -402,6 +402,10 @@ picture and log the differing region; with a path, save a screenshot when
 they differ), `quit` (the window's close button), `exit` (end at once). While
 a replay runs the real mouse and keyboard are ignored.
 `HOMM1_NO_DIALOGS=1` sends message boxes to the log only.
+The programs take SIGTERM as a request to close the window, which a hung
+program never reads; for unattended runs use `timeout -k 5 SECONDS`, or set
+`SDL_NO_SIGNAL_HANDLERS=1` (the headless test programs, harnesses and survey
+programs set it) so that SIGTERM ends them.
 `HOMM1_TIME_SCALE=N` runs the game's clock N times faster than real time
 (animations, delays and the replay's times alike); `HOMM1_TICK_START=N`
 starts the clock at N instead of 1,000,000 (for example just below 2^31, to

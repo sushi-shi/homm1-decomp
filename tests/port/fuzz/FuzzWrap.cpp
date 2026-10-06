@@ -33,6 +33,9 @@ extern "C" {
 
 void FuzzStartHost(const std::string& root) {
     setenv("SDL_VIDEODRIVER", "dummy", 0);
+    // SIGTERM ends the program at once (timeout, ctest); SDL would turn it into
+    // a quit event that a hung loop never reads.
+    setenv("SDL_NO_SIGNAL_HANDLERS", "1", 0);
     setenv("SDL_AUDIO_DRIVER", "dummy", 0);
     setenv("HOMM1_NO_DIALOGS", "1", 1);
     setenv("XDG_CONFIG_HOME", root.c_str(), 1);

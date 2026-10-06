@@ -187,6 +187,7 @@ def run(job: dict) -> dict:
             "HOMM1_TIME_SCALE": str(job["time_scale"]),
             "HOMM1_SURVEY_WATCHDOG": str(job.get("watchdog", 300)),
             "SDL_AUDIO_DRIVER": "dummy",
+            "SDL_NO_SIGNAL_HANDLERS": "1",
             "XDG_CONFIG_HOME": str(scratch / "config"),
             "ASAN_OPTIONS": "detect_leaks=0:abort_on_error=0:print_summary=1:handle_abort=1",
             "UBSAN_OPTIONS": "print_stacktrace=1",
@@ -235,7 +236,8 @@ def main() -> int:
     parser.add_argument("--random-maps", type=int, default=10, help="maps per editor generator run")
     parser.add_argument("--monkeys", type=int, default=8, help="random-input runs per program")
     parser.add_argument("--actions", type=int, default=3000, help="random actions per monkey run")
-    parser.add_argument("--jobs", type=int, default=max(1, (os.cpu_count() or 2) // 2))
+    parser.add_argument("--jobs", type=int, default=max(1, (os.cpu_count() or 2) // 2),
+                        help="parallel runs (default: half the processors)")
     parser.add_argument("--time-scale", type=int, default=20)
     parser.add_argument("--timeout", type=int, default=1800)
     parser.add_argument("--scratch", type=Path, default=None)

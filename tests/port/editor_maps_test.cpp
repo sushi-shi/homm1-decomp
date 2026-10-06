@@ -343,6 +343,9 @@ int main() {
             return 1;
 
     SetVariable("SDL_VIDEODRIVER", "dummy", false);
+    // SIGTERM ends the program at once (timeout, ctest); SDL would turn it into
+    // a quit event that a hung loop never reads.
+    SetVariable("SDL_NO_SIGNAL_HANDLERS", "1", false);
     SetVariable("SDL_AUDIO_DRIVER", "dummy", false);
     SetVariable("HOMM1_NO_DIALOGS", "1", true);
     SetVariable("HOMM1_CONFIG", (scratch + "/config").c_str(), true);
