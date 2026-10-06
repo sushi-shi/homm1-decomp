@@ -1,0 +1,3 @@
+# Not a Smacker file.
+bytes 53 4d 4b 33 00 00 00 00
+expect refused

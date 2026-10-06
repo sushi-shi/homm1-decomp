@@ -4,7 +4,8 @@ This branch builds Heroes of Might and Magic (the Buka 2003 edition) and its
 scenario editor as native programs for current systems, from the same
 reconstructed sources as the Windows build. They run on 64-bit Linux, on
 64-bit Windows (cross-compiled with MinGW-w64) and in a web browser
-(WebAssembly); the platform layer is SDL3 with FFmpeg, so a macOS build needs
+(WebAssembly); the platform layer is SDL3 and the port decodes the movies and
+music itself (Smacker, and Ogg Vorbis with stb_vorbis), so a macOS build needs
 only its toolchain and packages. The Visual C++ 6 build of `HEROES.EXE` and
 `EDITOR.EXE` (`build.py --target all`) keeps working on this branch.
 
@@ -38,8 +39,8 @@ the launchers and the data import are `nix/game.nix`, `nix/launch.sh` and
 `nix/game-data.py`.
 
 Without Nix: CMake 3.20, Ninja or Make, a C++20 compiler (GCC 12+ or Clang
-15+), Python 3, pkg-config, SDL 3.2+ and the FFmpeg libraries `libavformat`,
-`libavcodec`, `libavutil` and `libswresample`.
+15+), Python 3 and SDL 3.2+ (without an installed SDL, CMake 3.25 downloads
+and builds SDL 3.4.8 with the programs).
 
 The programs need the game data of the Buka edition: a folder with `DATA`,
 `MAPS`, `GAMES`, `SOUND` and `ANIM` (the CD's game folder, or what
@@ -72,9 +73,8 @@ nix build .#windows        # result/bin: heroes.exe, heroes-editor.exe and their
 ```
 
 `nix/windows.nix` cross-compiles both programs for x86-64 Windows with
-nixpkgs' MinGW-w64 GCC, SDL3 built for the target and the minimal FFmpeg of
-`nix/ffmpeg-minimal.nix` (Smacker and Ogg Vorbis only), and ships the DLLs
-they import (SDL3, the four FFmpeg libraries, `libmcfgthread-2.dll`); the
+nixpkgs' MinGW-w64 GCC and SDL3 built for the target, and ships the DLLs
+they import (`SDL3.dll`, `libmcfgthread-2.dll`); the
 build fails if a program imports any other DLL that is not part of Windows.
 Copy `result/bin` to Windows and run `heroes.exe --data C:\Games\Heroes` or
 `heroes-editor.exe`. The game folder is searched as on Linux, with
@@ -101,7 +101,7 @@ nix build .#wasm           # result/share/homm1-web: the page and both programs
 nix run .#web              # serves it on http://127.0.0.1:8000/
 ```
 
-`nix/wasm.nix` builds SDL3, the minimal FFmpeg and both programs with
+`nix/wasm.nix` builds SDL3 and both programs with
 Emscripten. The page (`src/PLATFORM/Web/`) asks for the game folder once
 (**Choose a folder**: the folder with `DATA`, `MAPS`, ..., or one above it
 that also holds the CD's `Tracks` and `HEROES.HLP`; **Add single files**
@@ -137,9 +137,8 @@ download. Any static web server works as long as it serves `.wasm` as
   through the canvas's shown size (the page scales the 640x500 canvas to the
   window, pixelated), keys by their physical code, so the Set 1 scan codes
   are the same as natively. The context menu is suppressed on the canvas.
-- **Movies and music.** The same FFmpeg code as natively, with FFmpeg built
-  for WebAssembly with only the Smacker and Ogg demuxers and the `smacker`,
-  `smackaud` and `vorbis` decoders.
+- **Movies and music.** The same decoders as natively (Smacker, and Ogg
+  Vorbis with stb_vorbis); nothing beyond SDL is built for WebAssembly.
 - **Help** opens in a new tab (a Blob URL of the converted page); when the
   browser blocks the tab, the page shows a link instead.
 
@@ -163,8 +162,8 @@ device, which the script detects and reports.
 Not built. The code has nothing Windows- or Linux-only outside the platform
 layer: `File.cpp`'s POSIX half, `Host.cpp`'s XDG settings folder (which
 should become `SDL_GetPrefPath` there, as on Windows) and the system browser
-through `SDL_OpenURL` all apply. A build needs SDL3 and FFmpeg for macOS
-(`nix/ffmpeg-minimal.nix` builds natively too) and a `.app` bundle.
+through `SDL_OpenURL` all apply. A build needs only SDL3 for macOS (CMake
+builds it when none is installed) and a `.app` bundle.
 
 ### Help
 
@@ -260,7 +259,12 @@ HOMM1_DATA=~/.local/share/homm1-buka/game ctest --test-dir build/port-asan --out
 
 `records_test` checks the file record codecs and, with `HOMM1_DATA`, parses
 and re-encodes every shipped map, campaign map, saved game, high score table
-and the archive directory. `file_test` covers the game path resolver,
+and the archive directory. `file_test` covers the game path resolver, `data_root_test` the search for
+the game folder (quoted and trailing-separator `HOMM1_DATA`, the program's
+folder from elsewhere, non-ASCII folders, file names in another case),
+`media_test` (with `HOMM1_DATA`) decodes every shipped movie to the hashes
+of what FFmpeg decoded and every music file to its length,
+`catalog_check` and `catalog_update_check` run `catalog.py`,
 `blit_test` the drawing routines, `lzhuf_test` the network save compressor,
 `remote_records_test` the network message codecs (sizes, round trips,
 refusal of short input, golden packets with their CRC and refusal of every
@@ -294,8 +298,12 @@ fought, heroes); the hashes must agree at every hand-off.
 The `*_replay` tests replay the fuzz harnesses' regression inputs (see
 [Fuzzing the file parsers](#fuzzing-the-file-parsers)).
 `nix flake check` builds the native and sanitizer builds and runs their tests
-(without game data), builds the Windows programs and the `heroes`
-launchers (`nix/game.nix`) without game data.
+(without game data), builds the Windows programs and runs `file_test` and
+`data_root_test` under Wine (`windows-tests`), and builds the `heroes`
+launchers (`nix/game.nix`) without game data. `HOMM1_DATA=DIR nix run
+.#windows-smoke` starts the Windows build under Wine and Xvfb from a
+player's game folder three ways (from it, from another folder, with a quoted
+`HOMM1_DATA`) and requires the main menu each time.
 `-DHOMM1_SANITIZERS_RECOVER=ON` keeps going after undefined behaviour, to
 survey a whole session.
 
@@ -350,7 +358,8 @@ resource archive and every decoder that reads a resource in place, drawing
 what it decodes into exactly-sized buffers (`fuzz_resources`), the WinHelp
 converter on a help file and its contents file (`fuzz_help`), the record
 codecs (`fuzz_records`), the network and serial message codecs, packets and
-payloads (`fuzz_remote`) and the network save compressor (`fuzz_lzhuf`). The
+payloads (`fuzz_remote`), the network save compressor (`fuzz_lzhuf`) and the
+Smacker movie decoder (`fuzz_smacker`). The
 game's own units run headless; its error exits (`FileError`, `ShutDown`)
 are wrapped to throw, so a file the game refuses is an ordinary outcome.
 
@@ -429,14 +438,14 @@ include/PLATFORM        File.h, Records.h: shared, plain C++98
 src/PLATFORM            File.cpp, Records.cpp (both builds); Text.cpp,
                         MsvcRuntime.cpp, Help.cpp (the WinHelp converter),
                         Net.cpp (native)
-src/PLATFORM/SDL3       the SDL3 + FFmpeg backend
+src/PLATFORM/SDL3       the SDL3 backend; its Media.cpp decodes movies and music
 src/PLATFORM/Web        the browser build's page and its file system setup
 src/PORT                native replacements of the Windows-bound units
 tools/port              localize.py (game text), units.py (each program's
                         units from build.json), menus.py (menus from the
                         .rc scripts), sync.sh, serial_interop.py
 tools/help              homm1-hlp2html, the converter on the command line
-nix                     the Windows and browser builds, the minimal FFmpeg
+nix                     the Windows and browser builds and checks, the installer
 tests/port              ctest programs; web_smoke.py (the browser build)
 ```
 
@@ -456,7 +465,7 @@ stays in the shared units; the port units hold only translation.
 | `SOURCE/kbwin.cpp` | `PORT/SOURCE/kbwin.cpp`, `Main.cpp`, `Menu.cpp` | entry point, event pump, timers, settings file, menu bar, CD folder |
 | `SOURCE/wingraph.cpp` | `PORT/SOURCE/wingraph.cpp` | 8-bit display with palette, cursors |
 | `BASE/Audio.cpp` | `PORT/BASE/Audio.cpp` | sound samples, Ogg music, movie sound |
-| SMACKW32.DLL | `PORT/SOURCE/Smacker.cpp` | Smacker decoding (FFmpeg) |
+| SMACKW32.DLL | `PORT/SOURCE/Smacker.cpp` | Smacker decoding (`PLATFORM/SmackerDecoder`) |
 | `SOURCE/netwin.cpp`, `comwin.cpp` | `PORT/SOURCE/netwin.cpp`, `comwin.cpp` | TCP sessions and streams (`PLATFORM/Net.h`) |
 | `BASE/*.asm`, LZHUF decoder | `PORT/BASE/*.cpp` | portable C++ of the same routines |
 
@@ -528,7 +537,7 @@ with strict warnings as errors; see [lessons.md](lessons.md).
 | Keyboard and mouse | Set 1 scan codes as the original read them; the language's keyboard table applies. |
 | Music | CD tracks or installed Ogg music, with the original's repeat and resume rules. |
 | Sound effects | Works. |
-| Movies | Smacker through FFmpeg, with sound. |
+| Movies | Smacker, with sound, by the port's decoder (frames, palettes and sound identical to FFmpeg's for every shipped movie: `media_test`). |
 | Menu bars | Drawn for the game (default, adventure, combat, town) and the editor, with check marks, greyed items, submenus and a modal loop. |
 | Help file | Converted from `HELP\HEROES.HLP` to HTML on first use and shown in the browser (a new tab in the browser build); greyed without the file. |
 | Network, modem, direct cable | Over TCP (see [multiplayer](#multiplayer)): new and loaded games, battles, chat; two instances agree at every hand-off (`net_game_test`). Plays the Visual C++ build and the retail program over a serial line under Wine. |

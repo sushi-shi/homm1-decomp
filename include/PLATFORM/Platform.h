@@ -5,7 +5,8 @@
 // the port's replacements of the Windows units (src/PORT) translate between
 // the game's host functions (kbwin.h, wingraph.h, audio.h, smack.h) and these
 // interfaces. A backend is a set of source files implementing them; the one
-// shipped is SDL3 with FFmpeg for compressed media (src/PLATFORM/SDL3).
+// shipped is SDL3 (src/PLATFORM/SDL3), with the port's own Smacker decoder
+// and stb_vorbis for the movies and the music.
 
 #include <H1/Ints.h>
 

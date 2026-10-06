@@ -1,0 +1,4 @@
+# The intro cut in the middle of its frames: decoding stops at the cut.
+base ANIM\INTRO.SMK
+truncate 300000
+expect refused

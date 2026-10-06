@@ -377,16 +377,18 @@ context created later stays suspended in some browsers.
 ## 16. Toolchains that accept wrong input silently
 
 **Mechanism.** Cross builds meet tools that do not fail on mistakes: FFmpeg's
-`configure` only warns about a component name it does not know (the
+`configure` only warned about a component name it did not know (the
 Smacker video decoder is `smacker`, not its runtime name `smackvid`) and
-builds without it, after which every movie "cannot be opened"; SDL marks its
+built without it, after which every movie "could not be opened"; SDL marks its
 headers as non-system, so strict warnings apply to its macros wherever the
 compiler is not Nix's native wrapper; MinGW's `printf` is Microsoft's unless
 asked otherwise, so `%zu` prints garbage.
 
-**Guard.** `nix/ffmpeg-minimal.nix` fails when any component the port needs
-is missing from `config_components.h`; `CMakeLists.txt` marks
-`SDL3::Headers` as system headers; the Windows build defines
+**Guard.** The port no longer builds FFmpeg: it decodes Smacker itself
+(`PLATFORM/SmackerDecoder`) and Ogg Vorbis with stb_vorbis, and
+`media_test` holds the hashes of the frames, palettes and sound FFmpeg gave
+for every shipped movie. `CMakeLists.txt` marks SDL's headers as system
+headers, the installed SDL's and the one it builds itself; the Windows build defines
 `__USE_MINGW_ANSI_STDIO` and checks `Log`'s format as `gnu_printf`; the
 Windows install fails when a program imports a DLL that is neither shipped
 nor part of Windows. Headless test runs of the help must also keep the

@@ -1,13 +1,12 @@
 # The native port cross-compiled for 64-bit Windows with MinGW-w64: the game
 # (heroes.exe) and the scenario editor (heroes-editor.exe) in bin/, with the
-# DLLs they need beside them. SDL3 is nixpkgs' cross build; FFmpeg is cut down
-# to the decoders the game uses (ffmpeg-minimal.nix).
+# DLLs they need beside them (SDL3, nixpkgs' cross build, and the compiler's
+# thread library).
 { pkgs, src }:
 
 let
   cross = pkgs.pkgsCross.mingwW64;
   sdl3 = cross.sdl3;
-  ffmpeg = cross.callPackage ./ffmpeg-minimal.nix { };
   # GCC's thread model on this target: libstdc++ calls into mcfgthread.
   threads = cross.windows.mcfgthreads;
 in
@@ -17,7 +16,7 @@ cross.stdenv.mkDerivation {
   inherit src;
 
   nativeBuildInputs = with cross.buildPackages; [ cmake ninja pkg-config python3 ];
-  buildInputs = [ sdl3 ffmpeg ];
+  buildInputs = [ sdl3 ];
   cmakeFlags = [ "-DCMAKE_BUILD_TYPE=RelWithDebInfo" "-DBUILD_TESTING=ON" ];
   # The programs and the path tests that run under Wine (windows-checks.nix);
   # the other tests are not cross-built here.
@@ -28,7 +27,7 @@ cross.stdenv.mkDerivation {
     runHook preInstall
     mkdir -p $out/bin
     install -m755 heroes.exe heroes-editor.exe $out/bin/
-    install -m644 ${sdl3.out}/bin/SDL3.dll ${ffmpeg}/bin/*.dll $out/bin/
+    install -m644 ${sdl3.out}/bin/SDL3.dll $out/bin/
     install -m644 ${threads}/bin/libmcfgthread-2.dll $out/bin/
     mkdir -p $tests/bin
     install -m755 tests/port/file_test.exe tests/port/data_root_test.exe $tests/bin/
@@ -52,6 +51,6 @@ cross.stdenv.mkDerivation {
     done
   '';
 
-  passthru = { inherit sdl3 ffmpeg; };
+  passthru = { inherit sdl3; };
   meta.platforms = [ "x86_64-windows" ];
 }

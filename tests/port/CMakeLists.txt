@@ -36,6 +36,11 @@ homm1_test(file_test
 homm1_test(data_root_test
   SOURCES data_root_test.cpp)
 
+# The movie and music decoders on the shipped files (needs HOMM1_DATA).
+homm1_test(media_test
+  SOURCES media_test.cpp)
+set_tests_properties(media_test PROPERTIES SKIP_RETURN_CODE 77)
+
 # The portable drawing routines (the Windows build's assembly) on synthetic
 # images in exactly-sized buffers.
 homm1_test(blit_test

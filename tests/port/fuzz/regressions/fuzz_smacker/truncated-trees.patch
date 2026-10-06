@@ -1,0 +1,4 @@
+# A movie cut inside its Huffman trees is refused when opened.
+base ANIM\BUKA.SMK
+truncate 3000
+expect refused

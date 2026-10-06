@@ -1,0 +1,4 @@
+# A frame count whose tables do not fit the file is refused.
+base ANIM\LOSE.SMK
+set 12 ff ff ff 00
+expect refused

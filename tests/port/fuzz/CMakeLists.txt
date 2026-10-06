@@ -118,3 +118,8 @@ homm1_fuzz_harness(fuzz_help
 homm1_fuzz_harness(fuzz_remote
   SOURCES fuzz_remote.cpp
   GAME_SOURCES ${CMAKE_SOURCE_DIR}/src/SOURCE/REMOTEREC.cpp ${CMAKE_SOURCE_DIR}/src/SOURCE/SAVEREC.cpp)
+
+# The Smacker movie decoder on whole movies.
+homm1_fuzz_harness(fuzz_smacker
+  SOURCES fuzz_smacker.cpp
+  SHIPPED "ANIM\\*.SMK")

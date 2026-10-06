@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(homm1 CXX)
+project(homm1 C CXX)
 
 # Native build of the game and the scenario editor on the SDL3 platform
 # layer, for Linux and (cross-compiled with MinGW-w64, nix/windows.nix)
@@ -27,15 +27,34 @@ if(CMAKE_CXX_BYTE_ORDER STREQUAL "BIG_ENDIAN")
 endif()
 
 find_package(Python3 COMPONENTS Interpreter REQUIRED)
-find_package(PkgConfig REQUIRED)
-find_package(SDL3 REQUIRED CONFIG)
+# SDL3 from the system (or the toolchain's find root), else its source
+# release, fetched and built with the programs (Windows, emsdk).
+find_package(SDL3 CONFIG QUIET)
+if(NOT SDL3_FOUND)
+  message(STATUS "SDL3 not found; building SDL 3.4.8 from its source release")
+  if(CMAKE_VERSION VERSION_LESS "3.25")
+    message(FATAL_ERROR "Building SDL with the programs needs CMake 3.25 or later")
+  endif()
+  include(FetchContent)
+  # SYSTEM: SDL's headers are outside the strict warnings.
+  FetchContent_Declare(SDL3 SYSTEM
+    URL https://github.com/libsdl-org/SDL/releases/download/release-3.4.8/SDL3-3.4.8.tar.gz
+    URL_HASH SHA256=e9fff7467fb60f037e6708da18b25560649e4c63edc2a69bb871b960d9cbfbba
+    DOWNLOAD_EXTRACT_TIMESTAMP TRUE)
+  set(SDL_TEST_LIBRARY OFF CACHE BOOL "" FORCE)
+  set(SDL_TESTS OFF CACHE BOOL "" FORCE)
+  set(SDL_EXAMPLES OFF CACHE BOOL "" FORCE)
+  # Linked in, so the programs need no SDL3 library beside them.
+  set(SDL_SHARED OFF CACHE BOOL "" FORCE)
+  set(SDL_STATIC ON CACHE BOOL "" FORCE)
+  FetchContent_MakeAvailable(SDL3)
+endif()
 # SDL marks its headers non-system, so the strict warnings below would apply
 # to its macros (old-style casts) wherever the compiler wrapper does not
 # already pass them as system headers, as Nix's does natively.
-if(TARGET SDL3::Headers AND NOT CMAKE_VERSION VERSION_LESS "3.25")
+if(SDL3_FOUND AND TARGET SDL3::Headers AND NOT CMAKE_VERSION VERSION_LESS "3.25")
   set_property(TARGET SDL3::Headers PROPERTY SYSTEM 1)
 endif()
-pkg_check_modules(FFMPEG REQUIRED IMPORTED_TARGET libavformat libavcodec libavutil libswresample)
 
 # --------------------------------------------------------------------------
 # Localized sources. Game text is resolved at build time, as in the Visual
@@ -133,11 +152,14 @@ set(HOMM1_GAME_WARNINGS
   -Wno-stringop-truncation -Wno-stringop-overflow -Wno-array-bounds
   -Wno-maybe-uninitialized -Wno-uninitialized -Wno-dangling-pointer
   -Wno-restrict -Wno-nonnull -Wno-unused-result -Wno-narrowing -Wno-register
+  # Named constants of different enumerations combined in arithmetic.
+  -Wno-deprecated-enum-enum-conversion -Wno-deprecated-enum-float-conversion
   -Werror=return-type -Werror=int-to-pointer-cast -Werror=mismatched-new-delete
   -Wformat-security -Wno-error=format-security -Wdelete-non-virtual-dtor)
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   # Some of the options above are GCC's alone.
-  list(APPEND HOMM1_GAME_WARNINGS -Wno-unknown-warning-option)
+  list(APPEND HOMM1_GAME_WARNINGS -Wno-unknown-warning-option
+    -Wno-deprecated-anon-enum-enum-conversion)
 endif()
 
 # --------------------------------------------------------------------------
@@ -165,6 +187,15 @@ endif()
 # Platform layer: host services behind include/PLATFORM interfaces.
 # --------------------------------------------------------------------------
 
+# Ogg Vorbis decoding for the music: stb_vorbis (vendor/stb_vorbis, public
+# domain), compiled as it is.
+add_library(homm1_vorbis STATIC ${CMAKE_SOURCE_DIR}/vendor/stb_vorbis/stb_vorbis.c)
+target_compile_definitions(homm1_vorbis PUBLIC STB_VORBIS_NO_STDIO STB_VORBIS_NO_PUSHDATA_API)
+target_include_directories(homm1_vorbis SYSTEM PUBLIC ${CMAKE_SOURCE_DIR}/vendor/stb_vorbis)
+if(NOT MSVC)
+  target_compile_options(homm1_vorbis PRIVATE -w)
+endif()
+
 file(GLOB HOMM1_PLATFORM_COMMON CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/src/PLATFORM/*.cpp)
 file(GLOB HOMM1_PLATFORM_SDL3 CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/src/PLATFORM/SDL3/*.cpp)
 add_library(homm1_platform STATIC ${HOMM1_PLATFORM_COMMON} ${HOMM1_PLATFORM_SDL3})
@@ -173,12 +204,17 @@ target_compile_options(homm1_platform PRIVATE ${HOMM1_SEMANTICS} ${HOMM1_STRICT_
   ${HOMM1_SANITIZE_FLAGS})
 target_link_options(homm1_platform PUBLIC ${HOMM1_SANITIZE_FLAGS})
 target_compile_definitions(homm1_platform PRIVATE HOMM1_PORT=1 HOMM1_CODEPAGE=${HOMM1_CODEPAGE})
-target_link_libraries(homm1_platform PUBLIC SDL3::SDL3 PkgConfig::FFMPEG)
+target_link_libraries(homm1_platform PUBLIC SDL3::SDL3 homm1_vorbis)
 if(WIN32)
   target_link_libraries(homm1_platform PUBLIC ws2_32)
-  # MinGW: the C++ runtime is linked in; the programs then need only SDL3,
-  # FFmpeg and the compiler's thread library beside them.
+  # MinGW: the C++ runtime is linked in; the programs then need only SDL3
+  # and the compiler's thread library beside them.
   target_link_options(homm1_platform PUBLIC -static-libgcc -static-libstdc++)
+  if(NOT SDL3_FOUND)
+    # A build on Windows itself: with SDL linked in too, the programs are
+    # single files.
+    target_link_options(homm1_platform PUBLIC -static)
+  endif()
   # C99 formatting (%zu, %lld) for the log, as on other hosts.
   target_compile_definitions(homm1_platform PRIVATE __USE_MINGW_ANSI_STDIO=1)
 endif()
@@ -251,6 +287,14 @@ endfunction()
 
 homm1_program(homm1 game heroes src/SOURCE/Heroes.rc)
 homm1_program(homm1_editor editor heroes-editor src/EDITOR/Editor.rc)
+
+# The browser build's page beside the programs: the build folder is the site
+# (python3 -m http.server --directory build/wasm).
+if(EMSCRIPTEN)
+  foreach(page index.html homm1.js homm1.css)
+    configure_file(${CMAKE_SOURCE_DIR}/src/PLATFORM/Web/${page} ${CMAKE_BINARY_DIR}/${page} COPYONLY)
+  endforeach()
+endif()
 
 # The help converter as a command-line tool (tools/help).
 add_executable(homm1_hlp2html ${CMAKE_SOURCE_DIR}/tools/help/hlp2html.cpp)

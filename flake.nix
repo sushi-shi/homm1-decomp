@@ -26,7 +26,7 @@
       tools = [ pkgs.python3 wine pkgs.llvm pkgs.p7zip pkgs.unshield ];
       portTools = [
         pkgs.cmake pkgs.ninja pkgs.pkg-config pkgs.python3 pkgs.clang pkgs.gdb
-        pkgs.sdl3 pkgs.ffmpeg-headless pkgs.xvfb-run pkgs.imagemagick
+        pkgs.sdl3 pkgs.xvfb-run pkgs.imagemagick
       ];
       environment = {
         HOMM1_TOOLCHAIN = "${toolchain}/toolchains";
@@ -56,7 +56,7 @@
         version = "0";
         src = self;
         nativeBuildInputs = [ pkgs.cmake pkgs.ninja pkgs.pkg-config pkgs.python3 ];
-        buildInputs = [ pkgs.sdl3 pkgs.ffmpeg-headless ];
+        buildInputs = [ pkgs.sdl3 ];
         cmakeFlags = [ "-DCMAKE_BUILD_TYPE=RelWithDebInfo" ];
         doCheck = true;
         installPhase = ''
@@ -200,10 +200,23 @@
       nixosModules.default = module "nixos";
       homeManagerModules.default = module "home-manager";
       devShells.${system} = {
+        # Everything: the Visual C++ 6 build under Wine, the native port
+        # (CMake presets linux and windows), and Emscripten for the browser
+        # build (preset wasm), whose library cache is kept writable in
+        # ~/.cache/homm1-emscripten.
         default = pkgs.mkShell ({
-          packages = tools;
+          # Not Clang: llvm-rc would preprocess the resource scripts with
+          # the wrapped compiler, which refuses the Windows target.
+          packages = tools ++ pkgs.lib.remove pkgs.clang portTools ++ [ pkgs.emscripten ];
+          shellHook = ''
+            export EM_CACHE="''${XDG_CACHE_HOME:-$HOME/.cache}/homm1-emscripten"
+            if [ ! -d "$EM_CACHE" ]; then
+              mkdir -p "$(dirname "$EM_CACHE")"
+              cp -r --no-preserve=mode ${pkgs.emscripten}/share/emscripten/cache "$EM_CACHE"
+            fi
+          '';
         } // environment);
-        # The native port: CMake, a current compiler, SDL3 and FFmpeg, plus
+        # The native port alone: CMake, a current compiler and SDL3, plus
         # Xvfb and ImageMagick for headless runs and screenshots.
         port = pkgs.mkShell {
           packages = portTools;
