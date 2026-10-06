@@ -6,7 +6,7 @@
 # (tab-separated; every field is an fnmatch glob, `*` matches anything; the
 # first matching row wins): file owner spelling group detail reason.
 # group/detail are the census' review_group/review_context columns.
-#floor	1616
+#floor	1407
 *	*	0	trivial-function-literal	0 for-init	a for loop's counter starts at zero
 *	*	0	trivial-function-literal	0 initializer*	an accumulator or counter declared at zero
 *	*	1	trivial-function-literal	1 arithmetic*	a one-step offset: the next index, element or count
@@ -531,7 +531,6 @@ src/SOURCE/TOWNMGR.cpp	*	1	trivial-function-literal	1 store m_visible	a boolean 
 src/SOURCE/TOWNMGR.cpp	*	1	trivial-function-literal	1 store sameType	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality AppIdle()	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality AppInit()	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
-src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality EarlySetup()	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality KeyboardMessageHandler()	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality MouseMessageHandler()	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality RegisterClassA()	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
@@ -1046,7 +1045,7 @@ src/EDITOR/EDITOR.cpp	oldmain	0	trivial-function-literal	0 store gMap[XY]	the ad
 src/EDITOR/CLEARMGR.cpp	clearManager::Open	0	call-argument	button(* argument 8	a plain button's select mode (only BUTTON_SELECT_DIALOG_RESULT ends a dialog)
 src/EDITOR/EDITMGR.cpp	editManager::[CR]*Area	0	trivial-function-literal	0 store *	a cleared cell's tilesets, flags, triggers, extra frame, metadata and object ids reset to zero
 src/EDITOR/*	*	0	trivial-function-literal	0 store *[XY]	a coordinate reset to the map's or the view's first cell
-src/EDITOR/*	*	0	trivial-function-literal	0 equality [xy]	the map's first column or row
+src/EDITOR/*	*	0	trivial-function-literal	0 equality *[xyXY]	the map's first column or row
 src/EDITOR/EDITMGR.cpp	editManager::Main	*	call-argument	Scroll(i16, i16) argument [12]	a scroll step in cells (-1, 0 or 1 per axis)
 src/EDITOR/EDITMGR.cpp	editManager::ToggleZoom	*	call-argument	Scroll(i16, i16) argument [12]	zooming moves the view origin by ten cells each way
 src/EDITOR/EDITMGR.cpp	*	*	store	initializer of *	a local text, file name or skipped-table buffer's extent
@@ -1149,3 +1148,51 @@ src/EDITOR/MAPOBJ.cpp	editManager::GenerateRandomMap	*	store	store to unusedPerc
 src/EDITOR/MAPOBJ.cpp	editManager::ScatterDecorations	*	initializer-payload	initializer list	each terrain's chance in 1000 of a decoration on a bare cell
 src/EDITOR/MAPOBJ.cpp	editManager::PlaceResourceSite	*	store	initializer of name	the object name buffer's extent
 src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	1	trivial-function-literal	1 for-init	land regions and region ranks count from 1 (0 marks water)
+src/EDITOR/*	*	[01]	trivial-function-literal	[01] store m_active	baseManager::m_active, an i16 flag: a manager's Open sets it and Close clears it
+src/EDITOR/*	*	[01]	trivial-function-literal	[01] store m_mapChanged	editManager::m_mapChanged, an i16 flag: an edit sets it, saving, loading and a new map clear it
+src/EDITOR/EDITMGR.cpp	editManager::DrawRadar	1	call-argument	UpdateKnobs(i16) argument 1	UpdateKnobs' i16 update flag, forwarded to heroWindow::DrawWindow's i16 updateScreen
+src/EDITOR/*	*	[01]	call-argument	BlendTerrain(* argument [2-5]	BlendTerrain's u8 flags (unread, from undo, skip borders, skip fill): the callee widens them as unsigned bytes, so they keep u8 and 0/1 (b8 is signed)
+src/EDITOR/EDITMGR.cpp	editManager::BlendTerrain	[01]	trivial-function-literal	[01] store *	a cell's u8 edge and corner flags (the border pass ORs them as unsigned bytes)
+src/EDITOR/EDITMGR.cpp	editManager::Confirm	[01]	trivial-function-literal	[01] return	Confirm's u8 yes answer: 1 when the player confirmed (the callers compare it with 1 as an unsigned byte)
+src/EDITOR/EDITMGR.cpp	editManager::Main	1	trivial-function-literal	1 equality Confirm()	Confirm's u8 yes answer
+src/EDITOR/EDITMGR.cpp	editManager::HasObject	[01]	trivial-function-literal	[01] return	HasObject counts up to one cell of the trigger: PlaceOverlay compares the result as a count (>= 1), beside the Count* limits
+src/EDITOR/OVERLAY.cpp	PlaceOverlay	1	trivial-function-literal	1 bound HasObject()	at least one lighthouse or Dragon City already on the map (HasObject counts up to one)
+src/EDITOR/EDITMGR.cpp	editManager::CheckObjects	1	trivial-function-literal	1 store heroIdUsed[]	CheckObjects' u8 marks of the hero ids already placed
+src/EDITOR/EDITMGR.cpp	editManager::UpdateTriggers	0	trivial-function-literal	0 store unused	an unread local of the retail frame
+src/EDITOR/EDITOR.cpp	InterpretCommandLine	1	trivial-function-literal	1 store gSpecialMouseMasks	the /B switch's default: mouse masks on (the switch stores its digit)
+src/EDITOR/EDITOR.cpp	NormalDialog	1	trivial-function-literal	1 store showMessageText	NormalDialog's i16 show-text flag
+src/EDITOR/EDITOR.cpp	HandleAppSpecificMenuCommands	[01]	trivial-function-literal	[01] return	AppCommand's window procedure result: 0 when the command was handled, 1 for a command the editor does not know
+src/EDITOR/EVENTMGR.cpp	gHeroEdit	0	data-or-extent	zero fill	the hero window's scratch record starts zeroed (VC6 has no empty braces; its first field is the owner)
+src/EDITOR/EVENTMGR.cpp	ClearWindowHandler	0	trivial-function-literal	0 equality	wasSet tests the toggle's bit of gClearFlags (bits & mask) != 0
+src/EDITOR/OVERLAY.cpp	CanPlaceOverlay	[01]	trivial-function-literal	[01] return	CanPlaceOverlay's i16 answer: 1 when every footprint cell is free
+src/EDITOR/OVERLAY.cpp	overlayManager::LoadCategory	[01]	trivial-function-literal	[01] return	LoadCategory's i16 answer: 1 when the category has objects
+src/EDITOR/OVERLAY.cpp	overlayManager::Main	0	trivial-function-literal	0 store m_placedState	m_placedState cleared when an object is placed (nothing reads it)
+src/EDITOR/OVERLAY.cpp	overlayManager::PickOverlay	[01]	trivial-function-literal	[01] store done	PickOverlay's i16 done flag
+src/EDITOR/OVERLAY.cpp	overlayManager::PickOverlay	[01]	trivial-function-literal	[01] store needDraw	PickOverlay's i16 redraw flag
+src/EDITOR/OVERLAY.cpp	overlayManager::PickOverlay	0	trivial-function-literal	0 store first	the picker's first shown object back at the category's start
+src/EDITOR/OVERLAY.cpp	overlayManager::PickOverlay	0	trivial-function-literal	0 store slot	the picker's first page slot
+src/EDITOR/OVERLAY.cpp	overlayManager::PickOverlay	0	trivial-function-literal	0 store selected	the picked object index starts at the category's first object
+src/EDITOR/OVERLAY.cpp	overlayManager::PickOverlay	0	trivial-function-literal	0 store gSelectedOverlay	a new category selects its first object
+src/EDITOR/OVERLAY.cpp	overlayManager::PickOverlay	0	trivial-function-literal	0 store unused*	an unread local of the retail frame
+src/EDITOR/MAPOBJ.cpp	editManager::*	0	trivial-function-literal	0 store attempt*	a try counter reset to zero (or spent: a placement ends the tries)
+src/EDITOR/MAPOBJ.cpp	editManager::*	0	trivial-function-literal	0 store guard	a walk's or seed search's step guard reset to zero
+src/EDITOR/MAPOBJ.cpp	editManager::*	0	trivial-function-literal	0 store escapes	an unread counter reset to zero
+src/EDITOR/MAPOBJ.cpp	editManager::*	0	trivial-function-literal	0 store laid	a placed-object counter reset to zero
+src/EDITOR/MAPOBJ.cpp	editManager::*	0	trivial-function-literal	0 store placed	the spent chain budget starts at zero
+src/EDITOR/MAPOBJ.cpp	editManager::*	0	trivial-function-literal	0 store pilesSoFar	a placed-treasure counter reset to zero
+src/EDITOR/MAPOBJ.cpp	editManager::*	0	trivial-function-literal	0 store landCells	a land cell count reset to zero
+src/EDITOR/MAPOBJ.cpp	editManager::*	0	trivial-function-literal	0 store gcLandSquares	gLandCellCount, the land cell count, reset to zero
+src/EDITOR/MAPOBJ.cpp	editManager::*	0	trivial-function-literal	0 store continents	the land region count reset to zero
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	0	trivial-function-literal	0 store reachable[]	a castle's reachable cell count reset to zero
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	0	trivial-function-literal	0 store top	the best castle site rating so far reset to zero
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	[01]	trivial-function-literal	[01] store steps	the approach steps cut towards water: one for a coast beside the entrance, none inland
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	*	trivial-function-literal	*[01] store step[XY]	a unit step of the road towards its end (-1, 0 or 1 per axis)
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	1	trivial-function-literal	1 * regionsUsed	one land region holds every castle (more than one splits them)
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	1	trivial-function-literal	1 store	a castle's own site marked as reached in its u8 reach grid
+src/EDITOR/MAPOBJ.cpp	editManager::GenerateRandomMap	0	trivial-function-literal	0 store canvas	no base terrain painted yet: the shares are painted from the first terrain
+src/EDITOR/MAPOBJ.cpp	editManager::PaintRandomTerrain	0	trivial-function-literal	0 conditional	snow seeds near the top of the map (or 48 rows lower)
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceChainLink	0	trivial-function-literal	0 array-index name	an object name's first letter (a tree chain's family)
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceObstacleChains	0	trivial-function-literal	0 store chance	a tree chain that jumped its gap does not turn
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceResourceSite	1	call-argument	PlaceMineResource(* argument 2	the mine's resource marker stands one column right of the mine
+src/EDITOR/MAPOBJ.cpp	editManager::RemoveSmallRegions	0	trivial-function-literal	0 store searchTop	the region's top row clamped to the map's first row
+src/EDITOR/MAPOBJ.cpp	editManager::RemoveSmallRegions	1	trivial-function-literal	1 store extent	a region's cell count starts with its first cell

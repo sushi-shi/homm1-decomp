@@ -135,7 +135,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) clearManager::Main(tag_message& messa
                                                 gSelectionHeight = abs(y - anchorY) + 1;
                                                 gEditManager->DrawMap();
                                                 gEditManager->UpdateMapView();
-                                                gEditManager->DrawRadar(1);
+                                                gEditManager->DrawRadar(true);
                                                 break;
                                         }
                                     }
@@ -159,7 +159,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) clearManager::Main(tag_message& messa
                             gSelectionX = gSelectionY = EDIT_NO_CELL;
                             gEditManager->DrawMap();
                             gEditManager->UpdateMapView();
-                            gEditManager->DrawRadar(1);
+                            gEditManager->DrawRadar(true);
                             m_lastY = EDIT_NO_CELL;
                             m_lastX = EDIT_NO_CELL;
                             gEditManager->m_mapChanged = 1;

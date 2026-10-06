@@ -324,7 +324,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) terrainManager::Main(tag_message& mes
                                                 gSelectionHeight = abs(y - anchorY) + 1;
                                                 gEditManager->DrawMap();
                                                 gEditManager->UpdateMapView();
-                                                gEditManager->DrawRadar(1);
+                                                gEditManager->DrawRadar(true);
                                                 break;
                                         }
                                     }
@@ -343,7 +343,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) terrainManager::Main(tag_message& mes
                             gEditManager->BlendTerrain(m_terrain, 0, 1, 0, 0);
                             gEditManager->DrawMap();
                             gEditManager->UpdateMapView();
-                            gEditManager->DrawRadar(1);
+                            gEditManager->DrawRadar(true);
                             m_lastY = EDIT_NO_CELL;
                             m_lastX = EDIT_NO_CELL;
                             gEditManager->m_mapChanged = 1;
@@ -376,7 +376,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) terrainManager::Main(tag_message& mes
                     gEditManager->m_mapChanged = 1;
                     gEditManager->DrawMap();
                     gEditManager->UpdateMapView();
-                    gEditManager->DrawRadar(1);
+                    gEditManager->DrawRadar(true);
                     break;
             }
             break;

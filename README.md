@@ -41,7 +41,7 @@ Open cleanup work; the [debt notes](docs/reconstruction-debt.md) hold the
 measuring commands and the record of resolved categories. Counts cover `src`
 and `include`. Preserve banked matches and the linked-image identity.
 
-- [ ] Name bare constants: **1,616** open literals (`homm1 verify constants`
+- [ ] Name bare constants: **1,407** open literals (`homm1 verify constants`
   floor, both programs); about 2,000 0/1 flag literals became `true`/`false`
   on `b8`/`b32` storage, and compiler-proven NULL/bool/enum replacements are
   at 0.

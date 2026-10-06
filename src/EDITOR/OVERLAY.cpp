@@ -204,7 +204,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) overlayManager::Main(tag_message& mes
                                 gEditManager->m_placedState = 0;
                                 gEditManager->DrawMap();
                                 gEditManager->UpdateMapView();
-                                gEditManager->DrawRadar(1);
+                                gEditManager->DrawRadar(true);
                                 gEditManager->m_mapChanged = 1;
                             }
                             break;

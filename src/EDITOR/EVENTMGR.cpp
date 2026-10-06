@@ -28,7 +28,7 @@
 // Zero-initialized: .bss in definition order, as in EDITOR.CPP's and
 // EDITMGR's editor state.
 DATA(0x00452940)
-iconWidget* gDensityTracks[EDITOR_GENERATOR_DENSITY_COUNT] = {0};
+iconWidget* gDensityTracks[EDITOR_GENERATOR_DENSITY_COUNT] = {NULL};
 DATA(0x00452958)
 editHeroExtra gHeroEdit = {0};
 DATA(0x004529a4)
@@ -36,13 +36,13 @@ heroWindow* gClearWindow = NULL;
 DATA(0x004529a8)
 i16 gEventsLastHoverId = 0;
 DATA(0x004529ac)
-iconWidget* gTerrainKnobs[EDITOR_TERRAIN_COUNT] = {0};
+iconWidget* gTerrainKnobs[EDITOR_TERRAIN_COUNT] = {NULL};
 DATA(0x004529c8)
 editMapCellPair* gEditCellPair = NULL;
 DATA(0x004529cc)
-iconWidget* gDensityKnobs[EDITOR_GENERATOR_DENSITY_COUNT] = {0};
+iconWidget* gDensityKnobs[EDITOR_GENERATOR_DENSITY_COUNT] = {NULL};
 DATA(0x004529e0)
-iconWidget* gTerrainTracks[EDITOR_TERRAIN_COUNT] = {0};
+iconWidget* gTerrainTracks[EDITOR_TERRAIN_COUNT] = {NULL};
 DATA(0x00452a00)
 editTownExtra gTownEdit = {false};
 DATA(0x00452a48)
@@ -92,7 +92,7 @@ void eventsManager::Close(void) {
     gResourceManager->Dispose(m_cursorIcon);
     gEditManager->DrawMap();
     gEditManager->UpdateMapView();
-    gEditManager->DrawRadar(1);
+    gEditManager->DrawRadar(true);
     m_active = 0;
 }
 
@@ -903,7 +903,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) HeroWindowHandler(tag_message& messag
 }
 
 VA(0x0040b329, 0x137)
-i32 ClearOptionsDialog(void) {
+b32 ClearOptionsDialog(void) {
     // Never read: a slot of the retail frame.
     i32 unusedResult;
     const i16 firstBitId = CLEAR_WINDOW_FIRST_TOGGLE;
@@ -931,8 +931,8 @@ i32 ClearOptionsDialog(void) {
     gEditManager->DrawMap();
     gEditManager->UpdateMapView();
     if (gWindowManager->m_dialogResult == EVENTS_DIALOG_OK)
-        return 1;
-    return 0;
+        return true;
+    return false;
 }
 
 VA(0x0040b460, 0x73)
@@ -1131,7 +1131,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) MapDetailsWindowHandler(tag_message& 
 }
 
 VA(0x0040bcf7, 0x367)
-i32 NewMapDialog(void) {
+b32 NewMapDialog(void) {
     i32 i;
 
     gNewMapWindow = new heroWindow(EVENTS_DIALOG_X, EVENTS_DIALOG_Y, "editnew.bin");
@@ -1203,8 +1203,8 @@ i32 NewMapDialog(void) {
     gNewMapWindow = NULL;
     BalanceTerrainPercents(TERRAIN_INVALID);
     if (gWindowManager->m_dialogResult == EVENTS_DIALOG_CANCEL)
-        return 0;
-    return 1;
+        return false;
+    return true;
 }
 
 VA(0x0040c05e, 0x11c)
@@ -1323,16 +1323,16 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) NewMapWindowHandler(tag_message& mess
         case WIDGET_NOTIFY_SELECT:
             if (message.id >= NEW_MAP_FIRST_TERRAIN_TRACK
                 && message.id < NEW_MAP_FIRST_TERRAIN_TRACK + EDITOR_TERRAIN_COUNT)
-                DragNewMapSlider(1, message.id - NEW_MAP_FIRST_TERRAIN_TRACK);
+                DragNewMapSlider(true, message.id - NEW_MAP_FIRST_TERRAIN_TRACK);
             else if (message.id >= NEW_MAP_FIRST_TERRAIN_KNOB
                      && message.id < NEW_MAP_FIRST_TERRAIN_KNOB + EDITOR_TERRAIN_COUNT)
-                DragNewMapSlider(1, message.id - NEW_MAP_FIRST_TERRAIN_KNOB);
+                DragNewMapSlider(true, message.id - NEW_MAP_FIRST_TERRAIN_KNOB);
             else if (message.id >= NEW_MAP_FIRST_DENSITY_TRACK
                      && message.id < NEW_MAP_FIRST_DENSITY_TRACK + EDITOR_TERRAIN_COUNT)
-                DragNewMapSlider(0, message.id - NEW_MAP_FIRST_DENSITY_TRACK);
+                DragNewMapSlider(false, message.id - NEW_MAP_FIRST_DENSITY_TRACK);
             else if (message.id >= NEW_MAP_FIRST_DENSITY_KNOB
                      && message.id < NEW_MAP_FIRST_DENSITY_KNOB + EDITOR_TERRAIN_COUNT)
-                DragNewMapSlider(0, message.id - NEW_MAP_FIRST_DENSITY_KNOB);
+                DragNewMapSlider(false, message.id - NEW_MAP_FIRST_DENSITY_KNOB);
             if (message.id >= NEW_MAP_SCATTER_TOWNS && message.id <= NEW_MAP_CENTRE_TOWNS) {
                 gScatterTowns = message.id == NEW_MAP_SCATTER_TOWNS;
                 redraw = true;
@@ -1351,7 +1351,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) NewMapWindowHandler(tag_message& mess
 }
 
 VA(0x0040c705, 0x25e)
-void DragNewMapSlider(i32 terrainRow, i32 index) {
+void DragNewMapSlider(b32 terrainRow, i32 index) {
     tag_message last;
     double knobPercent;
     i16 x;

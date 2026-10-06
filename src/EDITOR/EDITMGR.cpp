@@ -8943,7 +8943,7 @@ DATA(0x0045121c)
 char gEditMapHeader[EDIT_MAP_HEADER_BUFFER_SIZE];
 // Zero-initialized: .bss after the uninitialized objects, in definition order.
 DATA(0x004519ec)
-char* gEditErrors[EDIT_MANAGER_ERROR_CAPACITY] = {0};
+char* gEditErrors[EDIT_MANAGER_ERROR_CAPACITY] = {NULL};
 DATA(0x00451b7c)
 i32 gEditErrorCount = 0;
 DATA(0x00451b80)
@@ -9070,7 +9070,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) editManager::Open(i16 priority) {
     LoadObjectIcons(TILESET_ART32, "art32.icn", "art16.icn");
     m_buttons = gResourceManager->GetIcon("buttons.icn");
     m_window->DrawWindow(0);
-    DrawRadar(1);
+    DrawRadar(true);
     DrawView(m_viewX, m_viewY);
     UpdateMapView();
     gMouseManager->SetPointer("editor.mse", EDIT_POINTER_DEFAULT);
@@ -9151,7 +9151,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) editManager::Main(tag_message& messag
                             }
                             m_viewX = m_viewY = 0;
                             m_window->DrawWindow(0);
-                            DrawRadar(1);
+                            DrawRadar(true);
                             DrawMap();
                             UpdateMapView();
                             break;
@@ -9188,7 +9188,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) editManager::Main(tag_message& messag
                                 NewMap(false);
                                 DrawMap();
                                 UpdateMapView();
-                                DrawRadar(1);
+                                DrawRadar(true);
                             }
                             break;
                         case EDIT_CONTROL_UNDO:
@@ -9199,7 +9199,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) editManager::Main(tag_message& messag
                             free(swap);
                             DrawView(m_viewX, m_viewY);
                             UpdateMapView();
-                            DrawRadar(1);
+                            DrawRadar(true);
                             break;
                         case EDIT_CONTROL_SCROLL_UP:
                             Scroll(0, -1);
@@ -9568,7 +9568,7 @@ void editManager::DrawView(i16 viewX, i16 viewY) {
 
 #define buttonsIcon buttonIcn // frame-slot spelling
 VA(0x00402f2e, 0x255)
-void editManager::DrawRadar(i32) {
+void editManager::DrawRadar(b32) {
     u8 color;
     i16 x;
     i16 y;
@@ -9749,7 +9749,7 @@ void editManager::ToggleZoom(void) {
         Scroll(10, 10);
     }
     DrawView(m_viewX, m_viewY);
-    DrawRadar(1);
+    DrawRadar(true);
     UpdateMapView();
 }
 
@@ -9827,7 +9827,7 @@ void editManager::Scroll(i16 dx, i16 dy) {
             - (H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? EDIT_VIEW_ZOOMED_CELLS : EDIT_VIEW_CELLS);
     DrawView(m_viewX, m_viewY);
     UpdateMapView();
-    DrawRadar(1);
+    DrawRadar(true);
 }
 
 VA(0x00403923, 0xcd)
@@ -9889,7 +9889,7 @@ void editManager::PaintGround(i16 column, i16 row, i16 width, i16 height, i16 te
     if (redrawTop + redrawHeight > LOGICAL_SCREEN_HEIGHT - 1)
         redrawHeight = LOGICAL_SCREEN_HEIGHT - 1 - redrawTop;
     gWindowManager->UpdateScreenRegion(redrawLeft, redrawTop, redrawWidth, redrawHeight);
-    DrawRadar(1);
+    DrawRadar(true);
 }
 #undef cellPixels
 
@@ -10165,7 +10165,7 @@ void editManager::DoRadar(void) {
     if (m_viewY < 0)
         m_viewY = 0;
     DrawMap();
-    DrawRadar(1);
+    DrawRadar(true);
     UpdateMapView();
     input = gInputManager->GetEvent();
     while (!IS_BUTTON_RELEASE_MESSAGE(input.type)) {
@@ -10201,7 +10201,7 @@ void editManager::DoRadar(void) {
             if (m_viewY < 0)
                 m_viewY = 0;
             DrawMap();
-            DrawRadar(1);
+            DrawRadar(true);
             UpdateMapView();
         } else {
             input = gInputManager->GetEvent();
@@ -10256,7 +10256,7 @@ void editManager::DoHorizontalKnob(void) {
                 m_viewX = newX;
                 DrawMap();
                 UpdateMapView();
-                DrawRadar(1);
+                DrawRadar(true);
             }
         } else {
             message = gInputManager->GetEvent();
@@ -10315,7 +10315,7 @@ void editManager::DoVerticalKnob(void) {
                 m_viewY = newY;
                 DrawMap();
                 UpdateMapView();
-                DrawRadar(1);
+                DrawRadar(true);
             }
         } else {
             message = gInputManager->GetEvent();
@@ -11156,7 +11156,7 @@ i32 editManager::IsCleared(
         return mask & EDIT_CLEAR_ARTIFACTS;
 #line 2609 EDITMGR_CPP_PATH
     H1_ASSERT(0);
-    return 0;
+    return EDIT_CLEAR_NONE;
 }
 
 #define clearedId tag      // frame-slot spelling
