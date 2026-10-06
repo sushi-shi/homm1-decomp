@@ -422,6 +422,14 @@ class mapCell* advManager::DoAdvCommand(void) {
     selectedHero = gCurPlayerData->m_currentHero != HERO_ID_NONE
                        ? gGame->GetHero(gCurPlayerData->m_currentHero)
                        : NULL;
+    // A move or occupied-town command set while a hero was selected can
+    // outlive the selection (the hover that set it is not repeated); the
+    // original then moved hero -1. It is dropped.
+    if (selectedHero == NULL
+        && (m_pendingCommand == ADVMGR_COMMAND_MOVE_TO
+            || m_pendingCommand == ADVMGR_COMMAND_CONTINUE_ROUTE
+            || m_pendingCommand == ADVMGR_COMMAND_OCCUPIED_TOWN_VIEW))
+        m_pendingCommand = ADVMGR_COMMAND_NONE;
     userStopRequested = false;
     hover = false;
     switch (m_pendingCommand) {
@@ -1306,6 +1314,10 @@ b32 advManager::ProcessSearch(i32 x, i32 y) {
     tag_message evt;
     i32 gaveArtifact;
 
+    // The search key works without a selected hero too; the original then
+    // searched with hero -1, the bytes before the hero table.
+    if (gCurPlayerData->m_currentHero == HERO_ID_NONE)
+        return 1;
     hero = gGame->GetHero(gCurPlayerData->m_currentHero);
     if (hero->m_remainingMobility != hero->m_mobility) {
         NormalDialog(localization::Tr("adventure.search.requires_full_day"), NORMAL_DIALOG_TYPE_OK);
