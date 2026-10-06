@@ -18,10 +18,10 @@ u32 MAKEFILEID(char* name) {
     for (i32 i = 0; i < length; i++) {
         if (upperName[i] >= 'a' && upperName[i] <= 'z')
             upperName[i] &= ~('a' - 'A');
-        highByte = fileId >> 8;
-        fileId <<= 8;
+        highByte = fileId >> FILE_ID_HASH_BYTE_BITS;
+        fileId <<= FILE_ID_HASH_BYTE_BITS;
         fileId |= highByte;
-        if (fileId & 0x8000) {
+        if (fileId & FILE_ID_HASH_TOP_BIT) {
             fileId <<= 1;
             fileId |= 1;
         } else {

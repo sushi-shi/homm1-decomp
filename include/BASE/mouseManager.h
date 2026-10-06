@@ -21,6 +21,11 @@ H1_ENUM_CONST_BEGIN(MouseCursorFrameConstant)
     MOUSE_INVALID_CURSOR_FRAME = -1
 H1_ENUM_CONST_END(MouseCursorFrameConstant)
 
+// The m_pointerFlags bit IsVis tests: the software pointer is drawn.
+H1_ENUM_CONST_BEGIN(MousePointerFlag)
+    MOUSE_POINTER_FLAG_VISIBLE = 1
+H1_ENUM_CONST_END(MousePointerFlag)
+
 #pragma pack(push, 1)
 class mouseManager : public baseManager {
 public:
@@ -41,8 +46,16 @@ public:
     // The mouse code never updates them after the constructor clears them.
     i32 m_savedLeft;
     i32 m_savedTop;
-    i8 m_unknown51;
-    char m_unused52[9];
+    // The DOS build draws the cursor into the screen bitmap while the
+    // adventure view is copied out in two bands: advManager::UpdateScreen
+    // sets the flag around the copy, the band flag and split line, and the
+    // cursor drawing reads them with the frame's size. The Windows build
+    // only clears the flag in the constructor and never touches the rest.
+    i8 m_drawIntoScreen;
+    i8 m_bandFlushed;
+    i32 m_bandSplitY;
+    i16 m_cursorWidth;
+    i16 m_cursorHeight;
     i16 m_drawnX;
     i16 m_drawnY;
 
@@ -67,7 +80,7 @@ public:
     void HideColorPointer(void);
     void ShowColorPointer(void);
     i32 IsVis(void) {
-        return m_pointerFlags & 1;
+        return m_pointerFlags & MOUSE_POINTER_FLAG_VISIBLE;
     }
     // Empty in the Windows build (retail 0x00476e20, `ret 8`).
     void MovePointer(i16 x, i16 y);
@@ -110,7 +123,12 @@ H1_ENUM_CONST_BEGIN(MouseManagerConstant)
     MOUSE_CURSOR_ADVENTURE = 0,
     MOUSE_CURSOR_COMBAT = 1,
     MOUSE_CURSOR_SPELL = 2,
-    MOUSE_KEEP_CURRENT_FRAME = 1000
+    MOUSE_KEEP_CURRENT_FRAME = 1000,
+    // Cursor bitmap pixels SetPointer turns into the AND/XOR masks: index 0
+    // is transparent; index 1 is the monochrome pointer's black (the white
+    // XOR plane under the special masks).
+    MOUSE_CURSOR_PIXEL_TRANSPARENT = 0,
+    MOUSE_CURSOR_PIXEL_OUTLINE = 1
 H1_ENUM_CONST_END(MouseManagerConstant)
 
 extern i32 gMouseCursorType;

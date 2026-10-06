@@ -24,7 +24,7 @@ town::town(void) {
     m_occupyingHeroId = TOWN_OCCUPYING_HERO_NONE;
     m_buildings = H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_TENT);
     m_buildState = 0;
-    m_unknown19 = 0;
+    m_unused19 = 0;
 }
 
 VA(0x0045ea20, 0x43)

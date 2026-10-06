@@ -529,3 +529,9 @@ param	army::FindPath	(unnamed)	speed	every caller passes m_stats.speed; unused
 param	combatManager::DoCompAI	(unnamed)	side	CheckGetAIMove passes m_currentSide; unused
 param	combatManager::UpdateGrid	(unnamed)	attributes	every caller passes the stack's m_stats.attributes (UpdateGridForMove forwards its own); unused
 param	combatManager::NoShowCombatLog	(unnamed)	message	the combat log line it would show; empty body
+member	army	m_unknown04	m_unused04	constructor clears it; no reader in either Windows image, and the DOS army has no such field
+member	army	m_unknown29	m_unused29	Init stores 6 after the copied stats in every build, DOS included; no reader
+member	combatManager	m_unknown6d9	m_unused6d9	constructor clears it; no reader in the Windows or DOS images
+member	combatManager	m_unknown6db	m_unused6db	constructor clears it; no reader in the Windows or DOS images
+member	combatManager	m_unknown6e8	m_unused6e8	constructor clears it; no reader in the Windows or DOS images
+member	combatManager	m_unknown6f9	m_unused6f9	constructor sets -1; no reader in the Windows or DOS images

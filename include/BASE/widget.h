@@ -5,6 +5,7 @@
 // pure virtual with bodies. Derived classes (border, iconWidget, textWidget,
 // dimmerWidget, ...) override these three slots.
 
+#include <BASE/heroWindow.h>
 #include <BASE/message.h>
 #include <Domains.h>
 #include <H1/Macros.h>
@@ -82,7 +83,7 @@ public:
     virtual ~widget(void) = 0;
     virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(struct tag_message& message) = 0;
     // --- methods ---
-    i16 Open(i16 zOrder, class heroWindow* owner);
+    H1_ENUM_RETURN(WindowOpenStatus, i16) Open(i16 zOrder, class heroWindow* owner);
     void Close(void);
     void Dim(void);
 };

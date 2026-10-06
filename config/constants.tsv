@@ -6,7 +6,7 @@
 # (tab-separated; every field is an fnmatch glob, `*` matches anything; the
 # first matching row wins): file owner spelling group detail reason.
 # group/detail are the census' review_group/review_context columns.
-#floor	819
+#floor	28
 *	*	0	trivial-function-literal	0 for-init	a for loop's counter starts at zero
 *	*	0	trivial-function-literal	0 initializer*	an accumulator or counter declared at zero
 *	*	1	trivial-function-literal	1 arithmetic*	a one-step offset: the next index, element or count
@@ -62,7 +62,6 @@
 *	*	0x100	bitwise-or-packing	operator |	the input-filter bit 0x100 retail sets in manager message masks (no producer posts it; Buka lacks it too)
 *	*	[01]	call-argument	SetNoDialogMenus(* argument 1	SetNoDialogMenus's menus-enabled flag
 *	*	[01]	call-argument	SetEnvironmentOrigin(* argument 3	advManager::SetEnvironmentOrigin's stop-sounds flag
-*	*	[01]	call-argument	TransmitRemoteData(* argument [568]	TransmitRemoteData's reliable / retry-dialog / game-position-destination flags
 *	*	[01]	call-argument	FightValueOfStack(* argument [34]	philAI::FightValueOfStack's use-hero / use-town flags
 *	*	*	call-argument	DoCombat(* argument 10	the battle's random seed
 *	*	[01]	call-argument	AddWindow(* argument 3	the window's draw flag (heroWindow::Open forwards it to DrawWindow)
@@ -85,9 +84,7 @@
 *	*	*	call-argument	SRand(* argument 1	the seed (battle position mixed into one number)
 *	*	*	call-argument	EffectSpellDamage(* argument 3	the spell's damage per spell-power point (CastSpell's multipliers)
 src/SOURCE/FINDPATH.cpp	TerrainStepCost	*	store	store to cost	the movement cost of one step on that terrain (Buka TerrainStepCost table)
-src/SOURCE/ARMY.cpp	army::DamageEnemy	*20	*	*	the attack/defence difference clamp (+-20) and gBattleStat offset
 src/SOURCE/ARMY.cpp	army::DamageEnemy	32000	*	*	the damage cap (stays within the short quantity arithmetic)
-src/SOURCE/CMBTMGR.cpp	combatManager::KeepAttack	*20	*	*	the attack/defence difference clamp (+-20) and gBattleStat offset (as DamageEnemy)
 src/SOURCE/ARMY.cpp	army::DrawToBuffer	*	arithmetic	*	the quantity box / spell icon pixel offsets beside the sprite
 src/SOURCE/CMBTMGR.cpp	combatManager::GetGridIndex	*	arithmetic	*	the hex grid's pixel geometry (field origin, row height 80, column step 78, odd-row offset 27)
 src/SOURCE/CMBTMGR.cpp	combatManager::GetGridIndex	*	comparison-or-bound	*	the hex grid's left pixel edge
@@ -181,7 +178,7 @@ src/SOURCE/ARMY.cpp	army::PowEffect	*	*	*	PowEffect's ten effect frames (five sh
 src/SOURCE/ARMY.cpp	army::SpellEffect	10	store	*	SpellEffect's ten effect frames
 src/SOURCE/ARMY.cpp	army::DoHydraAttack	*	*	*	DoHydraAttack's five attack frames (3..7)
 src/SOURCE/ARMY.cpp	army::Damage	5	arithmetic	*	Damage's one-fifth minimum kill
-src/SOURCE/ARMY.cpp	army::Init	6	store	*	m_unknown29's initial 6 (Buka ArmyInitialStateConstant INITIAL_UNKNOWN_D4)
+src/SOURCE/ARMY.cpp	army::Init	6	store	*	m_unused29's initial 6 (Buka ArmyInitialStateConstant INITIAL_UNKNOWN_D4)
 src/SOURCE/ARMY.cpp	army::LoadResources	16	store	*	the creature sprite-name buffer size
 src/SOURCE/FLY.cpp	army::FlyTo	*	*	*	FlyTo's straight pixel line: six frames per hex, walk frames 0..5, midpoint halving
 src/SOURCE/DRAWING.cpp	combatManager::DrawFrame	*	arithmetic	*	DrawFrame's redraw-box sprite margins around a stack (pixels)
@@ -248,18 +245,16 @@ src/SOURCE/ARMY.cpp	*	*	*	* store gMonoIconSkip	gMonoIconSkip writes; retail nev
 src/SOURCE/SWAPMGR.cpp	*	*	*	store to gMonoIconSkip	gMonoIconSkip writes; retail never reads the variable
 src/SOURCE/SWAPMGR.cpp	*	*	*	* store gMonoIconSkip	gMonoIconSkip writes; retail never reads the variable
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_drawRightToLeft	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/CMBTMGR.cpp	*	-1	trivial-function-literal	-1 store m_unknown6f9	an index, position or timer local/field reset to -1 (none yet)
+src/SOURCE/CMBTMGR.cpp	*	-1	trivial-function-literal	-1 store m_unused6f9	an index, position or timer local/field reset to -1 (none yet)
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_limitCreatureHex	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_gridUpdateRow	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_unknown6e8	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_unknown6db	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_unused6e8	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_unused6db	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_castleSide[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_humanPlayerSide[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store m_catapultAttacksRemaining[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store m_keepAttacksRemaining[[][]]	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_visitingHeroPresent[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_heroCastSpell[[][]]	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store m_visitingHeroPresent[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 bitwise	an odd/even row test or a single low bit
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_sideRetreated[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store gEffectFileId	a flag, counter or index local/field set to 0 or 1
@@ -273,7 +268,6 @@ src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_objectMetadata	a f
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_active	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_creatureCounts[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 equality m_castleSide[[][]]	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
-src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_catapultFrame[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 equality x	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_groundFrame	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store m_groundFrame	a flag, counter or index local/field set to 0 or 1
@@ -424,8 +418,6 @@ src/SOURCE/netwin.cpp	*	0	trivial-function-literal	0 equality gNetbiosAvail	a te
 src/SOURCE/netwin.cpp	*	0	trivial-function-literal	0 store gNetStatus[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/netwin.cpp	*	0	trivial-function-literal	0 store gNbShutdown	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/netwin.cpp	*	0	trivial-function-literal	0 equality length	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
-src/SOURCE/netwin.cpp	*	0	trivial-function-literal	0 store sendComplete	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/netwin.cpp	*	1	trivial-function-literal	1 store sendComplete	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/netwin.cpp	*	0	trivial-function-literal	0 equality memcmp()	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
 src/SOURCE/netwin.cpp	*	0	trivial-function-literal	0 store gNbCallRetries	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/netwin.cpp	*	1	trivial-function-literal	1 condition	an unconditional loop
@@ -523,8 +515,6 @@ src/SOURCE/TOWNMGR.cpp	*	1	trivial-function-literal	1 store m_visible	a boolean 
 src/SOURCE/TOWNMGR.cpp	*	1	trivial-function-literal	1 store sameType	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality AppIdle()	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality AppInit()	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
-src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality KeyboardMessageHandler()	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
-src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality MouseMessageHandler()	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality RegisterClassA()	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality condition	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality fullScreen	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
@@ -627,7 +617,7 @@ src/SOURCE/TOWN.cpp	*	0	trivial-function-literal	0 store m_id	a counter, accumul
 src/SOURCE/TOWN.cpp	*	0	trivial-function-literal	0 store m_owner	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/TOWN.cpp	*	0	trivial-function-literal	0 store m_nameIndex	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/TOWN.cpp	*	0	trivial-function-literal	0 store m_townLocatorPage	a counter, accumulator, coordinate or field reset to zero
-src/SOURCE/TOWN.cpp	*	0	trivial-function-literal	0 store m_unknown19	a counter, accumulator, coordinate or field reset to zero
+src/SOURCE/TOWN.cpp	*	0	trivial-function-literal	0 store m_unused19	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/TOWNMGR.cpp	*	0	trivial-function-literal	0 store firstPlayer	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/TOWNMGR.cpp	*	0	trivial-function-literal	0 store id	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/TOWNMGR.cpp	*	0	trivial-function-literal	0 store m_animationFrame	a counter, accumulator, coordinate or field reset to zero
@@ -842,12 +832,7 @@ src/SOURCE/kbwin.cpp	*	*	call-argument	RegSetValueExA(HKEY, LPCSTR, DWORD, DWORD
 src/SOURCE/wingraph.cpp	*	*	call-argument	SetHWnd(DWORD, HWND) argument *	a Win32/CRT API literal argument (filter 0, reserved 0, flags, sizes)
 src/SOURCE/wingraph.cpp	*	*	call-argument	SetMenuStatus(i32) argument *	a flag, mode or selector argument of a HoMM1 routine without a named domain (draw/update/redraw/give-take flags, transfer options, no-exclusion -1)
 src/SOURCE/wingraph.cpp	*	*	call-argument	GetSystemPaletteEntries(HDC, UINT, UINT, LPPALETTEENTRY) argument *	a Win32/CRT API literal argument (filter 0, reserved 0, flags, sizes)
-src/SOURCE/wingraph.cpp	DDUpdatePalette	*	arithmetic	operator +	retail window/screen layout in pixels or frames, or a text/row count of this routine
 src/SOURCE/wingraph.cpp	*	*	call-argument	PatBlt(HDC, int, int, int, int, DWORD) argument *	a Win32/CRT API literal argument (filter 0, reserved 0, flags, sizes)
-src/SOURCE/wingraph.cpp	WGUpdatePalette	*	bitwise-or-packing	operator << paletteData[[]]	retail window/screen layout in pixels or frames, or a text/row count of this routine
-src/SOURCE/wingraph.cpp	WGUpdatePalette	*	arithmetic	operator +	retail window/screen layout in pixels or frames, or a text/row count of this routine
-src/SOURCE/wingraph.cpp	*	*	call-argument	AnimatePalette(HPALETTE, UINT, UINT, const PALETTEENTRY *) argument *	a Win32/CRT API literal argument (filter 0, reserved 0, flags, sizes)
-src/SOURCE/wingraph.cpp	*	*	call-argument	WinGSetDIBColorTable(HDC, UINT, UINT, const RGBQUAD *) argument *	a Win32/CRT API literal argument (filter 0, reserved 0, flags, sizes)
 src/SOURCE/ADVMGR.cpp	*	[01]	call-argument	ShowRoute(* argument [123]	advManager::ShowRoute's redraw / show / update flags
 src/SOURCE/ADVMGR.cpp	*	[01]	call-argument	Reseed(* argument [12]	advManager::Reseed's flag arguments
 src/SOURCE/ADVMGR.cpp	advManager::Main	*	array-index	array subscript m_playerDead	a player slot the debug keys kill
@@ -871,8 +856,6 @@ src/SOURCE/PHILAI.cpp	philAI::CheckBuyStuff	*	comparison-or-bound	operator < m_r
 src/SOURCE/PHILAI.cpp	philAI::GoodAdjacent	*	comparison-or-bound	operator > chance	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::CheckReload	*	store	store to fReduceFactor	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::CheckReload	*	store	store to enemyPressure	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::CheckReload	*	comparison-or-bound	operator < heroFightValue	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::CheckReload	*	store	store to heroFightValue	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::CheckReload	*	arithmetic	operator [*] heroFightValue	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::CheckReload	*	arithmetic	operator + m_mobility	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::CheckReload	*	arithmetic	operator + distance	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
@@ -905,7 +888,6 @@ src/SOURCE/PHILAI.cpp	philAI::DetermineTargetPosition	*	arithmetic	operator + Ra
 src/SOURCE/PHILAI.cpp	philAI::DetermineTargetPosition	*	comparison-or-bound	operator >	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::DetermineTargetPosition	*	comparison-or-bound	operator > giCurTurn	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::DetermineTargetPosition	*	arithmetic	operator [*] m_income[[][]]	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::DetermineTargetPosition	*	arithmetic	operator +	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::ProbableOutcomeOfBattle	*	store	store to powCurve	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::ProbableOutcomeOfBattle	*	store	store to winChance	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::ProbableOutcomeOfBattle	*	arithmetic	operator + attArts	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
@@ -927,12 +909,9 @@ src/SOURCE/PHILAI.cpp	philAI::GetTurnAttentionValue	*	store	store to gameWeightB
 src/SOURCE/PHILAI.cpp	philAI::GetTurnAttentionValue	*	store	store to gameRemainder	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::GetTurnAttentionValue	*	comparison-or-bound	operator < giCurTurn	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::TurnsToBuy	*	store	store to turnCount	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::RVOfPosition	*	store	store to guardEventChance	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::RVOfPosition	*	arithmetic	operator /	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::RVOfPosition	*	arithmetic	compound assignment to totalValue	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::StrategicValueOfPosition	*	store	store to liveChance	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::StrategicValueOfPosition	*	store	store to seedLimit	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::StrategicValueOfPosition	*	comparison-or-bound	operator < gaiHeroLiveChance[[][]]	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::StrategicValueOfPosition	*	comparison-or-bound	operator <= distance	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::StrategicValueOfPosition	*	arithmetic	operator - gaiHeroLiveChance[[][]]	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::StrategicValueOfPosition	*	arithmetic	operator +	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
@@ -953,36 +932,22 @@ src/SOURCE/PHILAI.cpp	philAI::TurnValueOfObelisk	*	return	return value	an AI tun
 src/SOURCE/PHILAI.cpp	philAI::TurnValueOfObelisk	*	arithmetic	operator [*] each	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::FightValueOfStack	*	comparison-or-bound	operator > m_creatureCounts[[][]]	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::FightValueOfStack	*	store	store to countMod	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::FightValueOfStack	*	arithmetic	operator +	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::FightValueOfStack	*	arithmetic	operator + morale	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::FightValueOfStack	*	arithmetic	operator /	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::FightValueOfStack	*	array-index	array subscript gBattleStat	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::FightValueOfStack	*	array-index	array subscript gSpellCastNumMod	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::EvaluateOneTimeCreaturePurchase	*	store	store to leastStackValue	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::QuickCombat	*	store	store to defenderCasualtyFraction	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::QuickCombat	*	store	store to attackerCasualtyFraction	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	*	comparison-or-bound	operator >= m_resources[[][]]	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	*	arithmetic	compound assignment to m_resources[[][]]	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	*	comparison-or-bound	operator > statSum	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	*	store	store to statSum	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	*	store	store to speedLimit	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	*	comparison-or-bound	operator <= m_remainingMobility	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::StatChangeValue	*	comparison-or-bound	operator > newValue	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::StatChangeValue	*	array-index	array subscript gSpellCastNumMod	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::StatChangeValue	*	comparison-or-bound	operator > oldValue	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::IncrementHourGlass	*	comparison-or-bound	operator < heroCount	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::IncrementHourGlass	*	comparison-or-bound	operator >= m_resources[[][]]	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::IncrementHourGlass	*	comparison-or-bound	operator > gCurHourGlassPhase	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::IncrementHourGlass	*	store	store to gCurHourGlassPhase	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	*	store	store to liveChance	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	*	store	store to m_creatureCounts[[][]]	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	*	store	store to gaiHeroLiveChance[[][]]	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	*	store	store to gVisitResult	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	*	arithmetic	operator - m_playerCount	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	*	comparison-or-bound	operator > gVisitResult	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	*	comparison-or-bound	operator > gaiHeroLiveChance[[][]]	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	*	store	store to gCombatWinningFraction	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	*	array-index	array subscript gStatPower	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	*	comparison-or-bound	operator >	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	*	arithmetic	operator -	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	*	comparison-or-bound	operator > m_ultimateArtifactHintChance	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
@@ -1020,6 +985,158 @@ src/SOURCE/kbwin.cpp	ResizeWindow	1	call-argument	MoveWindow(HWND, int, int, int
 src/SOURCE/kbwin.cpp	SetMenus	-1	trivial-function-literal	-1 cxx_static_cast_expr	GetMenuItemID's (UINT)-1 for a submenu entry (no Win32 macro in the VC4 headers)
 src/SOURCE/PHILAI.cpp	philAI::QuickCombat	-1	call-argument	ProbableOutcomeOfBattle(*	no defending player in the m_owner ternary: retail's int literal (an enumerator narrows VC4's ?: result to char)
 src/SOURCE/PHILAI.cpp	philAI::ChooseEvaluateBattle	-1	call-argument	ProbableOutcomeOfBattle(*	no defending player in the m_owner ternary: retail's int literal (an enumerator narrows VC4's ?: result to char)
+src/SOURCE/PHILAI.cpp	*	[01]	trivial-function-literal	[01] store bShowIt	gShowIt, the adventure code's shared integer show-the-move flag (stored 0/1 and tested against 0 by CURSOR/EVENTS/ADVMGR)
+src/SOURCE/PHILAI.cpp	*	0	trivial-function-literal	0 equality bShowIt	gShowIt, the adventure code's shared integer show-the-move flag (stored 0/1 and tested against 0 by CURSOR/EVENTS/ADVMGR)
+src/SOURCE/PHILAI.cpp	*	0	trivial-function-literal	0 equality blackoutComputer	gConfig.blackoutComputer, the saved integer option: 0 shows the computer's moves
+src/SOURCE/PHILAI.cpp	*	0	call-argument	CheckDoMain(i32, b32) argument 1	CheckDoMain's first argument, which it never reads
+src/SOURCE/PHILAI.cpp	*	0	trivial-function-literal	0 store m_remainingMobility	the hero's remaining movement points spent: its move ends this turn
+src/SOURCE/PHILAI.cpp	*	1	trivial-function-literal	1 bitwise	a one-bit shift: halving a fight value or mobility (>> 1), or a visited-site bit (1 << n)
+src/SOURCE/PHILAI.cpp	*	0	trivial-function-literal	0 store visited	the search's own start cell unmarked (searchArray's visited bit field)
+src/SOURCE/PHILAI.cpp	*	0	call-argument	QuickCombat(* argument [56]	QuickCombat's town-battle flag and town id: not a town battle (the id is unused)
+src/SOURCE/PHILAI.cpp	*	1	call-argument	QuickCombat(* argument 5	QuickCombat's town-battle flag: the town is the defender
+src/SOURCE/PHILAI.cpp	*	0	call-argument	ChooseEvaluateBattle(* argument [56]	ChooseEvaluateBattle's castle flag and castle id: not a castle battle (the id is unused)
+src/SOURCE/PHILAI.cpp	*	[01]	call-argument	ProbableOutcomeOfBattle(* argument [67]	ProbableOutcomeOfBattle's use-town flag and town id: 0 for an open-field battle (the id is unused), 1 for the defended town
+src/SOURCE/PHILAI.cpp	philAI::philAI	0	trivial-function-literal	0 store giBuildBoatStuffTurn[[][]]	no boat plan made yet: the plan's turn starts at 0
+src/SOURCE/PHILAI.cpp	philAI::CheckBuyStuff	1	call-argument	CreateBoat(i8, i8) argument [12]	the shipyard's dock cell, one column left of and one row below the town
+src/SOURCE/PHILAI.cpp	philAI::GoodAdjacent	100	store	store to bestEventValue	an AI tuning threshold: the least event value worth a one-step detour
+src/SOURCE/PHILAI.cpp	philAI::CheckReload	0.0f	store	store to friendlySupportSum	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/PHILAI.cpp	philAI::CheckReload	2	call-argument	SeedPosition(* argument 4	an AI tuning factor: the reload search reaches four times the hero's mobility (<< 2)
+src/SOURCE/PHILAI.cpp	philAI::CheckBerserk	-1	trivial-function-literal	-1 initializer	below every fight value: the strongest enemy found so far starts at -1
+src/SOURCE/PHILAI.cpp	philAI::DoDimensionDoor	-1	trivial-function-literal	-1 [se]* bestX	no landing cell found yet (bestX -1)
+src/SOURCE/PHILAI.cpp	philAI::DoDimensionDoor	1	trivial-function-literal	1 bound pathIndex	the path's steps after the first one (index 0 is the destination)
+src/SOURCE/PHILAI.cpp	philAI::DoDimensionDoor	4	comparison-or-bound	operator <= skippedCount	an AI tuning threshold: the fewest path steps a dimension door must skip
+src/SOURCE/PHILAI.cpp	philAI::DoAI	4	store	initializer of tempArrayData	the extent of an unused four-entry local array that holds its retail frame slot
+src/SOURCE/PHILAI.cpp	philAI::DoAI	0	trivial-function-literal	0 store iCurPlaceToVisit	the visit log emptied for the next hero
+src/SOURCE/PHILAI.cpp	philAI::DoAI	0	call-argument	ResetHeroRVs(b32, i32, i32) argument [23]	no position: a full reset (resetAll false) ignores x and y
+src/SOURCE/PHILAI.cpp	philAI::DoAI	*	store	store to stepQuota	an AI tuning weight: the steps a hero moves between re-evaluations, at sea and on land
+src/SOURCE/PHILAI.cpp	philAI::DoAI	0	trivial-function-literal	0 equality pathIndex	the path's last step (index 0 is the destination)
+src/SOURCE/PHILAI.cpp	philAI::GetTurnAIVars	0	trivial-function-literal	0 store gSandAnim	the AI-turn sand animation back at its first frame
+src/SOURCE/PHILAI.cpp	philAI::GetTurnAIVars	0	trivial-function-literal	0 store unusedFightValue	an unused local's retail store
+src/SOURCE/PHILAI.cpp	philAI::GetTurnAIVars	0.0f	store	store to fightVal	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/PHILAI.cpp	philAI::GetTurnAIVars	0	trivial-function-literal	0 store fightTotalSum	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/PHILAI.cpp	philAI::GetTurnAIVars	0	trivial-function-literal	0 store artifactValueSum	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/PHILAI.cpp	philAI::GetTurnAIVars	4e-05	arithmetic	operator * fightVal	an AI tuning weight: a hero's fight value scales its AI fight factor
+src/SOURCE/PHILAI.cpp	philAI::GetTurnAIVars	1000	arithmetic	operator + fightTotalSum	an AI tuning weight: the gold-to-strength upgrade ratio's offset
+src/SOURCE/PHILAI.cpp	philAI::GetTurnAIVars	10	arithmetic	operator [-+] *	an AI tuning radius: cells around an enemy hero whose mine value it threatens
+src/SOURCE/PHILAI.cpp	philAI::GetTurnAIVars	4	call-argument	abs(int) argument 1	an AI tuning offset: an enemy hero's reach before a mine counts as threatened
+src/SOURCE/PHILAI.cpp	philAI::GetBestBHC	*.*f	store	initializer of *	a floating-point AI score start: 1.0 scale and the -99 'no purchase yet' floor
+src/SOURCE/PHILAI.cpp	philAI::GetBestBHC	1	trivial-function-literal	1 * totalWeights	a divisor kept at least one
+src/SOURCE/PHILAI.cpp	philAI::GetBestBHC	*	arithmetic	operator [*] avgStrength	an AI tuning weight: a castle town's share of the garrison strength (10 against 7)
+src/SOURCE/PHILAI.cpp	philAI::GetBestBHC	1	trivial-function-literal	1 bound m_heroCount	a player with at most one hero
+src/SOURCE/PHILAI.cpp	philAI::GetBestBHC	0	trivial-function-literal	0 equality m_heroCount	a player without heroes
+src/SOURCE/PHILAI.cpp	philAI::DetermineHeroToMove	0	trivial-function-literal	0 store bestMobility	no hero with movement found yet
+src/SOURCE/PHILAI.cpp	philAI::DetermineHeroToMove	-1	trivial-function-literal	-1 store bestHero	no hero chosen yet (an index into the player's hero list)
+src/SOURCE/PHILAI.cpp	philAI::DetermineTargetPosition	-1	trivial-function-literal	-1 store best[XY]	no target cell found yet
+src/SOURCE/PHILAI.cpp	philAI::DetermineTargetPosition	*	store	store to maxRV	an AI tuning value: the -999999 'nothing yet' floor and the value given a planned shipyard trip
+src/SOURCE/PHILAI.cpp	philAI::DetermineTargetPosition	*	store	store to posValue	an AI tuning value: the penalties for a cell another hero targets (-2000) and an unreachable cell (-100)
+src/SOURCE/PHILAI.cpp	philAI::DetermineTargetPosition	100	arithmetic	compound assignment to posValue	a percentage: the random 76-125% scaling divided back
+src/SOURCE/PHILAI.cpp	philAI::DetermineTargetPosition	*	*	* gridStep	an AI tuning value: the sampling grid's step adjustment for slow terrain and its minimum
+src/SOURCE/PHILAI.cpp	philAI::DetermineTargetPosition	3	call-argument	SeedPosition(* argument 4	an AI tuning factor: the target search reaches three times the hero's mobility
+src/SOURCE/PHILAI.cpp	philAI::DetermineTargetPosition	-1	trivial-function-literal	-1 store [cr]*Counter	one before the first column or row: the counter is stepped before use
+src/SOURCE/PHILAI.cpp	philAI::DetermineTargetPosition	0	trivial-function-literal	0 store [cr]*Counter	the grid-step counter wrapped to the first column or row
+src/SOURCE/PHILAI.cpp	philAI::DetermineTargetPosition	0	trivial-function-literal	0 equality	a cell on the sampling grid (remainder zero)
+src/SOURCE/PHILAI.cpp	philAI::DetermineTargetPosition	0	trivial-function-literal	0 equality posValue	a tie at zero value, broken by distance
+src/SOURCE/PHILAI.cpp	philAI::DetermineTargetPosition	75	comparison-or-bound	operator < maxRV	an AI tuning threshold: the best target value below which a boat trip is planned
+src/SOURCE/PHILAI.cpp	philAI::DetermineTargetPosition	0	trivial-function-literal	0 conditional	no shipyard wood to reserve once a shipyard exists
+src/SOURCE/PHILAI.cpp	philAI::ProbableOutcomeOfBattle	0	trivial-function-literal	0 store [ad]*Arts	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/PHILAI.cpp	philAI::ProbableOutcomeOfBattle	1.0f	store	store to *	a strength floor of one before the power curve
+src/SOURCE/PHILAI.cpp	philAI::ValueOfBuyingBuilding	0	trivial-function-literal	0 store dwellingsOwned	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/PHILAI.cpp	philAI::ValueOfBuyingBuilding	-1	trivial-function-literal	-1 store lastDwellingIndex	no dwelling owned yet
+src/SOURCE/PHILAI.cpp	philAI::ValueOfBuyingBuilding	0	call-argument	*(* argument [34]	the mage guild level or build state, unused for a building other than the guild
+src/SOURCE/PHILAI.cpp	philAI::ValueOfBuyingBuilding	1	call-argument	GetBuildingBaseResourceValue(* argument 3	the guild level below the current one
+src/SOURCE/PHILAI.cpp	philAI::ValueOfBuyingBuilding	0	trivial-function-literal	0 store score	a building worth nothing to the AI
+src/SOURCE/PHILAI.cpp	philAI::GetBest*	-99.0f	store	store to *	the AI's 'no candidate yet' score floor
+src/SOURCE/PHILAI.cpp	philAI::ValueOfBuyingCreature	0	trivial-function-literal	0 store breathStacks	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/PHILAI.cpp	philAI::GetBestCreature	-1	trivial-function-literal	-1 store bestDwelling	no dwelling chosen yet
+src/SOURCE/PHILAI.cpp	philAI::GetBestCreature	0	trivial-function-literal	0 store bestNumber	no creatures chosen yet
+src/SOURCE/PHILAI.cpp	philAI::GetBestHero	-1	trivial-function-literal	-1 store bestHero	no available hero chosen yet
+src/SOURCE/PHILAI.cpp	philAI::CreaturesToBuy	1	trivial-function-literal	1 bound purchaseCount	more than one creature: the AI halves the purchase and never buys a single creature
+src/SOURCE/PHILAI.cpp	philAI::CreaturesToBuy	0	trivial-function-literal	0 return	nothing to buy
+src/SOURCE/PHILAI.cpp	philAI::MaxBuyableCreatures	0	trivial-function-literal	0 equality cost[[][]]	a resource the creature does not cost
+src/SOURCE/PHILAI.cpp	philAI::MaxBuyableCreatures	9999	store	store to affordable	an unlimited count for a resource the creature does not cost
+src/SOURCE/PHILAI.cpp	philAI::MaxBuyableCreatures	0	trivial-function-literal	0 store affordable	none affordable without the resource
+src/SOURCE/PHILAI.cpp	philAI::ValueOfBuyingHero	0	trivial-function-literal	0 store heroCost[[][]]	a hero costs no resource but gold
+src/SOURCE/PHILAI.cpp	philAI::MeanRVOfUnexploredTerritory	0	trivial-function-literal	0 return	the unexplored territory is valued at nothing (the function is a stub)
+src/SOURCE/PHILAI.cpp	philAI::GetTurnAttentionValue	*.*f	store	store to scale	an AI tuning weight: the attention scale by turn
+src/SOURCE/PHILAI.cpp	philAI::RVOfPosition	0	trivial-function-literal	0 store *	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/PHILAI.cpp	philAI::RVOfPosition	2	arithmetic	operator [*] positionStrategicValue	an AI tuning weight: the strategic value's weight against travel time
+src/SOURCE/PHILAI.cpp	philAI::StrategicValueOfPosition	0	trivial-function-literal	0 store strategicWorth	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/PHILAI.cpp	philAI::StrategicValueOfPosition	0	trivial-function-literal	0 store wasInBoat	the hero searched as on land: the target is the coast it lands on
+src/SOURCE/PHILAI.cpp	philAI::StrategicValueOfPosition	20	arithmetic	operator + reach	an AI tuning weight: a computer hero's threat fades over its reach plus 20 cells
+src/SOURCE/PHILAI.cpp	philAI::TurnCostResource	0	trivial-function-literal	0 store totalRV	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/PHILAI.cpp	philAI::TurnValueOfObelisk	32	call-argument	abs(int) argument 1	an AI tuning weight: the puzzle progress at which an obelisk is worth most
+src/SOURCE/PHILAI.cpp	philAI::FutureDeflator	0	trivial-function-literal	0 store value	a deflator floored at zero
+src/SOURCE/PHILAI.cpp	philAI::FightValueOfStack	0	trivial-function-literal	0 store *	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/PHILAI.cpp	philAI::FightValueOfStack	*	*	operator [*] *	an AI tuning weight: a keep archer's value, the army-value ratio tiers
+src/SOURCE/PHILAI.cpp	philAI::FightValueOfStack	16	arithmetic	operator + heroLuck	an AI tuning weight: luck scales the army by (luck + 16) / 16
+src/SOURCE/PHILAI.cpp	philAI::FightValueOfStack	*.*f	store	store to spellMultiplier	an AI tuning weight: the spell value scale for spell power one, two and more
+src/SOURCE/PHILAI.cpp	philAI::FightValueOfStack	-1	trivial-function-literal	-1 store bestScore	below every spell score: the best one found so far starts at -1
+src/SOURCE/PHILAI.cpp	philAI::EvaluateOneTimeCreaturePurchase	0	trivial-function-literal	0 store purchaseValue	a purchase worth nothing
+src/SOURCE/PHILAI.cpp	philAI::EvaluateOneTimeCreaturePurchase	-1	trivial-function-literal	-1 * replacementSlot	no army slot to replace
+src/SOURCE/PHILAI.cpp	philAI::EvaluateOneTimeCreaturePurchase	0	trivial-function-literal	0 equality purchaseCount	nothing to buy
+src/SOURCE/PHILAI.cpp	philAI::EvaluateOneTimeCreaturePurchase	0	trivial-function-literal	0 equality CanJoin()	armyGroup::CanJoin's i8 result: the creature has no slot to join
+src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	0	trivial-function-literal	0 store value	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	0	trivial-function-literal	0 store statSum	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	0	trivial-function-literal	0 store transferRating	a troop transfer worth nothing
+src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	0	trivial-function-literal	0 store heroTroops	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	1	trivial-function-literal	1 bound heroTroops	the single creature a hero must keep
+src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	1	trivial-function-literal	1 conditional	a spell whose value does not scale with power: a factor of one
+src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	*.*f	store	store to transferFactor	an AI tuning weight: the transfer rating's scale toward the weaker side
+src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	-1	trivial-function-literal	-1 * choice	no stack chosen to transfer
+src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	-9999	store	store to bestFV	below every stack's fight value: the best one found so far
+src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	0	trivial-function-literal	0 equality m_creatureCounts[[][]]	a stack emptied by the transfer
+src/SOURCE/PHILAI.cpp	philAI::ChooseEvaluateBattle	0	trivial-function-literal	0 store rating	a battle worth nothing
+src/SOURCE/PHILAI.cpp	philAI::ChooseEvaluateBattle	[01]	trivial-function-literal	[01] store canWin	ChooseEvaluateBattle's i32& verdict, shared with EVENTS' integer locals
+src/SOURCE/PHILAI.cpp	philAI::CombatMonsterEvent	0	trivial-function-literal	0 store remaining	a count reset to zero
+src/SOURCE/PHILAI.cpp	philAI::CombatMonsterEvent	0	trivial-function-literal	0 equality result	QuickCombat's integer victory result: the hero lost
+src/SOURCE/PHILAI.cpp	philAI::CombatMonsterEvent	[01]	trivial-function-literal	[01] return	CombatMonsterEvent's i8 victory result for advManager (1 won, 0 lost)
+src/SOURCE/PHILAI.cpp	philAI::DamageGroup	[01]	trivial-function-literal	[01] return	DamageGroup's integer result: 1 when the group was destroyed
+src/SOURCE/PHILAI.cpp	philAI::TownEvent	0	trivial-function-literal	0 equality gbHumanPlayer[[][]]	gHumanPlayer's integer entry: a computer player
+src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	0	trivial-function-literal	0 store gVisitResult	the event is worth nothing to this hero
+src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	0	trivial-function-literal	0 store g*	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	0	trivial-function-literal	0 store liveChance	no chance to survive the event
+src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	0	call-argument	ChooseEvaluateBattle(* argument 7	no artifact on top of the gold reward
+src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	1.0	call-argument	ChooseEvaluateBattle(* argument 7	a floating-point AI weight: the owner's artifact share plus one
+src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	1	trivial-function-literal	1 conditional	the least distance to another stone lith (whirlpools need more than three cells)
+src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	200	arithmetic	operator + stayWorth	an AI tuning threshold: the gain a travel gate must beat
+src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	-9999	store	store to bestExitValue	below every exit's value: the best one found so far
+src/SOURCE/ARMY.cpp	army::DoAttack	0	trivial-function-literal	0 store damageDone	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/ARMY.cpp	army::DoAttack	0	*	*Cyrillic*argument 1	the first character of the text, case-converted
+src/SOURCE/ARMY.cpp	army::DoAttack	0	trivial-function-literal	0 array-index gTargetName	the first character of the text, case-converted
+src/SOURCE/ARMY.cpp	army::DoAttack	1	call-argument	sprintf(* argument 10	a single creature takes the singular name
+src/SOURCE/ARMY.cpp	army::WalkTo	-1	trivial-function-literal	-1 store pathIndex	past the path's first step: ends the walk
+src/SOURCE/ARMY.cpp	army::AttackTo	0	trivial-function-literal	0 store pathIndex	the path index cleared before the loop sets it
+src/SOURCE/ARMY.cpp	army::AttackTo	1	trivial-function-literal	1 equality pathIndex	the last step before the target hex
+src/SOURCE/ARMY.cpp	army::Damage	1	trivial-function-literal	1 store quantityFifth	at least one creature
+src/SOURCE/ARMY.cpp	army::GoBerserk	[01]	trivial-function-literal	[01] store targetFound	GoBerserk's found count (an i8 also stepped with ++)
+src/SOURCE/ARMY.cpp	army::GoBerserk	0	trivial-function-literal	0 store tryNumber	a count reset to zero
+src/SOURCE/ARMYGRP.cpp	armyGroup::IsHomogeneous	*	*	* raceUsed*	the five race counters zeroed in one chained store (ARMY_GROUP_RACE_COUNT entries)
+src/SOURCE/ARMYGRP.cpp	armyGroup::IsHomogeneous	1	trivial-function-literal	1 bound numTypeRuns	a group of a single creature type
+src/SOURCE/CMBTMGR.cpp	combatManager::SetupCombat	[01]	trivial-function-literal	[01] conditional	m_castleSide's flag from retail's int ?: (a bool ?: compiles differently)
+src/SOURCE/CMBTMGR.cpp	combatManager::CatAttack	0	trivial-function-literal	0 store frameIndex	the boulder animation's first frame
+src/SOURCE/CMBTMGR.cpp	combatManager::CatAttack	25	store	store to topPosY	the boulder arc's top in pixels for the upper wall row
+src/SOURCE/CMBTMGR.cpp	combatManager::KeepAttack	-1	trivial-function-literal	-1 store bestClass	below every target priority: the best one found so far
+src/SOURCE/CMBTMGR.cpp	combatManager::KeepAttack	0	trivial-function-literal	0 store bestStrength	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/CMBTMGR.cpp	combatManager::KeepAttack	0	trivial-function-literal	0 store originalRow	the keep shoots from the top grid row
+src/SOURCE/CMBTMGR.cpp	combatManager::KeepAttack	*1	trivial-function-literal	*1 conditional	a wide target's second hex, one column left or right
+src/SOURCE/CMBTMGR.cpp	combatManager::KeepAttack	0	trivial-function-literal	0 store maxX	the redraw extent reset to the origin
+src/SOURCE/CMBTMGR.cpp	combatManager::KeepAttack	0	trivial-function-literal	0 store arrowDamage	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/CMBTMGR.cpp	combatManager::KeepAttack	1	trivial-function-literal	1 store arrowDamage	at least one point of damage
+src/SOURCE/CMBTMGR.cpp	combatManager::ExperienceValueOfStack	0	trivial-function-literal	0 store sideExperience	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/COMMAND.cpp	combatManager::SetCombatDirections	0	trivial-function-literal	0 store remainingSectors	a count reset to zero
+src/SOURCE/COMMAND.cpp	combatManager::CheckSetMouseDirection	0	trivial-function-literal	0 store slot	the first pointer sector
+src/SOURCE/COMMAND.cpp	combatManager::DoSurrender	1	trivial-function-literal	1 store unusedTypeValue	an unused local's retail store
+src/SOURCE/COMMAND.cpp	combatManager::ResetMouse	0x1ca	comparison-or-bound	operator <= y	the battlefield's last pointer row in pixels; below it lies the text bar
+src/SOURCE/DRAWING.cpp	combatManager::ResetLimitCreature	0	trivial-function-literal	0 conditional	a live stack's redraw count starts at zero
+src/SOURCE/DRAWING.cpp	combatManager::UpdateCombatArea	0	trivial-function-literal	0 store baseY	the top screen row: the first grid row also redraws the margin above it
+src/SOURCE/DRAWING.cpp	combatManager::DrawFrame	*1	trivial-function-literal	*1 conditional	a wide stack's rear hex, one column left or right by side
+src/SOURCE/SPELLAI.cpp	combatManager::DoSpellAI	0	trivial-function-literal	0 store bestValue	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/SPELLAI.cpp	combatManager::EffectSpellCure	0	trivial-function-literal	0 store negTotal	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/SPELLAI.cpp	combatManager::EffectSpellDamage	0	trivial-function-literal	0 store hex	the hex scan starts at the first hex
+src/SOURCE/SPELLAI.cpp	combatManager::EffectSpellDamage	0	trivial-function-literal	0 store killedValue[[][]]	a sum, score or estimate reset to zero before it accumulates
+src/SOURCE/SPELLAI.cpp	combatManager::EffectSpellDamage	0	trivial-function-literal	0 store leftDamage	no damage left over once the stack dies
+src/SOURCE/AI.cpp	combatManager::GetFlyerMask	0	trivial-function-literal	0 store bits	an empty stack mask
+include/SOURCE/philAI.h	philAI::FightValueOfStack	0	trivial-function-literal	0 parm_decl	FightValueOfStack's defaults: no town (useTown 0; townId is then unused)
 src/SOURCE/EVENTS.cpp	*	-1	trivial-function-literal	-1 conditional	retail's int-literal arm of `owner ? m_owner : -1`; an enumerator arm narrows the conditional to signed char (VC4)
 src/EDITOR/*	*	*	call-argument	ClearArea(* argument [1-4]	the erased rectangle's map x and y and its width and height in cells
 src/EDITOR/*	*	*	call-argument	ResetArea(* argument [1-4]	the reset rectangle's map x and y and its width and height in cells
@@ -1309,3 +1426,111 @@ src/SOURCE/ADVMGR.cpp	advManager::SetInitialMapOrigin	0	trivial-function-literal
 src/SOURCE/ADVMGR.cpp	*	1	call-argument	CheckDoMain(i32, b32) argument 1	CheckDoMain's unnamed, unused first argument
 src/SOURCE/ADVMGR.cpp	advManager::TrimLoopingSounds	0	trivial-function-literal	0 equality keep[[]]	a looping sample no sound slot uses (a zero use count)
 
+*	*	[01]	trivial-function-literal	[01] *m_active	baseManager::m_active, the managers' 16-bit active word: an i16 flag (b8/b32 are the 8- and 32-bit flag storage), set on Open and tested against 1
+*	*	[01]	trivial-function-literal	[01] *m_updateFlags	heroWindowManager::m_updateFlags, the 16-bit palette-cycling switch: an i16 flag that FadeScreen saves in a byte and ORs back in
+include/SOURCE/KB.h	NormalDialog	0	trivial-function-literal	0 parm_decl	an unused resource quantity: the slot shows no amount
+src/BASE/Audio.cpp	*	0	trivial-function-literal	0 store gMusicPositions*	a track's saved play position back at its start
+src/BASE/BASEMGR.cpp	baseManager::GetInfo	0	trivial-function-literal	0 return	an unknown info selector reads as zero
+src/BASE/BITMAP.cpp	bitmap::bitmap	0	trivial-function-literal	0 store m_*	an empty bitmap's width and height
+src/BASE/*	*	0	trivial-function-literal	0 store m_fillColor	a widget's fill colour defaults to palette index 0
+src/BASE/*	*	0	trivial-function-literal	0 store m_*Frame	a widget's icon frame defaults to the first frame
+src/BASE/ICONWDGT.cpp	iconWidget::iconWidget	0	trivial-function-literal	0 store m_frame	a widget's icon frame defaults to the first frame
+src/BASE/EXEC.cpp	executive::executive	0	trivial-function-literal	0 store m_result	no result until a manager's dialog-select message sets one
+src/BASE/FONT.cpp	*	0	trivial-function-literal	0 store *	a line layout position, width, indent or line bound reset to zero
+src/BASE/ICONWDGT.cpp	iconWidget::Main	0xffff	bitwise-or-packing	operator & value	the message value's low word, the frame number
+src/BASE/INPUTMGR.cpp	*	[01]	trivial-function-literal	[01] store m_requestedPriority	the requested priority cleared on Close and its rank-1 default
+src/BASE/INPUTMGR.cpp	inputManager::GetEvent	0	trivial-function-literal	0 store id	an empty event's widget id
+src/BASE/INPUTMGR.cpp	inputManager::Open	1	trivial-function-literal	1 initializer	SetPositiveOption's default value
+src/BASE/INPUTMGR.cpp	*	[01]	trivial-function-literal	[01] *m_mouseMessageActive	MouseMessageHandler's 16-bit re-entry guard (an i16 flag)
+src/BASE/INPUTMGR.cpp	ResetEventQueue	0	trivial-function-literal	0 store m_*Index	the event ring's read and write indices back at the start
+src/BASE/miscwin.cpp	AutoInitSVGA	0	trivial-function-literal	0 return	the Windows build's SVGA set-up does nothing and reports zero
+src/BASE/miscwin.cpp	ClipIconToBitmap	0	trivial-function-literal	0 equality sClipRun	an empty icon RLE run
+src/BASE/miscwin.cpp	ClippedMonoIconToBitmap	0	trivial-function-literal	0 equality	a mono RLE skip of zero (the row's end command)
+src/BASE/miscwin.cpp	*	0	trivial-function-literal	0 equality fullScreen	the windowed display mode: fullScreen is a 0/1 integer that the F4 key toggles as 1 - fullScreen
+src/BASE/miscwin.cpp	FadeOut	0	trivial-function-literal	0 store m_data[[][]]	a palette channel faded to black
+src/BASE/MOUSEMGR.cpp	mouseManager::mouseManager	0	trivial-function-literal	0 store m_*	a cleared pointer frame, saved screen area or unread byte
+src/BASE/MOUSEMGR.cpp	mouseManager::mouseManager	1	trivial-function-literal	1 store m_cursorReady	the 16-bit pointer-ready flag (an i16 flag)
+src/BASE/MOUSEMGR.cpp	mouseManager::SetPointer	0	trivial-function-literal	0 store bmType	Win32 BITMAP::bmType, which must be zero
+src/BASE/MOUSEMGR.cpp	mouseManager::SetPointer	0	trivial-function-literal	0 store frame	the editor has only the first adventure pointer frame
+src/BASE/MOUSEMGR.cpp	mouseManager::SetPointer	1	trivial-function-literal	1 bitwise	a single mask bit shifted into its pixel's position
+src/BASE/RESMGR.cpp	resourceManager::GetFileSize	0	trivial-function-literal	0 return	no size without an aggregate directory
+src/BASE/RESMGR.cpp	resourceManager::PointToFile	0	trivial-function-literal	0 store entry	the directory scan starts at the first entry
+src/BASE/RESMGR.cpp	resourceManager::resourceManager	0	trivial-function-literal	0 store m_lastFileId	no file read yet
+src/BASE/RESOURCE.cpp	resource::resource	0	trivial-function-literal	0 store m_id	an unnamed resource's id
+src/BASE/SAMPLE.cpp	sample::sample	0x80	arithmetic	compound assignment to data[[][]]	the bias that turns each signed sample byte into Audiere's unsigned 8-bit form
+src/BASE/TEXTNTRY.cpp	*	0	trivial-function-literal	0 store m_*	the cursor, display offset, length or frame reset to the start
+src/BASE/TEXTNTRY.cpp	textEntryWidget::Read	1	trivial-function-literal	1 store m_maxLines	a single-line entry
+src/BASE/TEXTNTRY.cpp	textEntryWidget::Read	1	trivial-function-literal	1 store m_preserveTextOnFocus	the 16-bit keep-text flag the resource also supplies as a word (an i16 flag)
+src/BASE/TEXTNTRY.cpp	*	0	trivial-function-literal	0 * done	the 16-bit loop flag that key handling increments (an i16)
+src/BASE/TEXTNTRY.cpp	textEntryWidget::Main	0	trivial-function-literal	0 array-index m_text	the text's first character (NUL there empties it)
+src/BASE/TEXTNTRY.cpp	textEntryWidget::SetupDisplayString	0	trivial-function-literal	0 equality m_displayOffset	the display scrolled to the start of the text
+src/BASE/TEXTWDGT.cpp	textWidget::textWidget	1	trivial-function-literal	1 store m_color	font colour 1, the default text colour
+src/BASE/WIDGET.cpp	widget::widget	0	trivial-function-literal	0 store m_id	a default-constructed widget's id 0 (the owning window assigns ids)
+src/BASE/WINDOW.cpp	heroWindow::DrawWindow	0	trivial-function-literal	0 equality updateScreen	DrawWindow's 16-bit update flag (an i16 parameter)
+src/BASE/WINDOW.cpp	heroWindow::heroWindow	0	trivial-function-literal	0 * finished	the widget-record loop's 16-bit end flag (an i16)
+src/BASE/WINDOW.cpp	heroWindow::heroWindow	0	trivial-function-literal	0 store m_posY	the full-screen window at the screen origin
+src/BASE/WINDOW.cpp	heroWindow::MoveWindow	0	trivial-function-literal	0 store to[XY]	MoveWindow clamps to the screen's left and top edges
+src/BASE/WINMGR.cpp	CreateFizzleTables	1	call-argument	fwrite(* argument 3	one table of the given byte size
+src/BASE/WINMGR.cpp	heroWindowManager::DoDialog	0	trivial-function-literal	0 equality gDialogNestCount	no dialog open (the outermost dialog switches the menus)
+src/BASE/WINMGR.cpp	heroWindowManager::DoDialog	[01]	trivial-function-literal	[01] * done	DoDialog's 16-bit loop flag (an i16)
+src/BASE/WINMGR.cpp	heroWindowManager::DoDialog	0	trivial-function-literal	0 return	DoDialog's i16 result: callers read m_dialogResult
+src/BASE/WINMGR.cpp	heroWindowManager::UpdateScreenRegion	[01]	trivial-function-literal	[01] store pointerInside	the 16-bit pointer-overlap flag (an i16)
+src/BASE/WINMGR.cpp	heroWindowManager::UpdateHoverWindow	[01]	trivial-function-literal	[01] return	the i16 result: whether the focus window changed
+src/BASE/WINMGR.cpp	heroWindowManager::FizzleForward	0	trivial-function-literal	0 store tickStart	no previous frame time: the first frame does not wait
+src/BASE/WINMGR.cpp	heroWindowManager::heroWindowManager	0	trivial-function-literal	0 store m_*	a cleared screenshot counter or unread byte
+src/SOURCE/kbwin.cpp	SetMenus	[01]	trivial-function-literal	[01] * update	the menu item's update switch, an int also set as 1 - the enable table's flag
+src/SOURCE/kbwin.cpp	SetMenus	0	trivial-function-literal	0 store matchIndex	the first enable-table row when no command matches
+src/SOURCE/kbwin.cpp	SetupCDDrive	0	trivial-function-literal	0 array-index gcRegCDRomPath	the drive letter, the CD path's first character
+src/SOURCE/netwin.cpp	nb_add_name_done	80	store	initializer of buffer	a local message buffer's extent
+src/SOURCE/netwin.cpp	nb_sess	0	trivial-function-literal	0 equality releaseSource	nb_sess's int va_arg flag
+src/SOURCE/REMOTE.cpp	calc_crc	0	trivial-function-literal	0 equality	the data bit under the mask, shifted into the CRC
+src/SOURCE/REQUEST.cpp	fileRequester::DoKnob	0	trivial-function-literal	0 store topRow	the knob clamps to the list's first row
+src/SOURCE/REQUEST.cpp	fileRequester::Main	0	trivial-function-literal	0 array-index nameBuffer	the typed name's first character
+src/SOURCE/REQUEST.cpp	fileRequester::Main	1	trivial-function-literal	1 * pageCount	the scroll gutter has at least one page
+src/SOURCE/REQUEST.cpp	fileRequester::Main	-1	trivial-function-literal	-1 store key	ends the trailing-space scan
+src/SOURCE/REQUEST.cpp	fileRequester::Main	*	arithmetic	operator + firstItemId	the ten file-list row widgets after the first
+src/SOURCE/REQUEST.cpp	fileRequester::Update	1	trivial-function-literal	1 equality savedPlayerCount	a one-player save shows no player count
+src/SOURCE/SMACKMGR.cpp	InitSmackSound	0	call-argument	AIL_waveOutOpen(* argument 3	the first wave-out device
+src/SOURCE/SMACKMGR.cpp	InitSmackSound	0	trivial-function-literal	0 store format	no wave format found yet
+src/SOURCE/SMACKMGR.cpp	SmackMain	0	call-argument	SmackToBuffer(* argument [237]	the movie at the buffer's origin, with no flags
+src/SOURCE/SMACKMGR.cpp	SmackMain	0	trivial-function-literal	0 conditional	no Smacker open flags
+src/SOURCE/SMACKMGR.cpp	SmackMain	1	trivial-function-literal	1 bound Frames	a one-frame movie
+src/SOURCE/SMACKMGR.cpp	SmackMain	1	trivial-function-literal	1 bound strlen()	a movie with a companion file name
+src/SOURCE/wingraph.cpp	*	0	call-argument	*(DWORD, *) argument 1	DirectDraw's reserved flags argument, which must be zero
+src/SOURCE/wingraph.cpp	SetGraphicsType	0	trivial-function-literal	0 equality fullState	the windowed display mode (the saved fullScreen integer)
+src/SOURCE/wingraph.cpp	WGAppPaint	0	trivial-function-literal	0 store *	the client area's origin or an unused local
+src/SOURCE/KB.cpp	AddScoreToHighScore	0	trivial-function-literal	0 return	AddScoreToHighScore's result, which callers ignore
+src/SOURCE/KB.cpp	AddScoreToHighScore	[12]	*	*	the shift down from the next-to-last entry (the last one falls off)
+src/SOURCE/KB.cpp	CanBuy	1	call-argument	GetBuildingCost(* argument 4	the next mage guild level's cost row
+src/SOURCE/KB.cpp	DataEntryWindowHandler	0	trivial-function-literal	0 equality strlen()	an empty text
+src/SOURCE/KB.cpp	DataEntryWindowHandler	1	call-argument	strncpy(* argument 3	room for the terminator
+src/SOURCE/KB.cpp	game::Show*Info	0	trivial-function-literal	0 equality Get*()	a neutral luck or morale sum picks the neutral text
+src/SOURCE/KB.cpp	game::ShowMoraleInfo	0	trivial-function-literal	0 store newFaction	the first faction (an aligned army always replaces it)
+src/SOURCE/KB.cpp	GetMonsterCost	1	trivial-function-literal	1 store cost[[][]]	a one-unit rare-resource cost
+src/SOURCE/KB.cpp	GetMonsterCost	0	trivial-function-literal	0 store cost[[][]]	the cost row cleared
+src/SOURCE/KB.cpp	HandleAppSpecificMenuCommands	0	call-argument	PostMessageA(* argument [34]	WM_CLOSE carries no parameters
+src/SOURCE/KB.cpp	HandleAppSpecificMenuCommands	[01]	trivial-function-literal	[01] return	AppCommand's result: 1 passes an unknown command on, 0 marks it handled
+src/SOURCE/KB.cpp	HandleRemote*Exit	[01]	trivial-function-literal	[01] store gText[[][]]	the player-exit packet's had-control byte
+src/SOURCE/KB.cpp	InitVars	0	trivial-function-literal	0 store m_dialogAnimationCounter	a counter reset to zero
+src/SOURCE/KB.cpp	IsCDDrive	0	trivial-function-literal	0 array-index gText	the drive letter of the root path
+src/SOURCE/KB.cpp	NormalDialog	[01]	trivial-function-literal	[01] array-index resource*	the first and second resource slots
+src/SOURCE/KB.cpp	NormalDialog	0	trivial-function-literal	0 equality index	the first resource slot
+src/SOURCE/KB.cpp	NormalDialog	0	trivial-function-literal	0 equality resourceAmounts[[][]]	a zero amount shows no label
+src/SOURCE/KB.cpp	NormalDialog	0	trivial-function-literal	0 store *	the layout values before the resource pictures are measured
+src/SOURCE/KB.cpp	NormalDialog	*	store	store to imageHeight	the pixel height of the dialog's resource, luck, morale, crest, hero or spell picture
+src/SOURCE/KB.cpp	NormalDialog	4	store	store to iconFrameIndex	surrendr.icn's hero frame (frames have no names)
+src/SOURCE/KB.cpp	NormalDialog	1	trivial-function-literal	1 store rows	a dialog with buttons keeps at least one text row
+src/SOURCE/KB.cpp	NormalDialog	1	trivial-function-literal	1 store showMessageText	an unused 16-bit flag local
+src/SOURCE/KB.cpp	oldmain	*	call-argument	DrawString(* argument [234]	the loading banner's pixel position and font colour
+src/SOURCE/KB.cpp	oldmain	[01]	call-argument	*(*, i32) argument [23]	an argument the callee ignores (an unnamed parameter)
+src/SOURCE/KB.cpp	oldmain	0	call-argument	NextHero(i32) argument 1	an argument the callee ignores (an unnamed parameter)
+src/SOURCE/KB.cpp	oldmain	0	call-argument	SetHeroContext(* argument 1	a new game starts with the first player's next hero
+src/SOURCE/KB.cpp	oldmain	0	trivial-function-literal	0 store gMap[XY]	a new game's map view at the origin until the adventure manager centres it
+src/SOURCE/KB.cpp	oldmain	0	trivial-function-literal	0 return	oldmain's exit code
+src/SOURCE/KB.cpp	ShutDown	0	trivial-function-literal	0 array-index buffer	the message buffer's first character
+src/SOURCE/KB.cpp	UpdateNormalDialog	1	trivial-function-literal	1 initializer	an unused 16-bit local set to 1
+src/SOURCE/KB.cpp	UpdateSystemOptionsMenu	1	call-argument	CheckMenuItem(* argument 3	the enemy-moves item shows the inverse of gConfig.blackoutComputer
+src/SOURCE/KB.cpp	ReceiveRemotePlayerExit	0	*	*CyrillicToUpper*	the text's first letter, capitalised
+src/SOURCE/KB.cpp	ReceiveRemotePlayerExit	0	trivial-function-literal	0 array-index gText	the text's first letter, capitalised
+src/SOURCE/KB.cpp	ShowCongrats	0	*	*	the player name's first letter, capitalised
+src/SOURCE/kbwin.cpp	SetupCDDrive	0	call-argument	DriveSupportsFreeSpaceQuery(char) argument 1	the drive letter, the CD path's first character

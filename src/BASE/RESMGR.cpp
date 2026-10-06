@@ -35,7 +35,7 @@ resourceManager::resourceManager(void) : baseManager() {
     m_active = 0;
     m_resourceListHead = NULL;
     m_aggregateDir = NULL;
-    m_aggregateFd = RESOURCE_MANAGER_INVALID_FILE;
+    m_aggregateFd = FILE_DESCRIPTOR_INVALID;
     m_aggregateEntryCount = 0;
     m_expunging = false;
     strcpy(m_lastFileName, "");
@@ -229,7 +229,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) resourceManager::Main(tag_message& me
 // Loads only the default aggregate.
 VA(0x0046c886, 0x66)
 H1_ENUM_RETURN(BaseManagerStatus, i16) resourceManager::Open(i16 priority) {
-    if (LoadAggregateHeader(gDefaultAggregateName) != 0)
+    if (LoadAggregateHeader(gDefaultAggregateName) != RESOURCE_MANAGER_LOAD_SUCCESS)
         return BASE_MANAGER_ERROR;
     m_messageMask = BASE_MANAGER_ACCEPT_RESOURCE;
     m_priority = priority;
@@ -264,9 +264,9 @@ void resourceManager::Close(void) {
     m_resourceListHead = NULL;
     if (m_aggregateDir != NULL)
         free(m_aggregateDir);
-    if (m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE) {
+    if (m_aggregateFd != FILE_DESCRIPTOR_INVALID) {
         close(m_aggregateFd);
-        m_aggregateFd = RESOURCE_MANAGER_INVALID_FILE;
+        m_aggregateFd = FILE_DESCRIPTOR_INVALID;
     }
     m_active = 0;
 }
@@ -276,12 +276,12 @@ VA(0x0046c9bb, 0xe5)
 i16 resourceManager::LoadAggregateHeader(char* aggregateName) {
     i16 directoryBytes;
     i32 aggregateFd = open(aggregateName, RESOURCE_MANAGER_BINARY_OPEN_MODE);
-    if (aggregateFd == RESOURCE_MANAGER_INVALID_FILE) {
+    if (aggregateFd == FILE_DESCRIPTOR_INVALID) {
         sprintf(gText, localization::Tr("file.aggregate.open_failed"), aggregateName);
         ShutDown(gText);
         return RESOURCE_MANAGER_LOAD_ERROR;
     }
-    if (m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE)
+    if (m_aggregateFd != FILE_DESCRIPTOR_INVALID)
         close(m_aggregateFd);
     if (m_aggregateDir != NULL)
         free(m_aggregateDir);
@@ -290,7 +290,7 @@ i16 resourceManager::LoadAggregateHeader(char* aggregateName) {
     directoryBytes = m_aggregateEntryCount * sizeof(aggEntry);
     m_aggregateDir = static_cast<aggEntry*>(malloc(directoryBytes));
     read(m_aggregateFd, m_aggregateDir, directoryBytes);
-    return 0;
+    return RESOURCE_MANAGER_LOAD_SUCCESS;
 }
 
 // One packed directory, indexed by a signed 16-bit resource ID.
@@ -352,7 +352,7 @@ VA(0x0046cc76, 0x48)
 #line 598 RESMGR_CPP_PATH
 i8 resourceManager::ReadByte(void) {
 #line 599
-    H1_ASSERT(m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE);
+    H1_ASSERT(m_aggregateFd != FILE_DESCRIPTOR_INVALID);
     i8 value = 0;
     read(m_aggregateFd, &value, sizeof(value));
     return value;
@@ -362,7 +362,7 @@ VA(0x0046ccbe, 0x4b)
 #line 619 RESMGR_CPP_PATH
 i16 resourceManager::ReadWord(void) {
 #line 620
-    H1_ASSERT(m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE);
+    H1_ASSERT(m_aggregateFd != FILE_DESCRIPTOR_INVALID);
     i16 value = 0;
     read(m_aggregateFd, &value, sizeof(value));
     return value;
@@ -372,7 +372,7 @@ VA(0x0046cd09, 0x4b)
 #line 639 RESMGR_CPP_PATH
 i32 resourceManager::ReadLong(void) {
 #line 640
-    H1_ASSERT(m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE);
+    H1_ASSERT(m_aggregateFd != FILE_DESCRIPTOR_INVALID);
     i32 value = 0;
     read(m_aggregateFd, &value, sizeof(value));
     return value;
@@ -395,7 +395,7 @@ VA(0x0046cdb0, 0x52)
 #line 679 RESMGR_CPP_PATH
 void resourceManager::ReadBlock(void* destination, u32 size) {
 #line 680
-    H1_ASSERT(m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE);
+    H1_ASSERT(m_aggregateFd != FILE_DESCRIPTOR_INVALID);
     PollSound();
     i32 bytesRead = read(m_aggregateFd, destination, size);
     PollSound();

@@ -458,8 +458,11 @@ void eventsManager::UpdateTownWindow(editTownExtra* town) {
         for (i = 0; i <= H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_DWELLING_LAST); i++) {
             if (i != H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_TENT)
                 && i != H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_CASTLE)) {
-                message.command = town->record.buildings & (1 << i) ? WIDGET_COMMAND_SET_FLAGS
-                                                                    : WIDGET_COMMAND_CLEAR_FLAGS;
+                message.command =
+                    town->record.buildings
+                            & H1_ENUM_BIT(BuildingSlotType, H1_ENUM_DECODE(BuildingSlotType, i))
+                        ? WIDGET_COMMAND_SET_FLAGS
+                        : WIDGET_COMMAND_CLEAR_FLAGS;
                 message.id = toggleIndex + TOWN_WINDOW_FIRST_BUILDING;
                 gEditDialog->BroadcastMessage(message);
                 toggleIndex++;
@@ -563,7 +566,10 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) TownWindowHandler(tag_message& messag
                             if (amount
                                 >= H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_RACE_FIRST))
                                 amount += BUILDING_SLOT_DWELLING_FIRST - BUILDING_SLOT_RACE_FIRST;
-                            bit = 1 << amount;
+                            bit = H1_ENUM_BIT(
+                                BuildingSlotType,
+                                H1_ENUM_DECODE(BuildingSlotType, amount)
+                            );
                             has = gTownEdit.record.buildings & bit;
                             if (has)
                                 gTownEdit.record.buildings -= bit;
@@ -1358,7 +1364,7 @@ void DragNewMapSlider(b32 terrainRow, i32 index) {
     event.type = MESSAGE_MOUSE_MOVE;
     event.x = x;
     event.y = y;
-    while (event.type != MESSAGE_LEFT_BUTTON_UP && event.type != MESSAGE_RIGHT_BUTTON_UP) {
+    while (!IS_BUTTON_RELEASE_MESSAGE(event.type)) {
         Process1WindowsMessage();
         if (event.type == MESSAGE_MOUSE_MOVE) {
             last = event;

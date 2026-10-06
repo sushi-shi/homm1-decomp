@@ -533,10 +533,12 @@ void DDUpdatePalette(i8* paletteData) {
     for (entry = WINGRAPH_SYSTEM_PALETTE_SIZE; entry < WINGRAPH_MUTABLE_PALETTE_END; entry++) {
         gLogicalPalette.entries[entry].peRed = paletteData[entry * PALETTE_GRAPHICS_CHANNELS]
                                                << WINGRAPH_PALETTE_VALUE_SHIFT;
-        gLogicalPalette.entries[entry].peGreen = paletteData[entry * PALETTE_GRAPHICS_CHANNELS + 1]
-                                                 << WINGRAPH_PALETTE_VALUE_SHIFT;
-        gLogicalPalette.entries[entry].peBlue = paletteData[entry * PALETTE_GRAPHICS_CHANNELS + 2]
-                                                << WINGRAPH_PALETTE_VALUE_SHIFT;
+        gLogicalPalette.entries[entry].peGreen =
+            paletteData[entry * PALETTE_GRAPHICS_CHANNELS + PALETTE_CHANNEL_GREEN]
+            << WINGRAPH_PALETTE_VALUE_SHIFT;
+        gLogicalPalette.entries[entry].peBlue =
+            paletteData[entry * PALETTE_GRAPHICS_CHANNELS + PALETTE_CHANNEL_BLUE]
+            << WINGRAPH_PALETTE_VALUE_SHIFT;
         gLogicalPalette.entries[entry].peFlags = PC_NOCOLLAPSE;
     }
     // API-forced: ProcessAssert accepts the pointer assertion as a 32-bit int.
@@ -545,7 +547,7 @@ void DDUpdatePalette(i8* paletteData) {
     status = gDDPal->SetEntries(
         0,
         WINGRAPH_SYSTEM_PALETTE_SIZE,
-        PALETTE_COLOR_COUNT - WINGRAPH_SYSTEM_PALETTE_SIZE * 2,
+        WINGRAPH_MUTABLE_PALETTE_END - WINGRAPH_SYSTEM_PALETTE_END,
         &gLogicalPalette.entries[WINGRAPH_SYSTEM_PALETTE_SIZE]
     );
     if (status != DD_OK)
@@ -733,23 +735,28 @@ void WGUpdatePalette(i8* paletteData) {
     i32 idx;
 
     for (idx = WINGRAPH_SYSTEM_PALETTE_SIZE; idx < WINGRAPH_MUTABLE_PALETTE_END; idx++) {
-        gLogicalPalette.entries[idx].peRed = paletteData[idx * 3] << 2;
+        gLogicalPalette.entries[idx].peRed = paletteData[idx * PALETTE_GRAPHICS_CHANNELS]
+                                             << WINGRAPH_PALETTE_VALUE_SHIFT;
         gScreenImage.colors[idx].rgbRed = gLogicalPalette.entries[idx].peRed;
-        gLogicalPalette.entries[idx].peGreen = paletteData[idx * 3 + 1] << 2;
+        gLogicalPalette.entries[idx].peGreen =
+            paletteData[idx * PALETTE_GRAPHICS_CHANNELS + PALETTE_CHANNEL_GREEN]
+            << WINGRAPH_PALETTE_VALUE_SHIFT;
         gScreenImage.colors[idx].rgbGreen = gLogicalPalette.entries[idx].peGreen;
-        gLogicalPalette.entries[idx].peBlue = paletteData[idx * 3 + 2] << 2;
+        gLogicalPalette.entries[idx].peBlue =
+            paletteData[idx * PALETTE_GRAPHICS_CHANNELS + PALETTE_CHANNEL_BLUE]
+            << WINGRAPH_PALETTE_VALUE_SHIFT;
         gScreenImage.colors[idx].rgbBlue = gLogicalPalette.entries[idx].peBlue;
     }
     AnimatePalette(
         gAppPalette,
         WINGRAPH_SYSTEM_PALETTE_SIZE,
-        PALETTE_COLOR_COUNT - WINGRAPH_SYSTEM_PALETTE_SIZE * 2,
+        WINGRAPH_MUTABLE_PALETTE_END - WINGRAPH_SYSTEM_PALETTE_END,
         &gLogicalPalette.entries[WINGRAPH_SYSTEM_PALETTE_SIZE]
     );
     WinGSetDIBColorTable(
         gImageDC,
         WINGRAPH_SYSTEM_PALETTE_SIZE,
-        PALETTE_COLOR_COUNT - WINGRAPH_SYSTEM_PALETTE_SIZE * 2,
+        WINGRAPH_MUTABLE_PALETTE_END - WINGRAPH_SYSTEM_PALETTE_END,
         &gScreenImage.colors[WINGRAPH_SYSTEM_PALETTE_SIZE]
     );
     if (gAppPalette != NULL)

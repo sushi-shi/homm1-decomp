@@ -105,6 +105,9 @@ H1_ENUM_CONST_END(CombatViewConstant)
 H1_ENUM_CONST_BEGIN(CombatDrawStateConstant)
     COMBAT_HERO_CLASS_NONE = -1,
     COMBAT_CATAPULT_FRAME_NONE = -1,
+    // The catapult's rest frame: GenerateMap starts a siege's catapult on it
+    // and CatAttack swings from it and returns to it.
+    COMBAT_CATAPULT_FRAME_FIRST = 0,
     COMBAT_LIMIT_CREATURE_HIDDEN = -1,
     // m_wallDamage without damage frames to draw (hexcell::DrawWall).
     COMBAT_WALL_DAMAGE_NONE = -1,
@@ -139,6 +142,19 @@ H1_ENUM_CONST_BEGIN(CombatAIConstant)
     COMBAT_AI_CASTLE_ARCHERS_PER_DWELLING = 4,
     COMBAT_AI_CASTLE_ARCHER_STRENGTH = 100
 H1_ENUM_CONST_END(CombatAIConstant)
+
+// MoreTreesNear's survey grid: each cell up to two steps from the battle
+// records the obstacle object found there (the memset fill, -1, when neither).
+H1_ENUM_CONST_BEGIN(CombatNearbyObjectConstant)
+    COMBAT_NEARBY_MOUNTAIN = 0,
+    COMBAT_NEARBY_TREE = 1
+H1_ENUM_CONST_END(CombatNearbyObjectConstant)
+
+// GetNextArmy's passes over the stacks: the first takes only high-morale
+// stacks, each later one steps m_currentSpeed down from BLAZING to SLOW.
+H1_ENUM_CONST_BEGIN(CombatTurnConstant)
+    COMBAT_SPEED_PASS_COUNT = 5
+H1_ENUM_CONST_END(CombatTurnConstant)
 
 // DoCompAI's plan for the acting stack: shooters with shots left shoot,
 // flyers fly, the rest walk.
@@ -225,13 +241,15 @@ public:
     // SetupCombat copies each hero's class (-1 without a hero); DrawFrame
     // draws it as the tent frame.
     H1_ENUM_ARRAY(i16, m_heroClass, CombatSide, COMBAT_SIDE_COUNT);
-    i16 m_unknown6d9;
-    i16 m_unknown6db;
+    // The constructor clears these and the two below (6f9 to -1); no code
+    // of any build (Windows or DOS) reads them.
+    i16 m_unused6d9;
+    i16 m_unused6db;
     // Per side: the side fights from a castle. hexcell::DrawTower/DrawWall
     // mirror the castle art from side 1's flag.
     H1_ENUM_ARRAY(i8, m_castleSide, CombatSide, COMBAT_SIDE_COUNT);
     // SetupCombat sets side 0 when the defending town has a garrisoned hero.
-    H1_ENUM_ARRAY(char, m_visitingHeroPresent, CombatSide, COMBAT_SIDE_COUNT);
+    H1_ENUM_ARRAY(b8, m_visitingHeroPresent, CombatSide, COMBAT_SIDE_COUNT);
     // CatAttack's target row in the castle wall column.
     i16 m_catapultTargetRow;
     // CatAttack: 1 when the shot only damages the wall, 0 when it falls;
@@ -239,7 +257,7 @@ public:
     b8 m_wallSurvives;
     i16 m_wallFrame;
     i16 m_wallDamage;
-    i8 m_unknown6e8;
+    i8 m_unused6e8;
     // Per side: creatures the attacking ghosts (CREATURE_GHOST) killed; the
     // ghost stack grows by it after the strike. army::DoAttack stores and
     // reloads it with word moves indexed by side.
@@ -251,7 +269,7 @@ public:
     // text widget (0xc).
     class heroWindow* m_combatWindow;
     char m_unused6f5[4];
-    i16 m_unknown6f9;
+    i16 m_unused6f9;
     // ProcessCombatMsg ignores message types outside this mask.
     i16 m_messageTypeMask;
     H1_ENUM_ARRAY(i8, m_sideRetreated, CombatSide, COMBAT_SIDE_COUNT);
@@ -521,12 +539,12 @@ SURRENDER_PORTRAIT = 1, SURRENDER_TEXT = 2 H1_ENUM_ID_END(SurrenderControl)
 H1_ENUM_CONST_END(CombatRearHexConstant)
 
 // Combat-window widget ids ProcessCombatMsg handles: the battlefield (0x40;
-// ResetMouse hovers it), the button
+// ResetMouse hovers it, or no control below it), the button
 // that stops grid selection and hides the pointer, and the skip-turn button
 // that queues ACTION_SKIP_TURN.
 H1_ENUM_ID_BEGIN(CombatControlId)
-COMBAT_CONTROL_DISABLE_SELECTION = 2,
-    COMBAT_CONTROL_SKIP_TURN = 8,
+COMBAT_CONTROL_NONE = 0,
+    COMBAT_CONTROL_DISABLE_SELECTION = 2, COMBAT_CONTROL_SKIP_TURN = 8,
     COMBAT_CONTROL_FIELD = 0x40 H1_ENUM_ID_END(CombatControlId)
 
     // clang-format off

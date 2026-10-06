@@ -248,8 +248,8 @@ editor	0x0001ddd2	?Close@inputManager@@UAEXXZ	BASE/INPUTMGR	game	0x0006ee42	?Clo
 editor	0x0001de36	?Main@inputManager@@UAEFAAUtag_message@@@Z	BASE/INPUTMGR	game	0x0006eea6	?Main@inputManager@@UAEFAAUtag_message@@@Z	BASE/INPUTMGR	shared-unit	compiled from the shared BASE/INPUTMGR source
 editor	0x0001de46	?Flush@inputManager@@QAEXXZ	BASE/INPUTMGR	game	0x0006eeb6	?Flush@inputManager@@QAEXXZ	BASE/INPUTMGR	shared-unit	compiled from the shared BASE/INPUTMGR source
 editor	0x0001de69	?GetEvent@inputManager@@QAE?AUtag_message@@XZ	BASE/INPUTMGR	game	0x0006eed9	?GetEvent@inputManager@@QAE?AUtag_message@@XZ	BASE/INPUTMGR	shared-unit	compiled from the shared BASE/INPUTMGR source
-editor	0x0001df67	?SetBooleanOption@inputManager@@QAEXF@Z	BASE/INPUTMGR	game	0x0006efd7	?SetBooleanOption@inputManager@@QAEXF@Z	BASE/INPUTMGR	shared-unit	compiled from the shared BASE/INPUTMGR source
-editor	0x0001df98	?SetPositiveOption@inputManager@@QAEXF@Z	BASE/INPUTMGR	game	0x0006f008	?SetPositiveOption@inputManager@@QAEXF@Z	BASE/INPUTMGR	shared-unit	compiled from the shared BASE/INPUTMGR source
+editor	0x0001df67	?SetRelativeMouse@inputManager@@QAEXF@Z	BASE/INPUTMGR	game	0x0006efd7	?SetRelativeMouse@inputManager@@QAEXF@Z	BASE/INPUTMGR	shared-unit	compiled from the shared BASE/INPUTMGR source
+editor	0x0001df98	?SetMouseSpeedDivisor@inputManager@@QAEXF@Z	BASE/INPUTMGR	game	0x0006f008	?SetMouseSpeedDivisor@inputManager@@QAEXF@Z	BASE/INPUTMGR	shared-unit	compiled from the shared BASE/INPUTMGR source
 editor	0x0001dfc9	?SetMouseCoords@inputManager@@QAEXFF@Z	BASE/INPUTMGR	game	0x0006f039	?SetMouseCoords@inputManager@@QAEXFF@Z	BASE/INPUTMGR	shared-unit	compiled from the shared BASE/INPUTMGR source
 editor	0x0001dff2	?SetKeyCodeType@inputManager@@QAEXF@Z	BASE/INPUTMGR	game	0x0006f062	?SetKeyCodeType@inputManager@@QAEXF@Z	BASE/INPUTMGR	shared-unit	compiled from the shared BASE/INPUTMGR source
 editor	0x0001e015	?TranslateInputCharacter@@YAXAAUtag_message@@@Z	BASE/INPUTMGR	game	0x0006f085	?TranslateInputCharacter@@YAXAAUtag_message@@@Z	BASE/INPUTMGR	shared-unit	compiled from the shared BASE/INPUTMGR source

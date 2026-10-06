@@ -48,6 +48,16 @@ BOX_REMOTE_SAVE = 1,
     REMOTE_WAIT_TIMEOUT = 20000
 H1_ENUM_CONST_END(RemoteConstant)
 
+// REMOTE_COMMAND_PLAYER_EXIT's payload bytes: the leaving player's game
+// position, whether it held the turn and, when it did, the next human player
+// to take it.
+H1_ENUM_CONST_BEGIN(RemotePlayerExitField)
+    REMOTE_PLAYER_EXIT_POSITION = 0,
+    REMOTE_PLAYER_EXIT_HAD_CONTROL = 1,
+    REMOTE_PLAYER_EXIT_NEXT_PLAYER = 2,
+    REMOTE_PLAYER_EXIT_PAYLOAD_SIZE = 3
+H1_ENUM_CONST_END(RemotePlayerExitField)
+
 H1_ENUM_BEGIN(RemoteGameMode)
     REMOTE_GAME_NONE = 0,
     REMOTE_GAME_NETWORK_HOST = 1,
@@ -148,6 +158,12 @@ extern char gPacketSend[];
 #define gNumNetGuests iNetGuests // spelling fixes .bss order
 extern i32 gNumNetGuests;
 extern i32 gLastConfirm;
+// GetRemoteData returns the queued message with the lowest gInOrder stamp:
+// the search starts above any stamp and with no slot selected.
+H1_ENUM_CONST_BEGIN(RemoteReceiveOrderConstant)
+    REMOTE_RECEIVE_ORDER_UNSET = 999999999,
+    REMOTE_QUEUE_SLOT_NONE = -1
+H1_ENUM_CONST_END(RemoteReceiveOrderConstant)
 #define gInOrder iInOrder // spelling fixes .bss order
 extern i32 gInOrder[REMOTE_QUEUE_CAPACITY];
 #define gReceiveQueue rcvBuf // spelling fixes .bss order
@@ -164,9 +180,9 @@ b32 TransmitRemoteData(
     i32 length,
     i8 command,
     b8 reliable,
-    i8 allowRetryDialog = 1,
+    b8 allowRetryDialog = true,
     H1_ENUM_PARAM(RemoteMessageType, i8) messageType = REMOTE_MESSAGE_DEFAULT,
-    i8 gamePosDestination = 1
+    b8 gamePosDestination = true
 );
 RemoteMessage* GetRemoteData(b8 remove);
 b32 TransmitAndWait(

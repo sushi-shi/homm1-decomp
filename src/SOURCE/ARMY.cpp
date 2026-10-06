@@ -52,7 +52,7 @@ army::army(void) {
     gSpellEffectFrame = 0;
     CLEAR_ARMY_TARGET(this);
     m_attackDirection = COMBAT_DIRECTION_INVALID;
-    m_unknown04 = 0;
+    m_unused04 = 0;
     m_moveTargetHex = 0;
 }
 
@@ -82,7 +82,7 @@ void army::Init(
     InitClean();
     m_creatureType = creatureType;
     memcpy(&m_stats, &gMonsterDatabase[creatureType].stats, sizeof(tag_monsterStats));
-    m_unknown29 = 6;
+    m_unused29 = 6;
     m_spellEffect = SPELL_NONE;
     m_spellEndCondition = ARMY_CANCEL_SPELLS_NONE;
     commander = gCombatManager->m_heroes[side];
@@ -137,7 +137,7 @@ void army::LoadResources(void) {
     }
     for (idx = ARMY_SAMPLE_MOVE; idx < ARMY_SAMPLE_COUNT; idx++) {
         if (m_samples[idx]) {
-            m_samples[idx]->m_playbackData.repeat = 0;
+            m_samples[idx]->m_playbackData.repeat = false;
             m_samples[idx]->m_playbackData.volume = SAMPLE_VOLUME_FULL;
         }
     }
@@ -1568,11 +1568,11 @@ void army::DamageEnemy(
     defenseExtra = 0;
     battleDiff =
         m_stats.attack + attackAdd - (target->m_stats.defense + defenseExtra + defenseModifier);
-    if (battleDiff > 20)
-        battleDiff = 20;
-    if (battleDiff < -20)
-        battleDiff = -20;
-    rolledTotal *= gBattleStat[battleDiff + 20];
+    if (battleDiff > STAT_CURVE_OFFSET)
+        battleDiff = STAT_CURVE_OFFSET;
+    if (battleDiff < -STAT_CURVE_OFFSET)
+        battleDiff = -STAT_CURVE_OFFSET;
+    rolledTotal *= gBattleStat[battleDiff + STAT_CURVE_OFFSET];
     if (m_luck > ARMY_LUCK_NONE)
         rolledTotal *= 2;
     if (m_luck < ARMY_LUCK_NONE)

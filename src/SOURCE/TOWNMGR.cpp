@@ -189,7 +189,8 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) townManager::Open(i16 priority) {
             if (m_townObjects[m_townObjectCount] == NULL)
                 MemError();
             if (m_townObjects[m_townObjectCount]->m_border) {
-                if (!(m_town->m_buildings & (1 << buildId))) {
+                if (!(m_town->m_buildings
+                      & H1_ENUM_BIT(BuildingSlotType, H1_ENUM_DECODE(BuildingSlotType, buildId)))) {
                     m_townObjects[m_townObjectCount]->m_border->m_flags &= ~WIDGET_FLAG_ENABLED;
                     m_townObjects[m_townObjectCount]->m_visible = 0;
                 }
@@ -202,7 +203,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) townManager::Open(i16 priority) {
         }
     }
     gTimers[TOWN_FRAME_TIMER_SLOT] = KBTickCount() + TOWN_REDRAW_INTERVAL;
-    gWindowManager->AddWindow(m_townWindow, WINDOW_Z_ORDER_BASE, 1);
+    gWindowManager->AddWindow(m_townWindow, WINDOW_Z_ORDER_BOTTOM, 1);
     crestFrame = H1_ENUM_ENCODE(PlayerColor, gCurPlayerData->m_color);
     if (m_town->m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE) {
         crestFrame *= HERO_CLASS_COUNT;

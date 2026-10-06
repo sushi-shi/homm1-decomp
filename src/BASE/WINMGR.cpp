@@ -97,8 +97,8 @@ heroWindowManager::heroWindowManager(void) : baseManager() {
     m_focusWindow = NULL;
     m_windowListTail = NULL;
     m_windowListHead = NULL;
-    m_unknown40 = 0;
-    m_unknown41 = 0;
+    m_unused40 = 0;
+    m_unused41 = 0;
     m_screen = NULL;
     m_screenshotIndex = 0;
     m_updateFlags = 0;
@@ -209,16 +209,16 @@ VA(0x0046a4f1, 0x166)
 void heroWindowManager::AddWindow(heroWindow* window, i16 zOrder, i8 updateScreen) {
     heroWindow* currentWindow = m_windowListTail;
     if (window->m_winFlags & WINDOW_FLAG_FIXED_LAYER)
-        zOrder = 0;
+        zOrder = WINDOW_Z_ORDER_BOTTOM;
     if (zOrder == WINDOW_Z_ORDER_APPEND) {
         if (currentWindow == NULL)
-            zOrder = 0;
+            zOrder = WINDOW_Z_ORDER_BOTTOM;
         else
             zOrder = currentWindow->m_zOrder + 1;
     }
-    if (zOrder == 0 && m_windowListHead != NULL)
+    if (zOrder == WINDOW_Z_ORDER_BOTTOM && m_windowListHead != NULL)
         return;
-    if (zOrder != 0 && m_windowListHead == NULL)
+    if (zOrder != WINDOW_Z_ORDER_BOTTOM && m_windowListHead == NULL)
         return;
     if (window->Open(zOrder, updateScreen) != WINDOW_OPEN_SUCCESS)
         return;
@@ -485,8 +485,9 @@ void CreateFizzleTables(void) {
             for (b = 0; b < PALETTE_CUBE_LEVELS; b++) {
                 minDist = PALETTE_NEAREST_DISTANCE_LIMIT;
                 for (src = 0; src < PALETTE_COLOR_COUNT; src++) {
-                    delta = abs(paletteColors[src][0] - r) + abs(paletteColors[src][1] - g)
-                            + abs(paletteColors[src][2] - b);
+                    delta = abs(paletteColors[src][PALETTE_CHANNEL_RED] - r)
+                            + abs(paletteColors[src][PALETTE_CHANNEL_GREEN] - g)
+                            + abs(paletteColors[src][PALETTE_CHANNEL_BLUE] - b);
                     if (delta < minDist) {
                         minDist = delta;
                         rgbCube[r][g][b] = src;
@@ -511,10 +512,10 @@ void CreateFizzleTables(void) {
                 for (c = 0; c < PALETTE_GRAPHICS_CHANNELS; c++)
                     FIZZLE_PAIR(blend, src, destColor)
                 [c] += FIZZLE_PAIR(increment, src, destColor)[c];
-                table[src][destColor] =
-                    rgbCube[static_cast<i32>(FIZZLE_PAIR(blend, src, destColor)[0])]
-                           [static_cast<i32>(FIZZLE_PAIR(blend, src, destColor)[1])]
-                           [static_cast<i32>(FIZZLE_PAIR(blend, src, destColor)[2])];
+                table[src][destColor] = rgbCube
+                    [static_cast<i32>(FIZZLE_PAIR(blend, src, destColor)[PALETTE_CHANNEL_RED])]
+                    [static_cast<i32>(FIZZLE_PAIR(blend, src, destColor)[PALETTE_CHANNEL_GREEN])]
+                    [static_cast<i32>(FIZZLE_PAIR(blend, src, destColor)[PALETTE_CHANNEL_BLUE])];
             }
         }
         sprintf(gText, "CCYCLE%02d.BIN", cycleFrame);

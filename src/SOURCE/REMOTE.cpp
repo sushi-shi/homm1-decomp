@@ -837,9 +837,9 @@ b32 TransmitRemoteData(
     i32 length,
     i8 command,
     b8 reliable,
-    i8 allowRetryDialog,
+    b8 allowRetryDialog,
     H1_ENUM_PARAM(RemoteMessageType, i8) messageType,
-    i8 gamePosDestination
+    b8 gamePosDestination
 ) {
     i32 i;
     b32 result;
@@ -899,8 +899,8 @@ RemoteMessage* GetRemoteData(b8 remove) {
 
     if (!gRemoteOn || gInNetSetup)
         return NULL;
-    oldestOrder = 999999999;
-    selected = -1;
+    oldestOrder = REMOTE_RECEIVE_ORDER_UNSET;
+    selected = REMOTE_QUEUE_SLOT_NONE;
     for (queueIndex = 0; queueIndex < REMOTE_QUEUE_CAPACITY; queueIndex++) {
         if (H1_ENUM_ENCODE(RemoteMessageType, gReceiveQueue[queueIndex].type)
             && gInOrder[queueIndex] < oldestOrder) {

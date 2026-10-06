@@ -98,7 +98,7 @@ object (`[-N]`, `this - N`, container-of). None remain; the count guards
 against new ones.
 
 **Unknown members.** `m_unknownNN` and `m_field_0xNNN` placeholders keep a
-class layout without a recovered name or type.
+class layout without a recovered name or type. None remain.
 
 Names come from a code user:
 
@@ -106,22 +106,36 @@ Names come from a code user:
   marks; nothing updates them after the constructor.
 - playerData's `m_unusedSaveData` is the span Write zeroes and Read skips.
 
-Spans that no code reads or writes are spelled `m_unused<offset>`, or
-`m_padding<offset>` in recruitUnit. Nineteen
-placeholders remain:
+Several members are only initialized in every reconstructed Windows image
+(the Win95 1.0, 1.1 and 1.2 games, the Buka game and its editor): no
+instruction reads them. The DOS v1.2
+`HEROES.EXE` (Watcom LE; its managers are static objects, the base manager is
+0x1e bytes shorter and has no name) keeps the same layout and still reads
+some of them, so their names come from the DOS code:
 
-- inputManager (seven): written by its constructor, the event queue, the two
-  option setters and advManager's context changes; nothing reads them.
-- army (two), combatManager (four), heroWindowManager (two), town (one) and
-  mouseManager (one): set only by constructors or Init.
-- playerData `m_unknown00`/`m_unknown99`: only copied raw by Write/Read;
-  `m_unknown99[1]` is written twice.
+| Member | DOS reader |
+| --- | --- |
+| inputManager `m_mouseDriverReady` (+0x236) | Open resets the INT 33h driver and installs the event handler when it is clear, then sets it; Close resets the driver |
+| inputManager `m_relativeMouse` (+0x238) | GetEvent reads the motion counters as a relative-motion event while set, as a clamped position otherwise; `SetRelativeMouse` is the same dead 0/1 setter |
+| inputManager `m_mouseSpeedDivisor` (+0x23a) | GetEvent and the move poll divide the motion counts by it; Open and `SetMouseSpeedDivisor` keep it at least 1 |
+| inputManager `m_keyboardHookInstalled` (+0x33c) | Open hooks the INT 9 handler when it is clear; the failure path and Close restore the vector |
+| inputManager `m_keyPrefixPending` (+0x342) | the keyboard handler sets it on a prefix scan code, then handles only modifier changes and copies it into the next event; both builds clear it after a queued key event |
+| mouseManager `m_drawIntoScreen` (+0x51) and the following `m_bandFlushed`, `m_bandSplitY`, `m_cursorWidth`, `m_cursorHeight` | advManager::UpdateScreen copies the view in two bands and sets the flag around it; the cursor code then draws into the screen bitmap and reads the band state and frame size. Windows only clears the flag |
 
-The editor image compiles the same BASE managers, so it was searched too:
-no instruction in `EDITOR.EXE` or `HEROES.EXE` loads `gpInputManager`,
-`gpMouseManager` or `gpWindowManager` and then reads one of these offsets.
-Inventing a meaning for them is not
-evidence, so they stay placeholders until a reader is found.
+Spans that no code of any build reads are spelled `m_unused<offset>`, or
+`m_padding<offset>` in recruitUnit, whether or not a constructor or a save
+routine writes them. Thirteen members recovered from placeholders are of
+this kind, and none has a reader in the Windows, editor or DOS images:
+
+- inputManager `m_unused34f`, heroWindowManager `m_unused40`/`m_unused41`,
+  combatManager `m_unused6d9`/`m_unused6db`/`m_unused6e8`/`m_unused6f9`:
+  constructor stores only;
+- army `m_unused04` (constructor; the DOS army has no target block) and
+  `m_unused29` (Init stores 6 after the copied stats in every build);
+- town `m_unused19`: the constructor clears it and saved games carry it;
+- playerData `m_unused00` (Write and Read copy its 17 bytes raw),
+  `m_unused99` (no access) and `m_unused9a` (saved twice by Write and Read,
+  DOS too).
 
 **`goto`.** A `goto` stays when retail's block layout requires it; it is
 replaced only when a structured form compiles to identical bytes.
@@ -258,8 +272,21 @@ C++ BASE unit) are read in full: [function checklist](common-code-adventure-func
 [candidate catalogue](common-code-adventure.tsv). Compiler-generated bodies,
 the assembly units (BITS, BMAP2, Icon2b, Icon2bc, TILE) and the vendored LZHUF
 code are outside the checklist. Declared default arguments (`NormalDialog`,
-`TransmitRemoteData`) count as recovered source conveniences: they shorten calls
-without changing code.
+`TransmitRemoteData`, `FightValueOfStack`) count as recovered source
+conveniences: they shorten calls without changing code.
+
+The families once deferred to the typed domains are decided. The opposite
+combat side (`COMBAT_OPPOSING_SIDE`), the object type of a trigger byte
+(`MAP_TRIGGER_OBJECT`) and the building bit (`H1_ENUM_BIT(BuildingSlotType,
+slot)`) are dual-view forms: the VC6 view expands to the open-coded
+expression and the strict view types the operand, so every converted site is
+byte-identical. Enum-indexed arrays are `H1_ENUM_ARRAY`s; the player seat and
+roster slot arrays have no domain and stay plain. The building mask test is
+the whole operation, so no wrapper is added beside `TOWN_BUILDING_COMPLETE`,
+and the one modem-response truncation stays explicit (a single site is no
+repetition). The trigger-byte sites that stay explicit are different
+operations: in-place event-bit clears, comparisons with the map-file object
+domain, secondary-trigger transfers and presence tests.
 
 **Unions and varargs.** Alternate views and manual argument access are kept only
 where retail evidence requires them. Eight unions remain; the other two `rg`
@@ -328,8 +355,13 @@ with the same passes as the game. Every editor function stays exact.
   SaveMap and LoadMap name the header range with `offsetof`, the generator's
   cell grids go through `MAP_GRID_CELL` and the object footprints through
   `OVERLAY_FOOTPRINT_CELL`/`_BIT`.
-- Helpers: the editor reuses `CELL_TERRAIN` (31 neighbour reads) and
-  `SET_WIDGET_MESSAGE` (4); `EDIT_CASTLE_FRAME`/`EDIT_TOWN_FRAME`,
+- Helpers: the editor reuses the game's helpers at 83 sites: `CELL_TERRAIN`
+  (31 neighbour reads), `READ_FILE_VALUE`/`WRITE_FILE_VALUE` (29 map-file
+  values; WriteTowns' 32-bit coordinates written as single bytes stay
+  explicit), `IS_BUTTON_RELEASE_MESSAGE` (6 drag loops), `SET_WIDGET_MESSAGE`
+  (5), `MAP_TRIGGER_OBJECT` (5), `MANHATTAN_LENGTH` (5 generator distances)
+  and the building bit `H1_ENUM_BIT(BuildingSlotType, slot)` (2), each
+  byte-identical; `EDIT_CASTLE_FRAME`/`EDIT_TOWN_FRAME`,
   `MAP_GRID_CELL`, `OVERLAY_FOOTPRINT_CELL`/`_BIT` and `OVERLAY_TERRAIN_BIT`
   are recovered at every site. `MAP_CELL_IN_BOUNDS` does not apply: the
   editor's bounds tests compare `> MAP_CELL_GRID_SIZE - 1`. The generator's
@@ -388,3 +420,19 @@ shows up in the measuring commands above.
   game and editor unit parses with typed domains, `H1_ENUM_ARRAY` indices and
   `b8`/`b32` boolean storage (about 470 declarations retyped); the gate runs
   in `homm1 build verify`.
+- Common-code review (helpers, accessors, macros): every source unit of both
+  programs is read. Combat and AI (**233 functions**,
+  [ledger](common-code-combat.tsv)): **19 families** retained at **164
+  sites** (22 of them calls shortened by declared defaults) plus the typed
+  enum arrays, 4 rejected by measurement, 25 kept explicit. Adventure, town,
+  hero, network, Windows and BASE (**764 functions**,
+  [ledger](common-code-adventure.tsv)): **23 families** retained at **404
+  sites** (69 of them calls shortened by declared defaults) plus the typed
+  enum arrays, 1 rejected by measurement, 78 kept explicit. The editor-only
+  units reuse the game's helpers at 83 sites. No family is deferred.
+- Recover unknown members: **0** `m_unknown*`/`m_field_0x*` placeholders
+  (from 18; the earlier count of 19 included an inputManager field already
+  named). Five inputManager members and mouseManager's cursor flag, with the
+  four spans after it, are named from their DOS readers; thirteen members
+  with no reader in any build are `m_unused*`, as are the other spans no code
+  reads.

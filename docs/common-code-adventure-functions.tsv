@@ -101,8 +101,8 @@ src/BASE/INPUTMGR.cpp	0x6ee42	inputManager::Close	read	event-queue-reset	Uses Re
 src/BASE/INPUTMGR.cpp	0x6eea6	inputManager::Main	read	none	Returns 0.		kept-existing-source	100	100
 src/BASE/INPUTMGR.cpp	0x6eeb6	inputManager::Flush	read	event-queue-reset	Uses ResetEventQueue.		kept-existing-source	100	100
 src/BASE/INPUTMGR.cpp	0x6eed9	inputManager::GetEvent	read	empty-event	Empty-event initializer: HoMM1 has only GetEvent (no PeekEvent), so a single site stays explicit.		kept-existing-source	100	100
-src/BASE/INPUTMGR.cpp	0x6efd7	inputManager::SetBooleanOption	read	none	Flag setter.		kept-existing-source	100	100
-src/BASE/INPUTMGR.cpp	0x6f008	inputManager::SetPositiveOption	read	none	Clamped setter.		kept-existing-source	100	100
+src/BASE/INPUTMGR.cpp	0x6efd7	inputManager::SetRelativeMouse	read	none	Flag setter.		kept-existing-source	100	100
+src/BASE/INPUTMGR.cpp	0x6f008	inputManager::SetMouseSpeedDivisor	read	none	Clamped setter.		kept-existing-source	100	100
 src/BASE/INPUTMGR.cpp	0x6f039	inputManager::SetMouseCoords	read	none	Two stores.		kept-existing-source	100	100
 src/BASE/INPUTMGR.cpp	0x6f062	inputManager::SetKeyCodeType	read	none	Setter plus Flush.		kept-existing-source	100	100
 src/BASE/INPUTMGR.cpp	0x6f085	TranslateInputCharacter	read	none	Table translation; already the helper.		kept-existing-source	100	100
@@ -334,7 +334,7 @@ src/SOURCE/CURSOR.cpp	0x22f55	advManager::ValidMoveWithEvent	read	hero-embarked	
 src/SOURCE/CURSOR.cpp	0x230f8	advManager::ValidMove	read	non-shadow-object	North/south blocking tests use CELL_HAS_NON_SHADOW_OBJECT (shared with helpers worker B); the whirlpool exception stays at the caller.	CELL_HAS_NON_SHADOW_OBJECT	retained-exact	100	100
 src/SOURCE/CURSOR.cpp	0x23344	advManager::MoveOrigin	read	none	Origin shift with cursor-flag moves; single site.		kept-existing-source	100	100
 src/SOURCE/EVENTS.cpp	0x24a50	advManager::DoEvent	read	hero-embarked;event-window-args;flag-reward-visit;memerror-check	IsEmbarked for the boat landing. EventWindow keeps its eight explicit arguments. The visited-flag reward arms (buoy, faerie ring, fountain, oasis, statue) differ in stat and text; kept as written.	hero::IsEmbarked;NormalDialog defaults	retained-exact	100	100
-src/SOURCE/EVENTS.cpp	0x267ed	advManager::EraseObj	read	map-cell-in-bounds	Object erase with sound grid update.	MAP_CELL_IN_BOUNDS	retained-exact	100	100
+src/SOURCE/EVENTS.cpp	0x267ed	advManager::EraseObj	read	map-cell-in-bounds;trigger-object	Object erase with sound grid update. The secondary trigger moves into the trigger byte as a raw value after a numeric range test, so its masking stays explicit.	MAP_CELL_IN_BOUNDS	retained-exact	100	100
 src/SOURCE/EVENTS.cpp	0x269b5	advManager::HeroSwap	read	none	Hero meeting through swapManager.		kept-existing-source	100	100
 src/SOURCE/EVENTS.cpp	0x26a58	advManager::TownEvent	read	current-hero	Town visit; current hero read through GetHero(gpCurPlayer->m_currentHero).		kept-existing-source	100	100
 src/SOURCE/EVENTS.cpp	0x26be9	advManager::EventSound	read	none	Event sound selection.		kept-existing-source	100	100
@@ -364,7 +364,7 @@ src/SOURCE/GAME.cpp	0x2b5f2	playerData::Read	read	file-value	Scalar fields throu
 src/SOURCE/GAME.cpp	0x2b7d3	playerData::NextHero	read	none	Next mobile hero search.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x2b8d3	playerData::HasMobileHero	read	none	Mobility scan.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x2b929	playerData::CountPuzzlePiecesRemoved	read	none	Bit count.		kept-existing-source	100	100
-src/SOURCE/GAME.cpp	0x2b97f	playerData::BuildingsOwned	read	town-building-bit	Building-mask counts; typed building flags are deferred.		kept-existing-source	100	100
+src/SOURCE/GAME.cpp	0x2b97f	playerData::BuildingsOwned	read	town-building-bit	Building-mask counts through H1_ENUM_BIT(BuildingSlotType, ...).	H1_ENUM_BIT	kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x2ba35	playerData::NumOfGivenArtifact	read	none	Artifact count.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x2bab9	ComputeUALoc	read	map-cell-in-bounds	Hint placement.	MAP_CELL_IN_BOUNDS	retained-exact	100	100
 src/SOURCE/GAME.cpp	0x2bdda	game::VisitObelisk	read	none	Obelisk piece pick.		kept-existing-source	100	100
@@ -389,7 +389,7 @@ src/SOURCE/GAME.cpp	0x2e595	game::InitCampaignMap	read	calendar-day	Campaign day
 src/SOURCE/GAME.cpp	0x2e7f0	game::NewMap	read	manhattan-length	Map set-up; the ultimate-artifact spread test is MANHATTAN_LENGTH.	MANHATTAN_LENGTH	retained-exact	100	100
 src/SOURCE/GAME.cpp	0x2f621	GetObjectFamily	read	none	Object family table.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x2f672	game::SettleOverlay	read	overlay-promote	Overlay-to-object promotion repeats inside one function; local.		kept-existing-source	100	100
-src/SOURCE/GAME.cpp	0x2f830	game::RandomizeEvents	read	none	Random events.		kept-existing-source	100	100
+src/SOURCE/GAME.cpp	0x2f830	game::RandomizeEvents	read	trigger-object	Random events. The mine footprint compares two cells through MAP_TRIGGER_OBJECT; the event-bit clears (&= MASK) stay explicit.	MAP_TRIGGER_OBJECT	retained-exact	100	100
 src/SOURCE/GAME.cpp	0x30344	game::LoadMap	read	file-value	Map loader: scalar header reads through READ_FILE_VALUE; variable-size blocks stay explicit.	READ_FILE_VALUE	retained-exact	100	100
 src/SOURCE/GAME.cpp	0x3070a	game::ClaimTown	read	none	Town claim.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x309a5	game::ClaimMine	read	none	Mine claim.		kept-existing-source	100	100
@@ -400,7 +400,7 @@ src/SOURCE/GAME.cpp	0x3109e	ViewSpellsHandler	read	spell-page-refresh	UpdateSpel
 src/SOURCE/GAME.cpp	0x31532	ViewSpecialHandler	read	none	Special handler.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x3165b	game::ViewArmy	read	none	Army view window.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x31f0a	ViewArmyHandler	read	none	Army view handler.	NormalDialog defaults	retained-exact	100	100
-src/SOURCE/GAME.cpp	0x32089	game::Overview	read	town-building-bit	Kingdom overview; building tests are deferred.		kept-existing-source	100	100
+src/SOURCE/GAME.cpp	0x32089	game::Overview	read	town-building-bit	Kingdom overview; building tests use H1_ENUM_BIT(BuildingSlotType, ...).	H1_ENUM_BIT	kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x32d0a	game::GetRandomNumTroops	read	none	Troop count roll.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x32f67	game::TurnOnAIMusic	read	none	Music switch.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x32f81	game::TurnOffAIMusic	read	none	Music switch.		kept-existing-source	100	100
@@ -433,14 +433,14 @@ src/SOURCE/GAME.cpp	0x365d2	game::WaitForPlayer	read	none	Player wait.	NormalDia
 src/SOURCE/GAME.cpp	0x366f6	game::RandomizeTerrainTiles	read	none	Terrain tiles.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x36796	game::ProcessMapExtra	read	none	Map extras.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x3689d	game::SetupTowns	read	none	Towns set-up.		kept-existing-source	100	100
-src/SOURCE/GAME.cpp	0x36a6c	game::ProcessOnMapHeroes	read	none	Map heroes.		kept-existing-source	100	100
+src/SOURCE/GAME.cpp	0x36a6c	game::ProcessOnMapHeroes	read	trigger-object	Map heroes. The masked trigger is compared with MAP_FILE_OBJECT_HERO, the map-file domain, so it stays explicit.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x36d91	game::CheckHeroConsistency	read	none	Consistency check.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x370d2	game::TransmitSaveGame	read	transmit-defaults;remote-save-encoded	Save transfer; TransmitRemoteData trailing defaults dropped where they matched.	TransmitRemoteData defaults;REMOTE_SAVE_ENCODED	retained-exact	100	100
 src/SOURCE/GAME.cpp	0x376cf	game::ReceiveSaveGame	read	transmit-defaults;remote-save-encoded	Save receive; TransmitRemoteData trailing defaults dropped.	NormalDialog defaults;TransmitRemoteData defaults;REMOTE_SAVE_ENCODED	retained-exact	100	100
 src/SOURCE/GAME.cpp	0x37b7f	game::DoNewTurn	read	none	New turn.	NormalDialog defaults	retained-exact	100	100
 src/SOURCE/GAME.cpp	0x38134	game::GetBoatsBuilt	read	none	Boat count.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x38180	game::GetMap	read	none	Map choice.		kept-existing-source	100	100
-src/SOURCE/GAME.cpp	0x384f3	game::GetNumThievesGuilds	read	town-building-bit	Thieves guild count by building bit (deferred).		kept-existing-source	100	100
+src/SOURCE/GAME.cpp	0x384f3	game::GetNumThievesGuilds	read	town-building-bit	Thieves guild count by H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_THIEVES_GUILD).	H1_ENUM_BIT	kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x38573	game::CalcDifficultyRating	read	none	Difficulty rating.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x38856	GetBaseScore	read	none	Score base.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x38934	game::ShowScenInfo	read	none	Scenario info.		kept-existing-source	100	100
@@ -487,7 +487,7 @@ src/SOURCE/KB.cpp	0x3e349	GetBuildingCost	read	none	Cost table.		kept-existing-s
 src/SOURCE/KB.cpp	0x3e3c0	GetMonsterSingularName	read	none	Name table.		kept-existing-source	100	100
 src/SOURCE/KB.cpp	0x3e3cf	GetMonsterName	read	none	Name table.		kept-existing-source	100	100
 src/SOURCE/KB.cpp	0x3e3de	GetMonsterCost	read	none	Cost table.		kept-existing-source	100	100
-src/SOURCE/KB.cpp	0x3e49c	CanBuild	read	town-building-bit	CanBuild: building-mask and requirement tests (deferred typed flags).		kept-existing-source	100	100
+src/SOURCE/KB.cpp	0x3e49c	CanBuild	read	town-building-bit	CanBuild: building-mask and requirement tests through H1_ENUM_BIT; the requirement mask comparison is whole-mask.	H1_ENUM_BIT	kept-existing-source	100	100
 src/SOURCE/KB.cpp	0x3e5a0	CanBuy	read	next-mage-guild-level	CanBuy's guild cost level is `level < LAST ? level + 1 : LAST`, not the `level + 1 < COUNT` form of a NEXT_MAGE_GUILD_LEVEL macro; single site, kept.		kept-existing-source	100	100
 src/SOURCE/KB.cpp	0x3e656	GetBuildingBaseResourceValue	read	none	Base value.		kept-existing-source	100	100
 src/SOURCE/KB.cpp	0x3e693	NormalDialog	read	alloc-copy-string;quick-view-show;memerror-check	NormalDialog body. The or-word malloc/strcpy is ALLOC_COPY_STRING's shape but the only HoMM1 site and the macro would hide its cast; the quick-view show/wait/remove sequence varies across nine sites.		kept-existing-source	100	100
@@ -633,7 +633,7 @@ src/SOURCE/TOWNMGR.cpp	0x5ee90	townObject::townObject	read	none	Town object set-
 src/SOURCE/TOWNMGR.cpp	0x5f053	townObject::~townObject	read	none	Release.		kept-existing-source	100	100
 src/SOURCE/TOWNMGR.cpp	0x5f0a9	townObject::Draw	read	none	Animated draw.		kept-existing-source	100	100
 src/SOURCE/TOWNMGR.cpp	0x5f1ac	townManager::townManager	read	none	Field initialization.		kept-existing-source	100	100
-src/SOURCE/TOWNMGR.cpp	0x5f215	townManager::Open	read	lazy-resource-load;memerror-check	Town screen set-up; per-building object creation keeps its own geometry.		kept-existing-source	100	100
+src/SOURCE/TOWNMGR.cpp	0x5f215	townManager::Open	read	lazy-resource-load;memerror-check;town-building-bit	Town screen set-up; per-building object creation keeps its own geometry. The object's building bit is H1_ENUM_BIT of its id (H1_ENUM_DECODE).	H1_ENUM_BIT	retained-exact	100	100
 src/SOURCE/TOWNMGR.cpp	0x5f93d	townManager::Close	read	none	Close and release.		kept-existing-source	100	100
 src/SOURCE/TOWNMGR.cpp	0x5fb18	townManager::SetArmyCommand	read	creature-name-lowercase	Army command text: the plural name copy plus CyrillicToLower repeats five times; the lowered copy is not CREATURE_DISPLAY_NAME.		kept-existing-source	100	100
 src/SOURCE/TOWNMGR.cpp	0x60294	townManager::SetCommandAndText	read	none	Status text by widget.		kept-existing-source	100	100

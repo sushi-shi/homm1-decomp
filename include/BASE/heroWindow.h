@@ -35,8 +35,9 @@ H1_ENUM_CONST_BEGIN(HeroWindowConstant)
     // AddWindow/AddWidget z-order meaning "one above the current top"; unlinked
     // windows and widgets keep it.
     WINDOW_Z_ORDER_APPEND = -1,
-    // The bottom layer: only the first window of an empty list takes it.
-    WINDOW_Z_ORDER_BASE = 0,
+    // The bottom layer: fixed-layer windows open there, and only the first
+    // window or widget of an empty list may take it.
+    WINDOW_Z_ORDER_BOTTOM = 0,
     WINDOW_ALL_WIDGETS_LOW = -65535,
     WINDOW_ALL_WIDGETS_HIGH = 65535
 H1_ENUM_CONST_END(HeroWindowConstant)
@@ -71,7 +72,8 @@ public:
     void DrawWindow(void);
     void DrawWindow(i16 updateScreen);
     void DrawWindow(i16 updateScreen, i32 firstId, i32 lastId);
-    i16 SaveBackground(void);
+    // Open fails unless the background was saved.
+    H1_ENUM_RETURN(WindowOpenStatus, i16) SaveBackground(void);
     void RestoreBackground(void);
     void MoveWindow(i16 dx, i16 dy);
 };

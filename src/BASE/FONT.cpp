@@ -30,14 +30,14 @@ font::~font(void) {
 VA(0x00471ef2, 0x4c)
 i32 RemapCyrillicCharacter(i32 character) {
     if (character == CYRILLIC_CAPITAL_YO)
-        return 0xa0;
+        return FONT_CODE_CAPITAL_YO;
     if (character == CYRILLIC_SMALL_YO)
-        return 0xc1;
+        return FONT_CODE_SMALL_YO;
     if (character < CYRILLIC_CAPITAL_A)
-        return 0xa1;
-    if (character < 0xe0)
-        return character - 0x40;
-    return character - 0x3f;
+        return FONT_CODE_SMALL_A;
+    if (character < CYRILLIC_SMALL_A)
+        return character - (CYRILLIC_CAPITAL_A - FONT_CODE_CAPITAL_A);
+    return character - (CYRILLIC_SMALL_A - FONT_CODE_SMALL_A);
 }
 
 #define drawX pos // frame-slot spelling
@@ -47,16 +47,16 @@ void font::DrawString(char* text, i16 x, i16 y, i16 color) {
     i32 glyph = 0;
     i16 drawX = x;
     i16 index = 0;
-    while (text[index] != 0) {
+    while (text[index] != '\0') {
         glyph = static_cast<u8>(text[index]);
         if (glyph < ' '
-            || (glyph > 0x7f && glyph < CYRILLIC_CAPITAL_A && glyph != CYRILLIC_SMALL_YO
-                && glyph != CYRILLIC_CAPITAL_YO))
-            glyph = 0x7f;
-        else if (glyph > 0x7f)
+            || (glyph > FONT_CODE_ASCII_LAST && glyph < CYRILLIC_CAPITAL_A
+                && glyph != CYRILLIC_SMALL_YO && glyph != CYRILLIC_CAPITAL_YO))
+            glyph = FONT_CODE_UNKNOWN;
+        else if (glyph > FONT_CODE_ASCII_LAST)
             glyph = RemapCyrillicCharacter(glyph);
         glyph -= ' ';
-        if (glyph != 0)
+        if (glyph != FONT_GLYPH_SPACE)
             m_glyphIcon->FillToBuffer(
                 drawX,
                 y + m_glyphOffsetY,
@@ -108,14 +108,14 @@ void font::DrawBoundedString(
     textCopy = new char[textLen + 1];
     strcpy(textCopy, text);
     drawColor = color;
-    while (position < textLen && textCopy[position] != 0 && lineTop + m_height <= height) {
-        while (textCopy[position] != 0 && textCopy[position] != '\n' && widthUsed <= width) {
+    while (position < textLen && textCopy[position] != '\0' && lineTop + m_height <= height) {
+        while (textCopy[position] != '\0' && textCopy[position] != '\n' && widthUsed <= width) {
             baseGlyph = static_cast<u8>(textCopy[position]);
             if (baseGlyph < ' '
-                || (baseGlyph > 0x7f && baseGlyph < CYRILLIC_CAPITAL_A
+                || (baseGlyph > FONT_CODE_ASCII_LAST && baseGlyph < CYRILLIC_CAPITAL_A
                     && baseGlyph != CYRILLIC_SMALL_YO && baseGlyph != CYRILLIC_CAPITAL_YO))
-                baseGlyph = 0x7f;
-            else if (baseGlyph > 0x7f)
+                baseGlyph = FONT_CODE_UNKNOWN;
+            else if (baseGlyph > FONT_CODE_ASCII_LAST)
                 baseGlyph = RemapCyrillicCharacter(baseGlyph);
             baseGlyph -= ' ';
             widthUsed += frameDirectory[baseGlyph * FONT_GLYPH_ENTRY_WORDS + FONT_GLYPH_WIDTH_WORD]
@@ -127,10 +127,10 @@ void font::DrawBoundedString(
             while (textCopy[position] != ' ' && position >= lineStart) {
                 baseGlyph = static_cast<u8>(textCopy[position]);
                 if (baseGlyph < ' '
-                    || (baseGlyph > 0x7f && baseGlyph < CYRILLIC_CAPITAL_A
+                    || (baseGlyph > FONT_CODE_ASCII_LAST && baseGlyph < CYRILLIC_CAPITAL_A
                         && baseGlyph != CYRILLIC_SMALL_YO && baseGlyph != CYRILLIC_CAPITAL_YO))
-                    baseGlyph = 0x7f;
-                else if (baseGlyph > 0x7f)
+                    baseGlyph = FONT_CODE_UNKNOWN;
+                else if (baseGlyph > FONT_CODE_ASCII_LAST)
                     baseGlyph = RemapCyrillicCharacter(baseGlyph);
                 baseGlyph -= ' ';
                 widthUsed -=
@@ -143,7 +143,7 @@ void font::DrawBoundedString(
         }
         lineEnd = position;
         breakChar = textCopy[lineEnd];
-        textCopy[lineEnd] = 0;
+        textCopy[lineEnd] = '\0';
         switch (align) {
             case FONT_ALIGN_LEFT:
                 alignIndent = 0;
@@ -187,14 +187,14 @@ i32 font::LineLength(char* text, i16 maxWidth) {
     position = 0;
     widthUsed = 0;
     chars = text;
-    while (position < textLen && chars[position] != 0) {
-        while (chars[position] != 0 && chars[position] != '\n' && widthUsed <= maxWidth) {
+    while (position < textLen && chars[position] != '\0') {
+        while (chars[position] != '\0' && chars[position] != '\n' && widthUsed <= maxWidth) {
             baseGlyph = static_cast<u8>(chars[position]);
             if (baseGlyph < ' '
-                || (baseGlyph > 0x7f && baseGlyph < CYRILLIC_CAPITAL_A
+                || (baseGlyph > FONT_CODE_ASCII_LAST && baseGlyph < CYRILLIC_CAPITAL_A
                     && baseGlyph != CYRILLIC_SMALL_YO && baseGlyph != CYRILLIC_CAPITAL_YO))
-                baseGlyph = 0x7f;
-            else if (baseGlyph > 0x7f)
+                baseGlyph = FONT_CODE_UNKNOWN;
+            else if (baseGlyph > FONT_CODE_ASCII_LAST)
                 baseGlyph = RemapCyrillicCharacter(baseGlyph);
             baseGlyph -= ' ';
             widthUsed += widths[baseGlyph * FONT_GLYPH_ENTRY_WORDS + FONT_GLYPH_WIDTH_WORD]
@@ -206,10 +206,10 @@ i32 font::LineLength(char* text, i16 maxWidth) {
             while (chars[position] != ' ' && position >= lineStart) {
                 baseGlyph = static_cast<u8>(chars[position]);
                 if (baseGlyph < ' '
-                    || (baseGlyph > 0x7f && baseGlyph < CYRILLIC_CAPITAL_A
+                    || (baseGlyph > FONT_CODE_ASCII_LAST && baseGlyph < CYRILLIC_CAPITAL_A
                         && baseGlyph != CYRILLIC_SMALL_YO && baseGlyph != CYRILLIC_CAPITAL_YO))
-                    baseGlyph = 0x7f;
-                else if (baseGlyph > 0x7f)
+                    baseGlyph = FONT_CODE_UNKNOWN;
+                else if (baseGlyph > FONT_CODE_ASCII_LAST)
                     baseGlyph = RemapCyrillicCharacter(baseGlyph);
                 baseGlyph -= ' ';
                 widthUsed -= widths[baseGlyph * FONT_GLYPH_ENTRY_WORDS + FONT_GLYPH_WIDTH_WORD]
@@ -250,14 +250,14 @@ i32 font::LineWidth(char* text) {
     position = 0;
     widthUsed = 0;
     chars = text;
-    while (position < textLen && chars[position] != 0) {
-        while (chars[position] != 0 && chars[position] != '\n') {
+    while (position < textLen && chars[position] != '\0') {
+        while (chars[position] != '\0' && chars[position] != '\n') {
             baseGlyph = static_cast<u8>(chars[position]);
             if (baseGlyph < ' '
-                || (baseGlyph > 0x7f && baseGlyph < CYRILLIC_CAPITAL_A
+                || (baseGlyph > FONT_CODE_ASCII_LAST && baseGlyph < CYRILLIC_CAPITAL_A
                     && baseGlyph != CYRILLIC_SMALL_YO && baseGlyph != CYRILLIC_CAPITAL_YO))
-                baseGlyph = 0x7f;
-            else if (baseGlyph > 0x7f)
+                baseGlyph = FONT_CODE_UNKNOWN;
+            else if (baseGlyph > FONT_CODE_ASCII_LAST)
                 baseGlyph = RemapCyrillicCharacter(baseGlyph);
             baseGlyph -= ' ';
             widthUsed += widths[baseGlyph * FONT_GLYPH_ENTRY_WORDS + FONT_GLYPH_WIDTH_WORD]

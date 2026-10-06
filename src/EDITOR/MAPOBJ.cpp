@@ -5,6 +5,7 @@
 
 #include <match.h>
 
+#include <BASE/Misc.h>
 #include <BASE/miscwin.h>
 #include <EDITOR/editManager.h>
 #include <EDITOR/EDITOR.h>
@@ -939,7 +940,7 @@ void editManager::PlaceTowns(void) {
                                     ) == TILESET_TOWN32
                                     && m_map.cells[nearX][nearY].m_triggerType
                                            & MAP_TRIGGER_EVENT) {
-                                    dist = abs(nearX - tileX) + abs(nearY - tileY);
+                                    dist = MANHATTAN_LENGTH(nearX - tileX, nearY - tileY);
                                     if (m_map.cells[nearX][nearY].m_triggerType
                                         == MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_CASTLE)) {
                                         if (dist < 10)
@@ -1174,14 +1175,14 @@ void editManager::PlaceTowns(void) {
                     tileX = Random(0, MAP_CELL_GRID_SIZE - 1);
                     tileY = Random(0, MAP_CELL_GRID_SIZE - 1);
                     if (MAP_GRID_CELL(reachedGrids[slot], tileX, tileY)) {
-                        dist = abs(tileX - keeps[slot].x) + abs(tileY - keeps[slot].y);
+                        dist = MANHATTAN_LENGTH(tileX - keeps[slot].x, tileY - keeps[slot].y);
                         if (steps < 10000 || Random(0, 100) < dist) {
                             tracing = false;
                             for (nearX = 0; nearX < MAP_CELL_GRID_SIZE; nearX++) {
                                 for (nearY = 0; nearY < MAP_CELL_GRID_SIZE; nearY++) {
                                     if (m_map.cells[nearX][nearY].m_triggerType
                                         == MAP_EVENT_TRIGGER(MAP_OBJECT_STONE_LITHS)) {
-                                        dist = abs(tileX - nearX) + abs(tileY - nearY);
+                                        dist = MANHATTAN_LENGTH(tileX - nearX, tileY - nearY);
                                         if (steps > 10000 && dist < 40 && Random(0, 100) > dist)
                                             tracing = true;
                                     }
@@ -1339,7 +1340,7 @@ void editManager::PlaceRandomObjects(i32 density, i32 strength) {
             for (j = 0; j < MAP_CELL_GRID_SIZE - 1; j++) {
                 if (H1_ENUM_DECODE(MapTileset, m_map.cells[i][j].m_objectTileset) == TILESET_TOWN32
                     && m_map.cells[i][j].m_triggerType & MAP_TRIGGER_EVENT) {
-                    spacing = abs(i - x) + abs(j - y);
+                    spacing = MANHATTAN_LENGTH(i - x, j - y);
                     if (spacing < 10 || spacing < Random(0, 40))
                         valid = false;
                 }
@@ -1408,7 +1409,7 @@ void editManager::PlaceRandomObjects(i32 density, i32 strength) {
                                    == MAP_EVENT_TRIGGER(MAP_OBJECT_SAWMILL)
                             || m_map.cells[i][j].m_triggerType
                                    == MAP_EVENT_TRIGGER(MAP_OBJECT_ALCHEMIST_LAB)) {
-                            spacing = abs(i - x) + abs(j - y);
+                            spacing = MANHATTAN_LENGTH(i - x, j - y);
                             if (spacing < 10)
                                 appeal -= 10 - spacing;
                             if (siteResource == RESOURCE_WOOD

@@ -209,7 +209,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) advManager::Open(i16 id) {
             MemError();
     }
     m_routeShown = false;
-    gWindowManager->AddWindow(m_adventureWindow, WINDOW_Z_ORDER_BASE, 1);
+    gWindowManager->AddWindow(m_adventureWindow, WINDOW_Z_ORDER_BOTTOM, 1);
     if (m_groundTiles == NULL)
         m_groundTiles = gResourceManager->GetTileset("ground32.til");
     if (m_cloudTiles == NULL)
@@ -5902,7 +5902,7 @@ void advManager::InsertSound(i16 x, i16 y, i16 distance, i8 soundLayer) {
         m_activeSounds[slot].distance = distance;
         CheckLoadSample(soundId);
         m_loopingSamples[soundId]->m_playbackData.volume = gEnvironmentVolume[distance];
-        m_loopingSamples[soundId]->m_playbackData.repeat = 1;
+        m_loopingSamples[soundId]->m_playbackData.repeat = true;
         PlaySample(m_loopingSamples[soundId]);
         m_activeSoundMask ^= 1 << m_activeSounds[slot].soundId;
     }
