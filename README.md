@@ -1,10 +1,44 @@
-# Heroes of Might and Magic — Buka 2003 source
+# Heroes of Might and Magic — Tournament Edition source
 
-C++ source for the 2003 Buka edition of Heroes of Might and Magic (`HEROES.EXE`,
-Windows) and its scenario editor (`EDITOR.EXE`), built with the original Visual
-C++ 6.0 SP5 toolchain. The text lives in a catalog with one translation per
-language: `locales/ru.po` (the retail Russian) and `locales/en.po` (English).
-Building selects one of them.
+The Tournament Edition (TE 1.05 f3) of the 2003 Buka Heroes of Might and Magic
+(`HEROES.EXE`, Windows) and its scenario editor (`EDITOR.EXE`), as ordinary
+source changes on the generated `source-buka-2003` tree, built with the
+original Visual C++ 6.0 SP5 toolchain. The text lives in a catalog with one
+translation per language: `locales/ru.po` (Russian) and `locales/en.po`
+(English). Building selects one of them.
+
+## Branches
+
+```text
+decomp-win95-1.0 -------------------> decomp-win95-1.1
+    |                                    |
+    v                                    v
+source-win95-1.0                     decomp-win95-1.2
+                                         |
+                                         v
+                                     decomp-buka-2003
+                                         |
+                 +-----------------------+---------+
+                 |                                 |
+                 v                                 v
+         source-buka-2003                  classic-buka-2003
+                 |
+      +----------+------------+
+      |                       |
+      v                       v
+  source-te (you are here)   port ------------------> port-te
+```
+
+- [`decomp-win95-1.0`](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.0) — Win95 1.0 `HEROES.EXE` (Feb 1996)
+- [`decomp-win95-1.1`](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.1) — Win95 1.1 `HEROES.EXE` (May 1996)
+- [`decomp-win95-1.2`](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.2) — Win95 1.2 `HEROESW.EXE` (Aug 1997), VC4.1
+- [`source-win95-1.0`](https://github.com/sushi-shi/homm1-decomp/tree/source-win95-1.0) — Clean source, Win95 1.0
+- [`decomp-buka-2003`](https://github.com/sushi-shi/homm1-decomp/tree/decomp-buka-2003) — Buka 2003 game and editor, byte-identical
+- [`source-buka-2003`](https://github.com/sushi-shi/homm1-decomp/tree/source-buka-2003) — Clean source, Buka 2003 (ru/en)
+- [`classic-buka-2003`](https://github.com/sushi-shi/homm1-decomp/tree/classic-buka-2003) — Reading view, UTF-8 Russian
+- [`source-te`](https://github.com/sushi-shi/homm1-decomp/tree/source-te) — Tournament Edition on the source
+- [`port`](https://github.com/sushi-shi/homm1-decomp/tree/port) — Native port: Linux, Windows, browser
+- [`port-te`](https://github.com/sushi-shi/homm1-decomp/tree/port-te) — Tournament Edition on the port
 
 ## Build and play
 
@@ -42,40 +76,6 @@ finds the CD by its first music track, reads the game's registry key (its
 window settings are the `HMM1 Editor...` values) and loads and saves maps in
 `~/.local/share/homm1-buka/game/MAPS/`. It takes the same options as the game's
 runner.
-
-## Branches
-
-```text
-decomp-win95-1.0 ---> decomp-win95-1.1 ---> decomp-win95-1.2 ---> decomp-buka-2003
-        |                                                                 |
-        v                                                    +------------+------------+
-source-win95-1.0                                             |                         |
-                                                             v                         v
-                                                     source-buka-2003         classic-buka-2003
-                                                             |
-                                                    +--------+--------+
-                                                    |                 |
-                                                    v                 v
-                                                  port            source-te
-                                                    |
-                                                    v
-                                                 port-te
-```
-
-| Branch | Purpose |
-| --- | --- |
-| [decomp-win95-1.0](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.0) | Win95 1.0 `HEROES.EXE` (Feb 1996) |
-| [decomp-win95-1.1](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.1) | Win95 1.1 `HEROES.EXE` (May 1996) |
-| [decomp-win95-1.2](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.2) | Win95 1.2 `HEROESW.EXE` (Aug 1997), VC4.1 |
-| [decomp-buka-2003](https://github.com/sushi-shi/homm1-decomp/tree/decomp-buka-2003) | Buka 2003 game and editor, byte-identical |
-| [source-win95-1.0](https://github.com/sushi-shi/homm1-decomp/tree/source-win95-1.0) | Clean source, Win95 1.0 |
-| [source-buka-2003](https://github.com/sushi-shi/homm1-decomp/tree/source-buka-2003) | Clean source, Buka 2003 (ru/en) |
-| [classic-buka-2003](https://github.com/sushi-shi/homm1-decomp/tree/classic-buka-2003) | Reading view, UTF-8 Russian |
-| [port](https://github.com/sushi-shi/homm1-decomp/tree/port) | Native port: Linux, Windows, browser |
-| [source-te](https://github.com/sushi-shi/homm1-decomp/tree/source-te) | Tournament Edition on the source |
-| [port-te](https://github.com/sushi-shi/homm1-decomp/tree/port-te) | Tournament Edition on the port |
-
-This branch is `source-buka-2003`.
 
 ## Build
 
@@ -119,10 +119,12 @@ edition, Cyrillic; a language needing other letters also needs new fonts.
 `nix run .#play` and `nix run .#editor` run the results with your game data; see
 [Build and play](#build-and-play) and [Scenario editor](#scenario-editor).
 
-## Regeneration
+## Edition changes
 
-`decomp-buka-2003` generates this branch with `homm1 clean`. Make source changes
-there and regenerate; do not edit this branch by hand.
+[docs/te](docs/te/README.md) describes how the edition's changes are laid out
+in the source; [the catalogue](docs/te/catalogue.md) lists every change of the
+edition and the decisions this branch took, and
+[changes.tsv](docs/te/changes.tsv) records how each row is implemented.
 
 ## License
 
