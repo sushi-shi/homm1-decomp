@@ -8,6 +8,9 @@
 #if !defined(_MSC_VER)
 
 #include <stddef.h>
+// Declared here, before rand and srand are renamed below, so that later
+// includes of <stdlib.h> and <cstdlib> see the C library's own names.
+#include <stdlib.h>
 
 int stricmp(const char* left, const char* right);
 int strcmpi(const char* left, const char* right);
@@ -16,6 +19,22 @@ char* strrev(char* text);
 
 #define __max(a, b) (((a) > (b)) ? (a) : (b))
 #define __min(a, b) (((a) < (b)) ? (a) : (b))
+
+// The Microsoft C runtime's random numbers: a linear congruential generator
+// with 15-bit results (RAND_MAX 0x7fff), seeded with 1. The game's outcomes
+// (Random, combat, network battles seeded by both peers) depend on the exact
+// sequence, so every native build uses this one instead of its C library's.
+int MsvcRand(void);
+void MsvcSrand(unsigned int seed);
+#define rand MsvcRand
+#define srand MsvcSrand
+#ifdef __cplusplus
+// The C++ library's own templates name std::rand.
+namespace std {
+using ::MsvcRand;
+using ::MsvcSrand;
+}
+#endif
 
 #endif
 
