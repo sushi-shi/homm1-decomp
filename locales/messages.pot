@@ -523,8 +523,16 @@ msgid "editor.quit.confirm"
 msgstr ""
 
 #: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.castles.failed"
+msgstr ""
+
+#: src/EDITOR/MAPOBJ.cpp
 #, c-format
 msgid "editor.random.saved"
+msgstr ""
+
+#: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.status.castles"
 msgstr ""
 
 #: src/EDITOR/MAPOBJ.cpp
@@ -537,6 +545,10 @@ msgstr ""
 
 #: src/EDITOR/MAPOBJ.cpp
 msgid "editor.random.status.objects"
+msgstr ""
+
+#: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.status.roads"
 msgstr ""
 
 #: src/EDITOR/MAPOBJ.cpp

@@ -14,6 +14,15 @@ rva	kind
 0x00038330	fppool
 0x00038338	vtable
 0x00038348	fppool
+0x00038350	fppool
+0x00038358	fppool
+0x00038360	fppool
+0x00038368	fppool
+0x00038370	fppool
+0x00038378	fppool
+0x00038380	fppool
+0x00038388	fppool
+0x00038390	fppool
 0x00038394	vtable
 0x000383a0	fppool
 0x000383a8	fppool
@@ -42,6 +51,7 @@ rva	kind
 0x00038478	vtable
 0x0003a2a6	vtable
 0x0003b0f8	
+0x0003b1f8	
 0x0003e5d4	
 0x0003eda0	
 0x0003edd0	

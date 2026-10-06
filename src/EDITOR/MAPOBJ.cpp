@@ -641,6 +641,450 @@ i32 editManager::PlaceChainLink(i32* x, i32* y, i32 direction, i32 tileset, char
     return 0;
 }
 
+VA(0x0041262a, 0x1f4c)
+void editManager::PlaceTowns(void) {
+    i32 terrain;
+    i32 cutOff[RANDOM_MAP_CASTLE_SLOTS];
+    i32 extraRoads[RANDOM_MAP_CASTLE_SLOTS];
+    i32 nearX;
+    i32 belongs[RANDOM_MAP_CASTLE_SLOTS];
+    i32 tileX;
+    i32 reachable[RANDOM_MAP_CASTLE_SLOTS];
+    i32 regionId;
+    double shareValue[RANDOM_MAP_REGION_LIMIT];
+    i32 endY;
+    overlayType* anyGate;
+    i32 coastAt;
+    i32 destX;
+    i32 continents;
+    mapStep keeps[RANDOM_MAP_CASTLE_SLOTS];
+    i32 tracing;
+    i32 fromX;
+    i32 roadMaskSet;
+    overlayType* winterGate;
+    i32 regionsUsed;
+    i32 c;
+    i32 round;
+    i32 unusedValue;
+    i16 rank[RANDOM_MAP_REGION_LIMIT + 1];
+    i32 dist;
+    i32 peerIndex;
+    i32 steps;
+    overlayType* castle;
+    i32 t;
+    i32 rating;
+    i32 slot;
+    i32 tileY;
+    i32 unusedIndex;
+    i32 filled;
+    i32 stepX;
+    i32 stepY;
+    u8* regionGrid;
+    i32 y0;
+    i16 regionSizes[RANDOM_MAP_REGION_LIMIT];
+    i32 meet;
+    i32 foundY;
+    i32 top;
+    overlayType* desertGateLiths;
+    i32 freeX;
+    i32 scanY;
+    i32 unusedTotal;
+    u8* reachedGrids[RANDOM_MAP_CASTLE_SLOTS];
+
+    for (slot = 0; slot < RANDOM_MAP_CASTLE_SLOTS; slot++) {
+        cutOff[slot] = 0;
+        extraRoads[slot] = 0;
+    }
+    castle = NULL;
+    winterGate = NULL;
+    desertGateLiths = NULL;
+    anyGate = NULL;
+    for (slot = 0; slot < OVERLAY_TYPE_COUNT; slot++) {
+        if (!strcmpi(gOverlayTypes[slot].name, "xcast   "))
+            castle = &gOverlayTypes[slot];
+        if (!strcmpi(gOverlayTypes[slot].name, "stgate  "))
+            winterGate = &gOverlayTypes[slot];
+        if (!strcmpi(gOverlayTypes[slot].name, "dtgate  "))
+            desertGateLiths = &gOverlayTypes[slot];
+        if (!strcmpi(gOverlayTypes[slot].name, "xtgate  "))
+            anyGate = &gOverlayTypes[slot];
+    }
+    regionGrid = static_cast<u8*>(malloc(MAP_CELL_GRID_SIZE * MAP_CELL_GRID_SIZE));
+    memset(regionGrid, 0, MAP_CELL_GRID_SIZE * MAP_CELL_GRID_SIZE);
+    for (slot = 0; slot < RANDOM_MAP_CASTLE_SLOTS; slot++) {
+        reachedGrids[slot] = static_cast<u8*>(malloc(MAP_CELL_GRID_SIZE * MAP_CELL_GRID_SIZE));
+        memset(reachedGrids[slot], 0, MAP_CELL_GRID_SIZE * MAP_CELL_GRID_SIZE);
+    }
+    continents = 0;
+    for (regionId = 1; regionId < RANDOM_MAP_REGION_LIMIT; regionId++) {
+        freeX = foundY = -1;
+        for (tileX = 0; tileX < MAP_CELL_GRID_SIZE; tileX++) {
+            for (tileY = 0; tileY < MAP_CELL_GRID_SIZE; tileY++) {
+                if (m_map.cells[tileX][tileY].m_tileIndex >= MAP_CELL_TILES_PER_TERRAIN
+                    && !*(regionGrid + tileX + tileY * MAP_CELL_GRID_SIZE)) {
+                    continents++;
+                    freeX = tileX;
+                    foundY = tileY;
+                    *(regionGrid + tileX + tileY * MAP_CELL_GRID_SIZE) = regionId;
+                    tileX = tileY = 999;
+                }
+            }
+        }
+        if (freeX >= 0) {
+            filled = 1;
+            while (filled) {
+                filled = 0;
+                for (tileX = 0; tileX < MAP_CELL_GRID_SIZE; tileX++) {
+                    for (tileY = 0; tileY < MAP_CELL_GRID_SIZE; tileY++) {
+                        if (m_map.cells[tileX][tileY].m_tileIndex >= MAP_CELL_TILES_PER_TERRAIN
+                            && !*(regionGrid + tileX + tileY * MAP_CELL_GRID_SIZE)) {
+                            if (tileX > 0
+                                && *(regionGrid + tileX - 1 + tileY * MAP_CELL_GRID_SIZE) > 0)
+                                *(regionGrid + tileX + tileY * MAP_CELL_GRID_SIZE) =
+                                    *(regionGrid + tileX - 1 + tileY * MAP_CELL_GRID_SIZE);
+                            else if (tileX < MAP_CELL_GRID_SIZE - 1
+                                     && *(regionGrid + tileX + 1 + tileY * MAP_CELL_GRID_SIZE) > 0)
+                                *(regionGrid + tileX + tileY * MAP_CELL_GRID_SIZE) =
+                                    *(regionGrid + tileX + 1 + tileY * MAP_CELL_GRID_SIZE);
+                            else if (tileY > 0
+                                     && *(regionGrid + tileX + (tileY - 1) * MAP_CELL_GRID_SIZE)
+                                            > 0)
+                                *(regionGrid + tileX + tileY * MAP_CELL_GRID_SIZE) =
+                                    *(regionGrid + tileX + (tileY - 1) * MAP_CELL_GRID_SIZE);
+                            else if (tileY < MAP_CELL_GRID_SIZE - 1
+                                     && *(regionGrid + tileX + (tileY + 1) * MAP_CELL_GRID_SIZE)
+                                            > 0)
+                                *(regionGrid + tileX + tileY * MAP_CELL_GRID_SIZE) =
+                                    *(regionGrid + tileX + (tileY + 1) * MAP_CELL_GRID_SIZE);
+                            if (*(regionGrid + tileX + tileY * MAP_CELL_GRID_SIZE))
+                                filled = 1;
+                        }
+                    }
+                }
+            }
+        } else
+            regionId = 999;
+    }
+    memset(regionSizes, 0, sizeof(regionSizes));
+    for (tileX = 0; tileX < MAP_CELL_GRID_SIZE; tileX++)
+        for (tileY = 0; tileY < MAP_CELL_GRID_SIZE; tileY++)
+            regionSizes[*(regionGrid + tileX + tileY * MAP_CELL_GRID_SIZE)]++;
+    for (slot = 0; slot < RANDOM_MAP_REGION_LIMIT; slot++)
+        shareValue[slot] = 0.0;
+    for (slot = 1; slot <= continents; slot++) {
+        rank[slot] = slot;
+        shareValue[slot] =
+            static_cast<float>(regionSizes[slot]) / (static_cast<float>(gLandCellCount)) * 100.0f;
+    }
+    for (round = 1; round < continents; round++) {
+        for (slot = round; slot < continents; slot++) {
+            if (regionSizes[rank[slot]] < regionSizes[rank[slot + 1]]) {
+                t = rank[slot];
+                rank[slot] = rank[slot + 1];
+                rank[slot + 1] = t;
+            }
+        }
+    }
+    if (shareValue[rank[1]] > 80.0) {
+        belongs[0] = belongs[1] = belongs[2] = belongs[3] = rank[1];
+        regionsUsed = 1;
+    } else if (shareValue[rank[1]] > 40.0 && shareValue[rank[2]] < 15.0) {
+        belongs[0] = belongs[1] = belongs[2] = belongs[3] = rank[1];
+        regionsUsed = 1;
+    } else if (shareValue[rank[1]] < 55.0 && shareValue[rank[2]] > 25.0) {
+        belongs[0] = belongs[1] = rank[1];
+        belongs[2] = belongs[3] = rank[2];
+        regionsUsed = 2;
+    } else if (shareValue[rank[1]] < 50.0 && shareValue[rank[2]] > 15.0
+               && shareValue[rank[3]] > 15.0 && shareValue[rank[4]] > 15.0) {
+        belongs[0] = rank[1];
+        belongs[1] = rank[2];
+        belongs[2] = rank[3];
+        belongs[3] = rank[4];
+        regionsUsed = 4;
+    } else if (shareValue[rank[1]] < 30.0 && shareValue[rank[2]] > 8.0 && shareValue[rank[3]] > 8.0
+               && shareValue[rank[4]] > 8.0) {
+        belongs[0] = rank[1];
+        belongs[1] = rank[2];
+        belongs[2] = rank[3];
+        belongs[3] = rank[4];
+        regionsUsed = 4;
+    } else {
+        belongs[0] = belongs[1] = belongs[2] = belongs[3] = rank[1];
+        regionsUsed = 1;
+    }
+    ShowStatusText(localization::Tr("editor.random.status.castles"));
+    for (c = 0; c < RANDOM_MAP_CASTLE_SLOTS; c++) {
+        top = 0;
+        for (tileX = 2; tileX < MAP_CELL_GRID_SIZE - 3; tileX++) {
+            for (tileY = 4; tileY < MAP_CELL_GRID_SIZE - 3; tileY++) {
+                if (*(regionGrid + tileX + tileY * MAP_CELL_GRID_SIZE) == belongs[c]) {
+                    rating = Random(1000, 1200);
+                    if (m_map.cells[tileX - 1][tileY + 1].m_tileIndex < MAP_CELL_TILES_PER_TERRAIN)
+                        rating += regionsUsed > 1 ? 1000 : continents * 50 + 100;
+                    else if (m_map.cells[tileX - 2][tileY + 2].m_tileIndex
+                             < MAP_CELL_TILES_PER_TERRAIN)
+                        rating += regionsUsed > 1 ? 1000 : continents * 40 + 100;
+                    for (nearX = tileX - 2; nearX <= tileX + 1; nearX++)
+                        for (scanY = tileY - 2; scanY <= tileY; scanY++)
+                            if (*(regionGrid + nearX + scanY * MAP_CELL_GRID_SIZE) == belongs[c])
+                                rating += 50;
+                    if (rating > top) {
+                        for (nearX = 0; nearX < MAP_CELL_GRID_SIZE - 1; nearX++) {
+                            for (scanY = 0; scanY < MAP_CELL_GRID_SIZE - 1; scanY++) {
+                                if (m_map.cells[nearX][scanY].m_objectTileset == TILESET_TOWN32
+                                    && m_map.cells[nearX][scanY].m_triggerType
+                                           & MAP_TRIGGER_EVENT) {
+                                    dist = abs(nearX - tileX) + abs(scanY - tileY);
+                                    if (m_map.cells[nearX][scanY].m_triggerType
+                                        == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_CASTLE)) {
+                                        if (dist < 10)
+                                            rating -= 3000;
+                                        else if (dist < 40)
+                                            rating -= (40 - dist) * 15;
+                                    } else {
+                                        if (dist < 8)
+                                            rating -= 3000;
+                                        else if (dist < 40)
+                                            rating -= (40 - dist) * 7;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (rating > top) {
+                        keeps[c].x = tileX;
+                        keeps[c].y = tileY;
+                        top = rating;
+                    }
+                }
+            }
+        }
+        tileX = keeps[c].x;
+        tileY = keeps[c].y;
+        if (top < 0)
+            ShutDown(localization::Tr("editor.random.castles.failed"));
+        terrain = m_map.cells[tileX][tileY].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN;
+        gEditManager->ClearArea(tileX - 2, tileY - 2, 5, 4, EDIT_CLEAR_ALL, 1);
+        for (nearX = tileX - 2; nearX <= tileX + 2; nearX++)
+            for (scanY = tileY - 2; scanY <= tileY + 1; scanY++)
+                m_map.cells[nearX][scanY].m_tileIndex = terrain * MAP_CELL_TILES_PER_TERRAIN;
+        PlaceOverlay(castle, tileX - 2, tileY);
+        if (regionsUsed > 1)
+            steps = 999;
+        else if (m_map.cells[tileX - 1][tileY + 1].m_tileIndex < MAP_CELL_TILES_PER_TERRAIN)
+            steps = 1;
+        else if (m_map.cells[tileX - 2][tileY + 2].m_tileIndex < MAP_CELL_TILES_PER_TERRAIN)
+            steps = 3;
+        else
+            steps = 0;
+        if (steps) {
+            coastAt = 0;
+            nearX = tileX - 2;
+            scanY = tileY + 1;
+            ResetArea(tileX - 2, tileY + 1, 2, 2);
+            while (!coastAt && steps) {
+                steps--;
+                if (m_map.cells[nearX][scanY].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN
+                        == TERRAIN_WATER
+                    || m_map.cells[nearX + 1][scanY].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN
+                           == TERRAIN_WATER)
+                    coastAt = 1;
+                else {
+                    m_map.cells[nearX][scanY].m_tileIndex = 0;
+                    m_map.cells[nearX + 1][scanY].m_tileIndex = 0;
+                    if (nearX > 0)
+                        nearX--;
+                    if (scanY < MAP_CELL_GRID_SIZE - 1)
+                        scanY++;
+                    if (nearX == 0 && scanY == MAP_CELL_GRID_SIZE - 1)
+                        coastAt = 1;
+                }
+            }
+        }
+        for (peerIndex = 0; peerIndex < c; peerIndex++) {
+            if (belongs[c] != belongs[c - 1])
+                continue;
+            if (keeps[peerIndex].x < keeps[c].x && keeps[peerIndex].y < keeps[c].y) {
+                fromX = tileX - 2;
+                y0 = tileY - 2;
+                destX = keeps[peerIndex].x + 1;
+                endY = keeps[peerIndex].x + 1;
+            } else if (keeps[peerIndex].x < keeps[c].x && keeps[peerIndex].y >= keeps[c].y) {
+                fromX = tileX + 1;
+                y0 = tileY + 1;
+                destX = keeps[peerIndex].x + 1;
+                endY = keeps[peerIndex].x - 2;
+            } else if (keeps[peerIndex].x >= keeps[c].x && keeps[peerIndex].y < keeps[c].y) {
+                fromX = tileX + 1;
+                y0 = tileY - 2;
+                destX = keeps[peerIndex].x + 1;
+                endY = keeps[peerIndex].x + 1;
+            } else {
+                fromX = tileX + 1;
+                y0 = tileY + 1;
+                destX = keeps[peerIndex].x - 1;
+                endY = keeps[peerIndex].x - 2;
+            }
+            nearX = fromX;
+            scanY = y0;
+            tracing = 1;
+            while (tracing) {
+                if (nearX == destX && scanY == endY)
+                    tracing = 0;
+                if (destX > nearX)
+                    stepX = 1;
+                else if (destX < nearX)
+                    stepX = -1;
+                else
+                    stepX = 0;
+                if (endY > scanY)
+                    stepY = 1;
+                else if (endY < scanY)
+                    stepY = -1;
+                else
+                    stepY = 0;
+                if (stepX
+                    && m_map.cells[nearX + stepX][scanY].m_tileIndex >= MAP_CELL_TILES_PER_TERRAIN)
+                    stepY = 0;
+                else if (stepY
+                         && m_map.cells[nearX][scanY + stepY].m_tileIndex
+                                >= MAP_CELL_TILES_PER_TERRAIN)
+                    stepX = 0;
+                else {
+                    tracing = 0;
+                    cutOff[c] = 1;
+                    cutOff[peerIndex] = 1;
+                }
+                if (tracing
+                    && m_map.cells[nearX + stepX][scanY + stepY].m_tileIndex
+                           >= MAP_CELL_TILES_PER_TERRAIN) {
+                    nearX += stepX;
+                    scanY += stepY;
+                    roadMaskSet = RANDOM_MAP_ROAD_CLEAR_MASK;
+                    gEditManager->ClearArea(nearX, scanY, 1, 1, roadMaskSet, 0);
+                }
+            }
+        }
+    }
+    if (Random(0, 100) < 50) {
+        extraRoads[0] = 1;
+        extraRoads[1] = 1;
+        if (Random(0, 100) < 50)
+            extraRoads[2] = 1;
+        if (Random(0, 100) < 50)
+            extraRoads[3] = 1;
+    }
+    if (cutOff[0] || cutOff[1] || cutOff[2] || cutOff[3] || extraRoads[0]) {
+        ShowStatusText(localization::Tr("editor.random.status.roads"));
+        for (slot = 0; slot < RANDOM_MAP_CASTLE_SLOTS; slot++) {
+            cutOff[slot] = 0;
+            reachable[slot] = 0;
+            for (tileX = keeps[slot].x - 2; tileX <= keeps[slot].x + 2; tileX++)
+                for (tileY = keeps[slot].y - 2; tileY <= keeps[slot].y + 1; tileY++)
+                    *(reachedGrids[slot] + tileX + tileY * MAP_CELL_GRID_SIZE) = 1;
+            filled = 1;
+            while (filled) {
+                filled = 0;
+                for (tileX = 0; tileX < MAP_CELL_GRID_SIZE; tileX++) {
+                    for (tileY = 0; tileY < MAP_CELL_GRID_SIZE; tileY++) {
+                        if (m_map.cells[tileX][tileY].m_tileIndex >= MAP_CELL_TILES_PER_TERRAIN
+                            && (!m_map.cells[tileX][tileY].m_objectTileset
+                                || m_map.cells[tileX][tileY].m_objectTileset == TILESET_MONS32)
+                            && !*(reachedGrids[slot] + tileX + tileY * MAP_CELL_GRID_SIZE)) {
+                            if (tileX > 0
+                                && *(reachedGrids[slot] + tileX - 1 + tileY * MAP_CELL_GRID_SIZE)
+                                       > 0)
+                                *(reachedGrids[slot] + tileX + tileY * MAP_CELL_GRID_SIZE) =
+                                    *(reachedGrids[slot] + tileX - 1 + tileY * MAP_CELL_GRID_SIZE);
+                            else if (tileX < MAP_CELL_GRID_SIZE - 1
+                                     && *(reachedGrids[slot] + tileX + 1
+                                          + tileY * MAP_CELL_GRID_SIZE)
+                                            > 0)
+                                *(reachedGrids[slot] + tileX + tileY * MAP_CELL_GRID_SIZE) =
+                                    *(reachedGrids[slot] + tileX + 1 + tileY * MAP_CELL_GRID_SIZE);
+                            else if (tileY > 0
+                                     && *(reachedGrids[slot] + tileX
+                                          + (tileY - 1) * MAP_CELL_GRID_SIZE)
+                                            > 0)
+                                *(reachedGrids[slot] + tileX + tileY * MAP_CELL_GRID_SIZE) =
+                                    *(reachedGrids[slot] + tileX
+                                      + (tileY - 1) * MAP_CELL_GRID_SIZE);
+                            else if (tileY < MAP_CELL_GRID_SIZE - 1
+                                     && *(reachedGrids[slot] + tileX
+                                          + (tileY + 1) * MAP_CELL_GRID_SIZE)
+                                            > 0)
+                                *(reachedGrids[slot] + tileX + tileY * MAP_CELL_GRID_SIZE) =
+                                    *(reachedGrids[slot] + tileX
+                                      + (tileY + 1) * MAP_CELL_GRID_SIZE);
+                            if (*(reachedGrids[slot] + tileX + tileY * MAP_CELL_GRID_SIZE)) {
+                                filled = 1;
+                                reachable[slot]++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        for (slot = 1; slot < RANDOM_MAP_CASTLE_SLOTS; slot++) {
+            for (t = 0; t < slot; t++) {
+                if (belongs[slot] == belongs[t]) {
+                    meet = 0;
+                    for (tileX = 0; tileX < MAP_CELL_GRID_SIZE; tileX++)
+                        for (tileY = 0; tileY < MAP_CELL_GRID_SIZE; tileY++)
+                            if (*(reachedGrids[slot] + tileX + tileY * MAP_CELL_GRID_SIZE)
+                                && *(reachedGrids[t] + tileX + tileY * MAP_CELL_GRID_SIZE))
+                                meet = 1;
+                    if (!meet) {
+                        cutOff[slot] = 1;
+                        cutOff[t] = 1;
+                    }
+                }
+            }
+        }
+        for (slot = 0; slot < RANDOM_MAP_CASTLE_SLOTS; slot++) {
+            if (cutOff[slot] || extraRoads[slot]) {
+                steps = 20000;
+                tracing = 1;
+                while (tracing) {
+                    if (steps-- < 0)
+                        tracing = 0;
+                    tileX = Random(0, MAP_CELL_GRID_SIZE - 1);
+                    tileY = Random(0, MAP_CELL_GRID_SIZE - 1);
+                    if (*(reachedGrids[slot] + tileX + tileY * MAP_CELL_GRID_SIZE)) {
+                        dist = abs(tileX - keeps[slot].x) + abs(tileY - keeps[slot].y);
+                        if (steps < 10000 || Random(0, 100) < dist) {
+                            tracing = 0;
+                            for (nearX = 0; nearX < MAP_CELL_GRID_SIZE; nearX++) {
+                                for (scanY = 0; scanY < MAP_CELL_GRID_SIZE; scanY++) {
+                                    if (m_map.cells[nearX][scanY].m_triggerType
+                                        == (MAP_TRIGGER_EVENT | MAP_OBJECT_STONE_LITHS)) {
+                                        dist = abs(tileX - nearX) + abs(tileY - scanY);
+                                        if (steps > 10000 && dist < 40 && Random(0, 100) > dist)
+                                            tracing = 1;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                gEditManager->ClearArea(tileX, tileY, 1, 1, EDIT_CLEAR_ALL, 1);
+                if (m_map.cells[tileX][tileY].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN
+                    == TERRAIN_DESERT)
+                    PlaceOverlay(desertGateLiths, tileX, tileY);
+                if (m_map.cells[tileX][tileY].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN
+                    == TERRAIN_SNOW)
+                    PlaceOverlay(winterGate, tileX, tileY);
+                else
+                    PlaceOverlay(anyGate, tileX, tileY);
+            }
+        }
+    }
+    free(regionGrid);
+    for (slot = 0; slot < RANDOM_MAP_CASTLE_SLOTS; slot++)
+        free(reachedGrids[slot]);
+}
+
 VA(0x00414576, 0x21f)
 void editManager::PlaceResourceSite(i32 x, i32 y, i32 kind) {
     overlayType* river;
@@ -922,7 +1366,7 @@ void editManager::PlaceTreasures(i32 density, i32 strength) {
             bounty = &gOverlayTypes[k];
         if (!strcmpi(gOverlayTypes[k].name, "chest   "))
             chest = &gOverlayTypes[k];
-        if (!strcmpi(gOverlayTypes[k].name, "genieLamp    "))
+        if (!strcmpi(gOverlayTypes[k].name, "lamp    "))
             genieLamp = &gOverlayTypes[k];
         if (!strcmpi(gOverlayTypes[k].name, "firemult"))
             bonfire = &gOverlayTypes[k];

@@ -12,6 +12,14 @@ struct mapStep {
     i32 y;
 };
 
+// PlaceTowns: castle slots (one per player), the land regions it numbers and
+// the object classes a road between castles erases.
+H1_ENUM_CONST_BEGIN(TownPlacementConstant)
+    RANDOM_MAP_CASTLE_SLOTS = 4,
+    RANDOM_MAP_REGION_LIMIT = 255,
+    RANDOM_MAP_ROAD_CLEAR_MASK = 0xfc7f
+H1_ENUM_CONST_END(TownPlacementConstant)
+
 H1_ENUM_CONST_BEGIN(RandomMapConstant)
 // GenerateRandomMap retries a map without enough castles this often.
     RANDOM_MAP_ATTEMPTS = 5,

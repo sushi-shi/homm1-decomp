@@ -522,9 +522,17 @@ msgid "editor.quit.confirm"
 msgstr "Вы действительно хотите выйти?\n"
 
 #: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.castles.failed"
+msgstr "Невозможно установить замки"
+
+#: src/EDITOR/MAPOBJ.cpp
 #, c-format
 msgid "editor.random.saved"
 msgstr "'%s' сохранена успешно"
+
+#: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.status.castles"
+msgstr "Генерация карты - размещаю замки..."
 
 #: src/EDITOR/MAPOBJ.cpp
 msgid "editor.random.status.land"
@@ -537,6 +545,10 @@ msgstr "Генерация карты - размещаю горы..."
 #: src/EDITOR/MAPOBJ.cpp
 msgid "editor.random.status.objects"
 msgstr "Генерация карты - размещаю объекты..."
+
+#: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.status.roads"
+msgstr "Генерация карты - соединяю замки..."
 
 #: src/EDITOR/MAPOBJ.cpp
 msgid "editor.random.status.save_prompt"
