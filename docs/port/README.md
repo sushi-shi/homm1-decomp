@@ -72,7 +72,10 @@ In a window both programs show their menu bar above the picture, as the
 original did; at full screen it is hidden, as it was. The game's options,
 the editor's window sizes, full screen, About and Help are there.
 
-`$HOMM1_CONFIG` names another settings folder on every system.
+`$HOMM1_CONFIG` names another settings folder on every system. On
+`port-te` the game is the Tournament Edition and keeps its settings in
+`heroes-te-en.cfg` or `heroes-te-ru.cfg` instead (`docs/te/README.md`); the
+editor keeps `heroes.cfg`.
 
 ### Windows
 

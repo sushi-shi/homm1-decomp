@@ -13,8 +13,8 @@ script serves it on a local port and, like a player would:
    given) in a new tab, starts a standard game
    and waits for the adventure map;
 3. reloads the page: the files must still be there (IndexedDB); starts the
-   game with its intro movie and checks that audio is running after the
-   click that started it;
+   game without /I0 (the edition plays no intro movie unless PlayVideos is
+   set) and checks that audio is running after the click that started it;
 4. loads the shipped saved game, saves it again and reloads: the saved file
    must have been written back to the browser's storage;
 5. opens the scenario editor on the same files.
@@ -227,8 +227,8 @@ def main() -> int:
         page.wait_for_timeout(1500)
         session.shot("adventure-map-scrolled")
 
-        # 3. Reload: the stored files are still there; the intro plays with
-        # sound.
+        # 3. Reload: the stored files are still there; the game starts with
+        # sound (the edition's intro movie is off by default).
         print("3. reload, intro movie and audio")
         page.goto(url + "?quiet=1")
         wait_status(page, "The game files are stored")

@@ -175,3 +175,19 @@ as the rows above; the others change play and stay in the edition.
 | TE-UI-1 spell book forward path | interface | No. |
 | TE-QOL-6 catapult residue | display (no memory error) | No. |
 | TE-RU-1 Russian end sequence | none (same behaviour) | No. |
+
+## The Tournament Edition (port-te)
+
+On `port-te` the game is the Tournament Edition; `docs/te/README.md`
+("The edition on the native port") lists each platform row's native form,
+the save format and protocol through the codecs, and which of the retail
+gameplay bugs above the edition fixes. Host differences of port-te besides
+those of the port:
+
+| Area | Edition on Windows | port-te |
+| --- | --- | --- |
+| Settings | Registry key `…\HeroesWorld TE\EN` or `\RU`. | `heroes-te-en.cfg` or `heroes-te-ru.cfg` in the settings folder; the editor keeps `heroes.cfg`. |
+| Idle processor use | `Sleep(1)` per message-pump pass, 1 ms timer period, `GetMessage` every 127 ms. | A 1 ms sleep per pass natively (not in the browser or the editor); SDL's 1 ms timer period on Windows; no blocking `GetMessage`. |
+| Music | `Tracks\NN-AudioTrack NN.ogg` or `Audio\Track NN.flac` in the game folder. | The same files first, then the port's CD folder, then `SOUND`. |
+| Window title | The wrapper's "Heroes of Might and Magic TE". | The game's catalog title (`window.gTitle`). |
+| Network peers | NetBIOS group `Empire TE1 `, serial tag `TE`, checksum seed. | The same, and the TCP session frame carries the protocol version: other versions are refused. |
