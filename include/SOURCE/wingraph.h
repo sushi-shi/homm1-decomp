@@ -109,13 +109,16 @@ extern i16 gDDSetFullScreenLineBase;
 extern i16 gDDPaintLineBase;
 extern RECT gDDClientRect;
 extern RECT gDDSourceRect;
-extern RECT gDDDestRect;
-extern i32 gDDrawStatus;
-extern _DDSURFACEDESC gDDrawSurfaceDesc;
+#define gDDDestinationRect gDDDestRect // spelling fixes .bss order
+extern RECT gDDDestinationRect;
+#define gDDResult gDDrawStatus // spelling fixes .bss order
+extern i32 gDDResult;
+#define gDDSurfaceDesc gDDrawSurfaceDesc // spelling fixes .bss order
+extern _DDSURFACEDESC gDDSurfaceDesc;
 extern i32 gDDPaintStart;
 extern i32 gBusyRetry;
 extern HDC gImageDC;
-extern HBITMAP gbmOldMonoBitmap;
+extern HBITMAP gOldMonoBitmap;
 extern WingImage screenImage;
 extern WingPalette LogicalPalette;
 extern i32 Orientation;

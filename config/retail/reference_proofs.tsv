@@ -6006,10 +6006,10 @@ site_rva	target_rva	symbol
 0x000396b5	0x0001107c	?TrimLoopingSounds@advManager@@QAEXH@Z
 0x000396bb	0x000a9920	?gHeroWindShowing@@3CA
 0x000396c8	0x000a74a8	?gpWindowManager@@3PAVheroWindowManager@@A
-0x00039ce0	0x000a6c3c	?gheroWin@@3PAVheroWindow@@A
-0x00039d07	0x000a6c3c	?gheroWin@@3PAVheroWindow@@A
+0x00039ce0	0x000a6c3c	?gHeroWin@@3PAVheroWindow@@A
+0x00039d07	0x000a6c3c	?gHeroWin@@3PAVheroWindow@@A
 0x00039d0c	0x0006da11	?BroadcastMessage@heroWindow@@QAEFAAUtag_message@@@Z
-0x00039d1e	0x000a6c3c	?gheroWin@@3PAVheroWindow@@A
+0x00039d1e	0x000a6c3c	?gHeroWin@@3PAVheroWindow@@A
 0x00039d23	0x0006daab	?DrawWindow@heroWindow@@QAEXFHH@Z
 0x00039d37	0x000a74a8	?gpWindowManager@@3PAVheroWindowManager@@A
 0x00039d3c	0x0006a917	?UpdateScreenRegion@heroWindowManager@@QAEXFFFF@Z
@@ -10744,7 +10744,7 @@ site_rva	target_rva	symbol
 0x00067b96	0x000cd95c	?screenImage@@3UWingImage@@A
 0x00067ba0	0x000cddd4	?gImageDC@@3PAUHDC__@@A
 0x00067ba7	0x0008a02c	__imp__SelectObject@8
-0x00067bac	0x000cddd8	?gbmOldMonoBitmap@@3PAUHBITMAP__@@A
+0x00067bac	0x000cddd8	?gOldMonoBitmap@@3PAUHBITMAP__@@A
 0x00067bb1	0x000cdd70	?screenImage@@3UWingImage@@A
 0x00067bb6	0x000cdda4	?gInitWin@@3PAXA
 0x00067bbe	0x000a99dc	?iMainWinScreenHeight@@3HA
@@ -10800,7 +10800,7 @@ site_rva	target_rva	symbol
 0x0006801d	0x000a9df0	?gMainWinScreenWidth@@3HA
 0x00068029	0x000a99dc	?iMainWinScreenHeight@@3HA
 0x000680fa	0x000cddd4	?gImageDC@@3PAUHDC__@@A
-0x00068102	0x000cddd8	?gbmOldMonoBitmap@@3PAUHBITMAP__@@A
+0x00068102	0x000cddd8	?gOldMonoBitmap@@3PAUHBITMAP__@@A
 0x00068109	0x000cddd4	?gImageDC@@3PAUHDC__@@A
 0x00068110	0x0008a02c	__imp__SelectObject@8
 0x0006811d	0x0008a028	__imp__DeleteObject@4

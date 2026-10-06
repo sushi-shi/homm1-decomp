@@ -239,7 +239,7 @@ i8 hero::HeroView(i8 viewOnly) {
     heroWin = new heroWindow(0, 0, "herowind.bin");
     if (!heroWin)
         MemError();
-    gheroWin = heroWin;
+    gHeroWin = heroWin;
     SetWinText(heroWin, WINDOW_TEXT_HERO);
     message.type = MESSAGE_WIDGET;
     sprintf(gText, localization::Tr("hero.title"), m_name, gClassNames[m_heroClass]);
@@ -351,7 +351,7 @@ i8 hero::HeroView(i8 viewOnly) {
     gWindowManager->DoDialog(heroWin, HeroHandler, 0);
     gWindowManager->FadeScreen(WINDOW_FADE_OUT, 8, NULL);
     delete heroWin;
-    gheroWin = NULL;
+    gHeroWin = NULL;
     if (gWindowManager->m_dialogResult == HERO_SCREEN_DISMISS) {
         return 1;
     } else {
@@ -367,12 +367,12 @@ VA(0x00439cd8, 0x6c)
 void HeroMessageUpdate(char* text) {
     tag_message message;
 
-    if (!gheroWin)
+    if (!gHeroWin)
         return;
     SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, HERO_SCREEN_STATUS_TEXT);
     message.text = text;
-    gheroWin->BroadcastMessage(message);
-    gheroWin->DrawWindow(0, HERO_SCREEN_STATUS_FIRST, HERO_SCREEN_STATUS_TEXT);
+    gHeroWin->BroadcastMessage(message);
+    gHeroWin->DrawWindow(0, HERO_SCREEN_STATUS_FIRST, HERO_SCREEN_STATUS_TEXT);
     gWindowManager->UpdateScreenRegion(0, 459, LOGICAL_SCREEN_WIDTH, 20);
 }
 
@@ -1051,4 +1051,4 @@ i16 HeroHandler(struct tag_message& message) {
 
 // HERO owns retail .data 0x004a12bc-0x004a0b2b.
 DATA(0x004a6c3c)
-class heroWindow* gheroWin = NULL;
+class heroWindow* gHeroWin = NULL;

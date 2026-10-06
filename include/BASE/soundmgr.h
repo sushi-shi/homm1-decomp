@@ -43,9 +43,9 @@ extern i32 CDPlaying;
 extern i32 CDPlayOnce;
 extern i8 CDTrackMap[];
 extern char CDPreviousPosition[][CD_POSITION_CAPACITY];
-extern char CommandString[];
-extern char lpszReturnString[];
-extern u32 nMCIError;
+extern char gMciCommandString[];
+extern char gMciReturnString[];
+extern u32 gMciError;
 extern i16 gSampleVolumes[];
 struct SampleChannelStruct {
     i32 startChannel;

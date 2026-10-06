@@ -1001,13 +1001,13 @@ i8 game::NewGame(void) {
         if (gNumHumanPlayers == 1) {
             strcpy(gMapName, "AES31000.map");
             strcpy(gFullMapName, localization::Tr("scenario.claw.name"));
-            strcpy(gMapDesc, localization::Tr("scenario.claw.description"));
+            strcpy(gMapDescription, localization::Tr("scenario.claw.description"));
             gMapSize = MAP_SIZE_SMALL;
             gMapDifficulty = MAP_DIFFICULTY_EASY;
         } else {
             strcpy(gMapName, "CNM51234.map");
             strcpy(gFullMapName, localization::Tr("scenario.bay.name"));
-            strcpy(gMapDesc, localization::Tr("scenario.bay.description"));
+            strcpy(gMapDescription, localization::Tr("scenario.bay.description"));
             gMapSize = MAP_SIZE_MEDIUM;
             gMapDifficulty = MAP_DIFFICULTY_NORMAL;
         }
@@ -1019,7 +1019,7 @@ i8 game::NewGame(void) {
     if (gWindowManager->m_dialogResult == DIALOG_BUTTON_1)
         return 0;
     strcpy(m_mapName, gFullMapName);
-    strcpy(m_mapDescription, gMapDesc);
+    strcpy(m_mapDescription, gMapDescription);
     m_mapSize = gMapSize;
     m_mapDifficulty = gMapDifficulty;
     strcpy(m_mapName, gFullMapName);
@@ -3703,14 +3703,18 @@ DATA(0x004a6c08)
 static i32 s_adjacentMonsterEndX;
 DATA(0x004a6c04)
 static i32 s_adjacentMonsterEndY;
+#define s_adjacentMonsterX s_adjacentGuardX // spelling fixes .bss order
 DATA(0x004a6bd4)
-static i32 s_adjacentGuardX;
+static i32 s_adjacentMonsterX;
+#define s_adjacentMonsterY s_adjacentGuardY // spelling fixes .bss order
 DATA(0x004a6bd8)
-static i32 s_adjacentGuardY;
+static i32 s_adjacentMonsterY;
+#define s_adjacentMonsterMinX s_adjacentGuardMinX // spelling fixes .bss order
 DATA(0x004a6be8)
-static i32 s_adjacentGuardMinX;
+static i32 s_adjacentMonsterMinX;
+#define s_adjacentMonsterMinY s_adjacentGuardMinY // spelling fixes .bss order
 DATA(0x004a6bec)
-static i32 s_adjacentGuardMinY;
+static i32 s_adjacentMonsterMinY;
 
 VA(0x00436026, 0x2fa)
 i8 advManager::FindAdjacentMonster(
@@ -3726,18 +3730,18 @@ i8 advManager::FindAdjacentMonster(
 
     if (originX > 0 && originY > 0 && originX < MAP_CELL_GRID_SIZE - 1
         && originY < MAP_CELL_GRID_SIZE - 1) {
-        for (s_adjacentGuardX = originX - 1; s_adjacentGuardX < s_adjacentMonsterEndX;
-             ++s_adjacentGuardX) {
-            for (s_adjacentGuardY = originY - 1; s_adjacentGuardY < s_adjacentMonsterEndY;
-                 ++s_adjacentGuardY) {
-                if (m_mapData[s_adjacentGuardX][s_adjacentGuardY].m_triggerType
+        for (s_adjacentMonsterX = originX - 1; s_adjacentMonsterX < s_adjacentMonsterEndX;
+             ++s_adjacentMonsterX) {
+            for (s_adjacentMonsterY = originY - 1; s_adjacentMonsterY < s_adjacentMonsterEndY;
+                 ++s_adjacentMonsterY) {
+                if (m_mapData[s_adjacentMonsterX][s_adjacentMonsterY].m_triggerType
                     == (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER)) {
-                    if (s_adjacentGuardY < originY) {
+                    if (s_adjacentMonsterY < originY) {
                         if ((GetCell(originX, originY)->m_objectIndex == MAP_CELL_NO_FRAME
                              || (GetCell(originX, originY)->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY))
-                            && (s_adjacentGuardX != excludedX || s_adjacentGuardY != excludedY))
+                            && (s_adjacentMonsterX != excludedX || s_adjacentMonsterY != excludedY))
                             goto foundAdjacentMonster;
-                    } else if (s_adjacentGuardX != excludedX || s_adjacentGuardY != excludedY) {
+                    } else if (s_adjacentMonsterX != excludedX || s_adjacentMonsterY != excludedY) {
                         goto foundAdjacentMonster;
                     }
                 }
@@ -3749,26 +3753,27 @@ i8 advManager::FindAdjacentMonster(
         if (originY == MAP_CELL_GRID_SIZE - 1)
             s_adjacentMonsterEndY = originY + 1;
         if (originX == 0)
-            s_adjacentGuardMinX = 0;
+            s_adjacentMonsterMinX = 0;
         else
-            s_adjacentGuardMinX = originX - 1;
+            s_adjacentMonsterMinX = originX - 1;
         if (originY == 0)
-            s_adjacentGuardMinY = 0;
+            s_adjacentMonsterMinY = 0;
         else
-            s_adjacentGuardMinY = originY - 1;
+            s_adjacentMonsterMinY = originY - 1;
 
-        for (s_adjacentGuardX = s_adjacentGuardMinX; s_adjacentGuardX < s_adjacentMonsterEndX;
-             ++s_adjacentGuardX) {
-            for (s_adjacentGuardY = s_adjacentGuardMinY; s_adjacentGuardY < s_adjacentMonsterEndY;
-                 ++s_adjacentGuardY) {
-                if (m_mapData[s_adjacentGuardX][s_adjacentGuardY].m_triggerType
+        for (s_adjacentMonsterX = s_adjacentMonsterMinX; s_adjacentMonsterX < s_adjacentMonsterEndX;
+             ++s_adjacentMonsterX) {
+            for (s_adjacentMonsterY = s_adjacentMonsterMinY;
+                 s_adjacentMonsterY < s_adjacentMonsterEndY;
+                 ++s_adjacentMonsterY) {
+                if (m_mapData[s_adjacentMonsterX][s_adjacentMonsterY].m_triggerType
                     == (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER)) {
-                    if (s_adjacentGuardY < originY) {
+                    if (s_adjacentMonsterY < originY) {
                         if ((GetCell(originX, originY)->m_objectIndex == MAP_CELL_NO_FRAME
                              || (GetCell(originX, originY)->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY))
-                            && (s_adjacentGuardX != excludedX || s_adjacentGuardY != excludedY))
+                            && (s_adjacentMonsterX != excludedX || s_adjacentMonsterY != excludedY))
                             goto foundAdjacentMonster;
-                    } else if (s_adjacentGuardX != excludedX || s_adjacentGuardY != excludedY) {
+                    } else if (s_adjacentMonsterX != excludedX || s_adjacentMonsterY != excludedY) {
                         goto foundAdjacentMonster;
                     }
                 }
@@ -3778,8 +3783,8 @@ i8 advManager::FindAdjacentMonster(
     return 0;
 
 foundAdjacentMonster:
-    *monsterX = s_adjacentGuardX;
-    *monsterY = s_adjacentGuardY;
+    *monsterX = s_adjacentMonsterX;
+    *monsterY = s_adjacentMonsterY;
     return 1;
 }
 
@@ -4529,7 +4534,7 @@ void game::GetMap(void) {
 
     strcpy(oldMapName, gMapName);
     strcpy(saveFullName, gFullMapName);
-    strcpy(oldDescription, gMapDesc);
+    strcpy(oldDescription, gMapDescription);
     gShowMapInfo = 1;
     strcpy(gCurMapName, "");
     gReqExtraWindow = new heroWindow(310, 332, "reqextra.bin");
@@ -4555,7 +4560,7 @@ void game::GetMap(void) {
     } else {
         strcpy(gMapName, oldMapName);
         strcpy(gFullMapName, saveFullName);
-        strcpy(gMapDesc, oldDescription);
+        strcpy(gMapDescription, oldDescription);
         delete theRequest;
     }
     delete gReqExtraWindow;

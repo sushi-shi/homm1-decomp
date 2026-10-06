@@ -41,7 +41,7 @@
 DATA(0x0043ede4)
 i8 gCommandLineInterpreted = 1;
 DATA(0x00451ea4)
-editManager* gpEditManager;
+editManager* gEditManager;
 DATA(0x004528d0)
 i32 gStatusTextShown;
 DATA(0x004528f0)
@@ -66,11 +66,11 @@ i32 oldmain(void) {
     gMapX = 0;
     gMapY = 0;
     gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_NORMAL, editorPalette);
-    if (gExec->AddManager(gpEditManager, BASE_MANAGER_PRIORITY_UNASSIGNED))
+    if (gExec->AddManager(gEditManager, BASE_MANAGER_PRIORITY_UNASSIGNED))
         ShutDown(localization::Tr("startup.manager.failed"));
     gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, editorPalette);
     gExec->MainLoop();
-    gExec->RemoveManager(gpEditManager);
+    gExec->RemoveManager(gEditManager);
     gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, editorPalette);
     gResourceManager->Dispose(editorPalette);
     ShutDown(NULL);
@@ -122,12 +122,7 @@ void ShutDown(char* message) {
     if (message) {
         strcpy(buffer, message);
         SetFullScreenStatus(0);
-        MessageBoxA(
-            gAppWindow,
-            buffer,
-            localization::Tr("shutdown.unexpected.title"),
-            MB_ICONHAND
-        );
+        MessageBoxA(gAppWindow, buffer, localization::Tr("shutdown.unexpected.title"), MB_ICONHAND);
     }
     gClosingApp = 1;
     gExec->ShutDownSystem();
@@ -209,7 +204,7 @@ void ShowStatusText(char* text) {
         EDITOR_STATUS_BAR_HEIGHT,
         0
     );
-    gpEditManager->m_statusFont->DrawBoundedString(
+    gEditManager->m_statusFont->DrawBoundedString(
         text,
         EDITOR_STATUS_BAR_X,
         EDITOR_STATUS_BAR_Y,
@@ -231,7 +226,7 @@ void ClearStatusText(void) {
     gStatusTextClearTime = 0;
     if (gStatusTextShown) {
         gStatusTextShown = 0;
-        gpEditManager->m_window->DrawWindow(0);
+        gEditManager->m_window->DrawWindow(0);
         gWindowManager->UpdateScreenRegion(
             EDITOR_STATUS_BAR_X,
             EDITOR_STATUS_BAR_Y,
@@ -256,8 +251,8 @@ void CleanUpMenus(void) {
 
 VA(0x0040921c, 0x1b)
 void EarlyShutDownSystem(void) {
-    if (gpEditManager)
-        gpEditManager->SelectTool(EDIT_MANAGER_NO_TOOL);
+    if (gEditManager)
+        gEditManager->SelectTool(EDIT_MANAGER_NO_TOOL);
 }
 
 // The editor always asks before quitting.
