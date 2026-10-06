@@ -10,6 +10,7 @@
 #include <BASE/baseManager.h>
 #include <Domains.h>
 #include <H1/Macros.h>
+#include <SOURCE/game.h>
 #include <SOURCE/mapCell.h>
 
 class font;
@@ -51,8 +52,22 @@ H1_ENUM_END(EditorWidgetId)
 // object and overlay layers (PlaceOverlay numbers each placed
 // object); the map reset clears them.
 struct editMapCellPair {
-    i16 objectId;
-    i16 overlayId;
+    u16 objectId;
+    u16 overlayId;
+};
+
+// A town's map-extra record as the editor keeps it: the game's mapTownExtra
+// and a tail no recovered code reads.
+struct editTownExtra {
+    mapTownExtra record;
+    u8 unknown14[0x32];
+};
+
+// A placed hero's map-extra record: the game's mapHeroExtra and a tail no
+// recovered code reads.
+struct editHeroExtra {
+    mapHeroExtra record;
+    u8 unknown19[0x32];
 };
 
 class editManager : public baseManager {
@@ -97,7 +112,8 @@ public:
     // The map cell under the cursor.
     i16 m_cursorX;
     i16 m_cursorY;
-    u8 m_unknown2545b[0x10];
+    // The map's four-character file code (MapDetailsDialog edits it).
+    char m_mapCode[0x10];
     i16 m_dispatchMask;
 
     editManager(void);

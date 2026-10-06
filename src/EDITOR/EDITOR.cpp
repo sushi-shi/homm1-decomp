@@ -332,3 +332,20 @@ DATA(0x004528c8)
 i32 gOverlayCategory;
 DATA(0x004528cc)
 i32 gOverlayShownCategory;
+
+// The random map generator's settings (EVENTMGR's editnew.bin and MAPOBJ).
+DATA(0x0043f3a8)
+double gTerrainPercent[EDITOR_GENERATOR_TERRAIN_COUNT] = {30.0, 30.0, 20.0, 0.0, 0.0, 0.0, 20.0};
+DATA(0x0043f3e0)
+double gDensityPercent[EDITOR_GENERATOR_DENSITY_COUNT] = {50.0, 50.0, 50.0, 50.0, 50.0};
+DATA(0x0043f408)
+i32 gScatterTowns = 1;
+DATA(0x004528e0)
+i32 gSaveUnseen;
+// The eventsManager dialogs' edited cell, map header and window.
+DATA(0x00451e98)
+SMapHeader* gMapHeader;
+DATA(0x00451f7c)
+heroWindow* gEditDialog;
+DATA(0x0045217c)
+mapCell* gEditCell;

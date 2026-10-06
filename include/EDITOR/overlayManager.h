@@ -70,20 +70,6 @@ struct overlayType {
 };
 #pragma pack(pop)
 
-// A town's map-extra record as the editor stores it.
-#pragma pack(push, 1)
-struct editTownExtra {
-    mapTownExtra town;
-    u8 unknown14[50];
-};
-
-// A placed hero's map-extra record as the editor stores it.
-struct editHeroExtra {
-    mapHeroExtra hero;
-    u8 unknown19[50];
-};
-#pragma pack(pop)
-
 // Main tests message.type against the dispatch mask the managers share.
 H1_ENUM_CONST_BEGIN(OverlayManagerConstant)
     OVERLAY_MANAGER_DISPATCH_MASK = 0x32f,

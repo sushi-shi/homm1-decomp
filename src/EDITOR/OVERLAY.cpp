@@ -511,10 +511,10 @@ i32 PlaceOverlay(overlayType* type, i16 x, i16 y) {
             if (dest->m_triggerType == (MAP_FILE_OBJECT_HERO | MAP_TRIGGER_EVENT)) {
                 newHero = new editHeroExtra;
                 memset(newHero, 0, sizeof(editHeroExtra));
-                newHero->hero.artifacts[0] = -1;
-                newHero->hero.artifacts[1] = -1;
-                newHero->hero.artifacts[2] = -1;
-                newHero->hero.artifacts[3] = -1;
+                newHero->record.artifacts[0] = -1;
+                newHero->record.artifacts[1] = -1;
+                newHero->record.artifacts[2] = -1;
+                newHero->record.artifacts[3] = -1;
                 dest->m_objectMetadata = gEditManager->m_extraCount;
                 gEditManager->m_extras[gEditManager->m_extraCount] = newHero;
                 gEditManager->m_extraSizes[gEditManager->m_extraCount] = sizeof(editHeroExtra);
