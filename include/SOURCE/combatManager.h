@@ -163,27 +163,6 @@ H1_ENUM_BEGIN(CombatIconSlot)
     COMBAT_ICON_COUNT = 9
 H1_ENUM_END(CombatIconSlot)
 
-// The combat action relayed through
-// GetRemoteData (command 0x17) or a net chat line (command 0xb).
-#pragma pack(push, 1)
-struct CombatRemotePacket {
-    i8 sender;
-    i32 id;
-    i8 type;
-    i8 command;
-    i16 payloadSize;
-    union {
-        struct {
-            i32 nextAction;
-            i32 nextActionExtra;
-            i32 nextActionGridIndex;
-            i32 nextActionGridIndex2;
-        };
-        char text[0xf7];
-    };
-};
-#pragma pack(pop)
-
 // Combat manager, 0x7d3 bytes (InitMainClasses; constructor 0x0044b440).
 // GameUnsaved reads the baseManager m_active word through gCombatManager.
 #pragma pack(push, 1)

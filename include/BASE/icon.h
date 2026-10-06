@@ -65,16 +65,6 @@ public:
         H1_ENUM_PARAM(IconDrawOrientation, i8) orientation,
         H1_ENUM_PARAM(IconDrawOffsetMode, i8) mode
     );
-    i32 CombatClipDrawToBuffer(
-        i32 x,
-        i32 y,
-        i32 frame,
-        struct SLimitData* limits,
-        i32 orientation,
-        i32 offset,
-        u8* colorTable,
-        i8* yModify
-    );
     void ClipFillToBuffer(
         i16 x,
         i16 y,

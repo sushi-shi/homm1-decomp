@@ -239,7 +239,7 @@ i16 com_rcv(i16 port, u16 requested, void* buffer) {
             success = ReadFile(gComPorts[port].handle, buffer, n, &bytesRead, NULL);
             if (!success)
                 ShutdownComError("Read communications data");
-            return static_cast<i16>(bytesRead);
+            return bytesRead;
         }
     }
     return 0;

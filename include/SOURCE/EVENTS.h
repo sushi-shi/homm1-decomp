@@ -258,11 +258,12 @@ struct heroRemoteMessage {
 };
 #pragma pack(pop)
 
-// CheckHandleNet, GetRemoteData and ReceiveHeroTownData pass received records
-// as char* and read them through these views.
-#define EVENTS_REMOTE_MESSAGE(buffer)                                                              \
-    (reinterpret_cast<combatRemoteMessage*>(buffer)) // API-forced: char* records.
-#define EVENTS_REMOTE_HERO(buffer)                                                                 \
-    (reinterpret_cast<heroRemoteMessage*>(buffer)) // API-forced: char* records.
+// ReceiveHeroTownData reads a received RemoteMessage record's payload as the
+// combat record or a hero fragment. combatRemoteData holds armyGroup and town
+// objects, whose constructors keep it out of the RemotePayload union.
+#define EVENTS_REMOTE_MESSAGE(record)                                                              \
+    (reinterpret_cast<combatRemoteMessage*>(record)) // Overlay: the combat payload.
+#define EVENTS_REMOTE_HERO(record)                                                                 \
+    (reinterpret_cast<heroRemoteMessage*>(record)) // Overlay: a hero fragment payload.
 
 #endif // HOMM1_SOURCE_EVENTS_H

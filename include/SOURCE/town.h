@@ -116,9 +116,6 @@ public:
     void XformToCastle(void);
     void View(void);
     void Deallocate(void);
-    void BuildBuilding(i32 building);
-    i32 CanBuildDock(void);
-    void CalcNumLevelArchers(i32* numArchers, i32* mageGuildLevel);
 };
 #pragma pack(pop)
 

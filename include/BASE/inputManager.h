@@ -154,14 +154,12 @@ public:
     virtual i16 Main(tag_message&) OVERRIDE;
     void Flush(void);
     tag_message GetEvent(void);
-    tag_message PeekEvent(void);
     void SetBooleanOption(i16 enabled);
     void SetMouseCoords(i16 x, i16 y);
     void SetPositiveOption(i16 value);
     void SetKeyCodeType(i16 keyCodeType);
     void AsciiConvert(tag_message& event);
     void MakeScanCodeTable(void);
-    void ForceMouseMove(void);
     // Inline qualifier accessor.
     i16 GetModifiers(void) {
         return m_modifiers;

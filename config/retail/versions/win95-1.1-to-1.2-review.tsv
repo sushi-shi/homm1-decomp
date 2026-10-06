@@ -236,7 +236,7 @@ old_rva	new_rva	unit	symbol	body_class	mapping_evidence	review
 0x00024950	0x0004e820	SOURCE/FINDPATH	?FindCombatPath@searchArray@@QAEFFFPAVarmy@@C@Z	same-masked-body	unique-body>=80	Discovery classification; masked operands do not prove referent equivalence.
 0x00024c50	0x0004eb20	SOURCE/FINDPATH	?PushCombatPoint@searchArray@@QAEXFFGG@Z	same-masked-body	unique-body>=80	Discovery classification; masked operands do not prove referent equivalence.
 0x00024d90	0x0004ec60	SOURCE/FINDPATH	?PushPoint@searchArray@@QAEXFFGGGCCCCCCC@Z	same-masked-body	unique-body>=80	Discovery classification; masked operands do not prove referent equivalence.
-0x00025040	0x0004ef10	SOURCE/FINDPATH	?TestPossibleDirections@searchArray@@QAEXFFQAC0FH@Z	same-masked-body	unique-body>=80	Discovery classification; masked operands do not prove referent equivalence.
+0x00025040	0x0004ef10	SOURCE/FINDPATH	?TestPossibleDirections@searchArray@@QAEXFFQACQAEFH@Z	same-masked-body	unique-body>=80	Discovery classification; masked operands do not prove referent equivalence.
 0x000252c0	0x00052ec0	SOURCE/ADVMGR	??0advManager@@QAE@XZ	same-masked-body	unique-body>=80	Discovery classification; masked operands do not prove referent equivalence.
 0x0002558c	0x0005318c	SOURCE/ADVMGR	??1advManager@@QAE@XZ	same-masked-body	references:1	Discovery classification; masked operands do not prove referent equivalence.
 0x000255ab	0x000531ab	SOURCE/ADVMGR	?Open@advManager@@UAEFF@Z	changed-body	paired-pointer-array:0x8c3c8	Compiler, layout or source difference; see behavior notes and strict comparison.
@@ -312,7 +312,7 @@ old_rva	new_rva	unit	symbol	body_class	mapping_evidence	review
 0x000363d6	0x00063f3f	SOURCE/ADVMGR	?MouseInScrollZone@advManager@@QAEHXZ	same-masked-body	unique-body>=80	Discovery classification; masked operands do not prove referent equivalence.
 0x00036479	0x00063fe2	SOURCE/ADVMGR	?SetInitialMapOrigin@advManager@@QAEXXZ	same-masked-body	unique-body>=80	Discovery classification; masked operands do not prove referent equivalence.
 0x000366fc	0x00064265	SOURCE/ADVMGR	?LoadRemote@advManager@@QAEXXZ	same-masked-body	unique-body>=80	Discovery classification; masked operands do not prove referent equivalence.
-0x00036859	0x000643c2	SOURCE/ADVMGR	?CheckHandleNet@advManager@@QAEPADXZ	same-masked-body	unique-body>=80	Discovery classification; masked operands do not prove referent equivalence.
+0x00036859	0x000643c2	SOURCE/ADVMGR	?CheckHandleNet@advManager@@QAEPAURemoteMessage@@XZ	same-masked-body	unique-body>=80	Discovery classification; masked operands do not prove referent equivalence.
 0x000369d1	0x0006453a	SOURCE/ADVMGR	?CheckHandleNetPlayerWait@advManager@@QAEFAAUtag_message@@C@Z	same-masked-body	unique-body>=80	Discovery classification; masked operands do not prove referent equivalence.
 0x00036aa5	0x0006460e	SOURCE/ADVMGR	?TrimLoopingSounds@advManager@@QAEXH@Z	changed-body	references:1	Compiler, layout or source difference; see behavior notes and strict comparison.
 0x00036c67	0x000647d0	SOURCE/ADVMGR	?DisableButtons@advManager@@QAEXXZ	same-masked-body	unique-body>=80	Discovery classification; masked operands do not prove referent equivalence.
@@ -560,10 +560,10 @@ old_rva	new_rva	unit	symbol	body_class	mapping_evidence	review
 0x0005879c	0x00070c9c	SOURCE/REMOTE	?RemoteMain@@YAXH@Z	same-masked-body	unique-body>=80	Discovery classification; masked operands do not prove referent equivalence.
 0x00058a16	0x00070f16	SOURCE/REMOTE	?UnloadRemoteDriver@@YAXF@Z	same-masked-body	unique-body>=80	Discovery classification; masked operands do not prove referent equivalence.
 0x00058a71	0x00070f71	SOURCE/REMOTE	?calc_crc@@YAXPAGPAEH@Z	changed-body	references:1	Compiler, layout or source difference; see behavior notes and strict comparison.
-0x00058b27	0x00071027	SOURCE/REMOTE	?EncodePacket@@YAHPAECCH@Z	same-masked-body	unique-body>=80	Discovery classification; masked operands do not prove referent equivalence.
-0x00058bad	0x000710ad	SOURCE/REMOTE	?DecodePacket@@YAHPAEH@Z	changed-body	references:1	Compiler, layout or source difference; see behavior notes and strict comparison.
-0x00058d0f	0x0007120f	SOURCE/REMOTE	?SendRemoteData@@YAHPAE0HH@Z	changed-body	references:1	Compiler, layout or source difference; see behavior notes and strict comparison.
-0x00058e50	0x00071350	SOURCE/REMOTE	?ReceiveRemoteData@@YAHPAE0H@Z	same-masked-body	unique-body>=80	Discovery classification; masked operands do not prove referent equivalence.
+0x00058b27	0x00071027	SOURCE/REMOTE	?EncodePacket@@YAHPAURemoteMessage@@CCH@Z	same-masked-body	unique-body>=80	Discovery classification; masked operands do not prove referent equivalence.
+0x00058bad	0x000710ad	SOURCE/REMOTE	?DecodePacket@@YAHPAURemoteMessage@@H@Z	changed-body	references:1	Compiler, layout or source difference; see behavior notes and strict comparison.
+0x00058d0f	0x0007120f	SOURCE/REMOTE	?SendRemoteData@@YAHPAURemoteMessage@@PAEHH@Z	changed-body	references:1	Compiler, layout or source difference; see behavior notes and strict comparison.
+0x00058e50	0x00071350	SOURCE/REMOTE	?ReceiveRemoteData@@YAHPAEPAURemoteMessage@@H@Z	same-masked-body	unique-body>=80	Discovery classification; masked operands do not prove referent equivalence.
 0x00058f44	0x00071444	SOURCE/REMOTE	?InitNetHost@@YACXZ	changed-body	references:1	Compiler, layout or source difference; see behavior notes and strict comparison.
 0x000590d8	0x000715d8	SOURCE/REMOTE	?InitNetGuest@@YACXZ	changed-body	references:1	Compiler, layout or source difference; see behavior notes and strict comparison.
 0x000592c9	0x000717c9	SOURCE/REMOTE	?WaitForHost@@YACXZ	same-masked-body	unique-body>=80	Discovery classification; masked operands do not prove referent equivalence.
@@ -584,10 +584,10 @@ old_rva	new_rva	unit	symbol	body_class	mapping_evidence	review
 0x00059e4c	0x0007234c	SOURCE/REMOTE	?WaitForDirectConnect@@YAHXZ	same-masked-body	unique-body>=80	Discovery classification; masked operands do not prove referent equivalence.
 0x0005a162	0x00072662	SOURCE/REMOTE	?ReadPacket@@YADXZ	same-masked-body	unique-body>=80	Discovery classification; masked operands do not prove referent equivalence.
 0x0005a26b	0x0007276b	SOURCE/REMOTE	?WriteModemPacket@@YAXPADH@Z	changed-body	references:1	Compiler, layout or source difference; see behavior notes and strict comparison.
-0x0005a347	0x00072847	SOURCE/REMOTE	?TransmitRemoteData@@YAHPADHHCCCCC@Z	changed-body	references:3	Compiler, layout or source difference; see behavior notes and strict comparison.
-0x0005a578	0x00072a6f	SOURCE/REMOTE	?GetRemoteData@@YAPADC@Z	same-masked-body	unique-body>=80	Discovery classification; masked operands do not prove referent equivalence.
+0x0005a347	0x00072847	SOURCE/REMOTE	?TransmitRemoteData@@YAHPAXHHCCCCC@Z	changed-body	references:3	Compiler, layout or source difference; see behavior notes and strict comparison.
+0x0005a578	0x00072a6f	SOURCE/REMOTE	?GetRemoteData@@YAPAURemoteMessage@@C@Z	same-masked-body	unique-body>=80	Discovery classification; masked operands do not prove referent equivalence.
 0x0005a684	0x00072b7b	SOURCE/REMOTE	?PollRemote@@YAXXZ	same-masked-body	unique-body>=80	Discovery classification; masked operands do not prove referent equivalence.
-0x0005ab82	0x00073079	SOURCE/REMOTE	?TransmitAndWait@@YAHPADHHCCPAPAD@Z	changed-body	references:1	Compiler, layout or source difference; see behavior notes and strict comparison.
+0x0005ab82	0x00073079	SOURCE/REMOTE	?TransmitAndWait@@YAHPAXHHCCPAPAURemoteMessage@@@Z	changed-body	references:1	Compiler, layout or source difference; see behavior notes and strict comparison.
 0x0005ace0	-	SOURCE/SMACKMGR	_radmalloc	removed-smacker-allocator	-	No surviving correspondence admitted.
 0x0005ad2c	-	SOURCE/SMACKMGR	_radfree	removed-smacker-allocator	-	No surviving correspondence admitted.
 0x0005ad48	0x0003d3f0	SOURCE/SMACKMGR	??0smackManager@@QAE@XZ	same-masked-body	references:1	Discovery classification; masked operands do not prove referent equivalence.
@@ -644,10 +644,10 @@ old_rva	new_rva	unit	symbol	body_class	mapping_evidence	review
 0x000615a6	0x000046c3	SOURCE/EVENTS	?DoAIEvent@advManager@@QAEXPAVmapCell@@PAVhero@@HH@Z	changed-body	adjacent-to-exact-body:0x61493	Compiler, layout or source difference; see behavior notes and strict comparison.
 0x000626e7	0x00005804	SOURCE/EVENTS	?PlayerMonsterInteract@advManager@@QAEXPAVmapCell@@0PAVhero@@PACHHCHH@Z	same-masked-body	unique-body>=80	Discovery classification; masked operands do not prove referent equivalence.
 0x00062881	0x0000599e	SOURCE/EVENTS	?ComputerMonsterInteract@advManager@@QAEXPAVmapCell@@PAVhero@@PAC@Z	changed-body	references:1	Compiler, layout or source difference; see behavior notes and strict comparison.
-0x000629d3	0x00005af0	SOURCE/EVENTS	?DoNetCombat@advManager@@QAEHPAD@Z	changed-body	references:1	Compiler, layout or source difference; see behavior notes and strict comparison.
+0x000629d3	0x00005af0	SOURCE/EVENTS	?DoNetCombat@advManager@@QAEHPAURemoteMessage@@@Z	changed-body	references:1	Compiler, layout or source difference; see behavior notes and strict comparison.
 0x00062b62	0x00005c7f	SOURCE/EVENTS	?DoCombat@advManager@@QAEHHHPAVhero@@PAVarmyGroup@@PAVtown@@01HHHC@Z	changed-body	references:2	Compiler, layout or source difference; see behavior notes and strict comparison.
 0x00063128	0x00006245	SOURCE/EVENTS	?SendHeroTownData@advManager@@QAEXHHPAVhero@@PAVarmyGroup@@PAVtown@@01HHHCCCC@Z	same-masked-body	unique-body>=80	Discovery classification; masked operands do not prove referent equivalence.
-0x00063402	0x0000651f	SOURCE/EVENTS	?ReceiveHeroTownData@advManager@@QAEXPADPAH11PAPAVhero@@PAPAVarmyGroup@@PAPAVtown@@23111PAC55@Z	changed-body	references:1	Compiler, layout or source difference; see behavior notes and strict comparison.
+0x00063402	0x0000651f	SOURCE/EVENTS	?ReceiveHeroTownData@advManager@@QAEXPAURemoteMessage@@PAH11PAPAVhero@@PAPAVarmyGroup@@PAPAVtown@@23111PAC55@Z	changed-body	references:1	Compiler, layout or source difference; see behavior notes and strict comparison.
 0x00063750	0x00037ed0	SOURCE/STRIP	??0strip@@QAE@FFCFCPAVarmyGroup@@FH@Z	same-masked-body	unique-body>=80	Discovery classification; masked operands do not prove referent equivalence.
 0x00063a2e	0x000381ae	SOURCE/STRIP	??1strip@@QAE@XZ	same-masked-body	unique-body>=80	Discovery classification; masked operands do not prove referent equivalence.
 0x00063b40	0x000382c0	SOURCE/STRIP	?Draw@strip@@QAEXXZ	same-masked-body	references:1	Discovery classification; masked operands do not prove referent equivalence.

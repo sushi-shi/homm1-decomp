@@ -25,6 +25,7 @@ class sample;
 class tileset;
 class town;
 class widget;
+struct RemoteMessage;
 struct SMapChange;
 struct tag_message;
 
@@ -284,7 +285,6 @@ public:
     void StartCursor(i8 direction);
     void StopCursor(i8 stopSound);
     void DrawCursor(void);
-    void DrawCursorShadow(void);
     i16 GetCursorBaseFrame(H1_ENUM_PARAM(MapDirection, i16) direction);
     void TurnTo(i8 direction);
     i32 GetMoveShowIt(i8 direction);
@@ -302,15 +302,7 @@ public:
     i16 ValidMoveWithEvent(class hero* movingHero, i16 direction);
     i16 ValidMove(i16 direction);
     void MoveOrigin(i16 directionX, i16 directionY);
-    void ProcessMapChange(struct SMapChange change);
-    void ProcessIncomingSingleMapChange(struct SMapChange* incoming);
-    void ProcessIncomingGroupMapChange(char* incomingData);
-    void PurgeMapChangeQueue(void);
-    void UnwindMapChangeQueue(i32 maximumToUnwind, i32 processChanges);
     void ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains);
-    void VWCleanup(void);
-    void VWInit(i32 centerX, i32 centerY);
-    void VWCompleteDraw(void);
     void GetCursorSampleSet(i32 sampleSet);
     class mapCell* DoAdvCommand(void);
     i32 GetCommandTargetX(void) {
@@ -319,7 +311,6 @@ public:
     i32 GetCommandTargetY(void) {
         return m_commandTargetY;
     }
-    void CheckSetEvilInterface(i32 redraw, i32 player);
     void Reseed(i32, i32);
     i32 ProcessSelect(struct tag_message* message, class mapCell** eventCell);
     i32 ProcessDeSelect(struct tag_message* message, i32* result, class mapCell** eventCell);
@@ -371,7 +362,6 @@ public:
     i8 ComboDraw(i32 animate);
     void SetEnvironmentOrigin(i16 originX, i16 originY, i16 stopSounds);
     void CheckLoadSample(i32 index);
-    i32 GetSoundId(i32 x, i32 y);
     void InsertSound(i16 x, i16 y, i16 distance, i8 soundLayer);
     void TeleportTo(i32 x, i32 y, i32);
     void DimensionDoor(void);
@@ -388,7 +378,7 @@ public:
     i32 MouseInScrollZone(void);
     void SetInitialMapOrigin(void);
     void LoadRemote(void);
-    char* CheckHandleNet(void);
+    RemoteMessage* CheckHandleNet(void);
     i16 CheckHandleNetPlayerWait(struct tag_message& message, i8 doMain);
     void TrimLoopingSounds(i32 maxSamples);
     void DisableButtons(void);
@@ -407,18 +397,9 @@ public:
     void PuzzleDraw(i32 left, i32 top, i32 markX, i32 markY);
     void AdvPanel(void);
     i16 ControlPanel(void);
-    void SystemOptions(void);
-    i32 DoVisions(class hero* visionHero);
-    i32 IsCrystalBallInEffect(i32 x, i32 y, i32 radius);
     void DoEvent(class mapCell* cell, i32 x, i32 y);
     void EraseObj(class mapCell* cell, i32 x, i32 y);
     void HeroSwap(class hero* firstHero, class hero* secondHero);
-    i32 BarrierEvent(class mapCell*, class hero*);
-    void PasswordEvent(class mapCell*, class hero*);
-    void GenericSiteEvent(class mapCell* cell, class hero* eventHero);
-    void RecruitSiteEvent(class mapCell* cell, class hero* eventHero);
-    void ExpansionRecruitEvent(class hero* eventHero, i32 creatureType, i16* availableCount);
-    void JailEvent(class mapCell* cell, class hero* eventHero, i32 x, i32 y);
     void TownEvent(class mapCell* cell, i32 x, i32 y);
     void EventSound(i16 eventType, i16 eventData);
     void EventWindow(
@@ -441,8 +422,6 @@ public:
         H1_ENUM_PARAM(CreatureType, i32) creatureType,
         class mapCell* cell
     );
-    i32 SkeletonEvent(class hero* eventHero, class mapCell* cell, char* text, i32 x, i32 y);
-    i32 ZombieEvent(class hero* eventHero, class mapCell* cell, char* text, i32 x, i32 y);
     i8 GhostEvent(class hero* eventHero, class mapCell* cell, i32 textId, i32 x, i32 y);
     void HouseEvent(class hero* eventHero, class mapCell* cell);
     // HoMM1 retail: nine arguments (ret 0x24), result in AL.
@@ -462,11 +441,6 @@ public:
     void DoWhirlpool(class hero* eventHero);
     void FizzleCenter(i32 fizzleType);
     void DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i32 y);
-    i32 BarrierAIEvent(class mapCell*, class hero*);
-    void PasswordAIEvent(class mapCell*, class hero*);
-    void GenericSiteAIEvent(class mapCell* cell, class hero* eventHero);
-    void RecruitSiteAIEvent(class mapCell* cell, class hero* eventHero);
-    void JailAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i32 y);
     void PlayerMonsterInteract(
         class mapCell* cell,
         class mapCell* combatCell,
@@ -479,7 +453,7 @@ public:
         i32 combatY
     );
     void ComputerMonsterInteract(class mapCell* cell, class hero* eventHero, i8* removeMonsterObject);
-    i32 DoNetCombat(char* packet);
+    i32 DoNetCombat(RemoteMessage* packet);
     i32 DoCombat(
         i32 x,
         i32 y,
@@ -510,7 +484,7 @@ public:
         i8 combatSurrender
     );
     void ReceiveHeroTownData(
-        char* packet,
+        RemoteMessage* packet,
         i32* remotePlayer,
         i32* x,
         i32* y,
@@ -525,19 +499,6 @@ public:
         i8* combatResult,
         i8* retreatWin,
         i8* combatSurrender
-    );
-    i32 AutoResolveCombat(
-        i32 x,
-        i32 y,
-        class hero* firstHero,
-        class armyGroup* firstArmy,
-        class town* combatTown,
-        class hero* secondHero,
-        class armyGroup* secondArmy,
-        i32 setupCombatX,
-        i32 setupCombatY,
-        i32 randomSeed,
-        i32 processLosses
     );
 };
 #pragma pack(pop)

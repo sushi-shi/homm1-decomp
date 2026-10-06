@@ -177,33 +177,12 @@ def _thunks() -> dict[int, tuple[str, str, int]]:
     return out
 
 
-def _unit_span_helper_hints() -> dict[int, tuple[str, str]]:
-    """Private identities exposed only by the unit-span segmentation.
-
-    These cannot be source names (the ``$E`` ordinal is compiler-private), but
-    a segment whose first ordered identity is ``$E<n>`` proves that its
-    first retail row is a lifecycle helper.  Keep the ordinal as evidence and
-    classify the row by kind.
-    """
-    path = RETAIL / "unit_spans.tsv"
-    if not path.is_file():
-        return {}
-    _body, _header, rows = read_tsv(path)
-    out = {}
-    for row in rows:
-        name = row.get("first_evidence", "")
-        if PRIVATE.match(name):
-            out[int(row["start_rva"], 16)] = (name, row["unit"])
-    return out
-
-
 def run_census():
     by_size, orders = _candidate_index()
     library_candidates = [candidate for rows in orders.values()
                           for candidate in rows
                           if candidate.source.split(":", 1)[0] in RUNTIME_LIBS]
     thunks = _thunks()
-    helper_hints = _unit_span_helper_hints()
     rows = []
     anchors: dict[str, list[tuple[int, int]]] = defaultdict(list)
     image_by_rva = {r["rva"]: r for r in _image_rows()}
@@ -231,18 +210,8 @@ def run_census():
             rows.append(row)
             continue
         if item["kind"] == "helper":
-            symbol, unit = helper_hints.get(rva, ("", ""))
-            row.update(**{"class": "compiler-helper", "source": unit,
-                          "symbol": symbol,
-                          "detail": ("unit-span definition-order segment"
-                                     if symbol else "committed helper-kind row")})
-            rows.append(row)
-            continue
-        if rva in helper_hints:
-            symbol, unit = helper_hints[rva]
-            row.update(**{"class": "helper-order", "source": unit,
-                          "symbol": symbol,
-                          "detail": "unit-span definition-order segment"})
+            row.update(**{"class": "compiler-helper",
+                          "detail": "committed helper-kind row"})
             rows.append(row)
             continue
         if rva in thunks:

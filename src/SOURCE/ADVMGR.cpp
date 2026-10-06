@@ -2653,8 +2653,7 @@ void advManager::UpdateHeroLocators(i8 drawWindow, i8 updateScreen) {
         m_scrollLeftButton->m_y = LOCATOR_SCROLL_NO_PAGES_Y;
     } else {
         scrollStep = 73.0 / (gCurPlayerData->m_heroCount - LOCATOR_PAGE_DENOMINATOR_OFFSET);
-        m_scrollLeftButton->m_y =
-            static_cast<i16>(gCurPlayerData->m_heroLocatorPage * scrollStep + 195.0);
+        m_scrollLeftButton->m_y = gCurPlayerData->m_heroLocatorPage * scrollStep + 195.0;
     }
     if (drawWindow)
         m_adventureWindow->DrawWindow(updateScreen);
@@ -2702,8 +2701,7 @@ void advManager::UpdateTownLocators(i8 drawWindow, i8 updateScreen) {
         m_scrollRightButton->m_y = LOCATOR_SCROLL_NO_PAGES_Y;
     } else {
         step = 74.0 / (gCurPlayerData->m_townCount - LOCATOR_PAGE_DENOMINATOR_OFFSET);
-        m_scrollRightButton->m_y =
-            static_cast<i16>(gCurPlayerData->m_townLocatorPage * step + 195.0);
+        m_scrollRightButton->m_y = gCurPlayerData->m_townLocatorPage * step + 195.0;
     }
     if (drawWindow)
         m_adventureWindow->DrawWindow(updateScreen);
@@ -4165,7 +4163,7 @@ void advManager::DoHeroKnob(void) {
     offset = y - m_scrollLeftButton->m_y;
     gInputManager->Flush();
     message = gInputManager->GetEvent();
-    while (message.type != MESSAGE_LEFT_BUTTON_UP && message.type != MESSAGE_RIGHT_BUTTON_UP) {
+    while (!IS_BUTTON_RELEASE_MESSAGE(message.type)) {
         if (message.type == MESSAGE_MOUSE_MOVE) {
             if (message.y < offset + LOCATOR_SCROLL_BASE_Y)
                 message.y = offset + LOCATOR_SCROLL_BASE_Y;
@@ -4175,8 +4173,7 @@ void advManager::DoHeroKnob(void) {
             m_scrollLeftButton->m_y = message.y - offset;
             m_adventureWindow->DrawWindow();
             if (count > LOCATOR_VISIBLE_COUNT) {
-                pageIndex =
-                    static_cast<i16>((m_scrollLeftButton->m_y - LOCATOR_SCROLL_BASE_Y) / scale);
+                pageIndex = (m_scrollLeftButton->m_y - LOCATOR_SCROLL_BASE_Y) / scale;
                 if (pageIndex != prevPage) {
                     gCurPlayerData->m_heroLocatorPage = pageIndex;
                     if (pageIndex > count - (LOCATOR_VISIBLE_COUNT - 1))
@@ -4215,7 +4212,7 @@ void advManager::DoTownKnob(void) {
     offset = y - m_scrollRightButton->m_y;
     gInputManager->Flush();
     message = gInputManager->GetEvent();
-    while (message.type != MESSAGE_LEFT_BUTTON_UP && message.type != MESSAGE_RIGHT_BUTTON_UP) {
+    while (!IS_BUTTON_RELEASE_MESSAGE(message.type)) {
         if (message.type == MESSAGE_MOUSE_MOVE) {
             if (message.y < offset + LOCATOR_SCROLL_BASE_Y)
                 message.y = offset + LOCATOR_SCROLL_BASE_Y;
@@ -4225,8 +4222,7 @@ void advManager::DoTownKnob(void) {
             m_scrollRightButton->m_y = message.y - offset;
             m_adventureWindow->DrawWindow();
             if (count > LOCATOR_VISIBLE_COUNT) {
-                pageIndex =
-                    static_cast<i16>((m_scrollRightButton->m_y - LOCATOR_SCROLL_BASE_Y) / scale);
+                pageIndex = (m_scrollRightButton->m_y - LOCATOR_SCROLL_BASE_Y) / scale;
                 if (pageIndex != prevPage) {
                     gCurPlayerData->m_townLocatorPage = pageIndex;
                     if (pageIndex > count - (LOCATOR_VISIBLE_COUNT - 1))
@@ -6408,12 +6404,11 @@ void advManager::LoadRemote(void) {
 }
 
 VA(0x00410e9f, 0x13b)
-char* advManager::CheckHandleNet(void) {
+RemoteMessage* advManager::CheckHandleNet(void) {
     RemoteMessage* receivedPacket;
     i32 exitedFlag;
 
-    // API-forced: GetRemoteData and DoNetCombat pass queue records as char*.
-    receivedPacket = reinterpret_cast<RemoteMessage*>(GetRemoteData(1));
+    receivedPacket = GetRemoteData(1);
     if (receivedPacket && receivedPacket->type == REMOTE_MESSAGE_RELIABLE) {
         switch (receivedPacket->command) {
             case BOX_REMOTE_SAVE:
@@ -6432,11 +6427,9 @@ char* advManager::CheckHandleNet(void) {
                 break;
             case REMOTE_COMMAND_HERO_TOWN_DATA:
                 if (gInCombat)
-                    return reinterpret_cast<char*>(receivedPacket); // API-forced: char* record.
+                    return receivedPacket;
                 else
-                    DoNetCombat(
-                        reinterpret_cast<char*>(receivedPacket)
-                    ); // API-forced: char* record.
+                    DoNetCombat(receivedPacket);
                 break;
             case REMOTE_COMMAND_PLAYER_EXIT:
                 ReceiveRemotePlayerExit(
@@ -6447,7 +6440,7 @@ char* advManager::CheckHandleNet(void) {
                 );
                 break;
             default:
-                return reinterpret_cast<char*>(receivedPacket); // API-forced: char* record.
+                return receivedPacket;
         }
     }
     return NULL;

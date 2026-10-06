@@ -110,4 +110,9 @@ public:
 #define CELL_HAS_NON_SHADOW_OBJECT(cell)                                                           \
     ((cell)->m_objectIndex != MAP_CELL_NO_FRAME && !((cell)->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY))
 
+// (x, y) lies on the map grid: the column's lower and upper bound, then the
+// row's.
+#define MAP_CELL_IN_BOUNDS(x, y)                                                                   \
+    ((x) >= 0 && (x) < MAP_CELL_GRID_SIZE && (y) >= 0 && (y) < MAP_CELL_GRID_SIZE)
+
 #endif // HOMM1_SOURCE_MAPCELL_H

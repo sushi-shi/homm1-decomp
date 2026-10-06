@@ -590,7 +590,7 @@ void fileRequester::DoKnob(void) {
     offset = n - m_scrollKnob->m_y;
     gInputManager->Flush();
     event = gInputManager->GetEvent();
-    while (event.type != MESSAGE_LEFT_BUTTON_UP && event.type != MESSAGE_RIGHT_BUTTON_UP) {
+    while (!IS_BUTTON_RELEASE_MESSAGE(event.type)) {
         if (event.type == MESSAGE_MOUSE_MOVE) {
             if (event.y < offset + FILE_REQUESTER_GUTTER_TOP)
                 event.y = offset + FILE_REQUESTER_GUTTER_TOP;
@@ -599,7 +599,7 @@ void fileRequester::DoKnob(void) {
             gMouseManager->Main(event);
             m_scrollKnob->m_y = event.y - offset;
             if (m_fileCount > FILE_REQUESTER_VISIBLE_ROWS) {
-                pos = static_cast<i16>((m_scrollKnob->m_y - FILE_REQUESTER_GUTTER_TOP) / scale);
+                pos = (m_scrollKnob->m_y - FILE_REQUESTER_GUTTER_TOP) / scale;
                 if (pos != lastTop) {
                     if (pos > m_fileCount - FILE_REQUESTER_VISIBLE_ROWS)
                         pos = m_fileCount - FILE_REQUESTER_VISIBLE_ROWS;

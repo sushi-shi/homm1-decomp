@@ -546,7 +546,7 @@ i8 combatManager::MoreTreesNear(void) {
         for (dir = 0; dir < MAP_DIRECTION_COUNT; dir++) {
             xPos = originX + normalDirTable[dir].x * pass;
             yPos = originY + normalDirTable[dir].y * pass;
-            if (xPos >= 0 && xPos < MAP_CELL_GRID_SIZE && yPos >= 0 && yPos < MAP_CELL_GRID_SIZE) {
+            if (MAP_CELL_IN_BOUNDS(xPos, yPos)) {
                 cell = gAdvManager->GetCell(xPos, yPos);
                 nearbyTileset = cell->m_objectTileset & MAP_CELL_TILESET_MASK;
                 if (nearbyTileset == TILESET_MTN32)
@@ -1294,7 +1294,7 @@ void combatManager::KeepAttack(void) {
     arrowDamage = 0;
     for (k = 0; k < numRolls; k++)
         arrowDamage += SRandom(2, 3);
-    arrowDamage = static_cast<i32>(arrowDamage * gBattleStat[mod + 20]);
+    arrowDamage = arrowDamage * gBattleStat[mod + 20];
     if (arrowDamage <= 0)
         arrowDamage = 1;
     stackKilled = hisStack->Damage(arrowDamage);
