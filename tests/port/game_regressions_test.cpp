@@ -174,6 +174,88 @@ void LongWords() {
     gResourceManager->Dispose(small);
 }
 
+// MaxBuyableCreatures kept only the last resource's (gold's) count.
+void AffordableCreaturesNeedEveryResource() {
+    i32 cost[RESOURCE_COUNT];
+    i32 saved[RESOURCE_COUNT];
+    int creature = CREATURE_DRAGON;
+    GetMonsterCost(creature, cost);
+    int scarce = RESOURCE_FIRST;
+    while (scarce < RESOURCE_GOLD && cost[scarce] == 0)
+        scarce++;
+    gCurPlayerData = &gGame->m_players[0];
+    memcpy(saved, gCurPlayerData->m_resources, sizeof(saved));
+    for (int i = RESOURCE_FIRST; i < RESOURCE_COUNT; i++)
+        gCurPlayerData->m_resources[i] = 1000;
+    gCurPlayerData->m_resources[RESOURCE_GOLD] = 1000000;
+    gCurPlayerData->m_resources[scarce] = 0;
+    Expect(scarce < RESOURCE_GOLD && gPhilAI->MaxBuyableCreatures(creature) == 0,
+           "a creature whose rare resource is missing is not affordable");
+    memcpy(gCurPlayerData->m_resources, saved, sizeof(saved));
+}
+
+// The value of the stack a purchase replaces was read from the creature
+// numbered like its slot.
+void ReplacedStackIsTheWeakest() {
+    hero* buyer = &gGame->m_heroRecs[6];
+    armyGroup saved = buyer->m_army;
+    const int types[ARMY_GROUP_SLOT_COUNT] = {CREATURE_DRAGON, CREATURE_GRIFFIN, CREATURE_UNICORN,
+                                              CREATURE_CENTAUR, CREATURE_PEASANT};
+    for (int i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
+        buyer->m_army.m_creatureTypes[i] = types[i];
+        buyer->m_army.m_creatureCounts[i] = 1;
+    }
+    i32 count = 0;
+    i32 value = 0;
+    i32 slot = -1;
+    gPhilAI->EvaluateOneTimeCreaturePurchase(buyer, CREATURE_GOBLIN, 1, true, count, value, slot);
+    Expect(slot == ARMY_GROUP_SLOT_COUNT - 1, "a purchase replaces the weakest stack (the peasant)");
+    buyer->m_army = saved;
+}
+
+// ResetHeroRVs measured the y distance to a hero with the hero's x.
+void HeroDistanceUsesY() {
+    hero* far = &gGame->m_heroRecs[7];
+    i16 savedX = far->m_x;
+    i16 savedY = far->m_y;
+    far->m_x = 10;
+    far->m_y = 40;
+    gHeroLiveChance[7] = 50;
+    ResetHeroRVs(true, 10, 10);
+    Expect(gHeroLiveChance[7] == 50, "a hero 30 cells away is not reset as near");
+    far->m_x = savedX;
+    far->m_y = savedY;
+}
+
+// BuildPath accepted a node from another cell when one coordinate matched.
+void RouteThroughAStaleNode() {
+    gSearchArray->Clear();
+    searchNode& node = gSearchArray->m_cells[20][20];
+    node.x = 20;
+    node.y = 21;
+    node.visited = 1;
+    node.distance = 1;
+    node.direction = MAP_DIRECTION_EAST;
+    Expect(gSearchArray->BuildPath(19, 20, 20, 20, 100) == 0, "a node left from another cell ends the route");
+}
+
+// A site's random artifact for a hero with no free slot was lost.
+void RandomArtifactWithoutAFreeSlot() {
+    hero* bearer = &gGame->m_heroRecs[8];
+    i8 savedArtifacts[HERO_ARTIFACT_SLOT_COUNT];
+    memcpy(savedArtifacts, bearer->m_artifacts, sizeof(savedArtifacts));
+    i8 savedOwner = bearer->m_owner;
+    bearer->m_owner = 0;
+    memset(bearer->m_artifacts, ARTIFACT_FIRST, sizeof(bearer->m_artifacts));
+    i32 gold = gGame->m_players[0].m_resources[RESOURCE_GOLD];
+    i32 artifact = gAdvManager->GiveRandomArtifact(&gAdvManager->m_mapData[30][30], bearer);
+    Expect(artifact == ARTIFACT_NONE && gGame->m_players[0].m_resources[RESOURCE_GOLD] == gold + 1000,
+           "a hero with every slot full is paid 1000 gold for a site's artifact");
+    gGame->m_players[0].m_resources[RESOURCE_GOLD] = gold;
+    memcpy(bearer->m_artifacts, savedArtifacts, sizeof(savedArtifacts));
+    bearer->m_owner = savedOwner;
+}
+
 }  // namespace
 
 int main() {
@@ -206,6 +288,11 @@ int main() {
     WeekWithAbsentPlayers();
     CampaignCrests();
     LongWords();
+    AffordableCreaturesNeedEveryResource();
+    ReplacedStackIsTheWeakest();
+    HeroDistanceUsesY();
+    RouteThroughAStaleNode();
+    RandomArtifactWithoutAFreeSlot();
     std::string cleanup = "rm -r '" + config + "'";
     if (std::system(cleanup.c_str()) != 0)
         std::fprintf(stderr, "could not remove %s\n", config.c_str());

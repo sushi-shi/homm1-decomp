@@ -113,7 +113,7 @@ i32 searchArray::BuildPath(
             return 0;
         }
         searchNode* node = &m_cells[destinationX][destinationY];
-        if (node->x != destinationX && node->y != destinationY) {
+        if (node->x != destinationX || node->y != destinationY) {
             m_pathLength = 0;
             return 0;
         }
