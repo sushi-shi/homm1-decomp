@@ -69,7 +69,9 @@ H1_ENUM_CONST_BEGIN(EditManagerConstant)
     EDIT_MAP_NAME_SERIAL_MODULUS = 1000,
     // The version word the editor writes after the header (hexadecimal 1112;
     // the game reads map extras from version MAP_EXTRA_VERSION on).
-    EDIT_MAP_VERSION = 0x1112
+    EDIT_MAP_VERSION = 0x1112,
+    // gEditMapHeader's buffer; the header takes its first sizeof(SMapHeader).
+    EDIT_MAP_HEADER_BUFFER_SIZE = 2000
 H1_ENUM_CONST_END(EditManagerConstant)
 
 // m_zoomedOut: 32-pixel cells (14 visible per side) or 16-pixel cells (28);
@@ -385,7 +387,8 @@ struct editMapRecord {
 // PlaceOverlay zero-fills the new record, the town and hero dialogs copy it
 // whole and SaveMap writes m_extraSizes bytes, but no code of either program
 // reads or writes its bytes (the game's readers stop at
-// mapTownExtra/mapHeroExtra).
+// mapTownExtra/mapHeroExtra), and every shipped map, NWC's and Buka's, holds
+// zeros there.
 H1_ENUM_CONST_BEGIN(EditExtraConstant)
     EDIT_EXTRA_UNUSED_SIZE = 50
 H1_ENUM_CONST_END(EditExtraConstant)
@@ -544,10 +547,11 @@ public:
 };
 #pragma pack(pop)
 
+#define gEditManager gpEditManager // spelling fixes .bss order
 extern editManager* gEditManager;
 extern char* gMapCodeLetters;
 extern i32 gSelectionColor;
-extern SMapHeader gEditMapHeader;
+extern char gEditMapHeader[];
 extern char* gEditErrors[];
 extern i32 gEditErrorCount;
 // Set while the random-map generator lays terrain: SetTileVariant then

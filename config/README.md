@@ -61,6 +61,8 @@ its image-only rows are reviewed by hand ([editor](../docs/editor.md)).
   resource payload hashes) of every catalog entry, checked by the
   localization tests.
 - `assets.json`: hashes of the retail game data files.
+- `editor/link_diff.tsv`: the editor candidate's per-region ceiling
+  (`homm1 --image editor verify link-diff`; the game's is `config/link_diff.tsv`).
 
 ### Release lineage (`retail/versions/`)
 

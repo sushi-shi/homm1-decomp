@@ -80,3 +80,5 @@ enum	RandomMapSiteKind	RANDOM_MAP_SITE_SAWMILL/ALCHEMIST_LAB/FIRST_MINE/KIND_COU
 param	editManager::PlaceResourceSite	kind	resource	the site's resource: 0 sawmill (wood), 1 alchemist's lab (mercury), 2..6 the mine whose marker WriteMines records as frame + 2
 member	editTownExtra/editHeroExtra	reserved	unused14/unused19	no instruction of either image touches the block's bytes: PlaceOverlay's memset, the dialogs' whole-record copies and SaveMap's write cover it, the game's readers stop at mapTownExtra/mapHeroExtra; spelled at its offset as the project's other unread spans
 enum	EditExtraConstant	EDIT_EXTRA_RESERVED_SIZE	EDIT_EXTRA_UNUSED_SIZE	the unused block's size (see unused14/unused19)
+global	EVENTMGR	gMonsterCount	gMonsterCountEdit	the monster dialog's edited count, named beside the town and hero dialogs' gTownEdit/gHeroEdit (zero-initialized, so its .bss place follows definition order, not the name)
+enum	EventsManagerConstant	EVENTS_CELL_EDIT_DEBUG_LEVEL	EVENTS_CELL_EDIT_DEBUG_LEVEL_MIN (KB.h DebugLevel)	EditCell compares giDebugLevel against it, so it is a threshold of KB.h's DebugLevel domain like the game's _MIN levels

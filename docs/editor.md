@@ -127,8 +127,11 @@ C objects and 9 MASM 6.13 objects. Each C++ object ends with the
   source for both programs (unit `SOURCE/wingraph`, `image_flags`), with the
   editor's path strings and that branch selected by `HOMM1_EDITOR`; all 33
   editor bodies are exact.
-- `kbwin.cpp` and `REQUEST.cpp` are shared the same way (`REQUEST` with
-  `/Ob2`, as in the game). The editor's `AppWndProc` and the requester's
+- `kbwin.cpp` and `REQUEST.cpp` are shared the same way. The game compiles
+  both `/Ob2`; the editor's compiles used `/Ob1`, which emits a global's
+  initializer literal before every function literal: kbwin's `gCDTrackName`
+  text and REQUEST's `gFRDummy` empty string (`.bss` 0x00452f00) lead their
+  objects' literals. The editor's `AppWndProc` and the requester's
   `ShowThisMap`, `Open`, `Main`, `Update` and `ShowMapInfo` are editor
   variants selected by `HOMM1_EDITOR`; `SetWinText` scans a 70-row table in
   the editor. The editor's window class, title and instance strings are its
@@ -149,13 +152,60 @@ and `build/editor/gen/data_debt.tsv` lists the targets a claimed body
 references. Reviewed data names carry the extent of the game datum they were
 placed from, so interior references resolve to the owner and an addend.
 
-## Resources and the generated source
+## Linked image
 
-`src/EDITOR/Editor.rc` spells the editor's five resources (two icon images
-under group 109, the `EDITOR` About dialog and its `MNUDFLT` menu, the game's
-reduced to Exit, the screen modes and help) and compiles to the retail
-payloads (`homm1 tool rc --src src/EDITOR/Editor.rc --verify-exe
-build/orig/EDITOR.EXE`). `homm1 clean` exports the editor with the game: both
-trees carry `src/EDITOR`, `include/EDITOR` and `Editor.rc`, and the source
-tree's `build.py --target editor` and `nix run .#editor` build and run
-`EDITOR.EXE` ([clean source](clean-source.md), [playing](play.md)).
+`homm1 --image editor link` links `build/editor/exe/EDITOR.candidate.EXE`
+from the editor's objects, the BASE library and `src/EDITOR/Editor.rc`; the
+candidate is byte-identical to the retail image, and `homm1 build verify`
+keeps it so against `config/retail/editor/link_diff.tsv` beside the game's
+`config/link_diff.tsv` (`homm1 --image editor verify link-diff --update`
+banks it). The link line is `graph/link.py`'s `editor` profile:
+
+- KERNEL32, USER32, GDI32, ADVAPI32 (VC6 Platform SDK libraries), WING32 and
+  audiere, then the BASE library from BASEMGR (0x0041b500), MSVCPRT and
+  LIBCMT; LINK's default stack; `/DEBUG` with
+  `U:\HMM\VSS\HMM1\temp\release\editor\editor.pdb`, written once (age 1),
+  at the image's link time.
+- `Editor.rc` holds the five resource payloads: the two icon images and
+  their group, the `EDITOR` About dialog and the `MNUDFLT` menu. Its text is
+  the editor's own catalog entries (`editor.resource.*`, provenance in
+  `config/retail/editor/localization_resources.tsv`).
+- LINK sorts the import thunks with the C runtime's `qsort`, so each DLL's
+  IAT order depends on the runtime LINK ran against. The game's IAT is the
+  median-of-three `qsort`'s, which wine's builtin `msvcrt` reproduces; the
+  editor's is the VC6 runtime's middle-pivot `qsort`
+  ([LINK import order](patterns/link6-iat-qsort-runtime.md)). The editor's
+  LINK therefore runs against the VC6 SP5 `MSVCRT.DLL` (pinned in
+  `config/toolchains.json`, `linker_runtime_files`).
+
+## Data debt
+
+Editor data no retail code reads, or reads only in part, keeps a typed
+placeholder at its retail place:
+
+| Datum | Evidence | Status |
+| --- | --- | --- |
+| `SMapHeader` (shared with the game) | NWC's maps fill ten name and ten description slots (`"??? name"`, `"??? description"`); the editor's format word overwrites the last two bytes of the tenth description | typed: `name[10]`, `description[9]`, `lastDescription`, `format`; slots 8–9 are read by no code of either program |
+| `gEditMapHeader` (0x0045121c) | 4-byte aligned, which VC6 gives no record-typed object; 0x7d0 bytes up to `gEditErrors` | a 2000-byte character buffer viewed as `SMapHeader`; its last 636 bytes (0x00451770-0x004519eb) are unread |
+| EDITMGR `.data` 0x0043ed9c | EDITMGR's `.data` ends at 0x0043ed9b; EDITOR's `.data` is 8-byte aligned | section alignment, not a datum |
+| `gPickMapNameDummy` (0x00451b84) | Main passes its address as PickMap's file name, which PickMap ignores | `char[4]`; its true extent (1 to 4 bytes) is not established |
+| `editTownExtra::unused14`, `editHeroExtra::unused19` | the dialogs copy and SaveMap writes them; no code reads them, and every shipped map holds zeros there | 50 unread bytes each |
+| `gUnusedData452ef4` (MAPOBJ) | MAPOBJ's empty status text sits at 0x00452ef8, four bytes into its `.bss` | an unread `i32` |
+| `gUnusedData453444` (wingraph, editor only) | BUTTON's `.bss` starts at 0x00453448 | an unread `i32` ending the editor's wingraph `.bss` |
+| `gUnusedData43ede8`, `gUnusedData451f84`, `gUnusedCount452450`, `gUnusedCount452454`, `gUnusedData4528ac` (EDITOR) | no code reads them | placeholders at their places |
+
+The game's `Audio` opens its `.bss` with `gAudioOldStore`; the editor's
+compile of that file (another checkout) has no such object.
+
+`.bss` order follows the [VC6 emission rules](patterns/vc6-bss-emission-order.md):
+EDITMGR's `gEditErrors`, `gEditErrorCount`, `gVaryTiles` and
+`gPickMapNameDummy`, EVENTMGR's dialog state and EDITOR.CPP's tail are
+zero-initialized and follow their units' uninitialized objects in definition
+order.
+
+## Generated source
+
+`homm1 clean` exports the editor with the game: both trees carry `src/EDITOR`,
+`include/EDITOR` and `Editor.rc`, and the source tree's
+`build.py --target editor` and `nix run .#editor` build and run `EDITOR.EXE`
+([clean source](clean-source.md), [playing](play.md)).

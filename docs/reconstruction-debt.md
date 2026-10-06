@@ -316,6 +316,10 @@ with the same passes as the game. Every editor function stays exact.
 - Unknown members and unread tails: `overlayManager::m_unused16ca` (no
   instruction of the editor image touches the offset) and the town and hero
   records' `unused14`/`unused19` blocks, which only whole-record copies cover.
+  The map header lives in a 2000-byte character buffer that its six users
+  view as `SMapHeader` (retail places it 4-byte aligned, which VC6 gives no
+  record), and its last 636 bytes are unread; the linked image's other unread
+  `.bss` placeholders are listed in [the editor's data debt](editor.md#data-debt).
 - Dead declarations: none in the editor headers.
 - Byte layouts: the map file's town and mine records are an `editMapRecord`,
   SaveMap and LoadMap name the header range with `offsetof`, the generator's

@@ -82,6 +82,24 @@ def resources_installed(name, directory=None):
     return True
 
 
+def linker_runtime_entries(name):
+    """The period C runtime DLL a linked image's LINK ran against. LINK.EXE
+    imports qsort from MSVCRT.DLL and sorts its import thunks with it, so the
+    runtime decides the IAT order (docs/patterns/link6-iat-qsort-runtime.md).
+    It comes from the same pinned media; release bundles may omit it."""
+    return dict(pins()[name].get('linker_runtime_files', {}))
+
+
+def linker_runtime(name, relative, directory=None):
+    """The installed, hash-verified linker runtime file `relative`."""
+    entries = linker_runtime_entries(name)
+    if relative not in entries:
+        raise ValueError(f'{name}: no linker runtime {relative} is pinned')
+    directory = directory or root(name)
+    _verify_entries(name, directory, {relative: entries[relative]})
+    return directory / relative
+
+
 def extract_media_files(config, media, staged, scratch, patch=None):
     """Extract pinned files, optionally overlaying a chained service-pack cabinet.
 
@@ -100,7 +118,8 @@ def extract_media_files(config, media, staged, scratch, patch=None):
     sevenzip = shutil.which('7z') or shutil.which('7zz')
     if not sevenzip:
         raise ValueError('7z is required to extract compiler media; enter nix develop .#build')
-    files = {**config['files'], **config.get('resource_files', {})}
+    files = {**config['files'], **config.get('resource_files', {}),
+             **config.get('linker_runtime_files', {})}
     extraction = scratch / 'base'
     base_paths = sorted({entry['media_path'] for entry in files.values()
                          if entry.get('media_id', 'base') == 'base'})
@@ -140,7 +159,8 @@ def install(name, media, patch=None):
     config = pins()[name]
     destination = root(name)
     destination.parent.mkdir(parents=True, exist_ok=True)
-    files = {**config['files'], **config.get('resource_files', {})}
+    files = {**config['files'], **config.get('resource_files', {}),
+             **config.get('linker_runtime_files', {})}
     with tempfile.TemporaryDirectory(prefix=f'.{name}-', dir=destination.parent) as scratch:
         scratch = Path(scratch)
         staged = scratch / 'toolchain'

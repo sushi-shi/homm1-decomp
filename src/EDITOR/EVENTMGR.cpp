@@ -25,30 +25,32 @@
 #include <stdlib.h>
 #include <string.h>
 
+// Zero-initialized: .bss in definition order, as in EDITOR.CPP's and
+// EDITMGR's editor state.
 DATA(0x00452940)
-iconWidget* gDensityTracks[EDITOR_GENERATOR_DENSITY_COUNT];
+iconWidget* gDensityTracks[EDITOR_GENERATOR_DENSITY_COUNT] = {0};
 DATA(0x00452958)
-editHeroExtra gHeroEdit;
+editHeroExtra gHeroEdit = {0};
 DATA(0x004529a4)
-heroWindow* gClearWindow;
+heroWindow* gClearWindow = 0;
 DATA(0x004529a8)
-i16 gEventsLastHoverId;
+i16 gEventsLastHoverId = 0;
 DATA(0x004529ac)
-iconWidget* gTerrainKnobs[EDITOR_TERRAIN_COUNT];
+iconWidget* gTerrainKnobs[EDITOR_TERRAIN_COUNT] = {0};
 DATA(0x004529c8)
-editMapCellPair* gEditCellPair;
+editMapCellPair* gEditCellPair = 0;
 DATA(0x004529cc)
-iconWidget* gDensityKnobs[EDITOR_GENERATOR_DENSITY_COUNT];
+iconWidget* gDensityKnobs[EDITOR_GENERATOR_DENSITY_COUNT] = {0};
 DATA(0x004529e0)
-iconWidget* gTerrainTracks[EDITOR_TERRAIN_COUNT];
+iconWidget* gTerrainTracks[EDITOR_TERRAIN_COUNT] = {0};
 DATA(0x00452a00)
-editTownExtra gTownEdit;
+editTownExtra gTownEdit = {0};
 DATA(0x00452a48)
-i32 gMonsterCount;
+i32 gMonsterCountEdit = 0;
 DATA(0x00452a4c)
-heroWindow* gDetailsWindow;
+heroWindow* gDetailsWindow = 0;
 DATA(0x00452a50)
-heroWindow* gNewMapWindow;
+heroWindow* gNewMapWindow = 0;
 
 VA(0x004092c0, 0x32)
 eventsManager::eventsManager(void) {
@@ -195,7 +197,7 @@ void eventsManager::EditCell(i16 x, i16 y) {
     // Never filled: only the cell is restored on cancel.
     editMapCellPair savedPair;
 
-    if (gDebugLevel < EVENTS_CELL_EDIT_DEBUG_LEVEL) {
+    if (gDebugLevel < EVENTS_CELL_EDIT_DEBUG_LEVEL_MIN) {
         NormalDialog(localization::Tr("editor.events.cell.unavailable"), NORMAL_DIALOG_TYPE_OK);
         return;
     }
@@ -603,7 +605,7 @@ void eventsManager::EditMonster(i16 x, i16 y) {
     gEditCell = &gEditManager->m_map.cells[x][y];
     gEditDialog = new heroWindow(EVENTS_DIALOG_X, EVENTS_DIALOG_Y, "monedit.bin");
     SetWinText(gEditDialog, EVENTS_WINDOW_TEXT_MONSTER);
-    gMonsterCount = gEditCell->m_objectMetadata;
+    gMonsterCountEdit = gEditCell->m_objectMetadata;
     sprintf(text, "%d", gEditCell->m_objectMetadata);
     SET_WIDGET_MESSAGE(widgetMessage, WIDGET_COMMAND_SET_TEXT, MONSTER_WINDOW_COUNT);
     widgetMessage.text = text;
@@ -612,7 +614,7 @@ void eventsManager::EditMonster(i16 x, i16 y) {
     delete gEditDialog;
     if (gWindowManager->m_dialogResult != EVENTS_DIALOG_CANCEL) {
         gEditManager->m_mapChanged = 1;
-        gEditCell->m_objectMetadata = gMonsterCount;
+        gEditCell->m_objectMetadata = gMonsterCountEdit;
     }
     gEditManager->DrawMap();
     gEditManager->UpdateMapView();
@@ -649,8 +651,8 @@ i16 MonsterWindowHandler(tag_message& message) {
                                 value = 0;
                             if (value > MONSTER_WINDOW_MAX_COUNT)
                                 value = MONSTER_WINDOW_MAX_COUNT;
-                            gMonsterCount = value;
-                            sprintf(gText, "%d", gMonsterCount);
+                            gMonsterCountEdit = value;
+                            sprintf(gText, "%d", gMonsterCountEdit);
                             SET_WIDGET_MESSAGE(
                                 reply,
                                 WIDGET_COMMAND_SET_TEXT,

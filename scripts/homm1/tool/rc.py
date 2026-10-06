@@ -13,10 +13,9 @@ source's own directory are passed as /i; the HoMM1 script needs no system
 header.
 
 With `retail`, the script is compiled from a temporary stage beside the one
-retail binary input, the program icon (HEROES.EXE: one 32x32 image;
-EDITOR.EXE: a 32x32 and a 16x16 image), under the name the script's ICON
-statement gives it. The icon is rebuilt as an ordinary .ico container from
-the user's retail RT_ICON payloads and RT_GROUP_ICON directory. It exists only while RC.EXE runs and never becomes a
+retail binary input, the program icon. The icon is rebuilt as an
+ordinary .ico container from the user's retail RT_ICON payload and
+RT_GROUP_ICON directory. It exists only while RC.EXE runs and never becomes a
 repository input. Every compiled payload (type, name, language, bytes and
 order) is then compared with the retail resource directory in both
 directions. Any drift fails and removes the .res. Retail payload order is the
@@ -27,7 +26,6 @@ The success signal is the produced .res.
 from __future__ import annotations
 
 import json
-import re
 import struct
 import tempfile
 from pathlib import Path
@@ -38,16 +36,10 @@ from homm1.tool.wine import era_tool, run, toolchain_root, winepath
 
 #: The toolchain whose pinned RC/CVTRES compile the candidate resources.
 RESOURCE_TOOLCHAIN = compiler_id()
-#: The file name a resource script gives the retail icon, unless its ICON
-#: statement names another (Editor.rc: editor.ico).
-RETAIL_ICON = "heroes.ico"
-_ICON_FILE = re.compile(r'^\s*\w+\s+ICON\s+"([^"]+\.ico)"', re.IGNORECASE | re.MULTILINE)
-
-
-def icon_file(script: str) -> str:
-    """The .ico file the script's ICON resource statement names."""
-    found = _ICON_FILE.search(script)
-    return found.group(1) if found else RETAIL_ICON
+#: The file name a resource script gives the retail icon: its own stem
+#: (Heroes.rc: heroes.ico, Editor.rc: editor.ico).
+def retail_icon(script: Path) -> str:
+    return f"{Path(script).stem.lower()}.ico"
 
 RT_ICON, RT_GROUP_ICON = 3, 14
 
@@ -118,15 +110,16 @@ def retail_resources(exe: Path | str) -> list[dict]:
 
 
 def icon_container(retail: list[dict]) -> bytes:
-    """The .ico file RC splits back into the retail RT_ICONs + RT_GROUP_ICON."""
+    """The .ico file RC splits back into the retail RT_ICON + RT_GROUP_ICON:
+    one directory entry per group entry, images in group order."""
     groups = [r for r in retail if r["type"] == RT_GROUP_ICON]
     if len(groups) != 1:
         raise ToolError(f"expected one retail RT_GROUP_ICON, found {len(groups)}")
     group = groups[0]["data"]
     reserved, kind, count = struct.unpack_from("<HHH", group, 0)
-    if (reserved, kind) != (0, 1) or not count or len(group) != 6 + 14 * count:
+    if (reserved, kind) != (0, 1) or count < 1 or len(group) != 6 + 14 * count:
         raise ToolError(f"unexpected retail RT_GROUP_ICON directory {group.hex()}")
-    header, images = struct.pack("<HHH", 0, 1, count), b""
+    entries, images = [], []
     offset = 6 + 16 * count
     for index in range(count):
         width, height, colors, flags, planes, bits, size, ordinal = struct.unpack_from(
@@ -135,11 +128,11 @@ def icon_container(retail: list[dict]) -> bytes:
                       if r["type"] == RT_ICON and r["name"] == ordinal), None)
         if image is None or len(image) != size:
             raise ToolError(f"retail RT_ICON {ordinal} does not match its group entry")
-        header += struct.pack("<BBBBHHII", width, height, colors, flags, planes, bits,
-                              size, offset)
-        images += image
+        entries.append(struct.pack("<BBBBHHII", width, height, colors, flags, planes,
+                                   bits, size, offset))
+        images.append(image)
         offset += size
-    return header + images
+    return struct.pack("<HHH", 0, 1, count) + b"".join(entries) + b"".join(images)
 
 
 def compare(ours: list[dict], retail: list[dict]) -> list[str]:
@@ -198,7 +191,7 @@ def compile(src: Path | str, out: Path | str, *, flags: list[str] = (),
             text = Catalog.load(REPO).render_resource(text, locale=locale)
         script.write_text(text, encoding='ascii')
         if retail_leaves is not None:
-            (script.parent / icon_file(text)).write_bytes(icon_container(retail_leaves))
+            (script.parent / retail_icon(src)).write_bytes(icon_container(retail_leaves))
         inc = [src.parent, *([INCLUDE] if INCLUDE.is_dir() else []), *extra_includes]
         argv = ["wine", str(rc_exe), "/r", *[f"/i{winepath(d)}" for d in inc],
                 *flags, f"/fo{winepath(out)}", script.name]

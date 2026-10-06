@@ -35,11 +35,6 @@ H1_ENUM_BEGIN(EventsDialogButton)
     EVENTS_DIALOG_OK = DIALOG_BUTTON_2
 H1_ENUM_END(EventsDialogButton)
 
-H1_ENUM_CONST_BEGIN(EventsManagerConstant)
-// EditCell opens only from this debug level.
-    EVENTS_CELL_EDIT_DEBUG_LEVEL = 1
-H1_ENUM_CONST_END(EventsManagerConstant)
-
 H1_ENUM_CONST_BEGIN(EventsManagerLayout)
 // Every dialog opens at (16, 16).
     EVENTS_DIALOG_X = 16,
