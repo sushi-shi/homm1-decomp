@@ -247,6 +247,15 @@ def install_release(archive=None, compiler=None):
             if previous.exists():
                 shutil.rmtree(previous)
     print(f"toolchain release {contract['tag']} verified and installed")
+    # Toolchains the build runs beside the contract's own: the game's vendor
+    # import libraries are LINK 3.10's format (config/retail/import_libraries.tsv),
+    # which only the pinned VC4.1 LINK emits. They come from their own release.
+    for name in contract.get('requires', []):
+        try:
+            verify(name)
+        except (KeyError, ValueError):
+            print(f"{name}: required beside {contract['tag']}; installing its release")
+            install_release(compiler=name)
     for name in contract['components']:
         if resource_entries(name) and not resources_installed(name):
             print(f'{name}: the release carries no resource compiler; '
@@ -266,6 +275,9 @@ def command(args):
     else:
         verify(args.id)
         print(f'{args.id}: all pinned files verified')
+        for name in pins()[args.id].get('release', {}).get('requires', []):
+            verify(name)
+            print(f'{name}: required beside {args.id}; all pinned files verified')
         if resource_entries(args.id):
             state = ('verified' if resources_installed(args.id) else
                      'not installed (install from the media to link .rsrc)')
