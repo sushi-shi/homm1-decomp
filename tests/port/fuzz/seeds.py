@@ -116,7 +116,7 @@ def main():
             write(out / harness, path.name, data)
         write(out / "fuzz_savegame", path.name, data + bytes([0x00]))
     for path in scores:
-        for harness in ("fuzz_records", "fuzz_lzhuf"):
+        for harness in ("fuzz_records", "fuzz_lzhuf", "fuzz_highscore"):
             write(out / harness, path.name, path.read_bytes())
 
     aggregate = find(root, "DATA", "HEROES.AGG")
