@@ -221,7 +221,7 @@ i32 EarlySetup(void) {
     if (gEarlySetupDone)
         return 0;
     sprintf(gAggPathName, "%s%s", gDataPath, "heroes.agg");
-    DEFAULT_AGGREGATE_NAME = gAggPathName;
+    gDefaultAggregateName = gAggPathName;
     InitMainClasses();
     GetGraphicsInfo();
     ReadPrefs();
