@@ -165,6 +165,16 @@ declared local its own slot, so each of these maps to an unread slot in
 retail's frame. The 101 locals that are only written (`-Wunused-but-set-variable`)
 are retail stores.
 
+**Dead declarations.** A function or method declared in a header but never
+defined, called or linked is a name with no body in either image. A libclang
+pass over every game unit and the editor's `EDITOR.cpp` lists the
+non-virtual declarations that no unit defines or references, that no object
+(assembly units included) defines, and that carry no `VA_DECL` claim. The
+adventure, game, hero, town and BASE headers lost 109 such declarations, and
+the combat headers 98; two remain in `combatManager.h` for that lane.
+Constructors, destructors and virtual methods stay, because the vtables and
+object lifetimes evidence them.
+
 **`static_cast`.** Narrowing and signedness conversions are often required for
 retail's widths; the review removes the ones that only paper over a wrong
 declared type. A libclang scan compared each cast's operand type with its target

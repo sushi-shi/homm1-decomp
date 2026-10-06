@@ -73,6 +73,9 @@ review inputs, not defect totals. Preserve banked matches.
 - [x] Review dead locals: **116** never-read locals. Each of the 75 without
   an initializer was removed alone, and every removal changes its function's
   frame. The 41 with an initializer emit retail stores.
+- [x] Remove dead declarations: **109** declared methods and functions with no
+  definition, call or object symbol in either image are gone (98 more in the
+  combat headers); **2** remain in `combatManager.h`.
 - [x] Review `static_cast`: **245 lines** (from 410). Casts that only hid a
   wrong declared type are gone, including the `void*` Win32 handles, which are
   now `STRICT`, and so are the 168 that restated the conversion an assignment,
