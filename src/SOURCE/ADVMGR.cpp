@@ -383,7 +383,7 @@ void advManager::Close(void) {
     delete m_adventureWindow;
     m_adventureWindow = NULL;
     if (m_routeMap)
-        delete m_routeMap;
+        delete[] m_routeMap;
     m_routeMap = NULL;
     gCurBottomView = BOTTOM_VIEW_NONE;
     m_active = 0;
