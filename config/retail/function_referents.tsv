@@ -213,7 +213,7 @@ rva	name	provenance
 0x00023707	?CombatMessage@combatManager@@QAEXPADH@Z	Buka combat message/hydra review: 0x158d6
 0x000237b4	?CombatMessage@combatManager@@QAEXF@Z	Buka TU-order, instruction/call or constructor-vtable identity review (identity only, strict body/reference comparison unchanged).
 0x00023a3a	?ResetLimitCreature@combatManager@@QAEXXZ	Buka combat message/hydra review: 0x15500, 0x15906
-0x00023acc	?SetGridMode@combatManager@@QAEXC@Z	Buka army drawing/movement instruction and CFG review: 0x143d4, 0x1407c
+0x00023acc	?SetDrawRightToLeft@combatManager@@QAEXC@Z	Buka army drawing/movement instruction and CFG review: 0x143d4, 0x1407c
 0x00023ae5	?UpdateCombatArea@combatManager@@QAEXXZ	Buka TU-order, instruction/call or constructor-vtable identity review (identity only, strict body/reference comparison unchanged).
 0x00023bab	?DrawBackground@combatManager@@QAEXXZ	Buka TU-order, instruction/call or constructor-vtable identity review (identity only, strict body/reference comparison unchanged).
 0x00023d6c	?DrawFrame@combatManager@@QAEXC@Z	Buka army drawing/movement instruction and CFG review: 0x14024, 0x14435, 0x14654

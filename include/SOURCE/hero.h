@@ -88,7 +88,7 @@ public:
     // UpdBottomViewHero copies this 8-character label into its name widget.
     char m_shortName[9];
     // Indexes gClassNames, gMinExpForLevel and the class crest frames;
-    // combat copies it to m_heroType.
+    // combat copies it to m_heroClass.
     i8 m_heroClass;
     // port%04d.icn portrait number.
     i8 m_portrait;

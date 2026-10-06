@@ -12,9 +12,9 @@
 
 // #line restores the original source file and line numbers of the asserts.
 
-// The speed slot is unused; a two-hex creature retries from its rear hex.
+// The speed argument is unused; a two-hex creature retries from its rear hex.
 VA(0x00446450, 0x11e)
-i16 army::FindPath(i16 sourceHex, i16 targetHex, i8, i8 ignoreSpeed, i8 pathMode) {
+i16 army::FindPath(i16 sourceHex, i16 targetHex, i8 speed, i8 ignoreSpeed, i8 pathMode) {
     i16 retVal;
     i32 savedSpeed;
 

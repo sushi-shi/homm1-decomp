@@ -357,7 +357,7 @@ old_rva	new_rva	name	note
 0x00022f62	0x0003e656	?GetBuildingBaseResourceValue@@YAHHHH@Z	
 0x00022fc2	0x0003e693	?NormalDialog@@YAXPADHHHHHHHH@Z	
 0x00023707	0x00023707	?CombatMessage@combatManager@@QAEXPADH@Z	
-0x00023acc	0x00023acc	?SetGridMode@combatManager@@QAEXC@Z	
+0x00023acc	0x00023acc	?SetDrawRightToLeft@combatManager@@QAEXC@Z	
 0x00023ebf	0x0003f440	?UpdateNormalDialog@@YAXPAD@Z	
 0x00023f2a	0x0003f4a2	?WaitHandler@@YAFAAUtag_message@@@Z	
 0x000240ef	0x0003f5ef	?EventWindowHandler@@YAFAAUtag_message@@@Z	
@@ -596,7 +596,7 @@ old_rva	new_rva	name	note
 0x00038869	0x00023707	?CombatMessage@combatManager@@QAEXPADH@Z	
 0x0003891e	0x000237b4	?CombatMessage@combatManager@@QAEXF@Z	
 0x00038c11	0x00023a3a	?ResetLimitCreature@combatManager@@QAEXXZ	
-0x00038ce5	0x00023acc	?SetGridMode@combatManager@@QAEXC@Z	
+0x00038ce5	0x00023acc	?SetDrawRightToLeft@combatManager@@QAEXC@Z	
 0x00038d09	0x00023ae5	?UpdateCombatArea@combatManager@@QAEXXZ	
 0x00038d44	0x00038d44	?RandomizePlayerCrests@game@@QAEXXZ	
 0x00038de7	0x00023bab	?DrawBackground@combatManager@@QAEXXZ	
@@ -1549,12 +1549,12 @@ old_rva	new_rva	name	note
 0x0008d500	0x0008a6d0	_SPELL_AI_SLOW_MODIFIER	
 0x0008d504	0x0008a6d4	_SPELL_AI_BLIND_MODIFIER	
 0x0008d508	0x0008a6d8	_SPELL_AI_CURSE_MODIFIER	
-0x0008d50c	0x0008a6dc	_SPELL_AI_PARALYZE_MODIFIER	
-0x0008d510	0x0008a6e0	_SPELL_AI_BERSERK_MODIFIER	
+0x0008d50c	0x0008a6dc	_SPELL_AI_BERSERK_MODIFIER	
+0x0008d510	0x0008a6e0	_SPELL_AI_PARALYZE_MODIFIER	
 0x0008d514	0x0008a6e4	_SPELL_AI_HASTE_MODIFIER	
 0x0008d518	0x0008a6e8	_SPELL_AI_BLESS_MODIFIER	
-0x0008d51c	0x0008a6ec	_SPELL_AI_STONESKIN_MODIFIER	
-0x0008d520	0x0008a6f0	_SPELL_AI_SHIELD_MODIFIER	
+0x0008d51c	0x0008a6ec	_SPELL_AI_PROTECTION_MODIFIER	
+0x0008d520	0x0008a6f0	_SPELL_AI_ANTI_MAGIC_MODIFIER	
 0x0008d538	0x0008a4a0	??_7highScoreManager@@6B@	
 0x0008d548	0x0008a6a8	??_7recruitUnit@@6B@	
 0x0008d570	0x0008a6b4	??_7fileRequester@@6B@	

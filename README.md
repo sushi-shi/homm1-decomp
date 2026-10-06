@@ -86,7 +86,7 @@ review inputs, not defect totals. Preserve banked matches.
   canonical, 288 retained, 48 merged); **98** members merged into shared
   domains and **43** unused members retired; **168** cross-domain value
   collisions remain, each with a reviewed reason.
-- [ ] Name bare constants: **1,927** open literals (`homm1 verify constants`
+- [ ] Name bare constants: **1,926** open literals (`homm1 verify constants`
   floor); compiler-proven NULL/bool/enum replacements are at 0.
 - [ ] Strict enum view (`/std:c++20`): **60 of 61** units do not compile yet,
   so typed arrays (`H1_ENUM_ARRAY`) and enum destinations are checked only
