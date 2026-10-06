@@ -1965,11 +1965,13 @@ void townManager::GetCategoryStats(
                     break;
                 case THIEVES_CATEGORY_WOOD_AND_ORE:
                     stats[player] = gGame->m_players[player].m_resources[RESOURCE_WOOD]
-                                    + gGame->m_players[player].m_resources[RESOURCE_CRYSTAL]
                                     + gGame->m_players[player].m_resources[RESOURCE_ORE];
                     break;
                 case THIEVES_CATEGORY_RARE_RESOURCES:
-                    stats[player] = gGame->m_players[player].m_resources[RESOURCE_GEMS]
+                    // Crystal is as rare as the others: its mines yield one
+                    // a day, like theirs.
+                    stats[player] = gGame->m_players[player].m_resources[RESOURCE_CRYSTAL]
+                                    + gGame->m_players[player].m_resources[RESOURCE_GEMS]
                                     + gGame->m_players[player].m_resources[RESOURCE_SULFUR]
                                     + gGame->m_players[player].m_resources[RESOURCE_MERCURY];
                     break;
@@ -2040,7 +2042,6 @@ b8 townManager::RecruitHero(b8 quickView) {
     SetWinText(m_heroWindow1, WINDOW_TEXT_RECRUIT_HERO);
     m_recruitHeroes[0] = gGame->GetHero(gCurPlayerData->m_availableHeroIds[0]);
     m_recruitHeroes[1] = gGame->GetHero(gCurPlayerData->m_availableHeroIds[1]);
-    m_recruitHeroes[0]->m_owner = m_recruitHeroes[1]->m_owner = gCurPlayer;
     evtCopy.type = MESSAGE_WIDGET;
     if (quickView) {
         evtCopy.command = WIDGET_COMMAND_CLEAR_FLAGS;
@@ -2088,6 +2089,7 @@ b8 townManager::RecruitHero(b8 quickView) {
         gCurPlayerData->m_heroCount++;
         townX = m_town->m_x;
         townY = m_town->m_y;
+        m_recruitHeroes[m_recruitState]->m_owner = gCurPlayer;
         m_recruitHeroes[m_recruitState]->m_x = townX;
         m_recruitHeroes[m_recruitState]->m_y = townY;
         m_recruitHeroes[m_recruitState]->m_eventFlags = 0;
@@ -2158,9 +2160,6 @@ b8 townManager::RecruitHero(b8 quickView) {
         TOWN_CLOSE_CONTROL,
         WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED
     );
-    m_recruitHeroes[0]->m_owner = m_recruitHeroes[1]->m_owner = GAME_PLAYER_NONE;
-    if (m_recruitState != RECRUIT_HERO_NONE)
-        m_recruitHeroes[m_recruitState]->m_owner = gCurPlayer;
     return gWindowManager->m_dialogResult != DIALOG_BUTTON_1;
 }
 
