@@ -15,7 +15,6 @@ ICON_WIDGET_DRAW = 0x10, ICON_WIDGET_FILL = 0x80 };
 class icon;
 struct tag_message;
 
-#pragma pack(push, 1)
 class iconWidget : public widget {
 public:
     icon* m_icon;
@@ -52,5 +51,4 @@ public:
     virtual i16 Main(struct tag_message& message) ;
     void Read(void);
 };
-#pragma pack(pop)
 #endif

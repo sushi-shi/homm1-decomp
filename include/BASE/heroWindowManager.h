@@ -31,7 +31,6 @@ enum WindowManagerConstant {
     WINDOW_MANAGER_NO_HOVER_WIDGET = -1
 };
 
-#pragma pack(push, 1)
 class heroWindowManager : public baseManager {
 public:
     heroWindow* m_windowListHead;
@@ -80,7 +79,6 @@ public:
     void FizzleForward(i16 x, i16 y, i16 width, i16 height, i32 delay);
     void ReleaseFizzleSource(void);
 };
-#pragma pack(pop)
 
 #define FINISH_DIALOG_MESSAGE(message)                                                             \
     (gWindowManager->m_dialogResult = (message).id,                                                \

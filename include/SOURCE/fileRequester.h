@@ -90,7 +90,6 @@ struct FileRequesterExtension {
     char text[FILE_REQUESTER_EXTENSION_SIZE];
 };
 
-#pragma pack(push, 1)
 struct FileRequesterMapInfo {
     i8 difficulty;
     i8 size;
@@ -145,7 +144,6 @@ public:
     char* GetFilename(void);
     void ShowMapInfo(void);
 };
-#pragma pack(pop)
 
 extern b8 gRequestingGames;
 extern char* gFRDummy;

@@ -1,5 +1,8 @@
 #include <H1/Ints.h>
 
+#include <PLATFORM/File.h>
+#include <PLATFORM/Records.h>
+
 #include <BASE/baseManager.h>
 #include <BASE/heroWindow.h>
 #include <BASE/heroWindowManager.h>
@@ -9,11 +12,10 @@
 #include <BASE/resourceManager.h>
 #include <BASE/widget.h>
 #include <SOURCE/highScoreManager.h>
+#include <SOURCE/saveRecords.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
 
-#include <fcntl.h>
-#include <io.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -130,7 +132,7 @@ i16 highScoreManager::Main(struct tag_message& message) {
 void highScoreManager::Update(void) {
     HighScoreEntry highScore;
     i32 rank;
-    i32 inputFile;
+    RecordReader inputFile;
     b8 noScoreFile;
     tag_message hsMessage;
     char scorePath[HIGH_SCORE_FILENAME_LENGTH];
@@ -140,8 +142,7 @@ void highScoreManager::Update(void) {
         sprintf(scorePath, "%sCAMPAIGN.HS", gDataPath);
     else
         sprintf(scorePath, "%sSTANDARD.HS", gDataPath);
-    inputFile = open(scorePath, _O_BINARY);
-    if (inputFile == FILE_DESCRIPTOR_INVALID)
+    if (!inputFile.LoadFile(scorePath))
         noScoreFile = true;
 
     sprintf(gText, "hiscore.bmp");
@@ -172,7 +173,7 @@ void highScoreManager::Update(void) {
         if (noScoreFile)
             highScore.score = HIGH_SCORE_EMPTY;
         else
-            READ_FILE_VALUE(inputFile, highScore);
+            ReadHighScore(inputFile, highScore);
 
         if (highScore.score == HIGH_SCORE_EMPTY) {
             m_monsterTypes[rank] = CREATURE_PEASANT;
@@ -251,6 +252,4 @@ void highScoreManager::Update(void) {
             m_window->BroadcastMessage(hsMessage);
         }
     }
-    if (!noScoreFile)
-        close(inputFile);
 }

@@ -203,7 +203,6 @@ struct mapHeroExtra {
 };
 #pragma pack(pop)
 
-#pragma pack(push, 1)
 class game {
 public:
     i16 m_difficultyRating;
@@ -285,8 +284,8 @@ public:
     void InitCampaignMap(i32 scenario, i32);
     b8 IsMobile(i8 heroId);
     class mapCell (*GetWorldMapData(void))[MAP_CELL_GRID_SIZE];
-    void ReadWorldMap(i32 fd);
-    void WriteWorldMap(i32 fd);
+    void ReadWorldMap(class RecordReader& in);
+    void WriteWorldMap(class RecordWriter& out);
     i8 CreateBoat(i8 x, i8 y);
     i8 Scan(i8* array, i8 start, i8 length);
     i8 RandomScan(i8* array, i8 start, i8 range, i32);
@@ -372,7 +371,6 @@ public:
     void RandomizePlayerCrests(void);
     void VisitObelisk(i8 player);
 };
-#pragma pack(pop)
 
 #define GAME_DAY_NUMBER(g)                                                                         \
     ((g).m_day + ((g).m_week - 1) * CALENDAR_DAYS_PER_WEEK                                         \

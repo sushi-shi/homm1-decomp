@@ -1,10 +1,6 @@
 #ifndef HOMM1_SOURCE_KBWIN_H
 #define HOMM1_SOURCE_KBWIN_H
 
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
-#include <windows.h>
 
 enum WindowTextConstant {
     WINDOW_TEXT_ENTRY_COUNT = 68,
@@ -88,14 +84,10 @@ enum PrefsConstant {
     KBWIN_MIN_HEIGHT = 160
 };
 
-extern HINSTANCE gAppInstance;
-extern HANDLE gEventHandle;
 extern char gCommandLine[];
-extern u8 gProcessMessage[];
 extern char gAppName[];
 extern char gTitle[];
 extern i32 gTempValue;
-extern struct tagRECT gTempRect;
 extern i32 gTempX;
 extern i32 gTempY;
 
@@ -115,29 +107,33 @@ struct WindowTextEntry {
 };
 #pragma pack(pop)
 
-extern HMENU gCurrentMenu;
-i32 AppCommand(HWND window, u32 message, u32 messageParam, i32 messageData);
+// A menu bar. The Windows build holds an HMENU; the native port, its own menu.
+typedef struct KBMenuData* KBMenu;
+
+enum KBMenuCheck {
+    KB_MENU_UNCHECKED = 0,
+    KB_MENU_CHECKED = 1
+};
+
+extern KBMenu gCurrentMenu;
+i32 AppMenuCommand(i32 command);
 i32 AppIdle(void);
 void AppExit(void);
 void SetGameDefaults(void);
 void ReadPrefs(void);
 i32 SetupCDDrive(void);
-i32 AppInit(HINSTANCE instance, HINSTANCE previousInstance, i32 showCommand, char* commandLine);
-long __stdcall AppWndProc(HWND window, u32 message, u32 messageParam, long messageData);
-extern "C" BOOL __stdcall
-AppAbout(HWND dialog, UINT message, WPARAM messageParam, LPARAM messageData);
-void KBChangeMenu(HMENU menu);
+void KBChangeMenu(KBMenu menu);
 void ResizeWindow(i32 x, i32 y, i32 width, i32 height);
 void SetMenuStatus(i32 showMenu);
 void SetWinText(class heroWindow* window, i16 id);
-void UpdateDfltMenu(HMENU menu);
+void UpdateDfltMenu(KBMenu menu);
 extern i32 gForegroundApp;
 extern i32 gNoDialogMenusOn;
-extern HMENU gAppMenu;
-extern HMENU gAdventureMenu;
-extern HMENU gDefaultMenu;
-extern HMENU gCombatMenu;
-extern HMENU gTownMenu;
+extern KBMenu gAppMenu;
+extern KBMenu gAdventureMenu;
+extern KBMenu gDefaultMenu;
+extern KBMenu gCombatMenu;
+extern KBMenu gTownMenu;
 extern b32 gClosingApp;
 extern i32 gLastGetMessage;
 extern i32 gLastAilServe;
@@ -145,8 +141,27 @@ i32 KBTickCount();
 void Process1WindowsMessage();
 void SetNoDialogMenus(i32 menusEnabled);
 char* FindLastToken(char* text, char token);
-void SetMenus(HMENU menu, i32 enabled);
-extern HWND gAppWindow;
+void SetMenus(KBMenu menu, i32 enabled);
+
+// Host services the game calls, implemented by kbwin.cpp on Windows and by the
+// native port on its platform layer.
+KBMenu KBLoadMenu(const char* name);
+void KBDestroyMenu(KBMenu menu);
+void KBDetachMenu(void);
+void KBCheckMenuItem(KBMenu menu, i32 command, i32 checked);
+void KBErrorBox(const char* text, const char* title);
+void KBRequestClose(void);
+void KBReleaseInstance(void);
+void KBCaptureMouse(void);
+void KBReleaseMouse(void);
+// Shows the given screen rectangle (inclusive client coordinates) now.
+void KBPaintScreen(i32 left, i32 top, i32 right, i32 bottom);
+// The pointer position in client coordinates.
+void KBCursorPosition(i32* x, i32* y);
+void KBShowSystemCursor(i32 visible);
+i32 KBIsCDDrive(i32 driveIndex);
+void KBBeep(void);
+
 extern i32 gMainWinScreenWidth;
 extern i32 gMainWinScreenHeight;
 void ProcessAssert(i32 condition, char* file, i32 line);

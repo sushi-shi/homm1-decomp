@@ -44,20 +44,18 @@
 #include <SOURCE/dialogTypes.h>
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/REMOTE.h>
+#include <SOURCE/saveRecords.h>
 #include <SOURCE/resourceTypes.h>
 #include <SOURCE/smackManager.h>
 #include <SOURCE/wingraph.h>
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+#include <PLATFORM/File.h>
+#include <PLATFORM/Records.h>
 
-#include <fcntl.h>
-#include <io.h>
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 
 i8 gHighScoreType;
 i8 gTerrainCost[FINDPATH_TERRAIN_COUNT][FINDPATH_STEP_COST_COUNT];
@@ -145,10 +143,10 @@ b32 gLoadingMonoIcon = false;
 i32 gScrollX = 0;
 i32 gScrollY = 0;
 b32 gNoBorder = false;
-HMENU gDefaultMenu = NULL;
-HMENU gCombatMenu = NULL;
-HMENU gAdventureMenu = NULL;
-HMENU gTownMenu = NULL;
+KBMenu gDefaultMenu = NULL;
+KBMenu gCombatMenu = NULL;
+KBMenu gAdventureMenu = NULL;
+KBMenu gTownMenu = NULL;
 i32 gColorMice = 0;
 i32 gSpecialMouseMasks = 0;
 i32 gCurExe = CONFIG_EXECUTABLE_GAME;
@@ -193,39 +191,19 @@ b32 EarlySetup(void) {
         return true;
     switch (SetupCDDrive()) {
         case CD_SETUP_NO_DRIVE:
-            MessageBoxA(
-                gAppWindow,
-                localization::Tr("startup.cd.inaccessible"),
-                localization::Tr("startup.error.title"),
-                MB_ICONHAND
-            );
+            KBErrorBox(localization::Tr("startup.cd.inaccessible"), localization::Tr("startup.error.title"));
             exit(EXIT_SUCCESS);
             break;
         case CD_SETUP_NOT_FOUND:
-            MessageBoxA(
-                gAppWindow,
-                localization::Tr("startup.cd.required"),
-                localization::Tr("startup.error.title"),
-                MB_ICONHAND
-            );
+            KBErrorBox(localization::Tr("startup.cd.required"), localization::Tr("startup.error.title"));
             exit(EXIT_SUCCESS);
             break;
         case CD_SETUP_NO_APP_PATH:
-            MessageBoxA(
-                gAppWindow,
-                localization::Tr("startup.directory.invalid"),
-                localization::Tr("startup.error.title"),
-                MB_ICONHAND
-            );
+            KBErrorBox(localization::Tr("startup.directory.invalid"), localization::Tr("startup.error.title"));
             exit(EXIT_SUCCESS);
             break;
         case CD_SETUP_NO_DATA:
-            MessageBoxA(
-                gAppWindow,
-                localization::Tr("startup.data.missing"),
-                localization::Tr("startup.error.title"),
-                MB_ICONHAND
-            );
+            KBErrorBox(localization::Tr("startup.data.missing"), localization::Tr("startup.error.title"));
             exit(EXIT_SUCCESS);
             break;
     }
@@ -1872,10 +1850,10 @@ void InitVars(void) {
     strcpy(gNetBoxLine[NET_BOX_SLOT_LATEST], "");
     for (i = 0; i < MAP_EXTRA_RECORD_CAPACITY; i++)
         gMapExtraBlocks[i] = NULL;
-    gDefaultMenu = LoadMenuA(gAppInstance, "mnuDflt");
-    gCombatMenu = LoadMenuA(gAppInstance, "mnuCmbt");
-    gAdventureMenu = LoadMenuA(gAppInstance, "mnuAdv");
-    gTownMenu = LoadMenuA(gAppInstance, "mnuTown");
+    gDefaultMenu = KBLoadMenu("mnuDflt");
+    gCombatMenu = KBLoadMenu("mnuCmbt");
+    gAdventureMenu = KBLoadMenu("mnuAdv");
+    gTownMenu = KBLoadMenu("mnuTown");
 }
 
 void game::ShowMoraleInfo(hero* heroPointer, i32 dialogType) {
@@ -2010,7 +1988,8 @@ i32 AddScoreToHighScore(
     HighScoreEntry entries[HIGH_SCORE_DISPLAY_ENTRY_COUNT];
     i32 entry;
     i32 shiftRank;
-    i32 file;
+    RecordReader scoreData;
+    RecordWriter newScores;
     char scoreFile[352];
     char enteredPlayerName[20];
     b8 noScoreFile;
@@ -2020,8 +1999,7 @@ i32 AddScoreToHighScore(
         sprintf(scoreFile, "%sSTANDARD.HS", gDataPath);
     else
         sprintf(scoreFile, "%sCAMPAIGN.HS", gDataPath);
-    file = open(scoreFile, _O_BINARY);
-    if (file == FILE_DESCRIPTOR_INVALID)
+    if (!scoreData.LoadFile(scoreFile))
         noScoreFile = true;
     if (noScoreFile) {
         for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++) {
@@ -2030,8 +2008,7 @@ i32 AddScoreToHighScore(
         }
     } else {
         for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++)
-            read(file, &entries[entry], sizeof(entries));
-        close(file);
+            ReadHighScore(scoreData, entries[entry]);
     }
 
     gShowHighScore = true;
@@ -2054,12 +2031,10 @@ i32 AddScoreToHighScore(
         strcpy(entries[entry].playerName, enteredPlayerName);
         strcpy(entries[entry].scenarioName, scenarioName);
         entries[entry].score = score;
-        file = open(scoreFile, _O_BINARY | _O_TRUNC | _O_CREAT | _O_WRONLY, _S_IWRITE);
-        if (file == FILE_DESCRIPTOR_INVALID)
-            FileError(scoreFile);
         for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++)
-            WRITE_FILE_VALUE(file, entries[entry]);
-        close(file);
+            WriteHighScore(newScores, entries[entry]);
+        if (!newScores.SaveFile(scoreFile))
+            FileError(scoreFile);
     }
     return 0;
 }
@@ -2305,8 +2280,8 @@ void ShutDown(char* message) {
     buffer[0] = '\0';
     if (message) {
         strcpy(buffer, message);
-        SetFullScreenStatus(FALSE);
-        MessageBoxA(gAppWindow, buffer, localization::Tr("shutdown.unexpected.title"), MB_ICONHAND);
+        SetFullScreenStatus(false);
+        KBErrorBox(buffer, localization::Tr("shutdown.unexpected.title"));
     }
     CloseSmackers();
     ClearMapExtra();
@@ -2323,10 +2298,7 @@ void ShutDown(char* message) {
     }
     gExec->ShutDownSystem();
     RemoteCleanup();
-    if (gEventHandle) {
-        CloseHandle(gEventHandle);
-        gEventHandle = NULL;
-    }
+    KBReleaseInstance();
     DeleteMainClasses();
     AppExit();
     exit(EXIT_SUCCESS);
@@ -2526,9 +2498,7 @@ char* GetTownName(i32 townIndex) {
 }
 
 bool IsCDDrive(i32 driveIndex) {
-    sprintf(gText, "A:\\");
-    gText[0] += driveIndex;
-    return GetDriveTypeA(gText) == DRIVE_CDROM;
+    return KBIsCDDrive(driveIndex) != 0;
 }
 
 void LoadSystemwideIcons(void) {
@@ -2601,7 +2571,7 @@ i32 HandleAppSpecificMenuCommands(i32 command) {
             SaveGame();
             break;
         case APP_MENU_QUIT:
-            PostMessage(gAppWindow, WM_CLOSE, 0, 0);
+            KBRequestClose();
             break;
         case APP_MENU_MUSIC_OFF:
             gConfig.musicVolume = SOUND_VOLUME_OFF;
@@ -2744,7 +2714,7 @@ void UpdateSystemOptionsMenu(void) {
         return;
 
     for (menuCommand = APP_MENU_MUSIC_FIRST; menuCommand <= APP_MENU_MUSIC_LAST; menuCommand++)
-        CheckMenuItem(gAppMenu, menuCommand, MF_UNCHECKED);
+        KBCheckMenuItem(gAppMenu, menuCommand, KB_MENU_UNCHECKED);
     switch (gConfig.musicVolume) {
         case SOUND_VOLUME_100:
             checkedCommand = APP_MENU_MUSIC_100;
@@ -2780,10 +2750,10 @@ void UpdateSystemOptionsMenu(void) {
             checkedCommand = APP_MENU_MUSIC_OFF;
             break;
     }
-    CheckMenuItem(gAppMenu, checkedCommand, MF_CHECKED);
+    KBCheckMenuItem(gAppMenu, checkedCommand, KB_MENU_CHECKED);
 
     for (menuCommand = APP_MENU_SOUND_FIRST; menuCommand <= APP_MENU_SOUND_LAST; menuCommand++)
-        CheckMenuItem(gAppMenu, menuCommand, MF_UNCHECKED);
+        KBCheckMenuItem(gAppMenu, menuCommand, KB_MENU_UNCHECKED);
     switch (gConfig.soundVolume) {
         case SOUND_VOLUME_100:
             checkedCommand = APP_MENU_SOUND_100;
@@ -2819,10 +2789,10 @@ void UpdateSystemOptionsMenu(void) {
             checkedCommand = APP_MENU_SOUND_OFF;
             break;
     }
-    CheckMenuItem(gAppMenu, checkedCommand, MF_CHECKED);
+    KBCheckMenuItem(gAppMenu, checkedCommand, KB_MENU_CHECKED);
 
     for (menuCommand = APP_MENU_SPEED_FIRST; menuCommand <= APP_MENU_SPEED_LAST; menuCommand++)
-        CheckMenuItem(gAppMenu, menuCommand, MF_UNCHECKED);
+        KBCheckMenuItem(gAppMenu, menuCommand, KB_MENU_UNCHECKED);
     switch (gConfig.walkSpeed) {
         case WALK_SPEED_JUMP:
             checkedCommand = APP_MENU_SPEED_JUMP;
@@ -2840,31 +2810,35 @@ void UpdateSystemOptionsMenu(void) {
             checkedCommand = APP_MENU_SPEED_WALK;
             break;
     }
-    CheckMenuItem(gAppMenu, checkedCommand, MF_CHECKED);
-    CheckMenuItem(
+    KBCheckMenuItem(gAppMenu, checkedCommand, KB_MENU_CHECKED);
+    KBCheckMenuItem(
         gAppMenu,
         APP_MENU_CD_STEREO,
-        gConfig.musicSource ? MF_CHECKED : MF_UNCHECKED
+        gConfig.musicSource ? KB_MENU_CHECKED : KB_MENU_UNCHECKED
     );
-    CheckMenuItem(gAppMenu, APP_MENU_SHOW_PATH, gConfig.showRoute ? MF_CHECKED : MF_UNCHECKED);
-    CheckMenuItem(
+    KBCheckMenuItem(
+        gAppMenu,
+        APP_MENU_SHOW_PATH,
+        gConfig.showRoute ? KB_MENU_CHECKED : KB_MENU_UNCHECKED
+    );
+    KBCheckMenuItem(
         gAppMenu,
         APP_MENU_VIEW_ENEMY_MOVES,
-        1 - gConfig.blackoutComputer ? MF_CHECKED : MF_UNCHECKED
+        1 - gConfig.blackoutComputer ? KB_MENU_CHECKED : KB_MENU_UNCHECKED
     );
 }
 
 void CleanUpMenus(void) {
     if (gAppMenu) {
-        SetMenu(gAppWindow, NULL);
+        KBDetachMenu();
         if (gAdventureMenu)
-            DestroyMenu(gAdventureMenu);
+            KBDestroyMenu(gAdventureMenu);
         if (gDefaultMenu)
-            DestroyMenu(gDefaultMenu);
+            KBDestroyMenu(gDefaultMenu);
         if (gCombatMenu)
-            DestroyMenu(gCombatMenu);
+            KBDestroyMenu(gCombatMenu);
         if (gTownMenu)
-            DestroyMenu(gTownMenu);
+            KBDestroyMenu(gTownMenu);
     }
     gAppMenu = NULL;
 }

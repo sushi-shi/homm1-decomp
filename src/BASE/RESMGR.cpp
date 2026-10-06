@@ -1,5 +1,11 @@
 #include <H1/Ints.h>
 
+#include <PLATFORM/File.h>
+#include <PLATFORM/Records.h>
+#include <SOURCE/saveRecords.h>
+
+#include <vector>
+
 #include <BASE/baseManager.h>
 #include <BASE/bitmap.h>
 #include <BASE/font.h>
@@ -16,7 +22,6 @@
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
 
-#include <io.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -233,7 +238,7 @@ void resourceManager::Close(void) {
     if (m_aggregateDir != NULL)
         free(m_aggregateDir);
     if (m_aggregateFd != FILE_DESCRIPTOR_INVALID) {
-        close(m_aggregateFd);
+        FileClose(m_aggregateFd);
         m_aggregateFd = FILE_DESCRIPTOR_INVALID;
     }
     m_active = 0;
@@ -241,21 +246,41 @@ void resourceManager::Close(void) {
 
 i16 resourceManager::LoadAggregateHeader(char* aggregateName) {
     i16 directoryBytes;
-    i32 aggregateFd = open(aggregateName, RESOURCE_MANAGER_BINARY_OPEN_MODE);
+    i32 aggregateFd = FileOpen(aggregateName, FILE_OPEN_READ);
     if (aggregateFd == FILE_DESCRIPTOR_INVALID) {
         sprintf(gText, localization::Tr("file.aggregate.open_failed"), aggregateName);
         ShutDown(gText);
         return RESOURCE_MANAGER_LOAD_ERROR;
     }
     if (m_aggregateFd != FILE_DESCRIPTOR_INVALID)
-        close(m_aggregateFd);
+        FileClose(m_aggregateFd);
     if (m_aggregateDir != NULL)
         free(m_aggregateDir);
     m_aggregateFd = aggregateFd;
-    read(m_aggregateFd, &m_aggregateEntryCount, sizeof(m_aggregateEntryCount));
-    directoryBytes = m_aggregateEntryCount * sizeof(aggEntry);
-    m_aggregateDir = static_cast<aggEntry*>(malloc(directoryBytes));
-    read(m_aggregateFd, m_aggregateDir, directoryBytes);
+    m_aggregateEntryCount = ReadWord();
+    // The directory is decoded entry by entry from its 10-byte records, and
+    // an archive whose directory does not fit the file is refused.
+    i32 fileLength = FileLength(m_aggregateFd);
+    i32 directoryLength = m_aggregateEntryCount * AGG_ENTRY_RECORD_SIZE;
+    std::vector<u8> directory(directoryLength > 0 ? directoryLength : 1);
+    if (m_aggregateEntryCount <= 0 || directoryLength + 2 > fileLength
+        || !FileReadExact(m_aggregateFd, &directory[0], directoryLength)) {
+        sprintf(gText, localization::Tr("file.aggregate.open_failed"), aggregateName);
+        ShutDown(gText);
+        return RESOURCE_MANAGER_LOAD_ERROR;
+    }
+    directoryBytes = static_cast<i16>(m_aggregateEntryCount * sizeof(aggEntry));
+    m_aggregateDir = static_cast<aggEntry*>(malloc(m_aggregateEntryCount * sizeof(aggEntry)));
+    RecordReader entries(&directory[0], directoryLength);
+    for (i32 entry = 0; entry < m_aggregateEntryCount; entry++) {
+        ReadAggEntry(entries, m_aggregateDir[entry]);
+        if (m_aggregateDir[entry].offset < 0 || m_aggregateDir[entry].offset > fileLength
+            || m_aggregateDir[entry].size > static_cast<u32>(fileLength - m_aggregateDir[entry].offset)) {
+            sprintf(gText, localization::Tr("file.aggregate.open_failed"), aggregateName);
+            ShutDown(gText);
+            return RESOURCE_MANAGER_LOAD_ERROR;
+        }
+    }
     return RESOURCE_MANAGER_LOAD_SUCCESS;
 }
 
@@ -266,7 +291,7 @@ void resourceManager::PointToFile(i16 fileId) {
     entry = 0;
     while (entry < m_aggregateEntryCount && m_aggregateDir[entry].id != fileId)
         entry++;
-    if (m_aggregateDir[entry].id != fileId) {
+    if (entry >= m_aggregateEntryCount) {
         sprintf(
             gText,
             "ResMgr::PointToFile failure!  ThisFileId:%d  LastFileId:%d  LastFileName:%s",
@@ -276,7 +301,7 @@ void resourceManager::PointToFile(i16 fileId) {
         );
         ShutDown(gText);
     }
-    lseek(m_aggregateFd, m_aggregateDir[entry].offset, SEEK_SET);
+    FileSeek(m_aggregateFd, m_aggregateDir[entry].offset, FILE_SEEK_SET);
 }
 
 u32 resourceManager::GetFileSize(i16 fileId) {
@@ -285,7 +310,7 @@ u32 resourceManager::GetFileSize(i16 fileId) {
     i16 entry = 0;
     while (entry < m_aggregateEntryCount && m_aggregateDir[entry].id != fileId)
         entry++;
-    if (m_aggregateDir[entry].id != fileId) {
+    if (entry >= m_aggregateEntryCount) {
         sprintf(
             gText,
             "ResMgr::PointToFile(GetFileSize) failure!  ThisFileId:%d  LastFileId:%d  "
@@ -301,31 +326,40 @@ u32 resourceManager::GetFileSize(i16 fileId) {
 }
 
 void resourceManager::SavePosition(void) {
-    m_savedPosition = tell(m_aggregateFd);
+    m_savedPosition = FileTell(m_aggregateFd);
 }
 
 void resourceManager::RestorePosition(void) {
-    lseek(m_aggregateFd, m_savedPosition, SEEK_SET);
+    FileSeek(m_aggregateFd, m_savedPosition, FILE_SEEK_SET);
 }
 
 i8 resourceManager::ReadByte(void) {
     H1_ASSERT(m_aggregateFd != FILE_DESCRIPTOR_INVALID);
-    i8 value = 0;
-    read(m_aggregateFd, &value, sizeof(value));
+    u8 bytes[1] = {0};
+    FileRead(m_aggregateFd, bytes, sizeof(bytes));
+    i8 value;
+    RecordReader reader(bytes, sizeof(bytes));
+    reader.Get(value);
     return value;
 }
 
 i16 resourceManager::ReadWord(void) {
     H1_ASSERT(m_aggregateFd != FILE_DESCRIPTOR_INVALID);
-    i16 value = 0;
-    read(m_aggregateFd, &value, sizeof(value));
+    u8 bytes[2] = {0, 0};
+    FileRead(m_aggregateFd, bytes, sizeof(bytes));
+    i16 value;
+    RecordReader reader(bytes, sizeof(bytes));
+    reader.Get(value);
     return value;
 }
 
 i32 resourceManager::ReadLong(void) {
     H1_ASSERT(m_aggregateFd != FILE_DESCRIPTOR_INVALID);
-    i32 value = 0;
-    read(m_aggregateFd, &value, sizeof(value));
+    u8 bytes[4] = {0, 0, 0, 0};
+    FileRead(m_aggregateFd, bytes, sizeof(bytes));
+    i32 value;
+    RecordReader reader(bytes, sizeof(bytes));
+    reader.Get(value);
     return value;
 }
 
@@ -343,6 +377,6 @@ void resourceManager::Read13(char* destination) {
 void resourceManager::ReadBlock(void* destination, u32 size) {
     H1_ASSERT(m_aggregateFd != FILE_DESCRIPTOR_INVALID);
     PollSound();
-    i32 bytesRead = read(m_aggregateFd, destination, size);
+    i32 bytesRead = FileRead(m_aggregateFd, destination, size);
     PollSound();
 }

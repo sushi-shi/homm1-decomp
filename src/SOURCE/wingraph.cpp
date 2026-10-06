@@ -1,6 +1,6 @@
 #include <H1/Ints.h>
 
-#include <SOURCE/wingraph.h>
+#include <SOURCE/wingraphHost.h>
 
 #include <BASE/bitmap.h>
 #include <BASE/heroWindowManager.h>
@@ -9,7 +9,7 @@
 #include <BASE/mouseManager.h>
 #include <BASE/palette.h>
 #include <SOURCE/KB.h>
-#include <SOURCE/kbwin.h>
+#include <SOURCE/kbwinHost.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -987,4 +987,77 @@ BOOL SetGraphicsType(i32 graphicsType) {
     );
     UpdatePalette(gBufferPalette->m_data);
     return TRUE;
+}
+
+static HCURSOR gMouseCursors[MOUSE_CURSOR_COUNT];
+static HBITMAP gColorBitmaps[MOUSE_CURSOR_COUNT];
+static HBITMAP gAndMaskBitmaps[MOUSE_CURSOR_COUNT];
+static BITMAP gAndMaskBitmapInfo[MOUSE_CURSOR_COUNT];
+static BITMAP gColorBitmapInfo[MOUSE_CURSOR_COUNT];
+static ICONINFO gMouseIconInfo[MOUSE_CURSOR_COUNT];
+
+i32 KBCursorReady(i32 cursorIndex) {
+    return gMouseCursors[cursorIndex] != NULL;
+}
+
+void KBCreateCursor(
+    i32 cursorIndex,
+    const u8* colorBits,
+    const u8* maskBits,
+    i32 colorCursor,
+    i32 hotX,
+    i32 hotY
+) {
+    gAndMaskBitmapInfo[cursorIndex].bmType = 0;
+    gAndMaskBitmapInfo[cursorIndex].bmWidth = MOUSE_CURSOR_BITMAP_WIDTH;
+    gAndMaskBitmapInfo[cursorIndex].bmHeight =
+        colorCursor ? MOUSE_CURSOR_BITMAP_WIDTH : MOUSE_CURSOR_MASK_HEIGHT;
+    gAndMaskBitmapInfo[cursorIndex].bmWidthBytes = MOUSE_CURSOR_MASK_ROW_BYTES;
+    gAndMaskBitmapInfo[cursorIndex].bmPlanes = MOUSE_CURSOR_BITMAP_PLANES;
+    gAndMaskBitmapInfo[cursorIndex].bmBitsPixel = MOUSE_CURSOR_BITMAP_BITS_PER_PIXEL;
+    gAndMaskBitmapInfo[cursorIndex].bmBits = const_cast<u8*>(maskBits);
+    gAndMaskBitmaps[cursorIndex] = CreateBitmapIndirect(&gAndMaskBitmapInfo[cursorIndex]);
+    H1_ASSERT(gAndMaskBitmaps[cursorIndex] != NULL);
+
+    if (colorCursor) {
+        gColorBitmapInfo[cursorIndex].bmType = 0;
+        gColorBitmapInfo[cursorIndex].bmWidth = MOUSE_CURSOR_BITMAP_WIDTH;
+        gColorBitmapInfo[cursorIndex].bmHeight = MOUSE_CURSOR_BITMAP_WIDTH;
+        gColorBitmapInfo[cursorIndex].bmPlanes = MOUSE_CURSOR_BITMAP_PLANES;
+        gColorBitmapInfo[cursorIndex].bmBitsPixel = MOUSE_CURSOR_COLOR_BITS_PER_PIXEL;
+        gColorBitmapInfo[cursorIndex].bmWidthBytes = MOUSE_CURSOR_BITMAP_WIDTH;
+        gColorBitmapInfo[cursorIndex].bmBits = const_cast<u8*>(colorBits);
+        gColorBitmaps[cursorIndex] = CreateBitmapIndirect(&gColorBitmapInfo[cursorIndex]);
+    }
+
+    gMouseIconInfo[cursorIndex].fIcon = FALSE;
+    gMouseIconInfo[cursorIndex].xHotspot = hotX;
+    gMouseIconInfo[cursorIndex].yHotspot = hotY;
+    gMouseIconInfo[cursorIndex].hbmMask = gAndMaskBitmaps[cursorIndex];
+    gMouseIconInfo[cursorIndex].hbmColor = colorCursor ? gColorBitmaps[cursorIndex] : NULL;
+    gMouseCursors[cursorIndex] = CreateIconIndirect(&gMouseIconInfo[cursorIndex]);
+    H1_ASSERT(gMouseCursors[cursorIndex] != NULL);
+}
+
+void KBSelectCursor(i32 cursorIndex) {
+    SetCursor(gMouseCursors[cursorIndex]);
+}
+
+void KBSelectArrowCursor(void) {
+    SetCursor(LoadCursorA(NULL, IDC_ARROW));
+}
+
+void KBDestroyCursors(void) {
+    i32 cursorIndex;
+    for (cursorIndex = 0; cursorIndex < MOUSE_CURSOR_COUNT; cursorIndex++) {
+        if (gMouseCursors[cursorIndex] != NULL)
+            DestroyIcon(gMouseCursors[cursorIndex]);
+        gMouseCursors[cursorIndex] = NULL;
+        if (gAndMaskBitmaps[cursorIndex] != NULL)
+            DeleteObject(gAndMaskBitmaps[cursorIndex]);
+        gAndMaskBitmaps[cursorIndex] = NULL;
+        if (gColorBitmaps[cursorIndex] != NULL)
+            DeleteObject(gColorBitmaps[cursorIndex]);
+        gColorBitmaps[cursorIndex] = NULL;
+    }
 }

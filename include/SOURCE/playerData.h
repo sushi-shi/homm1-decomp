@@ -66,7 +66,6 @@ public:
     float m_artifactPoolShare;
 };
 
-#pragma pack(push, 1)
 class playerData {
 public:
     char m_unused00[0x11];
@@ -91,8 +90,8 @@ public:
     i8 m_unused9a;
     u8 m_puzzlePiecesRemoved[PLAYER_PUZZLE_PIECE_STORAGE_SIZE];
     playerAIData m_aiData;
-    void Write(i32 file);
-    void Read(i32 file);
+    void Write(class RecordWriter& file);
+    void Read(class RecordReader& file);
     i8 NextHero(i32);
     i8 HasMobileHero(void);
     i32 BuildingsOwned(
@@ -127,6 +126,5 @@ public:
         return m_availableHeroIds[index];
     }
 };
-#pragma pack(pop)
 
 #endif

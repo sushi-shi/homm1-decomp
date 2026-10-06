@@ -52,9 +52,29 @@ INPUT_SCAN_NONE = 0x00,
     INPUT_ASCII_DELETE = 0x7f
 };
 
+// The window messages the host passes to KeyboardMessageHandler and
+// MouseMessageHandler, with the Windows values and parameter packing: a key
+// message carries its Set 1 scan code in bits 16-23 of messageData, a mouse
+// message its client coordinates in the low and high words.
+enum InputHostMessage {
+    INPUT_MESSAGE_KEY_DOWN = 0x100,
+    INPUT_MESSAGE_KEY_UP = 0x101,
+    INPUT_MESSAGE_MOUSE_MOVE = 0x200,
+    INPUT_MESSAGE_LEFT_DOWN = 0x201,
+    INPUT_MESSAGE_LEFT_UP = 0x202,
+    INPUT_MESSAGE_LEFT_DOUBLE = 0x203,
+    INPUT_MESSAGE_RIGHT_DOWN = 0x204,
+    INPUT_MESSAGE_RIGHT_UP = 0x205,
+    INPUT_MESSAGE_RIGHT_DOUBLE = 0x206,
+    INPUT_VIRTUAL_KEY_RETURN = 0x0d
+};
+
+#define INPUT_MESSAGE_SCAN_CODE(messageData) (((messageData) >> 16) & INPUT_SCAN_CODE_MASK)
+#define INPUT_MESSAGE_X(messageData) ((messageData) & 0xffff)
+#define INPUT_MESSAGE_Y(messageData) (((messageData) >> 16) & 0xffff)
+
 #define EncodeScanCode(scanCode) ((scanCode) << INPUT_KEY_SCAN_SHIFT)
 
-#pragma pack(push, 1)
 class inputManager : public baseManager {
 public:
     tag_message m_eventRing[INPUT_EVENT_RING_CAPACITY];
@@ -92,7 +112,6 @@ public:
         return m_modifiers;
     }
 };
-#pragma pack(pop)
 b32 KeyboardMessageHandler(void* window, u32 message, u32 virtualKey, i32 messageData);
 b32 MouseMessageHandler(void* window, u32 message, u32 keyFlags, i32 messageData);
 

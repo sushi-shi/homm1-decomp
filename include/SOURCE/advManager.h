@@ -165,7 +165,6 @@ enum AdventureDrawMask {
     ADVMGR_DRAW_CLOUD = 0x20
 };
 
-#pragma pack(push, 1)
 class advManager : public baseManager {
 public:
     i8 m_pendingCommand;
@@ -463,7 +462,6 @@ public:
         b8* combatSurrender
     );
 };
-#pragma pack(pop)
 
 i16 APanelHandler(struct tag_message& message);
 void UpdateCPanel(b8 initialDraw);

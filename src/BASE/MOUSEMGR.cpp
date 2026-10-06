@@ -36,11 +36,8 @@ mouseManager::mouseManager(void) {
     m_savedUnderlying = NULL;
     m_cursorFrame = 0;
     for (i32 cursorIndex = 0; cursorIndex < MOUSE_CURSOR_COUNT; cursorIndex++) {
-        gMouseCursors[cursorIndex] = NULL;
         gAndBits[cursorIndex] = NULL;
         gColorBits[cursorIndex] = NULL;
-        gAndMaskBitmaps[cursorIndex] = NULL;
-        gColorBitmaps[cursorIndex] = NULL;
     }
 }
 
@@ -61,24 +58,16 @@ void mouseManager::Close(void) {
     if (m_savedUnderlying != NULL)
         delete m_savedUnderlying;
     m_savedUnderlying = NULL;
-    SetCursor(LoadCursorA(NULL, IDC_ARROW));
+    KBSelectArrowCursor();
     DelayMilli(50);
+    KBDestroyCursors();
     for (cursorIndex = 0; cursorIndex < MOUSE_CURSOR_COUNT; cursorIndex++) {
-        if (gMouseCursors[cursorIndex] != NULL)
-            DestroyIcon(gMouseCursors[cursorIndex]);
-        gMouseCursors[cursorIndex] = NULL;
         if (gAndBits[cursorIndex] != NULL)
             free(gAndBits[cursorIndex]);
         gAndBits[cursorIndex] = NULL;
         if (gColorBits[cursorIndex] != NULL)
             free(gColorBits[cursorIndex]);
         gColorBits[cursorIndex] = NULL;
-        if (gAndMaskBitmaps[cursorIndex] != NULL)
-            DeleteObject(gAndMaskBitmaps[cursorIndex]);
-        gAndMaskBitmaps[cursorIndex] = NULL;
-        if (gColorBitmaps[cursorIndex] != NULL)
-            DeleteObject(gColorBitmaps[cursorIndex]);
-        gColorBitmaps[cursorIndex] = NULL;
     }
     DelayMilli(50);
 }
@@ -100,7 +89,7 @@ void mouseManager::SetPointer(char* name, i16 frame) {
 i32 gMouseCursorType = 0;
 
 void mouseManager::SetPointer(i16 frame) {
-    static BOOL gInSetPointer = FALSE;
+    static bool gInSetPointer = false;
     i32 cursorIndex;
     i32 x;
     i32 y;
@@ -119,7 +108,7 @@ void mouseManager::SetPointer(i16 frame) {
 
     if (gInSetPointer)
         return;
-    gInSetPointer = TRUE;
+    gInSetPointer = true;
 
     if (frame == MOUSE_KEEP_CURRENT_FRAME)
         frame = m_cursorFrame;
@@ -129,7 +118,7 @@ void mouseManager::SetPointer(i16 frame) {
     cursorIndex = frame + gMouseOffset[gMouseCursorType];
     H1_ASSERT(cursorIndex >= 0 && cursorIndex < MOUSE_CURSOR_COUNT);
 
-    if (gMouseCursors[cursorIndex] == NULL) {
+    if (!KBCursorReady(cursorIndex)) {
         gColorBits[cursorIndex] = static_cast<u8*>(malloc(MOUSE_CURSOR_COLOR_BYTES));
         if (gColorMice)
             gAndBits[cursorIndex] = static_cast<u8*>(malloc(MOUSE_CURSOR_MASK_PLANE_BYTES));
@@ -181,40 +170,18 @@ void mouseManager::SetPointer(i16 frame) {
             }
         }
 
-        gAndMaskBitmapInfo[cursorIndex].bmType = 0;
-        gAndMaskBitmapInfo[cursorIndex].bmWidth = MOUSE_CURSOR_BITMAP_WIDTH;
-        gAndMaskBitmapInfo[cursorIndex].bmHeight =
-            gColorMice ? MOUSE_CURSOR_BITMAP_WIDTH : MOUSE_CURSOR_MASK_HEIGHT;
-        gAndMaskBitmapInfo[cursorIndex].bmWidthBytes = MOUSE_CURSOR_MASK_ROW_BYTES;
-        gAndMaskBitmapInfo[cursorIndex].bmPlanes = MOUSE_CURSOR_BITMAP_PLANES;
-        gAndMaskBitmapInfo[cursorIndex].bmBitsPixel = MOUSE_CURSOR_BITMAP_BITS_PER_PIXEL;
-        gAndMaskBitmapInfo[cursorIndex].bmWidthBytes = MOUSE_CURSOR_MASK_ROW_BYTES;
-        gAndMaskBitmapInfo[cursorIndex].bmBits = gAndBits[cursorIndex];
-        gAndMaskBitmaps[cursorIndex] = CreateBitmapIndirect(&gAndMaskBitmapInfo[cursorIndex]);
-        H1_ASSERT(reinterpret_cast<i32>(gAndMaskBitmaps[cursorIndex]));
-
-        if (gColorMice) {
-            gColorBitmapInfo[cursorIndex].bmType = 0;
-            gColorBitmapInfo[cursorIndex].bmWidth = MOUSE_CURSOR_BITMAP_WIDTH;
-            gColorBitmapInfo[cursorIndex].bmHeight = MOUSE_CURSOR_BITMAP_WIDTH;
-            gColorBitmapInfo[cursorIndex].bmPlanes = MOUSE_CURSOR_BITMAP_PLANES;
-            gColorBitmapInfo[cursorIndex].bmBitsPixel = MOUSE_CURSOR_COLOR_BITS_PER_PIXEL;
-            gColorBitmapInfo[cursorIndex].bmWidthBytes = MOUSE_CURSOR_BITMAP_WIDTH;
-            gColorBitmapInfo[cursorIndex].bmBits = gColorBits[cursorIndex];
-            gColorBitmaps[cursorIndex] = CreateBitmapIndirect(&gColorBitmapInfo[cursorIndex]);
-        }
-
-        gMouseIconInfo[cursorIndex].fIcon = FALSE;
-        gMouseIconInfo[cursorIndex].xHotspot = gHotSpot[cursorIndex][MOUSE_CURSOR_HORIZONTAL];
-        gMouseIconInfo[cursorIndex].yHotspot = gHotSpot[cursorIndex][MOUSE_CURSOR_VERTICAL];
-        gMouseIconInfo[cursorIndex].hbmMask = gAndMaskBitmaps[cursorIndex];
-        gMouseIconInfo[cursorIndex].hbmColor = gColorMice ? gColorBitmaps[cursorIndex] : NULL;
-        gMouseCursors[cursorIndex] = CreateIconIndirect(&gMouseIconInfo[cursorIndex]);
-        H1_ASSERT(reinterpret_cast<i32>(gMouseCursors[cursorIndex]));
+        KBCreateCursor(
+            cursorIndex,
+            gColorBits[cursorIndex],
+            gAndBits[cursorIndex],
+            gColorMice,
+            gHotSpot[cursorIndex][MOUSE_CURSOR_HORIZONTAL],
+            gHotSpot[cursorIndex][MOUSE_CURSOR_VERTICAL]
+        );
     }
 
-    SetCursor(gMouseCursors[cursorIndex]);
-    gInSetPointer = FALSE;
+    KBSelectCursor(cursorIndex);
+    gInSetPointer = false;
 }
 
 void mouseManager::ReallyShowPointer(void) {}
@@ -244,12 +211,12 @@ void mouseManager::WarpPointer(i16 x, i16 y) {}
 void mouseManager::UnusedOneArgumentHook(i32) {}
 
 void mouseManager::MouseCoords(i16& x, i16& y) {
-    POINT point;
+    i32 clientX;
+    i32 clientY;
 
-    GetCursorPos(&point);
-    ScreenToClient(gAppWindow, &point);
-    x = CLIENT_TO_GAME_X(point.x);
-    y = CLIENT_TO_GAME_Y(point.y);
+    KBCursorPosition(&clientX, &clientY);
+    x = CLIENT_TO_GAME_X(clientX);
+    y = CLIENT_TO_GAME_Y(clientY);
 }
 
 void mouseManager::SetCursorShape(i32 shape) {}
@@ -257,11 +224,11 @@ void mouseManager::SetCursorShape(i32 shape) {}
 void mouseManager::SetColorMice(b32 enabled) {}
 
 void mouseManager::HideSystemCursor(void) {
-    ShowCursor(FALSE);
+    KBShowSystemCursor(0);
 }
 
 void mouseManager::ShowSystemCursor(void) {
-    ShowCursor(TRUE);
+    KBShowSystemCursor(1);
 }
 
 i32 gMouseOffset[3] = {0, 40, 55};
@@ -276,11 +243,5 @@ u8 gHotSpot[MOUSE_CURSOR_COUNT][MOUSE_CURSOR_AXIS_COUNT] = {
     {22, 23}, {22, 23}, {22, 23}, {22, 23}, {22, 23}, {22, 23}, {22, 23}, {22, 23}, {22, 23},
     {22, 23}, {22, 23}, {22, 23}
 };
-HBITMAP gColorBitmaps[MOUSE_CURSOR_COUNT];
-BITMAP gAndMaskBitmapInfo[MOUSE_CURSOR_COUNT];
-HCURSOR gMouseCursors[MOUSE_CURSOR_COUNT];
 u8* gAndBits[MOUSE_CURSOR_COUNT];
-BITMAP gColorBitmapInfo[MOUSE_CURSOR_COUNT];
 u8* gColorBits[MOUSE_CURSOR_COUNT];
-ICONINFO gMouseIconInfo[MOUSE_CURSOR_COUNT];
-HBITMAP gAndMaskBitmaps[MOUSE_CURSOR_COUNT];

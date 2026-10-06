@@ -31,7 +31,6 @@ enum ArmyGroupAlignmentResult {
      ),                                                                                            \
      memset((group).m_creatureCounts, 0, sizeof((group).m_creatureCounts)))
 
-#pragma pack(push, 1)
 class armyGroup {
 public:
     i8 m_creatureTypes[ARMY_GROUP_SLOT_COUNT];
@@ -48,7 +47,6 @@ public:
     void Swap(i8 slot, class armyGroup* otherGroup, i8 otherSlot);
     void DamageGroup(float casualtyFraction);
 };
-#pragma pack(pop)
 enum ArmyGroupRaceCount {
     ARMY_GROUP_RACES_THREE = 3,
     ARMY_GROUP_RACES_FOUR = 4,

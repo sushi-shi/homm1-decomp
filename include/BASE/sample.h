@@ -7,7 +7,6 @@ enum SampleDefaultConstant {
     SAMPLE_VOLUME_FULL = 127
 };
 
-#pragma pack(push, 1)
 struct SamplePlaybackData {
     i8* data;
     i32 size;
@@ -25,7 +24,6 @@ public:
     sample(char* name);
     virtual ~sample();
 };
-#pragma pack(pop)
 
 enum SampleLoadConstant {
     SAMPLE_FILENAME_CAPACITY = 32,

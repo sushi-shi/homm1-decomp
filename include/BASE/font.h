@@ -30,7 +30,6 @@ enum FontCharacterCode {
     FONT_CODE_SMALL_YO = 0xc1
 };
 
-#pragma pack(push, 1)
 class font : public resource {
 public:
     i16 m_height;
@@ -51,5 +50,4 @@ public:
     i32 LineLength(char* text, i16 maxWidth);
     i32 LineWidth(char* text);
 };
-#pragma pack(pop)
 #endif

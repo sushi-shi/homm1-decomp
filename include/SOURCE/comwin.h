@@ -1,7 +1,16 @@
 #ifndef HOMM1_SOURCE_COMWIN_H
 #define HOMM1_SOURCE_COMWIN_H
 
-#include <windows.h>
+
+// Line speeds in bits per second, as the configuration stores them.
+enum ComBaudRate {
+    COM_RATE_2400 = 2400,
+    COM_RATE_4800 = 4800,
+    COM_RATE_9600 = 9600,
+    COM_RATE_19200 = 19200,
+    COM_RATE_38400 = 38400,
+    COM_RATE_115200 = 115200
+};
 
 enum ComBaudCode {
     COM_BAUD_2400 = 1,
@@ -28,16 +37,6 @@ struct tag_Anchor {
     tag_Node* tail;
 };
 
-struct ComPortState {
-    HANDLE handle;
-    char reserved04[4];
-    DCB savedState;
-    COMMTIMEOUTS savedTimeouts;
-    char reserved38[0x18];
-    tag_Anchor normalQueue;
-    tag_Anchor priorityQueue;
-};
-
 enum ComConstant {
     COM_PORT_COUNT = 7,
     COM_ERROR_NAME_SIZE = 100,
@@ -48,7 +47,6 @@ enum ComConstant {
     COM_NODE_HEADER_SIZE = 10
 };
 
-extern ComPortState gComPorts[];
 
 void init_anchor(tag_Anchor* anchor, i32, i32);
 void add_node(tag_Anchor* anchor, tag_Node* node);

@@ -6,7 +6,6 @@
 class icon;
 class border;
 
-#pragma pack(push, 1)
 class townObject {
 public:
     i8 m_animationFrameCount;
@@ -19,5 +18,4 @@ public:
     ~townObject();
     void Draw(b8 advanceAnimation);
 };
-#pragma pack(pop)
 #endif

@@ -58,7 +58,6 @@ enum HeroPrimaryStat {
     HERO_PRIMARY_BALLISTA = 4
 };
 
-#pragma pack(push, 1)
 class hero {
 public:
     i8 m_id;
@@ -119,7 +118,6 @@ public:
     void CheckLevel(void);
     i32 NumArtifacts(void);
 };
-#pragma pack(pop)
 
 extern class heroWindow* gHeroWin;
 

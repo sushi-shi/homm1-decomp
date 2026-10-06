@@ -58,7 +58,6 @@ enum HighScoreColor {
     HIGH_SCORE_NORMAL_COLOR = 1
 };
 
-#pragma pack(push, 1)
 class highScoreManager : public baseManager {
 public:
     i16 m_animationFrames[HIGH_SCORE_DISPLAY_ENTRY_COUNT];
@@ -73,7 +72,6 @@ public:
     virtual i16 Main(struct tag_message& message) ;
     void Update(void);
 };
-#pragma pack(pop)
 
 enum HighScoreType {
     HIGH_SCORE_TYPE_CAMPAIGN = 0,

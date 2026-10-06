@@ -1,8 +1,6 @@
 #ifndef HOMM1_SOURCE_SMACKMANAGER_H
 #define HOMM1_SOURCE_SMACKMANAGER_H
 
-#include <windows.h>
-
 #include <SOURCE/smack.h>
 
 enum SmackVideo {
@@ -31,8 +29,11 @@ struct SSmackOptions {
 
 extern SSmackOptions gSmackOptions[SMACK_COUNT];
 extern i8 gMovieId;
+// Movie sound: Miles on Windows, the platform audio device in the native port.
 void InitSmackSound();
 void ShutdownSmackSound();
+i32 SmackSoundReady();
+void UseSmackSound(i32 volume);
 void ConvertSmackerPalette(u8* paletteData);
 void DoAdvance(Smack* smack, b32 drawFrame, b32 advanceFrame, b32 updatePalette, b32 skipPalette);
 void SmackMain();
@@ -49,14 +50,5 @@ enum SmackSoundConstant {
 enum SmackTextConstant {
     SMACK_WIN2_TEXT_FIRST_FRAME = 22
 };
-
-#pragma pack(push, 1)
-struct SmackSoundFormat {
-    DWORD format;
-    WORD channels;
-    DWORD samplesPerSecond;
-    WORD bitsPerSample;
-};
-#pragma pack(pop)
 
 #endif

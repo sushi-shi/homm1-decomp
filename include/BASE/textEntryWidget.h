@@ -21,7 +21,6 @@ enum TextEntryConstant {
 class icon;
 struct tag_message;
 
-#pragma pack(push, 1)
 class textEntryWidget : public textWidget {
 public:
     icon* m_icon;
@@ -57,5 +56,4 @@ public:
     void Read(i32 type);
     void SetupDisplayString(char* source, u16 cursor);
 };
-#pragma pack(pop)
 #endif

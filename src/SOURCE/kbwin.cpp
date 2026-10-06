@@ -1,6 +1,6 @@
 #include <H1/Ints.h>
 
-#include <SOURCE/kbwin.h>
+#include <SOURCE/kbwinHost.h>
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -24,14 +24,14 @@
 #include <BASE/audio.h>
 #include <SOURCE/cursorTypes.h>
 #include <SOURCE/dialogTypes.h>
-#include <SOURCE/wingraph.h>
+#include <SOURCE/wingraphHost.h>
 #ifdef HOMM1_EDITOR
 #include <EDITOR/EDITOR.h>
 #endif
 
 HWND gAppWindow = NULL;
 i32 gForegroundApp = 0;
-HMENU gAppMenu = NULL;
+KBMenu gAppMenu = NULL;
 HANDLE gEventHandle = NULL;
 
 extern "C" i32 __stdcall
@@ -151,7 +151,7 @@ BOOL AppInit(HINSTANCE instance, HINSTANCE previousInstance, i32 showCommand, ch
         windowRectangle.right - windowRectangle.left + 1,
         windowRectangle.bottom - windowRectangle.top + 1,
         NULL,
-        CURRENT_GRAPHICS_CONFIG.showMenu != 0 ? gDefaultMenu : NULL,
+        CURRENT_GRAPHICS_CONFIG.showMenu != 0 ? MenuHandle(gDefaultMenu) : NULL,
         instance,
         NULL
     );
@@ -376,18 +376,20 @@ void ResizeWindow(i32 x, i32 y, i32 width, i32 height) {
 }
 
 i32 AppCommand(HWND window, u32 message, u32 messageParam, i32 messageData) {
-    DLGPROC dialogProc;
-    i32 command;
+    return AppMenuCommand(LOWORD(messageParam));
+}
 
-    command = LOWORD(messageParam);
+i32 AppMenuCommand(i32 command) {
+    DLGPROC dialogProc;
+
     switch (command) {
         case KBWIN_MENU_ABOUT:
             dialogProc =
                 reinterpret_cast<DLGPROC>(AppAbout);
 #ifdef HOMM1_EDITOR
-            DialogBoxParamA(gAppInstance, "EDITOR", window, dialogProc, 0);
+            DialogBoxParamA(gAppInstance, "EDITOR", gAppWindow, dialogProc, 0);
 #else
-            DialogBoxParamA(gAppInstance, "HEROES", window, dialogProc, 0);
+            DialogBoxParamA(gAppInstance, "HEROES", gAppWindow, dialogProc, 0);
 #endif
             break;
         case KBWIN_MENU_HELP:
@@ -434,7 +436,8 @@ i32 AppCommand(HWND window, u32 message, u32 messageParam, i32 messageData) {
     return 0;
 }
 
-void UpdateDfltMenu(HMENU menu) {
+void UpdateDfltMenu(KBMenu appMenu) {
+    HMENU menu = MenuHandle(appMenu);
     i32 result;
     i32 value;
 
@@ -452,7 +455,7 @@ void UpdateDfltMenu(HMENU menu) {
         EnableMenuItem(menu, KBWIN_MENU_FULLSCREEN, MF_GRAYED);
 }
 
-void KBChangeMenu(HMENU menu) {
+void KBChangeMenu(KBMenu menu) {
     if (menu == NULL)
         menu = gCurrentMenu;
     else
@@ -460,7 +463,7 @@ void KBChangeMenu(HMENU menu) {
     gAppMenu = menu;
     if (CURRENT_GRAPHICS_CONFIG.showMenu) {
         if (menu != NULL) {
-            SetMenu(gAppWindow, menu);
+            SetMenu(gAppWindow, MenuHandle(menu));
             UpdateDfltMenu(menu);
             UpdateAppSpecificMenus(menu);
             DrawMenuBar(gAppWindow);
@@ -512,7 +515,8 @@ void SetNoDialogMenus(i32 menusEnabled) {
     SetMenus(gAppMenu, menusEnabled);
 }
 
-void SetMenus(HMENU menu, i32 enabled) {
+void SetMenus(KBMenu appMenu, i32 enabled) {
+    HMENU menu = MenuHandle(appMenu);
     u32 id;
     i32 candidate;
     i32 index;
@@ -524,7 +528,7 @@ void SetMenus(HMENU menu, i32 enabled) {
     for (index = 0; index < count; index++) {
         id = GetMenuItemID(menu, index);
         if (id == static_cast<u32>(-1)) {
-            SetMenus(GetSubMenu(menu, index), enabled);
+            SetMenus(MenuFromHandle(GetSubMenu(menu, index)), enabled);
             update = 0;
         } else {
             update = 0;
@@ -545,37 +549,7 @@ void SetMenus(HMENU menu, i32 enabled) {
         if (update != 0)
             EnableMenuItem(menu, id, enabled == 0 ? MF_GRAYED : MF_ENABLED);
     }
-    UpdateDfltMenu(menu);
-}
-
-void SetGameDefaults(void) {
-    i32 i;
-
-    gConfig.musicVolume = SOUND_VOLUME_100;
-    gConfig.soundVolume = SOUND_VOLUME_100;
-    gConfig.autosave = 1;
-    gConfig.showRoute = 1;
-    gConfig.blackoutComputer = 0;
-    for (i = CONFIG_EXECUTABLE_GAME; i < CONFIG_EXECUTABLE_COUNT; i++) {
-        gConfig.gfx[i].showMenu = 1;
-        gConfig.gfx[i].x = DEFAULT_WINDOW_ORIGIN;
-        gConfig.gfx[i].y = DEFAULT_WINDOW_ORIGIN;
-        if (gMainVideoModeWidth <= LOGICAL_SCREEN_WIDTH && gDDrawAttached) {
-            gConfig.gfx[i].fullScreen = 1;
-            gConfig.gfx[i].width = DEFAULT_SMALL_WINDOW_WIDTH;
-            gConfig.gfx[i].height = DEFAULT_SMALL_WINDOW_HEIGHT;
-        } else {
-            gConfig.gfx[i].fullScreen = 1;
-            gConfig.gfx[i].width = LOGICAL_SCREEN_WIDTH;
-            gConfig.gfx[i].height = LOGICAL_SCREEN_HEIGHT;
-        }
-    }
-    gConfig.blackoutComputer = 0;
-    gConfig.currentMapOffset = 0;
-    gConfig.firstMapOffset = Random(0, DEFAULT_MAP_OFFSET_LIMIT);
-    gConfig.musicSource = SOUND_MUSIC_SOURCE_CD;
-    gFirstTimeThrough = true;
-    gConfig.walkSpeed = WALK_SPEED_CANTER;
+    UpdateDfltMenu(appMenu);
 }
 
 void ReadPrefs(void) {
@@ -1104,6 +1078,12 @@ bool DriveSupportsFreeSpaceQuery(char driveLetter) {
     }
 }
 
+i32 KBIsCDDrive(i32 driveIndex) {
+    char root[4] = "A:\\";
+    root[0] += driveIndex;
+    return GetDriveTypeA(root) == DRIVE_CDROM;
+}
+
 i32 SetupCDDrive(void) {
     HKEY key;
     char keyPath[REGISTRY_TEXT_BUFFER_SIZE];
@@ -1191,67 +1171,82 @@ i32 SetupCDDrive(void) {
     return CD_SETUP_NOT_FOUND;
 }
 
-void SetWinText(heroWindow* window, i16 id) {
-    i32 i;
-    tag_message msg;
-#ifdef HOMM1_EDITOR
-    for (i = 0; i < WINDOW_TEXT_EDITOR_ENTRY_COUNT; i++) {
-#else
-    for (i = 0; i < WINDOW_TEXT_ENTRY_COUNT; i++) {
-#endif
-        if (gWinSetup[i].windowId == id) {
-            SET_WIDGET_MESSAGE(msg, WIDGET_COMMAND_SET_TEXT, gWinSetup[i].widgetId);
-            msg.text = gWinSetupText[i];
-            window->BroadcastMessage(msg);
-        }
-    }
-}
-
 i32 KBTickCount(void) {
     return GetTickCount();
-}
-
-void ProcessAssert(i32 condition, char* file, i32 line) {
-    i32 unusedAssertWord;
-    if (condition == 0) {
-        sprintf(gText, "Assert statement failed in module %s, line %d.", file, line);
-        MessageBoxA(gAppWindow, gText, "Assert Failure", MB_ICONHAND);
-        unusedAssertWord = 0;
-        ShutDown(gText);
-    }
-}
-
-char* FindToken(char* text, char token) {
-    i32 pos;
-    i32 len;
-
-    len = strlen(text);
-    for (pos = 0; pos < len; pos++) {
-        if (text[pos] == token)
-            return text + pos;
-    }
-    return NULL;
-}
-
-char* FindLastToken(char* text, char token) {
-    i32 pos;
-    i32 len;
-
-    len = strlen(text);
-    for (pos = len - 1; pos >= 0; pos--) {
-        if (text[pos] == token)
-            return text + pos;
-    }
-    return NULL;
 }
 
 HINSTANCE gAppInstance;
 struct tagRECT gTempRect;
 i32 gMainWinScreenHeight;
-HMENU gCurrentMenu;
+KBMenu gCurrentMenu;
 i32 gTempX;
 i32 gTempY;
 i32 gTempValue;
 u8 gProcessMessage[KBWIN_MESSAGE_FILTER_SIZE];
 char gCommandLine[KBWIN_COMMAND_LINE_CLEAR_SIZE];
 i32 gMainWinScreenWidth;
+
+KBMenu KBLoadMenu(const char* name) {
+    return MenuFromHandle(LoadMenuA(gAppInstance, name));
+}
+
+void KBDestroyMenu(KBMenu menu) {
+    DestroyMenu(MenuHandle(menu));
+}
+
+void KBDetachMenu(void) {
+    SetMenu(gAppWindow, NULL);
+}
+
+void KBCheckMenuItem(KBMenu menu, i32 command, i32 checked) {
+    CheckMenuItem(MenuHandle(menu), command, checked ? MF_CHECKED : MF_UNCHECKED);
+}
+
+void KBErrorBox(const char* text, const char* title) {
+    MessageBoxA(gAppWindow, text, title, MB_ICONHAND);
+}
+
+void KBRequestClose(void) {
+    PostMessage(gAppWindow, WM_CLOSE, 0, 0);
+}
+
+void KBReleaseInstance(void) {
+    if (gEventHandle) {
+        CloseHandle(gEventHandle);
+        gEventHandle = NULL;
+    }
+}
+
+void KBCaptureMouse(void) {
+    SetCapture(gAppWindow);
+}
+
+void KBReleaseMouse(void) {
+    ReleaseCapture();
+}
+
+void KBPaintScreen(i32 left, i32 top, i32 right, i32 bottom) {
+    RECT invalidRectangle;
+    invalidRectangle.left = left;
+    invalidRectangle.top = top;
+    invalidRectangle.right = right;
+    invalidRectangle.bottom = bottom;
+    InvalidateRect(gAppWindow, &invalidRectangle, FALSE);
+    UpdateWindow(gAppWindow);
+}
+
+void KBCursorPosition(i32* x, i32* y) {
+    POINT point;
+    GetCursorPos(&point);
+    ScreenToClient(gAppWindow, &point);
+    *x = point.x;
+    *y = point.y;
+}
+
+void KBShowSystemCursor(i32 visible) {
+    ShowCursor(visible ? TRUE : FALSE);
+}
+
+void KBBeep(void) {
+    MessageBeep(MB_OK);
+}

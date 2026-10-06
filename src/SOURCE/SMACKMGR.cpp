@@ -1,7 +1,5 @@
 #include <H1/Ints.h>
 
-#include <mss.h>
-
 #include <BASE/audio.h>
 #include <BASE/bitmap.h>
 #include <BASE/bmap2.h>
@@ -22,20 +20,6 @@
 #include <stdio.h>
 #include <string.h>
 
-static SmackSoundFormat gSmackSoundFormats[SMACK_SOUND_FORMAT_COUNT] = {
-    {WAVE_FORMAT_4S16, 2, 44100, 16},
-    {WAVE_FORMAT_4S08, 2, 44100, 8},
-    {WAVE_FORMAT_4M16, 1, 44100, 16},
-    {WAVE_FORMAT_4M08, 1, 44100, 8},
-    {WAVE_FORMAT_2S16, 2, 22050, 16},
-    {WAVE_FORMAT_2S08, 2, 22050, 8},
-    {WAVE_FORMAT_2M16, 1, 22050, 16},
-    {WAVE_FORMAT_2M08, 1, 22050, 8},
-    {WAVE_FORMAT_1S16, 2, 11025, 16},
-    {WAVE_FORMAT_1S08, 2, 11025, 8},
-    {WAVE_FORMAT_1M16, 1, 11025, 16},
-    {WAVE_FORMAT_1M08, 1, 11025, 8}
-};
 SSmackOptions gSmackOptions[SMACK_COUNT] = {
     {"BUKA", "", true, true, true, false, false, 0, 0},
     {"NWCLOGO", "", true, true, true, false, false, 0, 0},
@@ -47,65 +31,17 @@ SSmackOptions gSmackOptions[SMACK_COUNT] = {
 static i32 gSmackVolumes[11] = {0, 127, 97, 75, 52, 40, 30, 20, 15, 10, 5};
 i8 gMovieId;
 static b32 gSmackEnded;
-static WAVEOUTCAPS gSmackWaveCaps;
 static SmackSum gSmackSummary;
 static i8 gSmackSavedPalette[PALETTE_DATA_SIZE];
 static i32 gOldSmackPad;
 static b8 gSmackStop;
-static SmackSoundFormat gSmackAudioFormat;
-static PCMWAVEFORMAT gSmackPcmFormat;
 static b32 gSmackPrevFrame;
 static b32 gSmackSound;
 static resource* gSmackResource;
 static font* gSmackFont;
-static HDIGDRIVER gSmackDigDriver;
 static i32 gSmackTrackSummary;
 static Smack* gSmackPrimary;
 static Smack* gSmackCompanion;
-
-void InitSmackSound() {
-    if (gSmackDigDriver)
-        return;
-    if (!waveOutGetNumDevs())
-        return;
-    if (waveOutGetDevCaps(0, &gSmackWaveCaps, sizeof(gSmackWaveCaps)))
-        return;
-    gSmackAudioFormat.format = 0;
-    for (u32 i = 0; i < SMACK_SOUND_FORMAT_COUNT; ++i) {
-        if (gSmackWaveCaps.dwFormats & gSmackSoundFormats[i].format) {
-            gSmackAudioFormat.format = gSmackSoundFormats[i].format;
-            gSmackAudioFormat.channels = gSmackSoundFormats[i].channels;
-            gSmackAudioFormat.samplesPerSecond = gSmackSoundFormats[i].samplesPerSecond;
-            gSmackAudioFormat.bitsPerSample = gSmackSoundFormats[i].bitsPerSample;
-            break;
-        }
-    }
-    if (!gSmackAudioFormat.format) {
-        gSmackAudioFormat.channels = SMACK_FALLBACK_CHANNELS;
-        gSmackAudioFormat.samplesPerSecond = SMACK_FALLBACK_SAMPLE_RATE;
-        gSmackAudioFormat.bitsPerSample = SMACK_FALLBACK_BITS_PER_SAMPLE;
-    }
-    AIL_startup();
-    gSmackPcmFormat.wf.wFormatTag = WAVE_FORMAT_PCM;
-    gSmackPcmFormat.wf.nChannels = gSmackAudioFormat.channels;
-    gSmackPcmFormat.wf.nSamplesPerSec = gSmackAudioFormat.samplesPerSecond;
-    gSmackPcmFormat.wf.nAvgBytesPerSec = gSmackAudioFormat.samplesPerSecond
-                                         * (gSmackAudioFormat.bitsPerSample / CHAR_BIT)
-                                         * gSmackAudioFormat.channels;
-    gSmackPcmFormat.wf.nBlockAlign =
-        (gSmackAudioFormat.bitsPerSample / CHAR_BIT) * gSmackAudioFormat.channels;
-    gSmackPcmFormat.wBitsPerSample = gSmackAudioFormat.bitsPerSample;
-    if (AIL_waveOutOpen(&gSmackDigDriver, NULL, 0, &gSmackPcmFormat.wf))
-        gSmackDigDriver = NULL;
-}
-
-void ShutdownSmackSound() {
-    if (gSmackDigDriver) {
-        AIL_waveOutClose(gSmackDigDriver);
-        gSmackDigDriver = NULL;
-        AIL_shutdown();
-    }
-}
 
 void ConvertSmackerPalette(u8* paletteData) {
     for (i32 i = 0; i < PALETTE_DATA_SIZE; ++i)
@@ -123,7 +59,7 @@ void DoAdvance(Smack* smack, b32 drawFrame, b32 advanceFrame, b32 updatePalette,
     if (drawFrame) {
         while (SmackToBufferRect(smack, SMACK_SURFACE_SLOW)) {
             if (gMovieId == SMACK_WIN2 && smack->FrameNum >= SMACK_WIN2_TEXT_FIRST_FRAME) {
-                H1_ASSERT(reinterpret_cast<i32>(gWinText));
+                H1_ASSERT(gWinText != NULL);
                 gSmackFont->DrawBoundedString(gWinText, 32, 342, 320, 106, 4, FONT_ALIGN_CENTER);
             }
             BlitBitmapToScreen(
@@ -159,12 +95,11 @@ void SmackMain() {
     memcpy(gSmackSavedPalette, gPalette->m_data, PALETTE_DATA_SIZE);
     ShutdownAudio();
     InitSmackSound();
-    if (gNoSound || !gSmackDigDriver || !gConfig.soundVolume) {
+    if (gNoSound || !SmackSoundReady() || !gConfig.soundVolume) {
         gSmackSound = false;
     } else {
         gSmackSound = true;
-        AIL_set_digital_master_volume(gSmackDigDriver, gSmackVolumes[gConfig.soundVolume]);
-        SmackSoundUseMSS(gSmackDigDriver);
+        UseSmackSound(gSmackVolumes[gConfig.soundVolume]);
     }
     sprintf(gText, "%s%s.SMK", gAnimPath, gSmackOptions[gMovieId].fileName);
     soundFlags = gSmackSound ? SMACK_TRACKS : 0;

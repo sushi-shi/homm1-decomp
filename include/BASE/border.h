@@ -11,7 +11,6 @@ BORDER_BACKGROUND_SOLID = 0x400, BORDER_BACKGROUND_BITMAP =
                                  class bitmap;
 struct tag_message;
 
-#pragma pack(push, 1)
 class border : public widget {
 public:
     bitmap* m_background;
@@ -23,5 +22,4 @@ public:
     virtual i16 Main(struct tag_message& message) ;
     void Read(void);
 };
-#pragma pack(pop)
 #endif

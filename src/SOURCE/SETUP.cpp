@@ -56,16 +56,16 @@ i8 game::SetupBaud(void) {
     delete window;
     switch (gWindowManager->m_dialogResult) {
         case CHOICE_ONE:
-            gConfig.baudRate[gDirectConnect] = CBR_2400;
+            gConfig.baudRate[gDirectConnect] = COM_RATE_2400;
             break;
         case CHOICE_TWO:
-            gConfig.baudRate[gDirectConnect] = CBR_9600;
+            gConfig.baudRate[gDirectConnect] = COM_RATE_9600;
             break;
         case CHOICE_THREE:
-            gConfig.baudRate[gDirectConnect] = CBR_19200;
+            gConfig.baudRate[gDirectConnect] = COM_RATE_19200;
             break;
         case CHOICE_FOUR:
-            gConfig.baudRate[gDirectConnect] = CBR_38400;
+            gConfig.baudRate[gDirectConnect] = COM_RATE_38400;
             break;
         case DIALOG_CANCEL:
             return 0;

@@ -57,7 +57,6 @@ enum TownViewConstant {
     TOWN_VIEW_HIGH_MEMORY_LIMIT = 200
 };
 
-#pragma pack(push, 1)
 class town {
 public:
     i8 m_id;
@@ -88,7 +87,6 @@ public:
     void View(void);
     void Deallocate(void);
 };
-#pragma pack(pop)
 
 enum BuildingSlotType {
     BUILDING_SLOT_NONE = -1,

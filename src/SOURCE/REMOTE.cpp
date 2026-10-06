@@ -1,5 +1,7 @@
 #include <H1/Ints.h>
 
+#include <PLATFORM/File.h>
+
 #include <SOURCE/REMOTE.h>
 
 #include <BASE/heroWindowManager.h>
@@ -37,28 +39,24 @@ void RemoteCleanup(void) {
 }
 
 void* ReadFileBlock(char* filename, void* buffer, i32 size, i32 offset) {
-    FILE* fp;
-    fp = fopen(filename, "r+b");
-    if (!fp)
+    i32 file;
+    file = FileOpen(filename, FILE_OPEN_READ);
+    if (file == FILE_INVALID)
         FileError(filename);
-    fseek(fp, offset, SEEK_SET);
-    fread(buffer, size, 1, fp);
-    fclose(fp);
+    FileSeek(file, offset, FILE_SEEK_SET);
+    FileRead(file, buffer, size);
+    FileClose(file);
     return buffer;
 }
 
 i32 FileSize(char* filename) {
     i32 length;
-    FILE* stream;
-    stream = fopen(filename, "r+b");
-    if (stream == NULL) {
-        if (stream == NULL)
-            FileError(filename);
-    }
-    fseek(stream, 0, SEEK_END);
-    length = ftell(stream);
-    fseek(stream, 0, SEEK_SET);
-    fclose(stream);
+    i32 file;
+    file = FileOpen(filename, FILE_OPEN_READ);
+    if (file == FILE_INVALID)
+        FileError(filename);
+    length = FileLength(file);
+    FileClose(file);
     return length;
 }
 
@@ -88,8 +86,7 @@ void RemoteMain(i32 gameMode) {
             gModemInQueue.readPosition = 0;
             gModemOutQueue.writePosition = 0;
             gModemOutQueue.readPosition = 0;
-            gBaudBits =
-                CBR_115200 / gConfig.baudRate[gDirectConnect];
+            gBaudBits = COM_RATE_115200 / gConfig.baudRate[gDirectConnect];
             ModemSetup();
             switch (gameMode) {
                 case REMOTE_GAME_MODEM_HOST:

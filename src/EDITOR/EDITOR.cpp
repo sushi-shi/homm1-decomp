@@ -1188,10 +1188,10 @@ i32 gSpecialMouseMasks = 0;
 i32 gUnusedData4528ac = 0;
 i32 gScrollX = 0;
 i32 gScrollY = 0;
-HMENU gDefaultMenu = NULL;
-HMENU gCombatMenu = NULL;
-HMENU gAdventureMenu = NULL;
-HMENU gTownMenu = NULL;
+KBMenu gDefaultMenu = NULL;
+KBMenu gCombatMenu = NULL;
+KBMenu gAdventureMenu = NULL;
+KBMenu gTownMenu = NULL;
 i32 gOverlayCategory = 0;
 i32 gOverlayShownCategory = 0;
 b32 gStatusTextShown = false;
@@ -1277,15 +1277,12 @@ void ShutDown(char* message) {
     char buffer[300];
     if (message) {
         strcpy(buffer, message);
-        SetFullScreenStatus(FALSE);
-        MessageBoxA(gAppWindow, buffer, localization::Tr("shutdown.unexpected.title"), MB_ICONHAND);
+        SetFullScreenStatus(false);
+        KBErrorBox(buffer, localization::Tr("shutdown.unexpected.title"));
     }
     gClosingApp = true;
     gExec->ShutDownSystem();
-    if (gEventHandle) {
-        CloseHandle(gEventHandle);
-        gEventHandle = NULL;
-    }
+    KBReleaseInstance();
     DeleteMainClasses();
     AppExit();
     exit(EXIT_SUCCESS);
@@ -1331,43 +1328,23 @@ b32 EarlySetup(void) {
         return true;
     switch (SetupCDDrive()) {
         case CD_SETUP_NO_DRIVE:
-            MessageBoxA(
-                gAppWindow,
-                localization::Tr("startup.cd.inaccessible"),
-                localization::Tr("startup.error.title"),
-                MB_ICONHAND
-            );
+            KBErrorBox(localization::Tr("startup.cd.inaccessible"), localization::Tr("startup.error.title"));
             exit(EXIT_SUCCESS);
             break;
         case CD_SETUP_NOT_FOUND:
-            MessageBoxA(
-                gAppWindow,
-                localization::Tr("editor.startup.cd.required"),
-                localization::Tr("startup.error.title"),
-                MB_ICONHAND
-            );
+            KBErrorBox(localization::Tr("editor.startup.cd.required"), localization::Tr("startup.error.title"));
             exit(EXIT_SUCCESS);
             break;
         case CD_SETUP_NO_APP_PATH:
-            MessageBoxA(
-                gAppWindow,
-                localization::Tr("startup.directory.invalid"),
-                localization::Tr("startup.error.title"),
-                MB_ICONHAND
-            );
+            KBErrorBox(localization::Tr("startup.directory.invalid"), localization::Tr("startup.error.title"));
             exit(EXIT_SUCCESS);
             break;
         case CD_SETUP_NO_DATA:
-            MessageBoxA(
-                gAppWindow,
-                localization::Tr("startup.data.missing"),
-                localization::Tr("startup.error.title"),
-                MB_ICONHAND
-            );
+            KBErrorBox(localization::Tr("startup.data.missing"), localization::Tr("startup.error.title"));
             exit(EXIT_SUCCESS);
             break;
     }
-    gDefaultMenu = LoadMenuA(gAppInstance, "mnuDflt");
+    gDefaultMenu = KBLoadMenu("mnuDflt");
     for (i = 0; i < MAP_CELL_GROUND_TILE_COUNT; i++)
         gGroundToTerrain[i] = (i / MAP_CELL_TILES_PER_TERRAIN);
     return true;
@@ -1378,9 +1355,7 @@ void MemError(void) {
 }
 
 bool IsCDDrive(i32 driveIndex) {
-    sprintf(gText, "A:\\");
-    gText[0] += driveIndex;
-    return GetDriveTypeA(gText) == DRIVE_CDROM;
+    return KBIsCDDrive(driveIndex) != 0;
 }
 
 void InitMainClasses(void) {
@@ -1600,9 +1575,9 @@ void UpdateAppSpecificMenus(void*) {}
 
 void CleanUpMenus(void) {
     if (gAppMenu) {
-        SetMenu(gAppWindow, NULL);
+        KBDetachMenu();
         if (gDefaultMenu)
-            DestroyMenu(gDefaultMenu);
+            KBDestroyMenu(gDefaultMenu);
     }
     gAppMenu = NULL;
 }
@@ -1619,7 +1594,7 @@ b32 GameUnsaved(void) {
 i32 HandleAppSpecificMenuCommands(i32 command) {
     switch (command) {
         case APP_MENU_QUIT:
-            PostMessageA(gAppWindow, WM_CLOSE, 0, 0);
+            KBRequestClose();
             break;
         default:
             return 1;

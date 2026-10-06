@@ -8,7 +8,6 @@
 class font;
 struct tag_message;
 
-#pragma pack(push, 1)
 class textWidget : public widget {
 public:
     char* m_text;
@@ -34,5 +33,4 @@ public:
     void SetColorIndex(i16 color);
     void SetText(char* text);
 };
-#pragma pack(pop)
 #endif

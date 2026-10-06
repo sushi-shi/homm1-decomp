@@ -1,12 +1,16 @@
 #include <H1/Ints.h>
 
+#include <mss.h>
+
 #include <BASE/audiereBackend.h>
 #include <BASE/audio.h>
 #include <BASE/resourceManager.h>
 #include <BASE/sample.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/NOOPT.h>
+#include <SOURCE/smackManager.h>
 
+#include <limits.h>
 #include <stdio.h>
 
 #ifndef HOMM1_EDITOR
@@ -377,3 +381,91 @@ void SetVolumes(int effects, int music) {
     SetEffectsVolume(effects);
     SetMusicVolume(music);
 }
+
+#ifndef HOMM1_EDITOR
+
+// Movie sound goes through Miles, which Smacker drives directly. The editor
+// plays no movies.
+
+#pragma pack(push, 1)
+struct SmackSoundFormat {
+    DWORD format;
+    WORD channels;
+    DWORD samplesPerSecond;
+    WORD bitsPerSample;
+};
+#pragma pack(pop)
+
+static SmackSoundFormat gSmackSoundFormats[SMACK_SOUND_FORMAT_COUNT] = {
+    {WAVE_FORMAT_4S16, 2, 44100, 16},
+    {WAVE_FORMAT_4S08, 2, 44100, 8},
+    {WAVE_FORMAT_4M16, 1, 44100, 16},
+    {WAVE_FORMAT_4M08, 1, 44100, 8},
+    {WAVE_FORMAT_2S16, 2, 22050, 16},
+    {WAVE_FORMAT_2S08, 2, 22050, 8},
+    {WAVE_FORMAT_2M16, 1, 22050, 16},
+    {WAVE_FORMAT_2M08, 1, 22050, 8},
+    {WAVE_FORMAT_1S16, 2, 11025, 16},
+    {WAVE_FORMAT_1S08, 2, 11025, 8},
+    {WAVE_FORMAT_1M16, 1, 11025, 16},
+    {WAVE_FORMAT_1M08, 1, 11025, 8}
+};
+static WAVEOUTCAPS gSmackWaveCaps;
+static SmackSoundFormat gSmackAudioFormat;
+static PCMWAVEFORMAT gSmackPcmFormat;
+static HDIGDRIVER gSmackDigDriver;
+
+void InitSmackSound() {
+    if (gSmackDigDriver)
+        return;
+    if (!waveOutGetNumDevs())
+        return;
+    if (waveOutGetDevCaps(0, &gSmackWaveCaps, sizeof(gSmackWaveCaps)))
+        return;
+    gSmackAudioFormat.format = 0;
+    for (u32 i = 0; i < SMACK_SOUND_FORMAT_COUNT; ++i) {
+        if (gSmackWaveCaps.dwFormats & gSmackSoundFormats[i].format) {
+            gSmackAudioFormat.format = gSmackSoundFormats[i].format;
+            gSmackAudioFormat.channels = gSmackSoundFormats[i].channels;
+            gSmackAudioFormat.samplesPerSecond = gSmackSoundFormats[i].samplesPerSecond;
+            gSmackAudioFormat.bitsPerSample = gSmackSoundFormats[i].bitsPerSample;
+            break;
+        }
+    }
+    if (!gSmackAudioFormat.format) {
+        gSmackAudioFormat.channels = SMACK_FALLBACK_CHANNELS;
+        gSmackAudioFormat.samplesPerSecond = SMACK_FALLBACK_SAMPLE_RATE;
+        gSmackAudioFormat.bitsPerSample = SMACK_FALLBACK_BITS_PER_SAMPLE;
+    }
+    AIL_startup();
+    gSmackPcmFormat.wf.wFormatTag = WAVE_FORMAT_PCM;
+    gSmackPcmFormat.wf.nChannels = gSmackAudioFormat.channels;
+    gSmackPcmFormat.wf.nSamplesPerSec = gSmackAudioFormat.samplesPerSecond;
+    gSmackPcmFormat.wf.nAvgBytesPerSec = gSmackAudioFormat.samplesPerSecond
+                                         * (gSmackAudioFormat.bitsPerSample / CHAR_BIT)
+                                         * gSmackAudioFormat.channels;
+    gSmackPcmFormat.wf.nBlockAlign =
+        (gSmackAudioFormat.bitsPerSample / CHAR_BIT) * gSmackAudioFormat.channels;
+    gSmackPcmFormat.wBitsPerSample = gSmackAudioFormat.bitsPerSample;
+    if (AIL_waveOutOpen(&gSmackDigDriver, NULL, 0, &gSmackPcmFormat.wf))
+        gSmackDigDriver = NULL;
+}
+
+void ShutdownSmackSound() {
+    if (gSmackDigDriver) {
+        AIL_waveOutClose(gSmackDigDriver);
+        gSmackDigDriver = NULL;
+        AIL_shutdown();
+    }
+}
+
+i32 SmackSoundReady() {
+    return gSmackDigDriver != NULL;
+}
+
+void UseSmackSound(i32 volume) {
+    AIL_set_digital_master_volume(gSmackDigDriver, volume);
+    SmackSoundUseMSS(gSmackDigDriver);
+}
+
+#endif

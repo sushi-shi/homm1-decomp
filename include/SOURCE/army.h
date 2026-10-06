@@ -61,7 +61,6 @@ enum ArmyLuck {
 
 #define ARMY_FACING_ORIENTATION(facing) (facing)
 
-#pragma pack(push, 1)
 class army {
 public:
     i8 m_targetSide;
@@ -164,7 +163,6 @@ public:
     i16 ValidRange(i16 targetHex);
     i16 GetBestDirection(i16 sourceHex, i16 targetHex, i16 blockedMask);
 };
-#pragma pack(pop)
 
 #define ARMY_IGNORES_SPELLS(a)                                                                     \
     ((a)->m_creatureType == CREATURE_DRAGON || (a)->m_spellEffect == SPELL_ANTI_MAGIC)

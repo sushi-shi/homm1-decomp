@@ -1,5 +1,7 @@
 #include <H1/Ints.h>
 
+#include <PLATFORM/File.h>
+
 #include <BASE/bitmap.h>
 #include <BASE/bmap2.h>
 #include <BASE/display.h>
@@ -420,7 +422,7 @@ void CreateFizzleTables(void) {
     i32 cycleFrame;
     u32 r;
     u32 b;
-    FILE* fp;
+    i32 fp;
     float* blend;
 
     paletteColors = reinterpret_cast<u8(*)[PALETTE_GRAPHICS_CHANNELS]>(gBufferPalette->m_data);
@@ -436,9 +438,9 @@ void CreateFizzleTables(void) {
             for (b = 0; b < PALETTE_CUBE_LEVELS; b++) {
                 minDist = PALETTE_NEAREST_DISTANCE_LIMIT;
                 for (src = 0; src < PALETTE_COLOR_COUNT; src++) {
-                    delta = abs(paletteColors[src][PALETTE_CHANNEL_RED] - r)
-                            + abs(paletteColors[src][PALETTE_CHANNEL_GREEN] - g)
-                            + abs(paletteColors[src][PALETTE_CHANNEL_BLUE] - b);
+                    delta = abs(static_cast<i32>(paletteColors[src][PALETTE_CHANNEL_RED] - r))
+                            + abs(static_cast<i32>(paletteColors[src][PALETTE_CHANNEL_GREEN] - g))
+                            + abs(static_cast<i32>(paletteColors[src][PALETTE_CHANNEL_BLUE] - b));
                     if (delta < minDist) {
                         minDist = delta;
                         rgbCube[r][g][b] = src;
@@ -470,9 +472,9 @@ void CreateFizzleTables(void) {
             }
         }
         sprintf(gText, "CCYCLE%02d.BIN", cycleFrame);
-        fp = fopen(gText, "wb");
-        fwrite(table, FIZZLE_CYCLE_TABLE_BYTES, 1, fp);
-        fclose(fp);
+        fp = FileOpen(gText, FILE_OPEN_WRITE);
+        FileWrite(fp, table, FIZZLE_CYCLE_TABLE_BYTES);
+        FileClose(fp);
     }
     free(rgbCube);
     free(table);

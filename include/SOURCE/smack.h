@@ -1,6 +1,16 @@
 #ifndef HOMM1_SOURCE_SMACK_H
 #define HOMM1_SOURCE_SMACK_H
 
+// The Smacker SDK as the game uses it. On Windows it is SMACKW32.DLL; the
+// native port implements the same calls itself.
+#if defined(_WIN32) && !defined(HOMM1_PORT)
+#define SMACK_IMPORT __declspec(dllimport)
+#define SMACK_CALL __stdcall
+#else
+#define SMACK_IMPORT
+#define SMACK_CALL
+#endif
+
 enum SmackApiConstant {
     SMACK_PRELOAD_ALL = 0x200,
     SMACK_TRACK_1 = 0x2000,
@@ -11,30 +21,30 @@ enum SmackApiConstant {
 
 #pragma pack(push, 1)
 struct Smack {
-    unsigned long Version;
-    unsigned long Width;
-    unsigned long Height;
-    unsigned long Frames;
-    unsigned long MSPerFrame;
-    unsigned long SmackerType;
-    unsigned long LargestInTrack[7];
-    unsigned long tablesize;
-    unsigned long codesize;
-    unsigned long absize;
-    unsigned long detailsize;
-    unsigned long typesize;
-    unsigned long TrackType[7];
-    unsigned long extra;
-    unsigned long NewPalette;
+    u32 Version;
+    u32 Width;
+    u32 Height;
+    u32 Frames;
+    u32 MSPerFrame;
+    u32 SmackerType;
+    u32 LargestInTrack[7];
+    u32 tablesize;
+    u32 codesize;
+    u32 absize;
+    u32 detailsize;
+    u32 typesize;
+    u32 TrackType[7];
+    u32 extra;
+    u32 NewPalette;
     unsigned char Palette[772];
-    unsigned long PalType;
-    unsigned long FrameNum;
-    unsigned long FrameSize;
-    unsigned long SndSize;
-    long LastRectx;
-    long LastRecty;
-    long LastRectw;
-    long LastRecth;
+    u32 PalType;
+    u32 FrameNum;
+    u32 FrameSize;
+    u32 SndSize;
+    i32 LastRectx;
+    i32 LastRecty;
+    i32 LastRectw;
+    i32 LastRecth;
 };
 typedef struct SmackSumTag {
     u32 TotalTime;
@@ -61,23 +71,23 @@ typedef struct SmackSumTag {
 } SmackSum;
 #pragma pack(pop)
 
-extern "C" __declspec(dllimport) Smack* __stdcall SmackOpen(char*, unsigned long, long);
-extern "C" __declspec(dllimport) void __stdcall SmackClose(Smack*);
-extern "C" __declspec(dllimport) unsigned long __stdcall SmackDoFrame(Smack*);
-extern "C" __declspec(dllimport) void __stdcall SmackNextFrame(Smack*);
-extern "C" __declspec(dllimport) void __stdcall SmackToBuffer(
+extern "C" SMACK_IMPORT Smack* SMACK_CALL SmackOpen(char*, u32, i32);
+extern "C" SMACK_IMPORT void SMACK_CALL SmackClose(Smack*);
+extern "C" SMACK_IMPORT u32 SMACK_CALL SmackDoFrame(Smack*);
+extern "C" SMACK_IMPORT void SMACK_CALL SmackNextFrame(Smack*);
+extern "C" SMACK_IMPORT void SMACK_CALL SmackToBuffer(
     Smack*,
-    unsigned long,
-    unsigned long,
-    unsigned long,
-    unsigned long,
+    u32,
+    u32,
+    u32,
+    u32,
     void*,
-    unsigned long
+    u32
 );
-extern "C" __declspec(dllimport) unsigned long __stdcall SmackToBufferRect(Smack*, unsigned long);
-extern "C" __declspec(dllimport) unsigned long __stdcall SmackWait(Smack*);
-extern "C" __declspec(dllimport) unsigned char __stdcall SmackSoundUseMSS(void*);
+extern "C" SMACK_IMPORT u32 SMACK_CALL SmackToBufferRect(Smack*, u32);
+extern "C" SMACK_IMPORT u32 SMACK_CALL SmackWait(Smack*);
+extern "C" SMACK_IMPORT unsigned char SMACK_CALL SmackSoundUseMSS(void*);
 
-extern "C" __declspec(dllimport) void __stdcall SmackSummary(Smack*, SmackSum*);
+extern "C" SMACK_IMPORT void SMACK_CALL SmackSummary(Smack*, SmackSum*);
 
 #endif

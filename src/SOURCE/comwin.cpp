@@ -1,6 +1,6 @@
 #include <H1/Ints.h>
 
-#include <SOURCE/comwin.h>
+#include <SOURCE/comwinHost.h>
 #include <SOURCE/KB.h>
 
 #define WIN32_LEAN_AND_MEAN

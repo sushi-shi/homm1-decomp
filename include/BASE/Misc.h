@@ -7,8 +7,10 @@ enum FileDescriptorConstant {
     FILE_DESCRIPTOR_INVALID = -1
 };
 
-#define READ_FILE_VALUE(fd, value) read((fd), &(value), sizeof(value))
-#define WRITE_FILE_VALUE(fd, value) write((fd), &(value), sizeof(value))
+#include <PLATFORM/File.h>
+
+#define READ_FILE_VALUE(fd, value) FileRead((fd), &(value), sizeof(value))
+#define WRITE_FILE_VALUE(fd, value) FileWrite((fd), &(value), sizeof(value))
 
 #define MANHATTAN_LENGTH(dx, dy) (abs((dx)) + abs((dy)))
 

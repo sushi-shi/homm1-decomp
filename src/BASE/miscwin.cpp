@@ -1,10 +1,6 @@
-#define WIN32_LEAN_AND_MEAN
-
 #include <H1/Ints.h>
 
 #include <BASE/miscwin.h>
-
-#include <windows.h>
 
 #include <BASE/bitmap.h>
 #include <BASE/bmap2.h>
@@ -60,15 +56,12 @@ void BlitBitmapToScreen(
                 height += SCREEN_BLIT_ENLARGE_PIXELS;
         }
     }
-    RECT invalidRectangle;
-    invalidRectangle.left = destinationX * gMainWinScreenWidth / LOGICAL_SCREEN_WIDTH;
-    invalidRectangle.top = destinationY * gMainWinScreenHeight / LOGICAL_SCREEN_HEIGHT;
-    invalidRectangle.right =
-        (destinationX + width) * gMainWinScreenWidth / LOGICAL_SCREEN_WIDTH - 1;
-    invalidRectangle.bottom =
-        (destinationY + height) * gMainWinScreenHeight / LOGICAL_SCREEN_HEIGHT - 1;
-    InvalidateRect(gAppWindow, &invalidRectangle, FALSE);
-    UpdateWindow(gAppWindow);
+    KBPaintScreen(
+        destinationX * gMainWinScreenWidth / LOGICAL_SCREEN_WIDTH,
+        destinationY * gMainWinScreenHeight / LOGICAL_SCREEN_HEIGHT,
+        (destinationX + width) * gMainWinScreenWidth / LOGICAL_SCREEN_WIDTH - 1,
+        (destinationY + height) * gMainWinScreenHeight / LOGICAL_SCREEN_HEIGHT - 1
+    );
 }
 
 void GrabScreenBitmap(bitmap* destination, i32 x, i32 y) {
@@ -221,14 +214,14 @@ void ClippedMonoIconToBitmap(
     u8* source = sourceIcon->m_data + entry->srcOffset;
     i32 curX = x + entry->x;
     i32 curY = y + entry->y;
-    BOOL decoding = TRUE;
+    bool decoding = true;
     while (decoding) {
         if (static_cast<i8>(*source) < 0) {
             if ((*source & ICON_MONO_SKIP_MASK) != 0) {
                 curX += *source & ICON_MONO_SKIP_MASK;
                 source++;
             } else
-                decoding = FALSE;
+                decoding = false;
         } else if (*source != ICON_MONO_NEWLINE_COMMAND) {
             if (curY >= clipY && curY <= clipBottom && curX + *source >= clipX
                 && curX <= clipRight) {
@@ -280,7 +273,7 @@ static u8* gClipSource;
 static i32 gClipLimitX;
 static i32 gClipX;
 static u32 gClipRun;
-static BOOL gClipInside;
+static bool gClipInside;
 static u8 gMiscScanTable[64];
 
 void ClipIconToBitmap(
@@ -309,9 +302,9 @@ void ClipIconToBitmap(
             clipW,
             clipH
         )) {
-        gClipInside = TRUE;
+        gClipInside = true;
     } else {
-        gClipInside = FALSE;
+        gClipInside = false;
         gClipLimitX = clipX + clipW - 1;
         gClipLimitY = clipY + clipH - 1;
     }

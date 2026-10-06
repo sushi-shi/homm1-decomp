@@ -3,7 +3,6 @@
 
 #include <SOURCE/combatTypes.h>
 
-#pragma pack(push, 1)
 class hexcell {
 public:
     i16 m_x;
@@ -24,7 +23,6 @@ public:
     void DrawWall(void);
     void DrawObstacle(void);
 };
-#pragma pack(pop)
 
 #define HEX_HAS_OCCUPANT(cell, side, index)                                                        \
     ((cell).m_occupantSide == (side) && (cell).m_occupantIndex == (index))

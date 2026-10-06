@@ -1,8 +1,4 @@
-#define WIN32_LEAN_AND_MEAN
-
 #include <H1/Ints.h>
-
-#include <windows.h>
 
 #include <BASE/heroWindowManager.h>
 #include <BASE/inputManager.h>
@@ -14,7 +10,8 @@
 #include <SOURCE/philAI.h>
 #include <SOURCE/wingraph.h>
 
-#include <io.h>
+#include <PLATFORM/File.h>
+
 #include <string.h>
 
 #ifdef HOMM1_EDITOR
@@ -43,12 +40,12 @@ b32 KeyboardMessageHandler(void* window, u32 message, u32 virtualKey, i32 messag
     event->keyCode = INPUT_SCAN_NONE;
 
     switch (message) {
-        case WM_KEYDOWN:
+        case INPUT_MESSAGE_KEY_DOWN:
             event->type = MESSAGE_KEY_DOWN;
-            if (virtualKey == VK_RETURN)
+            if (virtualKey == INPUT_VIRTUAL_KEY_RETURN)
                 event->keyCode = INPUT_SCAN_ENTER;
             else
-                event->keyCode = HIWORD(messageData) & INPUT_SCAN_CODE_MASK;
+                event->keyCode = INPUT_MESSAGE_SCAN_CODE(messageData);
             event->y = 0;
             event->modifiers = MESSAGE_MODIFIER_NONE;
             switch (event->keyCode) {
@@ -66,12 +63,12 @@ b32 KeyboardMessageHandler(void* window, u32 message, u32 virtualKey, i32 messag
                     break;
             }
             break;
-        case WM_KEYUP:
+        case INPUT_MESSAGE_KEY_UP:
             event->type = MESSAGE_KEY_UP;
-            if (virtualKey == VK_RETURN)
+            if (virtualKey == INPUT_VIRTUAL_KEY_RETURN)
                 event->keyCode = INPUT_SCAN_ENTER;
             else
-                event->keyCode = HIWORD(messageData) & INPUT_SCAN_CODE_MASK;
+                event->keyCode = INPUT_MESSAGE_SCAN_CODE(messageData);
             event->y = 0;
             event->modifiers = MESSAGE_MODIFIER_NONE;
             switch (event->keyCode) {
@@ -105,8 +102,8 @@ b32 KeyboardMessageHandler(void* window, u32 message, u32 virtualKey, i32 messag
                 && (event->modifiers & MESSAGE_MODIFIER_SHIFT_KEYS))
                 gWindowManager->ScreenShot();
             if (event->type == MESSAGE_KEY_DOWN && event->keyCode == INPUT_SCAN_F1) {
-                SetFullScreenStatus(FALSE);
-                AppCommand(gAppWindow, 0, KBWIN_MENU_HELP, 0);
+                SetFullScreenStatus(0);
+                AppMenuCommand(KBWIN_MENU_HELP);
             }
             if (event->type == MESSAGE_KEY_DOWN && event->keyCode == INPUT_SCAN_F4)
                 SetFullScreenStatus(1 - CURRENT_GRAPHICS_CONFIG.fullScreen);
@@ -124,7 +121,6 @@ b32 MouseMessageHandler(void* window, u32 message, u32 keyFlags, i32 messageData
         return true;
     gInputManager->m_mouseMessageActive = 1;
 
-    i32 captureReleased;
     tag_message* event = &gInputManager->m_eventRing[gInputManager->m_writeIndex];
     event->modifiers = MESSAGE_MODIFIER_NONE;
     event->y = 0;
@@ -132,39 +128,39 @@ b32 MouseMessageHandler(void* window, u32 message, u32 keyFlags, i32 messageData
     event->type = MESSAGE_NONE;
 
     switch (message) {
-        case WM_MOUSEMOVE:
+        case INPUT_MESSAGE_MOUSE_MOVE:
             event->type = MESSAGE_MOUSE_MOVE;
             goto mouseCoordinates;
-        case WM_LBUTTONDBLCLK:
+        case INPUT_MESSAGE_LEFT_DOUBLE:
             event->type = MESSAGE_LEFT_BUTTON_DOWN;
             goto mouseCoordinates;
-        case WM_LBUTTONDOWN:
+        case INPUT_MESSAGE_LEFT_DOWN:
             event->type = MESSAGE_LEFT_BUTTON_DOWN;
-            SetCapture(gAppWindow);
+            KBCaptureMouse();
             goto mouseCoordinates;
-        case WM_RBUTTONDOWN:
+        case INPUT_MESSAGE_RIGHT_DOWN:
             event->type = MESSAGE_RIGHT_BUTTON_DOWN;
-            SetCapture(gAppWindow);
+            KBCaptureMouse();
             goto mouseCoordinates;
-        case WM_RBUTTONDBLCLK:
+        case INPUT_MESSAGE_RIGHT_DOUBLE:
             event->type = MESSAGE_RIGHT_BUTTON_DOWN;
             goto mouseCoordinates;
-        case WM_LBUTTONUP:
+        case INPUT_MESSAGE_LEFT_UP:
             event->type = MESSAGE_LEFT_BUTTON_UP;
-            captureReleased = ReleaseCapture();
+            KBReleaseMouse();
             goto mouseCoordinates;
-        case WM_RBUTTONUP:
+        case INPUT_MESSAGE_RIGHT_UP:
             event->type = MESSAGE_RIGHT_BUTTON_UP;
-            captureReleased = ReleaseCapture();
+            KBReleaseMouse();
 
         mouseCoordinates:
             H1_ASSERT(gMainWinScreenHeight > 0 && gMainWinScreenWidth > 0);
-            event->x = CLIENT_TO_GAME_X(LOWORD(messageData));
-            event->y = CLIENT_TO_GAME_Y(HIWORD(messageData));
+            event->x = CLIENT_TO_GAME_X(INPUT_MESSAGE_X(messageData));
+            event->y = CLIENT_TO_GAME_Y(INPUT_MESSAGE_Y(messageData));
     }
 
 mouseMoveCursorCheck:
-    if (message == WM_MOUSEMOVE && gMouseManager != NULL) {
+    if (message == INPUT_MESSAGE_MOUSE_MOVE && gMouseManager != NULL) {
         if (event->x > INPUT_CURSOR_INTERIOR_X_MIN && event->x < INPUT_CURSOR_INTERIOR_X_MAX
             && event->y > INPUT_CURSOR_INTERIOR_Y_MIN && event->y < INPUT_CURSOR_INTERIOR_Y_MAX)
             gMouseManager->SetPointer(MOUSE_KEEP_CURRENT_FRAME);
@@ -219,7 +215,7 @@ void inputManager::Close(void) {
     if (m_active != 1)
         return;
     if (m_recordFile != FILE_DESCRIPTOR_INVALID)
-        close(m_recordFile);
+        FileClose(m_recordFile);
     ResetEventQueue(this);
     m_requestedPriority = 0;
     m_active = 0;

@@ -2,9 +2,6 @@
 
 #include <BASE/audio.h>
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-
 #include <BASE/BITS.h>
 #include <BASE/BMAP2.h>
 #include <BASE/display.h>

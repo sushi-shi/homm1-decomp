@@ -1,5 +1,8 @@
 #include <H1/Ints.h>
 
+#include <PLATFORM/File.h>
+#include <PLATFORM/Records.h>
+
 #include <BASE/audio.h>
 #include <BASE/BITS.h>
 #include <BASE/executive.h>
@@ -38,69 +41,12 @@
 #include <SOURCE/philAI.h>
 #include <SOURCE/playerData.h>
 #include <SOURCE/REMOTE.h>
+#include <SOURCE/saveRecords.h>
 #include <SOURCE/town.h>
 
-#include <fcntl.h>
-#include <io.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/stat.h>
-
-void playerData::Write(i32 file) {
-    char unused[52];
-
-    write(file, m_unused00, sizeof(m_unused00));
-    WRITE_FILE_VALUE(file, m_color);
-    WRITE_FILE_VALUE(file, m_difficulty);
-    WRITE_FILE_VALUE(file, m_heroCount);
-    WRITE_FILE_VALUE(file, m_currentHero);
-    WRITE_FILE_VALUE(file, m_heroLocatorPage);
-    write(file, m_heroIds, sizeof(m_heroIds));
-    write(file, m_availableHeroIds, sizeof(m_availableHeroIds));
-    memset(unused, 0, PLAYER_SAVE_PAD_SIZE);
-    write(file, unused, PLAYER_SAVE_PAD_SIZE);
-    WRITE_FILE_VALUE(file, m_ultimateArtifactHintChance);
-    WRITE_FILE_VALUE(file, m_ultimateArtifactHintX);
-    WRITE_FILE_VALUE(file, m_ultimateArtifactHintY);
-    WRITE_FILE_VALUE(file, m_daysLeft);
-    WRITE_FILE_VALUE(file, m_townCount);
-    WRITE_FILE_VALUE(file, m_currentTown);
-    WRITE_FILE_VALUE(file, m_townLocatorPage);
-    write(file, m_townIds, sizeof(m_townIds));
-    write(file, m_resources, sizeof(m_resources));
-    write(file, m_aiData.m_income, sizeof(m_aiData.m_income));
-    WRITE_FILE_VALUE(file, m_unused9a);
-    WRITE_FILE_VALUE(file, m_unused9a);
-    write(file, m_puzzlePiecesRemoved, sizeof(m_puzzlePiecesRemoved));
-}
-
-void playerData::Read(i32 file) {
-    char unused[52];
-
-    read(file, m_unused00, sizeof(m_unused00));
-    READ_FILE_VALUE(file, m_color);
-    READ_FILE_VALUE(file, m_difficulty);
-    READ_FILE_VALUE(file, m_heroCount);
-    READ_FILE_VALUE(file, m_currentHero);
-    READ_FILE_VALUE(file, m_heroLocatorPage);
-    read(file, m_heroIds, sizeof(m_heroIds));
-    read(file, m_availableHeroIds, sizeof(m_availableHeroIds));
-    read(file, unused, PLAYER_SAVE_PAD_SIZE);
-    READ_FILE_VALUE(file, m_ultimateArtifactHintChance);
-    READ_FILE_VALUE(file, m_ultimateArtifactHintX);
-    READ_FILE_VALUE(file, m_ultimateArtifactHintY);
-    READ_FILE_VALUE(file, m_daysLeft);
-    READ_FILE_VALUE(file, m_townCount);
-    READ_FILE_VALUE(file, m_currentTown);
-    READ_FILE_VALUE(file, m_townLocatorPage);
-    read(file, m_townIds, sizeof(m_townIds));
-    read(file, m_resources, sizeof(m_resources));
-    read(file, m_aiData.m_income, sizeof(m_aiData.m_income));
-    READ_FILE_VALUE(file, m_unused9a);
-    READ_FILE_VALUE(file, m_unused9a);
-    read(file, m_puzzlePiecesRemoved, sizeof(m_puzzlePiecesRemoved));
-}
 
 i8 playerData::NextHero(i32) {
     i32 curHero = -1;
@@ -401,12 +347,18 @@ void GenerateStandardFileName(char* source, char* destination) {
     strcpy(destination + indexOut, ext);
 }
 
-inline void game::ReadWorldMap(i32 fd) {
-    read(fd, m_map, sizeof(m_map));
+inline void game::ReadWorldMap(RecordReader& in) {
+    for (i32 y = 0; y < MAP_CELL_GRID_SIZE; y++) {
+        for (i32 x = 0; x < MAP_CELL_GRID_SIZE; x++)
+            ReadMapCell(in, m_map[y][x]);
+    }
 }
 
-inline void game::WriteWorldMap(i32 fd) {
-    write(fd, m_map, sizeof(m_map));
+inline void game::WriteWorldMap(RecordWriter& out) {
+    for (i32 y = 0; y < MAP_CELL_GRID_SIZE; y++) {
+        for (i32 x = 0; x < MAP_CELL_GRID_SIZE; x++)
+            WriteMapCell(out, m_map[y][x]);
+    }
 }
 
 i16 game::SaveGame(char* filename, b8 generateName) {
@@ -416,7 +368,7 @@ i16 game::SaveGame(char* filename, b8 generateName) {
     i32 mySaveFlag;
     char humans[GAME_PLAYER_COUNT];
     i32 iFile;
-    i32 outFile;
+    RecordWriter outFile;
     i32 scratchVals[4];
     char savePath[452];
     char genName[452];
@@ -435,7 +387,7 @@ i16 game::SaveGame(char* filename, b8 generateName) {
             sprintf(genName, "%s.GM%d", filename, nHuman);
         }
     } else {
-        sprintf(genName, filename);
+        strcpy(genName, filename);
     }
     if (!stricmp(genName, "REMOTE.GAM")) {
         sprintf(savePath, "%s%s", gDataPath, genName);
@@ -449,64 +401,66 @@ i16 game::SaveGame(char* filename, b8 generateName) {
             ))
             strcpy(gGame->m_saveName, filename);
     }
-    outFile = open(savePath, O_WRONLY | O_CREAT | O_TRUNC | O_BINARY, S_IWRITE);
-    if (outFile == FILE_DESCRIPTOR_INVALID)
-        FileError(savePath);
-    WRITE_FILE_VALUE(outFile, gIAmGreatest);
-    write(outFile, this, 2);
-    WRITE_FILE_VALUE(outFile, gMonthType);
-    WRITE_FILE_VALUE(outFile, gMonthTypeExtra);
-    WRITE_FILE_VALUE(outFile, gWeekType);
-    WRITE_FILE_VALUE(outFile, gWeekTypeExtra);
-    WRITE_FILE_VALUE(outFile, m_campaignType);
-    WRITE_FILE_VALUE(outFile, m_campaignScenario);
-    WRITE_FILE_VALUE(outFile, m_campaignDay);
-    WRITE_FILE_VALUE(outFile, m_campaignScenariosWon);
+    outFile.Put(gIAmGreatest);
+    outFile.Put(m_difficultyRating);
+    outFile.Put(gMonthType);
+    outFile.Put(gMonthTypeExtra);
+    outFile.Put(gWeekType);
+    outFile.Put(gWeekTypeExtra);
+    outFile.Put(m_campaignType);
+    outFile.Put(m_campaignScenario);
+    outFile.Put(m_campaignDay);
+    outFile.Put(m_campaignScenariosWon);
     memset(buffer, 0, 0x2c);
-    write(outFile, buffer, 0x2c);
-    write(outFile, m_mapDescription, sizeof(m_mapDescription));
-    WRITE_FILE_VALUE(outFile, m_mapSize);
-    WRITE_FILE_VALUE(outFile, m_mapDifficulty);
-    write(outFile, m_mapName, sizeof(m_mapName));
+    outFile.Put(buffer, 0x2c);
+    outFile.Put(m_mapDescription, sizeof(m_mapDescription));
+    outFile.Put(m_mapSize);
+    outFile.Put(m_mapDifficulty);
+    outFile.Put(m_mapName, sizeof(m_mapName));
     GenerateStandardFileName(m_saveName, buffer);
-    write(outFile, buffer, 0x11);
-    WRITE_FILE_VALUE(outFile, m_difficulty);
-    WRITE_FILE_VALUE(outFile, m_playerCount);
+    outFile.Put(buffer, 0x11);
+    outFile.Put(m_difficulty);
+    outFile.Put(m_playerCount);
     gSavedCurPlayer = gCurPlayer;
-    WRITE_FILE_VALUE(outFile, gSavedCurPlayer);
-    WRITE_FILE_VALUE(outFile, m_deadPlayerCount);
-    write(outFile, m_playerDead, sizeof(m_playerDead));
+    outFile.Put(gSavedCurPlayer);
+    outFile.Put(m_deadPlayerCount);
+    outFile.Put(m_playerDead, sizeof(m_playerDead));
     for (iFile = 0; iFile < GAME_PLAYER_COUNT; iFile++) {
         humans[iFile] = gHumanPlayer[iFile];
         if (m_playerDead[iFile])
             humans[iFile] = 0;
     }
-    write(outFile, humans, GAME_PLAYER_COUNT);
-    WRITE_FILE_VALUE(outFile, m_day);
-    WRITE_FILE_VALUE(outFile, m_week);
-    WRITE_FILE_VALUE(outFile, m_month);
+    outFile.Put(humans, GAME_PLAYER_COUNT);
+    outFile.Put(m_day);
+    outFile.Put(m_week);
+    outFile.Put(m_month);
     for (iFile = 0; iFile < GAME_PLAYER_COUNT; iFile++)
         m_players[iFile].Write(outFile);
     WriteWorldMap(outFile);
-    WRITE_FILE_VALUE(outFile, m_obeliskCount);
-    write(outFile, m_heroRecs, sizeof(m_heroRecs));
-    write(outFile, m_availableHeroes, sizeof(m_availableHeroes));
-    write(outFile, m_castleRecs, sizeof(m_castleRecs));
-    write(outFile, m_townOwners, sizeof(m_townOwners));
-    write(outFile, m_townBuiltToday, sizeof(m_townBuiltToday));
-    write(outFile, m_mines, sizeof(m_mines));
-    write(outFile, m_mineOwners, sizeof(m_mineOwners));
-    write(outFile, m_randomArtifacts, sizeof(m_randomArtifacts));
-    write(outFile, m_boats, sizeof(m_boats));
-    write(outFile, m_boatSlots, sizeof(m_boatSlots));
-    write(outFile, m_obeliskVisitors, sizeof(m_obeliskVisitors));
-    WRITE_FILE_VALUE(outFile, m_ultimateArtifactX);
-    WRITE_FILE_VALUE(outFile, m_ultimateArtifactY);
-    WRITE_FILE_VALUE(outFile, m_ultimateArtifactId);
-    write(outFile, m_mapSounds, sizeof(m_mapSounds));
-    write(outFile, m_mapExtra, sizeof(m_mapExtra));
-    write(outFile, gMapVisitFlags, sizeof(gMapVisitFlags));
-    close(outFile);
+    outFile.Put(m_obeliskCount);
+    for (iFile = 0; iFile < GAME_HERO_COUNT; iFile++)
+        WriteHero(outFile, m_heroRecs[iFile]);
+    outFile.Put(m_availableHeroes, sizeof(m_availableHeroes));
+    for (iFile = 0; iFile < GAME_TOWN_COUNT; iFile++)
+        WriteTown(outFile, m_castleRecs[iFile]);
+    outFile.Put(m_townOwners, sizeof(m_townOwners));
+    outFile.Put(m_townBuiltToday, sizeof(m_townBuiltToday));
+    for (iFile = 0; iFile < GAME_MINE_COUNT; iFile++)
+        WriteMine(outFile, m_mines[iFile]);
+    outFile.Put(m_mineOwners, sizeof(m_mineOwners));
+    outFile.Put(m_randomArtifacts, sizeof(m_randomArtifacts));
+    for (iFile = 0; iFile < GAME_BOAT_COUNT; iFile++)
+        WriteBoat(outFile, m_boats[iFile]);
+    outFile.Put(m_boatSlots, sizeof(m_boatSlots));
+    outFile.Put(m_obeliskVisitors, sizeof(m_obeliskVisitors));
+    outFile.Put(m_ultimateArtifactX);
+    outFile.Put(m_ultimateArtifactY);
+    outFile.Put(m_ultimateArtifactId);
+    outFile.Put(&m_mapSounds[0][0], sizeof(m_mapSounds));
+    outFile.Put(&m_mapExtra[0][0], sizeof(m_mapExtra));
+    outFile.Put(&gMapVisitFlags[0][0], sizeof(gMapVisitFlags));
+    if (!outFile.SaveFile(savePath))
+        FileError(savePath);
     return 1;
 }
 
@@ -514,7 +468,7 @@ i16 game::LoadGame(char* filename, b32 origData, b32) {
     i32 junk2;
     i32 numHumans;
     i32 ix;
-    i32 theLoadHandle;
+    RecordReader theLoadHandle;
     char pathName[452];
     i8 theHumans[GAME_PLAYER_COUNT];
     i32 nextJunk;
@@ -527,34 +481,33 @@ i16 game::LoadGame(char* filename, b32 origData, b32) {
         sprintf(pathName, "%s%s", gDataPath, filename);
     else
         sprintf(pathName, "%s%s", gGamePath, filename);
-    theLoadHandle = open(pathName, O_BINARY);
-    if (theLoadHandle == FILE_DESCRIPTOR_INVALID)
+    if (!theLoadHandle.LoadFile(pathName))
         FileError(pathName);
     ClearMapExtra();
-    READ_FILE_VALUE(theLoadHandle, gIAmGreatest);
-    read(theLoadHandle, this, 2);
-    READ_FILE_VALUE(theLoadHandle, gMonthType);
-    READ_FILE_VALUE(theLoadHandle, gMonthTypeExtra);
-    READ_FILE_VALUE(theLoadHandle, gWeekType);
-    READ_FILE_VALUE(theLoadHandle, gWeekTypeExtra);
-    READ_FILE_VALUE(theLoadHandle, m_campaignType);
-    READ_FILE_VALUE(theLoadHandle, m_campaignScenario);
-    READ_FILE_VALUE(theLoadHandle, m_campaignDay);
-    READ_FILE_VALUE(theLoadHandle, m_campaignScenariosWon);
-    read(theLoadHandle, buffer, 0x2c);
-    read(theLoadHandle, m_mapDescription, sizeof(m_mapDescription));
-    READ_FILE_VALUE(theLoadHandle, m_mapSize);
-    READ_FILE_VALUE(theLoadHandle, m_mapDifficulty);
-    read(theLoadHandle, m_mapName, sizeof(m_mapName));
-    read(theLoadHandle, m_saveName, 0x11);
-    sprintf(m_saveName, filename);
-    READ_FILE_VALUE(theLoadHandle, m_difficulty);
-    READ_FILE_VALUE(theLoadHandle, m_playerCount);
-    READ_FILE_VALUE(theLoadHandle, gSavedCurPlayer);
+    theLoadHandle.Get(gIAmGreatest);
+    m_difficultyRating = theLoadHandle.GetI16();
+    theLoadHandle.Get(gMonthType);
+    theLoadHandle.Get(gMonthTypeExtra);
+    theLoadHandle.Get(gWeekType);
+    theLoadHandle.Get(gWeekTypeExtra);
+    m_campaignType = theLoadHandle.GetI32();
+    m_campaignScenario = theLoadHandle.GetI32();
+    m_campaignDay = theLoadHandle.GetI32();
+    m_campaignScenariosWon = theLoadHandle.GetI32();
+    theLoadHandle.Get(buffer, 0x2c);
+    theLoadHandle.Get(m_mapDescription, sizeof(m_mapDescription));
+    theLoadHandle.Get(m_mapSize);
+    theLoadHandle.Get(m_mapDifficulty);
+    theLoadHandle.Get(m_mapName, sizeof(m_mapName));
+    theLoadHandle.Get(m_saveName, 0x11);
+    strcpy(m_saveName, filename);
+    theLoadHandle.Get(m_difficulty);
+    theLoadHandle.Get(m_playerCount);
+    theLoadHandle.Get(gSavedCurPlayer);
     gCurPlayer = gSavedCurPlayer;
-    READ_FILE_VALUE(theLoadHandle, m_deadPlayerCount);
-    read(theLoadHandle, m_playerDead, sizeof(m_playerDead));
-    read(theLoadHandle, theHumans, GAME_PLAYER_COUNT);
+    theLoadHandle.Get(m_deadPlayerCount);
+    theLoadHandle.Get(m_playerDead, sizeof(m_playerDead));
+    theLoadHandle.Get(theHumans, GAME_PLAYER_COUNT);
     for (ix = 0; ix < GAME_PLAYER_COUNT; ix++) {
         if ((theHumans[ix] || gDebugLevel >= GAME_DEBUG_LEVEL_ALL_HUMAN_MIN)
             && numHumans < gNumHumanPlayers) {
@@ -574,47 +527,52 @@ i16 game::LoadGame(char* filename, b32 origData, b32) {
             gThisNetHumanPlayer[ix] = false;
         }
     }
-    READ_FILE_VALUE(theLoadHandle, m_day);
-    READ_FILE_VALUE(theLoadHandle, m_week);
-    READ_FILE_VALUE(theLoadHandle, m_month);
+    m_day = theLoadHandle.GetU16();
+    m_week = theLoadHandle.GetU16();
+    m_month = theLoadHandle.GetU16();
     gCurTurn = GAME_DAY_NUMBER(*this);
     for (ix = 0; ix < GAME_PLAYER_COUNT; ix++)
         m_players[ix].Read(theLoadHandle);
     ReadWorldMap(theLoadHandle);
-    READ_FILE_VALUE(theLoadHandle, m_obeliskCount);
-    read(theLoadHandle, m_heroRecs, sizeof(m_heroRecs));
+    theLoadHandle.Get(m_obeliskCount);
+    for (ix = 0; ix < GAME_HERO_COUNT; ix++)
+        ReadHero(theLoadHandle, m_heroRecs[ix]);
     if (origData) {
         for (ix = 0; ix < GAME_HERO_COUNT; ix++) {
             strcpy(m_heroRecs[ix].m_name, gHeroNames[ix][0]);
             strcpy(m_heroRecs[ix].m_shortName, gHeroNames[ix][1]);
         }
     }
-    read(theLoadHandle, m_availableHeroes, sizeof(m_availableHeroes));
-    read(theLoadHandle, m_castleRecs, sizeof(m_castleRecs));
-    read(theLoadHandle, m_townOwners, sizeof(m_townOwners));
-    read(theLoadHandle, m_townBuiltToday, sizeof(m_townBuiltToday));
-    read(theLoadHandle, m_mines, sizeof(m_mines));
-    read(theLoadHandle, m_mineOwners, sizeof(m_mineOwners));
-    read(theLoadHandle, m_randomArtifacts, sizeof(m_randomArtifacts));
-    read(theLoadHandle, m_boats, sizeof(m_boats));
-    read(theLoadHandle, m_boatSlots, sizeof(m_boatSlots));
-    read(theLoadHandle, m_obeliskVisitors, sizeof(m_obeliskVisitors));
-    READ_FILE_VALUE(theLoadHandle, m_ultimateArtifactX);
-    READ_FILE_VALUE(theLoadHandle, m_ultimateArtifactY);
-    READ_FILE_VALUE(theLoadHandle, m_ultimateArtifactId);
+    theLoadHandle.Get(m_availableHeroes, sizeof(m_availableHeroes));
+    for (ix = 0; ix < GAME_TOWN_COUNT; ix++)
+        ReadTown(theLoadHandle, m_castleRecs[ix]);
+    theLoadHandle.Get(m_townOwners, sizeof(m_townOwners));
+    theLoadHandle.Get(m_townBuiltToday, sizeof(m_townBuiltToday));
+    for (ix = 0; ix < GAME_MINE_COUNT; ix++)
+        ReadMine(theLoadHandle, m_mines[ix]);
+    theLoadHandle.Get(m_mineOwners, sizeof(m_mineOwners));
+    theLoadHandle.Get(m_randomArtifacts, sizeof(m_randomArtifacts));
+    for (ix = 0; ix < GAME_BOAT_COUNT; ix++)
+        ReadBoat(theLoadHandle, m_boats[ix]);
+    theLoadHandle.Get(m_boatSlots, sizeof(m_boatSlots));
+    theLoadHandle.Get(m_obeliskVisitors, sizeof(m_obeliskVisitors));
+    theLoadHandle.Get(m_ultimateArtifactX);
+    theLoadHandle.Get(m_ultimateArtifactY);
+    theLoadHandle.Get(m_ultimateArtifactId);
     if (origData) {
         memset(m_mapSounds, MAP_SOUND_NONE, sizeof(m_mapSounds));
         memset(m_mapExtra, 0, sizeof(m_mapExtra));
         memset(gMapVisitFlags, 0, sizeof(gMapVisitFlags));
         strcpy(gGame->m_saveName, localization::Tr("save.name.new_game"));
     } else {
-        read(theLoadHandle, m_mapSounds, sizeof(m_mapSounds));
-        read(theLoadHandle, m_mapExtra, sizeof(m_mapExtra));
-        read(theLoadHandle, gMapVisitFlags, sizeof(gMapVisitFlags));
+        theLoadHandle.Get(&m_mapSounds[0][0], sizeof(m_mapSounds));
+        theLoadHandle.Get(&m_mapExtra[0][0], sizeof(m_mapExtra));
+        theLoadHandle.Get(&gMapVisitFlags[0][0], sizeof(gMapVisitFlags));
         if (strcmp(filename, "REMOTE.GAM"))
             strcpy(gGame->m_saveName, filename);
     }
-    close(theLoadHandle);
+    if (!theLoadHandle.Ok())
+        FileError(pathName);
     gAdvManager->m_heroContextLocked = false;
     gCurPlayerData = &gGame->m_players[gCurPlayer];
     gCurPlayerBit = 1 << gCurPlayer;
@@ -1144,7 +1102,8 @@ void game::NewMap(char* mapName) {
     memset(m_mapExtra, 0, sizeof(m_mapExtra));
     memset(gMapVisitFlags, 0, sizeof(gMapVisitFlags));
     RandomizeHeroPool();
-    strcpy(gMapName, mapName);
+    if (mapName != gMapName)
+        strcpy(gMapName, mapName);
     LoadMap(gMapName);
     RandomizeTerrainTiles();
     RandomizePlayerCrests();
@@ -1699,35 +1658,31 @@ void game::RandomizeEvents(void) {
 }
 
 i16 game::LoadMap(char* filename) {
-    void* msg;
     i16 width;
     i8 y;
     i16 height;
     i16 i;
-    i32 handle;
+    RecordReader handle;
     i8 x;
     i8 type;
     i32 wasReserved;
     i16 theVersion;
 
     sprintf(gText, "%s%s", gMapPath, filename);
-    handle = open(gText, O_BINARY);
-    if (handle == FILE_DESCRIPTOR_INVALID)
+    if (!handle.LoadFile(gText))
         FileError(gText);
-    READ_FILE_VALUE(handle, theVersion);
+    handle.Get(theVersion);
     if (theVersion == MAP_HEADER_ID) {
-        msg = malloc(sizeof(SMapHeader));
-        read(handle, msg, sizeof(SMapHeader) - sizeof(theVersion));
-        READ_FILE_VALUE(handle, theVersion);
-        free(msg);
+        handle.Skip(MAP_HEADER_RECORD_SIZE - sizeof(theVersion));
+        handle.Get(theVersion);
     }
-    READ_FILE_VALUE(handle, width);
-    READ_FILE_VALUE(handle, height);
+    handle.Get(width);
+    handle.Get(height);
     ReadWorldMap(handle);
     for (i = 0; i < GAME_TOWN_COUNT; i++) {
-        READ_FILE_VALUE(handle, x);
-        READ_FILE_VALUE(handle, y);
-        READ_FILE_VALUE(handle, type);
+        handle.Get(x);
+        handle.Get(y);
+        handle.Get(type);
         if (x >= 0) {
             m_castleRecs[i].m_x = x;
             m_castleRecs[i].m_y = y;
@@ -1741,29 +1696,43 @@ i16 game::LoadMap(char* filename) {
         }
     }
     for (i = 0; i < GAME_MINE_COUNT; i++) {
-        READ_FILE_VALUE(handle, x);
-        READ_FILE_VALUE(handle, y);
-        READ_FILE_VALUE(handle, type);
+        handle.Get(x);
+        handle.Get(y);
+        handle.Get(type);
         if (x >= 0) {
             m_mines[i].x = x;
             m_mines[i].y = y;
             m_mines[i].type = type;
         }
     }
-    read(handle, m_randomArtifacts, sizeof(m_randomArtifacts));
-    READ_FILE_VALUE(handle, m_obeliskCount);
-    read(handle, m_mapSounds, sizeof(m_mapSounds));
+    handle.Get(m_randomArtifacts, sizeof(m_randomArtifacts));
+    handle.Get(m_obeliskCount);
+    handle.Get(&m_mapSounds[0][0], sizeof(m_mapSounds));
     if (theVersion >= MAP_EXTRA_VERSION) {
-        READ_FILE_VALUE(handle, gMaxMapExtra);
+        handle.Get(gMaxMapExtra);
+        // The record count and each record's length come from the file: a
+        // count beyond the table or a length beyond the file is an invalid
+        // map, not a reason to write past the table.
+        if (gMaxMapExtra < 1 || gMaxMapExtra > MAP_EXTRA_RECORD_CAPACITY)
+            FileError(gText);
         for (i = 1; i < gMaxMapExtra; i++) {
-            READ_FILE_VALUE(handle, gMapExtraSizes[i]);
-            gMapExtraBlocks[i] = malloc(gMapExtraSizes[i]);
-            read(handle, gMapExtraBlocks[i], gMapExtraSizes[i]);
+            handle.Get(gMapExtraSizes[i]);
+            if (gMapExtraSizes[i] < 0 || gMapExtraSizes[i] > handle.Remaining())
+                FileError(gText);
+            // Blocks are read through their record structures; a short
+            // block reads as zeros past its end instead of past the heap
+            // allocation.
+            i32 allocated = gMapExtraSizes[i] > MAP_EXTRA_RECORD_MAX_SIZE
+                                ? gMapExtraSizes[i]
+                                : MAP_EXTRA_RECORD_MAX_SIZE;
+            gMapExtraBlocks[i] = calloc(1, allocated);
+            handle.Bytes(gMapExtraBlocks[i], gMapExtraSizes[i]);
         }
     } else {
         gMaxMapExtra = 1;
     }
-    close(handle);
+    if (!handle.Ok())
+        FileError(gText);
     return 0;
 }
 
@@ -4079,15 +4048,15 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
     if (REMOTE_SAVE_ENCODED())
         mainOutData = static_cast<char*>(malloc(dataSize));
     dataObj = static_cast<char*>(malloc(dataSize));
-    mainFile = open(curPathname, O_BINARY);
+    mainFile = FileOpen(curPathname, FILE_OPEN_READ);
     if (mainFile == FILE_DESCRIPTOR_INVALID)
         FileError(curPathname);
     if (mainFile == FILE_DESCRIPTOR_INVALID) {
         goto cleanup;
     }
     {
-        read(mainFile, dataObj, dataSize);
-        close(mainFile);
+        FileRead(mainFile, dataObj, dataSize);
+        FileClose(mainFile);
         if (REMOTE_SAVE_ENCODED())
             dataSize = EncodeData(mainOutData, dataObj, dataSize);
         else
@@ -4281,11 +4250,11 @@ b32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
     else
         decodedData = curInData;
     sprintf(pathname, "%s%s", gDataPath, "REMOTE.GAM");
-    handleValue = open(pathname, O_WRONLY | O_CREAT | O_TRUNC | O_BINARY, S_IWRITE);
+    handleValue = FileOpen(pathname, FILE_OPEN_WRITE);
     if (handleValue == FILE_DESCRIPTOR_INVALID)
         FileError(pathname);
-    write(handleValue, decodedData, dataSize);
-    close(handleValue);
+    FileWrite(handleValue, decodedData, dataSize);
+    FileClose(handleValue);
     okay = true;
     free(sendPacket);
     free(curInData);

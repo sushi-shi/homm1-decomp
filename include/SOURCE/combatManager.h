@@ -113,7 +113,6 @@ enum CombatAIAttackPlan {
     COMBAT_AI_ATTACK_WALK = 3
 };
 
-#pragma pack(push, 1)
 class combatManager : public baseManager {
 public:
     bool m_restoreMusicSuspension;
@@ -302,7 +301,6 @@ public:
     i8 WalkTowardArmyFront(class army* currentArmy, i8 side, i16 mask);
     i8 WalkTowardArmy(class army* currentArmy, i8 side, i16 mask);
 };
-#pragma pack(pop)
 
 i32 ValidHex(i32 hex);
 i16 WinCombatHandler(struct tag_message& message);

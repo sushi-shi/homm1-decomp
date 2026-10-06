@@ -423,7 +423,7 @@ static void InsertNode(i16 node)
             }
         }
         for (i = 1; i < LOOK_AHEAD; ++i) {
-            cmp = *(reinterpret_cast<u8 *>(reinterpret_cast<u32>(key) + static_cast<i32>(i))) - text_buf[p + i];
+            cmp = key[i] - text_buf[p + i];
             if (cmp != 0)
                 break;
         }

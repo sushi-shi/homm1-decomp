@@ -45,7 +45,6 @@ enum WidgetIdConstant {
      (w)->m_width = (resources)->ReadWord(),                                                       \
      (w)->m_height = (resources)->ReadWord())
 
-#pragma pack(push, 1)
 class widget  {
 public:
     heroWindow* m_owner;
@@ -69,5 +68,4 @@ public:
     void Close(void);
     void Dim(void);
 };
-#pragma pack(pop)
 #endif

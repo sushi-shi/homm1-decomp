@@ -34,7 +34,6 @@ enum HeroWindowConstant {
     WINDOW_ALL_WIDGETS_HIGH = 65535
 };
 
-#pragma pack(push, 1)
 class heroWindow {
 public:
     i16 m_zOrder;
@@ -66,7 +65,6 @@ public:
     void RestoreBackground(void);
     void MoveWindow(i16 dx, i16 dy);
 };
-#pragma pack(pop)
 enum WindowWidgetRecordType {
     WIDGET_RECORD_END = 0,
     WIDGET_RECORD_BORDER = 1,

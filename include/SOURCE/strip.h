@@ -29,7 +29,6 @@ class font;
 class heroWindow;
 class icon;
 
-#pragma pack(push, 1)
 class strip {
 public:
     heroWindow* m_window;
@@ -60,5 +59,4 @@ public:
     void DrawIcons(i8 drawWindow);
     void DrawFrame(void);
 };
-#pragma pack(pop)
 #endif

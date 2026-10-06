@@ -226,7 +226,6 @@ RECRUIT_HERO_PORTRAIT_FIRST = 2,
     RECRUIT_HERO_SELECT_FIRST = 8,
     RECRUIT_HERO_SELECT_SECOND = 9 };
 
-#pragma pack(push, 1)
         class townManager : public baseManager {
 public:
     town* m_town;
@@ -293,7 +292,6 @@ public:
     );
     void SortStats(i32* const stats, i8* const order);
 };
-#pragma pack(pop)
 
 struct TownBuildingExtent {
     i16 x;

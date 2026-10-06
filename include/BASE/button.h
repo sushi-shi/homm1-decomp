@@ -14,7 +14,6 @@ enum ButtonConstant {
 class icon;
 struct tag_message;
 
-#pragma pack(push, 1)
 class button : public widget {
 public:
     icon* m_icon;
@@ -56,5 +55,4 @@ public:
     i16 Select(struct tag_message& message);
     i16 Deselect(struct tag_message& message);
 };
-#pragma pack(pop)
 #endif

@@ -40,7 +40,6 @@ enum BaseManagerInfoField {
     BASE_MANAGER_INFO_ACTIVE = 2
 };
 
-#pragma pack(push, 1)
 class baseManager {
 public:
     baseManager* m_next;
@@ -59,6 +58,5 @@ public:
     virtual void Close() = 0;
     virtual i16 Main(tag_message& message) = 0;
 };
-#pragma pack(pop)
 
 #endif

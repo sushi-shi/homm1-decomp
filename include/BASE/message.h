@@ -55,7 +55,6 @@ enum MessageModifier {
     MESSAGE_MODIFIER_BUTTON_MASK = 0x300
 };
 
-#pragma pack(push, 1)
 struct tag_message {
     i16 type;
     union {
@@ -76,7 +75,6 @@ struct tag_message {
         i32 result;
     };
 };
-#pragma pack(pop)
 
 #define SET_WIDGET_MESSAGE(messageValue, commandValue, idValue)                                    \
     ((messageValue).type = MESSAGE_WIDGET,                                                         \

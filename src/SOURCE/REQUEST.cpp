@@ -17,12 +17,11 @@
 #include <BASE/resourceManager.h>
 #include <BASE/soundmgr.h>
 #include <SOURCE/kbwin.h>
+#include <SOURCE/saveRecords.h>
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+#include <PLATFORM/File.h>
+#include <PLATFORM/Records.h>
 
-#include <fcntl.h>
-#include <io.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -64,18 +63,17 @@ fileRequester::fileRequester(
     const char* defaultExtension
 ) {
     char fullFileName[412];
-    i32 file;
     SMapHeader header;
-    BOOL found;
+    b32 found;
     char unusedName[FILE_REQUESTER_UNUSED_NAME_SIZE];
     i32 shiftRow;
     i32 entryIndex;
     char extension[FILE_REQUESTER_EXTENSION_SIZE];
-    WIN32_FIND_DATA findFileData;
+    FileFindData findFileData;
     i32 insertCount;
     char* extensionStart;
     char nameBuffer[FILE_REQUESTER_LOCAL_NAME_SIZE];
-    HANDLE findHandle;
+    i32 findHandle;
 
     m_selectedIndex = FILE_REQUESTER_SELECTION_NONE;
     m_fileCount = 0;
@@ -95,15 +93,15 @@ fileRequester::fileRequester(
 
     sprintf(gText, "%s%s", directory, pattern);
     m_fileCount = 0;
-    findHandle = FindFirstFile(gText, &findFileData);
-    if (findHandle != INVALID_HANDLE_VALUE) {
-        if (ShowThisMap(findFileData.cFileName))
+    findHandle = FileFindFirst(gText, &findFileData);
+    if (findHandle != FILE_INVALID) {
+        if (ShowThisMap(findFileData.name))
             m_fileCount++;
-        while (FindNextFile(findHandle, &findFileData)) {
-            if (ShowThisMap(findFileData.cFileName))
+        while (FileFindNext(findHandle, &findFileData)) {
+            if (ShowThisMap(findFileData.name))
                 m_fileCount++;
         }
-        FindClose(findHandle);
+        FileFindClose(findHandle);
     }
 
     m_fileNames = new FileRequesterName[m_fileCount + 1];
@@ -127,12 +125,12 @@ fileRequester::fileRequester(
 
     insertCount = 0;
     sprintf(gText, "%s%s", directory, pattern);
-    findHandle = FindFirstFile(gText, &findFileData);
-    if (findHandle != INVALID_HANDLE_VALUE) {
-        found = TRUE;
-        while (found) {
-            if (ShowThisMap(findFileData.cFileName)) {
-                strcpy(nameBuffer, findFileData.cFileName);
+    findHandle = FileFindFirst(gText, &findFileData);
+    if (findHandle != FILE_INVALID) {
+        found = true;
+        while (found && insertCount < m_fileCount) {
+            if (ShowThisMap(findFileData.name)) {
+                strcpy(nameBuffer, findFileData.name);
                 extensionStart = FindLastToken(nameBuffer, '.');
                 if (extensionStart) {
                     strcpy(extension, extensionStart);
@@ -152,13 +150,14 @@ fileRequester::fileRequester(
                 strcpy(m_extensions[entryIndex].text, extension);
                 insertCount++;
             }
-            found = FindNextFile(findHandle, &findFileData);
+            found = FileFindNext(findHandle, &findFileData);
         }
-        FindClose(findHandle);
+        FileFindClose(findHandle);
     }
 
     if (gShowMapInfo) {
         for (entryIndex = 0; entryIndex < insertCount; entryIndex++) {
+            RecordReader mapFile;
             sprintf(
                 fullFileName,
                 "%s%s%s",
@@ -166,13 +165,22 @@ fileRequester::fileRequester(
                 m_fileNames[entryIndex].text,
                 m_extensions[entryIndex].text
             );
-            file = open(fullFileName, O_BINARY);
-            if (file == FILE_DESCRIPTOR_INVALID)
+            if (!mapFile.LoadFile(fullFileName))
                 FileError(fullFileName);
-            READ_FILE_VALUE(file, header);
+            ReadMapHeader(mapFile, header);
             if (header.id == MAP_HEADER_ID) {
-                strcpy(m_mapNames[entryIndex].text, header.name[0]);
-                strcpy(m_mapInfo[entryIndex].description, header.description[0]);
+                CopyTextField(
+                    m_mapNames[entryIndex].text,
+                    sizeof(m_mapNames[entryIndex].text),
+                    header.name[0],
+                    sizeof(header.name[0])
+                );
+                CopyTextField(
+                    m_mapInfo[entryIndex].description,
+                    sizeof(m_mapInfo[entryIndex].description),
+                    header.description[0],
+                    sizeof(header.description[0])
+                );
                 m_mapInfo[entryIndex].difficulty = header.difficulty;
                 m_mapInfo[entryIndex].size = header.size;
             } else {
@@ -181,7 +189,6 @@ fileRequester::fileRequester(
                 m_mapInfo[entryIndex].difficulty = MAP_DIFFICULTY_EASY;
                 m_mapInfo[entryIndex].size = MAP_SIZE_SMALL;
             }
-            close(file);
         }
     }
 

@@ -891,6 +891,58 @@
             "/MT",
             "/G5"
           ]
+        },
+        {
+          "unit": "PLATFORM/File",
+          "source": "src/PLATFORM/File.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob2",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "PLATFORM/Records",
+          "source": "src/PLATFORM/Records.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob2",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "SOURCE/SAVEREC",
+          "source": "src/SOURCE/SAVEREC.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob2",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "SOURCE/KBCOMMON",
+          "source": "src/SOURCE/KBCOMMON.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob2",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
         }
       ],
       "link": {
@@ -930,7 +982,11 @@
           "SOURCE/TOWN",
           "SOURCE/TOWNMGR",
           "SOURCE/VIEW",
-          "SOURCE/wingraph"
+          "SOURCE/wingraph",
+          "PLATFORM/File",
+          "PLATFORM/Records",
+          "SOURCE/SAVEREC",
+          "SOURCE/KBCOMMON"
         ],
         "members": [
           "BASE/BASEMGR",
@@ -1555,6 +1611,66 @@
             "/G5",
             "/DHOMM1_EDITOR"
           ]
+        },
+        {
+          "unit": "PLATFORM/File",
+          "source": "src/PLATFORM/File.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Oi",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "PLATFORM/Records",
+          "source": "src/PLATFORM/Records.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Oi",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "SOURCE/SAVEREC",
+          "source": "src/SOURCE/SAVEREC.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Oi",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "SOURCE/KBCOMMON",
+          "source": "src/SOURCE/KBCOMMON.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Oi",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5",
+            "/DHOMM1_EDITOR"
+          ]
         }
       ],
       "link": {
@@ -1568,7 +1684,11 @@
           "EDITOR/MAPOBJ",
           "SOURCE/REQUEST",
           "EDITOR/TERRMGR",
-          "SOURCE/wingraph"
+          "SOURCE/wingraph",
+          "PLATFORM/File",
+          "PLATFORM/Records",
+          "SOURCE/SAVEREC",
+          "SOURCE/KBCOMMON"
         ],
         "members": [
           "BASE/BASEMGR",

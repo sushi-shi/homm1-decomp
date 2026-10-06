@@ -7,7 +7,6 @@ enum PaletteConstant {
     PALETTE_DATA_SIZE = 0x300
 };
 
-#pragma pack(push, 1)
 class palette : public resource {
 public:
     i8* m_data;
@@ -16,7 +15,6 @@ public:
     virtual ~palette();
     i8* Data(void);
 };
-#pragma pack(pop)
 
 enum PaletteGraphicsConstant {
     PALETTE_GRAPHICS_CHANNELS = 3,

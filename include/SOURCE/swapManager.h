@@ -23,7 +23,6 @@ enum SwapManagerItemType {
     SWAP_ITEM_ARTIFACT = 1
 };
 
-#pragma pack(push, 1)
 class swapManager : public baseManager {
 public:
     heroWindow* m_window;
@@ -48,7 +47,6 @@ public:
     void Update(void);
     void SplitMons(void);
 };
-#pragma pack(pop)
 enum SwapManagerControl {
 CONTROL_LEFT_HERO = 65, CONTROL_RIGHT_HERO = 66, CONTROL_LEFT_PRIMARY_SKILL_FIRST = 67,
                         CONTROL_RIGHT_PRIMARY_SKILL_FIRST = 72, CONTROL_TITLE = 77,

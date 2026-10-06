@@ -11179,7 +11179,7 @@ void editManager::NewMap(b32 random) {
 
 void ShowStatusWarning(char* text) {
     ShowStatusText(text);
-    MessageBeep(MB_OK);
+    KBBeep();
     gStatusTextClearTime = KBTickCount() + EDITOR_STATUS_WARNING_MILLISECONDS;
 }
 

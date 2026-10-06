@@ -1,5 +1,7 @@
 #include <H1/Ints.h>
 
+#include <PLATFORM/File.h>
+
 #include <BASE/bitmap.h>
 #include <BASE/bmap2.h>
 #include <BASE/heroWindowManager.h>
@@ -9,11 +11,8 @@
 #include <BASE/resourceManager.h>
 #include <SOURCE/KB.h>
 
-#include <fcntl.h>
-#include <io.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/stat.h>
 
 bitmap::bitmap(void) : resource(RESOURCE_CATEGORY_BITMAP, 0, RESOURCE_REFERENCE_UNMANAGED, NULL) {
     m_bitmapType = BITMAP_TYPE_NONE;
@@ -72,14 +71,14 @@ void bitmap::GrabBitmap(bitmap* source, i16 x, i16 y) {
 void bitmap::Write(char* filename) {
     palette* combatPaletteData;
     i32 unusedData;
-    i32 file = open(filename, O_WRONLY | O_CREAT | O_BINARY, S_IWRITE);
+    i32 file = FileOpen(filename, FILE_OPEN_WRITE);
     if (file == FILE_DESCRIPTOR_INVALID)
         return;
     combatPaletteData = gResourceManager->GetPalette("combat.pal");
     i8* paletteData = combatPaletteData->Data();
-    write(file, paletteData, PALETTE_DATA_SIZE);
-    write(file, m_pixels, m_width * m_height);
-    close(file);
+    FileWrite(file, paletteData, PALETTE_DATA_SIZE);
+    FileWrite(file, m_pixels, m_width * m_height);
+    FileClose(file);
     gResourceManager->Dispose(combatPaletteData);
 }
 

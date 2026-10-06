@@ -4,9 +4,6 @@
 #include <BASE/baseManager.h>
 #include <BASE/display.h>
 #include <BASE/message.h>
-#define WIN32_LEAN_AND_MEAN
-
-#include <windows.h>
 
 struct tag_message;
 class bitmap;
@@ -19,7 +16,6 @@ enum MousePointerFlag {
     MOUSE_POINTER_FLAG_VISIBLE = 1
 };
 
-#pragma pack(push, 1)
 class mouseManager : public baseManager {
 public:
     void* m_cursorResource;
@@ -70,7 +66,6 @@ public:
     void HideSystemCursor(void);
     void ShowSystemCursor(void);
 };
-#pragma pack(pop)
 
 enum MouseManagerConstant {
     MOUSE_CURSOR_COUNT = 75,
@@ -102,14 +97,26 @@ enum MouseManagerConstant {
 extern i32 gMouseCursorType;
 extern i32 gMouseOffset[3];
 extern u8 gHotSpot[MOUSE_CURSOR_COUNT][MOUSE_CURSOR_AXIS_COUNT];
-extern HCURSOR gMouseCursors[MOUSE_CURSOR_COUNT];
 extern u8* gColorBits[MOUSE_CURSOR_COUNT];
 extern u8* gAndBits[MOUSE_CURSOR_COUNT];
-extern BITMAP gAndMaskBitmapInfo[MOUSE_CURSOR_COUNT];
-extern BITMAP gColorBitmapInfo[MOUSE_CURSOR_COUNT];
-extern HBITMAP gAndMaskBitmaps[MOUSE_CURSOR_COUNT];
-extern HBITMAP gColorBitmaps[MOUSE_CURSOR_COUNT];
-extern ICONINFO gMouseIconInfo[MOUSE_CURSOR_COUNT];
+
+// The pointer shapes are host cursors, built from a 32x32 image: colorBits
+// holds one palette index per pixel; maskBits the AND mask (and, for a
+// monochrome cursor, the XOR mask after it), one bit per pixel, most
+// significant bit first, MOUSE_CURSOR_MASK_ROW_BYTES per row. Windows builds
+// an HCURSOR from them; the native port draws them over the game screen.
+i32 KBCursorReady(i32 cursorIndex);
+void KBCreateCursor(
+    i32 cursorIndex,
+    const u8* colorBits,
+    const u8* maskBits,
+    i32 colorCursor,
+    i32 hotX,
+    i32 hotY
+);
+void KBSelectCursor(i32 cursorIndex);
+void KBSelectArrowCursor(void);
+void KBDestroyCursors(void);
 
 enum MouseManagerStateConstant {
     MOUSE_INITIAL_POINTER_FLAGS = 6,

@@ -2,7 +2,7 @@
 
 #include <H1/Ints.h>
 
-#include <SOURCE/netwin.h>
+#include <SOURCE/netwinHost.h>
 
 #include <windows.h>
 

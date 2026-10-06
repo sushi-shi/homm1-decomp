@@ -16,7 +16,6 @@ enum RecruitSourceType {
     RECRUIT_SOURCE_TOWN = 0x28
 };
 
-#pragma pack(push, 1)
 class recruitUnit : public baseManager {
 public:
     i8 m_sourceType;
@@ -48,7 +47,6 @@ public:
     virtual i16 Main(struct tag_message& message) ;
     void Update(void);
 };
-#pragma pack(pop)
 
 void SetupRecruitWin(
     class heroWindow* window,
