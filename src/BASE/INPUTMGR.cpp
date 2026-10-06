@@ -357,6 +357,9 @@ void inputManager::AsciiConvert(tag_message& event) {
             case '/':
                 event.keyCode = '?';
                 break;
+            case '`':
+                event.keyCode = '~';
+                break;
         }
     }
     if ((event.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS) == MESSAGE_MODIFIER_NONE)
@@ -407,7 +410,7 @@ void inputManager::MakeScanCodeTable(void) {
     m_scanCodeTable[INPUT_SCAN_L] = 'L';
     m_scanCodeTable[INPUT_SCAN_SEMICOLON] = ';';
     m_scanCodeTable[INPUT_SCAN_APOSTROPHE] = '\'';
-    m_scanCodeTable[INPUT_SCAN_GRAVE] = EncodeScanCode(INPUT_SCAN_GRAVE);
+    m_scanCodeTable[INPUT_SCAN_GRAVE] = '`';
     m_scanCodeTable[INPUT_SCAN_LEFT_SHIFT] = EncodeScanCode(INPUT_SCAN_LEFT_SHIFT);
     m_scanCodeTable[INPUT_SCAN_BACKSLASH] = '\\';
     m_scanCodeTable[INPUT_SCAN_Z] = 'Z';

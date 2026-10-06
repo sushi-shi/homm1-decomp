@@ -94,8 +94,9 @@ enum PrefsConstant {
     KBWIN_TIMER_RESOLUTION = 1
 };
 
-// The edition keeps its preferences apart from the retail game's.
-#define PREFS_REGISTRY_KEY "SOFTWARE\\Buka\\3DO\\Heroes of Might and Magic\\HeroesWorld TE"
+// The edition keeps its preferences apart from the retail game's, one set
+// per language.
+#define PREFS_REGISTRY_KEY localization::Tr("prefs.registry_key")
 
 extern HINSTANCE gAppInstance;
 extern HANDLE gEventHandle;

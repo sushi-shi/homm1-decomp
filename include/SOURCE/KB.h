@@ -510,6 +510,10 @@ extern i16 gCrestTownTypes[PLAYER_COLOR_COUNT];
 extern char gWinText[];
 extern char* gHandicapNames[];
 extern char* gHeroNames[][2];
+extern char* gHeroNamesAccusative[];
+extern char* gHeroNamesGenitive[];
+extern char* gClassNamesAccusative[];
+extern char* gArmyNamesMoved[];
 extern i8 gHeroSkillBonus[4][9][HERO_PRIMARY_STAT_COUNT];
 extern char* gHumanPlayerTypeNames[];
 

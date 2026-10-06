@@ -469,6 +469,9 @@ i32 oldmain(void) {
             endVideos[GAME_END_LOST] = SMACK_LOSE;
             endVideos[GAME_END_WON] = SMACK_WIN1;
             endVideos[GAME_END_CAMPAIGN_COMPLETE] = SMACK_WIN2;
+            // The campaign's closing words come before its closing videos.
+            if (gEndSequence == GAME_END_CAMPAIGN_COMPLETE)
+                ShowCongrats();
             if (gEndSequence != GAME_END_WON) {
                 if (gEndSequence == GAME_END_CAMPAIGN_COMPLETE) {
                     PlaySmacker(SMACK_WIN1);
@@ -1181,10 +1184,11 @@ void NormalDialog(
                 MemError();
             gNormalDialogWindow->AddWidget(imageWidget, WINDOW_Z_ORDER_APPEND);
         }
+        // Wide enough for the longer Russian resource captions.
         labelWidget = new textWidget(
-            imageCenterX - 50,
+            imageCenterX - 60,
             resourceIconY + imageHeight - 10,
-            100,
+            120,
             12,
             labelTexts[index],
             "smalfont.fnt",
@@ -3883,6 +3887,107 @@ char* gGameTypeHelp[5] = {
     localization::Tr("table.gGameTypeHelp.2"),
     localization::Tr("table.gGameTypeHelp.3"),
     localization::Tr("table.gGameTypeHelp.4"),
+};
+// Hero, class and creature names in the form a phrase needs: as an object
+// (accusative), as an owner (genitive), and as the troops being moved.
+// Languages without cases keep the plain names.
+char* gHeroNamesAccusative[36] = {
+    localization::Tr("table.gHeroNamesAccusative.0"),
+    localization::Tr("table.gHeroNamesAccusative.1"),
+    localization::Tr("table.gHeroNamesAccusative.2"),
+    localization::Tr("table.gHeroNamesAccusative.3"),
+    localization::Tr("table.gHeroNamesAccusative.4"),
+    localization::Tr("table.gHeroNamesAccusative.5"),
+    localization::Tr("table.gHeroNamesAccusative.6"),
+    localization::Tr("table.gHeroNamesAccusative.7"),
+    localization::Tr("table.gHeroNamesAccusative.8"),
+    localization::Tr("table.gHeroNamesAccusative.9"),
+    localization::Tr("table.gHeroNamesAccusative.10"),
+    localization::Tr("table.gHeroNamesAccusative.11"),
+    localization::Tr("table.gHeroNamesAccusative.12"),
+    localization::Tr("table.gHeroNamesAccusative.13"),
+    localization::Tr("table.gHeroNamesAccusative.14"),
+    localization::Tr("table.gHeroNamesAccusative.15"),
+    localization::Tr("table.gHeroNamesAccusative.16"),
+    localization::Tr("table.gHeroNamesAccusative.17"),
+    localization::Tr("table.gHeroNamesAccusative.18"),
+    localization::Tr("table.gHeroNamesAccusative.19"),
+    localization::Tr("table.gHeroNamesAccusative.20"),
+    localization::Tr("table.gHeroNamesAccusative.21"),
+    localization::Tr("table.gHeroNamesAccusative.22"),
+    localization::Tr("table.gHeroNamesAccusative.23"),
+    localization::Tr("table.gHeroNamesAccusative.24"),
+    localization::Tr("table.gHeroNamesAccusative.25"),
+    localization::Tr("table.gHeroNamesAccusative.26"),
+    localization::Tr("table.gHeroNamesAccusative.27"),
+    localization::Tr("table.gHeroNamesAccusative.28"),
+    localization::Tr("table.gHeroNamesAccusative.29"),
+    localization::Tr("table.gHeroNamesAccusative.30"),
+    localization::Tr("table.gHeroNamesAccusative.31"),
+    localization::Tr("table.gHeroNamesAccusative.32"),
+    localization::Tr("table.gHeroNamesAccusative.33"),
+    localization::Tr("table.gHeroNamesAccusative.34"),
+    localization::Tr("table.gHeroNamesAccusative.35"),
+};
+char* gHeroNamesGenitive[36] = {
+    localization::Tr("table.gHeroNamesGenitive.0"),
+    localization::Tr("table.gHeroNamesGenitive.1"),
+    localization::Tr("table.gHeroNamesGenitive.2"),
+    localization::Tr("table.gHeroNamesGenitive.3"),
+    localization::Tr("table.gHeroNamesGenitive.4"),
+    localization::Tr("table.gHeroNamesGenitive.5"),
+    localization::Tr("table.gHeroNamesGenitive.6"),
+    localization::Tr("table.gHeroNamesGenitive.7"),
+    localization::Tr("table.gHeroNamesGenitive.8"),
+    localization::Tr("table.gHeroNamesGenitive.9"),
+    localization::Tr("table.gHeroNamesGenitive.10"),
+    localization::Tr("table.gHeroNamesGenitive.11"),
+    localization::Tr("table.gHeroNamesGenitive.12"),
+    localization::Tr("table.gHeroNamesGenitive.13"),
+    localization::Tr("table.gHeroNamesGenitive.14"),
+    localization::Tr("table.gHeroNamesGenitive.15"),
+    localization::Tr("table.gHeroNamesGenitive.16"),
+    localization::Tr("table.gHeroNamesGenitive.17"),
+    localization::Tr("table.gHeroNamesGenitive.18"),
+    localization::Tr("table.gHeroNamesGenitive.19"),
+    localization::Tr("table.gHeroNamesGenitive.20"),
+    localization::Tr("table.gHeroNamesGenitive.21"),
+    localization::Tr("table.gHeroNamesGenitive.22"),
+    localization::Tr("table.gHeroNamesGenitive.23"),
+    localization::Tr("table.gHeroNamesGenitive.24"),
+    localization::Tr("table.gHeroNamesGenitive.25"),
+    localization::Tr("table.gHeroNamesGenitive.26"),
+    localization::Tr("table.gHeroNamesGenitive.27"),
+    localization::Tr("table.gHeroNamesGenitive.28"),
+    localization::Tr("table.gHeroNamesGenitive.29"),
+    localization::Tr("table.gHeroNamesGenitive.30"),
+    localization::Tr("table.gHeroNamesGenitive.31"),
+    localization::Tr("table.gHeroNamesGenitive.32"),
+    localization::Tr("table.gHeroNamesGenitive.33"),
+    localization::Tr("table.gHeroNamesGenitive.34"),
+    localization::Tr("table.gHeroNamesGenitive.35"),
+};
+char* gClassNamesAccusative[4] = {
+    localization::Tr("table.gClassNamesAccusative.0"),
+    localization::Tr("table.gClassNamesAccusative.1"),
+    localization::Tr("table.gClassNamesAccusative.2"),
+    localization::Tr("table.gClassNamesAccusative.3"),
+};
+char* gArmyNamesMoved[28] = {
+    localization::Tr("table.gArmyNamesMoved.0"),  localization::Tr("table.gArmyNamesMoved.1"),
+    localization::Tr("table.gArmyNamesMoved.2"),  localization::Tr("table.gArmyNamesMoved.3"),
+    localization::Tr("table.gArmyNamesMoved.4"),  localization::Tr("table.gArmyNamesMoved.5"),
+    localization::Tr("table.gArmyNamesMoved.6"),  localization::Tr("table.gArmyNamesMoved.7"),
+    localization::Tr("table.gArmyNamesMoved.8"),  localization::Tr("table.gArmyNamesMoved.9"),
+    localization::Tr("table.gArmyNamesMoved.10"), localization::Tr("table.gArmyNamesMoved.11"),
+    localization::Tr("table.gArmyNamesMoved.12"), localization::Tr("table.gArmyNamesMoved.13"),
+    localization::Tr("table.gArmyNamesMoved.14"), localization::Tr("table.gArmyNamesMoved.15"),
+    localization::Tr("table.gArmyNamesMoved.16"), localization::Tr("table.gArmyNamesMoved.17"),
+    localization::Tr("table.gArmyNamesMoved.18"), localization::Tr("table.gArmyNamesMoved.19"),
+    localization::Tr("table.gArmyNamesMoved.20"), localization::Tr("table.gArmyNamesMoved.21"),
+    localization::Tr("table.gArmyNamesMoved.22"), localization::Tr("table.gArmyNamesMoved.23"),
+    localization::Tr("table.gArmyNamesMoved.24"), localization::Tr("table.gArmyNamesMoved.25"),
+    localization::Tr("table.gArmyNamesMoved.26"), localization::Tr("table.gArmyNamesMoved.27"),
 };
 char* gHeroNames[36][2] = {
     {localization::Tr("table.gHeroNames.0.0"), localization::Tr("table.gHeroNames.0.1")},

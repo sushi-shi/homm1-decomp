@@ -66,7 +66,7 @@ i16 swapManager::Open(i16 id) {
         gText,
         localization::Tr("hero.meeting.title"),
         m_heroes[SWAP_SIDE_LEFT]->m_name,
-        m_heroes[SWAP_SIDE_RIGHT]->m_name
+        gHeroNamesAccusative[m_heroes[SWAP_SIDE_RIGHT]->m_id]
     );
     message.text = gText;
     message.id = CONTROL_TITLE;
@@ -714,9 +714,9 @@ void swapManager::SplitMons(void) {
     sprintf(
         gText,
         localization::Tr("army.transfer.prompt"),
-        gArmyNames[selectedArmy->m_creatureTypes[m_selectedSlot]],
-        m_heroes[m_selectedSide]->m_name,
-        m_heroes[m_targetSide]->m_name
+        gArmyNamesMoved[selectedArmy->m_creatureTypes[m_selectedSlot]],
+        gHeroNamesGenitive[m_heroes[m_selectedSide]->m_id],
+        gHeroNamesGenitive[m_heroes[m_targetSide]->m_id]
     );
     message.command = WIDGET_COMMAND_SET_TEXT;
     message.id = TOWN_SPLIT_PROMPT_CONTROL;

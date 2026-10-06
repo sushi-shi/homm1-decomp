@@ -414,7 +414,10 @@ i16 fileRequester::Main(tag_message& message) {
                                     && static_cast<u8>(nameBuffer[key]) != CYRILLIC_SMALL_YO
                                     && static_cast<u8>(nameBuffer[key]) != '_'
                                     && static_cast<u8>(nameBuffer[key]) != ' '
-                                    && !FindToken("$%'-_@~`!(){}^#&+,;=[].", nameBuffer[key]))
+                                    && !FindToken(
+                                        localization::Tr("file.name.punctuation"),
+                                        nameBuffer[key]
+                                    ))
                                     nameBuffer[key] = '\0';
                             }
                             for (key = strlen(nameBuffer) - 1; key >= 0; key--) {
