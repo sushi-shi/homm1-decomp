@@ -1,0 +1,6 @@
+# A saved game whose map size (127) and difficulty (-128) index past the
+# tables of their names, which the scenario information shows.
+base DATA\REMOTE.GAM
+set 188 7F 80
+bytes 00
+expect refused
