@@ -136,6 +136,7 @@ enum GameRandomHeroConstant {
 
 enum GameLuckConstant {
     GAME_LUCK_MIN = -3,
+    GAME_FIZBIN_LUCK_PENALTY = 3,
     GAME_LUCK_MAX = 3
 };
 

@@ -34,12 +34,27 @@ enum HeroConstant {
     HERO_AVAILABLE_SLOT_COUNT = 2,
     HERO_LEVEL_RANDOM_SEED_FACTOR = 30,
     HERO_SKILL_BONUS_FIRST_LEVEL = 2,
-    HERO_SKILL_BONUS_ROW_LAST = 8
+    HERO_SKILL_BONUS_ROW_LAST = 8,
+    // Sorceresses and Warlocks start with a spell book.
+    HERO_CLASS_FIRST_SPELLCASTER = 2,
+    // m_cowardice: each lost battle that did not end in surrender lowers it
+    // down to this floor; each won battle raises it back towards zero.
+    HERO_COWARDICE_MIN = -3
 };
 
 enum HeroAvailability {
     HERO_AVAILABILITY_UNAVAILABLE = -1,
-    HERO_AVAILABILITY_RETREATED = 0x40
+    HERO_AVAILABILITY_IN_TAVERN = 0x40
+};
+
+// m_fledState: how the hero left the map today. A hero rehired the day he
+// retreated or surrendered has no movement left (or only his leftover
+// movement with the SoftRetreatSurrender option); a surrendered hero keeps
+// his army. Every new day clears it.
+enum HeroFledState {
+    HERO_FLED_NONE = 0,
+    HERO_FLED_RETREATED = 1,
+    HERO_FLED_SURRENDERED = 2
 };
 
 enum HeroSpellType {
@@ -83,7 +98,7 @@ public:
     i8 m_morale;
     i8 m_luck;
     i8 m_cowardice;
-    i8 m_unused38;
+    i8 m_fledState;
     i32 m_visitedSites;
     i16 m_randomSeed;
     char m_unused3f[0x18];
@@ -116,6 +131,9 @@ public:
     i32 GetLevel(i32 experienceValue);
     void ApplyBattleWinTemps(void);
     void ApplyBattleLossTemps(void);
+    void ClearBattleTemps(void);
+    void ResetToStartingState(void);
+    void SetRecruitedMobility(void);
     void CheckLevel(void);
     i32 NumArtifacts(void);
 };

@@ -2736,14 +2736,14 @@ void philAI::BuildHero(town* townPointer, i16 availableHeroIndex) {
     townX = townPointer->m_x;
     townY = townPointer->m_y;
     newHero = gGame->GetHero(gCurPlayerData->m_availableHeroIds[availableHeroIndex]);
-    gGame->SetRandomHeroArmies(newHero->m_id, RANDOM_HERO_STRONG_ARMY);
+    if (newHero->m_fledState != HERO_FLED_SURRENDERED)
+        gGame->SetRandomHeroArmies(newHero->m_id, RANDOM_HERO_STRONG_ARMY);
     newHero->m_owner = gCurPlayer;
     newHero->m_x = townX;
     newHero->m_y = townY;
     newHero->m_eventFlags = HERO_EVENT_NONE;
     newHero->m_direction = MAP_DIRECTION_EAST;
-    newHero->m_remainingMobility = newHero->CalcMobility();
-    newHero->m_mobility = newHero->m_remainingMobility;
+    newHero->SetRecruitedMobility();
     newHero->m_locationType = gGame->m_map[townX][townY].m_triggerType;
     newHero->m_occupiedTown = gGame->m_map[townX][townY].m_objectMetadata;
     gGame->m_map[townX][townY].m_triggerType = MAP_EVENT_TRIGGER(MAP_OBJECT_HERO);
@@ -2754,7 +2754,7 @@ void philAI::BuildHero(town* townPointer, i16 availableHeroIndex) {
     townPointer->GiveSpells();
     gCurPlayerData->m_availableHeroIds[availableHeroIndex] = gGame->GetNewHeroId(Random(0, 3));
     gGame->m_availableHeroes[gCurPlayerData->m_availableHeroIds[availableHeroIndex]] =
-        HERO_AVAILABILITY_RETREATED;
+        HERO_AVAILABILITY_IN_TAVERN;
     gHeroBuiltThisTurn = true;
     ShowStatus();
 }

@@ -108,6 +108,12 @@ i32 combatManager::AICheckRetreat(void) {
         / static_cast<double>(theForces[COMBAT_DEFENDER_SIDE] + theForces[COMBAT_ATTACKER_SIDE]);
     if (retreatRatio < prob) {
         gNextAction = ACTION_RETREAT;
+        if (m_heroes[COMBAT_OPPOSING_SIDE(m_currentSide)]) {
+            gSurrenderCost = SurrenderCost();
+            if (gGame->m_players[m_heroes[m_currentSide]->m_owner].m_resources[RESOURCE_GOLD]
+                >= gSurrenderCost + COMBAT_AI_SURRENDER_GOLD_RESERVE)
+                gNextAction = ACTION_SURRENDER;
+        }
         return 1;
     }
     return 0;

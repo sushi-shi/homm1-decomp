@@ -65,11 +65,53 @@ i32 combatManager::DoSpellAI(i8 side) {
     return 0;
 }
 
-void combatManager::DetermineEffectOfSpell(
-    i32 spell,
-    i32* bestEffect,
-    i32* bestHex
-) {
+// A computer hero whose surrender was refused spends its last turn on the
+// most damaging of its attack spells before it retreats.
+static i8 gSurrenderRefusedSpells[] = {
+    SPELL_TURN_UNDEAD,
+    SPELL_ARMAGEDDON,
+    SPELL_STORM,
+    SPELL_METEOR_SHOWER,
+    SPELL_FIREBALL,
+    SPELL_LIGHTNING_BOLT,
+};
+
+b32 combatManager::CastSurrenderRefusedSpell(i8 side) {
+    i32 bestSpell;
+    i32 bestValue;
+    i32 bestHex;
+    i32 effect;
+    i32 hex;
+    i32 i;
+
+    if (m_heroes[side] == NULL)
+        return false;
+    if (m_heroes[side]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] == HERO_SPELL_POWER_ONE)
+        gSpellAIEffectShift = 2;
+    else if (m_heroes[side]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] == HERO_SPELL_POWER_TWO)
+        gSpellAIEffectShift = 1;
+    else
+        gSpellAIEffectShift = 0;
+    bestSpell = SPELL_NONE;
+    bestValue = 0;
+    bestHex = ARMY_HEX_INVALID;
+    for (i = 0; i < static_cast<i32>(sizeof(gSurrenderRefusedSpells)); i++) {
+        if (!m_heroes[side]->HasSpell(gSurrenderRefusedSpells[i]))
+            continue;
+        DetermineEffectOfSpell(gSurrenderRefusedSpells[i], &effect, &hex);
+        if (effect > bestValue) {
+            bestValue = effect;
+            bestSpell = gSurrenderRefusedSpells[i];
+            bestHex = hex;
+        }
+    }
+    if (bestSpell == SPELL_NONE)
+        return false;
+    CastSpell(bestSpell, bestHex, 0, ARMY_HEX_INVALID);
+    return true;
+}
+
+void combatManager::DetermineEffectOfSpell(i32 spell, i32* bestEffect, i32* bestHex) {
     i32 side;
     i32 firstDurMax;
     b32 done;

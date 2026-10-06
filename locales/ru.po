@@ -310,6 +310,11 @@ msgstr "Переместиться сюда"
 
 #: src/SOURCE/COMMAND.cpp
 #, c-format
+msgid "combat.surrender.computer_offer"
+msgstr "%s говорит:\n\n\"Пропустите меня и моих воинов, и я заплачу вам %d золотых.\""
+
+#: src/SOURCE/COMMAND.cpp
+#, c-format
 msgid "combat.surrender.offer"
 msgstr "%s говорит:\n\n\"Я приму вашу капитуляцию и пропущу вас и ваших воинов за %d золотых."
 
@@ -2446,7 +2451,7 @@ msgstr "Медаль почета\n\nМедаль почета увеличив�
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.12"
-msgstr "Символ неудачи\n\nСимвол неудачи сильно уменьшает мораль."
+msgstr "Символ неудачи\n\nСимвол неудачи сильно уменьшает удачу."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactDesc.13"
@@ -2582,7 +2587,7 @@ msgstr "Вы избавляете округу от ужасного минот�
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactEvent.12"
-msgstr "На обочине пустынной дороги вы находите медаль. Вы подобрали ее и обнаружили, что стали несчастным обладателем Символа неудачи, который понижает мораль вашей армии."
+msgstr "На обочине пустынной дороги вы находите медаль. Вы подобрали ее и обнаружили, что стали несчастным обладателем Символа неудачи, который понижает удачу вашей армии."
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArtifactEvent.13"
@@ -4298,6 +4303,10 @@ msgid "table.gLuckInfoText.10"
 msgstr "\nнет"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gLuckInfoText.11"
+msgstr "\nСимвол неудачи -3"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gLuckText.0"
 msgstr "Проклятая"
 
@@ -4485,7 +4494,7 @@ msgstr "\nМедаль почета +1"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gMoraleInfoText.12"
-msgstr "\nСимвол неудачи -2"
+msgstr "\nСимвол неудачи -3"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gMoraleInfoText.13"

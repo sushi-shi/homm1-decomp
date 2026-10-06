@@ -620,7 +620,8 @@ enum LuckInfoText {
     LUCK_INFO_FAERIE_RING = 8,
     LUCK_INFO_FOUNTAIN = 9,
     LUCK_INFO_NONE = 10,
-    LUCK_INFO_COUNT = 11
+    LUCK_INFO_FIZBIN = 11,
+    LUCK_INFO_COUNT = 12
 };
 extern char* gLuckInfoText[LUCK_INFO_COUNT];
 

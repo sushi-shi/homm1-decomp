@@ -337,7 +337,7 @@ i8 game::GetNewHeroId(i8 heroClass) {
             idx = RandomScan(m_availableHeroes, 0, GAME_HERO_COUNT, GAME_HERO_COUNT);
         } else {
             for (ix = 0; ix < GAME_HERO_COUNT; ++ix) {
-                if (m_availableHeroes[ix] == HERO_AVAILABILITY_RETREATED)
+                if (m_availableHeroes[ix] == HERO_AVAILABILITY_IN_TAVERN)
                     idx = ix;
             }
         }
@@ -1213,10 +1213,10 @@ void game::NewMap(char* mapName) {
         else
             k = Random(0, 3);
         m_players[i].m_availableHeroIds[0] = GetNewHeroId(k);
-        m_availableHeroes[m_players[i].m_availableHeroIds[0]] = HERO_AVAILABILITY_RETREATED;
+        m_availableHeroes[m_players[i].m_availableHeroIds[0]] = HERO_AVAILABILITY_IN_TAVERN;
         k = (k + Random(1, 3)) % HERO_CLASS_COUNT;
         m_players[i].m_availableHeroIds[1] = GetNewHeroId(k);
-        m_availableHeroes[m_players[i].m_availableHeroIds[1]] = HERO_AVAILABILITY_RETREATED;
+        m_availableHeroes[m_players[i].m_availableHeroIds[1]] = HERO_AVAILABILITY_IN_TAVERN;
     }
     if (!m_noMapHeroes)
         ProcessOnMapHeroes();
@@ -2864,6 +2864,8 @@ void game::PerDay(void) {
                 m_players[i].m_resources[(m_day - 1)] += 1;
         }
     }
+    for (i = 0; i < GAME_HERO_COUNT; i++)
+        m_heroRecs[i].m_fledState = HERO_FLED_NONE;
     m_day++;
     gCurTurn = GAME_DAY_NUMBER(*this);
     if (m_day > CALENDAR_DAYS_PER_WEEK) {
@@ -2926,7 +2928,7 @@ void game::PerWeek(void) {
         for (j = 0; j < PLAYER_TAVERN_HERO_COUNT; j++) {
             heroClass = (Random(1, 3) + heroClass) % HERO_CLASS_COUNT;
             if (gGame->m_availableHeroes[gGame->m_players[i].m_availableHeroIds[j]]
-                == HERO_AVAILABILITY_RETREATED)
+                == HERO_AVAILABILITY_IN_TAVERN)
                 gGame->m_availableHeroes[gGame->m_players[i].m_availableHeroIds[j]] =
                     HERO_AVAILABILITY_UNAVAILABLE;
             gGame->m_players[i].m_availableHeroIds[j] = gGame->GetNewHeroId(heroClass);
@@ -3614,6 +3616,8 @@ i32 game::GetLuck(hero* heroPointer, army*) {
     if (!heroPointer)
         return 0;
     luck = 0;
+    if (heroPointer->HasArtifact(ARTIFACT_FIZBIN_OF_MISFORTUNE))
+        luck -= GAME_FIZBIN_LUCK_PENALTY;
     if (heroPointer->HasArtifact(ARTIFACT_LUCKY_RABBITS_FOOT))
         luck++;
     if (heroPointer->HasArtifact(ARTIFACT_GOLDEN_HORSESHOE))
@@ -3985,7 +3989,7 @@ void game::CheckHeroConsistency(void) {
                            <= GAME_PLAYER_COUNT - 1) {
                     m_players[i].m_availableHeroIds[j] = GetNewHeroId(0);
                     m_availableHeroes[m_players[i].m_availableHeroIds[j]] =
-                        HERO_AVAILABILITY_RETREATED;
+                        HERO_AVAILABILITY_IN_TAVERN;
                 }
             }
         }

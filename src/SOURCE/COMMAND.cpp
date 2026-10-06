@@ -1325,19 +1325,38 @@ void combatManager::DoLoseWindow(void) {
     gResourceManager->Dispose(scrollBitmap);
 }
 
+// Surrendering costs half the price of every creature still standing.
+i32 combatManager::SurrenderCost(void) {
+    i32 armyIndex;
+    i32 cost;
+
+    cost = 0;
+    for (armyIndex = 0; armyIndex < ARMY_GROUP_SLOT_COUNT; armyIndex++) {
+        if (m_armies[m_currentSide][armyIndex].IsAlive())
+            cost +=
+                m_armies[m_currentSide][armyIndex].m_quantity
+                * (gMonsterDatabase[m_armies[m_currentSide][armyIndex].m_creatureType].cost / 2);
+    }
+    return cost;
+}
+
 i16 combatManager::DoSurrender(void) {
     heroWindow* window;
     i16 unusedResult;
-    i32 armyIndex;
     tag_message message;
     i16 unusedTypeValue;
+    hero* speaker;
+    char* offer;
 
-    gSurrenderCost = 0;
-    for (armyIndex = 0; armyIndex < ARMY_GROUP_SLOT_COUNT; armyIndex++) {
-        if (m_armies[m_currentSide][armyIndex].IsAlive())
-            gSurrenderCost +=
-                m_armies[m_currentSide][armyIndex].m_quantity
-                * (gMonsterDatabase[m_armies[m_currentSide][armyIndex].m_creatureType].cost / 2);
+    gSurrenderCost = SurrenderCost();
+    // A human surrenders to the enemy hero's terms; a computer hero offers
+    // to pay its way out and the human opponent decides.
+    if (gHumanPlayer[m_playerId[m_currentSide]]) {
+        speaker = m_heroes[COMBAT_OPPOSING_SIDE(m_currentSide)];
+        offer = localization::Tr("combat.surrender.offer");
+    } else {
+        speaker = m_heroes[m_currentSide];
+        offer = localization::Tr("combat.surrender.computer_offer");
     }
     unusedTypeValue = 1;
     unusedResult = 2;
@@ -1345,17 +1364,12 @@ i16 combatManager::DoSurrender(void) {
     if (window == NULL)
         MemError();
     SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_ICON, SURRENDER_PORTRAIT);
-    sprintf(gText, "port%04d.icn", m_heroes[COMBAT_OPPOSING_SIDE(m_currentSide)]->m_portrait);
+    sprintf(gText, "port%04d.icn", speaker->m_portrait);
     message.text = gText;
     window->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_TEXT;
     message.id = SURRENDER_TEXT;
-    sprintf(
-        gText,
-        localization::Tr("combat.surrender.offer"),
-        m_heroes[COMBAT_OPPOSING_SIDE(m_currentSide)]->m_name,
-        gSurrenderCost
-    );
+    sprintf(gText, offer, speaker->m_name, gSurrenderCost);
     window->BroadcastMessage(message);
     gWindowManager->DoDialog(window, TrueFalseDialogHandler, false);
     delete window;
@@ -1507,10 +1521,28 @@ i16 combatManager::ProcessNextAction(struct tag_message& message) {
             doAdvance = true;
             break;
         case ACTION_RETREAT:
+        retreat:
             m_sideRetreated[m_currentSide] = 1;
             gRetreatWin = true;
+            if (m_heroes[m_currentSide])
+                m_heroes[m_currentSide]->m_fledState = HERO_FLED_RETREATED;
             break;
         case ACTION_SURRENDER:
+            if (!gHumanPlayer[m_playerId[m_currentSide]]) {
+                // The human opponent decides whether the computer may buy
+                // its way out; refused, it casts what damage it can and
+                // retreats.
+                if (!DoSurrender()) {
+                    if (!m_heroCastSpell[m_currentSide]) {
+                        gMouseManager->ReallyHidePointer();
+                        CastSurrenderRefusedSpell(m_currentSide);
+                    }
+                    goto retreat;
+                }
+                gNextActionExtra = gSurrenderCost;
+            }
+            if (m_heroes[m_currentSide])
+                m_heroes[m_currentSide]->m_fledState = HERO_FLED_SURRENDERED;
             gCombatSurrender = true;
             gRetreatWin = true;
             m_sideSurrendered[m_currentSide] = 1;

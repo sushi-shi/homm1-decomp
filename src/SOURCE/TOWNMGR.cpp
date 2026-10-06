@@ -2078,10 +2078,7 @@ b8 townManager::RecruitHero(b8 quickView) {
         m_recruitHeroes[m_recruitState]->m_y = townY;
         m_recruitHeroes[m_recruitState]->m_eventFlags = 0;
         m_recruitHeroes[m_recruitState]->m_direction = MAP_DIRECTION_EAST;
-        m_recruitHeroes[m_recruitState]->m_remainingMobility =
-            m_recruitHeroes[m_recruitState]->CalcMobility();
-        m_recruitHeroes[m_recruitState]->m_mobility =
-            m_recruitHeroes[m_recruitState]->m_remainingMobility;
+        m_recruitHeroes[m_recruitState]->SetRecruitedMobility();
         m_recruitHeroes[m_recruitState]->m_locationType = gGame->m_map[townX][townY].m_triggerType;
         m_recruitHeroes[m_recruitState]->m_occupiedTown =
             gGame->m_map[townX][townY].m_objectMetadata;
@@ -2133,7 +2130,7 @@ b8 townManager::RecruitHero(b8 quickView) {
         newHeroClass = (newHeroClass + Random(1, 3)) % HERO_CLASS_COUNT;
         gCurPlayerData->m_availableHeroIds[m_recruitState] = gGame->GetNewHeroId(newHeroClass);
         gGame->m_availableHeroes[gCurPlayerData->m_availableHeroIds[m_recruitState]] =
-            HERO_AVAILABILITY_RETREATED;
+            HERO_AVAILABILITY_IN_TAVERN;
     } else {
         if (m_castleDialogActive)
             SetupCastle(m_heroWindow0);

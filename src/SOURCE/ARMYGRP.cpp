@@ -35,8 +35,7 @@ i16 armyGroup::GetMorale(hero* armyHero, town* occupiedTown) {
             morale++;
         if (armyHero->HasArtifact(ARTIFACT_MEDAL_OF_DISTINCTION))
             morale++;
-        if (armyHero->HasArtifact(ARTIFACT_FIZBIN_OF_MISFORTUNE))
-            morale -= 2;
+        morale += armyHero->m_cowardice;
     }
     if (occupiedTown
         && (occupiedTown->m_buildings & (1 << BUILDING_SLOT_TAVERN)))
