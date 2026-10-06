@@ -213,7 +213,7 @@ rva	name	provenance
 0x00023707	?CombatMessage@combatManager@@QAEXPADH@Z	Buka combat message/hydra review: 0x158d6
 0x000237b4	?CombatMessage@combatManager@@QAEXF@Z	Buka TU-order, instruction/call or constructor-vtable identity review (identity only, strict body/reference comparison unchanged).
 0x00023a3a	?ResetLimitCreature@combatManager@@QAEXXZ	Buka combat message/hydra review: 0x15500, 0x15906
-0x00023acc	?SetGridMode@combatManager@@QAEXC@Z	Buka army drawing/movement instruction and CFG review: 0x143d4, 0x1407c
+0x00023acc	?SetDrawRightToLeft@combatManager@@QAEXC@Z	Buka army drawing/movement instruction and CFG review: 0x143d4, 0x1407c
 0x00023ae5	?UpdateCombatArea@combatManager@@QAEXXZ	Buka TU-order, instruction/call or constructor-vtable identity review (identity only, strict body/reference comparison unchanged).
 0x00023bab	?DrawBackground@combatManager@@QAEXXZ	Buka TU-order, instruction/call or constructor-vtable identity review (identity only, strict body/reference comparison unchanged).
 0x00023d6c	?DrawFrame@combatManager@@QAEXC@Z	Buka army drawing/movement instruction and CFG review: 0x14024, 0x14435, 0x14654
@@ -260,7 +260,7 @@ rva	name	provenance
 0x0002b5f2	?Read@playerData@@QAEXH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency
 0x0002b7d3	?NextHero@playerData@@QAECH@Z	Buka Main complete instruction/CFG correspondence: 0x3327
 0x0002b8d3	?HasMobileHero@playerData@@QAECXZ	Buka input-handler instruction/CFG review: 0x44e7
-0x0002b929	?CountVisitedObelisks@playerData@@QAECXZ	Complete instruction body, reference-site shape and injective stack-byte correspondence
+0x0002b929	?CountPuzzlePiecesRemoved@playerData@@QAECXZ	Complete instruction body, reference-site shape and injective stack-byte correspondence
 0x0002b97f	?BuildingsOwned@playerData@@QAEHHHH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency
 0x0002ba35	?NumOfGivenArtifact@playerData@@QAEHH@Z	Complete instruction body, reference-site shape and injective stack-byte correspondence
 0x0002bab9	?ComputeUALoc@@YAXH@Z	Buka input-handler instruction/CFG review: 0x4a00
@@ -883,7 +883,7 @@ rva	name	provenance
 0x000688b0	_Netbios@4	Buka FF25 import thunk at 0x688b0; PE IAT 0x8a1f8 NETAPI32.dll!Netbios; decoration from pinned or verified import library, or compiled WinG caller
 0x000688c0	??0baseManager@@QAE@XZ	Buka adventure-manager family: 0x100d, reviewed source family
 0x000689a0	?CleanupSamples@@YAXXZ	Buka audio/video assembly reconstruction; active VA identity checked against census
-0x00068b02	?FindSampleNode@@YAPAUAudiereSampleNode@@PAVsample@@@Z	Buka audio/video assembly reconstruction; active VA identity checked against census
+0x00068b02	?FindSampleNode@@YAPAU?$AudiereNode@Vsample@@@@PAVsample@@@Z	Buka audio/video assembly reconstruction; active VA identity checked against census
 0x00068b37	?PlaySample@@YAXPAVsample@@@Z	Buka environment-audio instruction/CFG/EH review: 0xf527
 0x00068ec4	?LoadPlaySample@@YAPAVsample@@PAD@Z	Buka input-handler instruction/CFG review: 0x4774
 0x00068eed	?StopSample@@YAXPAVsample@@@Z	Buka environment-audio instruction/CFG/EH review: 0xf092, 0xf24e, 0xf4b5
@@ -920,7 +920,7 @@ rva	name	provenance
 0x00069ec0	??1?$RefPtr@VSampleSource@audiere@@@audiere@@QAE@XZ	VC6 COMDAT body equal; template argument from the ordered EH unwind calls of AudiereEffects/AudiereMusic paired with the compiled objects' funclets
 0x00069ef0	??4?$RefPtr@VSampleSource@audiere@@@audiere@@QAEAAV01@PAVSampleSource@1@@Z	Full pinned-library/header-object instruction fingerprint and source caller controls
 0x00069f50	??1?$RefPtr@VAudioDevice@audiere@@@audiere@@QAE@XZ	VC6 COMDAT body equal; template argument from the ordered EH unwind calls of AudiereEffects/AudiereMusic paired with the compiled objects' funclets
-0x00069f80	??1AudiereSampleNode@@QAE@XZ	Full pinned-library/header-object instruction fingerprint and source caller controls
+0x00069f80	??1?$AudiereNode@Vsample@@@@QAE@XZ	Full pinned-library/header-object instruction fingerprint and source caller controls
 0x00069fb0	?CycleColors@@YAXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency
 0x0006a14c	??0heroWindowManager@@QAE@XZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency
 0x0006a1eb	?Open@heroWindowManager@@UAEFF@Z	Buka TU-order, instruction/call or constructor-vtable identity review (identity only, strict body/reference comparison unchanged).

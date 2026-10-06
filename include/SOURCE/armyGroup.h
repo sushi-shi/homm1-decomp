@@ -47,20 +47,18 @@ public:
     armyGroup(void);
     // --- methods ---
     void View(i32);
-    i32 HasAllUndead(void);
-    i32 HasSomeUndead(void);
     // HoMM1 retail: hero and town only (ret 8), morale in AX.
-    i16 GetMorale(class hero* h, class town* t);
+    i16 GetMorale(class hero* armyHero, class town* occupiedTown);
     void Dismiss(i8 slot);
     i8 IsMember(i8 creatureType);
-    H1_ENUM_RETURN(ArmyGroupAlignmentResult, i8) IsHomogeneous(i8 countRaces);
+    H1_ENUM_RETURN(ArmyGroupAlignmentResult, i8) IsHomogeneous(i8 alignmentMode);
     i8 CanJoin(i8 creatureType);
     // HoMM1 returns the count in AX (callers sign-extend).
     i16 GetNumArmies(void);
     // HoMM1 retail: byte creature/slot, word count, word result (ret 0xc).
     i16 Add(i8 creatureType, i16 quantity, i8 slot);
     void Swap(i8 slot, class armyGroup* otherGroup, i8 otherSlot);
-    void DamageGroup(float damagePercent);
+    void DamageGroup(float casualtyFraction);
 };
 #pragma pack(pop)
 // GetAlignmentModifier's distinct-race counts with their own modifier.

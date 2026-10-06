@@ -59,6 +59,9 @@ DATA(0x004cc910)
 static SmackSum gSmackSummary;
 DATA(0x004cc964)
 static i8 gSmackSavedPalette[PALETTE_DATA_SIZE];
+// No retail code reads this; it holds its retail .bss place.
+DATA(0x004ccc64)
+static i32 gOldSmackPad;
 DATA(0x004ccc68)
 static i8 gSmackStop;
 DATA(0x004ccc70)

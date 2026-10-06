@@ -156,7 +156,7 @@ old_rva	new_rva	name	note
 0x000113e0	0x0002b7d3	?NextHero@playerData@@QAECH@Z	
 0x000114e2	0x000114e2	?DrawAdventureBorder@advManager@@QAEXXZ	
 0x0001150c	0x0002b8d3	?HasMobileHero@playerData@@QAECXZ	
-0x00011574	0x0002b929	?CountVisitedObelisks@playerData@@QAECXZ	
+0x00011574	0x0002b929	?CountPuzzlePiecesRemoved@playerData@@QAECXZ	
 0x000115d3	0x0002b97f	?BuildingsOwned@playerData@@QAEHHHH@Z	
 0x000116a4	0x0002ba35	?NumOfGivenArtifact@playerData@@QAEHH@Z	
 0x0001173d	0x0002bab9	?ComputeUALoc@@YAXH@Z	
@@ -357,7 +357,7 @@ old_rva	new_rva	name	note
 0x00022f62	0x0003e656	?GetBuildingBaseResourceValue@@YAHHHH@Z	
 0x00022fc2	0x0003e693	?NormalDialog@@YAXPADHHHHHHHH@Z	
 0x00023707	0x00023707	?CombatMessage@combatManager@@QAEXPADH@Z	
-0x00023acc	0x00023acc	?SetGridMode@combatManager@@QAEXC@Z	
+0x00023acc	0x00023acc	?SetDrawRightToLeft@combatManager@@QAEXC@Z	
 0x00023ebf	0x0003f440	?UpdateNormalDialog@@YAXPAD@Z	
 0x00023f2a	0x0003f4a2	?WaitHandler@@YAFAAUtag_message@@@Z	
 0x000240ef	0x0003f5ef	?EventWindowHandler@@YAFAAUtag_message@@@Z	
@@ -437,7 +437,7 @@ old_rva	new_rva	name	note
 0x0002aaf9	0x00049dfe	?DetermineTargetPosition@philAI@@QAEXPAVhero@@AAC1F@Z	
 0x0002ac90	0x0002ac90	?FlyTo@army@@QAEFXZ	
 0x0002b42b	0x0004a69b	?ProbableOutcomeOfBattle@philAI@@QAEXPAVarmyGroup@@PAVhero@@010CCHAAMAAH3333@Z	
-0x0002b929	0x0002b929	?CountVisitedObelisks@playerData@@QAECXZ	
+0x0002b929	0x0002b929	?CountPuzzlePiecesRemoved@playerData@@QAECXZ	
 0x0002b97f	0x0002b97f	?BuildingsOwned@playerData@@QAEHHHH@Z	
 0x0002ba35	0x0002ba35	?NumOfGivenArtifact@playerData@@QAEHH@Z	
 0x0002ba65	0x0004abfa	?GetOddsOfWinning@philAI@@QAEMH@Z	
@@ -596,7 +596,7 @@ old_rva	new_rva	name	note
 0x00038869	0x00023707	?CombatMessage@combatManager@@QAEXPADH@Z	
 0x0003891e	0x000237b4	?CombatMessage@combatManager@@QAEXF@Z	
 0x00038c11	0x00023a3a	?ResetLimitCreature@combatManager@@QAEXXZ	
-0x00038ce5	0x00023acc	?SetGridMode@combatManager@@QAEXC@Z	
+0x00038ce5	0x00023acc	?SetDrawRightToLeft@combatManager@@QAEXC@Z	
 0x00038d09	0x00023ae5	?UpdateCombatArea@combatManager@@QAEXXZ	
 0x00038d44	0x00038d44	?RandomizePlayerCrests@game@@QAEXXZ	
 0x00038de7	0x00023bab	?DrawBackground@combatManager@@QAEXXZ	
@@ -1081,7 +1081,7 @@ old_rva	new_rva	name	note
 0x0006878c	0x00054459	?Open@fileRequester@@UAEFF@Z	
 0x000688c0	0x000688c0	??0baseManager@@QAE@XZ	
 0x000689a0	0x000689a0	?CleanupSamples@@YAXXZ	
-0x00068b02	0x00068b02	?FindSampleNode@@YAPAUAudiereSampleNode@@PAVsample@@@Z	
+0x00068b02	0x00068b02	?FindSampleNode@@YAPAU?$AudiereNode@Vsample@@@@PAVsample@@@Z	
 0x00068b37	0x00068b37	?PlaySample@@YAXPAVsample@@@Z	
 0x00068bbd	0x00054826	?SetOK@fileRequester@@QAEXC@Z	
 0x00068c47	0x0005488d	?Main@fileRequester@@UAEFAAUtag_message@@@Z	
@@ -1549,12 +1549,12 @@ old_rva	new_rva	name	note
 0x0008d500	0x0008a6d0	_SPELL_AI_SLOW_MODIFIER	
 0x0008d504	0x0008a6d4	_SPELL_AI_BLIND_MODIFIER	
 0x0008d508	0x0008a6d8	_SPELL_AI_CURSE_MODIFIER	
-0x0008d50c	0x0008a6dc	_SPELL_AI_PARALYZE_MODIFIER	
-0x0008d510	0x0008a6e0	_SPELL_AI_BERSERK_MODIFIER	
+0x0008d50c	0x0008a6dc	_SPELL_AI_BERSERK_MODIFIER	
+0x0008d510	0x0008a6e0	_SPELL_AI_PARALYZE_MODIFIER	
 0x0008d514	0x0008a6e4	_SPELL_AI_HASTE_MODIFIER	
 0x0008d518	0x0008a6e8	_SPELL_AI_BLESS_MODIFIER	
-0x0008d51c	0x0008a6ec	_SPELL_AI_STONESKIN_MODIFIER	
-0x0008d520	0x0008a6f0	_SPELL_AI_SHIELD_MODIFIER	
+0x0008d51c	0x0008a6ec	_SPELL_AI_PROTECTION_MODIFIER	
+0x0008d520	0x0008a6f0	_SPELL_AI_ANTI_MAGIC_MODIFIER	
 0x0008d538	0x0008a4a0	??_7highScoreManager@@6B@	
 0x0008d548	0x0008a6a8	??_7recruitUnit@@6B@	
 0x0008d570	0x0008a6b4	??_7fileRequester@@6B@	
@@ -2070,7 +2070,7 @@ old_rva	new_rva	name	note
 0x000cc44c	0x000cb3dc	?remotestage@@3HA	
 0x000cc480	0x000cb410	?sndBuf@@3URemoteMessage@@A	
 0x000cc580	0x000cb510	?WFDCStage@@3HA	
-0x000cc6d8	0x000cb664	?rcvBufIn@@3URemoteMessage@@A	
+0x000cc6d8	0x000cb664	?rcvBufIn@@3PADA	
 0x000cc7d8	0x000cb768	?outque@@3Uoutque_t@@A	
 0x000cc8b0	0x000cc8b0	?gSearchSeedingComplete@@3HA	
 0x000cd6e0	0x000cc670	?iLastIds@@3PAHA	

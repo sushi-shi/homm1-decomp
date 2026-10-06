@@ -225,7 +225,7 @@ rva	size	symbol	provenance
 0x0008a6d0	4	_SPELL_AI_SLOW_MODIFIER	Buka typed payload, unique anchored code uses and disjoint data owners
 0x0008a6e4	4	_SPELL_AI_HASTE_MODIFIER	Buka typed payload, unique anchored code uses and disjoint data owners
 0x0008a6e8	4	_SPELL_AI_BLESS_MODIFIER	Buka typed payload, unique anchored code uses and disjoint data owners
-0x0008a6ec	4	_SPELL_AI_STONESKIN_MODIFIER	Buka typed payload, unique anchored code uses and disjoint data owners
+0x0008a6ec	4	_SPELL_AI_PROTECTION_MODIFIER	Buka typed payload, unique anchored code uses and disjoint data owners
 0x0008a70c	64	?gTownObjectType@@3QAY0BA@$$CBCA	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000a01a8	1028	?LogicalPalette@@3UWingPalette@@A	Buka typed payload, unique anchored code uses and disjoint data owners
 0x0009f97c	1	_?indexToCastOn@?1??HandleCastSpell@@YAFAAUtag_message@@@Z@4CA	Buka typed payload, unique anchored code uses and disjoint data owners
@@ -254,22 +254,22 @@ rva	size	symbol	provenance
 0x000cfb64	4	_sClipRow	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000cfb6c	4	_sClipRun	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000cddcc	4	?gBusyRetry@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners
-0x000cdf58	4	_gSampleBuffer	Buka audio: complete typed payload and retail code users
-0x000cdf5c	4	_gSampleFrames	Buka audio: complete typed payload and retail code users
-0x000cdf60	4	_gSampleChannels	Buka audio: complete typed payload and retail code users
-0x000cdf64	4	_gSampleRate	Buka audio: complete typed payload and retail code users
-0x000cdf68	4	_gSampleFormat	Buka audio: complete typed payload and retail code users
-0x000ce104	4	_gSamples	Buka audio: complete typed payload and retail code users
-0x000ce108	4	_gSampleSuspensions	Buka audio: complete typed payload and retail code users
-0x000cddec	4	?stream@AudiereMusic@@2V?$RefPtr@VOutputStream@audiere@@@audiere@@A	Buka audio: complete typed payload and retail code users
-0x000cdf6c	4	?source@AudiereMusic@@2V?$RefPtr@VSampleSource@audiere@@@audiere@@A	Buka audio: complete typed payload and retail code users
+0x000cdf58	4	_gSampleBufferly	Buka audio: complete typed payload and retail code users
+0x000cdf5c	4	_gSampleFrames0	Buka audio: complete typed payload and retail code users
+0x000cdf60	4	_gSampleChannelsa58	Buka audio: complete typed payload and retail code users
+0x000cdf64	4	_gSampleRate7	Buka audio: complete typed payload and retail code users
+0x000cdf68	4	_gSampleFormata98	Buka audio: complete typed payload and retail code users
+0x000ce104	4	_gSamplesa	Buka audio: complete typed payload and retail code users
+0x000ce108	4	_gSampleSuspensionsa6	Buka audio: complete typed payload and retail code users
+0x000cddec	4	?channel@AudiereMusic@@2V?$RefPtr@VOutputStream@audiere@@@audiere@@A	Buka audio: complete typed payload and retail code users
+0x000cdf6c	4	?origin@AudiereMusic@@2V?$RefPtr@VSampleSource@audiere@@@audiere@@A	Buka audio: complete typed payload and retail code users
 0x000cdde8	4	_gMusicSuspensions	Buka audio: complete typed payload and retail code users
 0x000a0d70	4	_gCurrentTrack	Buka audio: complete typed payload and retail code users
 0x000a0d74	400	_gCDTrackMap	Buka audio: complete typed payload and retail code users
 0x000cddf0	352	_gMusicFilename	Buka audio: complete typed payload and retail code users
-0x000cdf74	400	_gMusicPositions	Buka audio: complete typed payload and retail code users
-0x000ce10c	4	_gMusicSource	Buka audio: complete typed payload and retail code users
-0x000cdf50	4	?device@AudiereDevice@@2V?$RefPtr@VAudioDevice@audiere@@@audiere@@A	Buka audio: complete typed payload and retail code users
+0x000cdf74	400	_gMusicPositionsaat	Buka audio: complete typed payload and retail code users
+0x000ce10c	4	_gMusicSourcejxy	Buka audio: complete typed payload and retail code users
+0x000cdf50	4	?driver@AudiereDevice@@2V?$RefPtr@VAudioDevice@audiere@@@audiere@@A	Buka audio: complete typed payload and retail code users
 0x000a0f04	4	_gEffectsVolume	Buka audio: complete typed payload and retail code users
 0x000a0f08	4	_gMusicVolume	Buka audio: complete typed payload and retail code users
 0x000a0f0c	44	_gVolumeLevels	Buka audio: complete typed payload and retail code users
@@ -279,7 +279,7 @@ rva	size	symbol	provenance
 0x000b2174	4	?gEventSlot@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000a99ec	1024	?bProcessMessage@@3PAEA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000b4b9c	4	?gCombatWinningFraction@@3MA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000cb664	256	?rcvBufIn@@3URemoteMessage@@A	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
+0x000cb664	256	?rcvBufIn@@3PADA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000c8cd4	72	?gaiHeroLiveChance@@3PAFA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000b4b98	4	?gDiscountByReloadFlag@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000ca184	4	?gEventTownRec@@3PAVtown@@A	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
@@ -353,9 +353,9 @@ rva	size	symbol	provenance
 0x000cccb0	4	?gSpellAITargetSide@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x0008a6d4	4	_SPELL_AI_BLIND_MODIFIER	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x0008a6d8	4	_SPELL_AI_CURSE_MODIFIER	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x0008a6dc	4	_SPELL_AI_PARALYZE_MODIFIER	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x0008a6e0	4	_SPELL_AI_BERSERK_MODIFIER	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x0008a6f0	4	_SPELL_AI_SHIELD_MODIFIER	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
+0x0008a6dc	4	_SPELL_AI_BERSERK_MODIFIER	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
+0x0008a6e0	4	_SPELL_AI_PARALYZE_MODIFIER	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
+0x0008a6f0	4	_SPELL_AI_ANTI_MAGIC_MODIFIER	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000d7f60	4	?gLeftRightSave@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000bb138	4	?gItemPurchaseScore@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000b2210	4	?gEventTownScore@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls

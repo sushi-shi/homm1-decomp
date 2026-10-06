@@ -181,7 +181,7 @@ H1_ENUM_CONST_BEGIN(TownCastleControl)
     TOWN_CASTLE_STATUS_HEIGHT = 0x10
 H1_ENUM_CONST_END(TownCastleControl)
 
-// RecruitHero's m_recruitState: which of the two tavern heroes was hired.
+// RecruitHero's m_recruitState: which of the two candidate heroes was hired.
 H1_ENUM_CONST_BEGIN(TownRecruitHeroConstant)
     RECRUIT_HERO_NONE = -1
 H1_ENUM_CONST_END(TownRecruitHeroConstant)
@@ -264,7 +264,7 @@ H1_ENUM_CONST_BEGIN(TownScreenConstant)
 H1_ENUM_CONST_END(TownScreenConstant)
 
 // rcrthero.bin widget ids: the two candidates' portraits, class labels and
-// select buttons (dimmed for the cannot-recruit quick view).
+// select buttons (dimmed for the right-click quick view).
 H1_ENUM_BEGIN(TownRecruitHeroControl)
     RECRUIT_HERO_PORTRAIT_FIRST = 2,
     RECRUIT_HERO_PORTRAIT_SECOND = 3,
@@ -298,7 +298,8 @@ public:
     char m_statusText[TOWN_MANAGER_STATUS_TEXT_SIZE];
     i16 m_lastHoverId;
     H1_ENUM_STORAGE(TownArmyCommand, i8) m_command;
-    // SetupCastle's recruit-slot state and its affordable/buildable masks.
+    // Set once RecruitHero hires a hero this visit (SetupCastle, CastleHandler
+    // and Main read it), then SetupCastle's affordable/buildable masks.
     i8 m_recruitResult;
     u16 m_affordableBuildings;
     u16 m_buildableBuildings;
@@ -308,7 +309,7 @@ public:
     heroWindow* m_heroWindow1;
     i16 m_splitAmount;
     i16 m_splitMaximum;
-    // RecruitHero: the chosen tavern slot (-1 if none) and both candidates.
+    // RecruitHero: the chosen candidate slot (-1 if none) and both candidates.
     i16 m_recruitState;
     hero* m_recruitHeroes[2];
     // HoMM1 Main tests this additional mask against message.type.
@@ -316,7 +317,7 @@ public:
     // --- constructors ---
     townManager(void);
     // --- virtual methods (vtable order) ---
-    virtual i16 Open(i16 id) OVERRIDE;
+    virtual i16 Open(i16 priority) OVERRIDE;
     virtual void Close(void) OVERRIDE;
     virtual i16 Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
@@ -336,11 +337,11 @@ public:
     void ShiftQualChange(void);
     void ResetStrips(void);
     void Toggle(i8 building);
-    void DrawTown(i8 updateScreen, i32 drawFlags);
+    void DrawTown(i8 updateScreen, i32 advanceAnimation);
     i16 BuyBuild(i16 building, i8 cannotBuy, i8 quickView);
     void BuildObj(i16 building);
     void SetupMage(class heroWindow* window);
-    i8 RecruitHero(i8 cannotRecruit);
+    i8 RecruitHero(i8 quickView);
     void DoTavern(void);
     void SetupWell(class heroWindow* window);
     void SetupThievesGuild(class heroWindow* window, i16 categories);

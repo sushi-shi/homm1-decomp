@@ -15,7 +15,7 @@ hexcell::hexcell(void) {
     m_occupantSide = COMBAT_SIDE_NONE;
     m_occupantIndex = 0;
     m_obstacleIndex = COMBAT_OBSTACLE_NONE;
-    m_occupantFrame = HEXCELL_OCCUPANT_FRAME_NONE;
+    m_occupantFootprintHalf = HEXCELL_FOOTPRINT_HALF_NONE;
     m_pathFlag = 0;
 }
 
@@ -24,9 +24,9 @@ VA(0x0043b73f, 0x42)
 hexcell* hexcell::TakeOccupant(hexcell* from) {
     m_occupantSide = from->m_occupantSide;
     m_occupantIndex = from->m_occupantIndex;
-    m_occupantFrame = from->m_occupantFrame;
+    m_occupantFootprintHalf = from->m_occupantFootprintHalf;
     from->m_occupantSide = COMBAT_SIDE_NONE;
-    from->m_occupantFrame = HEXCELL_OCCUPANT_FRAME_NONE;
+    from->m_occupantFootprintHalf = HEXCELL_FOOTPRINT_HALF_NONE;
     return this;
 }
 
@@ -38,13 +38,13 @@ void hexcell::DrawGround(void) {
 
 VA(0x0043b7c1, 0x71)
 void hexcell::DrawOccupant(void) {
-    i8 frame;
+    i8 occupantFacing;
     army* occupant;
 
     if (m_occupantSide != COMBAT_SIDE_NONE) {
         occupant = &gCombatManager->m_armies[m_occupantSide][m_occupantIndex];
-        frame = occupant->m_facing;
-        if (m_occupantFrame != frame)
+        occupantFacing = occupant->m_facing;
+        if (m_occupantFootprintHalf != occupantFacing)
             occupant->DrawToBuffer(m_x, m_y);
     }
 }
@@ -80,26 +80,26 @@ void hexcell::DrawTower(i8 frame) {
 
 VA(0x0043b956, 0x279)
 void hexcell::DrawWall(void) {
-    i8 lastFlip;
+    i8 level;
     i16 row;
-    i16 levelValue;
+    i16 rubbleFrame;
 
-    lastFlip = gCombatManager->m_castleSide[COMBAT_ATTACKER_SIDE] == 1;
+    level = gCombatManager->m_castleSide[COMBAT_ATTACKER_SIDE] == 1;
     row = (m_y - COMBAT_HEX_ORIGIN_Y) / COMBAT_HEX_HEIGHT;
-    levelValue = gCombatManager->m_wallDamage;
+    rubbleFrame = gCombatManager->m_wallDamage;
     gCombatManager->m_combatIcons[COMBAT_ICON_CLOUD]->DrawToBuffer(
-        lastFlip ? m_x - 15 : m_x + 15,
+        level ? m_x - 15 : m_x + 15,
         row == 0 ? m_y - 20 : m_y - 36,
         gCombatManager->m_wallFrame,
         ICON_DRAW_NORMAL,
         ICON_DRAW_OFFSET_FULL
     );
-    if (levelValue != COMBAT_WALL_DAMAGE_NONE) {
+    if (rubbleFrame != COMBAT_WALL_DAMAGE_NONE) {
         if (row == COMBAT_GRID_LAST_ROW) {
             gCombatManager->m_combatIcons[COMBAT_ICON_CLOUD]->DrawToBuffer(
-                lastFlip ? m_x : m_x + 15,
+                level ? m_x : m_x + 15,
                 m_y + 8,
-                levelValue,
+                rubbleFrame,
                 ICON_DRAW_NORMAL,
                 ICON_DRAW_OFFSET_FULL
             );
@@ -107,33 +107,33 @@ void hexcell::DrawWall(void) {
         }
         if (row & 1) {
             gCombatManager->m_combatIcons[COMBAT_ICON_CLOUD]->DrawToBuffer(
-                lastFlip ? m_x : m_x + 8,
+                level ? m_x : m_x + 8,
                 m_y + 40,
-                levelValue,
+                rubbleFrame,
                 ICON_DRAW_NORMAL,
                 ICON_DRAW_OFFSET_FULL
             );
-            if (levelValue > 0)
+            if (rubbleFrame > 0)
                 gCombatManager->m_combatIcons[COMBAT_ICON_CLOUD]->DrawToBuffer(
-                    lastFlip ? m_x - 40 : m_x - 32,
+                    level ? m_x - 40 : m_x - 32,
                     m_y + 60,
-                    levelValue - 1,
+                    rubbleFrame - 1,
                     ICON_DRAW_NORMAL,
                     ICON_DRAW_OFFSET_FULL
                 );
         } else {
             gCombatManager->m_combatIcons[COMBAT_ICON_CLOUD]->DrawToBuffer(
-                lastFlip ? m_x - 28 : m_x - 8,
+                level ? m_x - 28 : m_x - 8,
                 m_y + 40,
-                levelValue,
+                rubbleFrame,
                 ICON_DRAW_NORMAL,
                 ICON_DRAW_OFFSET_FULL
             );
-            if (levelValue > 0)
+            if (rubbleFrame > 0)
                 gCombatManager->m_combatIcons[COMBAT_ICON_CLOUD]->DrawToBuffer(
-                    lastFlip ? m_x + 20 : m_x + 40,
+                    level ? m_x + 20 : m_x + 40,
                     m_y + 60,
-                    levelValue - 1,
+                    rubbleFrame - 1,
                     ICON_DRAW_NORMAL,
                     ICON_DRAW_OFFSET_FULL
                 );
@@ -143,7 +143,7 @@ void hexcell::DrawWall(void) {
 
 VA(0x0043bbcf, 0x151)
 void hexcell::DrawObstacle(void) {
-    if (m_obstacleType == COMBAT_ICON_CASTLE) {
+    if (m_obstacleIcon == COMBAT_ICON_CASTLE) {
         switch (m_obstacleIndex) {
             case COMBAT_WALL_INTACT:
             case COMBAT_WALL_DAMAGED:

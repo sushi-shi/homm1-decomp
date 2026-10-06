@@ -165,7 +165,7 @@ rva	name	provenance
 0x00025ac0	??1?$RefPtr@VSampleSource@audiere@@@audiere@@QAE@XZ	game 0x69ec0: masked game body 0x69ec0 (44 bytes) at its unit's block offset, shared by 39 bodies (4 identical occurrence(s))
 0x00025af0	??4?$RefPtr@VSampleSource@audiere@@@audiere@@QAEAAV01@PAVSampleSource@1@@Z	game 0x69ef0: masked game body 0x69ef0 (81 bytes) at its unit's block offset, shared by 39 bodies (2 identical occurrence(s))
 0x00025b50	??1?$RefPtr@VAudioDevice@audiere@@@audiere@@QAE@XZ	game 0x69f50: masked game body 0x69f50 (44 bytes) at its unit's block offset, shared by 39 bodies (4 identical occurrence(s))
-0x00025b80	??1AudiereSampleNode@@QAE@XZ	game 0x69f80: masked game body 0x69f80 (44 bytes) at its unit's block offset, shared by 39 bodies (4 identical occurrence(s))
+0x00025b80	??1?$AudiereNode@Vsample@@@@QAE@XZ	game 0x69f80: masked game body 0x69f80 (44 bytes) at its unit's block offset, shared by 39 bodies (4 identical occurrence(s))
 0x000292a4	??3@YAXPAX@Z	callee of placed BASE/Audio body at site 0x24619; game callee 0x77c4d
 0x000292af	??2@YAPAXI@Z	callee of placed BASE/Audio body at site 0x247fb; game callee 0x77d50
 0x000292bd	?_JumpToContinuation@@YGXPAXPAUEHRegistrationNode@@@Z	masked-exact libcmt.lib:/1877 (dna_bands.tsv)

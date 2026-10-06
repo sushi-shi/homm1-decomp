@@ -43,6 +43,9 @@ DATA(0x004a01a8)
 WingPalette LogicalPalette = {0x300, PALETTE_COLOR_COUNT};
 DATA(0x004cdda4)
 void* gInitWin = NULL;
+// No retail code reads this; it holds its retail .bss place.
+DATA(0x004cdda8)
+i32 gUnusedPaintCount = 0;
 // Image and scroll counters of the WinG paint path.
 DATA(0x004cddac)
 i32 gTtlBlts = 0;
