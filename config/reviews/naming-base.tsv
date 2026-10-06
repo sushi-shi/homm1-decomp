@@ -138,3 +138,6 @@ local-aliased	PollRemote	newFull	queueFull	set when all receive-queue slots are 
 local	NormalDialog	amounts/sizedHeight/resCenterX	labelTexts/imageHeight/imageCenterX	the caption under each image (an amount, spell name or nothing) and the image geometry
 local-aliased	NormalDialog	resWidth/resourcePanel/captionText/msg	imageWidth/imageWidget/labelWidget/message	image widget, its caption widget and the widget message
 member	font	m_headerWord	m_glyphOffsetY	the font header's second word; DrawString adds it to y for every glyph
+global	BASE/miscwin	sClipY/sClipLimitY/sClipRowStart/sClipRow/sClipFrameEntry/sClipSource/sClipLimitX/sClipX/sClipRun/sClipInside	gClipY/gClipLimitY/gClipRowStart/gClipRow/gClipFrameEntry/gClipSource/gClipLimitX/gClipX/gClipRun/gClipInside	file statics take the g prefix every other unit uses; storage spellings stay behind aliases
+global	BASE/miscwin	sMiscOldField/sMiscScanTable	gMiscOldField/gMiscScanTable	g prefix; unreferenced objects that hold their .bss places
+global	SOURCE/ADVMGR	USMsg/CDMsg	gUSMsg/gCDMsg	g prefix on the two unreferenced message objects

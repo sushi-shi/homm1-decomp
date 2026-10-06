@@ -5746,8 +5746,8 @@ void advManager::InsertSound(i16 x, i16 y, i16 distance, i8 soundLayer) {
     }
 }
 
-// ADVMGR .bss keeps objects no code references: gThisMaxY, gThisMinY, USMsg,
-// CDMsg and four words that only retail's layout shows.
+// ADVMGR .bss keeps objects no code references: gThisMaxY, gThisMinY, gUSMsg,
+// gCDMsg and four words that only retail's layout shows.
 #define gThisMaxY iThisMaxY // spelling fixes .bss order
 DATA(0x004a65a0)
 i32 gThisMaxY;
@@ -5881,11 +5881,12 @@ void advManager::DimensionDoor(void) {
     }
 }
 
-#define USMsg gUSMsgCopy // spelling fixes .bss order
+#define gUSMsg gUSMsgCopy // spelling fixes .bss order
 DATA(0x004a6718)
-struct tag_message USMsg;
+struct tag_message gUSMsg;
+#define gCDMsg CDMsg // spelling fixes .bss order
 DATA(0x004a65b0)
-struct tag_message CDMsg;
+struct tag_message gCDMsg;
 
 VA(0x0040fa50, 0x240)
 void advManager::TownGate(void) {

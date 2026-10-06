@@ -308,35 +308,44 @@ void ClippedMonoIconToBitmap(
 
 // Clipped colour icon blit kept beside the mono path. Retail keeps every
 // working value in file statics, as in the assembly renderers.
-#define sClipY sClipPosY // spelling fixes .bss order
+#define gClipY sClipPosY // spelling fixes .bss order
 // No retail code reads this; it holds its retail .bss place.
+#define gMiscOldField sMiscOldField // spelling fixes .bss order
 DATA(0x004cfb4c)
-static i32 sMiscOldField;
+static i32 gMiscOldField;
 DATA(0x004cfb50)
-static i32 sClipY;
+static i32 gClipY;
+#define gClipLimitY sClipLimitY // spelling fixes .bss order
 DATA(0x004cfb58)
-static i32 sClipLimitY;
-#define sClipRowStart sClipLeft // spelling fixes .bss order
+static i32 gClipLimitY;
+#define gClipRowStart sClipLeft // spelling fixes .bss order
 DATA(0x004cfbb4)
-static i32 sClipRowStart;
+static i32 gClipRowStart;
+#define gClipRow sClipRow // spelling fixes .bss order
 DATA(0x004cfb64)
-static u8* sClipRow;
+static u8* gClipRow;
+#define gClipFrameEntry sClipFrameEntry // spelling fixes .bss order
 DATA(0x004cfb68)
-static IconEntry* sClipFrameEntry;
-#define sClipSource sClipSrcPtr // spelling fixes .bss order
+static IconEntry* gClipFrameEntry;
+#define gClipSource sClipSrcPtr // spelling fixes .bss order
 DATA(0x004cfb5c)
-static u8* sClipSource;
+static u8* gClipSource;
+#define gClipLimitX sClipLimitX // spelling fixes .bss order
 DATA(0x004cfb54)
-static i32 sClipLimitX;
+static i32 gClipLimitX;
+#define gClipX sClipX // spelling fixes .bss order
 DATA(0x004cfb60)
-static i32 sClipX;
+static i32 gClipX;
+#define gClipRun sClipRun // spelling fixes .bss order
 DATA(0x004cfb6c)
-static u32 sClipRun;
+static u32 gClipRun;
+#define gClipInside sClipInside // spelling fixes .bss order
 DATA(0x004cfbb0)
-static BOOL sClipInside;
+static BOOL gClipInside;
 // No retail code reads this; it holds its retail .bss place.
+#define gMiscScanTable sMiscScanTable // spelling fixes .bss order
 DATA(0x004cfb70)
-static u8 sMiscScanTable[64];
+static u8 gMiscScanTable[64];
 
 VA(0x00470076, 0x307)
 void ClipIconToBitmap(
@@ -351,57 +360,57 @@ void ClipIconToBitmap(
     i32 clipW,
     i32 clipH
 ) {
-    sClipFrameEntry = sourceIcon->m_frames + frame;
-    sClipSource = sourceIcon->m_data + sClipFrameEntry->srcOffset;
-    sClipX = sClipRowStart = x + sClipFrameEntry->x;
-    sClipY = y + sClipFrameEntry->y;
+    gClipFrameEntry = sourceIcon->m_frames + frame;
+    gClipSource = sourceIcon->m_data + gClipFrameEntry->srcOffset;
+    gClipX = gClipRowStart = x + gClipFrameEntry->x;
+    gClipY = y + gClipFrameEntry->y;
     if (ICON_FITS_CLIP(
-            sClipRowStart,
-            sClipY,
-            sClipFrameEntry->w,
-            sClipFrameEntry->h,
+            gClipRowStart,
+            gClipY,
+            gClipFrameEntry->w,
+            gClipFrameEntry->h,
             clipX,
             clipY,
             clipW,
             clipH
         )) {
-        sClipInside = TRUE;
+        gClipInside = TRUE;
     } else {
-        sClipInside = FALSE;
-        sClipLimitX = clipX + clipW - 1;
-        sClipLimitY = clipY + clipH - 1;
+        gClipInside = FALSE;
+        gClipLimitX = clipX + clipW - 1;
+        gClipLimitY = clipY + clipH - 1;
     }
-    sClipRow = destination->m_pixels + sClipY * destination->m_width;
+    gClipRow = destination->m_pixels + gClipY * destination->m_width;
     for (;;) {
-        sClipRun = *sClipSource++;
-        if (static_cast<i8>(sClipRun) < 0) {
-            if (sClipRun & ICON_MONO_SKIP_MASK)
-                sClipX += sClipRun & ICON_MONO_SKIP_MASK;
+        gClipRun = *gClipSource++;
+        if (static_cast<i8>(gClipRun) < 0) {
+            if (gClipRun & ICON_MONO_SKIP_MASK)
+                gClipX += gClipRun & ICON_MONO_SKIP_MASK;
             else
                 break;
-        } else if (sClipRun != 0) {
-            if (sClipInside) {
-                memcpy(sClipRow + sClipX, sClipSource, sClipRun);
-            } else if (sClipY >= clipY && sClipY <= sClipLimitY && sClipX + sClipRun >= clipX
-                       && sClipX <= sClipLimitX) {
-                if (sClipX >= clipX) {
-                    if (sClipX + sClipRun <= sClipLimitX)
-                        memcpy(sClipRow + sClipX, sClipSource, sClipRun);
+        } else if (gClipRun != 0) {
+            if (gClipInside) {
+                memcpy(gClipRow + gClipX, gClipSource, gClipRun);
+            } else if (gClipY >= clipY && gClipY <= gClipLimitY && gClipX + gClipRun >= clipX
+                       && gClipX <= gClipLimitX) {
+                if (gClipX >= clipX) {
+                    if (gClipX + gClipRun <= gClipLimitX)
+                        memcpy(gClipRow + gClipX, gClipSource, gClipRun);
                     else
-                        memcpy(sClipRow + sClipX, sClipSource, sClipLimitX - sClipX + 1);
+                        memcpy(gClipRow + gClipX, gClipSource, gClipLimitX - gClipX + 1);
                 } else {
-                    if (sClipX + *sClipSource <= sClipLimitX)
-                        memcpy(sClipRow + sClipX, sClipSource, sClipX + sClipRun - clipX);
+                    if (gClipX + *gClipSource <= gClipLimitX)
+                        memcpy(gClipRow + gClipX, gClipSource, gClipX + gClipRun - clipX);
                     else
-                        memcpy(sClipRow + sClipX, sClipSource, clipW);
+                        memcpy(gClipRow + gClipX, gClipSource, clipW);
                 }
             }
-            sClipX += sClipRun;
-            sClipSource += sClipRun;
+            gClipX += gClipRun;
+            gClipSource += gClipRun;
         } else {
-            sClipX = sClipRowStart;
-            sClipY++;
-            sClipRow += destination->m_width;
+            gClipX = gClipRowStart;
+            gClipY++;
+            gClipRow += destination->m_width;
         }
     }
 }
