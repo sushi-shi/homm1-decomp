@@ -4,7 +4,8 @@
     tests/port/fuzz/seeds.py GAME_DATA OUT
 
 creates OUT/<harness>/ for each harness in tests/port/fuzz: the shipped
-maps, campaign maps, saved games and high score tables as they are, and the
+maps, campaign maps, saved games and high score tables (with the byte of
+set-up choices fuzz_map and fuzz_savegame expect after the file), and the
 resource archive's entries in fuzz_resources' input format (a kind byte, then
 the payload). Archive entries are classified by their content, since the
 archive stores only name hashes. The seeds are game data: keep them out of the
@@ -98,12 +99,21 @@ def main():
                    if path is not None]
     scores = files(data, [".HS"])
 
+    # fuzz_map and fuzz_savegame inputs end with a byte of set-up choices.
     for path in maps:
-        for harness in ("fuzz_map", "fuzz_editor_map", "fuzz_records"):
-            write(out / harness, path.name, path.read_bytes())
+        data = path.read_bytes()
+        for harness in ("fuzz_editor_map", "fuzz_records"):
+            write(out / harness, path.name, data)
+        write(out / "fuzz_map", path.name, data + bytes([0x05]))
+        stem = path.stem.upper()
+        if stem.startswith("CAMP") and stem[4:].isdigit():
+            # Its own campaign scenario: bit 7, scenario in bits 2-6.
+            write(out / "fuzz_map", path.name + ".campaign", data + bytes([0x80 | (int(stem[4:]) - 1) << 2]))
     for path in games + extra_games:
-        for harness in ("fuzz_savegame", "fuzz_records", "fuzz_lzhuf"):
-            write(out / harness, path.name, path.read_bytes())
+        data = path.read_bytes()
+        for harness in ("fuzz_records", "fuzz_lzhuf"):
+            write(out / harness, path.name, data)
+        write(out / "fuzz_savegame", path.name, data + bytes([0x00]))
     for path in scores:
         for harness in ("fuzz_records", "fuzz_lzhuf"):
             write(out / harness, path.name, path.read_bytes())
@@ -124,7 +134,7 @@ def main():
         if kind is None:
             # Sounds and window layouts; a few samples are enough.
             if written.get(SAMPLE, 0) < 8 and len(payload) < 20000:
-                write(resources, f"sample-{file_id:04x}", bytes([SAMPLE]) + payload)
+                write(resources, f"sample-{file_id:04x}", payload + bytes([SAMPLE]))
                 written[SAMPLE] = written.get(SAMPLE, 0) + 1
             continue
         if kind == FONT:
@@ -135,14 +145,14 @@ def main():
             if glyphs is None:
                 continue
             record = payload[:4] + b"FUZZ.ICN".ljust(13, b"\0")
-            write(resources, f"font-{file_id:04x}", bytes([FONT]) + record + glyphs)
+            write(resources, f"font-{file_id:04x}", record + glyphs + bytes([FONT]))
         else:
             prefix = {ICON: "icon", BITMAP: "bitmap", TILESET: "tileset", PALETTE: "palette"}[kind]
-            write(resources, f"{prefix}-{file_id:04x}", bytes([kind]) + payload)
+            write(resources, f"{prefix}-{file_id:04x}", payload + bytes([kind]))
         written[kind] = written.get(kind, 0) + 1
         if len(payload) < 4096 and len(small) < 6:
             small.append((file_id, payload))
-    write(resources, "archive-small", bytes([ARCHIVE]) + archive(small))
+    write(resources, "archive-small", archive(small) + bytes([ARCHIVE]))
     for harness in sorted(os.listdir(out)):
         print(f"{harness}: {len(os.listdir(out / harness))} seeds")
 

@@ -1,5 +1,5 @@
 // The resource archive and the decoders that read a resource in place, in
-// the game's units started headless. The input is a kind byte and a payload;
+// the game's units started headless. The input is a payload and a kind byte;
 // the harness writes a small archive holding the payload as one resource,
 // opens it with resourceManager::LoadAggregateHeader in a resource manager of
 // its own, loads the resource through the real Get* call and draws what it
@@ -16,7 +16,8 @@
 //               measured and wrapped
 //   5  sample   (SAMPLE.cpp) the header and its size only
 //   6  archive  the payload is the whole archive: its directory, then every
-//               entry looked up and read
+//               entry looked up, read and loaded as what its contents look
+//               like (ctest loads the shipped archive whole this way)
 //
 // Kinds are taken modulo 7.
 
@@ -59,6 +60,8 @@ enum Kind { ICON, BITMAP, TILESET, PALETTE, FONT, SAMPLE, ARCHIVE, KIND_COUNT };
 const i32 kMaxPixels = 1 << 22;
 const i32 kScreenWidth = 640;
 const i32 kScreenHeight = 480;
+// A font record: height, glyph offset and the glyph icon's name.
+const size_t FONT_RECORD_SIZE = 4 + RESOURCE_NAME_CAPACITY;
 
 u16 FileId(const char* name) {
     return static_cast<u16>(gResourceManager->MakeId(const_cast<char*>(name)));
@@ -102,7 +105,9 @@ struct Image {
     }
 };
 
-void DrawIcon(icon* ic) {
+// Draws every frame of an icon; with `all` clear only where it exactly
+// covers an image of its size.
+void DrawIcon(icon* ic, bool all) {
     Image screen(kScreenWidth, kScreenHeight);
     for (i32 frame = 0; frame < ic->m_frameCount; frame++) {
         IconEntry entry;
@@ -119,6 +124,8 @@ void DrawIcon(icon* ic) {
         i32 top = -entry.y;
         i32 right = width - 1 + entry.x;
         IconToBitmap(ic, image, left, top, frame, ICON_DRAW_OFFSET_FULL);
+        if (!all)
+            continue;
         FlipIconToBitmap(ic, image, right, top, frame, ICON_DRAW_OFFSET_FULL);
         MonoIconToBitmap(ic, image, left, top, frame, 0x55, ICON_DRAW_OFFSET_FULL);
         FlipMonoIconToBitmap(ic, image, right, top, frame, 0x55, ICON_DRAW_OFFSET_FULL);
@@ -188,6 +195,45 @@ void DrawText(font* face) {
     }
 }
 
+// An archive entry loaded as what its contents look like (the archive keeps
+// only the hashes of the names), as seeds.py classifies them: icons hold
+// their data length after the frame count, bitmaps their type 0x21 and size,
+// tilesets their count and size, palettes are 768 bytes and font records
+// 17. The shipped archive must load whole this way.
+void LoadByContent(i16 id, const std::vector<u8>& bytes) {
+    size_t size = bytes.size();
+    if (size == PALETTE_DATA_SIZE) {
+        delete new palette(id);
+        return;
+    }
+    if (size == FONT_RECORD_SIZE) {
+        delete new font(id);
+        return;
+    }
+    if (size < 6)
+        return;
+    i32 a = static_cast<i16>(bytes[0] | (bytes[1] << 8));
+    i32 b = static_cast<i16>(bytes[2] | (bytes[3] << 8));
+    i32 c = static_cast<i16>(bytes[4] | (bytes[5] << 8));
+    u32 length = static_cast<u32>(bytes[2]) | (static_cast<u32>(bytes[3]) << 8)
+                 | (static_cast<u32>(bytes[4]) << 16) | (static_cast<u32>(bytes[5]) << 24);
+    if (a > 0 && length == size - 6) {
+        icon* image = new icon(id);
+        DrawIcon(image, false);
+        delete image;
+    } else if (a == BITMAP_TYPE_MEMORY && b >= 0 && c >= 0
+               && static_cast<size_t>(b) * static_cast<size_t>(c) + 6 == size) {
+        bitmap* image = new bitmap(id);
+        DrawBitmap(image);
+        delete image;
+    } else if (a > 0 && b > 0 && c > 0
+               && static_cast<size_t>(a) * static_cast<size_t>(b) * static_cast<size_t>(c) + 6 == size) {
+        tileset* tiles = new tileset(id);
+        DrawTileset(tiles);
+        delete tiles;
+    }
+}
+
 void Exercise(Kind kind, const u8* payload, size_t size) {
     std::vector<u8> body(payload, payload + size);
     std::vector<u8> archive;
@@ -229,7 +275,7 @@ void Exercise(Kind kind, const u8* payload, size_t size) {
             return;
         switch (kind) {
             case ICON:
-                DrawIcon(fuzzed->GetIcon(const_cast<char*>("FUZZ.ICN")));
+                DrawIcon(fuzzed->GetIcon(const_cast<char*>("FUZZ.ICN")), true);
                 break;
             case BITMAP: {
                 DrawBitmap(fuzzed->GetBitmap(const_cast<char*>("FUZZ.BMP")));
@@ -257,8 +303,9 @@ void Exercise(Kind kind, const u8* payload, size_t size) {
                     i16 id = fuzzed->m_aggregateDir[entry].id;
                     u32 length = fuzzed->GetFileSize(id);
                     fuzzed->PointToFile(id);
-                    std::vector<u8> bytes(length > (1u << 22) ? (1u << 22) : length);
+                    std::vector<u8> bytes(length > (1u << 26) ? (1u << 26) : length);
                     fuzzed->ReadBlock(bytes.data(), static_cast<u32>(bytes.size()));
+                    LoadByContent(id, bytes);
                 }
                 break;
         }
@@ -284,8 +331,8 @@ extern "C" int LLVMFuzzerInitialize(int*, char***) {
 }
 
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
-    if (size < 1 || size > (1u << 22))
+    if (size < 1 || size > (1u << 26))
         return 0;
-    Exercise(static_cast<Kind>(data[0] % KIND_COUNT), data + 1, size - 1);
+    Exercise(static_cast<Kind>(data[size - 1] % KIND_COUNT), data, size - 1);
     return 0;
 }

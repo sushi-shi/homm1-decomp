@@ -60,11 +60,19 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
     if (!FuzzWriteFile(path, data, size))
         return 0;
 
-    // The scenario list reads each map's header.
+    // The scenario list reads each map's header; selecting a map shows its
+    // size and difficulty by name (fileRequester::ShowMapInfo).
     RunGame([] {
         gShowMapInfo = 1;
         fileRequester* requester =
             new fileRequester(0, 0, FILE_REQUESTER_LOAD, "*.MAP", ".\\MAPS\\", ".MAP");
+        for (i32 i = 0; i < requester->m_fileCount; i++) {
+            volatile size_t shown = std::strlen(gMapSizeNames[requester->m_mapInfo[i].size])
+                                    + std::strlen(gMapDifficultyNames[requester->m_mapInfo[i].difficulty])
+                                    + std::strlen(requester->m_mapNames[i].text)
+                                    + std::strlen(requester->m_mapInfo[i].description);
+            (void)shown;
+        }
         delete requester;
     });
 

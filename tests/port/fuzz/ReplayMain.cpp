@@ -18,6 +18,7 @@
 //   base GAMEPATH        start from a shipped file (skipped without HOMM1_DATA)
 //   bytes HEX...         append bytes
 //   fill COUNT HEX       append COUNT copies of a byte
+//   repeat COUNT HEX...  append COUNT copies of a byte sequence
 //   set OFFSET HEX...    overwrite bytes at OFFSET (decimal or 0x hex)
 //   truncate LENGTH      cut the input to LENGTH bytes
 //   expect refused|accepted
@@ -206,6 +207,10 @@ bool BuildRecipe(const std::string& path, Recipe& recipe, std::string& error) {
         } else if (command == "fill" && words.size() == 3) {
             recipe.bytes.insert(recipe.bytes.end(), number(words[1], 0),
                                 static_cast<uint8_t>(number(words[2], 16)));
+        } else if (command == "repeat" && words.size() >= 3) {
+            for (unsigned long copy = 0; copy < number(words[1], 0); copy++)
+                for (size_t i = 2; i < words.size(); i++)
+                    recipe.bytes.push_back(static_cast<uint8_t>(number(words[i], 16)));
         } else if (command == "set" && words.size() >= 3) {
             size_t offset = number(words[1], 0);
             if (offset + words.size() - 2 > recipe.bytes.size()) {

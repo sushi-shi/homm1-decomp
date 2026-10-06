@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <vector>
 
+#include <dirent.h>
 #include <sys/stat.h>
 #include <unistd.h>
 
@@ -72,15 +73,27 @@ std::string FuzzScratchGame() {
     }
     gScratch = root;
     std::atexit(RemoveScratch);
+    // DATA is a folder of links to the game data's files, so that a harness
+    // can replace one of them (the high score tables) without touching the
+    // game data.
+    if (mkdir((gScratch + "/DATA").c_str(), 0755) != 0)
+        std::_Exit(1);
     std::string data = FuzzDataRoot();
     if (!data.empty()) {
         std::string dataDirectory = FindEntry(data, "DATA");
-        if (dataDirectory.empty() || symlink(dataDirectory.c_str(), (gScratch + "/DATA").c_str()) != 0) {
+        DIR* folder = dataDirectory.empty() ? nullptr : opendir(dataDirectory.c_str());
+        if (folder == nullptr) {
             std::fprintf(stderr, "no DATA folder in %s\n", data.c_str());
             std::_Exit(1);
         }
-    } else if (mkdir((gScratch + "/DATA").c_str(), 0755) != 0) {
-        std::_Exit(1);
+        while (dirent* entry = readdir(folder)) {
+            if (entry->d_name[0] == '.')
+                continue;
+            std::string target = dataDirectory + "/" + entry->d_name;
+            if (symlink(target.c_str(), (gScratch + "/DATA/" + entry->d_name).c_str()) != 0)
+                std::_Exit(1);
+        }
+        closedir(folder);
     }
     if (mkdir((gScratch + "/MAPS").c_str(), 0755) != 0 || mkdir((gScratch + "/GAMES").c_str(), 0755) != 0)
         std::_Exit(1);
@@ -88,6 +101,8 @@ std::string FuzzScratchGame() {
 }
 
 bool FuzzWriteFile(const std::string& path, const uint8_t* data, size_t size) {
+    // Never through a link into the game data.
+    unlink(path.c_str());
     std::FILE* file = std::fopen(path.c_str(), "wb");
     if (file == nullptr)
         return false;

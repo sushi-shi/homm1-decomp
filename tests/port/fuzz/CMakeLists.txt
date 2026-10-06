@@ -94,4 +94,11 @@ homm1_fuzz_harness(fuzz_editor_map
 # with draws of what they decode into exactly-sized buffers.
 homm1_fuzz_harness(fuzz_resources
   SOURCES fuzz_resources.cpp
-  UNITS homm1_units)
+  UNITS homm1_units
+  SHIPPED "DATA\\HEROES.AGG@06")
+
+# The high score tables through the high score screen's reader and display.
+homm1_fuzz_harness(fuzz_highscore
+  SOURCES fuzz_highscore.cpp
+  UNITS homm1_units
+  SHIPPED "DATA\\*.HS")
