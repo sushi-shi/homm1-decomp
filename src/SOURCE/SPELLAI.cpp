@@ -166,6 +166,8 @@ void combatManager::DetermineEffectOfSpell(
                 if (targetCreature->m_spellEffect >= SPELL_FIRST)
                     effect -=
                         RawEffectSpellInfluence(targetCreature, targetCreature->m_spellEffect);
+                if (spell == SPELL_BLESS && ARMY_HAS_FIXED_DAMAGE(targetCreature))
+                    effect = 0;
                 break;
             case SPELL_SLOW:
             case SPELL_BLIND:
@@ -176,6 +178,8 @@ void combatManager::DetermineEffectOfSpell(
                 if (targetCreature->m_spellEffect >= SPELL_FIRST)
                     effect +=
                         RawEffectSpellInfluence(targetCreature, targetCreature->m_spellEffect);
+                if (spell == SPELL_CURSE && ARMY_HAS_FIXED_DAMAGE(targetCreature))
+                    effect = 0;
                 break;
             case SPELL_TELEPORT:
                 effect = 0;

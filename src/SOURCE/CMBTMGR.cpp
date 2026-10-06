@@ -251,6 +251,7 @@ i16 combatManager::Open(i16 priority) {
 void combatManager::Close(void) {
     i32 i;
     i32 monsterSide;
+    i32 survivors;
 
     StopMusic();
     if (m_restoreSampleSuspension) {
@@ -274,12 +275,14 @@ void combatManager::Close(void) {
         monsterSide = m_playerId[COMBAT_DEFENDER_SIDE] != GAME_PLAYER_NONE
                           ? static_cast<i8>(COMBAT_ATTACKER_SIDE)
                           : static_cast<i8>(COMBAT_DEFENDER_SIDE);
-        m_battlefieldCell->m_objectMetadata = 0;
+        survivors = 0;
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
             if (m_armyGroups[monsterSide]->m_creatureTypes[i] != CREATURE_NONE)
-                m_battlefieldCell->m_objectMetadata +=
-                    m_armyGroups[monsterSide]->m_creatureCounts[i];
+                survivors += m_armyGroups[monsterSide]->m_creatureCounts[i];
         }
+        if (survivors > COMBAT_MAP_MONSTER_COUNT_MAX)
+            survivors = COMBAT_MAP_MONSTER_COUNT_MAX;
+        m_battlefieldCell->m_objectMetadata = survivors;
     }
     gWindowManager->RemoveWindow(m_combatWindow);
     FreeArmies();
@@ -297,19 +300,19 @@ void combatManager::UpdateArmyGroup(i8 side) {
     i16 i;
     i16 j;
 
-    for (i = 0; i < m_numArmies[side]; i++) {
-        for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
-            if (m_armyGroups[side]->m_creatureTypes[j] == m_armies[side][i].m_creatureType)
-                break;
+    // Combat stacks were created from the occupied slots in slot order, so
+    // walk both together; two stacks of one creature keep their own slots.
+    i = 0;
+    for (j = 0; j < ARMY_GROUP_SLOT_COUNT && i < m_numArmies[side]; j++) {
+        if (m_armyGroups[side]->m_creatureTypes[j] == CREATURE_NONE)
+            continue;
+        if (m_armies[side][i].m_stats.attributes & MONSTER_FLAGS_DEAD) {
+            m_armyGroups[side]->m_creatureTypes[j] = CREATURE_NONE;
+            m_armyGroups[side]->m_creatureCounts[j] = 0;
+        } else {
+            m_armyGroups[side]->m_creatureCounts[j] = m_armies[side][i].m_quantity;
         }
-        if (j < ARMY_GROUP_SLOT_COUNT) {
-            if (m_armies[side][i].m_stats.attributes & MONSTER_FLAGS_DEAD) {
-                m_armyGroups[side]->m_creatureTypes[j] = CREATURE_NONE;
-                m_armyGroups[side]->m_creatureCounts[j] = 0;
-            } else {
-                m_armyGroups[side]->m_creatureCounts[j] = m_armies[side][i].m_quantity;
-            }
-        }
+        i++;
     }
 }
 
@@ -810,6 +813,15 @@ i8 combatManager::IsWinner(i8 side) {
     return isWinner;
 }
 
+// The catapult animation repaints the whole screen each frame; partial
+// extents left fragments of the boulder and the wall behind.
+static void SetFullScreenExtent(void) {
+    gMinExtentX = 0;
+    gMinExtentY = 0;
+    gMaxExtentX = LOGICAL_SCREEN_WIDTH - 1;
+    gMaxExtentY = LOGICAL_SCREEN_HEIGHT - 1;
+}
+
 void combatManager::CatAttack(i8 side) {
     i16 yPos;
     i16 topPosX;
@@ -847,10 +859,7 @@ void combatManager::CatAttack(i8 side) {
     boulderIcon = gResourceManager->GetIcon("boulder.icn");
     sprintf(gText, "catsnd%02d.82M", 0);
     catapultSound = LoadPlaySample(gText);
-    gMinExtentX = 0;
-    gMaxExtentX = 200;
-    gMinExtentY = 190;
-    gMaxExtentY = 420;
+    SetFullScreenExtent();
     m_catapultFrame[side] = COMBAT_CATAPULT_FRAME_FIRST;
     while (m_catapultFrame[side] < 8) {
         m_redrawExtent = true;
@@ -897,20 +906,7 @@ void combatManager::CatAttack(i8 side) {
         i = 0;
         while (i < 12) {
             m_redrawExtent = true;
-            if (i) {
-                gMinExtentX = xPos - xDelta - 20;
-                gMaxExtentX = xPos + 75;
-                gMinExtentY = yPos - 75;
-                gMaxExtentY = yPos + 75;
-                if (gMinExtentX < 0)
-                    gMinExtentX = 0;
-                if (gMinExtentY < 0)
-                    gMinExtentY = 0;
-                if (gMaxExtentX > LOGICAL_SCREEN_WIDTH - 1)
-                    gMaxExtentX = LOGICAL_SCREEN_WIDTH - 1;
-                if (gMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
-                    gMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
-            }
+            SetFullScreenExtent();
             DrawFrame(false);
             boulderIcon
                 ->DrawToBuffer(xPos, yPos, frameIndex, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
@@ -937,20 +933,7 @@ void combatManager::CatAttack(i8 side) {
         yDelta = (topPosY - startY) / 78;
         for (i = 0; i < 12; i++) {
             m_redrawExtent = true;
-            if (i) {
-                gMinExtentX = xPos - xDelta - 20;
-                gMaxExtentX = xPos + 75;
-                gMinExtentY = yPos - 75;
-                gMaxExtentY = yPos + 75;
-                if (gMinExtentX < 0)
-                    gMinExtentX = 0;
-                if (gMinExtentY < 0)
-                    gMinExtentY = 0;
-                if (gMaxExtentX > LOGICAL_SCREEN_WIDTH - 1)
-                    gMaxExtentX = LOGICAL_SCREEN_WIDTH - 1;
-                if (gMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
-                    gMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
-            }
+            SetFullScreenExtent();
             DrawFrame(false);
             boulderIcon
                 ->DrawToBuffer(xPos, yPos, frameIndex, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
@@ -966,18 +949,7 @@ void combatManager::CatAttack(i8 side) {
         yDelta = (endY - yPos) / 36;
         for (i = 1; i <= 8; i++) {
             m_redrawExtent = true;
-            gMinExtentX = xPos - xDelta - 20;
-            gMaxExtentX = xPos + 75;
-            gMinExtentY = yPos - 75;
-            gMaxExtentY = yPos + 75;
-            if (gMinExtentX < 0)
-                gMinExtentX = 0;
-            if (gMinExtentY < 0)
-                gMinExtentY = 0;
-            if (gMaxExtentX > LOGICAL_SCREEN_WIDTH - 1)
-                gMaxExtentX = LOGICAL_SCREEN_WIDTH - 1;
-            if (gMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
-                gMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
+            SetFullScreenExtent();
             DrawFrame(false);
             boulderIcon
                 ->DrawToBuffer(xPos, yPos, frameIndex, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
@@ -1006,14 +978,7 @@ void combatManager::CatAttack(i8 side) {
                == COMBAT_WALL_DAMAGED_HIT) {
         m_wallSurvives = false;
         m_wallFrame = 0;
-        gMinExtentX = 300;
-        gMaxExtentX = 490;
-        gMinExtentY = m_catapultTargetRow * COMBAT_HEX_HEIGHT - 30;
-        gMaxExtentY = (m_catapultTargetRow + 2) * COMBAT_HEX_HEIGHT + 30;
-        if (gMinExtentY < 0)
-            gMinExtentY = 0;
-        if (gMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
-            gMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
+        SetFullScreenExtent();
         while (m_wallFrame < 10) {
             m_wallDamage = m_wallFrame;
             if (m_wallFrame == COMBAT_WALL_COLLAPSE_FRAME)
@@ -1032,14 +997,7 @@ void combatManager::CatAttack(i8 side) {
     } else {
         m_wallSurvives = true;
         m_wallFrame = 0;
-        gMinExtentX = 300;
-        gMaxExtentX = 490;
-        gMinExtentY = m_catapultTargetRow * COMBAT_HEX_HEIGHT - 30;
-        gMaxExtentY = (m_catapultTargetRow + 2) * COMBAT_HEX_HEIGHT + 30;
-        if (gMinExtentY < 0)
-            gMinExtentY = 0;
-        if (gMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
-            gMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
+        SetFullScreenExtent();
         while (m_wallFrame < 10) {
             if (m_wallFrame == COMBAT_WALL_COLLAPSE_FRAME)
                 m_hexCells[m_catapultTargetRow * COMBAT_GRID_COLUMNS + castleColumn]
@@ -1054,10 +1012,7 @@ void combatManager::CatAttack(i8 side) {
     }
     m_redrawExtent = true;
     DrawFrame(true);
-    gMinExtentX = 0;
-    gMaxExtentX = 200;
-    gMinExtentY = 220;
-    gMaxExtentY = 420;
+    SetFullScreenExtent();
     while (m_catapultFrame[side] < 14) {
         m_redrawExtent = true;
         DrawFrame(true);
@@ -1069,6 +1024,8 @@ void combatManager::CatAttack(i8 side) {
     gResourceManager->Dispose(boulderIcon);
     gMouseManager->ReallyShowPointer();
     WaitSample(catapultSound);
+    // Repaint the whole field so no boulder or catapult frame is left behind.
+    DrawFrame(1);
 }
 
 void combatManager::RegenerateField(void) {
@@ -1282,12 +1239,16 @@ void combatManager::KeepAttack(void) {
 i32 combatManager::ExperienceValueOfStack(i8 side) {
     i32 i;
     i32 sideExperience;
+    i32 lost;
 
     sideExperience = 0;
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
-        if (m_armies[side][i].m_creatureType != CREATURE_NONE)
-            sideExperience += (m_armies[side][i].m_initialQuantity - m_armies[side][i].m_quantity)
-                              * gMonsterDatabase[m_armies[side][i].m_creatureType].hitPoints;
+        if (m_armies[side][i].m_creatureType != CREATURE_NONE) {
+            lost = (m_armies[side][i].m_initialQuantity - m_armies[side][i].m_quantity)
+                   * gMonsterDatabase[m_armies[side][i].m_creatureType].hitPoints;
+            if (lost > 0)
+                sideExperience += lost;
+        }
     }
     if (m_heroes[side])
         sideExperience += 500;

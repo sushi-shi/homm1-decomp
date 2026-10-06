@@ -166,10 +166,10 @@ void armyGroup::DamageGroup(float casualtyFraction) {
         if (m_creatureTypes[i] != CREATURE_NONE) {
             killed = 0;
             for (j = 0; j < m_creatureCounts[i]; ++j) {
-                if (SRandom(0, 100) < killChance)
+                if (SRandom(0, 99) < killChance)
                     ++killed;
             }
-            if (isFirstTroop && killed == m_creatureCounts[i] && casualtyFraction < 0.999)
+            if (isFirstTroop && killed > 0 && killed == m_creatureCounts[i])
                 --killed;
             m_creatureCounts[i] -= killed;
             if (m_creatureCounts[i] <= 0 || casualtyFraction >= 1.0) {

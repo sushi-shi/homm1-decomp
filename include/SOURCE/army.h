@@ -166,6 +166,9 @@ public:
 
 #define ARMY_IGNORES_SPELLS(a)                                                                     \
     ((a)->m_creatureType == CREATURE_DRAGON || (a)->m_spellEffect == SPELL_ANTI_MAGIC)
+// Bless and Curse only pin damage to its maximum or minimum, which changes
+// nothing for a creature whose damage range is a single value.
+#define ARMY_HAS_FIXED_DAMAGE(a) ((a)->m_stats.damageMin == (a)->m_stats.damageMax)
 
 i16 GetAdjacentCellIndexNoArmy(i16 hex, i16 direction);
 extern i16 gCurLoadedSpellEffect;
