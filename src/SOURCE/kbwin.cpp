@@ -82,7 +82,7 @@ WinMain(HINSTANCE instance, HINSTANCE previousInstance, char* commandLine, i32 s
         }
     }
     ShutDown(NULL);
-    return static_cast<i32>(message.wParam);
+    return message.wParam;
 }
 
 VA(0x00442dba, 0x28e)

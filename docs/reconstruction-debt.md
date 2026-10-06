@@ -143,14 +143,29 @@ bodies exact:
 - `CONST` enum values converted to `int` or a narrower integer. These enums are
   unscoped in both views, so the cast does nothing.
 
+A second libclang pass over every unit listed each `static_cast` whose operand and target are arithmetic types (or a
+`CONST`/`FLAGS` enum, unscoped in both views) and whose value is consumed where
+C++ applies the same conversion implicitly: the right side of `=` with a
+left side of the target type, a variable initializer, a non-variadic argument,
+a `return`, a compound assignment, or an arithmetic operand whose other
+operand already has the target type. Removing those 167 casts left every
+object byte-identical except one: `ScaleSampleVolume`'s
+`GetEffectsVolume() * static_cast<float>(volume)` becomes an `fimul` from
+memory without the cast, so it stays. Casts of names declared through the
+`H1_ENUM_*` storage macros are excluded, because the strict view types them
+as enums.
+
 The remaining casts are:
 
-- Float-to-integer conversions, kept explicit at each `__ftol`.
-- `void*` results of `malloc`, `GlobalAlloc` and the resource cache. C++
-  requires these casts.
-- Narrowing stores and `i8` ternary arms whose byte width retail shows.
-- `char` to `u8` code-page comparisons.
-- Casts of strict-domain values, which are `enum class` in the Clang view.
+- `void*` results of `malloc`, `GlobalAlloc` and the resource cache, and the
+  resource-to-subclass downcasts. C++ requires these casts.
+- Strict-domain values converted to their storage width (`enum class` in the
+  Clang view), including enum-indexed subscripts.
+- `i8` ternary arms, which give the conditional its byte type.
+- Conversions whose result feeds a wider operation (`static_cast<u8>(c) >=
+  'a'`, `static_cast<i8>(Random(0, 3)) + 4`, integer-to-floating divisions):
+  dropping these changes the value.
+- `ScaleSampleVolume`'s `float` operand (above).
 
 Retyping the owner was measured for the remaining narrowing casts on locals
 and failed. For example, declaring `CheckEndGame`'s player index `i8` instead

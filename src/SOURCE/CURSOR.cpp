@@ -215,11 +215,11 @@ i16 advManager::GetCursorBaseFrame(H1_ENUM_PARAM(MapDirection, i16) direction) {
     if (static_cast<i32>(direction) > static_cast<i32>(MAP_DIRECTION_SOUTH)) {
         switch (direction) {
             case MAP_DIRECTION_SOUTH_WEST:
-                return static_cast<i16>(CURSOR_BOAT_BASE_FRAME_5);
+                return CURSOR_BOAT_BASE_FRAME_5;
             case MAP_DIRECTION_WEST:
-                return static_cast<i16>(CURSOR_BOAT_BASE_FRAME_6);
+                return CURSOR_BOAT_BASE_FRAME_6;
             case MAP_DIRECTION_NORTH_WEST:
-                return static_cast<i16>(CURSOR_BOAT_BASE_FRAME_7);
+                return CURSOR_BOAT_BASE_FRAME_7;
             default:
                 return 0;
         }

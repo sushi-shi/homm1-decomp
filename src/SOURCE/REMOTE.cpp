@@ -584,7 +584,7 @@ i8 GUIModemResponseExec(void) {
         goto compareResponse;
     }
     if (GUIMRc >= ' ') {
-        GUIMRresponse[GUIMRrespptr] = static_cast<char>(GUIMRc);
+        GUIMRresponse[GUIMRrespptr] = GUIMRc;
         ++GUIMRrespptr;
     }
     return 0;
@@ -763,7 +763,7 @@ readPacketStart:
         }
         if (packetlen >= MODEM_PACKET_MAX_LENGTH)
             goto readPacketStart;
-        packet[packetlen] = static_cast<char>(input);
+        packet[packetlen] = input;
         ++packetlen;
     } while (1);
 }

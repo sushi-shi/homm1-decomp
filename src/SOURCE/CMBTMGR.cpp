@@ -1277,7 +1277,7 @@ void combatManager::KeepAttack(void) {
     arrowDamage = 0;
     for (k = 0; k < numRolls; k++)
         arrowDamage += SRandom(2, 3);
-    arrowDamage = static_cast<i32>(arrowDamage * gBattleStat[mod + 20]);
+    arrowDamage = arrowDamage * gBattleStat[mod + 20];
     if (arrowDamage <= 0)
         arrowDamage = 1;
     stackKilled = hisStack->Damage(arrowDamage);

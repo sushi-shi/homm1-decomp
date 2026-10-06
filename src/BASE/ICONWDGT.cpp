@@ -105,7 +105,7 @@ i16 iconWidget::Main(tag_message& message) {
                     break;
                 case WIDGET_COMMAND_SET_FRAME:
                     if (message.id == m_id) {
-                        i16 frame = static_cast<i16>(message.value & 0xffff);
+                        i16 frame = message.value & 0xffff;
                         m_frame = frame;
                         return MESSAGE_DISPATCH_CONSUME;
                     }

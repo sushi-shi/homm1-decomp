@@ -123,7 +123,7 @@ i16 searchArray::FindCombatPath(i16 sourceHex, i16 targetHex, army* unit, i8 att
     bestDistance = FINDPATH_INITIAL_BEST_DISTANCE;
     bestHex = ARMY_HEX_INVALID;
     if (attackPath)
-        attackTargetHex = static_cast<i8>(targetHex);
+        attackTargetHex = targetHex;
     else
         attackTargetHex = ARMY_HEX_INVALID;
     Clear();
@@ -234,7 +234,7 @@ void searchArray::PushCombatPoint(i16 hex, i16 direction, u16 distance, u16 spee
     m_queueCount++;
     if (m_queueCount > m_maxQueueCount)
         m_maxQueueCount = m_queueCount;
-    node->x = static_cast<i8>(hex);
+    node->x = hex;
     node->y = 0;
     node->direction = direction;
     node->distance = distance;
@@ -303,8 +303,8 @@ void searchArray::PushPoint(
         gSearchQueueNode->previousX = previousX;
         gSearchQueueNode->previousY = previousY;
     }
-    gSearchQueueNode->x = static_cast<i8>(x);
-    gSearchQueueNode->y = static_cast<i8>(y);
+    gSearchQueueNode->x = x;
+    gSearchQueueNode->y = y;
     gSearchQueueNode->direction = direction;
     gSearchQueueNode->distance = cost;
     gSearchQueueNode->occupied = occupied;
@@ -414,7 +414,7 @@ void searchArray::TestPossibleDirections(
         }
 
     storeDirection:
-        terrain[gSearchDirection] = static_cast<i8>(gSearchTerrain);
+        terrain[gSearchDirection] = gSearchTerrain;
     }
 }
 

@@ -2639,8 +2639,7 @@ void advManager::UpdateHeroLocators(i8 drawWindow, i8 updateScreen) {
         m_scrollLeftButton->m_y = LOCATOR_SCROLL_NO_PAGES_Y;
     } else {
         scrollStep = 73.0 / (gpCurPlayer->m_heroCount - LOCATOR_PAGE_DENOMINATOR_OFFSET);
-        m_scrollLeftButton->m_y =
-            static_cast<i16>(gpCurPlayer->m_heroLocatorPage * scrollStep + 195.0);
+        m_scrollLeftButton->m_y = gpCurPlayer->m_heroLocatorPage * scrollStep + 195.0;
     }
     if (drawWindow)
         m_adventureWindow->DrawWindow(updateScreen);
@@ -2688,7 +2687,7 @@ void advManager::UpdateTownLocators(i8 drawWindow, i8 updateScreen) {
         m_scrollRightButton->m_y = LOCATOR_SCROLL_NO_PAGES_Y;
     } else {
         step = 74.0 / (gpCurPlayer->m_townCount - LOCATOR_PAGE_DENOMINATOR_OFFSET);
-        m_scrollRightButton->m_y = static_cast<i16>(gpCurPlayer->m_townLocatorPage * step + 195.0);
+        m_scrollRightButton->m_y = gpCurPlayer->m_townLocatorPage * step + 195.0;
     }
     if (drawWindow)
         m_adventureWindow->DrawWindow(updateScreen);
@@ -4160,8 +4159,7 @@ void advManager::DoHeroKnob(void) {
             m_scrollLeftButton->m_y = message.y - offset;
             m_adventureWindow->DrawWindow();
             if (count > LOCATOR_VISIBLE_COUNT) {
-                pageIndex =
-                    static_cast<i16>((m_scrollLeftButton->m_y - LOCATOR_SCROLL_BASE_Y) / scale);
+                pageIndex = (m_scrollLeftButton->m_y - LOCATOR_SCROLL_BASE_Y) / scale;
                 if (pageIndex != prevPage) {
                     gpCurPlayer->m_heroLocatorPage = pageIndex;
                     if (pageIndex > count - (LOCATOR_VISIBLE_COUNT - 1))
@@ -4210,8 +4208,7 @@ void advManager::DoTownKnob(void) {
             m_scrollRightButton->m_y = message.y - offset;
             m_adventureWindow->DrawWindow();
             if (count > LOCATOR_VISIBLE_COUNT) {
-                pageIndex =
-                    static_cast<i16>((m_scrollRightButton->m_y - LOCATOR_SCROLL_BASE_Y) / scale);
+                pageIndex = (m_scrollRightButton->m_y - LOCATOR_SCROLL_BASE_Y) / scale;
                 if (pageIndex != prevPage) {
                     gpCurPlayer->m_townLocatorPage = pageIndex;
                     if (pageIndex > count - (LOCATOR_VISIBLE_COUNT - 1))

@@ -68,8 +68,10 @@ review inputs, not defect totals. Preserve banked matches.
 - [x] Review dead locals: **116** never-read locals. The 75 without an
   initializer were removed together as a control, and every affected function
   lost its exact frame. The 41 with an initializer emit retail stores.
-- [x] Review `static_cast`: **400 sites**. Casts that only hid a wrong declared
-  type are gone, including the `void*` Win32 handles, which are now `STRICT`; the
+- [x] Review `static_cast`: **246 lines** (from 410). Casts that only hid a
+  wrong declared type are gone, including the `void*` Win32 handles, which are
+  now `STRICT`, and so are the 167 that restated the conversion an assignment,
+  initialization, argument, return or arithmetic operand already performs; the
   remaining classes are listed in the [debt notes](docs/reconstruction-debt.md).
 - [x] Review unions: **9 definitions**, each one shared storage with typed
   readers; varargs: **1 function** (`nb_sess`), standard `va_arg` with no
