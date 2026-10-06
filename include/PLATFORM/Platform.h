@@ -126,6 +126,14 @@ void UpdateChrome(const u8* pixels, const u8* mask);
 void CaptureDisplay(u8* rgb);
 bool SaveDisplayBmp(const char* hostPath);
 
+// The game's own 640x480 picture, which the display copies from. A test can
+// compare the two when the game waits for input: a difference is a region
+// the game drew but never copied (the replay's "check" action).
+void SetReferenceImage(const u8* pixels);
+// The number of game image pixels that differ from the reference, and their
+// bounding box (left, top, right, bottom); 0 without a reference.
+int CompareWithReference(int box[4]);
+
 // ---------------------------------------------------------------- cursor
 
 // A 32x32 pointer image in the Windows cursor model. color holds a palette

@@ -230,6 +230,19 @@ void RunReplayAction(const ReplayAction& action) {
         std::string path = action.arguments.empty() ? "screen.bmp" : action.arguments[0];
         if (!SaveDisplayBmp(path.c_str()))
             Log("replay: cannot write %s", path.c_str());
+    } else if (action.verb == "check") {
+        // The display against the game's own picture; with a path, a
+        // difference also saves a screenshot there.
+        int box[4];
+        int differing = CompareWithReference(box);
+        if (differing == 0) {
+            Log("replay check: display matches the game image");
+        } else {
+            Log("replay check: %d pixels differ in %d,%d-%d,%d", differing, box[0], box[1], box[2],
+                box[3]);
+            if (!action.arguments.empty())
+                SaveDisplayBmp(action.arguments[0].c_str());
+        }
     } else if (action.verb == "quit") {
         Event event;
         event.type = Event::QUIT;

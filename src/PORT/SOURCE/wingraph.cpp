@@ -73,6 +73,7 @@ void InitGraphics() {
         ShutDown(const_cast<char*>("The display could not be opened."));
     gScreen.assign(LOGICAL_SCREEN_WIDTH * LOGICAL_SCREEN_HEIGHT, 0);
     gInitWin = gScreen.data();
+    platform::SetReferenceImage(gScreen.data());
     InitializePalette();
 }
 

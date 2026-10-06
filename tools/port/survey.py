@@ -86,10 +86,13 @@ MONKEY_KEYS = ["return", "escape", "space", "e", "h", "t", "c", "s", "v", "m", "
                "pagedown", "home", "end", "n", "y", "l", "i", "o", "w", "f4", "b", "r", "u"]
 
 
-def monkey_replay(path: Path, seed: int, actions: int, start: str = "") -> None:
+def monkey_replay(path: Path, seed: int, actions: int, start: str = "", shots: Path | None = None) -> None:
     rng = random.Random(seed)
     lines = [start] if start else []
-    for _ in range(actions):
+    for action in range(actions):
+        if shots is not None and action % 25 == 24:
+            # After a pause the display must show what the game drew.
+            lines.append(f"+1500 check {shots}/check-{seed}-{action}.bmp")
         roll = rng.random()
         wait = rng.choice([30, 80, 150, 300, 600])
         if roll < 0.55:
@@ -150,6 +153,8 @@ def parse(output: str) -> list[tuple[str, str, str]]:
                     where = re.sub(r"^.*/localized/", "", location)
                     break
             findings.append(("asan " + match["what"], where, "\n      ".join(frames[:8])))
+        if "replay check:" in line and "differ" in line:
+            findings.append(("presentation", "display differs from the game image", line.split("replay check: ")[-1]))
         if line.startswith("FINDING"):
             findings.append(("check", line.split(":")[0], line))
     return findings
@@ -169,7 +174,9 @@ def run(job: dict) -> dict:
                                    Path(job["extra_maps"]) if job.get("extra_maps") else None)
         replay = scratch / "input.replay"
         if job.get("monkey") is not None:
-            monkey_replay(replay, job["monkey"], job["actions"], job.get("start", ""))
+            shots = Path(job["scratch"]) / "checks"
+            shots.mkdir(exist_ok=True)
+            monkey_replay(replay, job["monkey"], job["actions"], job.get("start", ""), shots)
         else:
             answer_replay(replay)
         environment = dict(os.environ)

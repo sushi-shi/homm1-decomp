@@ -32,6 +32,7 @@ int gBar = 0;
 std::array<Color, PALETTE_SIZE> gPalette{};
 bool gDirty = false;
 u32 gLastPresent = 0;
+const u8* gReference = nullptr;
 
 CursorImage gCursor;
 bool gCursorSet = false;
@@ -379,6 +380,33 @@ bool SaveDisplayBmp(const char* hostPath) {
         ok = std::fwrite(row.data(), row.size(), 1, file) == 1;
     }
     return std::fclose(file) == 0 && ok;
+}
+
+void SetReferenceImage(const u8* pixels) {
+    gReference = pixels;
+}
+
+int CompareWithReference(int box[4]) {
+    box[0] = kWidth;
+    box[1] = kHeight;
+    box[2] = -1;
+    box[3] = -1;
+    if (gReference == nullptr)
+        return 0;
+    int count = 0;
+    for (int y = 0; y < kHeight; y++) {
+        for (int x = 0; x < kWidth; x++) {
+            size_t index = static_cast<size_t>(y * kWidth + x);
+            if (gIndexed[index] == gReference[index])
+                continue;
+            count++;
+            box[0] = std::min(box[0], x);
+            box[1] = std::min(box[1], y);
+            box[2] = std::max(box[2], x);
+            box[3] = std::max(box[3], y);
+        }
+    }
+    return count;
 }
 
 void SetCursorImage(const CursorImage* image) {

@@ -116,7 +116,9 @@ tools/port/survey.py --build build/port-asan --data ~/.local/share/homm1-buka/ga
 - `editor`: random maps from the editor's generator with random settings,
   each saved, read and saved again, then played by the computer.
 - `monkey`, `monkey-editor`: the game and the editor under random clicks and
-  keys (including the menu bar and F4) under `xvfb-run`.
+  keys (including the menu bar and F4) under `xvfb-run`; after every 25
+  actions and a pause, the display must equal the game's own picture
+  (a difference is a region drawn but never copied to the screen).
 
 Each finding is printed once with how often it was seen and a command that
 reproduces it; a run that stops making progress is stopped
@@ -143,7 +145,9 @@ an action and its arguments; `#` starts a comment:
 Actions: `move X Y`, `click X Y`, `left-down`, `left-up`, `right-down`,
 `right-up` (display coordinates; the menu bar has negative `y`),
 `key K`, `key-down K`, `key-up K`,
-`shot PATH`, `quit` (the window's close button), `exit` (end at once). While
+`shot PATH`, `check [PATH]` (compare the display with the game's own
+picture and log the differing region; with a path, save a screenshot when
+they differ), `quit` (the window's close button), `exit` (end at once). While
 a replay runs the real mouse and keyboard are ignored.
 `HOMM1_NO_DIALOGS=1` sends message boxes to the log only.
 `HOMM1_TIME_SCALE=N` runs the game's clock N times faster than real time
