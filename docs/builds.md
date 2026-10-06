@@ -5,9 +5,8 @@ runtime libraries each one ships. The pinned target in this fork is Windows 95 1
 `HEROES.EXE` (`config/retail/targets.json`).
 
 Local copies are kept outside the repository in `~/Projects/homm1/exe`, listed
-in its `MANIFEST.md5`. Archive.org item ids are given as `item` or
-`item/file`. File offsets, RVAs and counts were measured from the bytes listed
-here.
+in its `MANIFEST.md5`. File offsets, RVAs and counts were measured from the
+bytes listed here.
 
 The comparison measurements below were made in the parent 1.0 repository;
 "current reconstruction" in those comparisons refers to that snapshot.
@@ -81,17 +80,14 @@ Watcom C/C++32 with DOS/4GW and are listed briefly at the end.
 - **sha256** `0d707d3456aacd470f4da601ac388a8b0be8976414b4ef689c8b849b9b2a1ce8`,
   md5 `58a5ddcc48793618632d48dff2522fa9`, 713216 bytes. The version string
   reads "Loading Heroes of Might and Magic for Windows 95 (version 1.0)".
-- **Sources:** `***REMOVED***` (redump NWC/3DO collection), in these
-  entries:
+- **Sources:** these NWC/3DO discs:
   - "(USA) (Windows 95)"
   - "(USA) (Rerelease) (2000-06-28)"
   - Millennium Edition Disc 1 and Disc 1 Alt
   - Platinum Edition Disc 1
 
-  Also: `***REMOVED***`,
-  `***REMOVED***/HEROES.BIN`,
-  `***REMOVED***` and
-  `***REMOVED***`. On every disc it
+  Also other Millennium and Platinum Edition images and Ubisoft's European
+  collection. On every disc it
   sits at `/HEROES/HEROES.EXE`, and inside the InstallShield 3 archive
   `/HEROES/HEROES.Z`.
 - **Section layout (RVA/virtual size):**
@@ -119,12 +115,11 @@ Watcom C/C++32 with DOS/4GW and are listed briefly at the end.
   md5 `0c3f9b12b6608faad9ac6f7ced223605`, 715776 bytes. The version string
   reads "(version 1.1)".
 - **Sources:**
-  - `***REMOVED***`, entry "(USA) (Windows 95) (Rerelease)" Track 01.
-  - `***REMOVED***`, file "Ultimate Strategy Archives Disc
-    One.bin".
+  - NWC "(USA) (Windows 95) (Rerelease)", Track 01.
+  - Ultimate Strategy Archives Disc One.
 - **Patch:** the 1.0→1.1 RTPatch (`PATCH.EXE` + `PATCH.RTP`, readme dated
-  07/15/96) is in `***REMOVED***/***REMOVED***.zip`. It is also in
-  `***REMOVED***` at `pcg_2.10_nov_1996.iso/PATCHES/HEROES11.EXE`.
+  07/15/96) also shipped on the PC Gamer November 1996 demo disc as
+  `PATCHES/HEROES11.EXE`.
   The patch was not applied here.
 - **Section layout:**
   - `.text` 0x1000/0x8a670
@@ -181,9 +176,8 @@ Watcom C/C++32 with DOS/4GW and are listed briefly at the end.
   md5 `6e2047ae9dfe7501b32e6d9d85669b44`, 726016 bytes. The version string
   reads "(version 1.2)".
 - **Sources:**
-  - `***REMOVED***/***REMOVED***.ISO`
-  - `***REMOVED***` Compendium (USA) Disc 1
-  - `***REMOVED***`, the Compendium Disc 1 `.BIN`
+  - the Heroes CD-ROM edition
+  - Compendium (USA) Disc 1
 
   The Compendium disc also carries DOS `HEROES.EXE` v1.3 and `EDITORW.EXE`.
 - **Section layout:**
@@ -221,10 +215,9 @@ Watcom C/C++32 with DOS/4GW and are listed briefly at the end.
 - **sha256** `34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db`,
   md5 `901fdb7daa130aa168584ec35d6205cd`, 692297 bytes.
 - **Sources:**
-  - `***REMOVED***`, Buka Platinum anthology: the rar holds an
-    ISO; the game is under `/AUTORUN/LAUNCH/SETUP1/`, InstallShield 6 cab group
-    "Program Executable Files".
-  - `***REMOVED***`, Buka New Year edition: `/HEROES1S/`, with
+  - Buka Platinum anthology: the game is under `/AUTORUN/LAUNCH/SETUP1/`,
+    InstallShield 6 cab group "Program Executable Files".
+  - Buka New Year edition: `/HEROES1S/`, with
     identical executable and DLL bytes.
 - **Registry key:** `SOFTWARE\Buka\3DO\Heroes of Might and Magic Platinum\1.000`.
 - **Section layout:** `.text .rdata .data .rsrc`, with no `.reloc` and
@@ -335,20 +328,20 @@ All are Watcom C/C++32 with DOS/4GW Professional and Miles AIL 3 DOS drivers;
 they carry no debug information. `KB.EXE` (King's Bounty, sha256
 `5e72b627c1e3…`, on every Windows disc) is a Borland C++ DOS program.
 
-| File | sha256 (prefix) | Version string | Archive.org sources |
+| File | sha256 (prefix) | Version string | Sources |
 |---|---|---|---|
-| `HEROES_dos_en_patch12_1995-10-12.exe` | `feacfeac7d64` | v1.2 | ***REMOVED*** OEM, NWC "(USA) (OEM)", `***REMOVED***`, PC Player 01/96, ***REMOVED*** |
-| `HEROES_dos_de_1995-10-09.exe` | `afeef9223422` | (German) | `***REMOVED***/CD01.img` |
+| `HEROES_dos_en_patch12_1995-10-12.exe` | `feacfeac7d64` | v1.2 | OEM disc, NWC "(USA) (OEM)", the 1.2 patch, PC Player 01/96, PC Action 02/96 |
+| `HEROES_dos_de_1995-10-09.exe` | `afeef9223422` | (German) | German CD |
 | `HEROES_dos_demo12_1995-11-28.exe` | `ca05cf263e59` | Demo v1.2 | PC Gamer 03/96, PC Action 16, Game Head 9 |
-| `HEROES_dos_1997-08-01.exe` | `0518cde12e53` | v1.3 | `***REMOVED***`, Compendium Disc 1 |
+| `HEROES_dos_1997-08-01.exe` | `0518cde12e53` | v1.3 | CD-ROM edition, Compendium Disc 1 |
 | — | `b53e33f82f92` | (USA retail) | NWC "(USA)" |
-| — | `d055e92497b7` | (Simplified Chinese) | `***REMOVED***/HEROES_SIM.iso` |
-| — | `f9340223a04b` | (Traditional Chinese) | `***REMOVED***/HEROES.iso` |
-| — | `0cbd9272d2cb` | CES 1995 demo | `***REMOVED***`, Score 02/96 |
+| — | `d055e92497b7` | (Simplified Chinese) | Chinese CD |
+| — | `f9340223a04b` | (Traditional Chinese) | Taiwanese CD |
+| — | `0cbd9272d2cb` | CES 1995 demo | Score 02/96 |
 
 The GOG package and two repacks contain byte-patched copies of `feacfeac…`
 and `b53e33…`. These are `0e87d302…`, `274a0954…` (also on
-`***REMOVED***`, the 2001 "12 в 1" disc) and the patched GOG editor.
+the 2001 "12 в 1" disc) and the patched GOG editor.
 
 ## Debug symbols
 
@@ -369,8 +362,8 @@ No PDB, DBG, MAP or symbol file for any HoMM1 build was found.
     `e:\Users\igorl\VSS\HMM\HMM2\temp\release\...` only, and no PDB on the
     disc.
   - HoMM3 `Heroes3.exe`, `h3maped.exe` and `h3ccmped.exe`, 2003-04: no PDB path.
-- **Magazine discs:** 116 Russian magazine and collection items on archive.org
-  were listed: Игромания, Game.EXE, Навигатор игрового мира and Страна Игр
+- **Magazine discs:** 116 Russian magazine and collection discs were
+  listed: Игромания, Game.EXE, Навигатор игрового мира and Страна Игр
   2002–2005, plus the HoMM-titled Russian collections. None contains HoMM1
   executables or debug files. Their "HEROES" paths are HoMM3/4 maps, guides and
   images.
