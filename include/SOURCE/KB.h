@@ -180,8 +180,8 @@ H1_ENUM_END(TimerSlot)
 extern H1_ENUM_ARRAY(i32, gTimers, TimerSlot, GLOBAL_TIMER_COUNT);
 void EarlyShutDownSystem();
 void QuickViewWait();
-i8 CanBuild(class town* t, i16 building);
-i8 CanBuy(class town* t, i16 type);
+i8 CanBuild(class town* townPointer, i16 building);
+i8 CanBuy(class town* townPointer, i16 building);
 extern "C" void PollSound();
 void ForcePollSound();
 #ifndef HOMM1_EDITOR
@@ -219,7 +219,7 @@ inline char CyrillicToLower(char c) {
         return static_cast<char>(CYRILLIC_SMALL_YO);
     return c;
 }
-i16 NullHandler(struct tag_message&);
+i16 NullHandler(struct tag_message& message);
 char* GetBuildingName(i32 race, i16 building);
 void GetBuildingCost(i32 race, i16 building, i32* const destination, i32 mageLevel);
 char* GetMonsterName(i32 monster);
@@ -252,18 +252,18 @@ void LoadSystemwideIcons(void);
 void UnloadSystemwideIcons(void);
 void UpdateSystemOptionsMenu(void);
 void CleanUpMenus(void);
-void EarlyResizeWindow(i32, i32, i32, i32);
+void EarlyResizeWindow(i32 x, i32 y, i32 width, i32 height);
 void GetDataEntry(char* prompt, char* destination, i32 maximumLength, char* initialText);
 i16 DataEntryWindowHandler(struct tag_message& message);
 i16 EventWindowHandler(struct tag_message& message);
 i16 TrueFalseDialogHandler(struct tag_message& message);
 // Town-name lookup by town id (retail 0x00455aaf); the inline game::GetTown
 // narrows the id.
-char* GetTownName(i32 i);
-void ReceiveRemotePlayerExit(i8 position, i8, i8 eliminated, i8 timedOut);
+char* GetTownName(i32 townIndex);
+void ReceiveRemotePlayerExit(i8 position, i8 hadControl, i8 eliminated, i8 timedOut);
 void ShutDown(char* message);
 void HandleRemoteDeadPlayerExit(i32 position);
-void CheckEndGame(i32 forced);
+void CheckEndGame(i32 forceWin);
 void HandleRemoteSuddenExit(void);
 #define gRetreatWin gbRetreatWin // spelling fixes .bss order
 extern i8 gRetreatWin;
@@ -316,12 +316,12 @@ extern i32 gMaxMapExtra;
 extern i32 gMapExtraSizes[];
 // KB's adventure status-bar resource message and its menu, wait and victory
 // screens.
-void BVResMsg(char* s, i32 res, i32 qty);
+void BVResMsg(char* text, i32 resourceType, i32 quantity);
 i16 InitMenuHandler(struct tag_message& message);
 i16 WaitHandler(struct tag_message& message);
 void ShowCongrats(void);
 void CongratsWait(void);
-i32 AddScoreToHighScore(i32 score, i32 standard, char*, char* scenarioName);
+i32 AddScoreToHighScore(i32 score, i32 highScoreType, char*, char* scenarioName);
 
 // Graphics records are six words.
 struct exeGfxConfig {
@@ -507,7 +507,7 @@ extern struct WindowTextEntry gWinSetup[];
 extern char* gWinSetupText[];
 i32 HandleAppSpecificMenuCommands(i32 command);
 i32 oldmain(void);
-void UpdateAppSpecificMenus(void* hMenu);
+void UpdateAppSpecificMenus(void* menu);
 #define gSpecialHideCursor bSpecialHideCursor // spelling fixes .bss order
 extern i32 gSpecialHideCursor;
 extern i32 gArtifactBaseRV[];

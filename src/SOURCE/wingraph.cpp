@@ -307,21 +307,26 @@ BOOL DDAppPaint(HWND window, HDC paintDC) {
 VA(0x00466ed3, 0x115)
 #line 315 WINGRAPH_CPP_PATH
 void DDInitializePalette() {
-    i32 ddrval;
-    HDC curHdc;
+    i32 status;
+    HDC systemDeviceContext;
     i32 i;
     if (gWinGraphBusy != FALSE)
         return;
     {
-        curHdc = GetDC(NULL);
-        GetSystemPaletteEntries(curHdc, 0, WINGRAPH_SYSTEM_PALETTE_SIZE, LogicalPalette.entries);
+        systemDeviceContext = GetDC(NULL);
         GetSystemPaletteEntries(
-            curHdc,
+            systemDeviceContext,
+            0,
+            WINGRAPH_SYSTEM_PALETTE_SIZE,
+            LogicalPalette.entries
+        );
+        GetSystemPaletteEntries(
+            systemDeviceContext,
             WINGRAPH_MUTABLE_PALETTE_END,
             WINGRAPH_SYSTEM_PALETTE_SIZE,
             &LogicalPalette.entries[WINGRAPH_MUTABLE_PALETTE_END]
         );
-        ReleaseDC(NULL, curHdc);
+        ReleaseDC(NULL, systemDeviceContext);
         for (i = 0; i < WINGRAPH_SYSTEM_PALETTE_END; i++) {
             LogicalPalette.entries[i].peFlags = 0;
             LogicalPalette.entries[WINGRAPH_MUTABLE_PALETTE_END + i].peFlags = 0;
@@ -332,10 +337,10 @@ void DDInitializePalette() {
             LogicalPalette.entries[i].peBlue = 0;
             LogicalPalette.entries[i].peFlags = PC_NOCOLLAPSE;
         }
-        ddrval = gDD->CreatePalette(DDPCAPS_8BIT, LogicalPalette.entries, &gDDPal, NULL);
-        if (ddrval != DD_OK)
+        status = gDD->CreatePalette(DDPCAPS_8BIT, LogicalPalette.entries, &gDDPal, NULL);
+        if (status != DD_OK)
 #line 360
-            DDSD(ddrval, __FILE__, __LINE__);
+            DDSD(status, __FILE__, __LINE__);
         SetPalette();
     }
 }
@@ -362,10 +367,10 @@ VA_AT(editor, 0x00419de9, 0xfe)
 #line 417 WINGRAPH_CPP_PATH
 struct IDirectDrawSurface* DDCreateSurface(u32 width, u32 height, i32 primary) {
     _DDSURFACEDESC ddsd;
-    IDirectDrawSurface* lpSurface;
+    IDirectDrawSurface* createdSurface;
     i32 i;
     i32 tmp;
-    i32 ddrval;
+    i32 status;
 
     memset(&ddsd, 0, sizeof(ddsd));
     ddsd.dwSize = sizeof(ddsd);
@@ -380,15 +385,15 @@ struct IDirectDrawSurface* DDCreateSurface(u32 width, u32 height, i32 primary) {
         ddsd.dwHeight = height;
         ddsd.dwWidth = width;
     }
-    ddrval = gDD->CreateSurface(&ddsd, &lpSurface, NULL);
-    if (ddrval != DD_OK)
+    status = gDD->CreateSurface(&ddsd, &createdSurface, NULL);
+    if (status != DD_OK)
 #line 427
-        DDSD(ddrval, __FILE__, __LINE__);
+        DDSD(status, __FILE__, __LINE__);
     if (primary == 0) {
-        ddrval = lpSurface->Lock(NULL, &ddsd, DDLOCK_WAIT, NULL);
-        if (ddrval != DD_OK)
+        status = createdSurface->Lock(NULL, &ddsd, DDLOCK_WAIT, NULL);
+        if (status != DD_OK)
 #line 435
-            DDSD(ddrval, __FILE__, __LINE__);
+            DDSD(status, __FILE__, __LINE__);
         if (gWindowManager->m_screen != NULL) {
             gWindowManager->m_screen->m_pixels = static_cast<u8*>(ddsd.lpSurface);
             gInitWin = ddsd.lpSurface;
@@ -396,114 +401,114 @@ struct IDirectDrawSurface* DDCreateSurface(u32 width, u32 height, i32 primary) {
             gInitWin = ddsd.lpSurface;
         }
     }
-    return lpSurface;
+    return createdSurface;
 }
 
 VA(0x0046716a, 0x3ed)
 void DDSD(i32 error, char* file, i32 line) {
     i32 restoreResult;
-    H1_ENUM_STORAGE(DirectDrawReportCode, i32) unused;
+    H1_ENUM_STORAGE(DirectDrawReportCode, i32) reportCode;
 
     if (gInDDSD != FALSE)
         return;
     gInDDSD = TRUE;
     restoreResult = gDD->RestoreDisplayMode();
-    unused = DDSD_REPORT_NONE;
+    reportCode = DDSD_REPORT_NONE;
     switch (error) {
         case DD_OK:
             return;
         case DDERR_GENERIC:
-            unused = DDSD_REPORT_GENERIC;
+            reportCode = DDSD_REPORT_GENERIC;
             break;
         case DDERR_INVALIDCLIPLIST:
-            unused = DDSD_REPORT_INVALIDCLIPLIST;
+            reportCode = DDSD_REPORT_INVALIDCLIPLIST;
             break;
         case DDERR_INVALIDOBJECT:
-            unused = DDSD_REPORT_INVALIDOBJECT;
+            reportCode = DDSD_REPORT_INVALIDOBJECT;
             break;
         case DDERR_INVALIDPARAMS:
-            unused = DDSD_REPORT_INVALIDPARAMS;
+            reportCode = DDSD_REPORT_INVALIDPARAMS;
             break;
         case DDERR_INVALIDRECT:
-            unused = DDSD_REPORT_INVALIDRECT;
+            reportCode = DDSD_REPORT_INVALIDRECT;
             break;
         case DDERR_NOALPHAHW:
-            unused = DDSD_REPORT_NOALPHAHW;
+            reportCode = DDSD_REPORT_NOALPHAHW;
             break;
         case DDERR_NOBLTHW:
-            unused = DDSD_REPORT_NOBLTHW;
+            reportCode = DDSD_REPORT_NOBLTHW;
             break;
         case DDERR_NOCLIPLIST:
-            unused = DDSD_REPORT_NOCLIPLIST;
+            reportCode = DDSD_REPORT_NOCLIPLIST;
             break;
         case DDERR_NODDROPSHW:
-            unused = DDSD_REPORT_NODDROPSHW;
+            reportCode = DDSD_REPORT_NODDROPSHW;
             break;
         case DDERR_SURFACELOST:
-            unused = DDSD_REPORT_SURFACELOST;
+            reportCode = DDSD_REPORT_SURFACELOST;
             break;
         case DDERR_UNSUPPORTED:
-            unused = DDSD_REPORT_UNSUPPORTED;
+            reportCode = DDSD_REPORT_UNSUPPORTED;
             break;
         case DDERR_NOMIRRORHW:
-            unused = DDSD_REPORT_NOMIRRORHW;
+            reportCode = DDSD_REPORT_NOMIRRORHW;
             break;
         case DDERR_NORASTEROPHW:
-            unused = DDSD_REPORT_NORASTEROPHW;
+            reportCode = DDSD_REPORT_NORASTEROPHW;
             break;
         case DDERR_NOROTATIONHW:
-            unused = DDSD_REPORT_NOROTATIONHW;
+            reportCode = DDSD_REPORT_NOROTATIONHW;
             break;
         case DDERR_NOSTRETCHHW:
-            unused = DDSD_REPORT_NOSTRETCHHW;
+            reportCode = DDSD_REPORT_NOSTRETCHHW;
             break;
         case DDERR_SURFACEBUSY:
-            unused = DDSD_REPORT_SURFACEBUSY;
+            reportCode = DDSD_REPORT_SURFACEBUSY;
             break;
         case DDERR_NOZBUFFERHW:
-            unused = DDSD_REPORT_NOZBUFFERHW;
+            reportCode = DDSD_REPORT_NOZBUFFERHW;
             break;
         case DDERR_OUTOFMEMORY:
-            unused = DDSD_REPORT_OUTOFMEMORY;
+            reportCode = DDSD_REPORT_OUTOFMEMORY;
             break;
         case DDERR_CLIPPERISUSINGHWND:
-            unused = DDSD_REPORT_CLIPPERISUSINGHWND;
+            reportCode = DDSD_REPORT_CLIPPERISUSINGHWND;
             break;
         case DDERR_NOEXCLUSIVEMODE:
-            unused = DDSD_REPORT_NOEXCLUSIVEMODE;
+            reportCode = DDSD_REPORT_NOEXCLUSIVEMODE;
             break;
         case DDERR_NOT8BITCOLOR:
-            unused = DDSD_REPORT_NOT8BITCOLOR;
+            reportCode = DDSD_REPORT_NOT8BITCOLOR;
             break;
         case DDERR_NOPALETTEATTACHED:
-            unused = DDSD_REPORT_NOPALETTEATTACHED;
+            reportCode = DDSD_REPORT_NOPALETTEATTACHED;
             break;
         case DDERR_NOPALETTEHW:
-            unused = DDSD_REPORT_NOPALETTEHW;
+            reportCode = DDSD_REPORT_NOPALETTEHW;
             break;
         case DDERR_LOCKEDSURFACES:
-            unused = DDSD_REPORT_LOCKEDSURFACES;
+            reportCode = DDSD_REPORT_LOCKEDSURFACES;
             break;
         case DDERR_IMPLICITLYCREATED:
-            unused = DDSD_REPORT_IMPLICITLYCREATED;
+            reportCode = DDSD_REPORT_IMPLICITLYCREATED;
             break;
         case DDERR_WRONGMODE:
-            unused = DDSD_REPORT_WRONGMODE;
+            reportCode = DDSD_REPORT_WRONGMODE;
             break;
         case DDERR_INCOMPATIBLEPRIMARY:
-            unused = DDSD_REPORT_INCOMPATIBLEPRIMARY;
+            reportCode = DDSD_REPORT_INCOMPATIBLEPRIMARY;
             break;
         case DDERR_NOCLIPPERATTACHED:
-            unused = DDSD_REPORT_NOCLIPPERATTACHED;
+            reportCode = DDSD_REPORT_NOCLIPPERATTACHED;
             break;
         default:
-            unused = DDSD_REPORT_UNKNOWN;
+            reportCode = DDSD_REPORT_UNKNOWN;
             break;
     }
     MessageBeep(MB_OK);
     MessageBeep(MB_OK);
     MessageBeep(MB_OK);
-    sprintf(gText, "Direct Draw Error #%d in file '%s' at Line #%d", unused, file, line);
+    sprintf(gText, "Direct Draw Error #%d in file '%s' at Line #%d", reportCode, file, line);
     ShutDown(gText);
 }
 
@@ -511,7 +516,7 @@ VA(0x00467557, 0xf5)
 #line 524 WINGRAPH_CPP_PATH
 void DDUpdatePalette(i8* paletteData) {
     i32 entry;
-    i32 curRes;
+    i32 status;
 
     if (gWinGraphBusy != FALSE)
         return;
@@ -529,15 +534,15 @@ void DDUpdatePalette(i8* paletteData) {
     // API-forced: ProcessAssert accepts the pointer assertion as a 32-bit int.
 #line 521
     H1_ASSERT(reinterpret_cast<i32>(gDDPal));
-    curRes = gDDPal->SetEntries(
+    status = gDDPal->SetEntries(
         0,
         WINGRAPH_SYSTEM_PALETTE_SIZE,
         PALETTE_COLOR_COUNT - WINGRAPH_SYSTEM_PALETTE_SIZE * 2,
         &LogicalPalette.entries[WINGRAPH_SYSTEM_PALETTE_SIZE]
     );
-    if (curRes != DD_OK)
+    if (status != DD_OK)
 #line 525
-        DDSD(curRes, __FILE__, __LINE__);
+        DDSD(status, __FILE__, __LINE__);
 }
 
 VA(0x0046764c, 0x154)
@@ -779,20 +784,20 @@ void WGUpdatePalette(i8* paletteData) {
 // interior flagged for palette animation.
 VA(0x00467d9b, 0x1a2)
 void WGInitializePalette() {
-    HDC hdc;
+    HDC screenDC;
     i32 i;
 
     if (gAppPalette != NULL)
         return;
-    hdc = GetDC(NULL);
-    GetSystemPaletteEntries(hdc, 0, WINGRAPH_SYSTEM_PALETTE_SIZE, LogicalPalette.entries);
+    screenDC = GetDC(NULL);
+    GetSystemPaletteEntries(screenDC, 0, WINGRAPH_SYSTEM_PALETTE_SIZE, LogicalPalette.entries);
     GetSystemPaletteEntries(
-        hdc,
+        screenDC,
         WINGRAPH_MUTABLE_PALETTE_END,
         WINGRAPH_SYSTEM_PALETTE_SIZE,
         &LogicalPalette.entries[WINGRAPH_MUTABLE_PALETTE_END]
     );
-    ReleaseDC(NULL, hdc);
+    ReleaseDC(NULL, screenDC);
     for (i = 0; i < WINGRAPH_SYSTEM_PALETTE_END; i++) {
         screenImage.colors[i].rgbRed = LogicalPalette.entries[i].peRed;
         screenImage.colors[i].rgbGreen = LogicalPalette.entries[i].peGreen;

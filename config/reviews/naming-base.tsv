@@ -46,3 +46,24 @@ local	fileRequester::Open	dotPtr/enable	extensionStart/enableOk	the '.' cut from
 local	fileRequester::fileRequester	moveValue/dotPtr	shiftRow/extensionStart	the insertion sort's shifting row; the extension split point
 static	BASE/INPUTMGR	gInputCharacterMapCp1251	gInputCharacterMap	the table is the selected language's keyboard catalog (localization::Chars("locale.keyboard")), not a CP1251 constant
 function	BASE/INPUTMGR	TranslateInputCharacterCp1251	TranslateInputCharacter	translates through the locale keyboard table
+local	PopNetBox	dataObj..curLen (16 locals)	cursorVisible/redrawInput/closeWindow/exitForIncomingData/inputText/inputWidth/netBox/noticeStamp/redrawText/boxFont/sendOk/closeDelay/enterPressed/inputLength/event/lineMax	chat box roles: the typed line, its cursor blink, the redraw flags, the 6 s notice timeout, the close-after-incoming-data pause
+param	CanBuild/CanBuy	t/type	townPointer/building	project name for a town pointer; CanBuy's second argument is a building slot passed to GetBuildingCost
+local	CanBuy	rec/i	player/resourceIndex	the current playerData and the resource loop
+param	ReceiveRemotePlayerExit	<unnamed#2>	hadControl	HandleRemoteSuddenExit's gText[1] and PollRemote's newControl: whether the exiting player held the turn; comment called it an unused flag
+param	CheckEndGame	forced	forceWin	non-zero ends the game as a win
+param	game::ShowMoraleInfo/ShowLuckInfo	h	heroPointer	project name for a hero pointer
+param	AddScoreToHighScore	standard	highScoreType	compared with HIGH_SCORE_TYPE_STANDARD/CAMPAIGN and stored in gHighScoreType
+local	AddScoreToHighScore	savedName	scoreFile	the STANDARD.HS/CAMPAIGN.HS path
+param	BVResMsg	s/res/qty	text/resourceType/quantity	stored in gBottomViewText/Resource/ResourceQty
+param	GetTownName	i	townIndex	GetTown(i)
+param	UpdateAppSpecificMenus	hMenu	menu	no Hungarian; AppCommand's menu handle
+param	NullHandler/EarlyResizeWindow	<unnamed>	message/x,y,width,height	handler message; ResizeWindow's rectangle
+local	ShowCongrats	win/scoreAmount/res	window/baseScore/total	GetBaseScore(days) and its difficulty-scaled total
+local	WaitForOtherPlayer	data	received	the received RemoteMessage
+param	AppAbout	hDlg/wParam/lParam	dialog/messageParam/messageData	no Hungarian; AppWndProc's names for the same message words
+local	AppAbout/AppCommand	wmId/codeNotify/hwndCtl/lpfnDlgProc	commandId/notifyCode/childWindow/dialogProc	no Hungarian
+local	SetMenus	disabled/match/pos	update/matchIndex/candidate	the flag selects items whose state is rewritten (set when enabling), not disabled ones
+local	SetupCDDrive	thisFh/tempDrives/pos/subKeyArray	probeFd/drivesCount/tailResult/keyPath	probe file descriptor, CD drive count, the tail-read result, the registry key path
+local	DriveSupportsFreeSpaceQuery	szPath/availToCaller	path/availableToCaller	no Hungarian
+local	DDSD	unused	reportCode	not unused: the DDSD_REPORT_* code printed in the "Direct Draw Error #%d" message
+local	DDCreateSurface/DDInitializePalette/DDUpdatePalette/WGInitializePalette	ddrval/lpSurface/curHdc/curRes/hdc	status/createdSurface/systemDeviceContext/status/screenDC	no Hungarian; one name for a DirectDraw call status

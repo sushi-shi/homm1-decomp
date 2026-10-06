@@ -508,8 +508,8 @@ public:
     void SetupNewRumour(void);
     void CheckForTimeEvent(void);
     i32 CountShrines(i32 player);
-    void ShowMoraleInfo(class hero* h, i32 dialogType);
-    void ShowLuckInfo(class hero* h, i32 dialogType);
+    void ShowMoraleInfo(class hero* heroPointer, i32 dialogType);
+    void ShowLuckInfo(class hero* heroPointer, i32 dialogType);
     // Retail GetMap never reads ecx; its caller passes no this.
     static void GetMap(void);
     void ProcessNewMap(struct SMapHeader* header);

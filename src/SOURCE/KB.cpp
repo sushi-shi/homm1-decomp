@@ -735,7 +735,7 @@ i16 InitMenuHandler(tag_message& message) {
 }
 
 VA(0x0043e1b2, 0x9)
-i16 NullHandler(tag_message&) {
+i16 NullHandler(tag_message& message) {
     return MESSAGE_DISPATCH_CONSUME;
 }
 
@@ -856,50 +856,54 @@ void GetMonsterCost(i32 monster, i32* const cost) {
 }
 
 VA(0x0043e49c, 0x104)
-i8 CanBuild(town* t, i16 building) {
+i8 CanBuild(town* townPointer, i16 building) {
     mapCell* cell;
     u16 required;
-    if (BitTest(gGame->m_townBuiltToday, t->m_id))
+    if (BitTest(gGame->m_townBuiltToday, townPointer->m_id))
         return 0;
-    if (building != BUILDING_SLOT_CASTLE && !(t->m_buildings & (1 << BUILDING_SLOT_CASTLE)))
+    if (building != BUILDING_SLOT_CASTLE
+        && !(townPointer->m_buildings & (1 << BUILDING_SLOT_CASTLE)))
         return 0;
     if (building == BUILDING_SLOT_SHIPYARD) {
-        cell = gAdvManager->GetCell(t->m_x - 1, t->m_y + 1);
+        cell = gAdvManager->GetCell(townPointer->m_x - 1, townPointer->m_y + 1);
         if (cell->m_tileIndex < MAP_CELL_TILES_PER_TERRAIN)
             return 1;
         else
             return 0;
     }
-    if (building == BUILDING_SLOT_MAGE_GUILD && t->m_buildState >= TOWN_MAGE_GUILD_COST_LEVEL_LAST)
+    if (building == BUILDING_SLOT_MAGE_GUILD
+        && townPointer->m_buildState >= TOWN_MAGE_GUILD_COST_LEVEL_LAST)
         return 0;
     if (building == BUILDING_SLOT_TENT)
         return 0;
     if (building < BUILDING_SLOT_DWELLING_FIRST)
         return 1;
     required = gDwellingRequirements
-        [t->m_type * BUILDING_SLOT_DWELLING_COUNT + (building - BUILDING_SLOT_DWELLING_FIRST)];
-    if ((required & t->m_buildings) == required)
+        [townPointer->m_type * BUILDING_SLOT_DWELLING_COUNT
+         + (building - BUILDING_SLOT_DWELLING_FIRST)];
+    if ((required & townPointer->m_buildings) == required)
         return 1;
     return 0;
 }
 
 VA(0x0043e5a0, 0xb6)
-i8 CanBuy(town* t, i16 type) {
+i8 CanBuy(town* townPointer, i16 building) {
     i32 cost[RESOURCE_COUNT];
-    playerData* rec;
-    i32 i;
+    playerData* player;
+    i32 resourceIndex;
     GetBuildingCost(
-        t->m_type,
-        type,
+        townPointer->m_type,
+        building,
         cost,
-        (t->m_buildings & (1 << BUILDING_SLOT_MAGE_GUILD))
-            ? (t->m_buildState < TOWN_MAGE_GUILD_COST_LEVEL_LAST ? t->m_buildState + 1
-                                                                 : TOWN_MAGE_GUILD_COST_LEVEL_LAST)
+        (townPointer->m_buildings & (1 << BUILDING_SLOT_MAGE_GUILD))
+            ? (townPointer->m_buildState < TOWN_MAGE_GUILD_COST_LEVEL_LAST
+                   ? townPointer->m_buildState + 1
+                   : TOWN_MAGE_GUILD_COST_LEVEL_LAST)
             : 0
     );
-    rec = &gGame->m_players[gCurPlayer];
-    for (i = 0; i < RESOURCE_COUNT; ++i) {
-        if (rec->m_resources[i] < cost[i])
+    player = &gGame->m_players[gCurPlayer];
+    for (resourceIndex = 0; resourceIndex < RESOURCE_COUNT; ++resourceIndex) {
+        if (player->m_resources[resourceIndex] < cost[resourceIndex])
             return 0;
     }
     return 1;
@@ -1642,9 +1646,9 @@ void HandleRemoteSuddenExit(void) {
 }
 
 VA(0x0043f956, 0x238)
-// HoMM1 callers push four byte-sized values: player, an unused flag,
-// elimination and timeout.
-void ReceiveRemotePlayerExit(i8 position, i8, i8 eliminated, i8 timedOut) {
+// The exiting player's position, whether it held the turn (unused here),
+// whether it was eliminated and whether it timed out.
+void ReceiveRemotePlayerExit(i8 position, i8 hadControl, i8 eliminated, i8 timedOut) {
     if (position == gThisGamePos) {
         sprintf(gText, localization::Tr("network.player.eliminated"));
         NormalDialog(gText, NORMAL_DIALOG_TYPE_OK);
@@ -1703,7 +1707,7 @@ void ReceiveRemotePlayerExit(i8 position, i8, i8 eliminated, i8 timedOut) {
 }
 
 VA(0x0043fb8e, 0x936)
-void CheckEndGame(i32 forced) {
+void CheckEndGame(i32 forceWin) {
     town* objectiveTown;
     i8 artifactOwner;
     hero* bearer;
@@ -1889,7 +1893,7 @@ void CheckEndGame(i32 forced) {
             gEndSequence = GAME_END_LOST;
         }
     }
-    if (forced) {
+    if (forceWin) {
         gGameOver = 1;
         gEndSequence = GAME_END_WON;
     }
@@ -1939,29 +1943,29 @@ void InitVars(void) {
 }
 
 VA(0x004406b3, 0x3f2)
-void game::ShowMoraleInfo(hero* h, i32 dialogType) {
+void game::ShowMoraleInfo(hero* heroPointer, i32 dialogType) {
     i32 newFaction;
     i32 i;
     i32 alignments;
     i32 length;
     char buffer[200];
 
-    if (h->m_army.GetMorale(h, NULL) > 0)
+    if (heroPointer->m_army.GetMorale(heroPointer, NULL) > 0)
         sprintf(buffer, gMoraleInfoText[MORALE_INFO_GOOD]);
-    else if (h->m_army.GetMorale(h, NULL) == 0)
+    else if (heroPointer->m_army.GetMorale(heroPointer, NULL) == 0)
         sprintf(buffer, gMoraleInfoText[MORALE_INFO_NEUTRAL]);
     else
         sprintf(buffer, gMoraleInfoText[MORALE_INFO_BAD]);
     sprintf(gText, gMoraleInfoText[MORALE_INFO_HEADER], buffer);
     length = strlen(gText);
-    if (!h->m_heroClass)
+    if (!heroPointer->m_heroClass)
         strcat(gText, gMoraleInfoText[MORALE_INFO_KNIGHT]);
-    alignments = h->m_army.IsHomogeneous(ARMY_GROUP_EMPTY_SLOT);
+    alignments = heroPointer->m_army.IsHomogeneous(ARMY_GROUP_EMPTY_SLOT);
     if (alignments > ARMY_GROUP_ALIGNMENT_NO_BONUS_LAST) {
         newFaction = 0;
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
-            if (h->m_army.m_creatureTypes[i] != CREATURE_NONE)
-                newFaction = h->m_army.m_creatureTypes[i] / CREATURE_FACTION_SIZE;
+            if (heroPointer->m_army.m_creatureTypes[i] != CREATURE_NONE)
+                newFaction = heroPointer->m_army.m_creatureTypes[i] / CREATURE_FACTION_SIZE;
         }
         sprintf(buffer, gMoraleInfoText[MORALE_INFO_ALL_TROOPS], gAlignmentNames[newFaction]);
         strcat(gText, buffer);
@@ -1978,28 +1982,28 @@ void game::ShowMoraleInfo(hero* h, i32 dialogType) {
         sprintf(buffer, gMoraleInfoText[MORALE_INFO_FIVE_ALIGNMENTS]);
         strcat(gText, buffer);
     }
-    if (h->HasArtifact(ARTIFACT_MEDAL_OF_VALOR))
+    if (heroPointer->HasArtifact(ARTIFACT_MEDAL_OF_VALOR))
         strcat(gText, gMoraleInfoText[MORALE_INFO_MEDAL_OF_VALOR]);
-    if (h->HasArtifact(ARTIFACT_MEDAL_OF_COURAGE))
+    if (heroPointer->HasArtifact(ARTIFACT_MEDAL_OF_COURAGE))
         strcat(gText, gMoraleInfoText[MORALE_INFO_MEDAL_OF_COURAGE]);
-    if (h->HasArtifact(ARTIFACT_MEDAL_OF_HONOR))
+    if (heroPointer->HasArtifact(ARTIFACT_MEDAL_OF_HONOR))
         strcat(gText, gMoraleInfoText[MORALE_INFO_MEDAL_OF_HONOR]);
-    if (h->HasArtifact(ARTIFACT_MEDAL_OF_DISTINCTION))
+    if (heroPointer->HasArtifact(ARTIFACT_MEDAL_OF_DISTINCTION))
         strcat(gText, gMoraleInfoText[MORALE_INFO_MEDAL_OF_DISTINCTION]);
-    if (h->HasArtifact(ARTIFACT_FIZBIN_OF_MISFORTUNE))
+    if (heroPointer->HasArtifact(ARTIFACT_FIZBIN_OF_MISFORTUNE))
         strcat(gText, gMoraleInfoText[MORALE_INFO_FIZBIN]);
-    if (h->m_eventFlags & HERO_EVENT_BUOY)
+    if (heroPointer->m_eventFlags & HERO_EVENT_BUOY)
         strcat(gText, gMoraleInfoText[MORALE_INFO_BUOY]);
-    if (h->m_eventFlags & HERO_EVENT_OASIS)
+    if (heroPointer->m_eventFlags & HERO_EVENT_OASIS)
         strcat(gText, gMoraleInfoText[MORALE_INFO_OASIS]);
-    if (h->m_eventFlags & HERO_EVENT_STATUE)
+    if (heroPointer->m_eventFlags & HERO_EVENT_STATUE)
         strcat(gText, gMoraleInfoText[MORALE_INFO_STATUE]);
-    if (h->m_eventFlags & HERO_EVENT_GRAVEYARD)
+    if (heroPointer->m_eventFlags & HERO_EVENT_GRAVEYARD)
         strcat(gText, gMoraleInfoText[MORALE_INFO_GRAVEYARD]);
-    if (h->m_eventFlags & HERO_EVENT_SHIPWRECK)
+    if (heroPointer->m_eventFlags & HERO_EVENT_SHIPWRECK)
         strcat(gText, gMoraleInfoText[MORALE_INFO_SHIPWRECK]);
-    if (h->m_cowardice) {
-        sprintf(buffer, gMoraleInfoText[MORALE_INFO_COWARDICE], h->m_cowardice);
+    if (heroPointer->m_cowardice) {
+        sprintf(buffer, gMoraleInfoText[MORALE_INFO_COWARDICE], heroPointer->m_cowardice);
         strcat(gText, buffer);
     }
     if (length == strlen(gText))
@@ -2008,30 +2012,30 @@ void game::ShowMoraleInfo(hero* h, i32 dialogType) {
 }
 
 VA(0x00440aa5, 0x1cd)
-void game::ShowLuckInfo(hero* h, i32 dialogType) {
+void game::ShowLuckInfo(hero* heroPointer, i32 dialogType) {
     i32 alignments;
     i32 size;
     char buffer[200];
 
-    if (gGame->GetLuck(h, NULL) > 0)
+    if (gGame->GetLuck(heroPointer, NULL) > 0)
         sprintf(buffer, gLuckInfoText[LUCK_INFO_GOOD]);
-    else if (gGame->GetLuck(h, NULL) == 0)
+    else if (gGame->GetLuck(heroPointer, NULL) == 0)
         sprintf(buffer, gLuckInfoText[LUCK_INFO_NEUTRAL]);
     else
         sprintf(buffer, gLuckInfoText[LUCK_INFO_BAD]);
     sprintf(gText, gLuckInfoText[LUCK_INFO_HEADER], buffer);
     size = strlen(gText);
-    if (h->HasArtifact(ARTIFACT_LUCKY_RABBITS_FOOT))
+    if (heroPointer->HasArtifact(ARTIFACT_LUCKY_RABBITS_FOOT))
         strcat(gText, gLuckInfoText[LUCK_INFO_RABBITS_FOOT]);
-    if (h->HasArtifact(ARTIFACT_GOLDEN_HORSESHOE))
+    if (heroPointer->HasArtifact(ARTIFACT_GOLDEN_HORSESHOE))
         strcat(gText, gLuckInfoText[LUCK_INFO_HORSESHOE]);
-    if (h->HasArtifact(ARTIFACT_GAMBLERS_LUCKY_COIN))
+    if (heroPointer->HasArtifact(ARTIFACT_GAMBLERS_LUCKY_COIN))
         strcat(gText, gLuckInfoText[LUCK_INFO_LUCKY_COIN]);
-    if (h->HasArtifact(ARTIFACT_FOUR_LEAF_CLOVER))
+    if (heroPointer->HasArtifact(ARTIFACT_FOUR_LEAF_CLOVER))
         strcat(gText, gLuckInfoText[LUCK_INFO_CLOVER]);
-    if (h->m_eventFlags & HERO_EVENT_FAERIE_RING)
+    if (heroPointer->m_eventFlags & HERO_EVENT_FAERIE_RING)
         strcat(gText, gLuckInfoText[LUCK_INFO_FAERIE_RING]);
-    if (h->m_eventFlags & HERO_EVENT_FOUNTAIN)
+    if (heroPointer->m_eventFlags & HERO_EVENT_FOUNTAIN)
         strcat(gText, gLuckInfoText[LUCK_INFO_FOUNTAIN]);
     if (size == strlen(gText))
         strcat(gText, gLuckInfoText[LUCK_INFO_NONE]);
@@ -2066,21 +2070,21 @@ i16 GetMonType(i32 score, i32 highScoreType) {
 }
 
 VA(0x00440d39, 0x32d)
-i32 AddScoreToHighScore(i32 score, i32 standard, char*, char* scenarioName) {
+i32 AddScoreToHighScore(i32 score, i32 highScoreType, char*, char* scenarioName) {
     HighScoreEntry curScores[HIGH_SCORE_DISPLAY_ENTRY_COUNT];
     i32 entry;
     i32 theDest;
     i32 nextFile;
-    char savedName[352];
+    char scoreFile[352];
     char enteredPlayerName[20];
     i8 missingFileValue;
 
     missingFileValue = 0;
-    if (standard == HIGH_SCORE_TYPE_STANDARD)
-        sprintf(savedName, "%sSTANDARD.HS", gDataPath);
+    if (highScoreType == HIGH_SCORE_TYPE_STANDARD)
+        sprintf(scoreFile, "%sSTANDARD.HS", gDataPath);
     else
-        sprintf(savedName, "%sCAMPAIGN.HS", gDataPath);
-    nextFile = open(savedName, _O_BINARY);
+        sprintf(scoreFile, "%sCAMPAIGN.HS", gDataPath);
+    nextFile = open(scoreFile, _O_BINARY);
     if (nextFile == -1)
         missingFileValue = 1;
     if (missingFileValue) {
@@ -2095,12 +2099,12 @@ i32 AddScoreToHighScore(i32 score, i32 standard, char*, char* scenarioName) {
     }
 
     gShowHighScore = 1;
-    gHighScoreType = standard;
+    gHighScoreType = highScoreType;
     gHighScoreRank = HIGH_SCORE_EMPTY;
     gScore = score;
     for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++) {
-        if ((score >= curScores[entry].score && standard == HIGH_SCORE_TYPE_STANDARD)
-            || (score <= curScores[entry].score && standard == HIGH_SCORE_TYPE_CAMPAIGN)
+        if ((score >= curScores[entry].score && highScoreType == HIGH_SCORE_TYPE_STANDARD)
+            || (score <= curScores[entry].score && highScoreType == HIGH_SCORE_TYPE_CAMPAIGN)
             || curScores[entry].score == HIGH_SCORE_EMPTY) {
             gHighScoreRank = entry;
             break;
@@ -2114,9 +2118,9 @@ i32 AddScoreToHighScore(i32 score, i32 standard, char*, char* scenarioName) {
         strcpy(curScores[entry].playerName, enteredPlayerName);
         strcpy(curScores[entry].scenarioName, scenarioName);
         curScores[entry].score = score;
-        nextFile = open(savedName, _O_BINARY | _O_TRUNC | _O_CREAT | _O_WRONLY, _S_IWRITE);
+        nextFile = open(scoreFile, _O_BINARY | _O_TRUNC | _O_CREAT | _O_WRONLY, _S_IWRITE);
         if (nextFile == -1)
-            FileError(savedName);
+            FileError(scoreFile);
         for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++)
             WRITE_FILE_VALUE(nextFile, curScores[entry]);
         close(nextFile);
@@ -2125,12 +2129,12 @@ i32 AddScoreToHighScore(i32 score, i32 standard, char*, char* scenarioName) {
 }
 
 VA(0x00441066, 0x51)
-void BVResMsg(char* s, i32 res, i32 qty) {
+void BVResMsg(char* text, i32 resourceType, i32 quantity) {
     gBottomViewOverride = BOTTOM_VIEW_RESOURCE;
     gBottomViewOverrideEndTime = KBTickCount() + 5000;
-    gBottomViewResource = res;
-    gBottomViewResourceQty = qty;
-    strcpy(gBottomViewText, s);
+    gBottomViewResource = resourceType;
+    gBottomViewResourceQty = quantity;
+    strcpy(gBottomViewText, text);
     gAdvManager->UpdBottomView(1, 1, 1);
 }
 
@@ -2153,18 +2157,18 @@ i8 NetPosToGamePos(i32 netPos) {
 VA(0x004410f1, 0xb1)
 i8 WaitForOtherPlayer(void) {
     i32 result = 0;
-    RemoteMessage* data;
+    RemoteMessage* received;
     PollSound();
-    data = reinterpret_cast<RemoteMessage*>(GetRemoteData(1)); // API-forced: char* record.
-    if (data && data->type == REMOTE_MESSAGE_RELIABLE) {
-        switch (data->command) {
+    received = reinterpret_cast<RemoteMessage*>(GetRemoteData(1)); // API-forced: char* record.
+    if (received && received->type == REMOTE_MESSAGE_RELIABLE) {
+        switch (received->command) {
             case BOX_REMOTE_SETUP:
-                memcpy(gGamePosToNetPos, data->payload.data, GAME_PLAYER_COUNT);
+                memcpy(gGamePosToNetPos, received->payload.data, GAME_PLAYER_COUNT);
                 gThisGamePos = NetPosToGamePos(gThisNetPos);
                 gHostGamePos = NetPosToGamePos(NET_POSITION_HOST);
                 break;
             case BOX_REMOTE_SAVE:
-                result = gGame->ReceiveSaveGame(data->payload.saveSize, data->sender);
+                result = gGame->ReceiveSaveGame(received->payload.saveSize, received->sender);
                 break;
         }
     }
@@ -2174,64 +2178,64 @@ i8 WaitForOtherPlayer(void) {
 VA(0x004411a2, 0x65a)
 void PopNetBox(char* notice) {
     char* dataObj;
-    i8 blinkState;
-    i8 lines;
-    i8 bClose;
     i32 myBaseId;
-    font* fontPtr;
-    i8 oldShown;
-    i32 pause;
-    i32 curLimit;
-    i8 nextExitOnData;
-    i8 curText;
-    tag_message nextIncoming;
-    tag_message messageData;
-    i32 curLen;
-    char text[80];
     i8 savedShowIt;
-    i8 updateInputNum;
     i32 heightValue;
-    i32 oldMsgTime;
-    heroWindow* theWin;
-    i32 lastSuccess;
-    i32 curWidth;
+    tag_message event;
+    i8 oldShown;
+    i32 inputLength;
+    i8 enterPressed;
+    tag_message messageData;
+    i32 closeDelay;
+    i32 sendOk;
+    font* boxFont;
+    i8 redrawText;
+    i32 noticeStamp;
+    heroWindow* netBox;
+    i32 inputWidth;
+    char inputText[80];
+    i8 exitForIncomingData;
+    i8 closeWindow;
+    i8 redrawInput;
+    i8 cursorVisible;
+    i32 lineMax;
 
     if (!gRemoteOn)
         return;
-    curLimit = 60;
+    lineMax = 60;
     myBaseId = 1;
     heightValue = 42;
-    fontPtr = gResourceManager->GetFont("bigfont.fnt");
-    oldMsgTime = 0;
+    boxFont = gResourceManager->GetFont("bigfont.fnt");
+    noticeStamp = 0;
     if (notice) {
         AddNetBoxLine(notice);
-        oldMsgTime = KBTickCount();
+        noticeStamp = KBTickCount();
     }
-    curLen = 0;
+    inputLength = 0;
     oldShown = gMouseManager->IsVis();
     savedShowIt = gShowIt;
     gShowIt = 1;
-    theWin = new heroWindow(0, 418, "netbox.bin");
-    if (!theWin)
+    netBox = new heroWindow(0, 418, "netbox.bin");
+    if (!netBox)
         MemError();
     SET_WIDGET_MESSAGE(messageData, WIDGET_COMMAND_SET_TEXT, NET_BOX_LINE_PREVIOUS);
     messageData.text = gNetBoxLine[0];
-    theWin->BroadcastMessage(messageData);
+    netBox->BroadcastMessage(messageData);
     messageData.id = NET_BOX_LINE_LATEST;
     messageData.text = gNetBoxLine[1];
-    theWin->BroadcastMessage(messageData);
-    gWindowManager->AddWindow(theWin, WINDOW_Z_ORDER_APPEND, 1);
+    netBox->BroadcastMessage(messageData);
+    gWindowManager->AddWindow(netBox, WINDOW_Z_ORDER_APPEND, 1);
     gMouseManager->ReallyHidePointer();
-    nextExitOnData = 0;
-    bClose = 0;
-    updateInputNum = 1;
-    blinkState = 0;
-    curText = 0;
-    lines = 1;
-    strcpy(text, "");
+    exitForIncomingData = 0;
+    closeWindow = 0;
+    redrawInput = 1;
+    cursorVisible = 0;
+    enterPressed = 0;
+    redrawText = 1;
+    strcpy(inputText, "");
     gInputManager->SetKeyCodeType(INPUT_KEY_CODE_ASCII);
 
-    while (!bClose) {
+    while (!closeWindow) {
         PollSound();
         dataObj = GetRemoteData(0);
         if (dataObj) {
@@ -2247,115 +2251,115 @@ void PopNetBox(char* notice) {
                         AddNetBoxLine(
                             reinterpret_cast<RemoteMessage*>(dataObj)->payload.data
                         ); // API-forced: char* record.
-                        lines = 1;
-                        if (oldMsgTime)
-                            oldMsgTime = KBTickCount();
+                        redrawText = 1;
+                        if (noticeStamp)
+                            noticeStamp = KBTickCount();
                         break;
                     default:
                         AddNetBoxLine(localization::Tr("network.incoming.close"));
-                        lines = 1;
-                        nextExitOnData = 1;
+                        redrawText = 1;
+                        exitForIncomingData = 1;
                         break;
                 }
             }
         }
 
         Process1WindowsMessage();
-        nextIncoming = gInputManager->GetEvent();
-        switch (nextIncoming.type) {
+        event = gInputManager->GetEvent();
+        switch (event.type) {
             case MESSAGE_KEY_DOWN:
-                oldMsgTime = 0;
-                switch (nextIncoming.keyCode) {
+                noticeStamp = 0;
+                switch (event.keyCode) {
                     case INPUT_ASCII_ESCAPE:
                     case EncodeScanCode(INPUT_SCAN_F1):
-                        bClose = 1;
+                        closeWindow = 1;
                         break;
                     case INPUT_ASCII_DELETE:
-                        if (curLen > 0)
-                            curLen--;
-                        updateInputNum = 1;
-                        blinkState = 1;
+                        if (inputLength > 0)
+                            inputLength--;
+                        redrawInput = 1;
+                        cursorVisible = 1;
                         break;
                     case '\n':
-                        curText = 1;
+                        enterPressed = 1;
                         break;
                     default:
-                        if (curLen < 58 && nextIncoming.keyCode) {
-                            text[curLen] = 0;
-                            curWidth = fontPtr->LineWidth(text);
-                            if (curWidth + 30 < 610) {
-                                text[curLen] = nextIncoming.keyCode & 0xff;
-                                curLen++;
-                                updateInputNum = 1;
-                                blinkState = 0;
+                        if (inputLength < 58 && event.keyCode) {
+                            inputText[inputLength] = 0;
+                            inputWidth = boxFont->LineWidth(inputText);
+                            if (inputWidth + 30 < 610) {
+                                inputText[inputLength] = event.keyCode & 0xff;
+                                inputLength++;
+                                redrawInput = 1;
+                                cursorVisible = 0;
                             }
                         }
                 }
         }
 
-        if (!updateInputNum && gTimers[NET_BOX_BLINK_TIMER_SLOT] < KBTickCount()) {
-            blinkState = 1 - blinkState;
-            updateInputNum = 1;
+        if (!redrawInput && gTimers[NET_BOX_BLINK_TIMER_SLOT] < KBTickCount()) {
+            cursorVisible = 1 - cursorVisible;
+            redrawInput = 1;
         }
-        if (curText) {
-            curText = 0;
-            text[curLen] = 0;
-            AddNetBoxLine(text);
-            lastSuccess = TransmitRemoteData(
-                text,
+        if (enterPressed) {
+            enterPressed = 0;
+            inputText[inputLength] = 0;
+            AddNetBoxLine(inputText);
+            sendOk = TransmitRemoteData(
+                inputText,
                 REMOTE_BROADCAST_PLAYER,
-                strlen(text) + 1,
+                strlen(inputText) + 1,
                 REMOTE_COMMAND_CHAT,
                 1
             );
-            if (!lastSuccess)
+            if (!sendOk)
                 ShutDown(NULL);
-            curLen = 0;
-            strcpy(text, "");
-            updateInputNum = 1;
-            lines = 1;
+            inputLength = 0;
+            strcpy(inputText, "");
+            redrawInput = 1;
+            redrawText = 1;
         }
-        if (lines) {
-            lines = 0;
+        if (redrawText) {
+            redrawText = 0;
             SET_WIDGET_MESSAGE(messageData, WIDGET_COMMAND_SET_TEXT, NET_BOX_LINE_PREVIOUS);
             messageData.text = gNetBoxLine[0];
-            theWin->BroadcastMessage(messageData);
+            netBox->BroadcastMessage(messageData);
             messageData.id = NET_BOX_LINE_LATEST;
             messageData.text = gNetBoxLine[1];
-            theWin->BroadcastMessage(messageData);
-            theWin->DrawWindow();
+            netBox->BroadcastMessage(messageData);
+            netBox->DrawWindow();
             gWindowManager->UpdateScreenRegion(0, 418, 639, 61);
         }
-        if (updateInputNum) {
-            updateInputNum = 0;
+        if (redrawInput) {
+            redrawInput = 0;
             gTimers[NET_BOX_BLINK_TIMER_SLOT] = KBTickCount() + NET_BOX_BLINK_DELAY;
-            if (blinkState)
-                text[curLen] = '_';
+            if (cursorVisible)
+                inputText[inputLength] = '_';
             else
-                text[curLen] = ' ';
-            text[curLen + 1] = 0;
+                inputText[inputLength] = ' ';
+            inputText[inputLength + 1] = 0;
             SET_WIDGET_MESSAGE(messageData, WIDGET_COMMAND_SET_TEXT, NET_BOX_INPUT);
-            messageData.text = text;
-            theWin->BroadcastMessage(messageData);
-            theWin->DrawWindow();
+            messageData.text = inputText;
+            netBox->BroadcastMessage(messageData);
+            netBox->DrawWindow();
             gWindowManager->UpdateScreenRegion(0, 460, 639, 16);
         }
-        if (oldMsgTime && oldMsgTime + 6000 < KBTickCount())
-            bClose = 1;
-        if (nextExitOnData) {
-            for (pause = 0; pause < 30; pause++) {
+        if (noticeStamp && noticeStamp + 6000 < KBTickCount())
+            closeWindow = 1;
+        if (exitForIncomingData) {
+            for (closeDelay = 0; closeDelay < 30; closeDelay++) {
                 PollSound();
                 DelayMilli(90);
             }
-            bClose = 1;
+            closeWindow = 1;
         }
     }
     gInputManager->SetKeyCodeType(INPUT_KEY_CODE_SCAN);
-    gWindowManager->RemoveWindow(theWin);
+    gWindowManager->RemoveWindow(netBox);
     gShowIt = savedShowIt;
     if (oldShown)
         gMouseManager->ReallyShowPointer();
-    gResourceManager->Dispose(fontPtr);
+    gResourceManager->Dispose(boxFont);
 }
 
 // The net box holds two uncoloured lines.
@@ -2423,13 +2427,13 @@ VA(0x00441977, 0x3f5)
 void ShowCongrats(void) {
     char name[32];
     i32 ii;
-    i32 res;
+    i32 total;
     tag_message message;
-    i32 scoreAmount;
-    heroWindow* win;
+    i32 baseScore;
+    heroWindow* window;
 
-    scoreAmount = GetBaseScore(gCurTurn);
-    res = scoreAmount * gGame->m_difficultyRating / 100;
+    baseScore = GetBaseScore(gCurTurn);
+    total = baseScore * gGame->m_difficultyRating / 100;
     PlayMusic(MUSIC_TRACK_CONGRATULATIONS);
     gMouseManager->ReallyHidePointer();
     sprintf(gText, "congrats.bmp");
@@ -2438,50 +2442,50 @@ void ShowCongrats(void) {
     message.command = WIDGET_COMMAND_SET_TEXT;
     message.text = gText;
     if (gGame->m_campaignType > 0) {
-        win = new heroWindow(0, 0, "congrats.bin");
-        if (!win)
+        window = new heroWindow(0, 0, "congrats.bin");
+        if (!window)
             MemError();
         sprintf(gText, gCampaignWinTexts[gGame->m_campaignScenario]);
         message.id = CONGRATS_TITLE;
-        win->BroadcastMessage(message);
+        window->BroadcastMessage(message);
     } else {
-        win = new heroWindow(0, 0, "congspre.bin");
-        if (!win)
+        window = new heroWindow(0, 0, "congspre.bin");
+        if (!window)
             MemError();
-        sprintf(name, gArmyNames[GetMonType(res, HIGH_SCORE_TYPE_STANDARD)]);
+        sprintf(name, gArmyNames[GetMonType(total, HIGH_SCORE_TYPE_STANDARD)]);
         name[0] = CyrillicToUpper(name[0]);
         sprintf(gText, localization::Tr("congratulations.victory.title"));
         message.id = CONGRATS_TITLE;
-        win->BroadcastMessage(message);
+        window->BroadcastMessage(message);
         for (ii = 0; ii < CONGRATS_SCORE_LABEL_COUNT; ii++) {
             sprintf(gText, gScoreLabels[ii]);
             message.id = ii + CONGRATS_SCORE_LABEL_FIRST;
-            win->BroadcastMessage(message);
+            window->BroadcastMessage(message);
         }
         sprintf(gText, "%d", gCurTurn);
         message.id = CONGRATS_DAYS;
-        win->BroadcastMessage(message);
-        sprintf(gText, "%d", scoreAmount);
+        window->BroadcastMessage(message);
+        sprintf(gText, "%d", baseScore);
         message.id = CONGRATS_BASE_SCORE;
-        win->BroadcastMessage(message);
+        window->BroadcastMessage(message);
         sprintf(gText, "%d%%", gGame->m_difficultyRating);
         message.id = CONGRATS_DIFFICULTY;
-        win->BroadcastMessage(message);
-        sprintf(gText, "%d", res);
+        window->BroadcastMessage(message);
+        sprintf(gText, "%d", total);
         message.id = CONGRATS_FINAL_SCORE;
-        win->BroadcastMessage(message);
+        window->BroadcastMessage(message);
         sprintf(gText, "%s", name);
         message.id = CONGRATS_RATING;
-        win->BroadcastMessage(message);
+        window->BroadcastMessage(message);
     }
-    gWindowManager->AddWindow(win, WINDOW_Z_ORDER_APPEND, 1);
+    gWindowManager->AddWindow(window, WINDOW_Z_ORDER_APPEND, 1);
     gMouseManager->ReallyHidePointer();
     gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);
     CongratsWait();
-    gWindowManager->RemoveWindow(win);
-    delete win;
+    gWindowManager->RemoveWindow(window);
+    delete window;
     if (gGame->m_campaignType <= 0)
-        AddScoreToHighScore(res, HIGH_SCORE_TYPE_STANDARD, "", gGame->m_mapName);
+        AddScoreToHighScore(total, HIGH_SCORE_TYPE_STANDARD, "", gGame->m_mapName);
 }
 
 VA(0x00441d6c, 0x8b)
@@ -2610,8 +2614,8 @@ i8 CheckMem(void) {
 
 // Towns carry a name index, and campaign maps override one town by position.
 VA(0x004421b7, 0x9d)
-char* GetTownName(i32 i) {
-    town* townPointer = gGame->GetTown(i);
+char* GetTownName(i32 townIndex) {
+    town* townPointer = gGame->GetTown(townIndex);
     if (gGame->m_campaignType > 0 && gCampaignScenarios[gGame->m_campaignScenario].victoryTownX >= 0
         && gCampaignScenarios[gGame->m_campaignScenario].victoryTownX == townPointer->m_x
         && gCampaignScenarios[gGame->m_campaignScenario].victoryTownY == townPointer->m_y)
@@ -2971,13 +2975,13 @@ void CleanUpMenus(void) {
 }
 
 VA(0x00442c49, 0x15)
-void UpdateAppSpecificMenus(void* hMenu) {
-    if (hMenu == gAdventureMenu)
+void UpdateAppSpecificMenus(void* menu) {
+    if (menu == gAdventureMenu)
         UpdateSystemOptionsMenu();
 }
 
 VA(0x00442c5e, 0x5)
-void EarlyResizeWindow(i32, i32, i32, i32) {
+void EarlyResizeWindow(i32 x, i32 y, i32 width, i32 height) {
     if (gClosingApp)
         return;
 }
