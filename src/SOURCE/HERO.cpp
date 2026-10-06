@@ -867,8 +867,8 @@ void UpdateHeroScreenStatusBar(i16 widgetId) {
             sprintf(
                 gText,
                 gHeroScreen[HERO_TEXT_DISMISS],
-                gInfoViewedHero->m_name,
-                gClassNames[gInfoViewedHero->m_heroClass]
+                gHeroNamesAccusative[gInfoViewedHero->m_id],
+                gClassNamesAccusative[gInfoViewedHero->m_heroClass]
             );
             break;
         case HERO_SCREEN_EXIT:

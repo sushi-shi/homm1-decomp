@@ -1142,6 +1142,10 @@ msgstr "Выбранная вами игра позволяет играть т�
 msgid "file.load.label"
 msgstr "Загрузить:"
 
+#: src/SOURCE/REQUEST.cpp
+msgid "file.name.punctuation"
+msgstr "$%'-_@~`!(){}^#&+,;=[].«»№"
+
 #: src/EDITOR/EDITOR.cpp src/SOURCE/GAME.cpp src/SOURCE/KB.cpp
 #, c-format
 msgid "file.open.failed"
@@ -1292,6 +1296,14 @@ msgstr "У другого игрока другая версия игры \"Ге
 #, c-format
 msgid "player.vanquished"
 msgstr "%s игрок разгромлен!"
+
+#: include/SOURCE/kbwin.h
+msgid "prefs.registry_key"
+msgstr "SOFTWARE\\Buka\\3DO\\Heroes of Might and Magic\\HeroesWorld TE\\RU"
+
+#: include/SOURCE/kbwin.h
+msgid "prefs.settings_file"
+msgstr "heroes-te-ru.cfg"
 
 #: src/SOURCE/RECRUIT.cpp
 msgid "recruitment.available.label"
@@ -2383,6 +2395,118 @@ msgstr "Призрак"
 msgid "table.gArmyNames.27"
 msgstr "Джинн"
 
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.0"
+msgstr "крестьян"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.1"
+msgstr "лучников"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.2"
+msgstr "копейщиков"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.3"
+msgstr "мечников"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.4"
+msgstr "всадников"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.5"
+msgstr "паладинов"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.6"
+msgstr "гоблинов"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.7"
+msgstr "орков"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.8"
+msgstr "волков"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.9"
+msgstr "огров"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.10"
+msgstr "троллей"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.11"
+msgstr "циклопов"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.12"
+msgstr "фей"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.13"
+msgstr "гномов"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.14"
+msgstr "эльфов"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.15"
+msgstr "друидов"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.16"
+msgstr "единорогов"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.17"
+msgstr "фениксов"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.18"
+msgstr "кентавров"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.19"
+msgstr "горгулий"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.20"
+msgstr "грифонов"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.21"
+msgstr "минотавров"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.22"
+msgstr "гидр"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.23"
+msgstr "драконов"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.24"
+msgstr "разбойников"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.25"
+msgstr "кочевников"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.26"
+msgstr "призраков"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.27"
+msgstr "джиннов"
+
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArmyNamesPlural.0"
 msgstr "крестьян"
@@ -3316,6 +3440,22 @@ msgstr "Волшебница"
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gClassNames.3"
 msgstr "Чернокнижник"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gClassNamesAccusative.0"
+msgstr "рыцаря"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gClassNamesAccusative.1"
+msgstr "варвара"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gClassNamesAccusative.2"
+msgstr "волшебницу"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gClassNamesAccusative.3"
+msgstr "чернокнижника"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gColorNames.0"
@@ -4314,6 +4454,294 @@ msgstr "Виспер"
 msgid "table.gHeroNames.35.1"
 msgstr "Виспер"
 
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.0"
+msgstr "Лорда Килбурна"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.1"
+msgstr "Лорда Хаарта"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.2"
+msgstr "Сэра Галланта"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.3"
+msgstr "Артуриуса"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.4"
+msgstr "Тиро"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.5"
+msgstr "Максимуса"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.6"
+msgstr "Эктора"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.7"
+msgstr "Димитрия"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.8"
+msgstr "Амброзия"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.9"
+msgstr "Сундакса"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.10"
+msgstr "Эргона"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.11"
+msgstr "Келзена"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.12"
+msgstr "Тсабу"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.13"
+msgstr "Крэга Хака"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.14"
+msgstr "Джоджоша"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.15"
+msgstr "Атласа"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.16"
+msgstr "Йога"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.17"
+msgstr "Антония"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.18"
+msgstr "Ариэль"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.19"
+msgstr "Ватавну"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.20"
+msgstr "Карлавн"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.21"
+msgstr "Ребекку"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.22"
+msgstr "Луну"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.23"
+msgstr "Астру"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.24"
+msgstr "Наташу"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.25"
+msgstr "Гем"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.26"
+msgstr "Троян"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.27"
+msgstr "Агара"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.28"
+msgstr "Кродо"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.29"
+msgstr "Фалагара"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.30"
+msgstr "Барока"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.31"
+msgstr "Ария"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.32"
+msgstr "Кастора"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.33"
+msgstr "Сандро"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.34"
+msgstr "Расмонта"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.35"
+msgstr "Виспера"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.0"
+msgstr "Лорда Килбурна"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.1"
+msgstr "Лорда Хаарта"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.2"
+msgstr "Сэра Галланта"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.3"
+msgstr "Артуриуса"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.4"
+msgstr "Тиро"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.5"
+msgstr "Максимуса"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.6"
+msgstr "Эктора"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.7"
+msgstr "Димитрия"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.8"
+msgstr "Амброзия"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.9"
+msgstr "Сундакса"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.10"
+msgstr "Эргона"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.11"
+msgstr "Келзена"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.12"
+msgstr "Тсабу"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.13"
+msgstr "Крэга Хака"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.14"
+msgstr "Джоджоша"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.15"
+msgstr "Атласа"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.16"
+msgstr "Йога"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.17"
+msgstr "Антония"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.18"
+msgstr "Ариэль"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.19"
+msgstr "Ватавны"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.20"
+msgstr "Карлавн"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.21"
+msgstr "Ребекки"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.22"
+msgstr "Луны"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.23"
+msgstr "Астры"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.24"
+msgstr "Наташи"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.25"
+msgstr "Гем"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.26"
+msgstr "Троян"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.27"
+msgstr "Агара"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.28"
+msgstr "Кродо"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.29"
+msgstr "Фалагара"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.30"
+msgstr "Барока"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.31"
+msgstr "Ария"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.32"
+msgstr "Кастора"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.33"
+msgstr "Сандро"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.34"
+msgstr "Расмонта"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.35"
+msgstr "Виспера"
+
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gHeroScreen.0"
 msgstr "Обзор королевства"
@@ -4386,7 +4814,7 @@ msgstr "Описание артефакта «%s»"
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 #, c-format
 msgid "table.gHeroScreen.16"
-msgstr "Уволить %s %s"
+msgstr "Уволить %s (%s)"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gHeroScreen.17"

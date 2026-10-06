@@ -5,7 +5,7 @@
   "system_locale": "ru_RU.UTF-8",
   "glyphs": "cyrillic",
   "keyboard": {
-    "keys":  "qwertyuiop[]asdfghjkl;'zxcvbnm,./QWERTYUIOP{}ASDFGHJKL:\"ZXCVBNM<>?",
-    "typed": "йцукенгшщзхъфывапролджэячсмитьбюёЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮЁ"
+    "keys":  "qwertyuiop[]asdfghjkl;'zxcvbnm,./QWERTYUIOP{}ASDFGHJKL:\"ZXCVBNM<>?`~#",
+    "typed": "йцукенгшщзхъфывапролджэячсмитьбю«ЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ»ёЁ№"
   }
 }

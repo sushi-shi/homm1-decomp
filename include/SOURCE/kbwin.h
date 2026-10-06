@@ -90,10 +90,11 @@ enum PrefsConstant {
     KBWIN_TIMER_RESOLUTION = 1
 };
 
-// The edition keeps its preferences apart from the retail game's: under its
-// own registry key on Windows, in its own settings file natively.
-#define PREFS_REGISTRY_KEY "SOFTWARE\\Buka\\3DO\\Heroes of Might and Magic\\HeroesWorld TE"
-#define PREFS_SETTINGS_FILE "heroes-te.cfg"
+// The edition keeps its preferences apart from the retail game's, one set
+// per language: under its own registry key on Windows, in its own settings
+// file natively.
+#define PREFS_REGISTRY_KEY localization::Tr("prefs.registry_key")
+#define PREFS_SETTINGS_FILE localization::Tr("prefs.settings_file")
 
 extern char gCommandLine[];
 extern char gAppName[];

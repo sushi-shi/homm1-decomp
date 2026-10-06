@@ -1142,6 +1142,10 @@ msgstr "The game you have chosen only has slots for %d human(s).  You need one w
 msgid "file.load.label"
 msgstr "File to Load:"
 
+#: src/SOURCE/REQUEST.cpp
+msgid "file.name.punctuation"
+msgstr "$%'-_@~`!(){}^#&+,;=[]."
+
 #: src/EDITOR/EDITOR.cpp src/SOURCE/GAME.cpp src/SOURCE/KB.cpp
 #, c-format
 msgid "file.open.failed"
@@ -1292,6 +1296,14 @@ msgstr "The other player is running a different version of Heroes of Might and M
 #, c-format
 msgid "player.vanquished"
 msgstr "%s player has been vanquished!"
+
+#: include/SOURCE/kbwin.h
+msgid "prefs.registry_key"
+msgstr "SOFTWARE\\Buka\\3DO\\Heroes of Might and Magic\\HeroesWorld TE\\EN"
+
+#: include/SOURCE/kbwin.h
+msgid "prefs.settings_file"
+msgstr "heroes-te-en.cfg"
 
 #: src/SOURCE/RECRUIT.cpp
 msgid "recruitment.available.label"
@@ -2383,6 +2395,118 @@ msgstr "ghost"
 msgid "table.gArmyNames.27"
 msgstr "genie"
 
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.0"
+msgstr "peasant"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.1"
+msgstr "archer"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.2"
+msgstr "pikeman"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.3"
+msgstr "swordsman"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.4"
+msgstr "cavalry"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.5"
+msgstr "paladin"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.6"
+msgstr "goblin"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.7"
+msgstr "orc"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.8"
+msgstr "wolf"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.9"
+msgstr "ogre"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.10"
+msgstr "troll"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.11"
+msgstr "cyclops"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.12"
+msgstr "sprite"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.13"
+msgstr "dwarf"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.14"
+msgstr "elf"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.15"
+msgstr "druid"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.16"
+msgstr "unicorn"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.17"
+msgstr "phoenix"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.18"
+msgstr "centaur"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.19"
+msgstr "gargoyle"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.20"
+msgstr "griffin"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.21"
+msgstr "minotaur"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.22"
+msgstr "hydra"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.23"
+msgstr "dragon"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.24"
+msgstr "rogue"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.25"
+msgstr "nomad"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.26"
+msgstr "ghost"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gArmyNamesMoved.27"
+msgstr "genie"
+
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gArmyNamesPlural.0"
 msgstr "peasants"
@@ -3315,6 +3439,22 @@ msgstr "Sorceress"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gClassNames.3"
+msgstr "Warlock"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gClassNamesAccusative.0"
+msgstr "Knight"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gClassNamesAccusative.1"
+msgstr "Barbarian"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gClassNamesAccusative.2"
+msgstr "Sorceress"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gClassNamesAccusative.3"
 msgstr "Warlock"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
@@ -4312,6 +4452,294 @@ msgstr "Vesper"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "table.gHeroNames.35.1"
+msgstr "Vesper"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.0"
+msgstr "Lord Kilburn"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.1"
+msgstr "Lord Haart"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.2"
+msgstr "Sir Gallant"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.3"
+msgstr "Arturius"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.4"
+msgstr "Tyro"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.5"
+msgstr "Maximus"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.6"
+msgstr "Ector"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.7"
+msgstr "Dimitri"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.8"
+msgstr "Ambrose"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.9"
+msgstr "Thundax"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.10"
+msgstr "Ergon"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.11"
+msgstr "Kelzen"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.12"
+msgstr "Tsabu"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.13"
+msgstr "Crag Hack"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.14"
+msgstr "Jojosh"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.15"
+msgstr "Atlas"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.16"
+msgstr "Yog"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.17"
+msgstr "Antoine"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.18"
+msgstr "Ariel"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.19"
+msgstr "Vatawna"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.20"
+msgstr "Carlawn"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.21"
+msgstr "Rebecca"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.22"
+msgstr "Luna"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.23"
+msgstr "Astra"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.24"
+msgstr "Natasha"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.25"
+msgstr "Gem"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.26"
+msgstr "Troyan"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.27"
+msgstr "Agar"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.28"
+msgstr "Crodo"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.29"
+msgstr "Falagar"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.30"
+msgstr "Barok"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.31"
+msgstr "Arie"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.32"
+msgstr "Kastore"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.33"
+msgstr "Sandro"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.34"
+msgstr "Wrathmont"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesAccusative.35"
+msgstr "Vesper"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.0"
+msgstr "Lord Kilburn"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.1"
+msgstr "Lord Haart"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.2"
+msgstr "Sir Gallant"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.3"
+msgstr "Arturius"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.4"
+msgstr "Tyro"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.5"
+msgstr "Maximus"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.6"
+msgstr "Ector"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.7"
+msgstr "Dimitri"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.8"
+msgstr "Ambrose"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.9"
+msgstr "Thundax"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.10"
+msgstr "Ergon"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.11"
+msgstr "Kelzen"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.12"
+msgstr "Tsabu"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.13"
+msgstr "Crag Hack"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.14"
+msgstr "Jojosh"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.15"
+msgstr "Atlas"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.16"
+msgstr "Yog"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.17"
+msgstr "Antoine"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.18"
+msgstr "Ariel"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.19"
+msgstr "Vatawna"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.20"
+msgstr "Carlawn"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.21"
+msgstr "Rebecca"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.22"
+msgstr "Luna"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.23"
+msgstr "Astra"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.24"
+msgstr "Natasha"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.25"
+msgstr "Gem"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.26"
+msgstr "Troyan"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.27"
+msgstr "Agar"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.28"
+msgstr "Crodo"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.29"
+msgstr "Falagar"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.30"
+msgstr "Barok"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.31"
+msgstr "Arie"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.32"
+msgstr "Kastore"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.33"
+msgstr "Sandro"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.34"
+msgstr "Wrathmont"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gHeroNamesGenitive.35"
 msgstr "Vesper"
 
 #: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
