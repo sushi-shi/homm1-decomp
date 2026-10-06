@@ -15,12 +15,12 @@ function_rva	target_rva	site_rva	owner	addend	occurrences	provenance
 0x00073460	0x000cdf7a	0x00073807	?bmpColor@@3PAUtagBITMAP@@A	0x12	1	1.2 relocation; BITMAP bmBitsPixel field
 0x00073460	0x000cdf74	0x0007380f	?bmpColor@@3PAUtagBITMAP@@A	0xC	1	1.2 relocation; BITMAP bmWidthBytes field
 0x00073460	0x000cdf7c	0x00073815	?bmpColor@@3PAUtagBITMAP@@A	0x14	1	1.2 relocation; BITMAP bmBits field
-0x00073460	0x000ceb34	0x0007385b	?mouseIconInfo@@3PAU_ICONINFO@@A	0x4	1	1.2 relocation; ICONINFO xHotspot field
+0x00073460	0x000ceb34	0x0007385b	?cursorIconInfo@@3PAU_ICONINFO@@A	0x4	1	1.2 relocation; ICONINFO xHotspot field
 0x00073460	0x000a3111	0x00073866	?gHotSpot@@3PAY01EA	0x1	1	1.2 relocation; second cursor-hotspot axis
-0x00073460	0x000ceb38	0x0007386c	?mouseIconInfo@@3PAU_ICONINFO@@A	0x8	1	1.2 relocation; ICONINFO yHotspot field
-0x00073460	0x000ceb3c	0x00073872	?mouseIconInfo@@3PAU_ICONINFO@@A	0xC	1	1.2 relocation; ICONINFO hbmMask field
-0x00073460	0x000ceb40	0x00073881	?mouseIconInfo@@3PAU_ICONINFO@@A	0x10	1	1.2 relocation; ICONINFO hbmColor field
-0x00073460	0x000ceb40	0x00073889	?mouseIconInfo@@3PAU_ICONINFO@@A	0x10	1	1.2 relocation; ICONINFO hbmColor field
+0x00073460	0x000ceb38	0x0007386c	?cursorIconInfo@@3PAU_ICONINFO@@A	0x8	1	1.2 relocation; ICONINFO yHotspot field
+0x00073460	0x000ceb3c	0x00073872	?cursorIconInfo@@3PAU_ICONINFO@@A	0xC	1	1.2 relocation; ICONINFO hbmMask field
+0x00073460	0x000ceb40	0x00073881	?cursorIconInfo@@3PAU_ICONINFO@@A	0x10	1	1.2 relocation; ICONINFO hbmColor field
+0x00073460	0x000ceb40	0x00073889	?cursorIconInfo@@3PAU_ICONINFO@@A	0x10	1	1.2 relocation; ICONINFO hbmColor field
 0x0007fb6c	0x000d1a96	0x0007fb8b	_son	0xFFFFFFFE	1	1.2 relocation; legacy object overlapping dword load uses son-2
 0x000616d7	0x000cb027	0x0006190c	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	1.2 relocation; retail operand below the claimed start (biased subscript): ComboDraw indexes its combo rows from 1
 0x000616d7	0x000cb027	0x00061923	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	1.2 relocation; retail operand below the claimed start (biased subscript): ComboDraw indexes its combo rows from 1

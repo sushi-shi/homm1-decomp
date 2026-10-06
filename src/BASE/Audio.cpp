@@ -113,7 +113,7 @@ void PlaySample(sample* resource) {
 
 VA(0x00468ec4, 0x29)
 sample* LoadPlaySample(char* name) {
-    sample* resource = gpResourceManager->GetSample(name);
+    sample* resource = gResourceManager->GetSample(name);
     PlaySample(resource);
     return resource;
 }
@@ -247,7 +247,7 @@ void PlayMusic(int track) {
         sprintf(
             gMusicFilename,
             "%s%s%02d-AudioTrack %02d.ogg",
-            gcRegCDRomPath,
+            gRegCDRomPath,
             gTracksPath,
             discTrack,
             discTrack

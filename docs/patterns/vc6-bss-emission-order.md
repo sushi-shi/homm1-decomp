@@ -23,13 +23,28 @@ Measured with the pinned HoMM1 Buka VC6 SP5 compiler under
   function-local static (`?lzz@?1??f1@@YAHXZ@4HA`). Type, size and definition
   position do not matter.
 - **Equal keys** emit the later definition first (`vaca`, `vaai`, `vabe` with
-  one key, defined in that order, come out `vabe`, `vaai`, `vaca`).
+  one key, defined in that order, come out `vabe`, `vaai`, `vaca`). What
+  counts is the symbol's first declaration in the TU, so an `extern` in a
+  header decides: swapping `gMapName` and `gbBlackoutPlayer` (both key 623)
+  in `KB.h` swaps them in `SOURCE/KB`, while swapping their definitions
+  does not.
 - **Zero-initialized definitions** (`char zz0 = 0;`) also go to `.bss`, after
-  every uninitialized one, in definition order.
+  every uninitialized one, in definition order. A zero-initialized function
+  local static takes its function's position in that order, and empty-string
+  literals placed in `.bss` follow all of them.
+- The same rule holds for the `/O2` units (`SOURCE/FINDPATH`, `SOURCE/SEARCH`).
 - Compiler static-destructor guards (`_$S<n>`) take part under their `$S<n>`
   name. In `BASE/Audio`, `$S30` (key 961, device) sorts before `$S19` (key
   962, music); retail has the music guard first (0x004cdf70) and the device
   guard after it (0x004cdf71), so retail's guard numbers differ.
+  The `$E` initializer/terminator functions and the `$S` guards and
+  `.CRT$XCU` entries share one counter: each `RefPtr` static takes four
+  `$E` numbers and one `.CRT$XCU` `$S`, and the first static needing a
+  guard also takes the guard's number, so the device guard is always the
+  music guard plus 11. Neither include order nor the order of
+  the three definitions moves the music guard off 19 (the first 16 numbers
+  are taken before the first definition), and retail's initializer order in
+  `.text` matches the current one; the swapped pair stays open.
 
 ## Use
 
@@ -39,6 +54,38 @@ window between its retail neighbours is not the retail spelling, or the
 definition is a local static, or it was zero-initialized. A global placed
 after the hash-sorted run (for example `EveryOther` after `S1cursorTurning`
 in `SOURCE/CURSOR`) points to a zero initializer or a local static.
+
+## Applying it
+
+Per object, sort the claimed `.bss` symbols by retail address and keep the
+longest key-ascending run; the rest need a name in the key window left
+between their kept neighbours, a zero initializer, or (for ties) another
+declaration order. Sibling spellings are the strongest evidence a window
+offers: `iMainWinScreenHeight` (key 410) and `iTempX`/`iTempY` (496/497)
+next to `gMainWinScreenWidth` and `iTempY`, `gBigFont`/`gSmallFont` (79/389)
+in `SOURCE/KB`, and `cColorBits` beside `cAndBits` in `BASE/MOUSEMGR` all
+fit their windows without search.
+
+## Alias defines
+
+The source spells the readable name; where that name's key falls outside its
+retail window, the owning header maps it to a spelling whose key fits,
+directly above the `extern` (file statics above their definition, function
+statics above their declaration):
+
+```cpp
+#define gGame gpGame // spelling fixes .bss order
+extern class game* gGame;
+```
+
+The compiler hashes the storage spelling, and function-local statics take it
+into their decorated name (`?s_direction_4@?1??SeedPosition@...`): a define
+of the identifier works for them too, measured on `SOURCE/SEARCH`, whose
+`SeedPosition` statics keep their retail order behind readable names. Tie
+order still follows the first declaration. A define is visible wherever its
+header is, so the readable name must not also spell a local, member or
+parameter there; a file or function static's define stays in its `.cpp`.
+The generated trees (`homm1 clean`) drop these defines.
 
 ## Does not establish
 

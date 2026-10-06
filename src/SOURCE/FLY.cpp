@@ -30,8 +30,8 @@ i16 army::CanFit(i16* hex) {
     if (!ValidHex(candidateHex) || candidateHex % COMBAT_GRID_COLUMNS == 0
         || candidateHex % COMBAT_GRID_COLUMNS == COMBAT_GRID_LAST_COLUMN)
         return 0;
-    if (gpCombatManager->m_hexCells[candidateHex].m_occupantSide != COMBAT_SIDE_NONE
-        || gpCombatManager->m_hexCells[candidateHex].m_obstacleIndex != COMBAT_OBSTACLE_NONE)
+    if (gCombatManager->m_hexCells[candidateHex].m_occupantSide != COMBAT_SIDE_NONE
+        || gCombatManager->m_hexCells[candidateHex].m_obstacleIndex != COMBAT_OBSTACLE_NONE)
         return 0;
     if (m_stats.attributes & MONSTER_FLAGS_WIDE) {
         candidateHex = GetAdjacentCellIndex(
@@ -40,13 +40,13 @@ i16 army::CanFit(i16* hex) {
                                           : static_cast<i8>(COMBAT_DIRECTION_WEST)
         );
         if (ValidHex(candidateHex))
-            mapCell = &gpCombatManager->m_hexCells[candidateHex];
+            mapCell = &gCombatManager->m_hexCells[candidateHex];
         if (ValidHex(candidateHex)
             && (mapCell->m_occupantSide == COMBAT_SIDE_NONE
                 || HEX_HAS_OCCUPANT(
                     *mapCell,
-                    gpCombatManager->m_currentSide,
-                    gpCombatManager->m_currentArmyIndex
+                    gCombatManager->m_currentSide,
+                    gCombatManager->m_currentArmyIndex
                 ))
             && mapCell->m_obstacleIndex == COMBAT_OBSTACLE_NONE) {
             return 1;
@@ -57,14 +57,14 @@ i16 army::CanFit(i16* hex) {
                                               : static_cast<i8>(COMBAT_DIRECTION_EAST)
             );
             if (ValidHex(candidateHex))
-                mapCell = &gpCombatManager->m_hexCells[candidateHex];
+                mapCell = &gCombatManager->m_hexCells[candidateHex];
             else
                 return 0;
             if ((mapCell->m_occupantSide == COMBAT_SIDE_NONE
                  || HEX_HAS_OCCUPANT(
                      *mapCell,
-                     gpCombatManager->m_currentSide,
-                     gpCombatManager->m_currentArmyIndex
+                     gCombatManager->m_currentSide,
+                     gCombatManager->m_currentArmyIndex
                  ))
                 && mapCell->m_obstacleIndex == COMBAT_OBSTACLE_NONE) {
                 *hex = candidateHex;
@@ -106,7 +106,7 @@ i16 army::ValidFlight(i16 destination, i8 useDestination) {
             return 0;
         }
     }
-    oldOpponent = &gpCombatManager->m_armies[m_targetSide][m_targetIndex];
+    oldOpponent = &gCombatManager->m_armies[m_targetSide][m_targetIndex];
     if (useDestination)
         destHexNo = destination;
     else
@@ -227,10 +227,10 @@ i16 army::FlyTo(i16 destination) {
     if (fullYLen < 0)
         fullYLen = -fullYLen;
     flightSteps = fullXLen > fullYLen ? fullXLen : fullYLen;
-    landX = gpCombatManager->m_hexCells[destination].m_x;
-    landY = gpCombatManager->m_hexCells[destination].m_y;
-    startX = gpCombatManager->m_hexCells[m_hex].m_x;
-    startY = gpCombatManager->m_hexCells[m_hex].m_y;
+    landX = gCombatManager->m_hexCells[destination].m_x;
+    landY = gCombatManager->m_hexCells[destination].m_y;
+    startX = gCombatManager->m_hexCells[m_hex].m_x;
+    startY = gCombatManager->m_hexCells[m_hex].m_y;
     if (fullXLen == 0)
         gainX = 0;
     else
@@ -250,10 +250,10 @@ i16 army::FlyTo(i16 destination) {
         flyBackwards = 1;
     hexcell headOccupant;
     hexcell tailSlot;
-    headOccupant.TakeOccupant(&gpCombatManager->m_hexCells[m_hex]);
+    headOccupant.TakeOccupant(&gCombatManager->m_hexCells[m_hex]);
     if (m_stats.attributes & MONSTER_FLAGS_WIDE)
         tailSlot.TakeOccupant(
-            &gpCombatManager->m_hexCells[m_hex + (m_facing == ARMY_FACING_LEFT ? -1 : 1)]
+            &gCombatManager->m_hexCells[m_hex + (m_facing == ARMY_FACING_LEFT ? -1 : 1)]
         );
     inFlightX = startX + adjustX;
     inFlightY = startY + adjustY;
@@ -262,9 +262,9 @@ i16 army::FlyTo(i16 destination) {
     headOccupant.m_occupantSide = COMBAT_SIDE_NONE;
     if (m_stats.attributes & MONSTER_FLAGS_WIDE)
         tailSlot.m_occupantSide = COMBAT_SIDE_NONE;
-    gpCombatManager->DrawFrame(0);
-    gpWindowManager->m_screen->CopyTo(
-        gpCombatManager->m_backgroundBuffer,
+    gCombatManager->DrawFrame(0);
+    gWindowManager->m_screen->CopyTo(
+        gCombatManager->m_backgroundBuffer,
         0,
         0,
         0,
@@ -272,57 +272,57 @@ i16 army::FlyTo(i16 destination) {
         LOGICAL_SCREEN_WIDTH,
         COMBAT_VIEW_HEIGHT
     );
-    gpCombatManager->m_backgroundDrawn = 0;
+    gCombatManager->m_backgroundDrawn = 0;
     for (k = 0; k < flightSteps * 6; k++) {
         if (k % 6 == 1)
             PlaySample(m_samples[ARMY_SAMPLE_MOVE]);
         if (k) {
-            gpCombatManager->m_backgroundBuffer->CopyTo(
-                gpWindowManager->m_screen,
-                giMinExtentX,
-                giMinExtentY,
-                giMinExtentX,
-                giMinExtentY,
-                giMaxExtentX - giMinExtentX + 1,
-                giMaxExtentY - giMinExtentY + 1
+            gCombatManager->m_backgroundBuffer->CopyTo(
+                gWindowManager->m_screen,
+                gMinExtentX,
+                gMinExtentY,
+                gMinExtentX,
+                gMinExtentY,
+                gMaxExtentX - gMinExtentX + 1,
+                gMaxExtentY - gMinExtentY + 1
             );
-            oldX = giMinExtentX;
-            oldY = giMinExtentY;
-            oldMaxExtentX = giMaxExtentX;
-            maxY = giMaxExtentY;
+            oldX = gMinExtentX;
+            oldY = gMinExtentY;
+            oldMaxExtentX = gMaxExtentX;
+            maxY = gMaxExtentY;
         } else {
             oldX = 0;
             oldY = 0;
             oldMaxExtentX = LOGICAL_SCREEN_WIDTH - 1;
             maxY = COMBAT_VIEW_HEIGHT - 1;
         }
-        giMinExtentY = COMBAT_EXTENT_MIN_START;
-        giMinExtentX = giMinExtentY;
-        giMaxExtentY = 0;
-        giMaxExtentX = giMaxExtentY;
+        gMinExtentY = COMBAT_EXTENT_MIN_START;
+        gMinExtentX = gMinExtentY;
+        gMaxExtentY = 0;
+        gMaxExtentX = gMaxExtentY;
         gComputeExtent = 1;
         gSaveBiggestExtent = 1;
         DrawToBuffer(inFlightX, inFlightY);
         gComputeExtent = 0;
         gSaveBiggestExtent = 0;
-        if (giMinExtentX < 0)
-            giMinExtentX = 0;
-        if (giMinExtentY < 0)
-            giMinExtentY = 0;
-        if (giMaxExtentX > LOGICAL_SCREEN_WIDTH - 1)
-            giMaxExtentX = LOGICAL_SCREEN_WIDTH - 1;
-        if (giMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
-            giMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
-        if (giMinExtentX < oldX)
-            oldX = giMinExtentX;
-        if (giMinExtentY < oldY)
-            oldY = giMinExtentY;
-        if (giMaxExtentX > oldMaxExtentX)
-            oldMaxExtentX = giMaxExtentX;
-        if (giMaxExtentY > maxY)
-            maxY = giMaxExtentY;
-        DelayTil(&glTimers[COMBAT_FRAME_TIMER_SLOT]);
-        glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
+        if (gMinExtentX < 0)
+            gMinExtentX = 0;
+        if (gMinExtentY < 0)
+            gMinExtentY = 0;
+        if (gMaxExtentX > LOGICAL_SCREEN_WIDTH - 1)
+            gMaxExtentX = LOGICAL_SCREEN_WIDTH - 1;
+        if (gMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
+            gMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
+        if (gMinExtentX < oldX)
+            oldX = gMinExtentX;
+        if (gMinExtentY < oldY)
+            oldY = gMinExtentY;
+        if (gMaxExtentX > oldMaxExtentX)
+            oldMaxExtentX = gMaxExtentX;
+        if (gMaxExtentY > maxY)
+            maxY = gMaxExtentY;
+        DelayTil(&gTimers[COMBAT_FRAME_TIMER_SLOT]);
+        gTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
         UPDATE_INCLUSIVE_REGION(oldX, oldY, oldMaxExtentX, maxY);
         m_animationFrame += flyBackwards == 1 ? -1 : 1;
         if (m_animationFrame > 5)
@@ -334,17 +334,17 @@ i16 army::FlyTo(i16 destination) {
     }
     if (!m_spellEndCondition)
         CancelSpell();
-    headOccupant.m_occupantSide = gpCombatManager->m_currentSide;
+    headOccupant.m_occupantSide = gCombatManager->m_currentSide;
     if (m_stats.attributes & MONSTER_FLAGS_WIDE)
-        tailSlot.m_occupantSide = gpCombatManager->m_currentSide;
-    gpCombatManager->m_hexCells[destination].TakeOccupant(&headOccupant);
+        tailSlot.m_occupantSide = gCombatManager->m_currentSide;
+    gCombatManager->m_hexCells[destination].TakeOccupant(&headOccupant);
     if (m_stats.attributes & MONSTER_FLAGS_WIDE)
-        gpCombatManager->m_hexCells[destination + (m_facing == ARMY_FACING_LEFT ? -1 : 1)]
+        gCombatManager->m_hexCells[destination + (m_facing == ARMY_FACING_LEFT ? -1 : 1)]
             .TakeOccupant(&tailSlot);
     m_hex = destination;
     m_animationSequence = ARMY_ANIMATION_STAND;
     m_animationFrame = 1;
-    gpCombatManager->UpdateGrid(destination, m_stats.attributes);
-    gpCombatManager->DrawFrame(1);
+    gCombatManager->UpdateGrid(destination, m_stats.attributes);
+    gCombatManager->DrawFrame(1);
     return 1;
 }

@@ -130,9 +130,11 @@ extern u8 GameMode;
 extern u8 gPacketSequence;
 extern i32 gNetNameIndex;
 extern char PacketSend[];
+#define gNumNetGuests iNetGuests // spelling fixes .bss order
 extern i32 gNumNetGuests;
 extern i32 gLastConfirm;
-extern i32 iInOrder[REMOTE_QUEUE_CAPACITY];
+#define gInOrder iInOrder // spelling fixes .bss order
+extern i32 gInOrder[REMOTE_QUEUE_CAPACITY];
 extern RemoteMessage rcvBuf[REMOTE_QUEUE_CAPACITY];
 extern char rcvBufOut[REMOTE_MESSAGE_SIZE];
 
@@ -177,7 +179,8 @@ extern i32 gLastHeartbeatSend;
 extern i32 gLastHeartbeatReceive;
 extern RemoteMessage sndBuf;
 extern RemoteMessage rcvBufIn;
-extern i32 iLastIds[REMOTE_RECENT_ID_COUNT];
+#define gLastIds iLastIds // spelling fixes .bss order
+extern i32 gLastIds[REMOTE_RECENT_ID_COUNT];
 extern i32 gInOrderCtr;
 extern i32 gCurLastID;
 // The network setup's host/guest handshake states and broadcast clock
@@ -207,14 +210,17 @@ H1_ENUM_CONST_BEGIN(ModemPacketConstant)
     MODEM_ENCODED_PACKET_SIZE = 516
 H1_ENUM_CONST_END(ModemPacketConstant)
 
-extern i32 iLastActionTime;
-extern i32 iModemCommandPos;
-extern char cModemCommand[];
+#define gLastActionTime iLastActionTime // spelling fixes .bss order
+extern i32 gLastActionTime;
+#define gModemCommandPos iModemCommandPos // spelling fixes .bss order
+extern i32 gModemCommandPos;
+extern char gModemCommand[];
 extern char GUIMRresponse[];
 extern char GUIMRresp[];
 extern i32 GUIMRrespptr;
 extern i32 GUIMRc;
-extern i32 iLastDialPos;
+#define gLastDialPos iLastDialPos // spelling fixes .bss order
+extern i32 gLastDialPos;
 extern char numbuf[];
 struct inque_t {
     i32 readPosition;
