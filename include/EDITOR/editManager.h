@@ -276,6 +276,13 @@ struct editHeroExtra {
     mapHeroExtra record;
     u8 unused19[EDIT_EXTRA_UNUSED_SIZE];
 };
+#pragma pack(pop)
+
+enum EditMapRecordSize {
+    EDIT_MAP_RECORD_SIZE = 3,
+    // The largest editing structure a map extra record is read through.
+    EDIT_EXTRA_RECORD_MAX_SIZE = 75
+};
 
 class editManager : public baseManager {
 public:
@@ -350,14 +357,15 @@ public:
     i32 CountArtifacts(void);
     i32 CountTowns(void);
     i32 CountMines(void);
-    void WriteTowns(i32 file);
-    void WriteMines(i32 file);
-    void WriteArtifacts(i32 file);
-    void WriteObelisks(i32 file);
+    void WriteTowns(class RecordWriter& file);
+    void WriteMines(class RecordWriter& file);
+    void WriteArtifacts(class RecordWriter& file);
+    void WriteObelisks(class RecordWriter& file);
     i16 SaveMap(char* name);
     i16 LoadMap(char* name);
-    i16
-    PickMap(char* unusedName, char* unusedExtension, i16 mode);
+    void WriteMapFile(class RecordWriter& file);
+    i32 ReadMapFile(class RecordReader& file);
+    i16 PickMap(char* unusedName, char* unusedExtension, i16 mode);
     void ClearErrors(void);
     void ShowErrors(void);
     void AddError(char* text);
@@ -388,7 +396,6 @@ public:
     void PlaceTreasures(i32 density, i32 strength);
     void ScatterDecorations(void);
 };
-#pragma pack(pop)
 
 extern editManager* gEditManager;
 extern char* gMapCodeLetters;

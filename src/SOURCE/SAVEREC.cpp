@@ -8,6 +8,14 @@
 #include <SOURCE/game.h>
 #include <SOURCE/highScoreManager.h>
 #include <SOURCE/playerData.h>
+#ifdef HOMM1_EDITOR
+#include <EDITOR/editManager.h>
+
+H1_STATIC_ASSERT(sizeof(editMapRecord) == EDIT_MAP_RECORD_SIZE, "editor map record layout");
+H1_STATIC_ASSERT(sizeof(editHeroExtra) == EDIT_EXTRA_RECORD_MAX_SIZE, "editor hero extra layout");
+H1_STATIC_ASSERT(sizeof(editTownExtra) <= EDIT_EXTRA_RECORD_MAX_SIZE, "editor town extra layout");
+H1_STATIC_ASSERT(sizeof(editMapCellPair) == 4, "editor object owner layout");
+#endif
 
 #include <string.h>
 

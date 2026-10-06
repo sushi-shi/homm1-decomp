@@ -1,6 +1,7 @@
 #include <H1/Ints.h>
 
-#include <windows.h>
+#include <PLATFORM/File.h>
+#include <PLATFORM/Records.h>
 
 #include <BASE/bitmap.h>
 #include <BASE/bmap2.h>
@@ -32,14 +33,13 @@
 #include <SOURCE/game.h>
 #include <SOURCE/gameTypes.h>
 #include <SOURCE/KB.h>
+#include <SOURCE/saveRecords.h>
 #include <SOURCE/kbwin.h>
 #include <SOURCE/mapCell.h>
 #include <SOURCE/mapObjectTypes.h>
 #include <SOURCE/resourceTypes.h>
 #include <SOURCE/terrainTypes.h>
 
-#include <fcntl.h>
-#include <io.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -9863,11 +9863,13 @@ void editManager::BlendTerrain(
                     north = 1;
                 else
                     surrounding = CELL_TERRAIN(&m_map.cells[x][y - 1]);
-                if (y == MAP_CELL_GRID_SIZE || CELL_TERRAIN(&m_map.cells[x][y + 1]) == terrain)
+                // The original tested the map edges against MAP_CELL_GRID_SIZE,
+                // one past the last cell, and so read the cell beyond the edge.
+                if (y == MAP_CELL_GRID_SIZE - 1 || CELL_TERRAIN(&m_map.cells[x][y + 1]) == terrain)
                     south = 1;
                 else
                     surrounding = CELL_TERRAIN(&m_map.cells[x][y + 1]);
-                if (x == MAP_CELL_GRID_SIZE || CELL_TERRAIN(&m_map.cells[x + 1][y]) == terrain)
+                if (x == MAP_CELL_GRID_SIZE - 1 || CELL_TERRAIN(&m_map.cells[x + 1][y]) == terrain)
                     east = 1;
                 else
                     surrounding = CELL_TERRAIN(&m_map.cells[x + 1][y]);
@@ -9888,20 +9890,22 @@ void editManager::BlendTerrain(
                     nw = 1;
                 else
                     surrounding = CELL_TERRAIN(&m_map.cells[x - 1][y - 1]);
-                if (x == 0 || y == MAP_CELL_GRID_SIZE
+                if (x == 0 || y == MAP_CELL_GRID_SIZE - 1
                     || CELL_TERRAIN(&m_map.cells[x - 1][y + 1]) == terrain)
                     sw = 1;
                 else
                     surrounding = CELL_TERRAIN(&m_map.cells[x - 1][y + 1]);
-                if (x == MAP_CELL_GRID_SIZE || y == MAP_CELL_GRID_SIZE
+                if (x == MAP_CELL_GRID_SIZE - 1 || y == MAP_CELL_GRID_SIZE - 1
                     || CELL_TERRAIN(&m_map.cells[x + 1][y + 1]) == terrain)
                     se = 1;
                 else
                     surrounding = CELL_TERRAIN(&m_map.cells[x + 1][y + 1]);
-                if (x == MAP_CELL_GRID_SIZE || y == 0
+                if (x == MAP_CELL_GRID_SIZE - 1 || y == 0
                     || CELL_TERRAIN(&m_map.cells[x + 1][y - 1]) == terrain)
                     ne = 1;
-                else
+                else if (y < MAP_CELL_GRID_SIZE - 1)
+                    // The original takes the south-east cell here; on the
+                    // bottom row there is none.
                     surrounding = CELL_TERRAIN(&m_map.cells[x + 1][y + 1]);
                 if (!((north && ne && east) || (north && nw && west) || (south && se && east)
                       || (south && sw && west))
@@ -10575,7 +10579,13 @@ i32 editManager::CountMines(void) {
     return mineTotal;
 }
 
-void editManager::WriteTowns(i32 file) {
+static void WriteEditMapRecord(RecordWriter& file, const editMapRecord& record) {
+    file.Put(record.x);
+    file.Put(record.y);
+    file.Put(record.type);
+}
+
+void editManager::WriteTowns(RecordWriter& file) {
     i16 count;
     i32 setTowns;
     i32 type;
@@ -10602,10 +10612,10 @@ void editManager::WriteTowns(i32 file) {
                         || cell->m_objectIndex == EDIT_CASTLE_FRAME(TOWN_TYPE_SORCERESS)
                         || cell->m_objectIndex == EDIT_CASTLE_FRAME(TOWN_TYPE_BARBARIAN)
                         || cell->m_objectIndex == EDIT_CASTLE_FRAME(TOWN_TYPE_WARLOCK)))) {
-                write(file, &x, 1);
-                write(file, &y, 1);
+                file.Put(static_cast<u8>(x));
+                file.Put(static_cast<u8>(y));
                 type = cell->m_objectIndex / TOWN_RACE_FRAME_STRIDE | MAP_TOWN_CASTLE_FLAG;
-                write(file, &type, 1);
+                file.Put(static_cast<u8>(type));
                 count++;
                 if (cell->m_objectMetadata) {
                     townExtra =
@@ -10626,10 +10636,10 @@ void editManager::WriteTowns(i32 file) {
                         || cell->m_objectIndex == EDIT_TOWN_FRAME(TOWN_TYPE_SORCERESS)
                         || cell->m_objectIndex == EDIT_TOWN_FRAME(TOWN_TYPE_BARBARIAN)
                         || cell->m_objectIndex == EDIT_TOWN_FRAME(TOWN_TYPE_WARLOCK)))) {
-                write(file, &x, 1);
-                write(file, &y, 1);
+                file.Put(static_cast<u8>(x));
+                file.Put(static_cast<u8>(y));
                 type = cell->m_objectIndex / TOWN_RACE_FRAME_STRIDE;
-                write(file, &type, 1);
+                file.Put(static_cast<u8>(type));
                 sprintf(gText, "Town %02d: (%02d,%02d) type: %02d\n", count, x, y, type);
                 count++;
                 if (cell->m_objectMetadata) {
@@ -10651,10 +10661,10 @@ void editManager::WriteTowns(i32 file) {
     empty.y = EDIT_MAP_NO_RECORD;
     empty.type = 0;
     for (x = 0; x < GAME_TOWN_COUNT - count; x++)
-        WRITE_FILE_VALUE(file, empty);
+        WriteEditMapRecord(file, empty);
 }
 
-void editManager::WriteMines(i32 file) {
+void editManager::WriteMines(RecordWriter& file) {
     u8 type;
     i32 lighthouseCount;
     u8 cityX;
@@ -10701,19 +10711,19 @@ void editManager::WriteMines(i32 file) {
     empty.type = EDIT_MAP_NO_RECORD;
     if (cityX != -1) {
         type = MAP_OBJECT_TRIGGER(MAP_OBJECT_DRAGON_CITY);
-        WRITE_FILE_VALUE(file, cityX);
-        WRITE_FILE_VALUE(file, cityY);
-        WRITE_FILE_VALUE(file, type);
+        file.Put(static_cast<u8>(cityX));
+        file.Put(static_cast<u8>(cityY));
+        file.Put(static_cast<u8>(type));
     } else {
-        WRITE_FILE_VALUE(file, empty);
+        WriteEditMapRecord(file, empty);
     }
     if (lighthouseX != -1) {
         type = MAP_OBJECT_TRIGGER(MAP_OBJECT_LIGHTHOUSE);
-        WRITE_FILE_VALUE(file, lighthouseX);
-        WRITE_FILE_VALUE(file, lighthouseY);
-        WRITE_FILE_VALUE(file, type);
+        file.Put(static_cast<u8>(lighthouseX));
+        file.Put(static_cast<u8>(lighthouseY));
+        file.Put(static_cast<u8>(type));
     } else {
-        WRITE_FILE_VALUE(file, empty);
+        WriteEditMapRecord(file, empty);
     }
     if (lighthouseCount > 1)
         AddError(localization::Tr("editor.check.lighthouse.multiple"));
@@ -10739,19 +10749,19 @@ void editManager::WriteMines(i32 file) {
                     else
                         type = RESOURCE_MERCURY;
                 }
-                WRITE_FILE_VALUE(file, x);
-                WRITE_FILE_VALUE(file, y);
-                WRITE_FILE_VALUE(file, type);
+                file.Put(static_cast<u8>(x));
+                file.Put(static_cast<u8>(y));
+                file.Put(static_cast<u8>(type));
                 sprintf(gText, "Mine %02d: (%02d,%02d) type: %02d\n", mineSlot, x, y, type);
                 mineSlot++;
             }
         }
     }
     for (x = 0; x < GAME_MINE_COUNT - mineSlot; x++)
-        WRITE_FILE_VALUE(file, empty);
+        WriteEditMapRecord(file, empty);
 }
 
-void editManager::WriteArtifacts(i32 file) {
+void editManager::WriteArtifacts(RecordWriter& file) {
     u8 x;
     u8 y;
     mapCell* cell;
@@ -10766,10 +10776,10 @@ void editManager::WriteArtifacts(i32 file) {
                 artifactHolders[cell->m_objectIndex] = GAME_ARTIFACT_ON_MAP;
         }
     }
-    write(file, artifactHolders, sizeof(artifactHolders));
+    file.Put(artifactHolders, sizeof(artifactHolders));
 }
 
-void editManager::WriteObelisks(i32 file) {
+void editManager::WriteObelisks(RecordWriter& file) {
     u8 obeliskCount;
     u8 x;
     u8 y;
@@ -10786,7 +10796,7 @@ void editManager::WriteObelisks(i32 file) {
     }
     if (!obeliskCount)
         obeliskCount++;
-    WRITE_FILE_VALUE(file, obeliskCount);
+    file.Put(static_cast<u8>(obeliskCount));
     if (obeliskCount > EDIT_MAP_OBELISK_LIMIT) {
         sprintf(gText, localization::Tr("editor.check.obelisks.many"), obeliskCount);
         AddError(gText);
@@ -10795,87 +10805,113 @@ void editManager::WriteObelisks(i32 file) {
 
 i16 editManager::SaveMap(char* name) {
     char fileName[40];
-    i16 width;
-    i16 data;
-    i16 mapHeight;
-    i32 i;
-    i32 handle;
-    i16 formatWord;
+    RecordWriter file;
 
     ClearErrors();
     gMouseManager->SetPointer(EDIT_POINTER_WAIT);
     CheckObjects();
     UpdateTriggers();
     sprintf(fileName, ".\\maps\\%s", name);
-    handle = open(fileName, O_WRONLY | O_CREAT | O_TRUNC | O_BINARY, S_IWRITE);
-    if (handle == -1)
+    WriteMapFile(file);
+    if (!file.SaveFile(fileName))
         return BASE_MANAGER_ERROR;
-    data = MAP_HEADER_ID;
-    WRITE_FILE_VALUE(handle, data);
-    if (gNewMapFormat) {
-        write(
-            handle,
-            &EDIT_MAP_HEADER()->difficulty,
-            offsetof(SMapHeader, format) - offsetof(SMapHeader, difficulty)
-        );
-        formatWord = MAP_HEADER_ID;
-        WRITE_FILE_VALUE(handle, formatWord);
-    } else {
-        write(handle, EDIT_MAP_HEADER(), offsetof(SMapHeader, format));
-    }
-    data = EDIT_MAP_VERSION;
-    WRITE_FILE_VALUE(handle, data);
-    data = MAP_CELL_GRID_SIZE;
-    WRITE_FILE_VALUE(handle, data);
-    data = MAP_CELL_GRID_SIZE;
-    WRITE_FILE_VALUE(handle, data);
-    write(handle, m_map.cells, sizeof(m_map.cells));
-    WriteTowns(handle);
-    WriteMines(handle);
-    WriteArtifacts(handle);
-    WriteObelisks(handle);
-    write(handle, m_mapSounds, sizeof(m_mapSounds));
-    WRITE_FILE_VALUE(handle, m_extraCount);
-    for (i = MAP_EXTRA_FIRST_RECORD; i < m_extraCount; i++) {
-        WRITE_FILE_VALUE(handle, m_extraSizes[i]);
-        write(handle, m_extras[i], m_extraSizes[i]);
-    }
-    if (gNewMapFormat) {
-        write(handle, m_map.cellPairs, sizeof(m_map.cellPairs));
-        WRITE_FILE_VALUE(handle, gNextObjectId);
-    }
-    close(handle);
     gMouseManager->SetPointer(EDIT_POINTER_DEFAULT);
     ShowErrors();
     return BASE_MANAGER_SUCCESS;
 }
 
+// The .MAP layout game::LoadMap reads: the header, the version, the cells,
+// the town, mine, artifact and obelisk tables (derived from the cells), the
+// cell sounds and the extra records; maps of the newer format end with the
+// editor's object owner table and next object id, which only the editor
+// reads.
+void editManager::WriteMapFile(RecordWriter& file) {
+    RecordWriter header;
+    i32 i;
+    i32 x;
+    i32 y;
+
+    WriteMapHeader(header, *EDIT_MAP_HEADER());
+    file.Put(static_cast<i16>(MAP_HEADER_ID));
+    if (gNewMapFormat) {
+        file.Bytes(
+            header.Data() + offsetof(SMapHeader, difficulty),
+            offsetof(SMapHeader, format) - offsetof(SMapHeader, difficulty)
+        );
+        file.Put(static_cast<i16>(MAP_HEADER_ID));
+    } else {
+        file.Bytes(header.Data(), offsetof(SMapHeader, format));
+    }
+    file.Put(static_cast<i16>(EDIT_MAP_VERSION));
+    file.Put(static_cast<i16>(MAP_CELL_GRID_SIZE));
+    file.Put(static_cast<i16>(MAP_CELL_GRID_SIZE));
+    for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
+        for (y = 0; y < MAP_CELL_GRID_SIZE; y++)
+            WriteMapCell(file, m_map.cells[x][y]);
+    }
+    WriteTowns(file);
+    WriteMines(file);
+    WriteArtifacts(file);
+    WriteObelisks(file);
+    file.Put(&m_mapSounds[0][0], sizeof(m_mapSounds));
+    file.Put(m_extraCount);
+    for (i = MAP_EXTRA_FIRST_RECORD; i < m_extraCount; i++) {
+        file.Put(m_extraSizes[i]);
+        file.Bytes(m_extras[i], m_extraSizes[i]);
+    }
+    if (gNewMapFormat) {
+        for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
+            for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
+                file.Put(m_map.cellPairs[x][y].objectId);
+                file.Put(m_map.cellPairs[x][y].overlayId);
+            }
+        }
+        file.Put(gNextObjectId);
+    }
+}
+
 i16 editManager::LoadMap(char* name) {
     char fileName[40];
-    u8 ignored[5500];
-    i16 width;
-    i16 mapFormat;
-    i32 unused2;
-    i32 unused;
-    i32 i;
-    i32 handle;
-    i16 headerId;
-    i16 height;
+    RecordReader file;
 
     FreeMapExtras();
     sprintf(fileName, ".\\maps\\%s", name);
-    handle = open(fileName, O_BINARY);
-    if (handle == -1)
+    if (!file.LoadFile(fileName))
         return BASE_MANAGER_ERROR;
-    READ_FILE_VALUE(handle, headerId);
+    gMouseManager->SetPointer(EDIT_POINTER_WAIT);
+    if (!ReadMapFile(file)) {
+        gMouseManager->SetPointer(EDIT_POINTER_DEFAULT);
+        FileError(fileName);
+        return BASE_MANAGER_ERROR;
+    }
+    gMouseManager->SetPointer(EDIT_POINTER_DEFAULT);
+    gEditManager->SaveUndo();
+    if (!gNewMapFormat)
+        NormalDialog(localization::Tr("editor.map.old_format"), NORMAL_DIALOG_TYPE_OK);
+    return BASE_MANAGER_SUCCESS;
+}
+
+// Reads what WriteMapFile writes. The town, mine, artifact, obelisk and sound
+// tables are rebuilt on saving and skipped here. A record count beyond the
+// table or a record longer than the file makes the map invalid.
+i32 editManager::ReadMapFile(RecordReader& file) {
+    u8 headerBytes[MAP_HEADER_RECORD_SIZE];
+    i16 width;
+    i16 height;
+    i16 mapFormat;
+    i16 headerId;
+    i32 i;
+    i32 x;
+    i32 y;
+
+    headerId = file.GetI16();
     if (headerId == MAP_HEADER_ID) {
-        EDIT_MAP_HEADER()->id = headerId;
-        read(
-            handle,
-            &EDIT_MAP_HEADER()->difficulty,
-            sizeof(SMapHeader) - offsetof(SMapHeader, difficulty)
-        );
-        READ_FILE_VALUE(handle, headerId);
+        headerBytes[0] = static_cast<u8>(headerId & 0xff);
+        headerBytes[1] = static_cast<u8>((headerId >> 8) & 0xff);
+        file.Get(headerBytes + sizeof(headerId), MAP_HEADER_RECORD_SIZE - sizeof(headerId));
+        RecordReader header(headerBytes, MAP_HEADER_RECORD_SIZE);
+        ReadMapHeader(header, *EDIT_MAP_HEADER());
+        headerId = file.GetI16();
     } else {
         NewMap(false);
     }
@@ -10884,35 +10920,48 @@ i16 editManager::LoadMap(char* name) {
         gNewMapFormat = true;
     else
         gNewMapFormat = false;
-    gMouseManager->SetPointer(EDIT_POINTER_WAIT);
-    READ_FILE_VALUE(handle, width);
-    READ_FILE_VALUE(handle, height);
-    read(handle, m_map.cells, sizeof(m_map.cells));
-    read(handle, ignored, GAME_TOWN_COUNT * sizeof(editMapRecord));
-    read(handle, ignored, GAME_MINE_COUNT * sizeof(editMapRecord));
-    read(handle, ignored, EDIT_MAP_ARTIFACT_SLOTS);
-    read(handle, ignored, 1);
-    read(handle, ignored, sizeof(m_mapSounds));
+    width = file.GetI16();
+    height = file.GetI16();
+    for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
+        for (y = 0; y < MAP_CELL_GRID_SIZE; y++)
+            ReadMapCell(file, m_map.cells[x][y]);
+    }
+    file.Skip(GAME_TOWN_COUNT * EDIT_MAP_RECORD_SIZE);
+    file.Skip(GAME_MINE_COUNT * EDIT_MAP_RECORD_SIZE);
+    file.Skip(EDIT_MAP_ARTIFACT_SLOTS);
+    file.Skip(1);
+    file.Skip(sizeof(m_mapSounds));
+    m_extraCount = MAP_EXTRA_FIRST_RECORD;
     if (headerId == EDIT_MAP_VERSION) {
-        READ_FILE_VALUE(handle, m_extraCount);
-        for (i = MAP_EXTRA_FIRST_RECORD; i < m_extraCount; i++) {
-            READ_FILE_VALUE(handle, m_extraSizes[i]);
-            m_extras[i] = malloc(m_extraSizes[i]);
-            read(handle, m_extras[i], m_extraSizes[i]);
+        i32 count = file.GetI32();
+        if (count < MAP_EXTRA_FIRST_RECORD || count > MAP_EXTRA_RECORD_CAPACITY)
+            return 0;
+        for (i = MAP_EXTRA_FIRST_RECORD; i < count; i++) {
+            m_extraSizes[i] = file.GetI32();
+            if (m_extraSizes[i] < 0 || m_extraSizes[i] > file.Remaining()) {
+                m_extraCount = i;
+                return 0;
+            }
+            // The editor reads a record through its larger editing structure.
+            m_extras[i] = calloc(
+                1,
+                m_extraSizes[i] > EDIT_EXTRA_RECORD_MAX_SIZE ? m_extraSizes[i]
+                                                             : EDIT_EXTRA_RECORD_MAX_SIZE
+            );
+            file.Bytes(m_extras[i], m_extraSizes[i]);
+            m_extraCount = i + 1;
         }
-    } else {
-        m_extraCount = MAP_EXTRA_FIRST_RECORD;
     }
     if (gNewMapFormat) {
-        read(handle, m_map.cellPairs, sizeof(m_map.cellPairs));
-        READ_FILE_VALUE(handle, gNextObjectId);
+        for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
+            for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
+                m_map.cellPairs[x][y].objectId = file.GetU16();
+                m_map.cellPairs[x][y].overlayId = file.GetU16();
+            }
+        }
+        gNextObjectId = file.GetI16();
     }
-    close(handle);
-    gMouseManager->SetPointer(EDIT_POINTER_DEFAULT);
-    gEditManager->SaveUndo();
-    if (!gNewMapFormat)
-        NormalDialog(localization::Tr("editor.map.old_format"), NORMAL_DIALOG_TYPE_OK);
-    return BASE_MANAGER_SUCCESS;
+    return file.Ok();
 }
 
 i16 editManager::PickMap(char*, char*, i16 mode) {
