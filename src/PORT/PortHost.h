@@ -30,4 +30,9 @@ void MenuEnableItem(KBMenu menu, i32 command, bool enabled);
 // The About box's text, one line per entry.
 std::string MenuAboutText();
 
+// The help book (kbwin.cpp): whether the game data holds the WinHelp file,
+// and showing it, converted to HTML on first use, in the browser.
+bool HelpAvailable();
+void OpenHelp();
+
 #endif

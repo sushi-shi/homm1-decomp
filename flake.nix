@@ -62,6 +62,7 @@
         installPhase = ''
           install -Dm755 heroes $out/bin/homm1
           install -Dm755 heroes-editor $out/bin/homm1-editor
+          install -Dm755 homm1-hlp2html $out/bin/homm1-hlp2html
         '';
         meta.mainProgram = "homm1";
       };
@@ -73,6 +74,10 @@
         # reports would be noise; the build sandbox also blocks LeakSanitizer.
         preCheck = "export ASAN_OPTIONS=detect_leaks=0";
       });
+      # The browser build (nix/wasm.nix).
+      wasm = import ./nix/wasm.nix { inherit pkgs; src = self; };
+      # The native port for 64-bit Windows, cross-compiled (nix/windows.nix).
+      windows = import ./nix/windows.nix { inherit pkgs; src = self; };
       app = name: target: description: {
         type = "app";
         program = "${runner name target}/bin/${name}";
@@ -95,12 +100,23 @@
           program = "${native}/bin/homm1-editor";
           meta.description = "The native scenario editor; pass --data DIR or set HOMM1_DATA";
         };
+        web = {
+          type = "app";
+          program = "${wasm.serve}/bin/homm1-web";
+          meta.description = "Serve the browser build on http://127.0.0.1:8000/ (or the port given)";
+        };
+        web-smoke = {
+          type = "app";
+          program = "${wasm.smoke}/bin/homm1-web-smoke";
+          meta.description = "Drive the browser build headless on your game data (--data DIR)";
+        };
       };
       packages.${system} = {
-        inherit native sanitized;
+        inherit native sanitized windows;
+        wasm = wasm.site;
       };
       checks.${system} = {
-        inherit native sanitized;
+        inherit native sanitized windows;
       };
       devShells.${system} = {
         default = pkgs.mkShell ({

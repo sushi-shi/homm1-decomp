@@ -1,0 +1,105 @@
+# The browser build (docs/port/README.md, "In a browser"): the game and the
+# scenario editor compiled with Emscripten, with SDL3 and a minimal FFmpeg
+# (Smacker movies and Ogg Vorbis music only) built for WebAssembly, and the
+# static page that takes the player's own game files. No game data is part
+# of any output here.
+{ pkgs, src }:
+let
+  emscripten = pkgs.emscripten;
+
+  # Emscripten builds its system libraries into a cache on first use; the
+  # store copy is read-only, so each build works on a private copy.
+  emscriptenSetup = ''
+    export HOME=$TMPDIR
+    export EM_CACHE=$TMPDIR/emscripten-cache
+    cp -r --no-preserve=mode ${emscripten}/share/emscripten/cache $EM_CACHE
+  '';
+
+  sdl3 = pkgs.stdenvNoCC.mkDerivation {
+    pname = "sdl3-wasm";
+    inherit (pkgs.sdl3) version src;
+    nativeBuildInputs = [ emscripten pkgs.cmake pkgs.ninja pkgs.python3 ];
+    dontFixup = true;
+    configurePhase = emscriptenSetup + ''
+      emcmake cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=$out -DSDL_SHARED=OFF -DSDL_STATIC=ON \
+        -DSDL_TESTS=OFF -DSDL_TEST_LIBRARY=OFF -DSDL_EXAMPLES=OFF
+    '';
+    buildPhase = "cmake --build build";
+    installPhase = "cmake --install build";
+  };
+
+  # Only what the game plays (ffmpeg-minimal.nix, shared with the Windows
+  # build), compiled by Emscripten: no assembly, threads or CPU detection.
+  ffmpeg = (pkgs.callPackage ./ffmpeg-minimal.nix {
+    shared = false;
+    extraConfigureFlags = [
+      "--target-os=none" "--arch=x86_32" "--enable-cross-compile"
+      "--cc=emcc" "--cxx=em++" "--ar=emar" "--ranlib=emranlib" "--nm=llvm-nm"
+      "--disable-asm" "--disable-inline-asm" "--disable-runtime-cpudetect"
+      "--disable-pthreads" "--disable-stripping"
+    ];
+  }).overrideAttrs (old: {
+    pname = "ffmpeg-homm1-wasm";
+    nativeBuildInputs = old.nativeBuildInputs ++ [ emscripten pkgs.python3 pkgs.llvm ];
+    preConfigure = emscriptenSetup;
+    dontFixup = true;
+  });
+
+  # The game and the editor, and the page that runs them: the site to serve
+  # is $out/share/homm1-web.
+  site = pkgs.stdenvNoCC.mkDerivation {
+    pname = "homm1-wasm";
+    version = "0";
+    inherit src;
+    nativeBuildInputs = [ emscripten pkgs.cmake pkgs.ninja pkgs.python3 pkgs.pkg-config ];
+    dontFixup = true;
+    configurePhase = emscriptenSetup + ''
+      export PKG_CONFIG_PATH=${ffmpeg}/lib/pkgconfig
+      emcmake cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF \
+        -DSDL3_DIR=${sdl3}/lib/cmake/SDL3 "-DCMAKE_FIND_ROOT_PATH=${sdl3};${ffmpeg}"
+    '';
+    buildPhase = "cmake --build build";
+    installPhase = ''
+      site=$out/share/homm1-web
+      mkdir -p $site
+      cp build/heroes.js build/heroes.wasm build/heroes-editor.js build/heroes-editor.wasm $site/
+      cp src/PLATFORM/Web/index.html src/PLATFORM/Web/homm1.js src/PLATFORM/Web/homm1.css $site/
+    '';
+  };
+
+  python = pkgs.python3.withPackages (p: [ p.playwright ]);
+
+  # Serves the page on http://127.0.0.1:8000/ (or the port given).
+  serve = pkgs.writeShellApplication {
+    name = "homm1-web";
+    runtimeInputs = [ pkgs.python3 ];
+    text = ''
+      port=''${1:-8000}
+      echo "Heroes of Might and Magic: http://127.0.0.1:$port/"
+      exec python3 -c '
+      import functools, http.server, sys
+      handler = http.server.SimpleHTTPRequestHandler
+      handler.extensions_map[".wasm"] = "application/wasm"
+      http.server.ThreadingHTTPServer(("127.0.0.1", int(sys.argv[1])),
+          functools.partial(handler, directory=sys.argv[2])).serve_forever()
+      ' "$port" ${site}/share/homm1-web
+    '';
+  };
+
+  # The page in headless Chromium or Firefox on the player's own data
+  # (tests/port/web_smoke.py; pass --data DIR, optionally --cd, --help-file,
+  # --browser firefox and --out DIR for the screenshots).
+  smoke = pkgs.writeShellApplication {
+    name = "homm1-web-smoke";
+    runtimeInputs = [ python ];
+    text = ''
+      export PLAYWRIGHT_BROWSERS_PATH=${pkgs.playwright-driver.browsers}
+      export PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS=true
+      exec python3 ${src}/tests/port/web_smoke.py ${site}/share/homm1-web "$@"
+    '';
+  };
+in
+{
+  inherit sdl3 ffmpeg site serve smoke;
+}

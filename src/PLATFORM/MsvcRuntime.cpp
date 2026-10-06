@@ -1,6 +1,6 @@
 #include <PLATFORM/MsvcRuntime.h>
 
-#if !defined(_MSC_VER)
+#if !defined(_MSC_VER) && !defined(_WIN32)
 
 #include <ctype.h>
 #include <string.h>
