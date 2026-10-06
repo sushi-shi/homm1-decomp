@@ -3908,6 +3908,10 @@ msgctxt "editor.window.title"
 msgid "Heroes Editor"
 msgstr "Редактор Героев"
 
+msgctxt "editor.clear.options.help"
+msgid "Provides finer control over which objects are removed."
+msgstr "Обеспечивает более детальное управление процессом удаления объектов."
+
 msgctxt "startup.instance.already_running"
 msgid "Only one copy of %s may run at a time"
 msgstr "Только одна копия %s может быть запущена одновременно"

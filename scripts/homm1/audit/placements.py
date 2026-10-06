@@ -26,7 +26,10 @@ image's config/retail directory:
   placements.tsv         source claims of units the image shares with the game
                          (they translate the shared source's game-space claims)
   function_referents.tsv names of placed functions and paired import thunks
-  data_vtables.tsv, data_compgen.tsv   placed provider rows
+  data_vtables.tsv, data_compgen.tsv   placed provider rows; a vtable of a
+                         class only the image defines is named where the
+                         image's own masked-identical constructor stores it and
+                         every slot names the claimed method at that address
 
 Units are shared when config/units.toml lists the image in their `images`.
 """
@@ -103,12 +106,14 @@ class Placer:
         self.starts = {int(r["rva"], 16) for r in
                        read_tsv(retail_dir(image) / "functions.tsv")[2]}
         self.shared = {u["unit"] for u in all_units() if image in unit_images(u)}
+        self.image_only = {u["unit"] for u in all_units() if "game" not in unit_images(u)}
         _b, _h, rows = read_tsv(BUILD / "gen/bindings.tsv")
         self.bindings = [dict(r, rva=int(r["rva"], 16), size=int(r["size"], 16))
                          for r in rows]
         self.functions: dict[int, tuple[int, str]] = {}   # game rva -> (rva, evidence)
         self.image_sizes: dict[int, int] = {}             # game rva -> this image's size
         self.image_callees: dict[int, set[str]] = {}      # rva -> callee symbol(s)
+        self.image_vtables: dict[int, tuple[str, int, str]] = {}  # rva -> (name, size, why)
         self.data: dict[int, tuple[int, str]] = {}
         self.problems: list[str] = []
 
@@ -458,6 +463,11 @@ class Placer:
         claims_dir = image_build(self.image) / "gen/claims"
         found: dict[int, set[int]] = defaultdict(set)
         from homm1.manifest import units as image_units
+        claimed = {mask(r["name"]): int(r["rva"], 16)
+                   for frag in sorted(claims_dir.glob("**/*.tsv"))
+                   for r in read_tsv(frag)[2]
+                   if r.get("space") == self.image and r["kind"] == "func"}
+        vtables: dict[int, set[tuple[str, int, str]]] = defaultdict(set)
         for unit in sorted(u["unit"] for u in image_units(image=self.image)):
             frag = claims_dir / f"{unit}.tsv"
             obj = image_build(self.image) / "objdiff/base" / f"{unit}.obj"
@@ -500,13 +510,24 @@ class Placer:
                             self.image_callees.setdefault(target, set()).add(callee)
                     if r.typ != 0x6:
                         continue
-                    b = names.get(mask(c.symbols[r.symbol_index].name))
-                    if b is None:
-                        continue
+                    target = c.symbols[r.symbol_index]
+                    b = names.get(mask(target.name))
                     off = r.site - sym.value
                     addend = struct.unpack_from("<i", body, off)[0]
                     value = struct.unpack_from("<I", retail, off)[0] - 0x400000
+                    if b is None:
+                        if unit in self.image_only and target.name.startswith("??_7") \
+                                and target.section > 0 and addend == 0:
+                            vt = self._image_vtable(c, target, value, claimed)
+                            if vt:
+                                vtables[value].add(vt)
+                        continue
                     found[b["rva"]].add(value - addend)
+        for erva, rows in vtables.items():
+            if len(rows) == 1:
+                self.image_vtables[erva] = next(iter(rows))
+            else:
+                self.problems.append(f"vtable 0x{erva:x}: image compiles disagree")
         for grva, eaddrs in found.items():
             # code users outrank an initializer-bytes match
             if grva in self.data and not self.data[grva][1].startswith("complete initialized"):
@@ -516,6 +537,26 @@ class Placer:
                                                  "shared source (VA_AT body, masked-identical)")
             else:
                 self.problems.append(f"data 0x{grva:x}: image compile fields disagree")
+
+    def _image_vtable(self, c, vtable, erva: int, claimed: dict[str, int]):
+        """An image-only class's vtable the image's own constructor stores at
+        `erva`: every slot of the compiled vtable must name a function this
+        image claims, and the retail slot must hold that function's address."""
+        from homm1.core.msvc_names import mask
+        sec = c.sections[vtable.section - 1]
+        size = sec.raw_size - vtable.value
+        slots = [r for r in c.relocations
+                 if r.section == vtable.section and vtable.value <= r.site < sec.raw_size]
+        if not slots or size != 4 * len(slots):
+            return None
+        for r in slots:
+            rva = claimed.get(mask(c.symbols[r.symbol_index].name))
+            word = struct.unpack_from("<I", self.pe.read(erva + r.site - vtable.value, 4))[0]
+            if rva is None or word - 0x400000 != rva:
+                return None
+        return (vtable.name, size,
+                f"image-only: this image's constructor stores it; its {len(slots)} slot(s) "
+                f"hold the claimed methods")
 
     def run(self) -> None:
         self.place_functions()
@@ -628,6 +669,8 @@ def write_tables(p: Placer, out: Path | None = None) -> dict:
     starts.update({erva: game_kinds.get(grva, "") for grva, (erva, _w) in p.data.items()})
     for grva, (erva, _n, _w, _s) in p.symbols.items():
         starts.setdefault(erva, game_kinds.get(grva, ""))
+    for erva in p.image_vtables:
+        starts.setdefault(erva, "vtable")
     # the image's own source data claims (src/<IMAGE>) are starts too
     from homm1.core.paths import image_build
     for frag in sorted((image_build(p.image) / "gen/claims").rglob("*.tsv")):
@@ -649,6 +692,9 @@ def write_tables(p: Placer, out: Path | None = None) -> dict:
     write_tsv(out / "function_referents.tsv", [
         digest_line, "# Names of game functions and import thunks placed in this image."],
         ["rva", "name", "provenance"], referents)
+    vtables += [[f"0x{erva:08x}", f"0x{size:x}", name, "primary", why]
+                for erva, (name, size, why) in sorted(p.image_vtables.items())]
+    vtables.sort()
     write_tsv(out / "data_vtables.tsv", [digest_line],
               ["rva", "size", "name", "kind", "note"], vtables)
     write_tsv(out / "data_compgen.tsv", [digest_line],

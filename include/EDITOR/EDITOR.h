@@ -24,6 +24,22 @@ extern i32 gStatusTextClearTime;
 extern i32 gStatusTextHoldTime;
 extern char gStatusText[];
 
+// gClearFlags' initial value: the first fourteen object classes.
+H1_ENUM_CONST_BEGIN(EditorClearConstant)
+    EDITOR_CLEAR_FLAGS_DEFAULT = 0x3fff
+H1_ENUM_CONST_END(EditorClearConstant)
+
+// The map rectangle a drag selects (gSelectionX < 0: none); the map view
+// outlines it.
+extern i32 gSelectionX;
+extern i32 gSelectionY;
+extern i32 gSelectionWidth;
+extern i32 gSelectionHeight;
+// The object classes the eraser removes (one bit per clearwin.bin toggle).
+extern i32 gClearFlags;
+// The eraser options button's right-click help.
+extern char* gClearToolHelp;
+
 void ShowStatusText(char* text);
 void ClearStatusText(void);
 

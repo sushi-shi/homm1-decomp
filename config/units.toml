@@ -478,3 +478,10 @@ unit = "EDITOR/EDITOR"
 source = "src/EDITOR/EDITOR.cpp"
 flags = "cpp_editor_oi_g5"
 images = ["editor"]
+
+# The eraser tool (clearManager); descriptive unit name.
+[[unit]]
+unit = "EDITOR/CLEARMGR"
+source = "src/EDITOR/CLEARMGR.cpp"
+flags = "cpp_editor_oi_g5"
+images = ["editor"]

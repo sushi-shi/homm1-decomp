@@ -283,3 +283,17 @@ void EarlyResizeWindow(i32, i32, i32, i32) {}
 
 VA(0x0040927d, 0x5)
 void UpdateSystemOptionsMenu(void) {}
+
+// The tool units' shared state (CLEARMGR, TERRMGR and EDITMGR read it).
+DATA(0x0043f39c)
+i32 gClearFlags = EDITOR_CLEAR_FLAGS_DEFAULT;
+DATA(0x0043f3a0)
+i32 gSelectionX = -1;
+DATA(0x0043f738)
+char* gClearToolHelp = localization::Tr("editor.clear.options.help");
+DATA(0x00451e9c)
+i32 gSelectionWidth;
+DATA(0x00451f70)
+i32 gSelectionY;
+DATA(0x00451f80)
+i32 gSelectionHeight;

@@ -21,6 +21,14 @@ H1_ENUM_CONST_BEGIN(EditManagerConstant)
     EDIT_MANAGER_MAP_SIZE = 72
 H1_ENUM_CONST_END(EditManagerConstant)
 
+// Widget ids of the editor's main window the tool managers handle.
+H1_ENUM_BEGIN(EditorWidgetId)
+    // The map view.
+    EDITOR_MAP_WIDGET = 9,
+    // A tool panel's options button.
+    EDITOR_TOOL_OPTIONS_BUTTON = 0x70
+H1_ENUM_END(EditorWidgetId)
+
 #pragma pack(push, 1)
 // One cell of the edited map (the constructor's map reset writes every byte).
 struct editMapCell {
@@ -78,6 +86,21 @@ public:
 
     editManager(void);
     void SelectTool(i16 tool);
+    // Copies the map into the undo buffer.
+    void SaveUndo(void);
+    // Copies the map view's 448x448 square to the screen.
+    void UpdateMapView(void);
+    // Redraws the cursor cell and its coordinates.
+    void UpdateCursor(void);
+    // Turns screen coordinates into the view cell under them (clamped).
+    void ScreenToCell(i16& x, i16& y);
+    // Redraws the map view at the current view origin.
+    void DrawMap(void);
+    // Redraws the radar map (and copies it to the screen when update is set).
+    void DrawRadar(i32 update);
+    // Erases the object classes in mask from the width x height cells at
+    // (x, y): each cell's first layer, and its second when secondLayer is set.
+    void ClearArea(i32 x, i32 y, i32 width, i32 height, u16 mask, i32 secondLayer);
     virtual i16 Open(i16 priority) OVERRIDE;
     virtual void Close(void) OVERRIDE;
     virtual i16 Main(tag_message& message) OVERRIDE;
