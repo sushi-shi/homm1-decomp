@@ -49,14 +49,15 @@ void hexcell::DrawOccupant(void) {
     }
 }
 
+#define mirrored level // frame-slot spelling
 VA(0x0043b832, 0x124)
 void hexcell::DrawTower(i8 frame) {
-    i8 level;
+    i8 mirrored;
     i16 row;
 
-    level = gCombatManager->m_castleSide[COMBAT_ATTACKER_SIDE] == 1;
+    mirrored = gCombatManager->m_castleSide[COMBAT_ATTACKER_SIDE] == 1;
     gCombatManager->m_combatIcons[COMBAT_ICON_CASTLE]->DrawToBuffer(
-        level ? m_x : m_x + 28,
+        mirrored ? m_x : m_x + 28,
         m_y,
         frame,
         ICON_DRAW_FLIPPED,
@@ -67,7 +68,7 @@ void hexcell::DrawTower(i8 frame) {
         return;
     if (row & 1)
         gCombatManager->m_combatIcons[COMBAT_ICON_CASTLE]->DrawToBuffer(
-            level ? m_x : m_x + 28,
+            mirrored ? m_x : m_x + 28,
             m_y,
             9,
             ICON_DRAW_FLIPPED,
@@ -75,8 +76,9 @@ void hexcell::DrawTower(i8 frame) {
         );
     else
         gCombatManager->m_combatIcons[COMBAT_ICON_CASTLE]
-            ->DrawToBuffer(level ? m_x - 28 : m_x, m_y, 9, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
+            ->DrawToBuffer(mirrored ? m_x - 28 : m_x, m_y, 9, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
 }
+#undef mirrored
 
 VA(0x0043b956, 0x279)
 void hexcell::DrawWall(void) {

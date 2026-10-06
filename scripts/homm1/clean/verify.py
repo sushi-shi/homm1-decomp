@@ -16,10 +16,12 @@ Four checks, all of which must pass:
   relocations, symbol names) and the candidate HEROES.EXE byte for byte,
   LINK's TimeDateStamps aside: the transforms change no code.
 * The source tree must compile and link without /FORCE. Without the `#line`
-  pins its assertions carry their own line numbers and file names, and VC6's
-  local label counters ($L, $T, $SG) shift with the removed scaffolding
-  headers, so its objects are compared after numbering those compiler-local
-  names by first appearance; every remaining difference is listed.
+  pins its assertions carry their own line numbers and file names, without
+  the frame-slot aliases its locals take their readable spellings' `/Od`
+  slots, and VC6's local label counters ($L, $T, $SG) shift with the removed
+  scaffolding headers, so its objects are compared after numbering those
+  compiler-local names by first appearance; every remaining difference is
+  listed, and each must be in a unit that one of those explains.
 * For the classic variant, every classic file must equal the source tree's
   Russian compiler input token for token once its UTF-8 literals are read as
   the Windows-1251 bytes they show (classic_equivalence).
@@ -404,12 +406,16 @@ def _link(work: Path, built: list, res: Path | None, label: str) -> tuple[bool, 
 _POSITIONAL = re.compile(r"\b(?:H1_ASSERT|__FILE__|__LINE__)\b")
 
 
-def unexplained_differences(tree: Path, different: dict[str, list[str]]) -> list[str]:
-    """Differing units whose source names no assertion, file or line."""
+def unexplained_differences(tree: Path, different: dict[str, list[str]],
+                            framed: set[str] = frozenset()) -> list[str]:
+    """Differing units whose source names no assertion, file or line, and
+    defines no function behind frame-slot aliases (`framed`, source paths):
+    the generated tree compiles their readable local names, which the `/Od`
+    frame orders by spelling."""
     from homm1.manifest import units
     sources = {u["unit"]: u["source"] for u in units()}
-    return sorted(unit for unit in different
-                  if not _POSITIONAL.search((tree / sources[unit]).read_text(encoding="utf-8")))
+    return sorted(unit for unit in different if sources[unit] not in framed
+                  and not _POSITIONAL.search((tree / sources[unit]).read_text(encoding="utf-8")))
 
 
 def _write(tree: Path, files: dict[str, bytes]) -> Path:
@@ -443,6 +449,8 @@ def verify(tree: Path, inputs: dict[str, bytes], variant: str = "source") -> int
     control = _write(work / "control-tree", generate(inputs, control=True)[0])
     renames = clean_source.aliases(data.decode("utf-8", "replace") for name, data in inputs.items()
                                    if name.endswith((".cpp", ".c", ".h")))
+    framed = {name for name, data in inputs.items() if name.endswith((".cpp", ".c"))
+              and clean_source.local_aliases(data.decode("utf-8", "replace"))}
     source_tree = tree
     if variant != "source":
         source_tree = _write(work / "source-tree", generate(inputs, variant="source")[0])
@@ -470,7 +478,7 @@ def verify(tree: Path, inputs: dict[str, bytes], variant: str = "source") -> int
                       "a transform changed code", file=sys.stderr)
                 status = 1
             if label == "source":
-                unexplained = unexplained_differences(root, different)
+                unexplained = unexplained_differences(root, different, framed)
                 if unexplained:
                     print("[clean] verify: FAIL: source objects differ without an assertion "
                           "line or file name to explain it: " + ", ".join(unexplained),
@@ -479,7 +487,8 @@ def verify(tree: Path, inputs: dict[str, bytes], variant: str = "source") -> int
                 elif different:
                     print(f"[clean] verify: source: the {len(different)} differing units are "
                           "those whose assertions now carry their own line numbers and file "
-                          "names: " + ", ".join(sorted(different)))
+                          "names, or whose aliased locals take their readable spellings' "
+                          "frame slots: " + ", ".join(sorted(different)))
     except (ToolError, ValueError, OSError) as error:
         print(f"[clean] verify: FAIL: {error}", file=sys.stderr)
         return 1

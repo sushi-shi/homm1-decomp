@@ -285,13 +285,14 @@ void combatManager::SetCombatDirections(i32 targetHex) {
 }
 
 // Hexes are 78 by 80 and odd rows shift by 66 pixels.
+#define sector slot // frame-slot spelling
 VA(0x0041de87, 0x564)
 void combatManager::CheckSetMouseDirection(i32 mouseX, i32 mouseY, i32 targetHex) {
     i32 yPos;
     i32 directionCopy;
     i32 alternateDirection;
     float endRatio;
-    i32 slot;
+    i32 sector;
     i32 rearHex;
     i32 xPos;
     i32 hexDir;
@@ -310,48 +311,48 @@ void combatManager::CheckSetMouseDirection(i32 mouseX, i32 mouseY, i32 targetHex
     yPos = mouseY - COMBAT_FIELD_TOP - targetHex / COMBAT_GRID_COLUMNS * COMBAT_HEX_HEIGHT;
     xPos -= 0x27;
     yPos -= 0x28;
-    slot = 0;
+    sector = 0;
     if (xPos < 0) {
         if (yPos < 0)
-            slot += COMBAT_CURSOR_SECTOR_LEFT_UP;
+            sector += COMBAT_CURSOR_SECTOR_LEFT_UP;
         else
-            slot += COMBAT_CURSOR_SECTOR_LEFT_DOWN;
+            sector += COMBAT_CURSOR_SECTOR_LEFT_DOWN;
     } else {
         if (yPos < 0)
-            slot += COMBAT_CURSOR_SECTOR_RIGHT_UP;
+            sector += COMBAT_CURSOR_SECTOR_RIGHT_UP;
         else
-            slot += COMBAT_CURSOR_SECTOR_RIGHT_DOWN;
+            sector += COMBAT_CURSOR_SECTOR_RIGHT_DOWN;
     }
     xPos = abs(xPos);
     yPos = abs(yPos);
     endRatio = static_cast<float>(xPos) / (static_cast<float>(yPos));
-    if (slot == COMBAT_CURSOR_SECTOR_RIGHT_UP || slot == COMBAT_CURSOR_SECTOR_LEFT_DOWN) {
+    if (sector == COMBAT_CURSOR_SECTOR_RIGHT_UP || sector == COMBAT_CURSOR_SECTOR_LEFT_DOWN) {
         if (endRatio > 3.73)
-            slot += 5;
+            sector += 5;
         else if (endRatio > 1.73)
-            slot += 4;
+            sector += 4;
         else if (endRatio > 1.0f)
-            slot += 3;
+            sector += 3;
         else if (endRatio > 0.58)
-            slot += 2;
+            sector += 2;
         else if (endRatio > 0.27)
-            slot++;
+            sector++;
     } else {
         if (endRatio < 0.27)
-            slot += 5;
+            sector += 5;
         else if (endRatio < 0.58)
-            slot += 4;
+            sector += 4;
         else if (endRatio < 1.0f)
-            slot += 3;
+            sector += 3;
         else if (endRatio < 1.73)
-            slot += 2;
+            sector += 2;
         else if (endRatio < 3.73)
-            slot++;
+            sector++;
     }
-    if (m_directionMap[slot] == m_mouseDirection)
+    if (m_directionMap[sector] == m_mouseDirection)
         return;
-    m_mouseDirection = m_directionMap[slot];
-    hexDir = OppositeDirection(m_directionMap[slot]);
+    m_mouseDirection = m_directionMap[sector];
+    hexDir = OppositeDirection(m_directionMap[sector]);
     directionCopy = hexDir;
     alternateDirection = COMBAT_DIRECTION_INVALID;
     movingUnit = &m_armies[m_currentSide][m_currentArmyIndex];
@@ -420,6 +421,7 @@ void combatManager::CheckSetMouseDirection(i32 mouseX, i32 mouseY, i32 targetHex
     }
     gMouseManager->SetPointer(m_mouseDirection + COMBAT_POINTER_ATTACK_FIRST);
 }
+#undef sector
 
 // The sole caller passes one command; command 13 maps to pointer 5 and all
 // others pass through.
@@ -638,12 +640,13 @@ i32 combatManager::CheckWin(struct tag_message* message) {
 
 // Returns each command directly and clears the target through the current
 // stack.
+#define enemyIndex indexNum // frame-slot spelling
 VA(0x0041eb45, 0x269)
 i8 combatManager::GetCommand(i16 hex) {
     i8 unusedCol = hex % COMBAT_GRID_COLUMNS;
     i8 rowIndex = hex / COMBAT_GRID_COLUMNS;
     army* attackingStack;
-    i8 indexNum;
+    i8 enemyIndex;
     i8 enemySide;
 
     if (hex == ARMY_HEX_INVALID)
@@ -669,7 +672,7 @@ i8 combatManager::GetCommand(i16 hex) {
             if (hex % COMBAT_GRID_COLUMNS == COMBAT_GRID_LAST_COLUMN)
                 return COMBAT_MESSAGE_COMMAND_DEFAULT;
             enemySide = m_hexCells[hex].m_occupantSide;
-            indexNum = m_hexCells[hex].m_occupantIndex;
+            enemyIndex = m_hexCells[hex].m_occupantIndex;
             attackingStack = &m_armies[m_currentSide][m_currentArmyIndex];
             CLEAR_ARMY_TARGET(attackingStack);
             if (m_hexCells[hex].m_obstacleIndex != COMBAT_OBSTACLE_NONE)
@@ -682,7 +685,7 @@ i8 combatManager::GetCommand(i16 hex) {
                             return COMBAT_MESSAGE_COMMAND_VIEW_INFO;
                         else {
                             attackingStack->m_targetSide = enemySide;
-                            attackingStack->m_targetIndex = indexNum;
+                            attackingStack->m_targetIndex = enemyIndex;
                             if (attackingStack->m_stats.shots > 0
                                 && attackingStack->GetAttackMask(
                                        attackingStack->m_hex,
@@ -711,6 +714,7 @@ i8 combatManager::GetCommand(i16 hex) {
     }
     return COMBAT_MESSAGE_COMMAND_DEFAULT;
 }
+#undef enemyIndex
 
 // The hero hexes are 26 and 9; the army view also takes the side.
 VA(0x0041edae, 0x171)
@@ -977,6 +981,7 @@ void combatManager::ShowWinLoseArtifact(class heroWindow* window, i32 artifact) 
 }
 
 // Lays out up to five casualties a side with fixed 40-pixel spacing.
+#define side team // frame-slot spelling
 VA(0x0041f71e, 0x753)
 void combatManager::ShowDeadArmies(class heroWindow* window) {
     i32 numLost[COMBAT_SIDE_COUNT];
@@ -984,7 +989,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
     i32 deadMonsters[COMBAT_SIDE_COUNT][ARMY_GROUP_SLOT_COUNT];
     i32 iconDeltaX;
     i32 armyIndex;
-    i32 team;
+    i32 side;
     i16 boxWidth = 0x140;
     i16 bottomVal = 0x1ca;
     i32 sectionPosY;
@@ -992,20 +997,20 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
     i32 casualtyCount[COMBAT_SIDE_COUNT][ARMY_GROUP_SLOT_COUNT];
     i32 firstX;
 
-    for (team = 0; team < WIN_LOSE_SLOT_COUNT; team++) {
-        m_winLoseBottomWidgets[team] = NULL;
-        m_winLoseBottomTextWidgets[team] = NULL;
+    for (side = 0; side < WIN_LOSE_SLOT_COUNT; side++) {
+        m_winLoseBottomWidgets[side] = NULL;
+        m_winLoseBottomTextWidgets[side] = NULL;
     }
-    for (team = 0; team < COMBAT_SIDE_COUNT; team++) {
-        numLost[team] = 0;
+    for (side = 0; side < COMBAT_SIDE_COUNT; side++) {
+        numLost[side] = 0;
         for (armyIndex = 0; armyIndex < ARMY_GROUP_SLOT_COUNT; armyIndex++) {
-            if (m_armies[team][armyIndex].m_creatureType != CREATURE_NONE
-                && m_armies[team][armyIndex].m_initialQuantity
-                       > m_armies[team][armyIndex].m_quantity) {
-                deadMonsters[team][numLost[team]] = m_armies[team][armyIndex].m_creatureType;
-                casualtyCount[team][numLost[team]] = m_armies[team][armyIndex].m_initialQuantity
-                                                     - m_armies[team][armyIndex].m_quantity;
-                numLost[team]++;
+            if (m_armies[side][armyIndex].m_creatureType != CREATURE_NONE
+                && m_armies[side][armyIndex].m_initialQuantity
+                       > m_armies[side][armyIndex].m_quantity) {
+                deadMonsters[side][numLost[side]] = m_armies[side][armyIndex].m_creatureType;
+                casualtyCount[side][numLost[side]] = m_armies[side][armyIndex].m_initialQuantity
+                                                     - m_armies[side][armyIndex].m_quantity;
+                numLost[side]++;
             }
         }
     }
@@ -1028,15 +1033,15 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
         m_winLoseBottomTextWidgets[WIN_LOSE_SLOT_CASUALTY_TITLE],
         WINDOW_Z_ORDER_APPEND
     );
-    for (team = 0; team < COMBAT_SIDE_COUNT; team++) {
-        sectionPosY = team == COMBAT_ATTACKER_SIDE ? 0x118 : 0x159;
+    for (side = 0; side < COMBAT_SIDE_COUNT; side++) {
+        sectionPosY = side == COMBAT_ATTACKER_SIDE ? 0x118 : 0x159;
         buffer = static_cast<char*>(malloc(0x1e));
         sprintf(
             buffer,
-            team == COMBAT_ATTACKER_SIDE ? localization::Tr("combat.casualties.attacker")
+            side == COMBAT_ATTACKER_SIDE ? localization::Tr("combat.casualties.attacker")
                                          : localization::Tr("combat.casualties.defender")
         );
-        m_winLoseBottomTextWidgets[WIN_LOSE_SLOT_SIDE_HEADING_FIRST + team] = new textWidget(
+        m_winLoseBottomTextWidgets[WIN_LOSE_SLOT_SIDE_HEADING_FIRST + side] = new textWidget(
             0,
             sectionPosY,
             0x140,
@@ -1047,16 +1052,16 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
             WIN_LOSE_CASUALTY_HEADING,
             WIDGET_KIND_TEXT
         );
-        if (m_winLoseBottomTextWidgets[WIN_LOSE_SLOT_SIDE_HEADING_FIRST + team] == NULL)
+        if (m_winLoseBottomTextWidgets[WIN_LOSE_SLOT_SIDE_HEADING_FIRST + side] == NULL)
             MemError();
         window->AddWidget(
-            m_winLoseBottomTextWidgets[WIN_LOSE_SLOT_SIDE_HEADING_FIRST + team],
+            m_winLoseBottomTextWidgets[WIN_LOSE_SLOT_SIDE_HEADING_FIRST + side],
             WINDOW_Z_ORDER_APPEND
         );
-        if (numLost[team] <= 0) {
+        if (numLost[side] <= 0) {
             buffer = static_cast<char*>(malloc(10));
             sprintf(buffer, localization::Tr("common.none"));
-            m_winLoseBottomTextWidgets[team * ARMY_GROUP_SLOT_COUNT] = new textWidget(
+            m_winLoseBottomTextWidgets[side * ARMY_GROUP_SLOT_COUNT] = new textWidget(
                 0,
                 sectionPosY + 0x12,
                 0x140,
@@ -1064,36 +1069,36 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
                 buffer,
                 "smalfont.fnt",
                 1,
-                team * ARMY_GROUP_SLOT_COUNT + WIN_LOSE_CASUALTY_TEXT_FIRST,
+                side * ARMY_GROUP_SLOT_COUNT + WIN_LOSE_CASUALTY_TEXT_FIRST,
                 WIDGET_KIND_TEXT
             );
-            if (m_winLoseBottomTextWidgets[team * ARMY_GROUP_SLOT_COUNT] == NULL)
+            if (m_winLoseBottomTextWidgets[side * ARMY_GROUP_SLOT_COUNT] == NULL)
                 MemError();
             window->AddWidget(
-                m_winLoseBottomTextWidgets[team * ARMY_GROUP_SLOT_COUNT],
+                m_winLoseBottomTextWidgets[side * ARMY_GROUP_SLOT_COUNT],
                 WINDOW_Z_ORDER_APPEND
             );
         }
         iconDeltaX = 0x28;
-        firstX = (0x140 - iconDeltaX * numLost[team]) / 2 + 3;
-        for (armyIndex = 0; armyIndex < numLost[team]; armyIndex++) {
-            m_winLoseBottomWidgets[team * ARMY_GROUP_SLOT_COUNT + armyIndex] = new iconWidget(
+        firstX = (0x140 - iconDeltaX * numLost[side]) / 2 + 3;
+        for (armyIndex = 0; armyIndex < numLost[side]; armyIndex++) {
+            m_winLoseBottomWidgets[side * ARMY_GROUP_SLOT_COUNT + armyIndex] = new iconWidget(
                 firstX + iconDeltaX * armyIndex,
                 sectionPosY + 0xf,
                 0x20,
                 0x1c,
                 "mons32.icn",
-                deadMonsters[team][armyIndex],
+                deadMonsters[side][armyIndex],
                 ICON_DRAW_NORMAL,
-                team * ARMY_GROUP_SLOT_COUNT + armyIndex + WIN_LOSE_CASUALTY_ICON_FIRST,
+                side * ARMY_GROUP_SLOT_COUNT + armyIndex + WIN_LOSE_CASUALTY_ICON_FIRST,
                 ICON_WIDGET_DRAW,
                 1
             );
-            if (m_winLoseBottomWidgets[team * ARMY_GROUP_SLOT_COUNT + armyIndex] == NULL)
+            if (m_winLoseBottomWidgets[side * ARMY_GROUP_SLOT_COUNT + armyIndex] == NULL)
                 MemError();
             buffer = static_cast<char*>(malloc(9));
-            sprintf(buffer, "%d", casualtyCount[team][armyIndex]);
-            m_winLoseBottomTextWidgets[team * ARMY_GROUP_SLOT_COUNT + armyIndex] = new textWidget(
+            sprintf(buffer, "%d", casualtyCount[side][armyIndex]);
+            m_winLoseBottomTextWidgets[side * ARMY_GROUP_SLOT_COUNT + armyIndex] = new textWidget(
                 firstX + iconDeltaX * armyIndex,
                 sectionPosY + 0x2e,
                 0x20,
@@ -1101,22 +1106,23 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
                 buffer,
                 "smalfont.fnt",
                 1,
-                team * ARMY_GROUP_SLOT_COUNT + armyIndex + WIN_LOSE_CASUALTY_TEXT_FIRST,
+                side * ARMY_GROUP_SLOT_COUNT + armyIndex + WIN_LOSE_CASUALTY_TEXT_FIRST,
                 WIDGET_KIND_TEXT
             );
-            if (m_winLoseBottomTextWidgets[team * ARMY_GROUP_SLOT_COUNT + armyIndex] == NULL)
+            if (m_winLoseBottomTextWidgets[side * ARMY_GROUP_SLOT_COUNT + armyIndex] == NULL)
                 MemError();
             window->AddWidget(
-                m_winLoseBottomWidgets[team * ARMY_GROUP_SLOT_COUNT + armyIndex],
+                m_winLoseBottomWidgets[side * ARMY_GROUP_SLOT_COUNT + armyIndex],
                 WINDOW_Z_ORDER_APPEND
             );
             window->AddWidget(
-                m_winLoseBottomTextWidgets[team * ARMY_GROUP_SLOT_COUNT + armyIndex],
+                m_winLoseBottomTextWidgets[side * ARMY_GROUP_SLOT_COUNT + armyIndex],
                 WINDOW_Z_ORDER_APPEND
             );
         }
     }
 }
+#undef side
 
 // Grabs the screen instead of fading it.
 VA(0x0041fe71, 0x731)
@@ -1236,9 +1242,11 @@ void combatManager::DoVictory(i8 winningSide) {
 
 // Walks the defeated hero across a scrolling backdrop until the window's
 // button is released.
+#define screenWidth nextWidth // frame-slot spelling
+#define walkFrame walkFrameNum // frame-slot spelling
 VA(0x004205a2, 0x4dc)
 void combatManager::DoLoseWindow(void) {
-    i16 walkFrameNum;
+    i16 walkFrame;
     i16 scrollX;
     i16 walkPosX;
     i16 walkY;
@@ -1249,7 +1257,7 @@ void combatManager::DoLoseWindow(void) {
     icon* walkIcon;
     i16 animationY;
     i32 losingParty;
-    i16 nextWidth;
+    i16 screenWidth;
     i16 animationX;
     i16 animHeight;
     i16 areaWidth;
@@ -1261,11 +1269,11 @@ void combatManager::DoLoseWindow(void) {
     animationY = 0x26;
     areaWidth = 0xdf;
     animHeight = 0x7d;
-    nextWidth = 0x280;
+    screenWidth = 0x280;
     walkPosX = 0x6f;
     walkY = 0x8a;
     gMaxTransferArtifacts = 0;
-    walkFrameNum = 0;
+    walkFrame = 0;
     scrollX = 0;
     stopRequested = 0;
     if (gCurPlayer == m_playerId[COMBAT_ATTACKER_SIDE]
@@ -1315,7 +1323,7 @@ void combatManager::DoLoseWindow(void) {
     ShowDeadArmies(loseWindow);
     gWindowManager->AddWindow(loseWindow, WINDOW_Z_ORDER_APPEND, 0);
     BlitBitmap(scrollBitmap, scrollX, 0, 0xdf, 0x7d, gWindowManager->m_screen, 0xd0, 0x28);
-    walkIcon->FillToBuffer(0x10e, 0x8c, walkFrameNum, 0, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
+    walkIcon->FillToBuffer(0x10e, 0x8c, walkFrame, 0, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
     gWindowManager->UpdateScreenRegion(0x9f, 2, 0x140, 0x1ca);
     gTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 0xb4;
     do {
@@ -1324,14 +1332,14 @@ void combatManager::DoLoseWindow(void) {
             walkIcon->FillToBuffer(
                 0x10e,
                 0x8c,
-                walkFrameNum,
+                walkFrame,
                 0,
                 ICON_DRAW_NORMAL,
                 ICON_DRAW_OFFSET_FULL
             );
             gWindowManager->UpdateScreenRegion(0xd0, 0x28, 0xdf, 0x7d);
-            walkFrameNum++;
-            walkFrameNum = walkFrameNum % 8;
+            walkFrame++;
+            walkFrame = walkFrame % 8;
             scrollX += 2;
             if (scrollX > 0x1a0)
                 scrollX = 0;
@@ -1350,6 +1358,8 @@ void combatManager::DoLoseWindow(void) {
     gResourceManager->Dispose(walkIcon);
     gResourceManager->Dispose(scrollBitmap);
 }
+#undef screenWidth
+#undef walkFrame
 
 // Charges half the stack cost, with no discount.
 VA(0x00420a7e, 0x253)

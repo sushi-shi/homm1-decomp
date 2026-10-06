@@ -349,11 +349,13 @@ void army::Wince(void) {
 
 // One hex of walking: six frames redrawn inside the union of the old and
 // new extents; a stack turned away from the step moves before animating.
+#define occupantCell tempCell // frame-slot spelling
+#define unusedDistance moveDist // frame-slot spelling
 VA(0x00414084, 0x7d0)
 void army::Walk(i16 direction, i8 standAfter, i8 continued) {
     i32 boundMaxX;
     i32 boundBottom;
-    i16 moveDist;
+    i16 unusedDistance;
     i16 startFrame;
     i16 stepCount;
     i16 backwards;
@@ -387,7 +389,7 @@ void army::Walk(i16 direction, i8 standAfter, i8 continued) {
     boundTop = gMinExtentY - 5;
     boundMaxX = gMaxExtentX + 5;
     boundBottom = gMaxExtentY + 5;
-    moveDist = 16;
+    unusedDistance = 16;
     backwards = 0;
     m_walkYStep = 0;
     if (direction < COMBAT_DIRECTION_WESTERN_FIRST) {
@@ -412,15 +414,15 @@ void army::Walk(i16 direction, i8 standAfter, i8 continued) {
     if (direction == COMBAT_DIRECTION_SOUTHWEST || direction == COMBAT_DIRECTION_SOUTHEAST)
         m_walkYStep = 16;
     originalHex = m_hex;
-    hexcell tempCell;
+    hexcell occupantCell;
     hexcell rearTemp;
     if (backwards) {
         newHex = GetAdjacentCellIndex(m_hex, direction);
         if (ValidHex(newHex)) {
-            tempCell.TakeOccupant(&gCombatManager->m_hexCells[m_hex]);
+            occupantCell.TakeOccupant(&gCombatManager->m_hexCells[m_hex]);
             if (m_stats.attributes & MONSTER_FLAGS_WIDE)
                 rearTemp.TakeOccupant(&gCombatManager->m_hexCells[m_hex + (m_facing ? -1 : 1)]);
-            gCombatManager->m_hexCells[newHex].TakeOccupant(&tempCell);
+            gCombatManager->m_hexCells[newHex].TakeOccupant(&occupantCell);
             destRearIndex = newHex + (m_facing ? -1 : 1);
             if (ValidHex(destRearIndex) && (m_stats.attributes & MONSTER_FLAGS_WIDE))
                 gCombatManager->m_hexCells[destRearIndex].TakeOccupant(&rearTemp);
@@ -512,11 +514,11 @@ void army::Walk(i16 direction, i8 standAfter, i8 continued) {
     if (!backwards) {
         newHex = GetAdjacentCellIndex(m_hex, direction);
         if (ValidHex(newHex)) {
-            tempCell.TakeOccupant(&gCombatManager->m_hexCells[m_hex]);
+            occupantCell.TakeOccupant(&gCombatManager->m_hexCells[m_hex]);
             backHexIndex = m_hex + (m_facing ? -1 : 1);
             if ((m_stats.attributes & MONSTER_FLAGS_WIDE) && ValidHex(backHexIndex))
                 rearTemp.TakeOccupant(&gCombatManager->m_hexCells[backHexIndex]);
-            gCombatManager->m_hexCells[newHex].TakeOccupant(&tempCell);
+            gCombatManager->m_hexCells[newHex].TakeOccupant(&occupantCell);
             backHexIndex = newHex + (m_facing ? -1 : 1);
             if ((m_stats.attributes & MONSTER_FLAGS_WIDE) && ValidHex(backHexIndex))
                 gCombatManager->m_hexCells[backHexIndex].TakeOccupant(&rearTemp);
@@ -526,10 +528,18 @@ void army::Walk(i16 direction, i8 standAfter, i8 continued) {
     if (standAfter == 1)
         Stand(1);
 }
+#undef occupantCell
+#undef unusedDistance
 
 // A ranged attack: turn toward the target, animate the missile hex by hex
 // over a saved screen patch, apply wall and luck modifiers, report the
 // damage; creature 14 shoots twice.
+#define launchY y1 // frame-slot spelling
+#define landPosY y2 // frame-slot spelling
+#define archerColumn srcCol // frame-slot spelling
+#define defenderRow aimRow // frame-slot spelling
+#define defenderColumn targetCol // frame-slot spelling
+#define wallRow hitRow // frame-slot spelling
 VA(0x00414854, 0xc74)
 void army::SpecialAttack(void) {
     DATA(0x004a67d8)
@@ -562,7 +572,7 @@ void army::SpecialAttack(void) {
     i32 flightSteps;
     i32 startX;
     i32 launchX;
-    i32 y1;
+    i32 launchY;
     i32 maxX;
     i32 adjustY;
     i32 killed;
@@ -570,7 +580,7 @@ void army::SpecialAttack(void) {
     i32 liftOffsets[5];
     i32 startY;
     i32 landPosX;
-    i32 y2;
+    i32 landPosY;
     i32 maxY;
     i8 wallPenalty;
     i32 damageDone;
@@ -648,9 +658,9 @@ void army::SpecialAttack(void) {
     launchX = startX + gainX;
     landPosX = landX - flightSteps * 2 * gainX;
     adjustX = (launchX + landPosX) / 2 - launchX;
-    y1 = startY + gainY;
-    y2 = landY - flightSteps * 2 * gainY;
-    adjustY = (y1 + y2) / 2 - y1;
+    launchY = startY + gainY;
+    landPosY = landY - flightSteps * 2 * gainY;
+    adjustY = (launchY + landPosY) / 2 - launchY;
     inFlightX = startX + adjustX;
     inFlightY = startY + adjustY;
     maxX = 0;
@@ -715,43 +725,43 @@ void army::SpecialAttack(void) {
         && m_hex % COMBAT_GRID_COLUMNS <= COMBAT_CASTLE_WALL_COLUMN - 1
         && enemyStack->m_hex % COMBAT_GRID_COLUMNS >= COMBAT_CASTLE_WALL_COLUMN + 1) {
         i32 wallDistance;
-        i32 aimRow;
-        i32 targetCol;
-        i32 srcCol;
+        i32 defenderRow;
+        i32 defenderColumn;
+        i32 archerColumn;
         i32 unusedHex;
-        i32 hitRow;
+        i32 wallRow;
         i32 archerRow;
         i32 pastWall;
 
-        srcCol = m_hex % COMBAT_GRID_COLUMNS;
+        archerColumn = m_hex % COMBAT_GRID_COLUMNS;
         archerRow = m_hex / COMBAT_GRID_COLUMNS;
-        pastWall = srcCol - COMBAT_CASTLE_WALL_COLUMN;
-        targetCol = enemyStack->m_hex % COMBAT_GRID_COLUMNS;
-        aimRow = enemyStack->m_hex / COMBAT_GRID_COLUMNS;
-        wallDistance = COMBAT_CASTLE_WALL_COLUMN - srcCol;
-        hitRow = aimRow;
-        if (abs(aimRow - archerRow) >= 2)
-            hitRow -= (aimRow - archerRow) / 2;
-        if (abs(aimRow - archerRow) % 2 == 1) {
+        pastWall = archerColumn - COMBAT_CASTLE_WALL_COLUMN;
+        defenderColumn = enemyStack->m_hex % COMBAT_GRID_COLUMNS;
+        defenderRow = enemyStack->m_hex / COMBAT_GRID_COLUMNS;
+        wallDistance = COMBAT_CASTLE_WALL_COLUMN - archerColumn;
+        wallRow = defenderRow;
+        if (abs(defenderRow - archerRow) >= 2)
+            wallRow -= (defenderRow - archerRow) / 2;
+        if (abs(defenderRow - archerRow) % 2 == 1) {
             if (pastWall < wallDistance
                 || pastWall == wallDistance
                        && (archerRow == COMBAT_UPPER_WALL_ROW
                            || archerRow == COMBAT_LOWER_WALL_ROW)) {
-                if (archerRow < aimRow)
-                    hitRow--;
+                if (archerRow < defenderRow)
+                    wallRow--;
                 else
-                    hitRow++;
+                    wallRow++;
             }
         }
-        if (hitRow > COMBAT_GRID_LAST_ROW)
-            hitRow = COMBAT_GRID_LAST_ROW;
-        if (hitRow < 0)
-            hitRow = 0;
+        if (wallRow > COMBAT_GRID_LAST_ROW)
+            wallRow = COMBAT_GRID_LAST_ROW;
+        if (wallRow < 0)
+            wallRow = 0;
         wallPenalty =
-            gCombatManager->m_hexCells[hitRow * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN]
+            gCombatManager->m_hexCells[wallRow * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN]
                     .m_obstacleIndex
                 == COMBAT_WALL_DAMAGED
-            || gCombatManager->m_hexCells[hitRow * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN]
+            || gCombatManager->m_hexCells[wallRow * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN]
                        .m_obstacleIndex
                    == COMBAT_WALL_INTACT;
     }
@@ -806,6 +816,12 @@ void army::SpecialAttack(void) {
         gSecondShot = 0;
     }
 }
+#undef launchY
+#undef landPosY
+#undef archerColumn
+#undef defenderRow
+#undef defenderColumn
+#undef wallRow
 
 // Attacks every enemy next to the stack (the hydra), then turns them back.
 VA(0x004154c8, 0x763)
@@ -1409,6 +1425,7 @@ void army::CheckLuck(void) {
     }
 }
 
+#define genieDamage hurt // frame-slot spelling
 VA(0x0041717c, 0x215)
 void army::DamageEnemy(
     class army* target,
@@ -1419,7 +1436,7 @@ void army::DamageEnemy(
 ) {
     i16 defenseExtra;
     i16 battleDiff;
-    i32 hurt;
+    i32 genieDamage;
     i32 damage;
     float rolledTotal;
     i16 creature;
@@ -1463,10 +1480,10 @@ void army::DamageEnemy(
     damage = rolledTotal + 0.5;
     if (m_creatureType == CREATURE_GENIE
         && SRandom(1, ARMY_SPECIAL_ROLL_MAX) == ARMY_GENIE_ROLL_HIT) {
-        hurt = ((target->m_quantity + 1) / 2) * target->m_stats.hitPoints;
-        if (hurt > damage) {
+        genieDamage = ((target->m_quantity + 1) / 2) * target->m_stats.hitPoints;
+        if (genieDamage > damage) {
             gGenieHalf = 1;
-            damage = hurt;
+            damage = genieDamage;
         }
     }
     if (damage > 32000)
@@ -1476,6 +1493,7 @@ void army::DamageEnemy(
     *damageResult = damage;
     *killedResult = target->Damage(damage);
 }
+#undef genieDamage
 
 // A stack whose spell (2) breaks on damage loses it.
 VA(0x00417391, 0x160)
@@ -1744,9 +1762,10 @@ void army::GoBerserk(void) {
 
 // Attacks the stack on the hex (flying, shooting or picking the adjacent
 // direction) or moves there; a second argument forbids attacking.
+#define adjacentCell cellItem // frame-slot spelling
 VA(0x0041811f, 0x34a)
 void army::MoveAttack(i32 destination, i32 moveOnly) {
-    hexcell* cellItem;
+    hexcell* adjacentCell;
     i32 attackFromHex;
     i16 baseAttackMask;
     i16 enemyAttackMask;
@@ -1796,8 +1815,8 @@ void army::MoveAttack(i32 destination, i32 moveOnly) {
                         attackFromHex += m_facing ? -1 : 1;
                     neighborHex = GetAdjacentCellIndex(attackFromHex, direction);
                     if (ValidHex(neighborHex)) {
-                        cellItem = &gCombatManager->m_hexCells[neighborHex];
-                        if (HEX_HAS_OCCUPANT(*cellItem, m_targetSide, m_targetIndex))
+                        adjacentCell = &gCombatManager->m_hexCells[neighborHex];
+                        if (HEX_HAS_OCCUPANT(*adjacentCell, m_targetSide, m_targetIndex))
                             m_attackDirection = direction;
                     }
                 }
@@ -1814,6 +1833,7 @@ void army::MoveAttack(i32 destination, i32 moveOnly) {
     }
     gCombatManager->m_limitCreature = 1;
 }
+#undef adjacentCell
 
 // DamageEnemy sets this byte when the genie halves its target stack.
 DATA(0x004a67d4)
