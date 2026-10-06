@@ -16,7 +16,7 @@
 VA(0x0045e9c0, 0x60)
 town::town(void) {
     m_type = 0;
-    m_threat = 0;
+    m_nameIndex = 0;
     m_id = 0;
     m_owner = 0;
     m_x = 0;
@@ -92,15 +92,15 @@ VA(0x0045ed10, 0x13d)
 void town::Deallocate(void) {
     playerData* ownerData;
     i16 i;
-    i8 found;
+    i8 foundIndex;
 
     ownerData = &gGame->m_players[m_owner];
-    found = -1;
+    foundIndex = -1;
     for (i = 0; i < ownerData->m_townCount; i++) {
         if (ownerData->m_townIds[i] == m_id)
-            found = i;
+            foundIndex = i;
     }
-    for (i = found; i < ownerData->m_townCount - 1; i++)
+    for (i = foundIndex; i < ownerData->m_townCount - 1; i++)
         ownerData->m_townIds[i] = ownerData->m_townIds[i + 1];
     ownerData->m_townIds[ownerData->m_townCount - 1] = GAME_TOWN_NONE;
     if (ownerData->m_currentTown == m_id)

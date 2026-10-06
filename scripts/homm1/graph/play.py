@@ -28,9 +28,10 @@ The per-user state directory (`$XDG_DATA_HOME/homm1-buka`, or `--state`):
                its own settings there on its first start.
     play.json  the --game sources and the last locale played.
 
-WinG resolves to Wine's built-in wing32, DirectDraw to Wine's. The Russian
-build runs under a Russian locale, so its window title and message boxes show
-their Windows-1251 text.
+WinG resolves to Wine's built-in wing32, DirectDraw to Wine's. Each language
+runs under the system locale of its descriptor (locales/<LANG>.json; ru_RU
+for Russian), so the window title and message boxes show the text in the
+language's Windows code page.
 """
 
 from __future__ import annotations
@@ -55,8 +56,6 @@ DESKTOP = "640x480"
 #: Seconds within which a failed full-screen start suggests --window.
 QUICK_EXIT = 30
 WINE_ENV = {"WINEDLLOVERRIDES": "mscoree,mshtml="}
-#: The Russian build's text is Windows-1251.
-LOCALE_ENV = {"ru": "ru_RU.UTF-8"}
 
 #: The resource archive every screen reads: path, size, SHA-256.
 AGG = ("DATA/heroes.agg", 21661575,
@@ -455,11 +454,23 @@ def stand_in_tracks(state: Path, dry_run: bool) -> None:
 # Wine
 # --------------------------------------------------------------------------
 
+def descriptors() -> dict[str, dict]:
+    """The languages of the nearest locales/ (the source tree's, or the
+    checkout's): {code: descriptor}."""
+    here = Path(__file__).resolve().parent
+    for root in (here, *here.parents):
+        found = sorted((root / "locales").glob("*.json"))
+        if found:
+            return {path.stem: json.loads(path.read_text(encoding="utf-8")) for path in found}
+    return {}
+
+
 def wine_env(state: Path, locale: str) -> dict[str, str]:
     env = dict(os.environ, WINEPREFIX=str(state / "prefix"), **WINE_ENV)
     env.setdefault("WINEDEBUG", "-all")
-    if locale in LOCALE_ENV:
-        env["LC_ALL"] = LOCALE_ENV[locale]
+    system_locale = descriptors().get(locale, {}).get("system_locale")
+    if system_locale:
+        env["LC_ALL"] = system_locale
         archive = os.environ.get("HOMM1_LOCALE_ARCHIVE")
         if archive:
             env["LOCALE_ARCHIVE"] = env["LOCALE_ARCHIVE_2_27"] = archive
@@ -579,7 +590,7 @@ def add_arguments(parser: argparse.ArgumentParser, *, standalone: bool) -> None:
                         help="the game copy: installed folder, CD folder, or .iso/.zip/.7z "
                              "image; repeatable; needed on the first run only")
     if standalone:
-        parser.add_argument("--locale", choices=("ru", "en"),
+        parser.add_argument("--locale", choices=sorted(descriptors()) or None,
                             help="program language (default: the last one played, else ru)")
         parser.add_argument("--rebuild", action="store_true",
                             help="rebuild HEROES.EXE even if the sources did not change")

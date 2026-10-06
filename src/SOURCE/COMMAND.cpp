@@ -884,8 +884,8 @@ i16 WinCombatHandler(struct tag_message& message) {
     }
     if (gTimers[COMBAT_FRAME_TIMER_SLOT] < KBTickCount()) {
         SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_FRAME, WIN_LOSE_ANIMATION);
-        gGame->m_viewArmyResult++;
-        message.value = gGame->m_viewArmyResult % 6 + 1;
+        gGame->m_dialogAnimationCounter++;
+        message.value = gGame->m_dialogAnimationCounter % 6 + 1;
         gCombatManager->m_winLoseWindow->BroadcastMessage(message);
         gCombatManager->m_winLoseWindow->DrawWindow();
         gTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 0x5a;

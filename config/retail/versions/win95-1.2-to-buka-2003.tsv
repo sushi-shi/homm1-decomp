@@ -156,7 +156,7 @@ old_rva	new_rva	name	note
 0x000113e0	0x0002b7d3	?NextHero@playerData@@QAECH@Z	
 0x000114e2	0x000114e2	?DrawAdventureBorder@advManager@@QAEXXZ	
 0x0001150c	0x0002b8d3	?HasMobileHero@playerData@@QAECXZ	
-0x00011574	0x0002b929	?CountVisitedObelisks@playerData@@QAECXZ	
+0x00011574	0x0002b929	?CountPuzzlePiecesRemoved@playerData@@QAECXZ	
 0x000115d3	0x0002b97f	?BuildingsOwned@playerData@@QAEHHHH@Z	
 0x000116a4	0x0002ba35	?NumOfGivenArtifact@playerData@@QAEHH@Z	
 0x0001173d	0x0002bab9	?ComputeUALoc@@YAXH@Z	
@@ -437,7 +437,7 @@ old_rva	new_rva	name	note
 0x0002aaf9	0x00049dfe	?DetermineTargetPosition@philAI@@QAEXPAVhero@@AAC1F@Z	
 0x0002ac90	0x0002ac90	?FlyTo@army@@QAEFXZ	
 0x0002b42b	0x0004a69b	?ProbableOutcomeOfBattle@philAI@@QAEXPAVarmyGroup@@PAVhero@@010CCHAAMAAH3333@Z	
-0x0002b929	0x0002b929	?CountVisitedObelisks@playerData@@QAECXZ	
+0x0002b929	0x0002b929	?CountPuzzlePiecesRemoved@playerData@@QAECXZ	
 0x0002b97f	0x0002b97f	?BuildingsOwned@playerData@@QAEHHHH@Z	
 0x0002ba35	0x0002ba35	?NumOfGivenArtifact@playerData@@QAEHH@Z	
 0x0002ba65	0x0004abfa	?GetOddsOfWinning@philAI@@QAEMH@Z	

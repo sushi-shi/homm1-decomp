@@ -258,7 +258,7 @@ rva	name
 0x0002b5f2	?Read@playerData@@QAEXH@Z
 0x0002b7d3	?NextHero@playerData@@QAECH@Z
 0x0002b8d3	?HasMobileHero@playerData@@QAECXZ
-0x0002b929	?CountVisitedObelisks@playerData@@QAECXZ
+0x0002b929	?CountPuzzlePiecesRemoved@playerData@@QAECXZ
 0x0002b97f	?BuildingsOwned@playerData@@QAEHHHH@Z
 0x0002ba35	?NumOfGivenArtifact@playerData@@QAEHH@Z
 0x0002bab9	?ComputeUALoc@@YAXH@Z

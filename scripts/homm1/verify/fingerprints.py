@@ -67,7 +67,7 @@ def cpp_hash(source: str) -> str:
 
 def _sha12(text: str) -> str:
     from homm1.graph.catalog import Catalog
-    if (REPO / "locales/messages.def").is_file():
+    if (REPO / "locales/messages.pot").is_file():
         from homm1.graph.localization import matching_locale
         text = Catalog.load(REPO).render(text, expanded=True, locale=matching_locale(REPO))
     return hashlib.sha1(text.encode("utf-8", "replace")).hexdigest()[:12]

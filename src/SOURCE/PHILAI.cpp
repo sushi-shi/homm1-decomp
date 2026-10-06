@@ -1374,7 +1374,7 @@ void philAI::ValueOfBuyingBuilding(
             for (level = 0; level < BUILDING_SLOT_DWELLING_COUNT; level++) {
                 dwellingCreature = gDwellingType[townPointer->m_type][level];
                 if ((townPointer->m_buildings & (1 << (level + BUILDING_SLOT_DWELLING_FIRST)))
-                    && townPointer->m_garrison[level] > 0
+                    && townPointer->m_dwellingAvailable[level] > 0
                     && gMonsterDatabase[dwellingCreature].iconIndex * 1.2
                            > gMonsterDatabase[gDwellingType[townPointer->m_type]
                                                            [building
@@ -1544,7 +1544,7 @@ void philAI::GetBestCreature(town* townPointer, BHC& best, float& bestValue) {
     for (dwelling = 0; dwelling < BUILDING_SLOT_DWELLING_COUNT; dwelling++) {
         creature = gDwellingType[townPointer->m_type][dwelling];
         if ((townPointer->m_buildings & (1 << (dwelling + BUILDING_SLOT_DWELLING_FIRST)))
-            && townPointer->m_garrison[dwelling] > 0) {
+            && townPointer->m_dwellingAvailable[dwelling] > 0) {
             canAdd = 0;
             for (armyIndex = 0; armyIndex < ARMY_GROUP_SLOT_COUNT; armyIndex++) {
                 if (townPointer->m_army.m_creatureTypes[armyIndex] == CREATURE_NONE
@@ -1582,7 +1582,7 @@ void philAI::GetBestCreature(town* townPointer, BHC& best, float& bestValue) {
 // The town overload indexes the six dwelling stocks and faction table.
 VA(0x0044b605, 0x3f)
 i32 philAI::CreaturesToBuy(town* townPointer, i32 level) {
-    i32 availableCount = townPointer->m_garrison[level];
+    i32 availableCount = townPointer->m_dwellingAvailable[level];
     return CreaturesToBuy(gDwellingType[townPointer->m_type][level], availableCount);
 }
 
@@ -2163,7 +2163,7 @@ float philAI::TurnValueOfObelisk(i32 player) {
     ai->m_obeliskValue = each * 48 / gGame->m_obeliskCount;
     ai->m_obeliskValue = static_cast<i32>(
         ai->m_obeliskValue
-        * (1.5 - abs(32 - gGame->m_players[player].CountVisitedObelisks()) / 48.0f)
+        * (1.5 - abs(32 - gGame->m_players[player].CountPuzzlePiecesRemoved()) / 48.0f)
     );
     ai->m_obeliskValue =
         static_cast<i32>(ai->m_obeliskValue * (ai->m_attentionWeights.heroValue + 0.66));
@@ -2840,7 +2840,7 @@ void philAI::BuildBuilding(town* townPointer, i16 building) {
     }
     townPointer->m_buildings |= 1 << building;
     if (building >= BUILDING_SLOT_DWELLING_FIRST && building <= BUILDING_SLOT_DWELLING_LAST)
-        townPointer->m_garrison[building - BUILDING_SLOT_DWELLING_FIRST] =
+        townPointer->m_dwellingAvailable[building - BUILDING_SLOT_DWELLING_FIRST] =
             gMonsterDatabase[gDwellingType[townPointer->m_type]
                                           [building - BUILDING_SLOT_DWELLING_FIRST]]
                 .growth;
@@ -2901,7 +2901,7 @@ void philAI::BuildCreature(town* townPointer, i32 dwelling, i32 purchaseCount) {
     GetMonsterCost(creature, cost);
     for (n = 0; n < RESOURCE_COUNT; n++)
         gCurPlayerData->m_resources[n] -= purchaseCount * cost[n];
-    townPointer->m_garrison[dwelling] -= purchaseCount;
+    townPointer->m_dwellingAvailable[dwelling] -= purchaseCount;
     townPointer->m_army.Add(creature, purchaseCount, ARMY_GROUP_EMPTY_SLOT);
     ShowStatus();
 }
@@ -2924,7 +2924,7 @@ i32 philAI::CanBuyBHC(BHC& purchase) {
             break;
         case PURCHASE_CREATURE:
             creature = gDwellingType[purchase.townPointer->m_type][purchase.what];
-            if (purchase.num > purchase.townPointer->m_garrison[purchase.what])
+            if (purchase.num > purchase.townPointer->m_dwellingAvailable[purchase.what])
                 return 0;
             if (!purchase.townPointer->m_army.CanJoin(creature))
                 return 0;
