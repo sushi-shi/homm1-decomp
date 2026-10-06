@@ -28,6 +28,19 @@ int strcmpi(const char* left, const char* right) {
     return stricmp(left, right);
 }
 
+// The original's generator (/MT keeps it per thread; the game draws numbers on
+// one thread only).
+static unsigned int gMsvcRandState = 1;
+
+int MsvcRand(void) {
+    gMsvcRandState = gMsvcRandState * 214013u + 2531011u;
+    return static_cast<int>((gMsvcRandState >> 16) & 0x7fffu);
+}
+
+void MsvcSrand(unsigned int seed) {
+    gMsvcRandState = seed;
+}
+
 char* strrev(char* text) {
     size_t length = strlen(text);
     for (size_t i = 0; i < length / 2; i++) {

@@ -163,6 +163,7 @@ target_link_options(homm1_platform PUBLIC ${HOMM1_SANITIZE_FLAGS})
 target_compile_definitions(homm1_platform PRIVATE HOMM1_PORT=1 HOMM1_CODEPAGE=${HOMM1_CODEPAGE})
 target_link_libraries(homm1_platform PUBLIC SDL3::SDL3 PkgConfig::FFMPEG)
 if(WIN32)
+  target_link_libraries(homm1_platform PUBLIC ws2_32)
   # MinGW: the C++ runtime is linked in; the programs then need only SDL3,
   # FFmpeg and the compiler's thread library beside them.
   target_link_options(homm1_platform PUBLIC -static-libgcc -static-libstdc++)

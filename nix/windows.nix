@@ -38,7 +38,7 @@ cross.stdenv.mkDerivation {
         case "$dll" in
           kernel32.dll|user32.dll|gdi32.dll|advapi32.dll|shell32.dll|ole32.dll|oleaut32.dll| \
           imm32.dll|winmm.dll|version.dll|setupapi.dll|cfgmgr32.dll|bcrypt.dll|msvcrt.dll| \
-          ntdll.dll|uxtheme.dll|dwmapi.dll|shcore.dll|hid.dll|api-ms-win-*) ;;
+          ntdll.dll|uxtheme.dll|dwmapi.dll|shcore.dll|hid.dll|ws2_32.dll|api-ms-win-*) ;;
           *) echo "$shipped" | grep -qx "$dll" || { echo "$program imports $dll, which is not shipped"; exit 1; } ;;
         esac
       done

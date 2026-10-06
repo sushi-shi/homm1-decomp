@@ -44,6 +44,7 @@
 #include <SOURCE/dialogTypes.h>
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/REMOTE.h>
+#include <SOURCE/remoteRecords.h>
 #include <SOURCE/saveRecords.h>
 #include <SOURCE/resourceTypes.h>
 #include <SOURCE/smackManager.h>
@@ -395,6 +396,7 @@ i32 oldmain(void) {
             goto processMenuCommand;
         if (!leave) {
             if (gRemoteOn && !gThisNetPos) {
+                RecordWriter setupRecord;
                 netIndex = NET_POSITION_HOST;
                 for (gamePlayer = 0; gamePlayer < GAME_PLAYER_COUNT; gamePlayer++) {
                     if (gHumanPlayer[gamePlayer]) {
@@ -404,16 +406,13 @@ i32 oldmain(void) {
                         gGamePosToNetPos[gamePlayer] = NET_POSITION_NONE;
                     }
                 }
-                for (gamePlayer = 0; gamePlayer < GAME_PLAYER_COUNT; gamePlayer++)
-                    memcpy(gText, gGamePosToNetPos, GAME_PLAYER_COUNT);
+                WriteRemoteSetup(setupRecord, gGamePosToNetPos);
                 gHostGamePos = NetPosToGamePos(NET_POSITION_HOST);
                 gThisGamePos = gHostGamePos;
-                for (gamePlayer = NET_POSITION_FIRST_GUEST; gamePlayer < gNumHumanPlayers;
-                     gamePlayer++) {
-                    sendResult = TransmitRemoteData(
-                        gText,
+                for (gamePlayer = NET_POSITION_FIRST_GUEST; gamePlayer < gNumHumanPlayers; gamePlayer++) {
+                    sendResult = TransmitRemoteRecord(
+                        setupRecord,
                         gamePlayer,
-                        4,
                         BOX_REMOTE_SETUP,
                         true,
                         true,
@@ -1521,13 +1520,17 @@ void HandleRemoteDeadPlayerExit(i32 position) {
             ShutDown(NULL);
         RemoteCleanup();
     } else if (gNumHumanPlayers == REMOTE_PLAYER_COUNT) {
+        RemotePlayerExit playerExit;
+        RecordWriter exitRecord;
         gNumHumanPlayers--;
-        gText[REMOTE_PLAYER_EXIT_POSITION] = position;
-        gText[REMOTE_PLAYER_EXIT_HAD_CONTROL] = 0;
-        TransmitRemoteData(
-            gText,
+        playerExit.position = position;
+        playerExit.hadControl = 0;
+        // The original left the third byte as gText held it.
+        playerExit.nextPlayer = 0;
+        WriteRemotePlayerExit(exitRecord, playerExit);
+        TransmitRemoteRecord(
+            exitRecord,
             REMOTE_BROADCAST_PLAYER,
-            REMOTE_PLAYER_EXIT_PAYLOAD_SIZE,
             REMOTE_COMMAND_PLAYER_EXIT,
             false,
             false,
@@ -1540,24 +1543,29 @@ void HandleRemoteDeadPlayerExit(i32 position) {
 
 void HandleRemoteSuddenExit(void) {
     i32 next;
+    RemotePlayerExit playerExit;
+    RecordWriter exitRecord;
     if (!gGameInitialized)
         return;
-    gText[REMOTE_PLAYER_EXIT_POSITION] = gThisGamePos;
+    playerExit.position = gThisGamePos;
+    // The original left the third byte as gText held it when the player
+    // leaving had no control.
+    playerExit.nextPlayer = 0;
     if (gThisNetHumanPlayer[gCurPlayer]
         || (!gHumanPlayer[gCurPlayer] && gThisGamePos == gHostGamePos)) {
-        gText[REMOTE_PLAYER_EXIT_HAD_CONTROL] = 1;
+        playerExit.hadControl = 1;
         next = gCurPlayer;
         next = (next + 1) % gGame->m_playerCount;
         while (!gHumanPlayer[next])
             next = (next + 1) % gGame->m_playerCount;
-        gText[REMOTE_PLAYER_EXIT_NEXT_PLAYER] = next;
+        playerExit.nextPlayer = next;
     } else {
-        gText[REMOTE_PLAYER_EXIT_HAD_CONTROL] = 0;
+        playerExit.hadControl = 0;
     }
-    TransmitRemoteData(
-        gText,
+    WriteRemotePlayerExit(exitRecord, playerExit);
+    TransmitRemoteRecord(
+        exitRecord,
         REMOTE_BROADCAST_PLAYER,
-        REMOTE_PLAYER_EXIT_PAYLOAD_SIZE,
         REMOTE_COMMAND_PLAYER_EXIT,
         false,
         false,
@@ -2067,14 +2075,17 @@ b8 WaitForOtherPlayer(void) {
     PollSound();
     received = GetRemoteData(true);
     if (received && received->type == REMOTE_MESSAGE_RELIABLE) {
+        RecordReader payload = RemotePayloadReader(*received);
+        RemoteSaveHeader saveHeader;
         switch (received->command) {
             case BOX_REMOTE_SETUP:
-                memcpy(gGamePosToNetPos, received->payload.data, GAME_PLAYER_COUNT);
+                ReadRemoteSetup(payload, gGamePosToNetPos);
                 gThisGamePos = NetPosToGamePos(gThisNetPos);
                 gHostGamePos = NetPosToGamePos(NET_POSITION_HOST);
                 break;
             case BOX_REMOTE_SAVE:
-                result = gGame->ReceiveSaveGame(received->payload.saveSize, received->sender);
+                ReadRemoteSaveHeader(payload, saveHeader);
+                result = gGame->ReceiveSaveGame(saveHeader.saveSize, received->sender);
                 break;
         }
     }
@@ -2263,8 +2274,10 @@ void PopNetBox(char* notice) {
 }
 
 void AddNetBoxLine(char* text) {
+    // A peer's chat line can be longer than a line holds.
     strcpy(gNetBoxLine[NET_BOX_SLOT_PREVIOUS], gNetBoxLine[NET_BOX_SLOT_LATEST]);
-    strcpy(gNetBoxLine[NET_BOX_SLOT_LATEST], text);
+    strncpy(gNetBoxLine[NET_BOX_SLOT_LATEST], text, sizeof(gNetBoxLine[1]) - 1);
+    gNetBoxLine[1][sizeof(gNetBoxLine[1]) - 1] = 0;
 }
 
 b8 gKBDone = false;

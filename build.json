@@ -932,6 +932,19 @@
           ]
         },
         {
+          "unit": "SOURCE/REMOTEREC",
+          "source": "src/SOURCE/REMOTEREC.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob2",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
           "unit": "SOURCE/KBCOMMON",
           "source": "src/SOURCE/KBCOMMON.cpp",
           "flags": [
@@ -986,6 +999,7 @@
           "PLATFORM/File",
           "PLATFORM/Records",
           "SOURCE/SAVEREC",
+          "SOURCE/REMOTEREC",
           "SOURCE/KBCOMMON"
         ],
         "members": [

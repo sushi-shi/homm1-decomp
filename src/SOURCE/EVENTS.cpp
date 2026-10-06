@@ -29,6 +29,8 @@
 #include <SOURCE/playerData.h>
 #include <SOURCE/recruitUnit.h>
 #include <SOURCE/REMOTE.h>
+#include <SOURCE/remoteRecords.h>
+#include <SOURCE/saveRecords.h>
 #include <SOURCE/searchArray.h>
 #include <SOURCE/swapManager.h>
 #include <SOURCE/town.h>
@@ -2783,6 +2785,10 @@ combatFinished:
         firstHero->CheckLevel();
     if (secondHero)
         secondHero->CheckLevel();
+    // Both peers fight a battle between their players; the outcome must agree.
+    if (gRemoteOn && attackPlayer >= 0 && defenderSide >= 0 && gHumanPlayer[attackPlayer]
+        && gHumanPlayer[defenderSide])
+        RemoteTraceCombat("combat");
     if (processLosses) {
         switch (gCombatManager->m_combatResult) {
             case COMBAT_RESULT_ATTACKER:
@@ -2837,41 +2843,39 @@ void advManager::SendHeroTownData(
 ) {
     RemoteMessage* reply;
     i32 result;
-    union {
-        combatRemoteData* combat;
-        combatRemoteHeroFragment* heroFragment;
-    } buffer;
+    combatRemoteData combat;
+    RecordWriter combatRecord;
 
-    buffer.combat = NULL;
-    buffer.combat = static_cast<combatRemoteData*>(malloc(COMBAT_REMOTE_BUFFER_SIZE));
     reply = NULL;
-    buffer.combat->fragment = COMBAT_REMOTE_FRAGMENT_COMBAT;
-    buffer.combat->x = x;
-    buffer.combat->y = y;
-    buffer.combat->hasFirstHero = firstHero != NULL;
-    buffer.combat->hasTown = combatTown != NULL;
-    buffer.combat->hasSecondHero = secondHero != NULL;
-    buffer.combat->setupCombatX = setupCombatX;
-    buffer.combat->setupCombatY = setupCombatY;
-    buffer.combat->randomSeed = randomSeed;
-    buffer.combat->combatResult = combatResult;
-    buffer.combat->retreatWin = retreatWin;
-    buffer.combat->combatSurrender = combatSurrender;
-    buffer.combat->firstOwner = firstHero ? firstHero->m_owner : -1;
-    buffer.combat->firstGold =
+    combat.fragment = COMBAT_REMOTE_FRAGMENT_COMBAT;
+    combat.x = x;
+    combat.y = y;
+    combat.hasFirstHero = firstHero != NULL;
+    combat.hasTown = combatTown != NULL;
+    combat.hasSecondHero = secondHero != NULL;
+    combat.setupCombatX = setupCombatX;
+    combat.setupCombatY = setupCombatY;
+    combat.randomSeed = randomSeed;
+    combat.combatResult = combatResult;
+    combat.retreatWin = retreatWin;
+    combat.combatSurrender = combatSurrender;
+    combat.firstOwner = firstHero ? firstHero->m_owner : -1;
+    combat.firstGold =
         firstHero ? gGame->m_players[firstHero->m_owner].m_resources[RESOURCE_GOLD] : 0;
-    buffer.combat->secondOwner = secondHero ? secondHero->m_owner : -1;
-    buffer.combat->secondGold =
+    combat.secondOwner = secondHero ? secondHero->m_owner : -1;
+    combat.secondGold =
         secondHero ? gGame->m_players[secondHero->m_owner].m_resources[RESOURCE_GOLD] : 0;
-    memcpy(&buffer.combat->firstArmy, firstArmy, sizeof(armyGroup));
-    memcpy(&buffer.combat->secondArmy, secondArmy, sizeof(armyGroup));
+    combat.firstArmy = *firstArmy;
+    combat.secondArmy = *secondArmy;
+    // Without a town the original sent what its buffer held there.
+    memset(&combat.combatTown, 0, sizeof(combat.combatTown));
     if (combatTown)
-        memcpy(&buffer.combat->combatTown, combatTown, sizeof(town));
+        combat.combatTown = *combatTown;
+    WriteCombatRemoteData(combatRecord, combat);
 
-    result = TransmitAndWait(
-        buffer.combat,
+    result = TransmitAndWaitRecord(
+        combatRecord,
         remotePlayer,
-        sizeof(combatRemoteData),
         REMOTE_COMMAND_HERO_TOWN_DATA,
         REMOTE_COMMAND_HERO_TOWN_CONFIRM,
         &reply
@@ -2880,32 +2884,19 @@ void advManager::SendHeroTownData(
         ShutDown(NULL);
 
     if (firstHero) {
-        buffer.heroFragment->fragment = COMBAT_REMOTE_FRAGMENT_FIRST_HERO;
-        memcpy(buffer.heroFragment->data, firstHero, sizeof(hero));
-        result = TransmitRemoteData(
-            buffer.heroFragment,
-            remotePlayer,
-            sizeof(combatRemoteHeroFragment),
-            REMOTE_COMMAND_HERO_TOWN_DATA,
-            true
-        );
+        RecordWriter heroRecord;
+        WriteCombatRemoteHero(heroRecord, COMBAT_REMOTE_FRAGMENT_FIRST_HERO, *firstHero);
+        result = TransmitRemoteRecord(heroRecord, remotePlayer, REMOTE_COMMAND_HERO_TOWN_DATA, true);
         if (!result)
             ShutDown(NULL);
     }
     if (secondHero) {
-        buffer.heroFragment->fragment = COMBAT_REMOTE_FRAGMENT_SECOND_HERO;
-        memcpy(buffer.heroFragment->data, secondHero, sizeof(hero));
-        result = TransmitRemoteData(
-            buffer.heroFragment,
-            remotePlayer,
-            sizeof(combatRemoteHeroFragment),
-            REMOTE_COMMAND_HERO_TOWN_DATA,
-            true
-        );
+        RecordWriter heroRecord;
+        WriteCombatRemoteHero(heroRecord, COMBAT_REMOTE_FRAGMENT_SECOND_HERO, *secondHero);
+        result = TransmitRemoteRecord(heroRecord, remotePlayer, REMOTE_COMMAND_HERO_TOWN_DATA, true);
         if (!result)
             ShutDown(NULL);
     }
-    free(buffer.combat);
 }
 
 void advManager::ReceiveHeroTownData(
@@ -2932,6 +2923,9 @@ void advManager::ReceiveHeroTownData(
     i8 secondOwner;
     b8 bFirstHero;
     b8 hasSecondHero;
+    i8 fragment;
+    combatRemoteData combat;
+    RecordReader combatRecord = RemotePayloadReader(*packet);
 
     *firstHero = NULL;
     *firstArmy = NULL;
@@ -2939,34 +2933,35 @@ void advManager::ReceiveHeroTownData(
     *secondHero = NULL;
     *secondArmy = NULL;
     bFirstHero = hasSecondHero = hasTownOn = false;
+    ReadCombatRemoteData(combatRecord, combat);
+    if (!combatRecord.Ok())
+        ShutDown(localization::Tr("combat.network.canceled"));
     *remotePlayer = packet->sender;
-    *x = EVENTS_REMOTE_MESSAGE(packet)->combat.x;
-    *y = EVENTS_REMOTE_MESSAGE(packet)->combat.y;
-    bFirstHero = EVENTS_REMOTE_MESSAGE(packet)->combat.hasFirstHero;
-    hasTownOn = EVENTS_REMOTE_MESSAGE(packet)->combat.hasTown;
-    hasSecondHero = EVENTS_REMOTE_MESSAGE(packet)->combat.hasSecondHero;
-    *setupCombatX = EVENTS_REMOTE_MESSAGE(packet)->combat.setupCombatX;
-    *setupCombatY = EVENTS_REMOTE_MESSAGE(packet)->combat.setupCombatY;
-    *randomSeed = EVENTS_REMOTE_MESSAGE(packet)->combat.randomSeed;
-    *combatResult = EVENTS_REMOTE_MESSAGE(packet)->combat.combatResult;
-    *retreatWin = EVENTS_REMOTE_MESSAGE(packet)->combat.retreatWin;
-    *combatSurrender = EVENTS_REMOTE_MESSAGE(packet)->combat.combatSurrender;
-    firstOwner = EVENTS_REMOTE_MESSAGE(packet)->combat.firstOwner;
+    *x = combat.x;
+    *y = combat.y;
+    bFirstHero = combat.hasFirstHero;
+    hasTownOn = combat.hasTown;
+    hasSecondHero = combat.hasSecondHero;
+    *setupCombatX = combat.setupCombatX;
+    *setupCombatY = combat.setupCombatY;
+    *randomSeed = combat.randomSeed;
+    *combatResult = combat.combatResult;
+    *retreatWin = combat.retreatWin;
+    *combatSurrender = combat.combatSurrender;
+    firstOwner = combat.firstOwner;
     if (firstOwner > 0)
-        gGame->m_players[firstOwner].m_resources[RESOURCE_GOLD] =
-            EVENTS_REMOTE_MESSAGE(packet)->combat.firstGold;
-    secondOwner = EVENTS_REMOTE_MESSAGE(packet)->combat.secondOwner;
+        gGame->m_players[firstOwner].m_resources[RESOURCE_GOLD] = combat.firstGold;
+    secondOwner = combat.secondOwner;
     if (secondOwner > 0)
-        gGame->m_players[secondOwner].m_resources[RESOURCE_GOLD] =
-            EVENTS_REMOTE_MESSAGE(packet)->combat.secondGold;
+        gGame->m_players[secondOwner].m_resources[RESOURCE_GOLD] = combat.secondGold;
 
     *firstArmy = static_cast<armyGroup*>(malloc(sizeof(armyGroup)));
-    memcpy(*firstArmy, &EVENTS_REMOTE_MESSAGE(packet)->combat.firstArmy, sizeof(armyGroup));
+    memcpy(*firstArmy, &combat.firstArmy, sizeof(armyGroup));
     *secondArmy = static_cast<armyGroup*>(malloc(sizeof(armyGroup)));
-    memcpy(*secondArmy, &EVENTS_REMOTE_MESSAGE(packet)->combat.secondArmy, sizeof(armyGroup));
+    memcpy(*secondArmy, &combat.secondArmy, sizeof(armyGroup));
     if (hasTownOn) {
         *combatTown = static_cast<town*>(malloc(sizeof(town)));
-        memcpy(*combatTown, &EVENTS_REMOTE_MESSAGE(packet)->combat.combatTown, sizeof(town));
+        memcpy(*combatTown, &combat.combatTown, sizeof(town));
     }
 
     confirmSent =
@@ -2990,17 +2985,19 @@ void advManager::ReceiveHeroTownData(
         packet = GetRemoteData(true);
         if (packet && packet->type == REMOTE_MESSAGE_RELIABLE
             && packet->command == REMOTE_COMMAND_HERO_TOWN_DATA) {
+            RecordReader heroRecord = RemotePayloadReader(*packet);
             lastReceiveTick = KBTickCount();
-            if (EVENTS_REMOTE_HERO(packet)->heroFragment.fragment
-                == COMBAT_REMOTE_FRAGMENT_FIRST_HERO) {
+            fragment = ReadCombatRemoteFragment(heroRecord);
+            if (fragment == COMBAT_REMOTE_FRAGMENT_FIRST_HERO) {
                 *firstHero = static_cast<hero*>(malloc(sizeof(hero)));
-                memcpy(*firstHero, EVENTS_REMOTE_HERO(packet)->heroFragment.data, sizeof(hero));
+                ReadHero(heroRecord, **firstHero);
             }
-            if (EVENTS_REMOTE_HERO(packet)->heroFragment.fragment
-                == COMBAT_REMOTE_FRAGMENT_SECOND_HERO) {
+            if (fragment == COMBAT_REMOTE_FRAGMENT_SECOND_HERO) {
                 *secondHero = static_cast<hero*>(malloc(sizeof(hero)));
-                memcpy(*secondHero, EVENTS_REMOTE_HERO(packet)->heroFragment.data, sizeof(hero));
+                ReadHero(heroRecord, **secondHero);
             }
+            if (!heroRecord.Ok())
+                ShutDown(localization::Tr("combat.network.canceled"));
         }
     }
 }

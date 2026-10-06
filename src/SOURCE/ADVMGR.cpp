@@ -45,6 +45,7 @@
 #include <SOURCE/philAI.h>
 #include <SOURCE/playerData.h>
 #include <SOURCE/REMOTE.h>
+#include <SOURCE/remoteRecords.h>
 #include <SOURCE/searchArray.h>
 #include <SOURCE/town.h>
 #include <SOURCE/wingraph.h>
@@ -6492,16 +6493,17 @@ void advManager::LoadRemote(void) {
 RemoteMessage* advManager::CheckHandleNet(void) {
     RemoteMessage* receivedPacket;
     i32 exitedFlag;
+    RemoteSaveHeader saveHeader;
+    RemotePlayerExit playerExit;
 
     receivedPacket = GetRemoteData(true);
     if (receivedPacket && receivedPacket->type == REMOTE_MESSAGE_RELIABLE) {
+        RecordReader payload = RemotePayloadReader(*receivedPacket);
         switch (receivedPacket->command) {
             case BOX_REMOTE_SAVE:
-                exitedFlag = receivedPacket->payload.playerExited;
-                if (!gGame->ReceiveSaveGame(
-                        receivedPacket->payload.saveSize,
-                        receivedPacket->sender
-                    ))
+                ReadRemoteSaveHeader(payload, saveHeader);
+                exitedFlag = saveHeader.playerExited;
+                if (!gGame->ReceiveSaveGame(saveHeader.saveSize, receivedPacket->sender))
                     ShutDown(NULL);
                 if (exitedFlag)
                     ReceiveRemotePlayerExit(receivedPacket->sender, 0, true, false);
@@ -6517,12 +6519,8 @@ RemoteMessage* advManager::CheckHandleNet(void) {
                     DoNetCombat(receivedPacket);
                 break;
             case REMOTE_COMMAND_PLAYER_EXIT:
-                ReceiveRemotePlayerExit(
-                    receivedPacket->payload.data[REMOTE_PLAYER_EXIT_POSITION],
-                    receivedPacket->payload.data[REMOTE_PLAYER_EXIT_HAD_CONTROL],
-                    false,
-                    false
-                );
+                ReadRemotePlayerExit(payload, playerExit);
+                ReceiveRemotePlayerExit(playerExit.position, playerExit.hadControl, false, false);
                 break;
             default:
                 return receivedPacket;

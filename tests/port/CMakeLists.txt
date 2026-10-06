@@ -22,6 +22,11 @@ homm1_test(records_test
   SOURCES records_test.cpp
   GAME_SOURCES ${CMAKE_SOURCE_DIR}/src/SOURCE/SAVEREC.cpp)
 
+# The network and serial message codecs, with golden packets.
+homm1_test(remote_records_test
+  SOURCES remote_records_test.cpp
+  GAME_SOURCES ${CMAKE_SOURCE_DIR}/src/SOURCE/REMOTEREC.cpp ${CMAKE_SOURCE_DIR}/src/SOURCE/SAVEREC.cpp)
+
 homm1_test(file_test
   SOURCES file_test.cpp)
 
@@ -85,3 +90,10 @@ if(HOMM1_SURVEY)
   add_executable(homm1_editor_survey survey/editor_survey.cpp)
   target_link_libraries(homm1_editor_survey PRIVATE homm1_editor_units)
 endif()
+
+# Two instances play network, direct-connection and modem games on localhost
+# with scripted input, through a battle, comparing state hashes at every
+# hand-off (needs HOMM1_DATA and xvfb-run).
+add_test(NAME net_game_test
+  COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/net_game_test.py $<TARGET_FILE:homm1>)
+set_tests_properties(net_game_test PROPERTIES SKIP_RETURN_CODE 77 TIMEOUT 1200)
