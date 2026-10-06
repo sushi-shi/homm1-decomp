@@ -566,7 +566,7 @@ i32 gTriggerX = 0;
 DATA(0x004a674c)
 i32 gTriggerY = 0;
 DATA(0x004a6750)
-i32 gCurBottomView = BOTTOM_VIEW_NONE;
+H1_ENUM_STORAGE(BottomViewMode, i32) gCurBottomView = BOTTOM_VIEW_NONE;
 DATA(0x004a6754)
 i32 gCurHourGlassPhase = 0;
 DATA(0x004a6758)

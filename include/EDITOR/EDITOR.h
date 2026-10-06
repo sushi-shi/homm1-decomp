@@ -64,11 +64,11 @@ H1_ENUM_CONST_BEGIN(EditorToolHelpConstant)
     EDITOR_OVERLAY_TOOL_HELP_COUNT = 2
 H1_ENUM_CONST_END(EditorToolHelpConstant)
 
-extern char* gTerrainToolHelp[];
-extern char* gClearToolHelp[];
+extern H1_ENUM_ARRAY(char*, gTerrainToolHelp, TerrainToolHelp, EDITOR_TERRAIN_TOOL_HELP_COUNT);
+extern H1_ENUM_ARRAY(char*, gClearToolHelp, ClearToolHelp, EDITOR_CLEAR_TOOL_HELP_COUNT);
 
 // The object tool's preview-border help and category names.
-extern char* gOverlayToolHelp[];
+extern H1_ENUM_ARRAY(char*, gOverlayToolHelp, OverlayToolHelp, EDITOR_OVERLAY_TOOL_HELP_COUNT);
 extern char* gOverlayCategoryNames[];
 // The category the object tool places from and the one its panel shows.
 extern i32 gOverlayCategory;

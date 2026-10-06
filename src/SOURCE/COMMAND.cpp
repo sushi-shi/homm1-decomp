@@ -51,7 +51,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) combatManager::Main(struct tag_messag
     if (packet && packet->type == REMOTE_MESSAGE_RELIABLE) {
         switch (packet->command) {
             case REMOTE_COMMAND_COMBAT_ACTION:
-                gNextAction = packet->payload.combatAction.nextAction;
+                gNextAction = H1_ENUM_DECODE(CombatAction, packet->payload.combatAction.nextAction);
                 gNextActionExtra = packet->payload.combatAction.nextActionExtra;
                 gNextActionGridIndex = packet->payload.combatAction.nextActionGridIndex;
                 gNextActionGridIndex2 = packet->payload.combatAction.nextActionGridIndex2;
@@ -295,14 +295,14 @@ void combatManager::SetCombatDirections(i32 targetHex) {
 #define sector slot // frame-slot spelling
 VA(0x0041de87, 0x564)
 void combatManager::CheckSetMouseDirection(i32 mouseX, i32 mouseY, i32 targetHex) {
-    H1_ENUM_LOCAL(CombatHexDirection, i32) yPos;
+    i32 yPos;
     H1_ENUM_LOCAL(CombatHexDirection, i32) directionCopy;
     H1_ENUM_LOCAL(CombatHexDirection, i32) alternateDirection;
     float endRatio;
     i32 sector;
     i32 rearHex;
     i32 xPos;
-    i32 hexDir;
+    H1_ENUM_LOCAL(CombatHexDirection, i32) hexDir;
     army* enemyArmy;
     army* movingUnit;
 

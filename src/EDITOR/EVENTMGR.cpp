@@ -19,6 +19,7 @@
 #include <SOURCE/fileRequester.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
+#include <SOURCE/mapObjectTypes.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -56,7 +57,7 @@ eventsManager::eventsManager(void) {
 }
 
 VA(0x004092f2, 0x123)
-i16 eventsManager::Open(i16 priority) {
+H1_ENUM_RETURN(BaseManagerStatus, i16) eventsManager::Open(i16 priority) {
     m_panel = new iconWidget(
         EVENTS_PANEL_X,
         EVENTS_PANEL_Y,
@@ -64,7 +65,7 @@ i16 eventsManager::Open(i16 priority) {
         EVENTS_PANEL_HEIGHT,
         "buttons.icn",
         EVENTS_PANEL_FRAME,
-        0,
+        ICON_DRAW_NORMAL,
         WIDGET_ID_NONE,
         ICON_WIDGET_DRAW,
         1
@@ -94,7 +95,7 @@ void eventsManager::Close(void) {
 }
 
 VA(0x004094b8, 0x343)
-i16 eventsManager::Main(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) eventsManager::Main(tag_message& message) {
     i16 x;
     i16 y;
     i16 newX;
@@ -102,7 +103,7 @@ i16 eventsManager::Main(tag_message& message) {
     i16 newY;
 
     if (!(message.type & m_dispatchMask))
-        return 0;
+        return MESSAGE_DISPATCH_CONTINUE;
     switch (message.type) {
         case MESSAGE_WIDGET:
             switch (message.command) {
@@ -114,18 +115,33 @@ i16 eventsManager::Main(tag_message& message) {
                     cell = &gEditManager->m_map.cells[x][y];
                     switch (message.id) {
                         case EDIT_CONTROL_MAP:
-                            if (cell->m_triggerType == EVENTS_OBJECT_TOWN
-                                || cell->m_triggerType == EVENTS_OBJECT_CASTLE
-                                || cell->m_triggerType == EVENTS_OBJECT_CASTLE_GATE)
+                            if (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN)
+                                || cell->m_triggerType
+                                       == MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_TOWN)
+                                || cell->m_triggerType
+                                       == MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_CASTLE))
                                 EditTown(x, y);
-                            else if (cell->m_triggerType == EVENTS_OBJECT_MONSTER
-                                     || cell->m_triggerType == EVENTS_OBJECT_MONSTER_2
-                                     || cell->m_triggerType == EVENTS_OBJECT_MONSTER_3
-                                     || cell->m_triggerType == EVENTS_OBJECT_MONSTER_4
-                                     || cell->m_triggerType == EVENTS_OBJECT_MONSTER_5
-                                     || cell->m_triggerType == EVENTS_OBJECT_MONSTER_6)
+                            else if (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_MONSTER)
+                                     || cell->m_triggerType
+                                            == MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_MONSTER)
+                                     || cell->m_triggerType
+                                            == MAP_EVENT_TRIGGER(
+                                                MAP_FILE_OBJECT_RANDOM_MONSTER_WEAK
+                                            )
+                                     || cell->m_triggerType
+                                            == MAP_EVENT_TRIGGER(
+                                                MAP_FILE_OBJECT_RANDOM_MONSTER_MEDIUM
+                                            )
+                                     || cell->m_triggerType
+                                            == MAP_EVENT_TRIGGER(
+                                                MAP_FILE_OBJECT_RANDOM_MONSTER_STRONG
+                                            )
+                                     || cell->m_triggerType
+                                            == MAP_EVENT_TRIGGER(
+                                                MAP_FILE_OBJECT_RANDOM_MONSTER_VERY_STRONG
+                                            ))
                                 EditMonster(x, y);
-                            else if (cell->m_triggerType == EVENTS_OBJECT_HERO)
+                            else if (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_HERO))
                                 EditHero(x, y);
                             else
                                 EditCell(x, y);
@@ -134,7 +150,7 @@ i16 eventsManager::Main(tag_message& message) {
                     break;
                 case WIDGET_COMMAND_HOVER:
                     if (message.id != EDIT_CONTROL_MAP && message.id == gEventsLastHoverId)
-                        return 1;
+                        return MESSAGE_DISPATCH_CONSUME;
                     gEventsLastHoverId = message.id;
                     switch (message.id) {
                         case EDIT_CONTROL_MAP:
@@ -145,18 +161,20 @@ i16 eventsManager::Main(tag_message& message) {
                                 gEditManager->m_cursorX = newX;
                                 gEditManager->m_cursorY = newY;
                                 newX = newX
-                                           * (gEditManager->m_zoomedOut ? EVENTS_ZOOMED_CELL_SIZE
-                                                                        : EVENTS_CELL_SIZE)
+                                           * (H1_ENUM_ENCODE(EditZoom, gEditManager->m_zoomedOut)
+                                                  ? EVENTS_ZOOMED_CELL_SIZE
+                                                  : EVENTS_CELL_SIZE)
                                        + EVENTS_MAP_VIEW_ORIGIN;
                                 newY = newY
-                                           * (gEditManager->m_zoomedOut ? EVENTS_ZOOMED_CELL_SIZE
-                                                                        : EVENTS_CELL_SIZE)
+                                           * (H1_ENUM_ENCODE(EditZoom, gEditManager->m_zoomedOut)
+                                                  ? EVENTS_ZOOMED_CELL_SIZE
+                                                  : EVENTS_CELL_SIZE)
                                        + EVENTS_MAP_VIEW_ORIGIN;
                                 gEditManager->DrawMap();
                                 m_cursorIcon->FillToBuffer(
                                     newX,
                                     newY,
-                                    !gEditManager->m_zoomedOut,
+                                    !H1_ENUM_ENCODE(EditZoom, gEditManager->m_zoomedOut),
                                     1,
                                     ICON_DRAW_NORMAL,
                                     ICON_DRAW_OFFSET_FULL
@@ -166,11 +184,11 @@ i16 eventsManager::Main(tag_message& message) {
                             }
                             break;
                     }
-                    return 1;
+                    return MESSAGE_DISPATCH_CONSUME;
             }
             break;
     }
-    return 0;
+    return MESSAGE_DISPATCH_CONTINUE;
 }
 
 VA(0x004097fb, 0x410)
@@ -241,7 +259,7 @@ void eventsManager::EditCell(i16 x, i16 y) {
 }
 
 VA(0x00409c0b, 0x358)
-i16 CellWindowHandler(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) CellWindowHandler(tag_message& message) {
     const i16 firstByteId = CELL_WINDOW_FIRST_BYTE;
     const i16 firstToggleId = CELL_WINDOW_FIRST_FLAG;
     i32 value;
@@ -299,7 +317,7 @@ i16 CellWindowHandler(tag_message& message) {
                                     gEditCell->m_extraFrame = value;
                                     break;
                                 case CELL_WINDOW_FIRST_BYTE + 6:
-                                    gEditCell->m_flags = value;
+                                    gEditCell->m_flags = H1_ENUM_DECODE(MapCellFlag, value);
                                     break;
                                 case CELL_WINDOW_FIRST_BYTE + 7:
                                     gEditCell->m_secondaryTrigger = value;
@@ -321,7 +339,8 @@ i16 CellWindowHandler(tag_message& message) {
                         case CELL_WINDOW_FIRST_FLAG + 5:
                         case CELL_WINDOW_FIRST_FLAG + 6:
                         case CELL_WINDOW_FIRST_FLAG + 7:
-                            gEditCell->m_flags ^= 1 << (message.id - firstToggleId);
+                            gEditCell->m_flags ^=
+                                H1_ENUM_DECODE(MapCellFlag, 1 << (message.id - firstToggleId));
                             message.type = MESSAGE_WIDGET;
                             message.command =
                                 gEditCell->m_flags & (1 << (message.id - firstToggleId))
@@ -451,7 +470,7 @@ void eventsManager::UpdateTownWindow(editTownExtra* town) {
 }
 
 VA(0x0040a459, 0x39b)
-i16 TownWindowHandler(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) TownWindowHandler(tag_message& message) {
     const i16 escapeKey = INPUT_SCAN_ESCAPE;
     const i16 toggleBase = CELL_WINDOW_FIRST_FLAG;
     i32 changed = 0;
@@ -509,7 +528,7 @@ i16 TownWindowHandler(tag_message& message) {
                                 amount = 0;
                             }
                             gTownEdit.record.troopTypes[message.id - EXTRA_WINDOW_FIRST_TYPE] =
-                                amount;
+                                H1_ENUM_DECODE(CreatureType, amount);
                             changed = 1;
                             break;
                         case EXTRA_WINDOW_FIRST_OWNER:
@@ -604,7 +623,7 @@ void eventsManager::EditMonster(i16 x, i16 y) {
 }
 
 VA(0x0040a968, 0x1bd)
-i16 MonsterWindowHandler(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) MonsterWindowHandler(tag_message& message) {
     i8 outOfRange;
     i32 value;
     tag_message reply;
@@ -650,7 +669,12 @@ i16 MonsterWindowHandler(tag_message& message) {
                             break;
                     }
                     break;
-                case MESSAGE_KEY_DOWN:
+                // Retail tests the key-down type against the widget command
+                // here, so Escape never reaches this case.
+                case H1_ENUM_DECODE(
+                    BaseWidgetCommand,
+                    H1_ENUM_ENCODE(MessageType, MESSAGE_KEY_DOWN)
+                ):
                     switch (message.keyCode) {
                         case INPUT_SCAN_ESCAPE:
                             FINISH_DIALOG_SELECT(message);
@@ -725,10 +749,10 @@ void eventsManager::UpdateHeroWindow(editHeroExtra* hero) {
     message.id = HERO_WINDOW_HERO_NAME;
     gEditDialog->BroadcastMessage(message);
     for (i = 0; i < MAP_HERO_EXTRA_ARTIFACT_COUNT; i++) {
-        sprintf(text, "%d", hero->record.artifacts[i] + 1);
+        sprintf(text, "%d", H1_ENUM_ENCODE(ArtifactType, hero->record.artifacts[i]) + 1);
         message.id = i + HERO_WINDOW_FIRST_ARTIFACT;
         gEditDialog->BroadcastMessage(message);
-        if (hero->record.artifacts[i] >= 0)
+        if (hero->record.artifacts[i] >= ARTIFACT_FIRST)
             sprintf(text, "%s", gArtifactNames[hero->record.artifacts[i]]);
         else
             sprintf(text, "(none)");
@@ -741,7 +765,7 @@ void eventsManager::UpdateHeroWindow(editHeroExtra* hero) {
 }
 
 VA(0x0040afda, 0x34f)
-i16 HeroWindowHandler(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) HeroWindowHandler(tag_message& message) {
     i32 changed = 0;
     i32 amount;
     i32 fieldIndex;
@@ -792,7 +816,7 @@ i16 HeroWindowHandler(tag_message& message) {
                                 amount = 0;
                             }
                             gHeroEdit.record.troopTypes[message.id - EXTRA_WINDOW_FIRST_TYPE] =
-                                amount;
+                                H1_ENUM_DECODE(CreatureType, amount);
                             changed = 1;
                             break;
                         case EXTRA_WINDOW_NEUTRAL_OWNER:
@@ -826,7 +850,7 @@ i16 HeroWindowHandler(tag_message& message) {
                                 if (amount > HERO_WINDOW_MAX_ARTIFACT)
                                     amount = HERO_WINDOW_MAX_ARTIFACT;
                                 gHeroEdit.record.artifacts[fieldIndex - HERO_FIELD_FIRST_ARTIFACT] =
-                                    amount - 1;
+                                    H1_ENUM_DECODE(ArtifactType, amount - 1);
                             }
                             if (fieldIndex == HERO_FIELD_EXPERIENCE) {
                                 if (amount < 0)
@@ -904,7 +928,7 @@ void UpdateClearWindow(void) {
 }
 
 VA(0x0040b4d3, 0x1a7)
-i16 ClearWindowHandler(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) ClearWindowHandler(tag_message& message) {
     const i16 firstToggleId = CLEAR_WINDOW_FIRST_TOGGLE;
     i32 set;
     i32 index;
@@ -975,7 +999,7 @@ void UpdateMapDetailsWindow(void) {
     message.type = MESSAGE_WIDGET;
     message.value = WIDGET_FLAG_DRAW;
     for (i = 0; i < DETAILS_WINDOW_DIFFICULTY_COUNT; i++) {
-        if (i == gMapHeader->difficulty)
+        if (i == H1_ENUM_ENCODE(MapDifficulty, gMapHeader->difficulty))
             message.command = WIDGET_COMMAND_SET_FLAGS;
         else
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
@@ -983,7 +1007,7 @@ void UpdateMapDetailsWindow(void) {
         gDetailsWindow->BroadcastMessage(message);
     }
     for (i = 0; i < DETAILS_WINDOW_SIZE_COUNT; i++) {
-        if (i == gMapHeader->size)
+        if (i == H1_ENUM_ENCODE(MapSize, gMapHeader->size))
             message.command = WIDGET_COMMAND_SET_FLAGS;
         else
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
@@ -1005,7 +1029,7 @@ void UpdateMapDetailsWindow(void) {
 }
 
 VA(0x0040b927, 0x3d0)
-i16 MapDetailsWindowHandler(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) MapDetailsWindowHandler(tag_message& message) {
     bool modified = false;
     tag_message request;
     i32 i;
@@ -1030,10 +1054,11 @@ i16 MapDetailsWindowHandler(tag_message& message) {
             if (message.id >= DETAILS_WINDOW_FIRST_DIFFICULTY
                 && message.id
                        <= DETAILS_WINDOW_FIRST_DIFFICULTY + DETAILS_WINDOW_DIFFICULTY_COUNT - 1)
-                gMapHeader->difficulty = message.id - DETAILS_WINDOW_FIRST_DIFFICULTY;
+                gMapHeader->difficulty =
+                    H1_ENUM_DECODE(MapDifficulty, message.id - DETAILS_WINDOW_FIRST_DIFFICULTY);
             else if (message.id >= DETAILS_WINDOW_FIRST_SIZE
                      && message.id <= DETAILS_WINDOW_FIRST_SIZE + DETAILS_WINDOW_SIZE_COUNT - 1)
-                gMapHeader->size = message.id - DETAILS_WINDOW_FIRST_SIZE;
+                gMapHeader->size = H1_ENUM_DECODE(MapSize, message.id - DETAILS_WINDOW_FIRST_SIZE);
             else if (message.id == DETAILS_WINDOW_NAME) {
                 gDetailsWindow->BroadcastMessage(request);
                 for (i = 0; i < MAP_HEADER_LANGUAGE_COUNT; i++)
@@ -1091,7 +1116,7 @@ i32 NewMapDialog(void) {
             NEW_MAP_TRACK_HEIGHT,
             "escroll.icn",
             NEW_MAP_TRACK_FRAME,
-            0,
+            ICON_DRAW_NORMAL,
             i + NEW_MAP_FIRST_TERRAIN_TRACK,
             ICON_WIDGET_DRAW,
             1
@@ -1104,7 +1129,7 @@ i32 NewMapDialog(void) {
             NEW_MAP_KNOB_HEIGHT,
             "escroll.icn",
             NEW_MAP_KNOB_FRAME,
-            0,
+            ICON_DRAW_NORMAL,
             i + NEW_MAP_FIRST_TERRAIN_KNOB,
             ICON_WIDGET_DRAW,
             1
@@ -1119,7 +1144,7 @@ i32 NewMapDialog(void) {
             NEW_MAP_TRACK_HEIGHT,
             "escroll.icn",
             NEW_MAP_TRACK_FRAME,
-            0,
+            ICON_DRAW_NORMAL,
             i + NEW_MAP_FIRST_DENSITY_TRACK,
             ICON_WIDGET_DRAW,
             1
@@ -1132,7 +1157,7 @@ i32 NewMapDialog(void) {
             NEW_MAP_KNOB_HEIGHT,
             "escroll.icn",
             NEW_MAP_KNOB_FRAME,
-            0,
+            ICON_DRAW_NORMAL,
             i + NEW_MAP_FIRST_DENSITY_KNOB,
             ICON_WIDGET_DRAW,
             1
@@ -1212,7 +1237,7 @@ void BalanceTerrainPercents(i32 fixed) {
 }
 
 VA(0x0040c30d, 0x3f8)
-i16 NewMapWindowHandler(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) NewMapWindowHandler(tag_message& message) {
     bool redraw = false;
     i32 index;
 

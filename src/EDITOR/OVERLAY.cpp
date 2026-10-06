@@ -43,7 +43,7 @@ overlayManager::overlayManager(void) {
 }
 
 VA(0x0040ea3b, 0x372)
-i16 overlayManager::Open(i16 priority) {
+H1_ENUM_RETURN(BaseManagerStatus, i16) overlayManager::Open(i16 priority) {
     gOverlayCategory = gOverlayShownCategory;
     m_previewDrawn = 0;
     m_panel = new iconWidget(
@@ -53,7 +53,7 @@ i16 overlayManager::Open(i16 priority) {
         OVERLAY_PANEL_HEIGHT,
         "buttons.icn",
         OVERLAY_PANEL_FRAME,
-        0,
+        ICON_DRAW_NORMAL,
         WIDGET_ID_NONE,
         ICON_WIDGET_DRAW,
         1
@@ -103,7 +103,13 @@ i16 overlayManager::Open(i16 priority) {
     gEditManager->m_window->DrawWindow();
     gEditManager->m_window->RemoveWidget(m_panel);
     delete m_panel;
-    m_icon->DrawToBuffer(OVERLAY_PREVIEW_X, OVERLAY_PREVIEW_Y, OVERLAY_PREVIEW_FRAME, 0, 0);
+    m_icon->DrawToBuffer(
+        OVERLAY_PREVIEW_X,
+        OVERLAY_PREVIEW_Y,
+        OVERLAY_PREVIEW_FRAME,
+        ICON_DRAW_NORMAL,
+        ICON_DRAW_OFFSET_FULL
+    );
     DrawCategoryName(1);
     gEditManager->m_placedY = -1;
     gEditManager->m_placedX = -1;
@@ -133,10 +139,10 @@ void overlayManager::Close(void) {
 }
 
 VA(0x0040eef6, 0x601)
-i16 overlayManager::Main(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) overlayManager::Main(tag_message& message) {
     i32 result;
     i32 objectPlaced;
-    i32 helpItem;
+    H1_ENUM_LOCAL(OverlayToolHelp, i32) helpItem;
     i8 previousCategory;
     i16 cellX;
     i16 cellY;
@@ -144,7 +150,7 @@ i16 overlayManager::Main(tag_message& message) {
     result = 0;
     helpItem = OVERLAY_TOOL_HELP_NONE;
     if (!(message.type & m_dispatchMask))
-        return 0;
+        return MESSAGE_DISPATCH_CONTINUE;
     switch (message.type) {
         case MESSAGE_WIDGET:
             switch (message.command) {
@@ -155,7 +161,7 @@ i16 overlayManager::Main(tag_message& message) {
                                 helpItem = OVERLAY_TOOL_HELP_SELECTED;
                                 break;
                         }
-                        if (helpItem >= 0)
+                        if (H1_ENUM_ENCODE(OverlayToolHelp, helpItem) >= 0)
                             NormalDialog(gOverlayToolHelp[helpItem], NORMAL_DIALOG_TYPE_QUICK_VIEW);
                         break;
                     }
@@ -226,7 +232,7 @@ i16 overlayManager::Main(tag_message& message) {
                             gEditManager->UpdateMapView();
                             gEditManager->UpdateCursor();
                         }
-                        return 1;
+                        return MESSAGE_DISPATCH_CONSUME;
                     }
                     gEditManager->m_lastCommandId = message.id;
                     switch (message.id) {
@@ -237,9 +243,10 @@ i16 overlayManager::Main(tag_message& message) {
                                 || gEditManager->m_cursorY != cellY) {
                                 if (gSelectedOverlay != OVERLAY_NO_SELECTION) {
                                     if (cellX + m_width
-                                        > (gEditManager->m_zoomedOut ? EDIT_VIEW_ZOOMED_CELLS
-                                                                     : EDIT_VIEW_CELLS))
-                                        cellX = !gEditManager->m_zoomedOut
+                                        > (H1_ENUM_ENCODE(EditZoom, gEditManager->m_zoomedOut)
+                                               ? EDIT_VIEW_ZOOMED_CELLS
+                                               : EDIT_VIEW_CELLS))
+                                        cellX = !H1_ENUM_ENCODE(EditZoom, gEditManager->m_zoomedOut)
                                                     ? EDIT_VIEW_CELLS - m_width
                                                     : EDIT_VIEW_ZOOMED_CELLS - m_width;
                                     if (cellY - m_height + 1 < 0)
@@ -247,16 +254,18 @@ i16 overlayManager::Main(tag_message& message) {
                                     gEditManager->DrawMap();
                                     gEditManager->m_cursorX = cellX;
                                     gEditManager->m_cursorY = cellY;
-                                    cellX = cellX
-                                                * (gEditManager->m_zoomedOut
-                                                       ? EDIT_VIEW_ZOOMED_CELL_PIXELS
-                                                       : EDIT_VIEW_CELL_PIXELS)
-                                            + EDIT_VIEW_LEFT;
-                                    cellY = cellY
-                                                * (gEditManager->m_zoomedOut
-                                                       ? EDIT_VIEW_ZOOMED_CELL_PIXELS
-                                                       : EDIT_VIEW_CELL_PIXELS)
-                                            + EDIT_VIEW_LEFT;
+                                    cellX =
+                                        cellX
+                                            * (H1_ENUM_ENCODE(EditZoom, gEditManager->m_zoomedOut)
+                                                   ? EDIT_VIEW_ZOOMED_CELL_PIXELS
+                                                   : EDIT_VIEW_CELL_PIXELS)
+                                        + EDIT_VIEW_LEFT;
+                                    cellY =
+                                        cellY
+                                            * (H1_ENUM_ENCODE(EditZoom, gEditManager->m_zoomedOut)
+                                                   ? EDIT_VIEW_ZOOMED_CELL_PIXELS
+                                                   : EDIT_VIEW_CELL_PIXELS)
+                                        + EDIT_VIEW_LEFT;
                                     if (gSelectedOverlay != OVERLAY_NO_SELECTION) {
                                         DrawFootprint(
                                             cellX,
@@ -286,7 +295,7 @@ i16 overlayManager::Main(tag_message& message) {
                             }
                             break;
                     }
-                    return 1;
+                    return MESSAGE_DISPATCH_CONSUME;
             }
             break;
     }
@@ -312,8 +321,9 @@ void overlayManager::DrawFootprint(
     i16 cx;
     i16 cy;
 
-    frame = !gEditManager->m_zoomedOut;
-    cellSize = gEditManager->m_zoomedOut ? EDIT_VIEW_ZOOMED_CELL_PIXELS : EDIT_VIEW_CELL_PIXELS;
+    frame = !H1_ENUM_ENCODE(EditZoom, gEditManager->m_zoomedOut);
+    cellSize = H1_ENUM_ENCODE(EditZoom, gEditManager->m_zoomedOut) ? EDIT_VIEW_ZOOMED_CELL_PIXELS
+                                                                   : EDIT_VIEW_CELL_PIXELS;
     for (cy = 0; cy < OVERLAY_FOOTPRINT_ROWS; cy++)
         for (cx = 0; cx < OVERLAY_FOOTPRINT_COLUMNS; cx++)
             if (cy < height && cx < width
@@ -325,8 +335,8 @@ void overlayManager::DrawFootprint(
                     (overlayMask & 1 << (cy * OVERLAY_FOOTPRINT_COLUMNS + cx))
                         ? OVERLAY_FOOTPRINT_OVERLAY_COLOR
                         : OVERLAY_FOOTPRINT_GROUND_COLOR,
-                    0,
-                    0
+                    ICON_DRAW_NORMAL,
+                    ICON_DRAW_OFFSET_FULL
                 );
     if ((groundMask & OVERLAY_FOOTPRINT_CORNER_BIT) && height >= OVERLAY_FOOTPRINT_CORNER_ROW + 1
         && width >= OVERLAY_FOOTPRINT_CORNER_COLUMN + 1)
@@ -336,8 +346,8 @@ void overlayManager::DrawFootprint(
             frame,
             (overlayMask & OVERLAY_FOOTPRINT_CORNER_BIT) ? OVERLAY_FOOTPRINT_OVERLAY_COLOR
                                                          : OVERLAY_FOOTPRINT_GROUND_COLOR,
-            0,
-            0
+            ICON_DRAW_NORMAL,
+            ICON_DRAW_OFFSET_FULL
         );
 }
 
@@ -434,13 +444,13 @@ i32 PlaceOverlay(overlayType* type, i16 x, i16 y) {
         return 0;
     }
     if (!strcmp(type->name, "litehous")
-        && gEditManager->HasObject(MAP_OBJECT_LIGHTHOUSE | MAP_TRIGGER_EVENT) >= 1) {
+        && gEditManager->HasObject(MAP_EVENT_TRIGGER(MAP_OBJECT_LIGHTHOUSE)) >= 1) {
         sprintf(gText, localization::Tr("editor.overlay.limit.lighthouse"));
         ShowStatusWarning(gText);
         return 0;
     }
     if (!strcmp(type->name, "bigkeep ")
-        && gEditManager->HasObject(MAP_OBJECT_DRAGON_CITY | MAP_TRIGGER_EVENT) >= 1) {
+        && gEditManager->HasObject(MAP_EVENT_TRIGGER(MAP_OBJECT_DRAGON_CITY)) >= 1) {
         sprintf(gText, localization::Tr("editor.overlay.limit.dragon_city"));
         ShowStatusWarning(gText);
         return 0;
@@ -466,13 +476,13 @@ i32 PlaceOverlay(overlayType* type, i16 x, i16 y) {
             if (type->overlayMask & footBit) {
                 placedIds->overlayId = gNextObjectId;
                 dest->m_overlayIndex = type->frames[piece];
-                dest->m_overlayTileset = type->tileset;
+                dest->m_overlayTileset = H1_ENUM_ENCODE(MapTileset, type->tileset);
                 if (type->animatedMask & footBit)
                     dest->m_flags |= MAP_CELL_OVERLAY_ANIMATED;
             } else {
                 placedIds->objectId = gNextObjectId;
                 dest->m_objectIndex = type->frames[piece];
-                dest->m_objectTileset = type->tileset;
+                dest->m_objectTileset = H1_ENUM_ENCODE(MapTileset, type->tileset);
                 if (type->animatedMask & footBit)
                     dest->m_flags |= MAP_CELL_OBJECT_ANIMATED;
             }
@@ -495,9 +505,9 @@ i32 PlaceOverlay(overlayType* type, i16 x, i16 y) {
             }
             if (type->eventMask & footBit)
                 dest->m_triggerType |= MAP_TRIGGER_EVENT;
-            if (dest->m_triggerType == (MAP_OBJECT_TOWN | MAP_TRIGGER_EVENT)
-                || dest->m_triggerType == (MAP_FILE_OBJECT_RANDOM_TOWN | MAP_TRIGGER_EVENT)
-                || dest->m_triggerType == (MAP_FILE_OBJECT_RANDOM_CASTLE | MAP_TRIGGER_EVENT)) {
+            if (dest->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN)
+                || dest->m_triggerType == MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_TOWN)
+                || dest->m_triggerType == MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_CASTLE)) {
                 newTown = new editTownExtra;
                 memset(newTown, 0, sizeof(editTownExtra));
                 dest->m_objectMetadata = gEditManager->m_extraCount;
@@ -505,13 +515,13 @@ i32 PlaceOverlay(overlayType* type, i16 x, i16 y) {
                 gEditManager->m_extraSizes[gEditManager->m_extraCount] = sizeof(editTownExtra);
                 gEditManager->m_extraCount++;
             }
-            if (dest->m_triggerType == (MAP_FILE_OBJECT_HERO | MAP_TRIGGER_EVENT)) {
+            if (dest->m_triggerType == MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_HERO)) {
                 newHero = new editHeroExtra;
                 memset(newHero, 0, sizeof(editHeroExtra));
-                newHero->record.artifacts[0] = -1;
-                newHero->record.artifacts[1] = -1;
-                newHero->record.artifacts[2] = -1;
-                newHero->record.artifacts[3] = -1;
+                newHero->record.artifacts[0] = ARTIFACT_NONE;
+                newHero->record.artifacts[1] = ARTIFACT_NONE;
+                newHero->record.artifacts[2] = ARTIFACT_NONE;
+                newHero->record.artifacts[3] = ARTIFACT_NONE;
                 dest->m_objectMetadata = gEditManager->m_extraCount;
                 gEditManager->m_extras[gEditManager->m_extraCount] = newHero;
                 gEditManager->m_extraSizes[gEditManager->m_extraCount] = sizeof(editHeroExtra);
@@ -545,9 +555,10 @@ i32 PlaceMineResource(overlayType* type, i16 x, i16 y, i32 checkMine) {
 
     fits = 1;
     if (checkMine && (type->flags & OVERLAY_TYPE_MINE_RESOURCE)
-        && (gEditManager->m_map.cells[x][y].m_triggerType != MAP_OBJECT_MINE || x < 1
+        && (gEditManager->m_map.cells[x][y].m_triggerType != MAP_OBJECT_TRIGGER(MAP_OBJECT_MINE)
+            || x < 1
             || gEditManager->m_map.cells[x - 1][y].m_triggerType
-                   != (MAP_OBJECT_MINE | MAP_TRIGGER_EVENT)))
+                   != MAP_EVENT_TRIGGER(MAP_OBJECT_MINE)))
         fits = 0;
     if (!fits) {
         ShowStatusWarning(localization::Tr("editor.overlay.resource.unsuitable"));
@@ -555,7 +566,8 @@ i32 PlaceMineResource(overlayType* type, i16 x, i16 y, i32 checkMine) {
     }
     target = &gEditManager->m_map.cells[x][y];
     target->m_flags |= MAP_CELL_OBJECT_EXTRA;
-    target->m_objectTileset |= TILESET_RSRC32 << MAP_CELL_EXTRA_TILESET_SHIFT;
+    target->m_objectTileset |= H1_ENUM_ENCODE(MapTileset, TILESET_RSRC32)
+                               << MAP_CELL_EXTRA_TILESET_SHIFT;
     target->m_extraFrame = type->frames[0];
     return 1;
 }
@@ -573,7 +585,8 @@ void overlayManager::DrawOverlay(
     i16 cx;
     i16 cy;
 
-    cellSize = gEditManager->m_zoomedOut ? EDIT_VIEW_ZOOMED_CELL_PIXELS : EDIT_VIEW_CELL_PIXELS;
+    cellSize = H1_ENUM_ENCODE(EditZoom, gEditManager->m_zoomedOut) ? EDIT_VIEW_ZOOMED_CELL_PIXELS
+                                                                   : EDIT_VIEW_CELL_PIXELS;
     for (cy = 0; cy < OVERLAY_FOOTPRINT_ROWS; cy++)
         for (cx = 0; cx < OVERLAY_FOOTPRINT_COLUMNS; cx++)
             if (cy < height && cx < width
@@ -582,8 +595,8 @@ void overlayManager::DrawOverlay(
                     x + cx * cellSize,
                     y - cy * cellSize,
                     type->frames[cy * OVERLAY_FOOTPRINT_COLUMNS + cx],
-                    0,
-                    0
+                    ICON_DRAW_NORMAL,
+                    ICON_DRAW_OFFSET_FULL
                 );
                 if (type->animatedMask & 1 << (cy * OVERLAY_FOOTPRINT_COLUMNS + cx))
                     gEditManager->m_objectIcons[type->tileset][gEditManager->m_zoomedOut]
@@ -592,8 +605,8 @@ void overlayManager::DrawOverlay(
                             y - cy * cellSize,
                             type->frames[cy * OVERLAY_FOOTPRINT_COLUMNS + cx]
                                 + gEditManager->m_animationFrame + 1,
-                            0,
-                            0
+                            ICON_DRAW_NORMAL,
+                            ICON_DRAW_OFFSET_FULL
                         );
                 if ((type->flags & OVERLAY_TYPE_SHOWS_RESOURCE) && cx == 1 && cy == 0)
                     gEditManager->m_objectIcons[type->tileset][gEditManager->m_zoomedOut]
@@ -601,8 +614,8 @@ void overlayManager::DrawOverlay(
                             x + cx * cellSize,
                             y - cy * cellSize,
                             type->resourceFrame,
-                            0,
-                            0
+                            ICON_DRAW_NORMAL,
+                            ICON_DRAW_OFFSET_FULL
                         );
                 if (update)
                     gWindowManager->UpdateScreenRegion(
@@ -619,16 +632,16 @@ void overlayManager::DrawOverlay(
             x + cellSize * OVERLAY_FOOTPRINT_CORNER_COLUMN,
             y - cellSize * OVERLAY_FOOTPRINT_CORNER_ROW,
             type->frames[OVERLAY_FOOTPRINT_CORNER],
-            0,
-            0
+            ICON_DRAW_NORMAL,
+            ICON_DRAW_OFFSET_FULL
         );
         if (type->animatedMask & OVERLAY_FOOTPRINT_CORNER_BIT)
             gEditManager->m_objectIcons[type->tileset][gEditManager->m_zoomedOut]->DrawToBuffer(
                 x + cellSize * OVERLAY_FOOTPRINT_CORNER_COLUMN,
                 y - cellSize * OVERLAY_FOOTPRINT_CORNER_ROW,
                 type->frames[OVERLAY_FOOTPRINT_CORNER] + gEditManager->m_animationFrame + 1,
-                0,
-                0
+                ICON_DRAW_NORMAL,
+                ICON_DRAW_OFFSET_FULL
             );
         if (update)
             gWindowManager->UpdateScreenRegion(
@@ -680,7 +693,7 @@ i16 overlayManager::PickOverlay(i16 category) {
     i16 y;
     i32 perLine;
     i32 rowsPerPage;
-    i16 previousZoom;
+    H1_ENUM_LOCAL(EditZoom, i16) previousZoom;
 
     slot = 0;
     previousZoom = gEditManager->m_zoomedOut;
@@ -695,7 +708,7 @@ i16 overlayManager::PickOverlay(i16 category) {
     perPage = OVERLAY_PICKER_PAGE;
     screenWindow = new heroWindow(0, 0, 640, 480, 2);
     gWindowManager->AddWindow(screenWindow, -1, 1);
-    gEditManager->m_zoomedOut = 1;
+    gEditManager->m_zoomedOut = EDIT_ZOOM_OUT;
     LoadCategory(category);
     gInputManager->Flush();
     while (!done) {
@@ -708,8 +721,8 @@ i16 overlayManager::PickOverlay(i16 category) {
                         x * OVERLAY_PICKER_CELL_WIDTH,
                         y * OVERLAY_PICKER_CELL_HEIGHT,
                         OVERLAY_PICKER_CELL_FRAME,
-                        0,
-                        0
+                        ICON_DRAW_NORMAL,
+                        ICON_DRAW_OFFSET_FULL
                     );
             slot = 0;
             while (first + slot < m_typeCount && slot < OVERLAY_PICKER_PAGE) {
@@ -863,13 +876,19 @@ void overlayManager::DrawCategoryName(i32) {
 
 VA(0x00410e33, 0x134)
 void overlayManager::DrawSelectedOverlay(void) {
-    i16 previousZoom;
+    H1_ENUM_LOCAL(EditZoom, i16) previousZoom;
 
     if (gSelectedOverlay != OVERLAY_NO_SELECTION) {
         MeasureOverlay(&m_types[gSelectedOverlay]);
         previousZoom = gEditManager->m_zoomedOut;
-        gEditManager->m_zoomedOut = 1;
-        m_icon->DrawToBuffer(OVERLAY_PREVIEW_X, OVERLAY_PREVIEW_Y, OVERLAY_PREVIEW_FRAME, 0, 0);
+        gEditManager->m_zoomedOut = EDIT_ZOOM_OUT;
+        m_icon->DrawToBuffer(
+            OVERLAY_PREVIEW_X,
+            OVERLAY_PREVIEW_Y,
+            OVERLAY_PREVIEW_FRAME,
+            ICON_DRAW_NORMAL,
+            ICON_DRAW_OFFSET_FULL
+        );
         DrawFootprint(
             OVERLAY_PREVIEW_OBJECT_X,
             OVERLAY_PREVIEW_OBJECT_Y,
@@ -894,7 +913,13 @@ void overlayManager::DrawSelectedOverlay(void) {
         );
         gEditManager->m_zoomedOut = previousZoom;
     } else {
-        m_icon->DrawToBuffer(OVERLAY_PREVIEW_X, OVERLAY_PREVIEW_Y, OVERLAY_PREVIEW_FRAME, 0, 0);
+        m_icon->DrawToBuffer(
+            OVERLAY_PREVIEW_X,
+            OVERLAY_PREVIEW_Y,
+            OVERLAY_PREVIEW_FRAME,
+            ICON_DRAW_NORMAL,
+            ICON_DRAW_OFFSET_FULL
+        );
         gWindowManager->UpdateScreenRegion(
             OVERLAY_PREVIEW_X,
             OVERLAY_PREVIEW_Y,

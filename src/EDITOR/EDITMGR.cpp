@@ -8940,7 +8940,7 @@ editManager::editManager(void) {
     SaveUndo();
     gMapHeader = &gEditMapHeader;
     m_animationFrame = 0;
-    m_tool = EDIT_MANAGER_NO_TOOL;
+    m_tool = EDIT_TOOL_NONE;
     m_toolManager = NULL;
     m_mapChanged = 0;
     m_placedX = m_placedY = -1;
@@ -8949,13 +8949,17 @@ editManager::editManager(void) {
 }
 
 VA(0x004018db, 0x41)
-void editManager::LoadObjectIcons(i16 tileset, char* largeName, char* smallName) {
+void editManager::LoadObjectIcons(
+    H1_ENUM_PARAM(MapTileset, i16) tileset,
+    char* largeName,
+    char* smallName
+) {
     m_objectIcons[tileset][EDIT_ZOOM_NORMAL] = gResourceManager->GetIcon(largeName);
     m_objectIcons[tileset][EDIT_ZOOM_OUT] = gResourceManager->GetIcon(smallName);
 }
 
 VA(0x0040191c, 0x57a)
-i16 editManager::Open(i16 priority) {
+H1_ENUM_RETURN(BaseManagerStatus, i16) editManager::Open(i16 priority) {
     bitmap* borderImage;
     i32 i;
 
@@ -8972,7 +8976,7 @@ i16 editManager::Open(i16 priority) {
         16,
         "escroll.icn",
         0,
-        0,
+        ICON_DRAW_NORMAL,
         EDIT_CONTROL_HORIZONTAL_TRACK,
         ICON_WIDGET_DRAW,
         1
@@ -8984,7 +8988,7 @@ i16 editManager::Open(i16 priority) {
         416,
         "escroll.icn",
         1,
-        0,
+        ICON_DRAW_NORMAL,
         EDIT_CONTROL_VERTICAL_TRACK,
         ICON_WIDGET_DRAW,
         1
@@ -8996,7 +9000,7 @@ i16 editManager::Open(i16 priority) {
         8,
         "escroll.icn",
         2,
-        0,
+        ICON_DRAW_NORMAL,
         EDIT_CONTROL_HORIZONTAL_KNOB,
         ICON_WIDGET_DRAW,
         1
@@ -9008,7 +9012,7 @@ i16 editManager::Open(i16 priority) {
         17,
         "escroll.icn",
         3,
-        0,
+        ICON_DRAW_NORMAL,
         EDIT_CONTROL_VERTICAL_KNOB,
         ICON_WIDGET_DRAW,
         1
@@ -9023,7 +9027,8 @@ i16 editManager::Open(i16 priority) {
     m_cloudTiles[EDIT_ZOOM_NORMAL] = gResourceManager->GetTileset("clof32.til");
     m_cloudTiles[EDIT_ZOOM_OUT] = gResourceManager->GetTileset("clof16.til");
     for (i = 0; i < EDIT_MANAGER_TILESET_COUNT; i++)
-        m_objectIcons[i][EDIT_ZOOM_NORMAL] = m_objectIcons[i][EDIT_ZOOM_OUT] = NULL;
+        m_objectIcons[H1_ENUM_DECODE(MapTileset, i)][EDIT_ZOOM_NORMAL] =
+            m_objectIcons[H1_ENUM_DECODE(MapTileset, i)][EDIT_ZOOM_OUT] = NULL;
     LoadObjectIcons(TILESET_OBJ32_00, "obj32-00.icn", "obj16-00.icn");
     LoadObjectIcons(TILESET_OBJ32_01, "obj32-01.icn", "obj16-01.icn");
     LoadObjectIcons(TILESET_OBJ32_02, "obj32-02.icn", "obj16-02.icn");
@@ -9061,7 +9066,7 @@ void editManager::Close(void) {
 
     NewMap(0);
     ClearErrors();
-    SelectTool(EDIT_MANAGER_NO_TOOL);
+    SelectTool(EDIT_TOOL_NONE);
     gWindowManager->RemoveWindow(m_window);
     delete m_window;
     gResourceManager->Dispose(m_groundTiles[EDIT_ZOOM_NORMAL]);
@@ -9069,8 +9074,8 @@ void editManager::Close(void) {
     gResourceManager->Dispose(m_cloudTiles[EDIT_ZOOM_NORMAL]);
     gResourceManager->Dispose(m_cloudTiles[EDIT_ZOOM_OUT]);
     for (i = 0; i < EDIT_MANAGER_TILESET_COUNT; i++) {
-        gResourceManager->Dispose(m_objectIcons[i][EDIT_ZOOM_NORMAL]);
-        gResourceManager->Dispose(m_objectIcons[i][EDIT_ZOOM_OUT]);
+        gResourceManager->Dispose(m_objectIcons[H1_ENUM_DECODE(MapTileset, i)][EDIT_ZOOM_NORMAL]);
+        gResourceManager->Dispose(m_objectIcons[H1_ENUM_DECODE(MapTileset, i)][EDIT_ZOOM_OUT]);
     }
     gResourceManager->Dispose(m_buttons);
     gResourceManager->Dispose(m_statusFont);
@@ -9079,7 +9084,7 @@ void editManager::Close(void) {
 }
 
 VA(0x00401fb4, 0x883)
-i16 editManager::Main(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) editManager::Main(tag_message& message) {
     i32 spare1;
     i32 spare2;
     i32 helpIndex;
@@ -9115,7 +9120,7 @@ i16 editManager::Main(tag_message& message) {
                         case EDIT_CONTROL_LOAD:
                             if (!PickMap(gPickMapNameDummy, "map", FILE_REQUESTER_LOAD))
                                 break;
-                            if (!LoadMap(m_mapFileName)) {
+                            if (!H1_ENUM_ENCODE(BaseManagerStatus, LoadMap(m_mapFileName))) {
                                 m_mapChanged = 0;
                                 m_placedX = m_placedY = -1;
                             }
@@ -9126,7 +9131,7 @@ i16 editManager::Main(tag_message& message) {
                             UpdateMapView();
                             break;
                         case EDIT_CONTROL_SAVE:
-                            if (!SaveMap(m_mapFileName)) {
+                            if (!H1_ENUM_ENCODE(BaseManagerStatus, SaveMap(m_mapFileName))) {
                                 sprintf(
                                     gText,
                                     localization::Tr("editor.map.saved"),
@@ -9313,7 +9318,11 @@ i16 editManager::Main(tag_message& message) {
                     UpdateMapView();
                     break;
                 case INPUT_SCAN_TAB:
-                    SelectTool((m_tool + 1) % EDIT_TOOL_COUNT);
+                    SelectTool(H1_ENUM_DECODE(
+                        EditTool,
+                        (H1_ENUM_ENCODE(EditTool, m_tool) + 1)
+                            % H1_ENUM_ENCODE(EditTool, EDIT_TOOL_COUNT)
+                    ));
                     break;
                 case INPUT_SCAN_ESCAPE:
                     if (Confirm(localization::Tr("editor.quit.confirm")) == 1)
@@ -9361,30 +9370,62 @@ void editManager::DrawRulers(i16 viewX, i16 viewY, i16 cursorX, i16 cursorY) {
         cursorY = -1;
     }
     for (i = 0; i < EDIT_RULER_SLOTS; i++) {
-        if (!m_zoomedOut && (i & 1))
+        if (!H1_ENUM_ENCODE(EditZoom, m_zoomedOut) && (i & 1))
             continue;
-        if (!m_zoomedOut)
-            m_buttons->DrawToBuffer(i * EDIT_RULER_SLOT_PIXELS + EDIT_VIEW_LEFT, 0, 24, 0, 0);
+        if (!H1_ENUM_ENCODE(EditZoom, m_zoomedOut))
+            m_buttons->DrawToBuffer(
+                i * EDIT_RULER_SLOT_PIXELS + EDIT_VIEW_LEFT,
+                0,
+                24,
+                ICON_DRAW_NORMAL,
+                ICON_DRAW_OFFSET_FULL
+            );
         else
-            m_buttons->DrawToBuffer(i * EDIT_RULER_SLOT_PIXELS + EDIT_VIEW_LEFT, 0, 18, 0, 0);
-        sprintf(text, "%02d", viewX + i / (m_zoomedOut ? 1 : 2));
-        if (i / (m_zoomedOut ? 1 : 2) == cursorX)
+            m_buttons->DrawToBuffer(
+                i * EDIT_RULER_SLOT_PIXELS + EDIT_VIEW_LEFT,
+                0,
+                18,
+                ICON_DRAW_NORMAL,
+                ICON_DRAW_OFFSET_FULL
+            );
+        sprintf(text, "%02d", viewX + i / (H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? 1 : 2));
+        if (i / (H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? 1 : 2) == cursorX)
             color = 1;
         else
             color = 192;
-        m_statusFont
-            ->DrawString(text, i * EDIT_RULER_SLOT_PIXELS + (m_zoomedOut ? 0 : 8) + 19, 2, color);
-        if (!m_zoomedOut)
-            m_buttons->DrawToBuffer(0, i * EDIT_RULER_SLOT_PIXELS + EDIT_VIEW_TOP, 25, 0, 0);
+        m_statusFont->DrawString(
+            text,
+            i * EDIT_RULER_SLOT_PIXELS + (H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? 0 : 8) + 19,
+            2,
+            color
+        );
+        if (!H1_ENUM_ENCODE(EditZoom, m_zoomedOut))
+            m_buttons->DrawToBuffer(
+                0,
+                i * EDIT_RULER_SLOT_PIXELS + EDIT_VIEW_TOP,
+                25,
+                ICON_DRAW_NORMAL,
+                ICON_DRAW_OFFSET_FULL
+            );
         else
-            m_buttons->DrawToBuffer(0, i * EDIT_RULER_SLOT_PIXELS + EDIT_VIEW_TOP, 18, 0, 0);
-        sprintf(text, "%02d", viewY + i / (m_zoomedOut ? 1 : 2));
-        if (i / (m_zoomedOut ? 1 : 2) == cursorY)
+            m_buttons->DrawToBuffer(
+                0,
+                i * EDIT_RULER_SLOT_PIXELS + EDIT_VIEW_TOP,
+                18,
+                ICON_DRAW_NORMAL,
+                ICON_DRAW_OFFSET_FULL
+            );
+        sprintf(text, "%02d", viewY + i / (H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? 1 : 2));
+        if (i / (H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? 1 : 2) == cursorY)
             color = 1;
         else
             color = 192;
-        m_statusFont
-            ->DrawString(text, 3, i * EDIT_RULER_SLOT_PIXELS + (m_zoomedOut ? 0 : 8) + 18, color);
+        m_statusFont->DrawString(
+            text,
+            3,
+            i * EDIT_RULER_SLOT_PIXELS + (H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? 0 : 8) + 18,
+            color
+        );
     }
     gWindowManager->UpdateScreenRegion(EDIT_VIEW_LEFT, 0, EDIT_VIEW_PIXELS, EDIT_VIEW_TOP);
     gWindowManager->UpdateScreenRegion(0, EDIT_VIEW_TOP, EDIT_VIEW_LEFT, EDIT_VIEW_PIXELS);
@@ -9436,19 +9477,20 @@ void editManager::DrawView(i16 viewX, i16 viewY) {
     i32 cy;
     i32 cellPixels;
     i32 numCells;
-    i32 savedZoom;
+    H1_ENUM_LOCAL(EditZoom, i32) savedZoom;
 
     savedZoom = m_zoomedOut;
     if (gGeneratingMaps)
         m_zoomedOut = EDIT_ZOOM_NORMAL;
-    numCells = m_zoomedOut ? EDIT_VIEW_ZOOMED_CELLS : EDIT_VIEW_CELLS;
+    numCells = H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? EDIT_VIEW_ZOOMED_CELLS : EDIT_VIEW_CELLS;
     for (cy = 0; cy < numCells; cy++)
         for (cx = 0; cx < numCells; cx++)
             DrawCell(viewX + cx, viewY + cy, cx, cy, EDIT_DRAW_ALL);
     m_animationFrame++;
     m_animationFrame %= 6;
-    cellPixels = m_zoomedOut ? EDIT_VIEW_ZOOMED_CELL_PIXELS : EDIT_VIEW_CELL_PIXELS;
-    lineWidth = m_zoomedOut ? 1 : 2;
+    cellPixels = H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? EDIT_VIEW_ZOOMED_CELL_PIXELS
+                                                       : EDIT_VIEW_CELL_PIXELS;
+    lineWidth = H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? 1 : 2;
     if (gSelectionX >= 0) {
         gSelectionColor = gMonoColorMap[190];
         FillBitmapArea(
@@ -9498,11 +9540,16 @@ void editManager::DrawRadar(i32) {
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             if (m_map.cells[x][y].m_objectIndex != MAP_CELL_NO_FRAME) {
-                switch (m_map.cells[x][y].m_objectTileset & MAP_CELL_TILESET_MASK) {
+                switch (H1_ENUM_DECODE(
+                    MapTileset,
+                    m_map.cells[x][y].m_objectTileset & MAP_CELL_TILESET_MASK
+                )) {
                     case TILESET_MTN32:
                     case TILESET_TREE32:
-                        color = gRadarTerrainColor
-                                    [m_map.cells[x][y].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN]
+                        color = gRadarTerrainColor[H1_ENUM_DECODE(
+                                    TerrainType,
+                                    m_map.cells[x][y].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN
+                                )]
                                 + 3;
                         break;
                     case TILESET_TOWN32:
@@ -9512,13 +9559,17 @@ void editManager::DrawRadar(i32) {
                         color = 10;
                         break;
                     default:
-                        color = gRadarTerrainColor
-                            [m_map.cells[x][y].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN];
+                        color = gRadarTerrainColor[H1_ENUM_DECODE(
+                            TerrainType,
+                            m_map.cells[x][y].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN
+                        )];
                         break;
                 }
             } else {
-                color =
-                    gRadarTerrainColor[m_map.cells[x][y].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN];
+                color = gRadarTerrainColor[H1_ENUM_DECODE(
+                    TerrainType,
+                    m_map.cells[x][y].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN
+                )];
             }
             if (gGeneratingMaps)
                 color = 0;
@@ -9527,18 +9578,18 @@ void editManager::DrawRadar(i32) {
                 y * EDIT_RADAR_CELL_PIXELS + EDIT_RADAR_TOP,
                 21,
                 color,
-                0,
-                0
+                ICON_DRAW_NORMAL,
+                ICON_DRAW_OFFSET_FULL
             );
         }
     }
     buttonIcn->FillToBuffer(
         m_viewX * EDIT_RADAR_CELL_PIXELS + EDIT_RADAR_LEFT,
         m_viewY * EDIT_RADAR_CELL_PIXELS + EDIT_RADAR_TOP,
-        m_zoomedOut ? 23 : 22,
+        H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? 23 : 22,
         190,
-        0,
-        0
+        ICON_DRAW_NORMAL,
+        ICON_DRAW_OFFSET_FULL
     );
     gResourceManager->Dispose(buttonIcn);
     gWindowManager
@@ -9548,17 +9599,28 @@ void editManager::DrawRadar(i32) {
 }
 
 VA(0x00403183, 0x34b)
-void editManager::DrawCell(i16 x, i16 y, i16 column, i16 row, u8 layers) {
-    u8 tileset;
+void editManager::DrawCell(
+    i16 x,
+    i16 y,
+    i16 column,
+    i16 row,
+    H1_ENUM_PARAM(EditDrawLayer, u8) layers
+) {
+    H1_ENUM_LOCAL(MapTileset, u8) tileset;
     u16 groundFrame;
     i16 sx;
     i16 sy;
     mapCell* cell;
 
     cell = &m_map.cells[x][y];
-    sx = column * (m_zoomedOut ? EDIT_VIEW_ZOOMED_CELL_PIXELS : EDIT_VIEW_CELL_PIXELS)
+    sx = column
+             * (H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? EDIT_VIEW_ZOOMED_CELL_PIXELS
+                                                      : EDIT_VIEW_CELL_PIXELS)
          + EDIT_VIEW_LEFT;
-    sy = row * (m_zoomedOut ? EDIT_VIEW_ZOOMED_CELL_PIXELS : EDIT_VIEW_CELL_PIXELS) + EDIT_VIEW_TOP;
+    sy = row
+             * (H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? EDIT_VIEW_ZOOMED_CELL_PIXELS
+                                                      : EDIT_VIEW_CELL_PIXELS)
+         + EDIT_VIEW_TOP;
     if (gGeneratingMaps) {
         if (layers & EDIT_DRAW_OVERLAY)
             TileToBitmap(m_cloudTiles[m_zoomedOut], (x + y) & 3, gWindowManager->m_screen, sx, sy);
@@ -9572,7 +9634,7 @@ void editManager::DrawCell(i16 x, i16 y, i16 column, i16 row, u8 layers) {
     }
     if (layers & EDIT_DRAW_OBJECT) {
         if (cell->m_objectIndex != MAP_CELL_NO_FRAME) {
-            tileset = cell->m_objectTileset & MAP_CELL_TILESET_MASK;
+            tileset = H1_ENUM_DECODE(MapTileset, cell->m_objectTileset & MAP_CELL_TILESET_MASK);
             IconToBitmap(
                 m_objectIcons[tileset][m_zoomedOut],
                 gWindowManager->m_screen,
@@ -9603,7 +9665,7 @@ void editManager::DrawCell(i16 x, i16 y, i16 column, i16 row, u8 layers) {
     }
     if (layers & EDIT_DRAW_OVERLAY) {
         if (cell->m_overlayIndex != MAP_CELL_NO_FRAME) {
-            tileset = cell->m_overlayTileset & MAP_CELL_TILESET_MASK;
+            tileset = H1_ENUM_DECODE(MapTileset, cell->m_overlayTileset & MAP_CELL_TILESET_MASK);
             IconToBitmap(
                 m_objectIcons[tileset][m_zoomedOut],
                 gWindowManager->m_screen,
@@ -9629,7 +9691,7 @@ void editManager::DrawCell(i16 x, i16 y, i16 column, i16 row, u8 layers) {
 // in moves it forward by ten.
 VA(0x004034ce, 0x78)
 void editManager::ToggleZoom(void) {
-    if (!m_zoomedOut) {
+    if (!H1_ENUM_ENCODE(EditZoom, m_zoomedOut)) {
         m_zoomedOut = EDIT_ZOOM_OUT;
         Scroll(-10, -10);
     } else {
@@ -9644,8 +9706,8 @@ void editManager::ToggleZoom(void) {
 // The tool buttons show their frame pair from EDIT_TOOL_BUTTON_FRAME, the
 // second frame for the selected tool.
 VA(0x00403546, 0x29c)
-void editManager::SelectTool(i16 tool) {
-    i32 i;
+void editManager::SelectTool(H1_ENUM_PARAM(EditTool, i16) tool) {
+    H1_ENUM_LOCAL(EditTool, i32) i;
     tag_message msg;
 
     if (m_tool == tool)
@@ -9655,11 +9717,11 @@ void editManager::SelectTool(i16 tool) {
         delete m_toolManager;
         m_toolManager = NULL;
     }
-    for (i = 0; i < EDIT_TOOL_COUNT; i++) {
+    for (i = EDIT_TOOL_TERRAIN; i < EDIT_TOOL_COUNT; i++) {
         msg.type = MESSAGE_WIDGET;
-        msg.id = i + EDIT_CONTROL_TERRAIN;
+        msg.id = H1_ENUM_ENCODE(EditTool, i) + EDIT_CONTROL_TERRAIN;
         msg.command = WIDGET_COMMAND_SET_FRAME;
-        msg.value = (i == tool) + i * 2 + EDIT_TOOL_BUTTON_FRAME;
+        msg.value = (i == tool) + H1_ENUM_ENCODE(EditTool, i) * 2 + EDIT_TOOL_BUTTON_FRAME;
         m_window->BroadcastMessage(msg);
     }
     switch (tool) {
@@ -9677,14 +9739,17 @@ void editManager::SelectTool(i16 tool) {
             break;
     }
     if (m_toolManager) {
-        if (!gExec->AddManager(m_toolManager, BASE_MANAGER_PRIORITY_UNASSIGNED)) {
+        if (!H1_ENUM_ENCODE(
+                BaseManagerStatus,
+                gExec->AddManager(m_toolManager, BASE_MANAGER_PRIORITY_UNASSIGNED)
+            )) {
             m_tool = tool;
         } else {
             m_toolManager = NULL;
-            m_tool = EDIT_MANAGER_NO_TOOL;
+            m_tool = EDIT_TOOL_NONE;
         }
     } else {
-        m_tool = EDIT_MANAGER_NO_TOOL;
+        m_tool = EDIT_TOOL_NONE;
     }
     m_window->DrawWindow();
 }
@@ -9694,13 +9759,21 @@ void editManager::Scroll(i16 dx, i16 dy) {
     m_viewX += dx;
     if (m_viewX < 0)
         m_viewX = 0;
-    if (m_viewX > MAP_CELL_GRID_SIZE - (m_zoomedOut ? EDIT_VIEW_ZOOMED_CELLS : EDIT_VIEW_CELLS))
-        m_viewX = MAP_CELL_GRID_SIZE - (m_zoomedOut ? EDIT_VIEW_ZOOMED_CELLS : EDIT_VIEW_CELLS);
+    if (m_viewX
+        > MAP_CELL_GRID_SIZE
+              - (H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? EDIT_VIEW_ZOOMED_CELLS : EDIT_VIEW_CELLS))
+        m_viewX =
+            MAP_CELL_GRID_SIZE
+            - (H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? EDIT_VIEW_ZOOMED_CELLS : EDIT_VIEW_CELLS);
     m_viewY += dy;
     if (m_viewY < 0)
         m_viewY = 0;
-    if (m_viewY > MAP_CELL_GRID_SIZE - (m_zoomedOut ? EDIT_VIEW_ZOOMED_CELLS : EDIT_VIEW_CELLS))
-        m_viewY = MAP_CELL_GRID_SIZE - (m_zoomedOut ? EDIT_VIEW_ZOOMED_CELLS : EDIT_VIEW_CELLS);
+    if (m_viewY
+        > MAP_CELL_GRID_SIZE
+              - (H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? EDIT_VIEW_ZOOMED_CELLS : EDIT_VIEW_CELLS))
+        m_viewY =
+            MAP_CELL_GRID_SIZE
+            - (H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? EDIT_VIEW_ZOOMED_CELLS : EDIT_VIEW_CELLS);
     DrawView(m_viewX, m_viewY);
     UpdateMapView();
     DrawRadar(1);
@@ -9713,8 +9786,8 @@ void editManager::UpdateKnobs(i16 update) {
     i16 xPos;
     i16 yPos;
 
-    scaleX = 402.0 / (m_zoomedOut ? 45 : 59);
-    scaleY = 402.0 / (m_zoomedOut ? 45 : 59);
+    scaleX = 402.0 / (H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? 45 : 59);
+    scaleY = 402.0 / (H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? 45 : 59);
     xPos = m_viewX * scaleX;
     yPos = m_viewY * scaleY;
     m_horizontalKnob->m_x = xPos + EDIT_KNOB_FIRST;
@@ -9792,11 +9865,17 @@ void SetTileVariant(mapCell* cell, i32 tile) {
 // not meet at a corner take the other terrain or, with fromUndo, their undo
 // terrain), then gives every other terrain cell its border tile and flips.
 VA(0x00403d38, 0xbdb)
-void editManager::BlendTerrain(i16 terrain, u8, u8 fromUndo, u8 skipBorders, u8 skipFill) {
+void editManager::BlendTerrain(
+    H1_ENUM_PARAM(TerrainType, i16) terrain,
+    u8,
+    u8 fromUndo,
+    u8 skipBorders,
+    u8 skipFill
+) {
     u8 east;
     u8 ne;
     i32 terrainBase;
-    i32 surrounding;
+    H1_ENUM_LOCAL(TerrainType, i32) surrounding;
     u8 nw;
     i16 x;
     u8 se;
@@ -9806,14 +9885,18 @@ void editManager::BlendTerrain(i16 terrain, u8, u8 fromUndo, u8 skipBorders, u8 
     u8 sw;
     u8 west;
     mapCell* cell;
-    i32 thisTerrain;
+    H1_ENUM_LOCAL(TerrainType, i32) thisTerrain;
 
-    surrounding = 0;
+    surrounding = TERRAIN_WATER;
     if (skipFill)
         goto borders;
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
-            if (m_map.cells[x][y].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN == terrain) {
+            if (H1_ENUM_DECODE(
+                    TerrainType,
+                    m_map.cells[x][y].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN
+                )
+                == terrain) {
                 north = south = east = west = nw = ne = sw = se = 0;
                 if (y == 0 || gGroundToTerrain[m_map.cells[x][y - 1].m_tileIndex] == terrain)
                     north = 1;
@@ -9836,10 +9919,14 @@ void editManager::BlendTerrain(i16 terrain, u8, u8 fromUndo, u8 skipBorders, u8 
                 if (!((north && west) || (north && east) || (south && west) || (south && east))) {
                     if (fromUndo)
                         m_map.cells[x][y].m_tileIndex =
-                            gGroundToTerrain[m_undoMap.cells[x][y].m_tileIndex]
+                            H1_ENUM_ENCODE(
+                                TerrainType,
+                                gGroundToTerrain[m_undoMap.cells[x][y].m_tileIndex]
+                            )
                             * MAP_CELL_TILES_PER_TERRAIN;
                     else
-                        m_map.cells[x][y].m_tileIndex = surrounding * MAP_CELL_TILES_PER_TERRAIN;
+                        m_map.cells[x][y].m_tileIndex =
+                            H1_ENUM_ENCODE(TerrainType, surrounding) * MAP_CELL_TILES_PER_TERRAIN;
                 }
                 if (x == 0 || y == 0
                     || gGroundToTerrain[m_map.cells[x - 1][y - 1].m_tileIndex] == terrain)
@@ -9866,10 +9953,14 @@ void editManager::BlendTerrain(i16 terrain, u8, u8 fromUndo, u8 skipBorders, u8 
                     && !m_map.cells[x][y].m_objectTileset) {
                     if (fromUndo)
                         m_map.cells[x][y].m_tileIndex =
-                            gGroundToTerrain[m_undoMap.cells[x][y].m_tileIndex]
+                            H1_ENUM_ENCODE(
+                                TerrainType,
+                                gGroundToTerrain[m_undoMap.cells[x][y].m_tileIndex]
+                            )
                             * MAP_CELL_TILES_PER_TERRAIN;
                     else
-                        m_map.cells[x][y].m_tileIndex = surrounding * MAP_CELL_TILES_PER_TERRAIN;
+                        m_map.cells[x][y].m_tileIndex =
+                            H1_ENUM_ENCODE(TerrainType, surrounding) * MAP_CELL_TILES_PER_TERRAIN;
                 }
             }
         }
@@ -9880,8 +9971,9 @@ borders:
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             cell = &m_map.cells[x][y];
-            thisTerrain = cell->m_tileIndex / MAP_CELL_TILES_PER_TERRAIN;
-            terrainBase = thisTerrain * MAP_CELL_TILES_PER_TERRAIN;
+            thisTerrain =
+                H1_ENUM_DECODE(TerrainType, cell->m_tileIndex / MAP_CELL_TILES_PER_TERRAIN);
+            terrainBase = H1_ENUM_ENCODE(TerrainType, thisTerrain) * MAP_CELL_TILES_PER_TERRAIN;
             north = south = east = west = 0;
             if (thisTerrain != TERRAIN_DIRT) {
                 if (y > 0 && gGroundToTerrain[m_map.cells[x][y - 1].m_tileIndex] != thisTerrain)
@@ -10048,7 +10140,7 @@ void editManager::DoHorizontalKnob(void) {
     i16 newX;
 
     gMouseManager->SetCursorShape(2);
-    scale = 402.0 / (m_zoomedOut ? 45 : 59);
+    scale = 402.0 / (H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? 45 : 59);
     gMouseManager->MouseCoords(x, y);
     gInputManager->Flush();
     message.type = MESSAGE_MOUSE_MOVE;
@@ -10072,10 +10164,12 @@ void editManager::DoHorizontalKnob(void) {
             newX = (newX - EDIT_KNOB_FIRST) / scale;
             if (m_viewX != newX) {
                 if (newX
-                    > (m_zoomedOut ? MAP_CELL_GRID_SIZE - EDIT_VIEW_ZOOMED_CELLS
-                                   : MAP_CELL_GRID_SIZE - EDIT_VIEW_CELLS))
-                    newX = m_zoomedOut ? MAP_CELL_GRID_SIZE - EDIT_VIEW_ZOOMED_CELLS
-                                       : MAP_CELL_GRID_SIZE - EDIT_VIEW_CELLS;
+                    > (H1_ENUM_ENCODE(EditZoom, m_zoomedOut)
+                           ? MAP_CELL_GRID_SIZE - EDIT_VIEW_ZOOMED_CELLS
+                           : MAP_CELL_GRID_SIZE - EDIT_VIEW_CELLS))
+                    newX = H1_ENUM_ENCODE(EditZoom, m_zoomedOut)
+                               ? MAP_CELL_GRID_SIZE - EDIT_VIEW_ZOOMED_CELLS
+                               : MAP_CELL_GRID_SIZE - EDIT_VIEW_CELLS;
                 if (newX < 0)
                     newX = 0;
                 m_viewX = newX;
@@ -10102,7 +10196,7 @@ void editManager::DoVerticalKnob(void) {
     i16 newY;
 
     gMouseManager->SetCursorShape(4);
-    scale = 402.0 / (m_zoomedOut ? 45 : 59);
+    scale = 402.0 / (H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? 45 : 59);
     gMouseManager->MouseCoords(x, y);
     gInputManager->Flush();
     message.type = MESSAGE_MOUSE_MOVE;
@@ -10127,10 +10221,12 @@ void editManager::DoVerticalKnob(void) {
             newY = (newY - EDIT_KNOB_FIRST) / scale;
             if (m_viewY != newY) {
                 if (newY
-                    > (m_zoomedOut ? MAP_CELL_GRID_SIZE - EDIT_VIEW_ZOOMED_CELLS
-                                   : MAP_CELL_GRID_SIZE - EDIT_VIEW_CELLS))
-                    newY = m_zoomedOut ? MAP_CELL_GRID_SIZE - EDIT_VIEW_ZOOMED_CELLS
-                                       : MAP_CELL_GRID_SIZE - EDIT_VIEW_CELLS;
+                    > (H1_ENUM_ENCODE(EditZoom, m_zoomedOut)
+                           ? MAP_CELL_GRID_SIZE - EDIT_VIEW_ZOOMED_CELLS
+                           : MAP_CELL_GRID_SIZE - EDIT_VIEW_CELLS))
+                    newY = H1_ENUM_ENCODE(EditZoom, m_zoomedOut)
+                               ? MAP_CELL_GRID_SIZE - EDIT_VIEW_ZOOMED_CELLS
+                               : MAP_CELL_GRID_SIZE - EDIT_VIEW_CELLS;
                 if (newY < 0)
                     newY = 0;
                 m_viewY = newY;
@@ -10154,10 +10250,10 @@ void editManager::SetCellSound(i16 x, i16 y) {
     mapCell* cell;
 
     cell = &m_map.cells[x][y];
-    m_mapSounds[x][y] = MAP_SOUND_NONE;
+    m_mapSounds[x][y] = EDIT_MAP_SOUND_NONE;
     if (cell->m_tileIndex < MAP_CELL_TILES_PER_TERRAIN && cell->m_tileIndex > 3)
         m_mapSounds[x][y] = MAP_SOUND_COAST;
-    switch (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
+    switch (MAP_TRIGGER_OBJECT(cell->m_triggerType)) {
         case MAP_OBJECT_BUOY:
             m_mapSounds[x][y] = MAP_SOUND_BUOY;
             break;
@@ -10212,7 +10308,7 @@ void editManager::SetCellSound(i16 x, i16 y) {
             m_mapSounds[x][y] = MAP_SOUND_SPELL_SHRINE;
             break;
         default:
-            switch (cell->m_objectTileset & MAP_CELL_TILESET_MASK) {
+            switch (H1_ENUM_DECODE(MapTileset, cell->m_objectTileset & MAP_CELL_TILESET_MASK)) {
                 case TILESET_OBJ32_04:
                     if (cell->m_objectIndex == EDIT_SOUND_LAVA_LOOP_5_FRAME)
                         m_mapSounds[x][y] = MAP_SOUND_LOOP_5;
@@ -10250,75 +10346,78 @@ void editManager::SetCoast(i16 x, i16 y) {
     cell = &m_map.cells[x][y];
     if (cell->m_tileIndex > MAP_CELL_TILES_PER_TERRAIN - 1)
         return;
-    switch (cell->m_tileIndex / EDIT_COAST_TILE_VARIANTS) {
+    switch (H1_ENUM_DECODE(
+        EditCoastTile,
+        cell->m_tileIndex / H1_ENUM_ENCODE(EditCoastTile, EDIT_COAST_TILE_VARIANTS)
+    )) {
         case EDIT_COAST_OPEN:
             return;
         case EDIT_COAST_EDGE:
             if (cell->m_flags & MAP_CELL_GROUND_FLIP_VERTICAL) {
                 if (y < MAP_CELL_GRID_SIZE - 1 && !m_map.cells[x][y + 1].m_triggerType)
-                    m_map.cells[x][y + 1].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x][y + 1].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
             } else {
                 if (y > 0 && !m_map.cells[x][y - 1].m_triggerType)
-                    m_map.cells[x][y - 1].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x][y - 1].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
             }
             break;
         case EDIT_COAST_OUTER_CORNER:
             if ((cell->m_flags & (MAP_CELL_GROUND_FLIP_VERTICAL | MAP_CELL_GROUND_FLIP_HORIZONTAL))
                 == (MAP_CELL_GROUND_FLIP_VERTICAL | MAP_CELL_GROUND_FLIP_HORIZONTAL)) {
                 if (y < MAP_CELL_GRID_SIZE - 1 && !m_map.cells[x][y + 1].m_triggerType)
-                    m_map.cells[x][y + 1].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x][y + 1].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
                 if (x > 0 && !m_map.cells[x - 1][y].m_triggerType)
-                    m_map.cells[x - 1][y].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x - 1][y].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
                 if (y < MAP_CELL_GRID_SIZE - 1 && x > 0 && !m_map.cells[x - 1][y + 1].m_triggerType)
-                    m_map.cells[x - 1][y + 1].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x - 1][y + 1].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
             } else if (cell->m_flags & MAP_CELL_GROUND_FLIP_HORIZONTAL) {
                 if (y > 0 && !m_map.cells[x][y - 1].m_triggerType)
-                    m_map.cells[x][y - 1].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x][y - 1].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
                 if (x > 0 && !m_map.cells[x - 1][y].m_triggerType)
-                    m_map.cells[x - 1][y].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x - 1][y].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
                 if (y > 0 && x > 0 && !m_map.cells[x - 1][y - 1].m_triggerType)
-                    m_map.cells[x - 1][y - 1].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x - 1][y - 1].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
             } else if (cell->m_flags & MAP_CELL_GROUND_FLIP_VERTICAL) {
                 if (y < MAP_CELL_GRID_SIZE - 1 && !m_map.cells[x][y + 1].m_triggerType)
-                    m_map.cells[x][y + 1].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x][y + 1].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
                 if (x < MAP_CELL_GRID_SIZE - 1 && !m_map.cells[x + 1][y].m_triggerType)
-                    m_map.cells[x + 1][y].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x + 1][y].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
                 if (y < MAP_CELL_GRID_SIZE - 1 && x < MAP_CELL_GRID_SIZE - 1
                     && !m_map.cells[x + 1][y + 1].m_triggerType)
-                    m_map.cells[x + 1][y + 1].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x + 1][y + 1].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
             } else {
                 if (y > 0 && !m_map.cells[x][y - 1].m_triggerType)
-                    m_map.cells[x][y - 1].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x][y - 1].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
                 if (x < MAP_CELL_GRID_SIZE - 1 && !m_map.cells[x + 1][y].m_triggerType)
-                    m_map.cells[x + 1][y].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x + 1][y].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
                 if (y > 0 && x < MAP_CELL_GRID_SIZE - 1 && !m_map.cells[x + 1][y - 1].m_triggerType)
-                    m_map.cells[x + 1][y - 1].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x + 1][y - 1].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
             }
             break;
         case EDIT_COAST_SIDE:
             if (cell->m_flags & MAP_CELL_GROUND_FLIP_HORIZONTAL) {
                 if (x > 0 && !m_map.cells[x - 1][y].m_triggerType)
-                    m_map.cells[x - 1][y].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x - 1][y].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
             } else {
                 if (x < MAP_CELL_GRID_SIZE - 1 && !m_map.cells[x + 1][y].m_triggerType)
-                    m_map.cells[x + 1][y].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x + 1][y].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
             }
             break;
         case EDIT_COAST_INNER_CORNER:
             if ((cell->m_flags & (MAP_CELL_GROUND_FLIP_VERTICAL | MAP_CELL_GROUND_FLIP_HORIZONTAL))
                 == (MAP_CELL_GROUND_FLIP_VERTICAL | MAP_CELL_GROUND_FLIP_HORIZONTAL)) {
                 if (y < MAP_CELL_GRID_SIZE - 1 && x > 0 && !m_map.cells[x - 1][y + 1].m_triggerType)
-                    m_map.cells[x - 1][y + 1].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x - 1][y + 1].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
             } else if (cell->m_flags & MAP_CELL_GROUND_FLIP_HORIZONTAL) {
                 if (y > 0 && x > 0 && !m_map.cells[x - 1][y - 1].m_triggerType)
-                    m_map.cells[x - 1][y - 1].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x - 1][y - 1].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
             } else if (cell->m_flags & MAP_CELL_GROUND_FLIP_VERTICAL) {
                 if (y < MAP_CELL_GRID_SIZE - 1 && x < MAP_CELL_GRID_SIZE - 1
                     && !m_map.cells[x + 1][y + 1].m_triggerType)
-                    m_map.cells[x + 1][y + 1].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x + 1][y + 1].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
             } else {
                 if (y > 0 && x < MAP_CELL_GRID_SIZE - 1 && !m_map.cells[x + 1][y - 1].m_triggerType)
-                    m_map.cells[x + 1][y - 1].m_triggerType = MAP_OBJECT_COAST;
+                    m_map.cells[x + 1][y - 1].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST);
             }
             break;
     }
@@ -10341,11 +10440,11 @@ void editManager::CheckObjects(void) {
     whirlpools = 0;
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
-            if ((m_map.cells[x][y].m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_STONE_LITHS)
+            if (MAP_TRIGGER_OBJECT(m_map.cells[x][y].m_triggerType) == MAP_OBJECT_STONE_LITHS)
                 lithsSeen++;
             if (x < MAP_CELL_GRID_SIZE - 2 && y < MAP_CELL_GRID_SIZE - 1
-                && (m_map.cells[x][y].m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_WHIRLPOOL
-                && (m_map.cells[x + 2][y + 1].m_triggerType & MAP_TRIGGER_TYPE_MASK)
+                && MAP_TRIGGER_OBJECT(m_map.cells[x][y].m_triggerType) == MAP_OBJECT_WHIRLPOOL
+                && MAP_TRIGGER_OBJECT(m_map.cells[x + 2][y + 1].m_triggerType)
                        == MAP_OBJECT_WHIRLPOOL)
                 whirlpools++;
         }
@@ -10358,13 +10457,13 @@ void editManager::CheckObjects(void) {
     memset(heroIdUsed, 0, sizeof(heroIdUsed));
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
-            if ((m_map.cells[x][y].m_triggerType
-                     == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_TOWN)
+            if ((m_map.cells[x][y].m_triggerType == MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_TOWN)
                  || m_map.cells[x][y].m_triggerType
-                        == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_CASTLE))
+                        == MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_CASTLE))
                 && x > 1 && y > 1)
                 ClearArea(x - 2, y - 2, 4, 1, EDIT_CLEAR_ALL, 0);
-            if ((m_map.cells[x][y].m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_FILE_OBJECT_HERO) {
+            if ((m_map.cells[x][y].m_triggerType & MAP_TRIGGER_TYPE_MASK)
+                == MAP_OBJECT_TRIGGER(MAP_FILE_OBJECT_HERO)) {
                 heroRecord =
                     static_cast<mapHeroExtra*>(m_extras[m_map.cells[x][y].m_objectMetadata]);
                 if (++placedHeroes > GAME_HERO_COUNT)
@@ -10388,8 +10487,8 @@ void editManager::UpdateTriggers(void) {
     unused = 0;
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++)
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++)
-            if (m_map.cells[x][y].m_triggerType == MAP_OBJECT_COAST)
-                m_map.cells[x][y].m_triggerType = MAP_OBJECT_NONE;
+            if (m_map.cells[x][y].m_triggerType == MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST))
+                m_map.cells[x][y].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_NONE);
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             cell = &m_map.cells[x][y];
@@ -10400,8 +10499,8 @@ void editManager::UpdateTriggers(void) {
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             cell = &m_map.cells[x][y];
-            if ((cell->m_overlayTileset == TILESET_MTN32
-                 || cell->m_overlayTileset == TILESET_TREE32)
+            if ((H1_ENUM_DECODE(MapTileset, cell->m_overlayTileset) == TILESET_MTN32
+                 || H1_ENUM_DECODE(MapTileset, cell->m_overlayTileset) == TILESET_TREE32)
                 && !cell->m_triggerType) {
                 if (cell->m_secondaryTrigger & MAP_TRIGGER_TYPE_MASK) {
                     cell->m_triggerType = cell->m_secondaryTrigger & MAP_TRIGGER_TYPE_MASK;
@@ -10450,9 +10549,10 @@ i32 editManager::CountArtifacts(void) {
     count = 0;
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++)
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++)
-            if ((m_map.cells[x][y].m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_ARTIFACT
+            if ((m_map.cells[x][y].m_triggerType & MAP_TRIGGER_TYPE_MASK)
+                    == MAP_OBJECT_TRIGGER(MAP_OBJECT_ARTIFACT)
                 || (m_map.cells[x][y].m_triggerType & MAP_TRIGGER_TYPE_MASK)
-                       == MAP_FILE_OBJECT_RANDOM_ARTIFACT)
+                       == MAP_OBJECT_TRIGGER(MAP_FILE_OBJECT_RANDOM_ARTIFACT))
                 count++;
     return count;
 }
@@ -10468,9 +10568,9 @@ i32 editManager::CountTowns(void) {
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             cell = &m_map.cells[x][y];
-            if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_TOWN)
-                || cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_CASTLE)
-                || cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN))
+            if (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_TOWN)
+                || cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_CASTLE)
+                || cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN))
                 count++;
         }
     }
@@ -10488,10 +10588,10 @@ i32 editManager::CountMines(void) {
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             cell = &m_map.cells[x][y];
-            if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_MINE)
-                || cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SAWMILL)
-                || cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_ALCHEMIST_LAB)
-                || cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_MINE))
+            if (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_MINE)
+                || cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_SAWMILL)
+                || cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_ALCHEMIST_LAB)
+                || cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_MINE))
                 mineTotal++;
         }
     }
@@ -10522,8 +10622,8 @@ void editManager::WriteTowns(i32 file) {
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             spot = &m_map.cells[x][y];
-            if (spot->m_triggerType == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_CASTLE)
-                || (spot->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)
+            if (spot->m_triggerType == MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_CASTLE)
+                || (spot->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN)
                     && (spot->m_objectIndex == EDIT_CASTLE_ENTRANCE_FRAME
                         || spot->m_objectIndex
                                == EDIT_CASTLE_ENTRANCE_FRAME + TOWN_RACE_FRAME_STRIDE
@@ -10548,8 +10648,8 @@ void editManager::WriteTowns(i32 file) {
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             spot = &m_map.cells[x][y];
-            if (spot->m_triggerType == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_TOWN)
-                || (spot->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)
+            if (spot->m_triggerType == MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_TOWN)
+                || (spot->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN)
                     && (spot->m_objectIndex == EDIT_CASTLE_ENTRANCE_FRAME - TOWN_CASTLE_FRAME_OFFSET
                         || spot->m_objectIndex
                                == EDIT_CASTLE_ENTRANCE_FRAME - TOWN_CASTLE_FRAME_OFFSET
@@ -10615,7 +10715,7 @@ void editManager::WriteMines(i32 file) {
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             spot = &m_map.cells[x][y];
-            if (spot->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_DRAGON_CITY)) {
+            if (spot->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_DRAGON_CITY)) {
                 numCities++;
                 cityX = x;
                 cityY = y;
@@ -10625,7 +10725,7 @@ void editManager::WriteMines(i32 file) {
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             spot = &m_map.cells[x][y];
-            if (spot->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_LIGHTHOUSE)) {
+            if (spot->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_LIGHTHOUSE)) {
                 beaconCount++;
                 beaconX = x;
                 beaconY = y;
@@ -10636,7 +10736,7 @@ void editManager::WriteMines(i32 file) {
     empty[1] = 0xff;
     empty[2] = 0xff;
     if (cityX != -1) {
-        type = MAP_OBJECT_DRAGON_CITY;
+        type = H1_ENUM_ENCODE(MapObjectType, MAP_OBJECT_DRAGON_CITY);
         write(file, &cityX, 1);
         write(file, &cityY, 1);
         write(file, &type, 1);
@@ -10644,7 +10744,7 @@ void editManager::WriteMines(i32 file) {
         write(file, empty, 3);
     }
     if (beaconX != -1) {
-        type = MAP_OBJECT_LIGHTHOUSE;
+        type = H1_ENUM_ENCODE(MapObjectType, MAP_OBJECT_LIGHTHOUSE);
         write(file, &beaconX, 1);
         write(file, &beaconY, 1);
         write(file, &type, 1);
@@ -10659,11 +10759,11 @@ void editManager::WriteMines(i32 file) {
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             spot = &m_map.cells[x][y];
-            if (spot->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_MINE)
-                || spot->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SAWMILL)
-                || spot->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_ALCHEMIST_LAB)
-                || spot->m_triggerType == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_MINE)) {
-                if (spot->m_triggerType == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_MINE)) {
+            if (spot->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_MINE)
+                || spot->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_SAWMILL)
+                || spot->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_ALCHEMIST_LAB)
+                || spot->m_triggerType == MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_MINE)) {
+                if (spot->m_triggerType == MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_MINE)) {
                     type = 0xff;
                 } else {
                     neighbour = &m_map.cells[x + 1][y];
@@ -10699,7 +10799,7 @@ void editManager::WriteArtifacts(i32 file) {
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             cell = &m_map.cells[x][y];
-            if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_ARTIFACT))
+            if (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_ARTIFACT))
                 artifactHolders[cell->m_objectIndex] = GAME_ARTIFACT_ON_MAP;
         }
     }
@@ -10718,7 +10818,7 @@ void editManager::WriteObelisks(i32 file) {
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             cell = &m_map.cells[x][y];
-            if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_OBELISK))
+            if (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_OBELISK))
                 obeliskCount++;
         }
     }
@@ -10735,7 +10835,7 @@ void editManager::WriteObelisks(i32 file) {
 // checks, then shows the checks' messages. Maps in the old format keep the
 // header without its format word and no object owners.
 VA(0x00406f5b, 0x25c)
-i16 editManager::SaveMap(char* name) {
+H1_ENUM_RETURN(BaseManagerStatus, i16) editManager::SaveMap(char* name) {
     char fileName[40];
     i16 width;
     i16 data;
@@ -10792,7 +10892,7 @@ i16 editManager::SaveMap(char* name) {
 // and sound tables are rebuilt on save) and, from the new format on, the
 // object owners.
 VA(0x004071b7, 0x382)
-i16 editManager::LoadMap(char* name) {
+H1_ENUM_RETURN(BaseManagerStatus, i16) editManager::LoadMap(char* name) {
     char fileName[40];
     u8 ignored[5500];
     i16 width;
@@ -10854,7 +10954,7 @@ i16 editManager::LoadMap(char* name) {
 }
 
 VA(0x00407539, 0x12e)
-i16 editManager::PickMap(char*, char*, i16 mode) {
+i16 editManager::PickMap(char*, char*, H1_ENUM_PARAM(FileRequesterMode, i16) mode) {
     fileRequester* requester;
     i32 picked;
     i16 dialogResult;
@@ -10911,21 +11011,46 @@ void editManager::AddError(char* text) {
 // towns, monsters and artifacts by theirs, any other object by the bit of
 // the terrain under it.
 VA(0x004077bc, 0x129)
-i32 editManager::IsCleared(i32 tileset, i32 index, i32 mask, i32 x, i32 y) {
+i32 editManager::IsCleared(
+    H1_ENUM_PARAM(MapTileset, i32) tileset,
+    i32 index,
+    i32 mask,
+    i32 x,
+    i32 y
+) {
     if (tileset <= TILESET_TERRAIN_OBJECT_LAST || tileset == TILESET_RSRC32) {
-        if ((tileset == TILESET_RSRC32 && index == RESOURCE_PILE_OBJECT_BASE + RESOURCE_WOOD)
-            || (tileset == TILESET_RSRC32 && index == RESOURCE_PILE_OBJECT_BASE + RESOURCE_MERCURY)
-            || (tileset == TILESET_RSRC32 && index == RESOURCE_PILE_OBJECT_BASE + RESOURCE_ORE)
-            || (tileset == TILESET_RSRC32 && index == RESOURCE_PILE_OBJECT_BASE + RESOURCE_SULFUR)
-            || (tileset == TILESET_RSRC32 && index == RESOURCE_PILE_OBJECT_BASE + RESOURCE_CRYSTAL)
-            || (tileset == TILESET_RSRC32 && index == RESOURCE_PILE_OBJECT_BASE + RESOURCE_GEMS)
-            || (tileset == TILESET_RSRC32 && index == RESOURCE_PILE_OBJECT_BASE + RESOURCE_GOLD)
+        if ((tileset == TILESET_RSRC32
+             && index == RESOURCE_PILE_OBJECT_BASE + H1_ENUM_ENCODE(ResourceType, RESOURCE_WOOD))
+            || (tileset == TILESET_RSRC32
+                && index
+                       == RESOURCE_PILE_OBJECT_BASE
+                              + H1_ENUM_ENCODE(ResourceType, RESOURCE_MERCURY))
+            || (tileset == TILESET_RSRC32
+                && index == RESOURCE_PILE_OBJECT_BASE + H1_ENUM_ENCODE(ResourceType, RESOURCE_ORE))
+            || (tileset == TILESET_RSRC32
+                && index
+                       == RESOURCE_PILE_OBJECT_BASE + H1_ENUM_ENCODE(ResourceType, RESOURCE_SULFUR))
+            || (tileset == TILESET_RSRC32
+                && index
+                       == RESOURCE_PILE_OBJECT_BASE
+                              + H1_ENUM_ENCODE(ResourceType, RESOURCE_CRYSTAL))
+            || (tileset == TILESET_RSRC32
+                && index == RESOURCE_PILE_OBJECT_BASE + H1_ENUM_ENCODE(ResourceType, RESOURCE_GEMS))
+            || (tileset == TILESET_RSRC32
+                && index == RESOURCE_PILE_OBJECT_BASE + H1_ENUM_ENCODE(ResourceType, RESOURCE_GOLD))
             || (tileset == TILESET_RSRC32 && index == EDIT_TREASURE_CHEST_FRAME)
             || (tileset == TILESET_OBJ32_07 && index == EDIT_TREASURE_OBJECT_FRAME_A)
             || (tileset == TILESET_OBJ32_07 && index == EDIT_TREASURE_OBJECT_FRAME_C)
             || (tileset == TILESET_OBJ32_07 && index == EDIT_TREASURE_OBJECT_FRAME_B))
             return mask & EDIT_CLEAR_TREASURE;
-        return mask & (1 << (m_map.cells[x][y].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN));
+        return mask
+               & H1_ENUM_BIT(
+                   TerrainType,
+                   H1_ENUM_DECODE(
+                       TerrainType,
+                       m_map.cells[x][y].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN
+                   )
+               );
     }
     if (tileset == TILESET_TOWN32)
         return mask & EDIT_CLEAR_TOWNS;
@@ -10962,7 +11087,10 @@ void editManager::ClearArea(i32 x, i32 y, i32 width, i32 height, u16 mask, i32 s
                     continue;
                 if ((pass == 0
                      && IsCleared(
-                         m_map.cells[i][j].m_objectTileset & MAP_CELL_TILESET_MASK,
+                         H1_ENUM_DECODE(
+                             MapTileset,
+                             m_map.cells[i][j].m_objectTileset & MAP_CELL_TILESET_MASK
+                         ),
                          m_map.cells[i][j].m_objectIndex,
                          mask,
                          i,
@@ -10970,7 +11098,10 @@ void editManager::ClearArea(i32 x, i32 y, i32 width, i32 height, u16 mask, i32 s
                      ))
                     || (pass == 1
                         && IsCleared(
-                            m_map.cells[i][j].m_overlayTileset & MAP_CELL_TILESET_MASK,
+                            H1_ENUM_DECODE(
+                                MapTileset,
+                                m_map.cells[i][j].m_overlayTileset & MAP_CELL_TILESET_MASK
+                            ),
                             m_map.cells[i][j].m_overlayIndex,
                             mask,
                             i,
@@ -10991,7 +11122,8 @@ void editManager::ClearArea(i32 x, i32 y, i32 width, i32 height, u16 mask, i32 s
                                         ownerRec->objectId = 0;
                                         thatCell->m_objectTileset = 0;
                                         thatCell->m_objectIndex = MAP_CELL_NO_FRAME;
-                                        thatCell->m_triggerType = MAP_OBJECT_NONE;
+                                        thatCell->m_triggerType =
+                                            MAP_OBJECT_TRIGGER(MAP_OBJECT_NONE);
                                         thatCell->m_flags &=
                                             ~(MAP_CELL_OBJECT_ANIMATED | MAP_CELL_OBJECT_EXTRA
                                               | MAP_CELL_OBJECT_SHADOW_ONLY);
@@ -11012,7 +11144,8 @@ void editManager::ClearArea(i32 x, i32 y, i32 width, i32 height, u16 mask, i32 s
                                             ~(MAP_CELL_OVERLAY_ANIMATED | MAP_CELL_OVERLAY_EXTRA);
                                         thatCell->m_secondaryTrigger &= MAP_CELL_SECONDARY_BLOCKED;
                                         if (thatCell->m_objectIndex == MAP_CELL_NO_FRAME)
-                                            thatCell->m_triggerType = MAP_OBJECT_NONE;
+                                            thatCell->m_triggerType =
+                                                MAP_OBJECT_TRIGGER(MAP_OBJECT_NONE);
                                     }
                                 }
                             }
@@ -11025,9 +11158,9 @@ void editManager::ClearArea(i32 x, i32 y, i32 width, i32 height, u16 mask, i32 s
                         m_map.cells[i][j].m_triggerType &=
                             MAP_CELL_GROUND_FLIP_VERTICAL | MAP_CELL_GROUND_FLIP_HORIZONTAL;
                         m_map.cells[i][j].m_extraFrame = 0;
-                        m_map.cells[i][j].m_flags = 0;
+                        m_map.cells[i][j].m_flags = MAP_CELL_FLAGS_NONE;
                         m_map.cells[i][j].m_secondaryTrigger = 0;
-                        m_map.cells[i][j].m_triggerType = MAP_OBJECT_NONE;
+                        m_map.cells[i][j].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_NONE);
                         m_map.cells[i][j].m_objectMetadata = 0;
                     }
                 }
@@ -11050,11 +11183,11 @@ void editManager::ResetArea(i32 x, i32 y, i32 width, i32 height) {
             m_map.cells[i][j].m_objectIndex = MAP_CELL_NO_FRAME;
             m_map.cells[i][j].m_overlayTileset = 0;
             m_map.cells[i][j].m_overlayIndex = MAP_CELL_NO_FRAME;
-            m_map.cells[i][j].m_triggerType = MAP_OBJECT_NONE;
+            m_map.cells[i][j].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_NONE);
             m_map.cells[i][j].m_extraFrame = 0;
-            m_map.cells[i][j].m_flags = 0;
+            m_map.cells[i][j].m_flags = MAP_CELL_FLAGS_NONE;
             m_map.cells[i][j].m_secondaryTrigger = 0;
-            m_map.cells[i][j].m_triggerType = MAP_OBJECT_NONE;
+            m_map.cells[i][j].m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_NONE);
             m_map.cells[i][j].m_objectMetadata = 0;
         }
     }
@@ -11153,36 +11286,38 @@ void ScatterDetails(void) {
                 && cell->m_tileIndex % MAP_CELL_TILES_PER_TERRAIN < 4 && Random(1, 100) <= 3) {
                 gNextObjectId++;
                 cellOwner->objectId = gNextObjectId;
-                switch (cell->m_tileIndex / MAP_CELL_TILES_PER_TERRAIN) {
+                switch (
+                    H1_ENUM_DECODE(TerrainType, cell->m_tileIndex / MAP_CELL_TILES_PER_TERRAIN)
+                ) {
                     case TERRAIN_GRASS:
-                        cell->m_objectTileset = TILESET_OBJ32_01;
+                        cell->m_objectTileset = H1_ENUM_ENCODE(MapTileset, TILESET_OBJ32_01);
                         cell->m_objectIndex = Random(0, 9);
-                        cell->m_triggerType = MAP_OBJECT_SHADOW;
+                        cell->m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW);
                         break;
                     case TERRAIN_SNOW:
-                        cell->m_objectTileset = TILESET_OBJ32_02;
+                        cell->m_objectTileset = H1_ENUM_ENCODE(MapTileset, TILESET_OBJ32_02);
                         cell->m_objectIndex = Random(0, 2);
-                        cell->m_triggerType = MAP_OBJECT_SHADOW;
+                        cell->m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW);
                         break;
                     case TERRAIN_SWAMP:
-                        cell->m_objectTileset = TILESET_OBJ32_03;
+                        cell->m_objectTileset = H1_ENUM_ENCODE(MapTileset, TILESET_OBJ32_03);
                         cell->m_objectIndex = Random(0, 1);
-                        cell->m_triggerType = MAP_OBJECT_SHADOW;
+                        cell->m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW);
                         break;
                     case TERRAIN_LAVA:
-                        cell->m_objectTileset = TILESET_OBJ32_04;
+                        cell->m_objectTileset = H1_ENUM_ENCODE(MapTileset, TILESET_OBJ32_04);
                         cell->m_objectIndex = 0;
-                        cell->m_triggerType = MAP_OBJECT_SHADOW;
+                        cell->m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW);
                         break;
                     case TERRAIN_DESERT:
-                        cell->m_objectTileset = TILESET_OBJ32_05;
+                        cell->m_objectTileset = H1_ENUM_ENCODE(MapTileset, TILESET_OBJ32_05);
                         cell->m_objectIndex = 2;
-                        cell->m_triggerType = MAP_OBJECT_SHADOW;
+                        cell->m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW);
                         break;
                     case TERRAIN_DIRT:
-                        cell->m_objectTileset = TILESET_OBJ32_06;
+                        cell->m_objectTileset = H1_ENUM_ENCODE(MapTileset, TILESET_OBJ32_06);
                         cell->m_objectIndex = Random(0, 10);
-                        cell->m_triggerType = MAP_OBJECT_SHADOW;
+                        cell->m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW);
                         break;
                 }
             }

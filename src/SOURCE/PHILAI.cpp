@@ -1862,14 +1862,14 @@ i32 philAI::RVOfPosition(
     i32 eventMode
 ) {
     i32 targetOdds;
-    i32 triggerObjectType;
+    H1_ENUM_LOCAL(MapObjectType, i32) triggerObjectType;
     i32 followWorth;
     i32 targetEventValue;
     i32 totalValue;
     i32 positionStrategicValue;
     float journeyTurns;
     i32 triggerType;
-    H1_ENUM_LOCAL(MapObjectType, i32) destinationSafety;
+    i32 destinationSafety;
     i32 followChance;
     i32 guardEventChance;
     i32 primaryEventChance;
@@ -2232,13 +2232,13 @@ i32 philAI::FightValueOfStack(
     float spellMultiplier;
     i32 spellScore;
     i32 heroLuck;
-    // Counts army slots, then the castle's building slots, then spell slots.
-    H1_ENUM_SHARED(BuildingSlotType, i32) keepArrows;
+    i32 keepArrows;
     i32 armyValue;
     i32 castleValue;
     i32 bestScore;
     float countMod;
-    i32 slot;
+    // Counts army slots, then the castle's building slots, then spell slots.
+    H1_ENUM_SHARED(BuildingSlotType, i32) slot;
     i32 combatStatSum;
     i32 morale;
     i32 magicTotal;

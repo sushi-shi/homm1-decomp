@@ -36,6 +36,8 @@ H1_ENUM_CONST_END(MapCellConstant)
 // cell and bit 7 draws the object with the ground (the shadow-only bit;
 // pathing ignores such objects).
 H1_ENUM_FLAGS_BEGIN(MapCellFlag, u8)
+    // No flag (the editor's cleared cell).
+    MAP_CELL_FLAGS_NONE = 0x00,
     MAP_CELL_GROUND_FLIP_VERTICAL = 0x01,
     MAP_CELL_GROUND_FLIP_HORIZONTAL = 0x02,
     MAP_CELL_OBJECT_ANIMATED = 0x04,

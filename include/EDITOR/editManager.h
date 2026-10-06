@@ -9,6 +9,7 @@
 
 #include <BASE/baseManager.h>
 #include <Domains.h>
+#include <EDITOR/randomMap.h>
 #include <H1/Macros.h>
 #include <SOURCE/game.h>
 #include <SOURCE/KB.h>
@@ -22,9 +23,8 @@ class tileset;
 struct tag_message;
 
 H1_ENUM_CONST_BEGIN(EditManagerConstant)
-    EDIT_MANAGER_NO_TOOL = -1,
-    // Main tests message.type against this mask (key, mouse and widget
-    // messages).
+// Main tests message.type against this mask (key, mouse and widget
+// messages).
     EDIT_MANAGER_DISPATCH_MASK = 0x32f,
     // m_objectIcons: the adventure tileset slots (MapTileset), each loaded at
     // both zoom levels.
@@ -72,46 +72,32 @@ H1_ENUM_CONST_BEGIN(EditViewGeometry)
 H1_ENUM_CONST_END(EditViewGeometry)
 
 // editwind.bin widget ids and the tool commands.
-H1_ENUM_BEGIN(EditWindowControlId)
-    EDIT_CONTROL_MAP = 9,
-    EDIT_CONTROL_HORIZONTAL_TRACK = 10,
-    EDIT_CONTROL_VERTICAL_TRACK = 11,
-    EDIT_CONTROL_HORIZONTAL_KNOB = 12,
-    EDIT_CONTROL_VERTICAL_KNOB = 13,
-    EDIT_CONTROL_SCROLL_UP = 14,
-    EDIT_CONTROL_SCROLL_DOWN = 15,
-    EDIT_CONTROL_SCROLL_RIGHT = 16,
-    EDIT_CONTROL_SCROLL_LEFT = 17,
-    EDIT_CONTROL_SCROLL_UP_LEFT = 18,
-    EDIT_CONTROL_SCROLL_UP_RIGHT = 19,
-    EDIT_CONTROL_SCROLL_DOWN_LEFT = 20,
-    EDIT_CONTROL_SCROLL_DOWN_RIGHT = 21,
-    EDIT_CONTROL_RADAR = 39,
-    EDIT_CONTROL_UNDO = 101,
-    EDIT_CONTROL_ZOOM = 102,
-    EDIT_CONTROL_TERRAIN = 103,
-    EDIT_CONTROL_OBJECTS = 104,
-    EDIT_CONTROL_DETAILS = 105,
-    EDIT_CONTROL_ERASER = 106,
-    EDIT_CONTROL_LOAD = 107,
-    EDIT_CONTROL_SAVE = 108,
-    EDIT_CONTROL_QUIT = 109,
-    EDIT_CONTROL_MAP_INFO = 110,
-    EDIT_CONTROL_NEW = 111,
+H1_ENUM_ID_BEGIN(EditWindowControlId)
+EDIT_CONTROL_MAP = 9,
+    EDIT_CONTROL_HORIZONTAL_TRACK = 10, EDIT_CONTROL_VERTICAL_TRACK = 11,
+    EDIT_CONTROL_HORIZONTAL_KNOB = 12, EDIT_CONTROL_VERTICAL_KNOB = 13, EDIT_CONTROL_SCROLL_UP = 14,
+    EDIT_CONTROL_SCROLL_DOWN = 15, EDIT_CONTROL_SCROLL_RIGHT = 16, EDIT_CONTROL_SCROLL_LEFT = 17,
+    EDIT_CONTROL_SCROLL_UP_LEFT = 18, EDIT_CONTROL_SCROLL_UP_RIGHT = 19,
+    EDIT_CONTROL_SCROLL_DOWN_LEFT = 20, EDIT_CONTROL_SCROLL_DOWN_RIGHT = 21,
+    EDIT_CONTROL_RADAR = 39, EDIT_CONTROL_UNDO = 101, EDIT_CONTROL_ZOOM = 102,
+    EDIT_CONTROL_TERRAIN = 103, EDIT_CONTROL_OBJECTS = 104, EDIT_CONTROL_DETAILS = 105,
+    EDIT_CONTROL_ERASER = 106, EDIT_CONTROL_LOAD = 107, EDIT_CONTROL_SAVE = 108,
+    EDIT_CONTROL_QUIT = 109, EDIT_CONTROL_MAP_INFO = 110, EDIT_CONTROL_NEW = 111,
     // A tool panel's options button (the tool managers handle it).
     EDIT_CONTROL_TOOL_OPTIONS = 112,
-    EDIT_CONTROL_RANDOM_MAP = 113
-H1_ENUM_END(EditWindowControlId)
+    EDIT_CONTROL_RANDOM_MAP = 113 H1_ENUM_ID_END(EditWindowControlId)
 
-// SelectTool's tools; their buttons follow EDIT_CONTROL_TERRAIN in this
-// order.
-H1_ENUM_BEGIN(EditTool)
+    // SelectTool's tools; their buttons follow EDIT_CONTROL_TERRAIN in this
+    // order. NONE: no tool selected (m_tool at start and after a failed Open).
+    H1_ENUM_BEGIN(EditTool)
+    EDIT_TOOL_NONE = -1,
     EDIT_TOOL_TERRAIN = 0,
     EDIT_TOOL_OBJECTS = 1,
     EDIT_TOOL_DETAILS = 2,
     EDIT_TOOL_ERASER = 3,
     EDIT_TOOL_COUNT = 4
 H1_ENUM_END(EditTool)
+H1_ENUM_STEPPED(EditTool)
 
 H1_ENUM_CONST_BEGIN(EditToolButtonConstant)
 // buttons.icn: the terrain tool button's frame pair; each tool's pair
@@ -121,18 +107,20 @@ H1_ENUM_CONST_END(EditToolButtonConstant)
 
 // IsCleared's mask: a bit per terrain (TerrainType) for the objects standing
 // on it, then the object classes the eraser lists after the terrains.
-H1_ENUM_BEGIN(EditClearMask)
+H1_ENUM_FLAGS_BEGIN(EditClearMask, u16)
     EDIT_CLEAR_TOWNS = 0x80,
     EDIT_CLEAR_MONSTERS = 0x100,
     EDIT_CLEAR_ARTIFACTS = 0x200,
     EDIT_CLEAR_TREASURE = 0x400,
     EDIT_CLEAR_ALL = 0xffff
-H1_ENUM_END(EditClearMask)
+H1_ENUM_FLAGS_END(EditClearMask)
 
 // The looped environment sounds SetCellSound gives a cell (the game's
 // game::m_mapSounds ids; loop%04d.82M). Ids named by a number come from
-// object frames no table names.
+// object frames no table names. NONE is the game's MAP_SOUND_NONE: the cell
+// has no sound.
 H1_ENUM_BEGIN(EditMapSound)
+    EDIT_MAP_SOUND_NONE = -1,
     MAP_SOUND_BUOY = 0,
     MAP_SOUND_SHIPWRECK = 1,
     MAP_SOUND_WHIRLPOOL = 2,
@@ -209,12 +197,12 @@ H1_ENUM_BEGIN(EditCoastTile)
 H1_ENUM_END(EditCoastTile)
 
 // DrawCell's layers.
-H1_ENUM_BEGIN(EditDrawLayer)
+H1_ENUM_FLAGS_BEGIN(EditDrawLayer, u8)
     EDIT_DRAW_GROUND = 1,
     EDIT_DRAW_OBJECT = 2,
     EDIT_DRAW_OVERLAY = 4,
     EDIT_DRAW_ALL = 7
-H1_ENUM_END(EditDrawLayer)
+H1_ENUM_FLAGS_END(EditDrawLayer)
 
 #pragma pack(push, 1)
 // The per-cell ids of the placed objects whose frames the cell shows on its
@@ -255,15 +243,22 @@ struct editHeroExtra {
 
 class editManager : public baseManager {
 public:
-    // The selected tool (EditTool, or EDIT_MANAGER_NO_TOOL).
-    i16 m_tool;
+    // The selected tool.
+    H1_ENUM_STORAGE(EditTool, i16) m_tool;
     // The rulers' backgrounds and the radar's colour cells.
     icon* m_buttons;
     // The rulers' digits and the status bar's text.
     font* m_statusFont;
-    tileset* m_groundTiles[EDIT_MANAGER_ZOOM_COUNT];
-    tileset* m_cloudTiles[EDIT_MANAGER_ZOOM_COUNT];
-    icon* m_objectIcons[EDIT_MANAGER_TILESET_COUNT][EDIT_MANAGER_ZOOM_COUNT];
+    H1_ENUM_ARRAY(tileset*, m_groundTiles, EditZoom, EDIT_MANAGER_ZOOM_COUNT);
+    H1_ENUM_ARRAY(tileset*, m_cloudTiles, EditZoom, EDIT_MANAGER_ZOOM_COUNT);
+    H1_ENUM_ARRAY2(
+        icon*,
+        m_objectIcons,
+        MapTileset,
+        EDIT_MANAGER_TILESET_COUNT,
+        EditZoom,
+        EDIT_MANAGER_ZOOM_COUNT
+    );
     iconWidget* m_horizontalTrack;
     iconWidget* m_verticalTrack;
     iconWidget* m_horizontalKnob;
@@ -292,7 +287,7 @@ public:
     i32 m_extraCount;
     i32 m_extraSizes[MAP_EXTRA_RECORD_CAPACITY];
     void* m_extras[MAP_EXTRA_RECORD_CAPACITY];
-    i8 m_mapSounds[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+    H1_ENUM_STORAGE(EditMapSound, i8) m_mapSounds[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
     // The map cell shown at the view's top-left corner.
     i16 m_viewX;
     i16 m_viewY;
@@ -302,10 +297,11 @@ public:
     // The map's file name ("<code>1234.MAP"); the map-details dialog edits
     // its code.
     char m_mapFileName[EDIT_MAP_FILE_NAME_SIZE];
-    H1_ENUM_STORAGE(BaseManagerMessageMask, i16) m_dispatchMask;
+    // Main's message.type mask (EDIT_MANAGER_DISPATCH_MASK).
+    i16 m_dispatchMask;
 
     editManager(void);
-    void LoadObjectIcons(i16 tileset, char* largeName, char* smallName);
+    void LoadObjectIcons(H1_ENUM_PARAM(MapTileset, i16) tileset, char* largeName, char* smallName);
     virtual H1_ENUM_RETURN(BaseManagerStatus, i16) Open(i16 priority) OVERRIDE;
     virtual void Close(void) OVERRIDE;
     virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(tag_message& message) OVERRIDE;
@@ -323,9 +319,9 @@ public:
     void DrawView(i16 viewX, i16 viewY);
     // Redraws the radar map, the scroll knobs and the rulers.
     void DrawRadar(i32 unused);
-    void DrawCell(i16 x, i16 y, i16 column, i16 row, u8 layers);
+    void DrawCell(i16 x, i16 y, i16 column, i16 row, H1_ENUM_PARAM(EditDrawLayer, u8) layers);
     void ToggleZoom(void);
-    void SelectTool(i16 tool);
+    void SelectTool(H1_ENUM_PARAM(EditTool, i16) tool);
     void Scroll(i16 dx, i16 dy);
     void UpdateKnobs(i16 update);
     // Sets the ground of the width x height view cells at (column, row) to
@@ -334,7 +330,13 @@ public:
     // The same for map cells, filling the rectangle with random variants.
     void FillGround(i16 x, i16 y, i16 width, i16 height, i16 terrain);
     // Fits the terrain's edge tiles to their neighbours over the whole map.
-    void BlendTerrain(i16 terrain, u8 unused, u8 fromUndo, u8 skipBorders, u8 skipFill);
+    void BlendTerrain(
+        H1_ENUM_PARAM(TerrainType, i16) terrain,
+        u8 unused,
+        u8 fromUndo,
+        u8 skipBorders,
+        u8 skipFill
+    );
     void DoRadar(void);
     void DoHorizontalKnob(void);
     void DoVerticalKnob(void);
@@ -352,13 +354,14 @@ public:
     void WriteMines(i32 file);
     void WriteArtifacts(i32 file);
     void WriteObelisks(i32 file);
-    i16 SaveMap(char* name);
-    i16 LoadMap(char* name);
-    i16 PickMap(char* unusedName, char* unusedExtension, i16 mode);
+    H1_ENUM_RETURN(BaseManagerStatus, i16) SaveMap(char* name);
+    H1_ENUM_RETURN(BaseManagerStatus, i16) LoadMap(char* name);
+    i16
+    PickMap(char* unusedName, char* unusedExtension, H1_ENUM_PARAM(FileRequesterMode, i16) mode);
     void ClearErrors(void);
     void ShowErrors(void);
     void AddError(char* text);
-    i32 IsCleared(i32 tileset, i32 index, i32 mask, i32 x, i32 y);
+    i32 IsCleared(H1_ENUM_PARAM(MapTileset, i32) tileset, i32 index, i32 mask, i32 x, i32 y);
     // Erases the object classes in mask from the width x height cells at
     // (x, y): each cell's first layer, and its second when secondLayer is set.
     void ClearArea(i32 x, i32 y, i32 width, i32 height, u16 mask, i32 secondLayer);
@@ -371,18 +374,28 @@ public:
     i32 HasEnoughCastles(void);
     // Grows `percent` of the map's cells of terrain from random seeds over
     // cells of baseTerrain (100: the whole map).
-    void PaintRandomTerrain(i32 terrain, i32 percent, i32 baseTerrain);
+    void PaintRandomTerrain(
+        H1_ENUM_PARAM(TerrainType, i32) terrain,
+        i32 percent,
+        H1_ENUM_PARAM(TerrainType, i32) baseTerrain
+    );
     // Merges terrain regions of at most fifteen cells into a neighbour and
     // counts the land cells.
     void RemoveSmallRegions(void);
     // Lays chains of the tileset's mountains or trees.
-    void PlaceObstacleChains(i32 density, i32 tileset);
+    void PlaceObstacleChains(i32 density, H1_ENUM_PARAM(MapTileset, i32) tileset);
     // Places one chain link at (*x, *y) facing `direction` and steps on.
-    i32 PlaceChainLink(i32* x, i32* y, i32 direction, i32 tileset, char kind);
+    i32 PlaceChainLink(
+        i32* x,
+        i32* y,
+        H1_ENUM_PARAM(ChainDirection, i32) direction,
+        H1_ENUM_PARAM(MapTileset, i32) tileset,
+        char kind
+    );
     void PlaceTowns(void);
-    // Places a sawmill (kind 0), an alchemist's lab (1) or the mine of
-    // resource `kind` with its river at (x, y).
-    void PlaceResourceSite(i32 x, i32 y, i32 kind);
+    // Places a sawmill, an alchemist's lab or the mine of a resource with
+    // its river at (x, y).
+    void PlaceResourceSite(i32 x, i32 y, H1_ENUM_PARAM(RandomMapSiteKind, i32) kind);
     // Places towns, mines and obelisks.
     void PlaceRandomObjects(i32 density, i32 strength);
     // Places treasure (guarded in map corners) and wandering monsters.

@@ -599,11 +599,11 @@ void combatManager::DefaultSpell(i8 targetHex) {
 // spells are cancelled side by side.
 VA(0x0045b375, 0x383)
 void combatManager::CastMassSpell(H1_ENUM_PARAM(CombatSide, i8) castSide, i8 cureOnly) {
-    H1_ENUM_LOCAL(CombatSide, i16) effectFile;
+    i16 effectFile;
     i32 spare;
     H1_ENUM_LOCAL(CombatSide, i32) lastSide;
     i16 armyIndex;
-    i16 side;
+    H1_ENUM_LOCAL(CombatSide, i16) side;
     H1_ENUM_LOCAL(CombatSide, i32) firstSide;
 
     m_computeExtent = m_redrawExtent = 0;
@@ -776,13 +776,13 @@ void combatManager::Fireball(i8 targetHex) {
 #define meteorIcon rockIcon // frame-slot spelling
 VA(0x0045bbeb, 0x402)
 void combatManager::MeteorShower(i8 targetHex) {
-    // The area-hex counter, and the direction of each neighbour.
-    H1_ENUM_SHARED(CombatHexDirection, i16) frame;
+    i16 frame;
     i32 baseDamage;
     icon* meteorIcon;
     army* target;
     i16 affectedHexes[H1_ENUM_ENCODE(CombatHexDirection, COMBAT_DIRECTION_ADJACENT_COUNT) + 1];
-    i16 i;
+    // The area-hex counter, and the direction of each neighbour.
+    H1_ENUM_SHARED(CombatHexDirection, i16) i;
     i8 anyAffected;
 
     if (!ValidHex(targetHex))

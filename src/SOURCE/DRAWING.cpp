@@ -234,10 +234,10 @@ void combatManager::DrawFrame(i8 updateScreen) {
     i16 col;
     i8 anyLimited;
     i32 armyRight;
-    H1_ENUM_LOCAL(CombatSide, i32) armyTop;
+    i32 armyTop;
     i32 i;
     i32 rearDelta;
-    i32 side;
+    H1_ENUM_LOCAL(CombatSide, i32) side;
     i32 armyLeft;
     i32 armyBottom;
     i16 row;

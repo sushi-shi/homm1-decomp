@@ -270,7 +270,7 @@ i32 EarlySetup(void) {
     }
     gDefaultMenu = LoadMenuA(gAppInstance, "mnuDflt");
     for (i = 0; i < MAP_CELL_GROUND_TILE_COUNT; i++)
-        gGroundToTerrain[i] = i / MAP_CELL_TILES_PER_TERRAIN;
+        gGroundToTerrain[i] = H1_ENUM_DECODE(TerrainType, i / MAP_CELL_TILES_PER_TERRAIN);
     return 1;
 }
 
@@ -424,7 +424,7 @@ void NormalDialog(
 }
 
 VA(0x00408fc5, 0x91)
-i16 EventWindowHandler(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) EventWindowHandler(tag_message& message) {
     if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
             case WIDGET_NOTIFY_DESELECT:
@@ -527,7 +527,7 @@ void CleanUpMenus(void) {
 VA(0x0040921c, 0x1b)
 void EarlyShutDownSystem(void) {
     if (gEditManager)
-        gEditManager->SelectTool(EDIT_MANAGER_NO_TOOL);
+        gEditManager->SelectTool(EDIT_TOOL_NONE);
 }
 
 // The editor always asks before quitting.
@@ -560,7 +560,7 @@ i32 gClearFlags = EDITOR_CLEAR_FLAGS_DEFAULT;
 DATA(0x0043f3a0)
 i32 gSelectionX = -1;
 DATA(0x0043f714)
-char* gTerrainToolHelp[EDITOR_TERRAIN_TOOL_HELP_COUNT] = {
+H1_ENUM_ARRAY(char*, gTerrainToolHelp, TerrainToolHelp, EDITOR_TERRAIN_TOOL_HELP_COUNT) = {
     "",
     localization::Tr("editor.terrain.help.water"),
     localization::Tr("editor.terrain.help.grass"),
@@ -571,12 +571,12 @@ char* gTerrainToolHelp[EDITOR_TERRAIN_TOOL_HELP_COUNT] = {
     localization::Tr("editor.terrain.help.dirt")
 };
 DATA(0x0043f734)
-char* gClearToolHelp[EDITOR_CLEAR_TOOL_HELP_COUNT] = {
+H1_ENUM_ARRAY(char*, gClearToolHelp, ClearToolHelp, EDITOR_CLEAR_TOOL_HELP_COUNT) = {
     "",
     localization::Tr("editor.clear.options.help")
 };
 DATA(0x0043f73c)
-char* gOverlayToolHelp[EDITOR_OVERLAY_TOOL_HELP_COUNT] = {
+H1_ENUM_ARRAY(char*, gOverlayToolHelp, OverlayToolHelp, EDITOR_OVERLAY_TOOL_HELP_COUNT) = {
     "",
     localization::Tr("editor.overlay.selected.help")
 };

@@ -85,13 +85,12 @@ H1_ENUM_CONST_BEGIN(OverlayManagerConstant)
 H1_ENUM_CONST_END(OverlayManagerConstant)
 
 // The tool panel: the object preview border and the category arrows.
-H1_ENUM_BEGIN(OverlayControlId)
-    OVERLAY_PREVIEW_BORDER = 0x26,
-    OVERLAY_NEXT_CATEGORY_BUTTON = 0x28,
-    OVERLAY_PREVIOUS_CATEGORY_BUTTON = 0x29
-H1_ENUM_END(OverlayControlId)
+H1_ENUM_ID_BEGIN(OverlayControlId)
+OVERLAY_PREVIEW_BORDER = 0x26, OVERLAY_NEXT_CATEGORY_BUTTON = 0x28,
+                               OVERLAY_PREVIOUS_CATEGORY_BUTTON =
+                                   0x29 H1_ENUM_ID_END(OverlayControlId)
 
-H1_ENUM_CONST_BEGIN(OverlayManagerLayout)
+                                       H1_ENUM_CONST_BEGIN(OverlayManagerLayout)
     OVERLAY_PANEL_X = 480,
     OVERLAY_PANEL_Y = 197,
     OVERLAY_PANEL_WIDTH = 144,
@@ -157,12 +156,12 @@ public:
     font* m_font;
     // Main drew the selected object over the map view.
     i32 m_previewDrawn;
-    H1_ENUM_STORAGE(BaseManagerMessageMask, i16) m_dispatchMask;
+    i16 m_dispatchMask;
 
     overlayManager(void);
-    virtual i16 Open(i16 priority) OVERRIDE;
+    virtual H1_ENUM_RETURN(BaseManagerStatus, i16) Open(i16 priority) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual i16 Main(tag_message& message) OVERRIDE;
+    virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(tag_message& message) OVERRIDE;
     // Outlines a footprint at screen (x, y): groundMask cells, coloured by
     // overlayMask, within width columns and height rows.
     void DrawFootprint(i16 x, i16 y, i16 groundMask, i16 overlayMask, i16 width, i16 height);

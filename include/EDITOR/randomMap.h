@@ -47,6 +47,7 @@ H1_ENUM_BEGIN(RandomMapSiteKind)
     RANDOM_MAP_SITE_FIRST_MINE = 2,
     RANDOM_MAP_SITE_KIND_COUNT = 7
 H1_ENUM_END(RandomMapSiteKind)
+H1_ENUM_STEPPED(RandomMapSiteKind)
 
 // Where PlaceTreasures guards a treasure: the diagonal cell of a corner whose
 // two sides are blocked.
@@ -75,6 +76,7 @@ H1_ENUM_BEGIN(ChainDirection)
     CHAIN_RIGHTWARD_END = CHAIN_DOWN_LEFT_STEEP,
     CHAIN_DIRECTION_COUNT = 8
 H1_ENUM_END(ChainDirection)
+H1_ENUM_STEPPED(ChainDirection)
 
 // PlaceObstacleChains' roll for a tree chain's family (the first letter of
 // its objects' names: autumn, pine or deciduous trees).

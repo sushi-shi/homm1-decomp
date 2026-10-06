@@ -95,10 +95,10 @@ void combatManager::DetermineEffectOfSpell(
     i32* bestEffect,
     i32* bestHex
 ) {
-    i32 side;
+    H1_ENUM_LOCAL(CombatSide, i32) side;
     i32 firstDurMax;
     i32 done;
-    H1_ENUM_LOCAL(CombatSide, i32) effect;
+    i32 effect;
     army* targetCreature;
     H1_ENUM_LOCAL(CombatSpellAITargetMode, i32) spellMode;
     i32 hex;

@@ -17,16 +17,6 @@ class icon;
 class iconWidget;
 struct tag_message;
 
-// SetWinText rows of the editor's dialogs.
-H1_ENUM_CONST_BEGIN(EventsWindowText)
-    EVENTS_WINDOW_TEXT_TOWN = 0x65,
-    EVENTS_WINDOW_TEXT_MONSTER = 0x66,
-    EVENTS_WINDOW_TEXT_HERO = 0x67,
-    EVENTS_WINDOW_TEXT_CLEAR = 0x68,
-    EVENTS_WINDOW_TEXT_MAP_DETAILS = 0x69,
-    EVENTS_WINDOW_TEXT_NEW_MAP = 0x6a
-H1_ENUM_CONST_END(EventsWindowText)
-
 // Main tests message.type against the dispatch mask the managers share.
 H1_ENUM_CONST_BEGIN(EventsManagerConstant)
     EVENTS_MANAGER_DISPATCH_MASK = 0x32f,
@@ -50,20 +40,6 @@ H1_ENUM_CONST_BEGIN(EventsManagerLayout)
     EVENTS_DIALOG_X = 16,
     EVENTS_DIALOG_Y = 16
 H1_ENUM_CONST_END(EventsManagerLayout)
-
-// mapCell::m_triggerType values Main opens a dialog for.
-H1_ENUM_BEGIN(EventsObjectType)
-    EVENTS_OBJECT_MONSTER = 0x9a,
-    EVENTS_OBJECT_TOWN = 0xa8,
-    EVENTS_OBJECT_MONSTER_2 = 0xbf,
-    EVENTS_OBJECT_CASTLE = 0xc0,
-    EVENTS_OBJECT_CASTLE_GATE = 0xc1,
-    EVENTS_OBJECT_MONSTER_3 = 0xc3,
-    EVENTS_OBJECT_MONSTER_4 = 0xc4,
-    EVENTS_OBJECT_MONSTER_5 = 0xc5,
-    EVENTS_OBJECT_MONSTER_6 = 0xc6,
-    EVENTS_OBJECT_HERO = 0xc7
-H1_ENUM_END(EventsObjectType)
 
 // cellwin.bin: a text field per cell byte and per pair word, and toggles for
 // the bits of the cell's seventh byte and the object type's top bit.
@@ -190,7 +166,10 @@ H1_ENUM_CONST_END(EventsCursorConstant)
 // Closes the running dialog: the dialog manager reads the select command.
 #define FINISH_DIALOG_SELECT(message)                                                              \
     ((message).type = MESSAGE_WIDGET,                                                              \
-     (message).command = (message).id = WIDGET_COMMAND_DIALOG_SELECT)
+     (message).command = H1_ENUM_DECODE(                                                           \
+         BaseWidgetCommand,                                                                        \
+         (message).id = H1_ENUM_ENCODE(BaseWidgetCommand, WIDGET_COMMAND_DIALOG_SELECT)            \
+     ))
 
 #pragma pack(push, 1)
 
@@ -200,12 +179,12 @@ public:
     icon* m_cursorIcon;
     // The tool panel's backdrop.
     iconWidget* m_panel;
-    H1_ENUM_STORAGE(BaseManagerMessageMask, i16) m_dispatchMask;
+    i16 m_dispatchMask;
 
     eventsManager(void);
-    virtual i16 Open(i16 priority) OVERRIDE;
+    virtual H1_ENUM_RETURN(BaseManagerStatus, i16) Open(i16 priority) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual i16 Main(tag_message& message) OVERRIDE;
+    virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(tag_message& message) OVERRIDE;
     // The raw cell editor (debug level 1 and above).
     void EditCell(i16 x, i16 y);
     void EditTown(i16 x, i16 y);
@@ -216,25 +195,25 @@ public:
 };
 #pragma pack(pop)
 
-i16 CellWindowHandler(tag_message& message);
-i16 TownWindowHandler(tag_message& message);
-i16 MonsterWindowHandler(tag_message& message);
-i16 HeroWindowHandler(tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) CellWindowHandler(tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) TownWindowHandler(tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) MonsterWindowHandler(tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) HeroWindowHandler(tag_message& message);
 // Runs the eraser options window (clearwin.bin); on OK with the whole-map
 // toggle set it erases the selected classes everywhere. Returns 1 on OK.
 i32 ClearOptionsDialog(void);
 void UpdateClearWindow(void);
-i16 ClearWindowHandler(tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) ClearWindowHandler(tag_message& message);
 // Edits the map header (dtlwind.bin); returns 0 when cancelled.
 i32 MapDetailsDialog(i32 randomMap);
 void UpdateMapDetailsWindow(void);
-i16 MapDetailsWindowHandler(tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) MapDetailsWindowHandler(tag_message& message);
 // Sets up the random map generator (editnew.bin); returns 0 when cancelled.
 i32 NewMapDialog(void);
 void UpdateNewMapWindow(void);
 // Rescales the other terrains after terrain `fixed` changed (-1: none).
 void BalanceTerrainPercents(i32 fixed);
-i16 NewMapWindowHandler(tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) NewMapWindowHandler(tag_message& message);
 // Drags a generator slider: a terrain row when `terrain` is set, else a
 // density row.
 void DragNewMapSlider(i32 terrain, i32 index);

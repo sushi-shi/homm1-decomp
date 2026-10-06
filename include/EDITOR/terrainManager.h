@@ -38,20 +38,15 @@ H1_ENUM_CONST_BEGIN(TerrainManagerLayout)
     TERRAIN_BACKDROP_KIND = 0x20
 H1_ENUM_CONST_END(TerrainManagerLayout)
 
-H1_ENUM_BEGIN(TerrainManagerWidgetId)
-    TERRAIN_HIGHLIGHT_WIDGET = 0x19,
-    TERRAIN_BUTTON_WATER = 0x33,
-    TERRAIN_BUTTON_GRASS = 0x34,
-    TERRAIN_BUTTON_SNOW = 0x35,
-    TERRAIN_BUTTON_SWAMP = 0x36,
-    TERRAIN_BUTTON_LAVA = 0x37,
-    TERRAIN_BUTTON_DESERT = 0x38,
-    TERRAIN_BUTTON_DIRT = 0x39
-H1_ENUM_END(TerrainManagerWidgetId)
+H1_ENUM_ID_BEGIN(TerrainManagerWidgetId)
+TERRAIN_HIGHLIGHT_WIDGET = 0x19,
+    TERRAIN_BUTTON_WATER = 0x33, TERRAIN_BUTTON_GRASS = 0x34, TERRAIN_BUTTON_SNOW = 0x35,
+    TERRAIN_BUTTON_SWAMP = 0x36, TERRAIN_BUTTON_LAVA = 0x37, TERRAIN_BUTTON_DESERT = 0x38,
+    TERRAIN_BUTTON_DIRT = 0x39 H1_ENUM_ID_END(TerrainManagerWidgetId)
 
-// Main's drag modes: shift paints the cells the cursor crosses, control a 2x2
-// brush, a plain drag fills the spanned rectangle.
-H1_ENUM_BEGIN(TerrainDragMode)
+    // Main's drag modes: shift paints the cells the cursor crosses, control a 2x2
+    // brush, a plain drag fills the spanned rectangle.
+    H1_ENUM_BEGIN(TerrainDragMode)
     TERRAIN_DRAG_CELLS = 0,
     TERRAIN_DRAG_RECTANGLE = 1,
     TERRAIN_DRAG_BRUSH = 2
@@ -60,21 +55,21 @@ H1_ENUM_END(TerrainDragMode)
 #pragma pack(push, 1)
 class terrainManager : public baseManager {
 public:
-    // The selected terrain (TerrainType).
-    u8 m_terrain;
-    iconWidget* m_terrainButtons[TERRAIN_MANAGER_TERRAIN_COUNT];
+    // The selected terrain.
+    H1_ENUM_STORAGE(TerrainType, u8) m_terrain;
+    H1_ENUM_ARRAY(iconWidget*, m_terrainButtons, TerrainType, TERRAIN_MANAGER_TERRAIN_COUNT);
     backdropWidget* m_backdrop;
     iconWidget* m_highlight;
     iconWidget* m_panel;
     // The last map cell a drag step visited.
     i16 m_lastX;
     i16 m_lastY;
-    H1_ENUM_STORAGE(BaseManagerMessageMask, i16) m_dispatchMask;
+    i16 m_dispatchMask;
 
     terrainManager(void);
-    virtual i16 Open(i16 priority) OVERRIDE;
+    virtual H1_ENUM_RETURN(BaseManagerStatus, i16) Open(i16 priority) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual i16 Main(tag_message& message) OVERRIDE;
+    virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(tag_message& message) OVERRIDE;
     // Refits every terrain's edges, then rerolls each plain ground tile to
     // one of its terrain's variants (the R key).
     void RandomizeTiles(void);
@@ -83,6 +78,6 @@ public:
 #pragma pack(pop)
 
 // The terrain the tool last selected; Open restores it.
-extern i32 gLastTerrain;
+extern H1_ENUM_STORAGE(TerrainType, i32) gLastTerrain;
 
 #endif // HOMM1_EDITOR_TERRAINMANAGER_H

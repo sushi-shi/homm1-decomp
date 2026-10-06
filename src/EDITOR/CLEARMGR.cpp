@@ -29,7 +29,7 @@ clearManager::clearManager(void) {
 }
 
 VA(0x00401044, 0x188)
-i16 clearManager::Open(i16 priority) {
+H1_ENUM_RETURN(BaseManagerStatus, i16) clearManager::Open(i16 priority) {
     m_panel = new iconWidget(
         CLEAR_PANEL_X,
         CLEAR_PANEL_Y,
@@ -37,7 +37,7 @@ i16 clearManager::Open(i16 priority) {
         CLEAR_PANEL_HEIGHT,
         "buttons.icn",
         CLEAR_PANEL_FRAME,
-        0,
+        ICON_DRAW_NORMAL,
         WIDGET_ID_NONE,
         ICON_WIDGET_DRAW,
         1
@@ -79,7 +79,7 @@ void clearManager::Close(void) {
 }
 
 VA(0x00401291, 0x501)
-i16 clearManager::Main(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) clearManager::Main(tag_message& message) {
     i16 newX;
     i16 newY;
     i16 anchorX;
@@ -87,11 +87,11 @@ i16 clearManager::Main(tag_message& message) {
     i16 x;
     i16 y;
     i32 unusedMask;
-    i16 dragMode;
+    H1_ENUM_LOCAL(ClearDragMode, i16) dragMode;
     tag_message event;
 
     if (!(message.type & m_dispatchMask))
-        return 0;
+        return MESSAGE_DISPATCH_CONTINUE;
     switch (message.type) {
         case MESSAGE_WIDGET:
             switch (message.command) {
@@ -181,7 +181,7 @@ i16 clearManager::Main(tag_message& message) {
                 case WIDGET_COMMAND_HOVER:
                     if (message.id != EDIT_CONTROL_MAP
                         && message.id == gEditManager->m_lastCommandId)
-                        return 1;
+                        return MESSAGE_DISPATCH_CONSUME;
                     gEditManager->m_lastCommandId = message.id;
                     switch (message.id) {
                         case EDIT_CONTROL_MAP:
@@ -195,9 +195,9 @@ i16 clearManager::Main(tag_message& message) {
                             }
                             break;
                     }
-                    return 1;
+                    return MESSAGE_DISPATCH_CONSUME;
             }
             break;
     }
-    return 0;
+    return MESSAGE_DISPATCH_CONTINUE;
 }

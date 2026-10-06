@@ -984,7 +984,7 @@ void game::GiveTroopsToNeutralTowns(void) {
 DATA(0x004a6c10)
 char gCurMapName[16] = "";
 DATA(0x004a6c20)
-i32 gEndSequence = 0;
+H1_ENUM_STORAGE(GameEndSequence, i32) gEndSequence = GAME_END_LOST;
 DATA(0x004a6c24)
 i32 gGameOver = 0;
 
