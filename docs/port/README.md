@@ -547,7 +547,7 @@ those commits onto the new root:
 ```sh
 git fetch origin source-buka-2003
 old=$(git rev-list --max-parents=0 port)         # the source commit the port sits on
-git rebase --onto origin/source-buka-2003 "$old" port
+git rebase --rebase-merges --onto origin/source-buka-2003 "$old" port
 ```
 
 Then rebuild both programs and run the tests:
@@ -578,3 +578,19 @@ host headers (`*Host.h`) were refreshed from the new headers' Windows part,
 the editor's own copies of the Windows calls got the same host functions, and
 the four shared portable units (`PLATFORM/File`, `PLATFORM/Records`,
 `SOURCE/SAVEREC`, `SOURCE/KBCOMMON`) joined both `build.json` targets.
+
+The second (`52922394` to `d59c9910`: named constants, `b8`/`b32` flags with
+`true` and `false`, helper families such as `WRITE_FILE_VALUE`, renamed
+unknown members, inlined strings) was replayed with `--rebase-merges`, which
+keeps the side branches' merges; a merge's own resolutions (its remerge diff)
+were carried over by hand. Conflicts were where a port commit rewrote lines
+the regeneration had re-spelled: the record codecs replacing `read`/`write`
+and `WRITE_FILE_VALUE` calls, the bug pass's fixes in conditions that gained
+named constants (`COMBAT_OPPOSING_SIDE`, `MAP_EVENT_TRIGGER`,
+`TOWN_GATE_NO_TOWN`), and code the port had moved out of a unit (the movie
+sound setup into `Audio.cpp`, `SetGameDefaults` into `KBCOMMON.cpp`, the
+`*Host.h` declarations), which took the regeneration's changes in its new
+place. Windows spellings the regeneration added to shared units (`BOOL`,
+`TRUE`, `FALSE`) became `b32`, `true` and `false` there; the record codecs
+follow the renamed members (`m_unused00`, `m_unused9a`, `m_unused19`) and
+the network codec's entry points take `b8` flags like `TransmitRemoteData`.
