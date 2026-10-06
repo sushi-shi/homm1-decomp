@@ -9,6 +9,9 @@
 #include <BASE/heroWindowManager.h>
 #include <BASE/Misc.h>
 #include <SOURCE/advManager.h>
+#include <SOURCE/army.h>
+#include <SOURCE/armyGroup.h>
+#include <SOURCE/combatManager.h>
 #include <SOURCE/comwin.h>
 #include <SOURCE/dialogTypes.h>
 #include <SOURCE/KB.h>
@@ -18,9 +21,14 @@
 #include <SOURCE/philAI.h>
 #include <SOURCE/playerData.h>
 #include <SOURCE/remoteRecords.h>
+#include <SOURCE/saveRecords.h>
 #include <SOURCE/SETUP.h>
+#include <SOURCE/game.h>
+#include <SOURCE/hero.h>
+#include <SOURCE/town.h>
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 void RemoteCleanup(void) {
@@ -123,6 +131,122 @@ void RemoteMain(i32 gameMode) {
     gNumHumanPlayers = gNumNetGuests + 1;
     gIDCtr = (gThisNetPos + gNetNameIndex * 400 + 1) * 100000000;
     gInNetSetup = false;
+}
+
+static FILE* RemoteTraceFile(void) {
+    static i32 gTraceOpened = 0;
+    static FILE* gTraceFile = NULL;
+    char* path;
+    if (!gTraceOpened) {
+        gTraceOpened = 1;
+        path = getenv("HOMM1_NET_TRACE");
+        if (path && *path)
+            gTraceFile = fopen(path, "a");
+    }
+    return gTraceFile;
+}
+
+// FNV-1a, 32 bits, skipping the bytes in [skipFrom, skipTo).
+static u32 RemoteTraceHash(const u8* data, i32 size, i32 skipFrom, i32 skipTo) {
+    u32 hash = 2166136261u;
+    i32 i;
+    for (i = 0; i < size; i++) {
+        if (i >= skipFrom && i < skipTo)
+            continue;
+        hash ^= data[i];
+        hash *= 16777619u;
+    }
+    return hash;
+}
+
+static void RemoteTraceLine(const char* event, u32 hash, i32 size) {
+    FILE* file = RemoteTraceFile();
+    if (!file)
+        return;
+    // A save just received is not loaded yet: the date is the old game's,
+    // or none.
+    if (gGameInitialized && strcmp(event, "receive"))
+        fprintf(
+            file,
+            "%s date=%d.%d.%d player=%d net=%d size=%d hash=%08x\n",
+            event,
+            gGame->m_month,
+            gGame->m_week,
+            gGame->m_day,
+            gCurPlayer,
+            gThisNetPos,
+            size,
+            hash
+        );
+    else
+        fprintf(file, "%s net=%d size=%d hash=%08x\n", event, gThisNetPos, size, hash);
+    fflush(file);
+}
+
+// With HOMM1_NET_TRACE_DUMP set, the traced bytes themselves are kept beside
+// the trace, to find what differs.
+static void RemoteTraceDump(const char* event, const void* data, i32 size) {
+    static i32 gTraceCount = 0;
+    char* path;
+    char dumpPath[512];
+    FILE* dump;
+    path = getenv("HOMM1_NET_TRACE");
+    if (!getenv("HOMM1_NET_TRACE_DUMP") || strlen(path) >= sizeof(dumpPath) - 32)
+        return;
+    sprintf(dumpPath, "%s.%02d.%s", path, gTraceCount++, event);
+    dump = fopen(dumpPath, "wb");
+    if (dump) {
+        fwrite(data, 1, size, dump);
+        fclose(dump);
+    }
+}
+
+void RemoteTraceSave(const char* event, const char* save, i32 size) {
+    if (!RemoteTraceFile())
+        return;
+    RemoteTraceDump(event, save, size);
+    RemoteTraceLine(
+        event,
+        RemoteTraceHash(
+            reinterpret_cast<const u8*>(save),
+            size,
+            SAVE_NAME_FIELD_OFFSET,
+            SAVE_NAME_FIELD_OFFSET + SAVE_NAME_FIELD_SIZE
+        ),
+        size
+    );
+}
+
+void RemoteTraceGame(const char* event) {
+    if (!RemoteTraceFile())
+        return;
+    RecordWriter record;
+    gGame->WriteSaveRecord(record);
+    RemoteTraceSave(event, reinterpret_cast<const char*>(record.Data()), record.Size());
+}
+
+void RemoteTraceCombat(const char* event) {
+    i32 side;
+    i32 index;
+    army* unit;
+    if (!RemoteTraceFile())
+        return;
+    RecordWriter record;
+    record.Put(static_cast<i32>(gCombatManager->m_combatResult));
+    for (side = 0; side < COMBAT_SIDE_COUNT; side++) {
+        record.Put(gCombatManager->m_numArmies[side]);
+        for (index = 0; index < gCombatManager->m_numArmies[side]; index++) {
+            unit = &gCombatManager->m_armies[side][index];
+            record.Put(unit->m_creatureType);
+            record.Put(unit->m_hex);
+            record.Put(unit->m_quantity);
+            record.Put(unit->m_hitPointsLost);
+        }
+        if (gCombatManager->m_heroes[side])
+            WriteHero(record, *gCombatManager->m_heroes[side]);
+    }
+    RemoteTraceDump(event, record.Data(), record.Size());
+    RemoteTraceLine(event, RemoteTraceHash(record.Data(), record.Size(), 0, 0), record.Size());
 }
 
 void UnloadRemoteDriver(i16 networkDriver) {

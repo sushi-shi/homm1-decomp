@@ -402,6 +402,17 @@ i16 game::SaveGame(char* filename, b8 generateName) {
             ))
             strcpy(gGame->m_saveName, filename);
     }
+    WriteSaveRecord(outFile);
+    if (!outFile.SaveFile(savePath))
+        FileError(savePath);
+    return 1;
+}
+
+void game::WriteSaveRecord(RecordWriter& outFile) {
+    i32 iFile;
+    char humans[GAME_PLAYER_COUNT];
+    char buffer[100];
+
     outFile.Put(gIAmGreatest);
     outFile.Put(m_difficultyRating);
     outFile.Put(gMonthType);
@@ -460,9 +471,6 @@ i16 game::SaveGame(char* filename, b8 generateName) {
     outFile.Put(&m_mapSounds[0][0], sizeof(m_mapSounds));
     outFile.Put(&m_mapExtra[0][0], sizeof(m_mapExtra));
     outFile.Put(&gMapVisitFlags[0][0], sizeof(gMapVisitFlags));
-    if (!outFile.SaveFile(savePath))
-        FileError(savePath);
-    return 1;
 }
 
 i16 game::LoadGame(char* filename, b32 origData, b32) {
@@ -587,6 +595,8 @@ i16 game::LoadGame(char* filename, b32 origData, b32) {
     memset(gMapExtra, 0, sizeof(gMapExtra));
     if (!origData)
         SetupAdjacentMons();
+    if (!strcmp(filename, "REMOTE.GAM"))
+        RemoteTraceGame("load");
     return 1;
 }
 
@@ -4059,6 +4069,7 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
     {
         FileRead(mainFile, dataObj, dataSize);
         FileClose(mainFile);
+        RemoteTraceSave("send", dataObj, dataSize);
         // EncodeData returns the size of its code, which follows the stream's
         // four-byte decoded size: the original sent that many bytes and so
         // never the stream's last four.
@@ -4275,6 +4286,7 @@ b32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
     } else {
         decodedData = curInData;
     }
+    RemoteTraceSave("receive", decodedData, dataSize);
     sprintf(pathname, "%s%s", gDataPath, "REMOTE.GAM");
     handleValue = FileOpen(pathname, FILE_OPEN_WRITE);
     if (handleValue == FILE_DESCRIPTOR_INVALID)

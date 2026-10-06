@@ -2774,6 +2774,10 @@ combatFinished:
         firstHero->CheckLevel();
     if (secondHero)
         secondHero->CheckLevel();
+    // Both peers fight a battle between their players; the outcome must agree.
+    if (gRemoteOn && attackPlayer >= 0 && defenderSide >= 0 && gHumanPlayer[attackPlayer]
+        && gHumanPlayer[defenderSide])
+        RemoteTraceCombat("combat");
     if (processLosses) {
         switch (gCombatManager->m_combatResult) {
             case COMBAT_RESULT_ATTACKER:

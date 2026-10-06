@@ -55,3 +55,10 @@ add_executable(editor_maps_test editor_maps_test.cpp)
 target_link_libraries(editor_maps_test PRIVATE homm1_editor_units)
 add_test(NAME editor_maps_test COMMAND editor_maps_test)
 set_tests_properties(editor_maps_test PROPERTIES SKIP_RETURN_CODE 77 TIMEOUT 600)
+
+# Two instances play network, direct-connection and modem games on localhost
+# with scripted input, through a battle, comparing state hashes at every
+# hand-off (needs HOMM1_DATA and xvfb-run).
+add_test(NAME net_game_test
+  COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/net_game_test.py $<TARGET_FILE:homm1>)
+set_tests_properties(net_game_test PROPERTIES SKIP_RETURN_CODE 77 TIMEOUT 1200)

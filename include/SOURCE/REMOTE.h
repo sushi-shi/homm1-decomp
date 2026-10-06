@@ -155,6 +155,15 @@ i32 TransmitAndWaitRecord(
     RemoteMessage** response
 );
 void RemoteCleanup(void);
+
+// Test support: with HOMM1_NET_TRACE naming a file, each saved game sent to
+// the peer, each one loaded from it and each battle fought with it appends a
+// line with a hash of what both peers must agree on (the saved game without
+// its file name; a battle's result, its armies as both sides fought them and
+// the heroes afterwards).
+void RemoteTraceSave(const char* event, const char* save, i32 size);
+void RemoteTraceGame(const char* event);
+void RemoteTraceCombat(const char* event);
 void UnloadRemoteDriver(i16 networkDriver);
 i32 FileSize(char* filename);
 void WriteModemPacket(char* buffer, i32 length);
