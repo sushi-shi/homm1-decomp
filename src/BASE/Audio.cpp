@@ -214,15 +214,13 @@ void PlayMusic(int track) {
     if (gMusicSource == SOUND_MUSIC_SOURCE_DIGITAL) {
         sprintf(gMusicFilename, "%sHeroes%02d.ogg", gSoundPath, track);
     } else {
+        // The disc's tracks are installed in the game folder, as Ogg files
+        // or, with the LosslessAudio option, as FLAC files.
         int discTrack = gCDTrackMap[track];
-        sprintf(
-            gMusicFilename,
-            "%s%s%02d-AudioTrack %02d.ogg",
-            gRegCDRomPath,
-            gTracksPath,
-            discTrack,
-            discTrack
-        );
+        if (gConfig.losslessAudio)
+            sprintf(gMusicFilename, ".\\Audio\\Track %02d.flac", discTrack);
+        else
+            sprintf(gMusicFilename, ".\\Tracks\\%02d-AudioTrack %02d.ogg", discTrack, discTrack);
     }
     audiere::SampleSourcePtr source = audiere::OpenSampleSource(gMusicFilename);
     if (source) {

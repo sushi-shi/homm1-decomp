@@ -136,6 +136,9 @@
           copies.push({ file, to: GAME + '/' + path.slice(root.length) });
       } else if (/(^|\/)tracks\/[^/]+\.ogg$/i.test(path) || /^\d\d-audiotrack \d\d\.ogg$/i.test(name)) {
         copies.push({ file, to: CD + '/Tracks/' + name });
+      } else if (/^track \d\d\.flac$/i.test(name)) {
+        // The edition's lossless music (LosslessAudio) lives in the game folder.
+        copies.push({ file, to: GAME + '/Audio/' + name });
       } else if (/^heroes\.(hlp|cnt)$/i.test(name)) {
         copies.push({ file, to: GAME + '/HELP/' + name });
       }

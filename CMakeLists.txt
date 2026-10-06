@@ -196,6 +196,16 @@ if(NOT MSVC)
   target_compile_options(homm1_vorbis PRIVATE -w)
 endif()
 
+# FLAC decoding for the lossless music: dr_flac (vendor/dr_flac, public
+# domain), its implementation compiled once.
+file(WRITE ${CMAKE_BINARY_DIR}/dr_flac.c "#define DR_FLAC_IMPLEMENTATION\n#include <dr_flac.h>\n")
+add_library(homm1_flac STATIC ${CMAKE_BINARY_DIR}/dr_flac.c)
+target_compile_definitions(homm1_flac PUBLIC DR_FLAC_NO_STDIO)
+target_include_directories(homm1_flac SYSTEM PUBLIC ${CMAKE_SOURCE_DIR}/vendor/dr_flac)
+if(NOT MSVC)
+  target_compile_options(homm1_flac PRIVATE -w)
+endif()
+
 file(GLOB HOMM1_PLATFORM_COMMON CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/src/PLATFORM/*.cpp)
 file(GLOB HOMM1_PLATFORM_SDL3 CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/src/PLATFORM/SDL3/*.cpp)
 add_library(homm1_platform STATIC ${HOMM1_PLATFORM_COMMON} ${HOMM1_PLATFORM_SDL3})
@@ -204,7 +214,7 @@ target_compile_options(homm1_platform PRIVATE ${HOMM1_SEMANTICS} ${HOMM1_STRICT_
   ${HOMM1_SANITIZE_FLAGS})
 target_link_options(homm1_platform PUBLIC ${HOMM1_SANITIZE_FLAGS})
 target_compile_definitions(homm1_platform PRIVATE HOMM1_PORT=1 HOMM1_CODEPAGE=${HOMM1_CODEPAGE})
-target_link_libraries(homm1_platform PUBLIC SDL3::SDL3 homm1_vorbis)
+target_link_libraries(homm1_platform PUBLIC SDL3::SDL3 homm1_vorbis homm1_flac)
 if(WIN32)
   target_link_libraries(homm1_platform PUBLIC ws2_32)
   # MinGW: the C++ runtime is linked in; the programs then need only SDL3

@@ -6,6 +6,7 @@
 
 #define STB_VORBIS_HEADER_ONLY
 #include <stb_vorbis.c>
+#include <dr_flac.h>
 
 #include <cstring>
 #include <filesystem>
@@ -41,6 +42,10 @@ void Decoder::Close() {
     if (m_music != nullptr) {
         stb_vorbis_close(m_music);
         m_music = nullptr;
+    }
+    if (m_flac != nullptr) {
+        drflac_close(m_flac);
+        m_flac = nullptr;
     }
     m_movie = smacker::Decoder();
     m_movieTrack = -1;
@@ -79,6 +84,18 @@ bool Decoder::Open(const std::string& hostPath, bool wantVideo, bool wantAudio) 
                 m_movieTrack = track;
             break;
         }
+        return true;
+    }
+    if (wantAudio && std::memcmp(file.data(), "fLaC", 4) == 0) {
+        m_file = std::move(file);
+        m_flac = drflac_open_memory(m_file.data(), m_file.size(), nullptr);
+        if (m_flac == nullptr || m_flac->channels < 1 || m_flac->channels > 2
+            || !OpenConverter(SDL_AUDIO_S16, m_flac->channels, static_cast<int>(m_flac->sampleRate))) {
+            Close();
+            return false;
+        }
+        m_musicChannels = m_flac->channels;
+        m_musicRate = static_cast<int>(m_flac->sampleRate);
         return true;
     }
     if (!wantAudio || std::memcmp(file.data(), "OggS", 4) != 0)
@@ -146,10 +163,14 @@ bool Decoder::Next(std::vector<u8>* pixels, std::vector<u8>* palette, std::vecto
             palette->assign(m_movie.Palette().begin(), m_movie.Palette().end());
         return true;
     }
-    if (m_music == nullptr)
+    if (m_music == nullptr && m_flac == nullptr)
         return false;
     i16 samples[kMusicChunkFrames * 2];
-    int frames = stb_vorbis_get_samples_short_interleaved(m_music, m_musicChannels, samples,
+    int frames;
+    if (m_flac != nullptr)
+        frames = static_cast<int>(drflac_read_pcm_frames_s16(m_flac, kMusicChunkFrames, samples));
+    else
+        frames = stb_vorbis_get_samples_short_interleaved(m_music, m_musicChannels, samples,
                                                           kMusicChunkFrames * m_musicChannels);
     if (frames <= 0) {
         m_ended = true;
@@ -168,6 +189,8 @@ bool Decoder::SeekSeconds(double seconds) {
         seconds = 0;
     if (m_music != nullptr)
         return stb_vorbis_seek(m_music, static_cast<unsigned int>(seconds * m_musicRate)) != 0;
+    if (m_flac != nullptr)
+        return drflac_seek_to_pcm_frame(m_flac, static_cast<drflac_uint64>(seconds * m_musicRate)) != 0;
     if (!m_movie.IsOpen())
         return false;
     // Movies only go back to the start, then forward frame by frame.

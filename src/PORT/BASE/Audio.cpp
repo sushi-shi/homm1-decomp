@@ -51,27 +51,39 @@ bool ValidTrack(int track) {
     return track >= 0 && track < 100;
 }
 
-// The host path of a track: SOUND\HEROESnn.ogg, or the CD's
-// TRACKS\nn-AudioTrack nn.ogg under the CD folder the host found.
+// The host path of a track. The edition plays the disc's tracks from the
+// game folder, as the shared PlayMusic names them: Tracks\nn-AudioTrack nn.ogg,
+// or Audio\Track nn.flac with the LosslessAudio option. Otherwise the CD's
+// TRACKS\nn-AudioTrack nn.ogg under the CD folder the host found, and without
+// one SOUND\HEROESnn.ogg.
 std::string TrackPath(int track) {
     char name[FILE_PATH_CAPACITY];
     char resolved[FILE_PATH_CAPACITY];
-    if (gMusicSource == SOUND_MUSIC_SOURCE_DIGITAL || CdRoot().empty()) {
-        std::snprintf(name, sizeof(name), "%sHeroes%02d.ogg", gSoundPath, track);
+    if (gMusicSource != SOUND_MUSIC_SOURCE_DIGITAL) {
+        int discTrack = kCDTrackMap[track];
+        if (discTrack < 0)
+            return std::string();
+        if (gConfig.losslessAudio)
+            std::snprintf(name, sizeof(name), ".\\Audio\\Track %02d.flac", discTrack);
+        else
+            std::snprintf(name, sizeof(name), ".\\Tracks\\%02d-AudioTrack %02d.ogg", discTrack,
+                          discTrack);
         if (FileResolve(name, FILE_OPEN_READ, resolved, sizeof(resolved)))
             return resolved;
-        return std::string();
+        if (!CdRoot().empty()) {
+            std::string root = FileRoot();
+            FileSetRoot(CdRoot().c_str());
+            std::snprintf(name, sizeof(name), "%s%02d-AudioTrack %02d.ogg", gTracksPath,
+                          discTrack, discTrack);
+            bool found = FileResolve(name, FILE_OPEN_READ, resolved, sizeof(resolved));
+            FileSetRoot(root.c_str());
+            return found ? std::string(resolved) : std::string();
+        }
     }
-    int discTrack = kCDTrackMap[track];
-    if (discTrack < 0)
-        return std::string();
-    std::string root = FileRoot();
-    FileSetRoot(CdRoot().c_str());
-    std::snprintf(name, sizeof(name), "%s%02d-AudioTrack %02d.ogg", gTracksPath, discTrack,
-                  discTrack);
-    bool found = FileResolve(name, FILE_OPEN_READ, resolved, sizeof(resolved));
-    FileSetRoot(root.c_str());
-    return found ? std::string(resolved) : std::string();
+    std::snprintf(name, sizeof(name), "%sHeroes%02d.ogg", gSoundPath, track);
+    if (FileResolve(name, FILE_OPEN_READ, resolved, sizeof(resolved)))
+        return resolved;
+    return std::string();
 }
 
 void RememberPosition() {
