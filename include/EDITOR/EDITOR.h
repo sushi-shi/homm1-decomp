@@ -26,8 +26,8 @@ extern i32 gStatusTextClearTime;
 extern i32 gStatusTextHoldTime;
 extern char gStatusText[];
 
-// The map header the editor edits (EDITMGR's gMapHeader).
-extern SMapHeader* gpMapHeader;
+// The map header the editor edits (EDITMGR's gEditMapHeader).
+extern SMapHeader* gMapHeader;
 // Cleared while a map without the editor's format word is loaded: such maps
 // keep no object owners, so the eraser clears whole cells.
 extern i32 gNewMapFormat;

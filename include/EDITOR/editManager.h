@@ -332,10 +332,10 @@ public:
 };
 #pragma pack(pop)
 
-extern editManager* gpEditManager;
+extern editManager* gEditManager;
 extern char* gMapCodeLetters;
 extern i32 gSelectionColor;
-extern SMapHeader gMapHeader;
+extern SMapHeader gEditMapHeader;
 extern char* gEditErrors[];
 extern i32 gEditErrorCount;
 // Set while the random-map generator lays terrain: SetTileVariant then

@@ -17,8 +17,8 @@ VA(0x0047480a, 0x93)
 palette::palette(i16 id)
     : resource(RESOURCE_CATEGORY_PALETTE, id, RESOURCE_REFERENCE_INITIAL, NULL) {
     m_data = static_cast<i8*>(malloc(PALETTE_DATA_SIZE));
-    gpResourceManager->PointToFile(id);
-    gpResourceManager->ReadBlock(m_data, PALETTE_DATA_SIZE);
+    gResourceManager->PointToFile(id);
+    gResourceManager->ReadBlock(m_data, PALETTE_DATA_SIZE);
 }
 
 VA(0x0047489d, 0x2b)

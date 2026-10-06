@@ -105,7 +105,7 @@ public:
         i32 waterMode,
         i32 findAdjacentMonster,
         i32 mobility,
-        i32 costMode,
+        i32 heroClass,
         i32 targetX,
         i32 targetY,
         i32 continueSeed,
@@ -146,6 +146,7 @@ public:
     void PushCombatPoint(i16 hex, i16 direction, u16 distance, u16 speed);
 };
 #pragma pack(pop)
+#define gFullySeeded gSearchSeedingComplete // spelling fixes .bss order
 extern i32 gFullySeeded;
 
 #endif // HOMM1_SOURCE_SEARCHARRAY_H

@@ -30,7 +30,7 @@ H1_ENUM_BEGIN(GameDifficulty)
     DIFFICULTY_COUNT = 4
 H1_ENUM_END(GameDifficulty)
 
-// giWeekType / giMonthType: a named week or month
+// gWeekType / gMonthType: a named week or month
 // (gWeekNames / gMonthNames[special]), a creature week or month
 // (gArmyNames[special] grows), or the month of the plague. NONE suppresses
 // the new-week announcement.
@@ -129,11 +129,11 @@ H1_ENUM_CONST_BEGIN(SpellBookConstant)
 H1_ENUM_CONST_END(SpellBookConstant)
 
 // ComputeUALoc: a player sees the ultimate artifact's hint only after eleven
-// obelisks, four percent per further obelisk; a missed roll scatters the
+// puzzle pieces are removed, four percent per further piece; a missed roll scatters the
 // hint up to three cells (3 - three 0..2 rolls) for at most 200 tries.
 H1_ENUM_CONST_BEGIN(UltimateHintConstant)
-    ULTIMATE_HINT_OBELISK_MIN = 11,
-    ULTIMATE_HINT_PERCENT_PER_OBELISK = 4,
+    ULTIMATE_HINT_PIECE_MIN = 11,
+    ULTIMATE_HINT_PERCENT_PER_PIECE = 4,
     ULTIMATE_HINT_SCATTER = 3,
     ULTIMATE_HINT_PLACE_TRIES = 200,
     // VisitObelisk's fallback piece search.
@@ -324,7 +324,7 @@ public:
     // ViewArmy's open army window; ViewArmyHandler animates it.
     class heroWindow* m_viewArmyWindow;
     // TavernHandler advances this word as its animation counter.
-    i16 m_viewArmyResult;
+    i16 m_dialogAnimationCounter;
     // InitMainClasses allocates 0x16e7a bytes for the game object.
     // ViewSpells' window state: the hero's spell slots
     // run from m_spellFirst to m_spellLast, four per page from m_viewSpellsTop.
@@ -372,7 +372,7 @@ public:
     i8 PickLoadGame(void);
     i32 HandleCampaignWin(void);
     void PlayPreScenarioSmacker(i32 side, i32 map);
-    void ShowCampaignInfo(i32 scenario, i32 fromMenu, i32);
+    void ShowCampaignInfo(i32 scenario, i32 viewOnly, i32);
     void CampaignInfoUpdate(i32 redraw);
     void InitEntireCampaign(i32 side);
     // Retail InitCampaignMap takes the scenario and an unused int (ret 8).
@@ -470,9 +470,9 @@ public:
     void SetVisibility(i16 x, i16 y, i16 player, i16 radius);
     void MakeAllWaterVisible(i32 player);
     void GiveArmy(class armyGroup* group, i32 type, i32 count, i32 slot);
-    i32 ExperienceValueOfStack(class armyGroup* group, class hero* h);
+    i32 ExperienceValueOfStack(class armyGroup* group, class hero* heroPointer);
     // HoMM1 retail: hero and army only (ret 8).
-    i32 GetLuck(class hero* h, class army*);
+    i32 GetLuck(class hero* heroPointer, class army*);
     // Enemy-turn crest reads widen the stored color to a signed short.
     i16 GetPlayerColor(i32 player) {
         return m_players[player].m_color;
@@ -500,17 +500,17 @@ public:
     i32 ReceiveSaveGame(i32 dataSize, i32 remotePlayer);
     void DoNewTurn(void);
     i32 GetBoatsBuilt(void);
-    i32 GetNumThievesGuilds(i32 color);
+    i32 GetNumThievesGuilds(i32 player);
     i32 CalcDifficultyRating(void);
-    void RestoreCell(i32 x, i32 y, i32 obj, i32 barrier, class mapCell* passedCell, i32);
+    void RestoreCell(i32 x, i32 y, i32 objectType, i32 barrier, class mapCell* passedCell, i32);
     void SetMapSize(i32 width, i32 height);
     i32 HeroIDToHeroPos(class playerData* player, i32 heroId);
     i32 TownIDToTownPos(class playerData* player, i32 townId);
     void SetupNewRumour(void);
     void CheckForTimeEvent(void);
     i32 CountShrines(i32 player);
-    void ShowMoraleInfo(class hero* h, i32 dialogType);
-    void ShowLuckInfo(class hero* h, i32 dialogType);
+    void ShowMoraleInfo(class hero* heroPointer, i32 dialogType);
+    void ShowLuckInfo(class hero* heroPointer, i32 dialogType);
     // Retail GetMap never reads ecx; its caller passes no this.
     static void GetMap(void);
     void ProcessNewMap(struct SMapHeader* header);
@@ -551,13 +551,16 @@ i32 GetBaseScore(i32 days);
 extern i32 gGameOver;
 extern i32 gEndSequence;
 // SaveGame files the current player through this byte.
-extern i8 gSaveCurPlayer;
+extern i8 gSavedCurPlayer;
 // NewGame remembers the last new-game settings for the next setup screen.
+#define gSavedDifficulty gOldGameDifficulty // spelling fixes .bss order
 extern i8 gSavedDifficulty;
-extern i8 gSavedPlayerTypes[];
+extern i8 gSavedDifficulties[];
 extern i8 gSavedKingOfTheHill;
+#define gSavedCrest gKeptColor // spelling fixes .bss order
 extern i8 gSavedCrest;
 extern i8 gRandomTownTypes[4];
+#define gMineTypeCount gMineTypeNums // spelling fixes .bss order
 extern i16 gMineTypeCount[];
 extern i32 gLastSeed;
 i32 SGenRand(void);
@@ -569,7 +572,8 @@ void SRand(i32 seed);
 extern i8 gShowMapInfo;
 extern heroWindow* gReqExtraWindow;
 extern char gCurMapName[];
-extern i8 gbDismissArmy;
+#define gDismissArmy gbDismissArmy // spelling fixes .bss order
+extern i8 gDismissArmy;
 
 // Moved from GAME.cpp.
 // newgame.bin widget ids. The opponent toggles are players 1..3 (id - 1);

@@ -18,9 +18,9 @@ H1_ENUM_CONST_BEGIN(MapCellConstant)
     // m_secondaryTrigger bit 7: the cell blocks pathing (DoDimensionDoor and
     // ViewWorld's dimension-door preview skip it).
     MAP_CELL_SECONDARY_BLOCKED = 0x80,
-    // Ground tiles come in runs of 20 per terrain (giGroundToTerrain[i] =
+    // Ground tiles come in runs of 20 per terrain (gGroundToTerrain[i] =
     // i / 20); tiles below 20 are water. The seven terrains' runs make the
-    // 140-entry giGroundToTerrain table InitVars fills.
+    // 140-entry gGroundToTerrain table InitVars fills.
     MAP_CELL_TILES_PER_TERRAIN = 20,
     MAP_CELL_GROUND_TILE_COUNT = 140,
     // DrawCell shifts m_flags' two ground-flip bits to TileToBitmap's bits

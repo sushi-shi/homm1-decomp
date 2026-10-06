@@ -57,41 +57,41 @@ rva	size	symbol	provenance
 0x00053428	4	?gDDPal@@3PAUIDirectDrawPalette@@A	game 0xcddc8: 11 code reference(s) from placed bodies
 0x00053430	4	?gInDDSD@@3HA	game 0xcddd0: 2 code reference(s) from placed bodies
 0x00053448	4	?gLeftRightSave@@3HA	game 0xd7f60: 3 code reference(s) from placed bodies
-0x00053450	1800	?bmpAndMask@@3PAUtagBITMAP@@A	game 0xce178: 9 code reference(s) from placed bodies
+0x00053450	1800	?gAndMaskBitmapInfo@@3PAUtagBITMAP@@A	game 0xce178: 9 code reference(s) from placed bodies
 0x00053b58	1800	?bmpColor@@3PAUtagBITMAP@@A	game 0xce880: 8 code reference(s) from placed bodies
 0x00054260	300	?hMouseCursor@@3PAPAUHICON__@@A	game 0xcef88: 8 code reference(s) from placed bodies
 0x0005438c	300	?hbmpAndMask@@3PAPAUHBITMAP__@@A	game 0xcf0b4: 7 code reference(s) from placed bodies
-0x000544b8	300	?gColorBits@@3PAPAEA	game 0xcf1e0: 12 code reference(s) from placed bodies
+0x000544b8	300	?cColorBits@@3PAPAEA	game 0xcf1e0: 12 code reference(s) from placed bodies
 0x000545e4	300	?hbmpColor@@3PAPAUHBITMAP__@@A	game 0xcf30c: 6 code reference(s) from placed bodies
-0x00054710	1500	?mouseIconInfo@@3PAU_ICONINFO@@A	game 0xcf438: 6 code reference(s) from placed bodies
+0x00054710	1500	?cursorIconInfo@@3PAU_ICONINFO@@A	game 0xcf438: 6 code reference(s) from placed bodies
 0x00054cec	300	?cAndBits@@3PAPAEA	game 0xcfa14: 16 code reference(s) from placed bodies
 0x00054e18	4	?gMouseCursorType@@3HA	game 0xcfb40: 7 code reference(s) from placed bodies
 0x00054e1c	4	_?gInSetPointer@?1??SetPointer@mouseManager@@QAEXF@Z@4HA	game 0xcfb44: 3 code reference(s) from placed bodies
-0x00054e24	1	?gWindowFadeSavedUpdate@@3CA	game 0xce110: 2 code reference(s) from placed bodies
-0x00054e90	4	_sClipY	game 0xcfb50: 8 code reference(s) from placed bodies
-0x00054e94	4	_sClipRight	game 0xcfb54: 5 code reference(s) from placed bodies
-0x00054e98	4	_sClipBottom	game 0xcfb58: 2 code reference(s) from placed bodies
-0x00054e9c	4	_sClipSource	game 0xcfb5c: 12 code reference(s) from placed bodies
+0x00054e24	1	?gFadeSavedUpdate@@3CA	game 0xce110: 2 code reference(s) from placed bodies
+0x00054e90	4	_sClipPosY	game 0xcfb50: 8 code reference(s) from placed bodies
+0x00054e94	4	_sClipLimitX	game 0xcfb54: 5 code reference(s) from placed bodies
+0x00054e98	4	_sClipLimitY	game 0xcfb58: 2 code reference(s) from placed bodies
+0x00054e9c	4	_sClipSrcPtr	game 0xcfb5c: 12 code reference(s) from placed bodies
 0x00054ea0	4	_sClipX	game 0xcfb60: 18 code reference(s) from placed bodies
 0x00054ea4	4	_sClipRow	game 0xcfb64: 8 code reference(s) from placed bodies
-0x00054ea8	4	_sClipEntry	game 0xcfb68: 6 code reference(s) from placed bodies
+0x00054ea8	4	_sClipFrameEntry	game 0xcfb68: 6 code reference(s) from placed bodies
 0x00054eac	4	_sClipRun	game 0xcfb6c: 12 code reference(s) from placed bodies
 0x00054ef0	4	_sClipInside	game 0xcfbb0: 3 code reference(s) from placed bodies
-0x00054ef4	4	_sClipRowStart	game 0xcfbb4: 5 code reference(s) from placed bodies
+0x00054ef4	4	_sClipLeft	game 0xcfbb4: 5 code reference(s) from placed bodies
 0x00054ef8	4	_gMusicSuspensions	game 0xcdde8: 5 code reference(s) from placed bodies
-0x00054efc	4	?stream@AudiereMusic@@2V?$RefPtr@VOutputStream@audiere@@@audiere@@A	game 0xcddec: 41 code reference(s) from placed bodies
+0x00054efc	4	?channel@AudiereMusic@@2V?$RefPtr@VOutputStream@audiere@@@audiere@@A	game 0xcddec: 41 code reference(s) from placed bodies
 0x00054f00	352	_gMusicFilename	game 0xcddf0: 3 code reference(s) from placed bodies
-0x00055060	4	?device@AudiereDevice@@2V?$RefPtr@VAudioDevice@audiere@@@audiere@@A	game 0xcdf50: 34 code reference(s) from placed bodies
-0x00055068	4	_gSampleBuffer	game 0xcdf58: 2 code reference(s) from placed bodies
-0x0005506c	4	_gSampleFrames	game 0xcdf5c: 6 code reference(s) from placed bodies
-0x00055070	4	_gSampleChannels	game 0xcdf60: 3 code reference(s) from placed bodies
-0x00055074	4	_gSampleRate	game 0xcdf64: 2 code reference(s) from placed bodies
-0x00055078	4	_gSampleFormat	game 0xcdf68: 3 code reference(s) from placed bodies
-0x0005507c	4	?source@AudiereMusic@@2V?$RefPtr@VSampleSource@audiere@@@audiere@@A	game 0xcdf6c: 24 code reference(s) from placed bodies
-0x00055084	400	_gMusicPositions	game 0xcdf74: 7 code reference(s) from placed bodies
-0x00055214	4	_gSamples	game 0xce104: 21 code reference(s) from placed bodies
-0x00055218	4	_gSampleSuspensions	game 0xce108: 5 code reference(s) from placed bodies
-0x0005521c	4	_gMusicSource	game 0xce10c: 2 code reference(s) from placed bodies
+0x00055060	4	?driver@AudiereDevice@@2V?$RefPtr@VAudioDevice@audiere@@@audiere@@A	game 0xcdf50: 34 code reference(s) from placed bodies
+0x00055068	4	_gSampleBufferly	game 0xcdf58: 2 code reference(s) from placed bodies
+0x0005506c	4	_gSampleFrames0	game 0xcdf5c: 6 code reference(s) from placed bodies
+0x00055070	4	_gSampleChannelsa58	game 0xcdf60: 3 code reference(s) from placed bodies
+0x00055074	4	_gSampleRate7	game 0xcdf64: 2 code reference(s) from placed bodies
+0x00055078	4	_gSampleFormata98	game 0xcdf68: 3 code reference(s) from placed bodies
+0x0005507c	4	?origin@AudiereMusic@@2V?$RefPtr@VSampleSource@audiere@@@audiere@@A	game 0xcdf6c: 24 code reference(s) from placed bodies
+0x00055084	400	_gMusicPositionsaat	game 0xcdf74: 7 code reference(s) from placed bodies
+0x00055214	4	_gSamplesa	game 0xce104: 21 code reference(s) from placed bodies
+0x00055218	4	_gSampleSuspensionsa6	game 0xce108: 5 code reference(s) from placed bodies
+0x0005521c	4	_gMusicSourcejxy	game 0xce10c: 2 code reference(s) from placed bodies
 0x0003b0f8	256	?gMonoColorMap@@3PAEA	game 0x92090 (SOURCE/KB): 5 code reference(s) from placed bodies
 0x0003eda0	48	?gRadarTerrainColor@@3PAFA	game 0x90588 (SOURCE/KB): fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x0003eddc	4	?bShowIt@@3HA	game 0xa98bc (SOURCE/KB): 2 code reference(s) from placed bodies
@@ -106,7 +106,7 @@ rva	size	symbol	provenance
 0x00051e94	4	?DEFAULT_AGGREGATE_NAME@@3PADA	game 0xa7498 (SOURCE/KB): 1 code reference(s) from placed bodies
 0x00051ea0	4	?gpWindowManager@@3PAVheroWindowManager@@A	game 0xa74a8 (SOURCE/KB): 44 code reference(s) from placed bodies
 0x00051f74	4	?gpResourceManager@@3PAVresourceManager@@A	game 0xa74d8 (SOURCE/KB): 149 code reference(s) from placed bodies
-0x00051f78	4	?gNormalDialogWindow@@3PAVheroWindow@@A	game 0xa74ec (SOURCE/KB): fields of this image's own compile of the shared source (VA_AT body, masked-identical)
+0x00051f78	4	?gCommonDialogBox@@3PAVheroWindow@@A	game 0xa74ec (SOURCE/KB): fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x00051f88	140	?giGroundToTerrain@@3PACA	game 0xa7638 (SOURCE/KB): fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x00052014	351	?gLastFilename@@3PADA	game 0xa76c4 (SOURCE/KB): fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x00052178	2	?gMapX@@3FA	game 0xa7824 (SOURCE/KB): fields of this image's own compile of the shared source (VA_AT body, masked-identical)
@@ -117,12 +117,12 @@ rva	size	symbol	provenance
 0x000522e8	352	?gcRegAppPath@@3PADA	game 0xa7a10 (SOURCE/KB): fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x00052448	4	?giMaxExtentX@@3HA	game 0xa7b74 (SOURCE/KB): 7 code reference(s) from placed bodies
 0x0005244c	4	?giMaxExtentY@@3HA	game 0xa7b78 (SOURCE/KB): 7 code reference(s) from placed bodies
-0x00052458	4	?gpInputManager@@3PAVinputManager@@A	game 0xa7b90 (SOURCE/KB): 68 code reference(s) from placed bodies
+0x00052458	4	?gInputManager@@3PAVinputManager@@A	game 0xa7b90 (SOURCE/KB): 68 code reference(s) from placed bodies
 0x00052460	300	?gConfig@@3UconfigStruct@@A	game 0xa9428 (SOURCE/KB): 58 code reference(s) from placed bodies
 0x00052590	4	?giMinExtentX@@3HA	game 0xa9560 (SOURCE/KB): 7 code reference(s) from placed bodies
 0x00052594	4	?giMinExtentY@@3HA	game 0xa9564 (SOURCE/KB): 7 code reference(s) from placed bodies
 0x00052598	4	?gpExec@@3PAVexecutive@@A	game 0xa95c8 (SOURCE/KB): fields of this image's own compile of the shared source (VA_AT body, masked-identical)
-0x000525a0	352	?gLastMapName@@3PADA	game 0xa95d0 (SOURCE/KB): fields of this image's own compile of the shared source (VA_AT body, masked-identical)
+0x000525a0	352	?gPrevGameFile@@3PADA	game 0xa95d0 (SOURCE/KB): fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x00052700	4	?giCurWindowsStyleFlags@@3HA	game 0xa9734 (SOURCE/KB): 4 code reference(s) from placed bodies
 0x00052864	24	?glTimers@@3PAHA	game 0xa98a0 (SOURCE/KB): 4 code reference(s) from placed bodies
 0x0005287c	16	?gCurMapName@@3PADA	game 0xa6c10 (SOURCE/GAME): fields of this image's own compile of the shared source (VA_AT body, masked-identical)
@@ -134,7 +134,7 @@ rva	size	symbol	provenance
 0x000528a0	4	?gSaveBiggestExtent@@3HA	game 0xa9938 (SOURCE/KB): 2 code reference(s) from placed bodies
 0x000528b0	4	?gScrollX@@3HA	game 0xa98d0 (SOURCE/KB): 3 code reference(s) from placed bodies
 0x000528b4	4	?gScrollY@@3HA	game 0xa98d4 (SOURCE/KB): 3 code reference(s) from placed bodies
-0x000528b8	4	?hmnuDflt@@3PAUHMENU__@@A	game 0xa98dc (SOURCE/KB): fields of this image's own compile of the shared source (VA_AT body, masked-identical)
+0x000528b8	4	?gDefaultMenu@@3PAUHMENU__@@A	game 0xa98dc (SOURCE/KB): fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x000528d4	4	?gInDialog@@3HA	game 0xa98f8 (SOURCE/KB): 2 code reference(s) from placed bodies
 0x000528d8	4	?gMinimized@@3HA	game 0xa9900 (SOURCE/KB): fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x000528dc	4	?gInSetupDialog@@3HA	game 0xa98fc (SOURCE/KB): 1 code reference(s) from placed bodies

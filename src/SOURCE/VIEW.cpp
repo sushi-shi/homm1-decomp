@@ -64,7 +64,7 @@ i8 combatManager::ViewGeneral(i32 side, i32 allowActions, i32 quickView) {
     surrenderBtn = GENERAL_SURRENDER;
     activeCtrl = GENERAL_CONTROL_THIRTEEN;
     prevFrameWidgetId = GENERAL_CONTROL_FOURTEEN;
-    giCurGeneral = side;
+    gCurGeneral = side;
     packet.type = MESSAGE_WIDGET;
     wnd = new heroWindow(195, 60, "vgenwin.bin");
     if (wnd == NULL)
@@ -76,7 +76,7 @@ i8 combatManager::ViewGeneral(i32 side, i32 allowActions, i32 quickView) {
     wnd->BroadcastMessage(packet);
     packet.command = WIDGET_COMMAND_SET_FRAME;
     packet.id = GENERAL_COLOR_WIDGET;
-    packet.value = gpGame->m_players[m_heroes[side]->m_owner].Color() + 1;
+    packet.value = gGame->m_players[m_heroes[side]->m_owner].Color() + 1;
     wnd->BroadcastMessage(packet);
     sprintf(
         gText,
@@ -89,7 +89,7 @@ i8 combatManager::ViewGeneral(i32 side, i32 allowActions, i32 quickView) {
     packet.text = gText;
     wnd->BroadcastMessage(packet);
     morale = m_heroes[side]->m_army.GetMorale(m_heroes[side], NULL);
-    iLuck = gpGame->GetLuck(m_heroes[side], NULL);
+    iLuck = gGame->GetLuck(m_heroes[side], NULL);
     sprintf(
         gText,
         "\n%s%d\n%s%d\n%s%d\n%s%d\n%s%s\n%s%s\n",
@@ -112,7 +112,7 @@ i8 combatManager::ViewGeneral(i32 side, i32 allowActions, i32 quickView) {
     wnd->BroadcastMessage(packet);
     if (m_heroes[side] == NULL || allowActions == 0
         || !m_heroes[side]->HasArtifact(ARTIFACT_MAGIC_BOOK) || m_heroCastSpell[side] != 0
-        || giCurGeneral != m_currentSide) {
+        || gCurGeneral != m_currentSide) {
         packet.command = WIDGET_COMMAND_CLEAR_FLAGS;
         packet.id = GENERAL_CAST_SPELL;
         packet.value = WIDGET_FLAG_ENABLED;
@@ -121,7 +121,7 @@ i8 combatManager::ViewGeneral(i32 side, i32 allowActions, i32 quickView) {
         packet.value = WIDGET_FLAG_DIMMED;
         wnd->BroadcastMessage(packet);
     }
-    if (allowActions == 0 || m_heroes[1 - m_currentSide] == NULL || giCurGeneral != m_currentSide) {
+    if (allowActions == 0 || m_heroes[1 - m_currentSide] == NULL || gCurGeneral != m_currentSide) {
         packet.command = WIDGET_COMMAND_CLEAR_FLAGS;
         packet.id = GENERAL_SURRENDER;
         packet.value = WIDGET_FLAG_ENABLED;
@@ -130,8 +130,8 @@ i8 combatManager::ViewGeneral(i32 side, i32 allowActions, i32 quickView) {
         packet.value = WIDGET_FLAG_DIMMED;
         wnd->BroadcastMessage(packet);
     }
-    if (allowActions == 0 || giCurGeneral != m_currentSide
-        || (giCurGeneral == COMBAT_DEFENDER_SIDE && m_combatTowns[COMBAT_DEFENDER_SIDE] != NULL)
+    if (allowActions == 0 || gCurGeneral != m_currentSide
+        || (gCurGeneral == COMBAT_DEFENDER_SIDE && m_combatTowns[COMBAT_DEFENDER_SIDE] != NULL)
         || m_sideRetreated[COMBAT_DEFENDER_SIDE] != 0
         || m_sideRetreated[COMBAT_ATTACKER_SIDE] != 0) {
         packet.command = WIDGET_COMMAND_CLEAR_FLAGS;
@@ -143,18 +143,18 @@ i8 combatManager::ViewGeneral(i32 side, i32 allowActions, i32 quickView) {
         wnd->BroadcastMessage(packet);
     }
     if (quickView) {
-        gpMouseManager->ReallyHidePointer();
-        gpWindowManager->AddWindow(wnd, WINDOW_Z_ORDER_APPEND, 1);
+        gMouseManager->ReallyHidePointer();
+        gWindowManager->AddWindow(wnd, WINDOW_Z_ORDER_APPEND, 1);
         QuickViewWait();
-        gpWindowManager->RemoveWindow(wnd);
-        gpMouseManager->ReallyShowPointer();
+        gWindowManager->RemoveWindow(wnd);
+        gMouseManager->ReallyShowPointer();
     } else
-        gpWindowManager->DoDialog(wnd, HandleViewGeneral, 0);
+        gWindowManager->DoDialog(wnd, HandleViewGeneral, 0);
     delete wnd;
     m_gridUpdateRow = 0;
     DrawFrame(1);
     if (!quickView)
-        DoCommand(gpWindowManager->m_dialogResult);
+        DoCommand(gWindowManager->m_dialogResult);
     return 0;
 }
 
@@ -162,13 +162,13 @@ i8 combatManager::ViewGeneral(i32 side, i32 allowActions, i32 quickView) {
 // their help line.
 VA(0x004663ee, 0x1a7)
 i16 HandleViewGeneral(tag_message& message) {
-    i32 pos;
+    i32 helpIndex;
     i16 prevCtrl;
     i16 borderId;
     i16 theBarId;
     i16 oldControl;
     i16 curSurrenderBtn;
-    i8 result;
+    i8 dialogEnded;
     i16 colorControlVal;
     i16 nameCtrl;
     i16 oldFrameWidgetId;
@@ -193,7 +193,7 @@ i16 HandleViewGeneral(tag_message& message) {
     curSurrenderBtn = GENERAL_SURRENDER;
     activeCtrl = GENERAL_CONTROL_THIRTEEN;
     oldFrameWidgetId = GENERAL_CONTROL_FOURTEEN;
-    result = 0;
+    dialogEnded = 0;
     if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
             case WIDGET_NOTIFY_DESELECT:
@@ -203,39 +203,39 @@ i16 HandleViewGeneral(tag_message& message) {
                     case GENERAL_SURRENDER:
                     case DIALOG_BUTTON_0:
                         if (!(message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)) {
-                            gpWindowManager->m_dialogResult = message.id;
-                            result = 1;
+                            gWindowManager->m_dialogResult = message.id;
+                            dialogEnded = 1;
                             break;
                         }
                 }
                 break;
             case WIDGET_COMMAND_HOVER:
-                if (message.id == gpWindowManager->m_lastHoverId)
+                if (message.id == gWindowManager->m_lastHoverId)
                     return MESSAGE_DISPATCH_CONSUME;
-                gpWindowManager->m_lastHoverId = message.id;
+                gWindowManager->m_lastHoverId = message.id;
                 switch (message.id) {
                     case GENERAL_CAST_SPELL:
-                        pos = GENERAL_HOVER_HELP_CAST_SPELL;
+                        helpIndex = GENERAL_HOVER_HELP_CAST_SPELL;
                         break;
                     case GENERAL_RETREAT:
-                        pos = GENERAL_HOVER_HELP_RETREAT;
+                        helpIndex = GENERAL_HOVER_HELP_RETREAT;
                         break;
                     case GENERAL_SURRENDER:
-                        pos = GENERAL_HOVER_HELP_SURRENDER;
+                        helpIndex = GENERAL_HOVER_HELP_SURRENDER;
                         break;
                     case DIALOG_BUTTON_0:
-                        pos = GENERAL_HOVER_HELP_CLOSE;
+                        helpIndex = GENERAL_HOVER_HELP_CLOSE;
                         break;
                     default:
-                        pos = GENERAL_HOVER_HELP_HERO;
+                        helpIndex = GENERAL_HOVER_HELP_HERO;
                         break;
                 }
-                gpCombatManager->CombatMessage(gViewGeneralHelp[pos], 1);
+                gCombatManager->CombatMessage(gViewGeneralHelp[helpIndex], 1);
                 return MESSAGE_DISPATCH_CONSUME;
                 break;
         }
     }
-    if (result) {
+    if (dialogEnded) {
         message.id = WIDGET_COMMAND_DIALOG_SELECT;
         message.command = message.id;
         return MESSAGE_DISPATCH_FORWARD;
@@ -273,7 +273,7 @@ void combatManager::ViewArmy(army* viewedArmy, i32 side, i32 quickView) {
         yWindow = 0;
     if (yWindow + 229 > COMBAT_VIEW_HEIGHT)
         yWindow = 230;
-    gpGame->ViewArmy(
+    gGame->ViewArmy(
         xWnd,
         yWindow,
         viewedArmy->m_creatureType,

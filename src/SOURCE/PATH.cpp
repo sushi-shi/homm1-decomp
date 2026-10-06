@@ -23,7 +23,7 @@ i16 army::FindPath(i16 sourceHex, i16 targetHex, i8, i8 ignoreSpeed, i8 pathMode
     savedSpeed = m_stats.speed;
     if (ignoreSpeed)
         m_stats.speed = IGNORE_SPEED;
-    retVal = gpSearchArray->FindCombatPath(sourceHex, targetHex, this, pathMode);
+    retVal = gSearchArray->FindCombatPath(sourceHex, targetHex, this, pathMode);
     if (!retVal && (m_stats.attributes & MONSTER_FLAGS_WIDE) && !pathMode) {
         switch (m_facing) {
             case ARMY_FACING_LEFT:
@@ -36,7 +36,7 @@ i16 army::FindPath(i16 sourceHex, i16 targetHex, i8, i8 ignoreSpeed, i8 pathMode
         if (!ValidHex(targetHex))
             retVal = 0;
         else
-            retVal = gpSearchArray->FindCombatPath(sourceHex, targetHex, this, pathMode);
+            retVal = gSearchArray->FindCombatPath(sourceHex, targetHex, this, pathMode);
     }
     m_stats.speed = savedSpeed;
     return retVal;
@@ -113,8 +113,8 @@ i16 army::ValidMove(i16 sourceHex, i16 direction) {
     if (!ValidHex(destHexNext))
         return 0;
     frontValid = 0;
-    if (gpCombatManager->m_hexCells[destHexNext].m_occupantSide == COMBAT_SIDE_NONE
-        && gpCombatManager->m_hexCells[destHexNext].m_obstacleIndex == COMBAT_OBSTACLE_NONE)
+    if (gCombatManager->m_hexCells[destHexNext].m_occupantSide == COMBAT_SIDE_NONE
+        && gCombatManager->m_hexCells[destHexNext].m_obstacleIndex == COMBAT_OBSTACLE_NONE)
         frontValid = 1;
     if (m_stats.attributes & MONSTER_FLAGS_WIDE) {
         rearSquare = ARMY_HEX_INVALID;
@@ -134,8 +134,8 @@ i16 army::ValidMove(i16 sourceHex, i16 direction) {
         }
         rearValidResult = 0;
         if (ValidHex(rearSquare)
-            && gpCombatManager->m_hexCells[rearSquare].m_occupantSide == COMBAT_SIDE_NONE
-            && gpCombatManager->m_hexCells[rearSquare].m_obstacleIndex == COMBAT_OBSTACLE_NONE)
+            && gCombatManager->m_hexCells[rearSquare].m_occupantSide == COMBAT_SIDE_NONE
+            && gCombatManager->m_hexCells[rearSquare].m_obstacleIndex == COMBAT_OBSTACLE_NONE)
             rearValidResult = 1;
         if (direction == COMBAT_DIRECTION_EAST || direction == COMBAT_DIRECTION_WEST)
             return rearValidResult;
@@ -197,15 +197,15 @@ i16 army::ValidAttack(
         return 0;
     if (requiredTargetHex != ARMY_HEX_INVALID && *attackHex != requiredTargetHex)
         return 0;
-    occupantSide = gpCombatManager->m_hexCells[*attackHex].m_occupantSide;
+    occupantSide = gCombatManager->m_hexCells[*attackHex].m_occupantSide;
     switch (targetMode) {
         case ARMY_ATTACK_TARGET_ASSIGNED:
             if (occupantSide == m_targetSide
-                && gpCombatManager->m_hexCells[*attackHex].m_occupantIndex == m_targetIndex)
+                && gCombatManager->m_hexCells[*attackHex].m_occupantIndex == m_targetIndex)
                 return 1;
             break;
         case ARMY_ATTACK_TARGET_ENEMY:
-            if (occupantSide == 1 - gpCombatManager->m_currentSide)
+            if (occupantSide == 1 - gCombatManager->m_currentSide)
                 return 1;
             break;
         case ARMY_ATTACK_TARGET_OCCUPIED:
@@ -372,36 +372,36 @@ OppositeDirection(H1_ENUM_PARAM(CombatHexDirection, i16) direction) {
 // Nine-hex rows and byte row/column flags.
 VA(0x00447103, 0x7b7)
 i16 army::GetBestDirection(i16 sourceHex, i16 targetHex, i16 blockedMask) {
-    i8 targetCol;
-    i8 theDstRowPos;
-    i8 sourceColumnCheckNum;
-    i8 iIsMovingDown;
-    i8 savedMovingUp;
-    i8 curSrcRow;
-    i8 lastFl;
-    i8 iLeftFl;
+    i8 isMovingRight;
+    i8 curSourceRow;
+    i8 targetRow;
+    i8 goingUp;
+    i8 goingLeft;
+    i8 srcCol;
+    i8 targetColumn;
+    i8 isMovingDown;
 
     if (!ValidHex(sourceHex) || !ValidHex(targetHex))
         return COMBAT_DIRECTION_INVALID;
-    sourceColumnCheckNum = sourceHex % COMBAT_GRID_COLUMNS;
-    curSrcRow = sourceHex / COMBAT_GRID_COLUMNS;
-    targetCol = targetHex % COMBAT_GRID_COLUMNS;
-    theDstRowPos = targetHex / COMBAT_GRID_COLUMNS;
-    savedMovingUp = 0;
-    iIsMovingDown = 0;
-    iLeftFl = 0;
-    lastFl = 0;
-    if (targetCol > sourceColumnCheckNum)
-        lastFl = 1;
-    else if (targetCol != sourceColumnCheckNum)
-        iLeftFl = 1;
-    if (theDstRowPos > curSrcRow)
-        iIsMovingDown = 1;
-    else if (theDstRowPos != curSrcRow)
-        savedMovingUp = 1;
-    if (lastFl == iLeftFl) {
-        if (savedMovingUp == 1) {
-            if (curSrcRow & 1) {
+    srcCol = sourceHex % COMBAT_GRID_COLUMNS;
+    curSourceRow = sourceHex / COMBAT_GRID_COLUMNS;
+    targetColumn = targetHex % COMBAT_GRID_COLUMNS;
+    targetRow = targetHex / COMBAT_GRID_COLUMNS;
+    goingUp = 0;
+    isMovingDown = 0;
+    goingLeft = 0;
+    isMovingRight = 0;
+    if (targetColumn > srcCol)
+        isMovingRight = 1;
+    else if (targetColumn != srcCol)
+        goingLeft = 1;
+    if (targetRow > curSourceRow)
+        isMovingDown = 1;
+    else if (targetRow != curSourceRow)
+        goingUp = 1;
+    if (isMovingRight == goingLeft) {
+        if (goingUp == 1) {
+            if (curSourceRow & 1) {
                 if (!(blockedMask & COMBAT_DIRECTION_BIT_NORTHWEST))
                     return COMBAT_DIRECTION_NORTHWEST;
                 else if (!(blockedMask & COMBAT_DIRECTION_BIT_NORTHEAST))
@@ -437,7 +437,7 @@ i16 army::GetBestDirection(i16 sourceHex, i16 targetHex, i16 blockedMask) {
                     return COMBAT_DIRECTION_WIDE_EAST;
             }
         } else {
-            if (curSrcRow & 1) {
+            if (curSourceRow & 1) {
                 if (!(blockedMask & COMBAT_DIRECTION_BIT_SOUTHWEST))
                     return COMBAT_DIRECTION_SOUTHWEST;
                 else if (!(blockedMask & COMBAT_DIRECTION_BIT_SOUTHEAST))
@@ -474,8 +474,8 @@ i16 army::GetBestDirection(i16 sourceHex, i16 targetHex, i16 blockedMask) {
             }
         }
     }
-    if (iLeftFl == 1) {
-        if (savedMovingUp == 1) {
+    if (goingLeft == 1) {
+        if (goingUp == 1) {
             if (!(blockedMask & COMBAT_DIRECTION_BIT_NORTHWEST))
                 return COMBAT_DIRECTION_NORTHWEST;
             else if (!(blockedMask & COMBAT_DIRECTION_BIT_WEST))
@@ -492,7 +492,7 @@ i16 army::GetBestDirection(i16 sourceHex, i16 targetHex, i16 blockedMask) {
                 return COMBAT_DIRECTION_WIDE_WEST;
             else if (!(blockedMask & COMBAT_DIRECTION_BIT_WIDE_EAST))
                 return COMBAT_DIRECTION_WIDE_EAST;
-        } else if (iIsMovingDown == 1) {
+        } else if (isMovingDown == 1) {
             if (!(blockedMask & COMBAT_DIRECTION_BIT_SOUTHWEST))
                 return COMBAT_DIRECTION_SOUTHWEST;
             else if (!(blockedMask & COMBAT_DIRECTION_BIT_WEST))
@@ -527,8 +527,8 @@ i16 army::GetBestDirection(i16 sourceHex, i16 targetHex, i16 blockedMask) {
             else if (!(blockedMask & COMBAT_DIRECTION_BIT_WIDE_WEST))
                 return COMBAT_DIRECTION_WIDE_WEST;
         }
-    } else if (lastFl == 1) {
-        if (savedMovingUp == 1) {
+    } else if (isMovingRight == 1) {
+        if (goingUp == 1) {
             if (!(blockedMask & COMBAT_DIRECTION_BIT_NORTHEAST))
                 return COMBAT_DIRECTION_NORTHEAST;
             else if (!(blockedMask & COMBAT_DIRECTION_BIT_EAST))
@@ -545,7 +545,7 @@ i16 army::GetBestDirection(i16 sourceHex, i16 targetHex, i16 blockedMask) {
                 return COMBAT_DIRECTION_WIDE_WEST;
             else if (!(blockedMask & COMBAT_DIRECTION_BIT_WIDE_EAST))
                 return COMBAT_DIRECTION_WIDE_EAST;
-        } else if (iIsMovingDown == 1) {
+        } else if (isMovingDown == 1) {
             if (!(blockedMask & COMBAT_DIRECTION_BIT_SOUTHEAST))
                 return COMBAT_DIRECTION_SOUTHEAST;
             else if (!(blockedMask & COMBAT_DIRECTION_BIT_EAST))

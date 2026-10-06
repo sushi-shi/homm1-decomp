@@ -78,7 +78,7 @@ rva	size	symbol	provenance
 0x000a2584	1256	_initialFrequency	Buka complete lzhuf instruction/reference proof and typed initializer
 0x000a5408	64	_positionLength$S481	code-required position-code table
 0x000a5448	64	_positionCode$S482	code-required position-code table
-0x000d7f5c	2	_putbuf	Buka complete lzhuf instruction/reference proof and typed initializer
+0x000d7f5c	2	_encbuf	Buka complete lzhuf instruction/reference proof and typed initializer
 0x000d7f5e	1	_putlen	Buka complete lzhuf instruction/reference proof and typed initializer
 0x000a5490	13	??_C@_0N@PCJN@Data?5decoded?$AA@	code-required pooled literal identity
 0x000a1484	4	_gIconXAdjust	Buka typed MASM initializer and every complete-body reference checked
@@ -87,35 +87,35 @@ rva	size	symbol	provenance
 0x000a1490	4	_gIconWidth	Buka typed MASM initializer and every complete-body reference checked
 0x000a1494	4	_gIconHeight	Buka typed MASM initializer and every complete-body reference checked
 0x000a54ec	4	__adjust_fdiv	LIBC FDIV-erratum flag read by cl's Pentium fdiv check, code-required identity
-0x000cad50	448	?gNbSessNcb@@3PAU_NCB@@A	nb_init retail operand and loop/memset extent; pinned Win32 record or Buka queue/name identity; code layout only
-0x000ce178	1800	?bmpAndMask@@3PAUtagBITMAP@@A	Buka typed payload, unique anchored code uses and disjoint data owners
+0x000cad50	448	?gNetPeerNcb@@3PAU_NCB@@A	nb_init retail operand and loop/memset extent; pinned Win32 record or Buka queue/name identity; code layout only
+0x000ce178	1800	?gAndMaskBitmapInfo@@3PAUtagBITMAP@@A	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000ce880	1800	?bmpColor@@3PAUtagBITMAP@@A	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000ce670	300	?hMouseCursor@@3PAPAXA	75 cursor handles
 0x000ce7a0	300	?hbmpAndMask@@3PAPAXA	75 mask bitmap handles
-0x000cf1e0	300	?gColorBits@@3PAPAEA	Buka typed payload, unique anchored code uses and disjoint data owners
+0x000cf1e0	300	?cColorBits@@3PAPAEA	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000cea00	300	?hbmpColor@@3PAPAXA	75 color bitmap handles
-0x000cf438	1500	?mouseIconInfo@@3PAU_ICONINFO@@A	Buka typed payload, unique anchored code uses and disjoint data owners
+0x000cf438	1500	?cursorIconInfo@@3PAU_ICONINFO@@A	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000cfa14	300	?cAndBits@@3PAPAEA	Buka typed payload, unique anchored code uses and disjoint data owners
-0x000cf240	4	?nMCIError@@3IA	retail-backed code identity only
-0x000cf248	256	?CommandString@@3PADA	retail-backed code identity only
-0x000cf348	256	?lpszReturnString@@3PADA	retail-backed code identity only
+0x000cf240	4	?gMciError@@3IA	retail-backed code identity only
+0x000cf248	256	?gMciCommandString@@3PADA	retail-backed code identity only
+0x000cf348	256	?gMciReturnString@@3PADA	retail-backed code identity only
 0x000cf448	2	?gSampleVolumes@@3PAFA	retail code-required identity, initializer/complete extent deferred
 0x000cf488	16	?gWaveFormat@@3Upcmwaveformat_tag@@A	retail writes all fields of the real SDK PCMWAVEFORMAT, code layout only
 0x000cf498	48	?gAuxCaps@@3UtagAUXCAPSA@@A	CDStartup fills the real SDK auxiliary-device capability record, code layout only
-0x000ce110	1	?gWindowFadeSavedUpdate@@3CA	Buka typed payload, unique anchored code uses and disjoint data owners
+0x000ce110	1	?gFadeSavedUpdate@@3CA	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000cf540	96	?gCyclePal@@3PACA	SetPalette copies32RGBtriplets and cycle helper references same table
 0x000cfbb8	1256	_freq	Buka complete lzhuf instruction/reference proof and typed initializer
 0x000d00a0	8194	_dad	Buka complete lzhuf instruction/reference proof and typed initializer
-0x000d20a8	4	_decodeSize	Buka complete lzhuf instruction/reference proof and typed initializer
+0x000d20a8	4	_decodeLen	Buka complete lzhuf instruction/reference proof and typed initializer
 0x000d20ac	1254	_son	Buka complete lzhuf instruction/reference proof and typed initializer
-0x000d2598	4	_codePtr	Buka complete lzhuf instruction/reference proof and typed initializer
+0x000d2598	4	_dataPtr	Buka complete lzhuf instruction/reference proof and typed initializer
 0x000d259c	8194	_lson	Buka complete lzhuf instruction/reference proof and typed initializer
 0x000d45a4	4	_codesize	Buka complete lzhuf instruction/reference proof and typed initializer
 0x000d45ac	1882	_prnt	Buka complete lzhuf instruction/reference proof and typed initializer
-0x000d4d08	4	_decodeOutput	Buka complete lzhuf instruction/reference proof and typed initializer
+0x000d4d08	4	_outputPos	Buka complete lzhuf instruction/reference proof and typed initializer
 0x000d4d0c	2	_match_position	Buka complete lzhuf instruction/reference proof and typed initializer
 0x000d4d0e	2	_getbuf	Buka complete lzhuf instruction/reference proof and typed initializer
-0x000d4d10	4	_textsize	Buka complete lzhuf instruction/reference proof and typed initializer
+0x000d4d10	4	_decodeSkip	Buka complete lzhuf instruction/reference proof and typed initializer
 0x000d4d14	2	_match_length	Buka complete lzhuf instruction/reference proof and typed initializer
 0x000d4d18	8706	_rson	Buka complete lzhuf instruction/reference proof and typed initializer
 0x000d6f1a	1	_getlen	Buka complete lzhuf instruction/reference proof and typed initializer
@@ -171,17 +171,17 @@ rva	size	symbol	provenance
 0x000a74d0	1	?giWeekTypeExtra@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
 0x000a7b80	13	?gMapName@@3PADA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
 0x000a74dc	4	?gbInNewGameSetup@@3HA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
-0x000a6cc8	1020	?pwSizeOfMapExtra@@3PAHA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
+0x000a6cc8	1020	?iSizeOfMapExtra@@3PAHA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
 0x000a9921	1	?gOverviewShowing@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
 0x000a9914	4	?gHeartbeatSeen@@3HA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
 0x000a9920	1	?gHeroWindShowing@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
-0x000a7fb4	4	?gHVHero@@3PAVhero@@A	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
+0x000a7fb4	4	?gInfoViewedHero@@3PAVhero@@A	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
 0x000a9949	1	?gShowHighScore@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
 0x000a7624	1	?giHighScoreType@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
 0x000a9951	1	?gInPollSound@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
 0x000a9952	1	_?gEarlySetupDone@?1??EarlySetup@@YAHXZ@4CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
 0x000a9953	1	?gKBDone@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
-0x000a7620	4	?giShowIntro@@3HA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
+0x000a7620	4	?gShowIntro@@3HA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
 0x000a9929	1	?gSkipIntro@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
 0x000a7bb4	4	?gbGamePosToNetPos@@3PACA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
 0x000a98ec	4	?gColorMice@@3HA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
@@ -189,20 +189,20 @@ rva	size	symbol	provenance
 0x000a7ba9	1	?giLimitPlayer@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
 0x000a78b0	352	?cAggPathName@@3PADA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
 0x000a9954	1	?gInCheckEndGame@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
-0x000a7484	14	?giTerrainCost@@3PAY01CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
+0x000a7484	14	?gTerrainCost@@3PAY01CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
 0x000a9900	4	?gMinimized@@3HA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
-0x000a6bd0	4	?gSavedPlayerTypes@@3PACA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
-0x000a6bd4	4	_s_adjacentMonsterX	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
-0x000a6bd8	4	_s_adjacentMonsterY	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
-0x000a6bdc	1	?gSavedCrest@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
+0x000a6bd0	4	?gSavedDifficulties@@3PACA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
+0x000a6bd4	4	_s_adjacentGuardX	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
+0x000a6bd8	4	_s_adjacentGuardY	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
+0x000a6bdc	1	?gKeptColor@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
 0x000a6be0	4	?gRandomTownTypes@@3PACA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
-0x000a6be8	4	_s_adjacentMonsterMinX	Buka FindAdjacentMonster complete conditional CFG and typed scan-cursor consumers
-0x000a6bec	4	_s_adjacentMonsterMinY	Buka FindAdjacentMonster complete conditional CFG and typed scan-cursor consumers
-0x000a6bf0	1	?gSavedDifficulty@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
-0x000a6bf4	14	?gMineTypeCount@@3PAFA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
+0x000a6be8	4	_s_adjacentGuardMinX	Buka FindAdjacentMonster complete conditional CFG and typed scan-cursor consumers
+0x000a6bec	4	_s_adjacentGuardMinY	Buka FindAdjacentMonster complete conditional CFG and typed scan-cursor consumers
+0x000a6bf0	1	?gOldGameDifficulty@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
+0x000a6bf4	14	?gMineTypeNums@@3PAFA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
 0x000a6c04	4	_s_adjacentMonsterEndY	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
 0x000a6c08	4	_s_adjacentMonsterEndX	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
-0x000a6c0c	1	?gSaveCurPlayer@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
+0x000a6c0c	1	?gSavedCurPlayer@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
 0x000a6c0d	1	?gbDismissArmy@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
 0x000a6c0e	1	?gSavedKingOfTheHill@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
 0x000a6c20	4	?gEndSequence@@3HA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage
@@ -230,11 +230,11 @@ rva	size	symbol	provenance
 0x000a01a8	1028	?LogicalPalette@@3UWingPalette@@A	Buka typed payload, unique anchored code uses and disjoint data owners
 0x0009f97c	1	_?indexToCastOn@?1??HandleCastSpell@@YAFAAUtag_message@@@Z@4CA	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000cdd78	16	?gDDClientRect@@3UtagRECT@@A	Buka typed payload, unique anchored code uses and disjoint data owners
-0x000cdd90	16	?gDDDestinationRect@@3UtagRECT@@A	Buka typed payload, unique anchored code uses and disjoint data owners
+0x000cdd90	16	?gDDDestRect@@3UtagRECT@@A	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000cd938	16	?gDDSourceRect@@3UtagRECT@@A	Buka typed payload, unique anchored code uses and disjoint data owners
-0x000cd8c0	4	?gDDResult@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners
-0x000cdd88	4	?gPaintStart@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners
-0x000cd8c8	108	?gDDSurfaceDesc@@3U_DDSURFACEDESC@@A	Independent reviewed owner identity, complete current typed payload and nonoverlap
+0x000cd8c0	4	?gDDrawStatus@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners
+0x000cdd88	4	?gDDPaintStart@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners
+0x000cd8c8	108	?gDDrawSurfaceDesc@@3U_DDSURFACEDESC@@A	Independent reviewed owner identity, complete current typed payload and nonoverlap
 0x000cddc8	4	?gDDPal@@3PAUIDirectDrawPalette@@A	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000cdda4	4	?gInitWin@@3PAXA	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000cddd0	4	?gInDDSD@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners
@@ -243,87 +243,87 @@ rva	size	symbol	provenance
 0x000cf0b4	300	?hbmpAndMask@@3PAPAUHBITMAP__@@A	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000cf30c	300	?hbmpColor@@3PAPAUHBITMAP__@@A	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000cfb44	4	_?gInSetPointer@?1??SetPointer@mouseManager@@QAEXF@Z@4HA	Buka typed payload, unique anchored code uses and disjoint data owners
-0x000cfb68	4	_sClipEntry	Buka typed payload, unique anchored code uses and disjoint data owners
-0x000cfb5c	4	_sClipSource	Buka typed payload, unique anchored code uses and disjoint data owners
-0x000cfbb4	4	_sClipRowStart	Buka typed payload, unique anchored code uses and disjoint data owners
+0x000cfb68	4	_sClipFrameEntry	Buka typed payload, unique anchored code uses and disjoint data owners
+0x000cfb5c	4	_sClipSrcPtr	Buka typed payload, unique anchored code uses and disjoint data owners
+0x000cfbb4	4	_sClipLeft	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000cfb60	4	_sClipX	Buka typed payload, unique anchored code uses and disjoint data owners
-0x000cfb50	4	_sClipY	Buka typed payload, unique anchored code uses and disjoint data owners
+0x000cfb50	4	_sClipPosY	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000cfbb0	4	_sClipInside	Buka typed payload, unique anchored code uses and disjoint data owners
-0x000cfb54	4	_sClipRight	Buka typed payload, unique anchored code uses and disjoint data owners
-0x000cfb58	4	_sClipBottom	Buka typed payload, unique anchored code uses and disjoint data owners
+0x000cfb54	4	_sClipLimitX	Buka typed payload, unique anchored code uses and disjoint data owners
+0x000cfb58	4	_sClipLimitY	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000cfb64	4	_sClipRow	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000cfb6c	4	_sClipRun	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000cddcc	4	?gBusyRetry@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners
-0x000cdf58	4	_gSampleBuffer	Buka audio: complete typed payload and retail code users
-0x000cdf5c	4	_gSampleFrames	Buka audio: complete typed payload and retail code users
-0x000cdf60	4	_gSampleChannels	Buka audio: complete typed payload and retail code users
-0x000cdf64	4	_gSampleRate	Buka audio: complete typed payload and retail code users
-0x000cdf68	4	_gSampleFormat	Buka audio: complete typed payload and retail code users
-0x000ce104	4	_gSamples	Buka audio: complete typed payload and retail code users
-0x000ce108	4	_gSampleSuspensions	Buka audio: complete typed payload and retail code users
-0x000cddec	4	?stream@AudiereMusic@@2V?$RefPtr@VOutputStream@audiere@@@audiere@@A	Buka audio: complete typed payload and retail code users
-0x000cdf6c	4	?source@AudiereMusic@@2V?$RefPtr@VSampleSource@audiere@@@audiere@@A	Buka audio: complete typed payload and retail code users
+0x000cdf58	4	_gSampleBufferly	Buka audio: complete typed payload and retail code users
+0x000cdf5c	4	_gSampleFrames0	Buka audio: complete typed payload and retail code users
+0x000cdf60	4	_gSampleChannelsa58	Buka audio: complete typed payload and retail code users
+0x000cdf64	4	_gSampleRate7	Buka audio: complete typed payload and retail code users
+0x000cdf68	4	_gSampleFormata98	Buka audio: complete typed payload and retail code users
+0x000ce104	4	_gSamplesa	Buka audio: complete typed payload and retail code users
+0x000ce108	4	_gSampleSuspensionsa6	Buka audio: complete typed payload and retail code users
+0x000cddec	4	?channel@AudiereMusic@@2V?$RefPtr@VOutputStream@audiere@@@audiere@@A	Buka audio: complete typed payload and retail code users
+0x000cdf6c	4	?origin@AudiereMusic@@2V?$RefPtr@VSampleSource@audiere@@@audiere@@A	Buka audio: complete typed payload and retail code users
 0x000cdde8	4	_gMusicSuspensions	Buka audio: complete typed payload and retail code users
 0x000a0d70	4	_gCurrentTrack	Buka audio: complete typed payload and retail code users
 0x000a0d74	400	_gCDTrackMap	Buka audio: complete typed payload and retail code users
 0x000cddf0	352	_gMusicFilename	Buka audio: complete typed payload and retail code users
-0x000cdf74	400	_gMusicPositions	Buka audio: complete typed payload and retail code users
-0x000ce10c	4	_gMusicSource	Buka audio: complete typed payload and retail code users
-0x000cdf50	4	?device@AudiereDevice@@2V?$RefPtr@VAudioDevice@audiere@@@audiere@@A	Buka audio: complete typed payload and retail code users
+0x000cdf74	400	_gMusicPositionsaat	Buka audio: complete typed payload and retail code users
+0x000ce10c	4	_gMusicSourcejxy	Buka audio: complete typed payload and retail code users
+0x000cdf50	4	?driver@AudiereDevice@@2V?$RefPtr@VAudioDevice@audiere@@@audiere@@A	Buka audio: complete typed payload and retail code users
 0x000a0f04	4	_gEffectsVolume	Buka audio: complete typed payload and retail code users
 0x000a0f08	4	_gMusicVolume	Buka audio: complete typed payload and retail code users
 0x000a0f0c	44	_gVolumeLevels	Buka audio: complete typed payload and retail code users
-0x000b2208	4	?gEventRV@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000c8cbc	4	?gEventCell@@3PAVmapCell@@A	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
+0x000b2208	4	?gVisitResult@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
+0x000c8cbc	4	?gEventLocation@@3PAVmapCell@@A	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000cc7e8	8	?idstr@@3PADA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000b2174	4	?gEventLoop@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
+0x000b2174	4	?gEventSlot@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000a99ec	1024	?bProcessMessage@@3PAEA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000b4b9c	4	?gWinChance@@3MA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000cb664	256	?rcvBufIn@@3URemoteMessage@@A	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
+0x000b4b9c	4	?gCombatWinningFraction@@3MA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
+0x000cb664	256	?rcvBufIn@@3PADA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000c8cd4	72	?gaiHeroLiveChance@@3PAFA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000b4b98	4	?gReduceByReload@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000ca184	4	?gEventTown@@3PAVtown@@A	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
+0x000b4b98	4	?gDiscountByReloadFlag@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
+0x000ca184	4	?gEventTownRec@@3PAVtown@@A	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000cb410	256	?sndBuf@@3URemoteMessage@@A	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000ca16c	4	?giMaxHeroesForThisPlayer@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000b2220	1	?giBestShipyardId@@3CA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000ca170	1	?gbActualShipyardFound@@3CA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000cb3dc	4	?remotestage@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000ca28c	4	?localstage@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000c8d1c	5184	?mapVisited@@3PAY0EI@CA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
+0x000c8d1c	5184	?gMapVisitFlags@@3PAY0EI@CA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x0009ef7c	4	?gAttackComputerBonus@@3MA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000b4ba4	4	?gEventHero@@3PAVhero@@A	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000c8ccc	4	?gPurchaseSlot@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000b2214	4	?gPurchaseNum@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
+0x000b4ba4	4	?gFoe@@3PAVhero@@A	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
+0x000c8ccc	4	?gRecruitStackSlot@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
+0x000b2214	4	?gPurchaseTotal@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000cc81d	1	_?gInitNetHostStatus@?1??InitNetHost@@YACXZ@4CA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000b2170	1	?giBestShipyardDist@@3CA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x00090a8c	2	?gHeroGoldCost@@3FA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000bb12c	4	?gOutcome@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
+0x000bb12c	4	?gSimOutcome@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000cb510	4	?WFDCStage@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000b2224	10368	?gaiHeroStrategicRVOfPos@@3PAY0EI@FA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000b7434	10368	?gaiHeroEventStratRVOfPos@@3PAY0EI@FA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
+0x000b7434	10368	?gHeroEventStratRVOfPos@@3PAY0EI@FA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x0009ef78	4	?gAttackHumanBonus@@3MA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000b9cb4	1	?gbPossibleShipyardFound@@3CA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000bb11c	4	?gAttackerLoss@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
+0x000bb11c	4	?gExpectedOurCasualties@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000cc7f0	4	?gIDCtr@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000c8cc0	4	?gbTroopReload@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000bb128	4	?gDefenderRemaining@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000bb124	4	?gAttackerRemaining@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000bb120	4	?gDefenderLoss@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000bb15c	4	?gMonsterCount@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
+0x000bb128	4	?gEstGuardPower@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
+0x000bb124	4	?gEstOurForce@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
+0x000bb120	4	?gOpponentLosses@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
+0x000bb15c	4	?gEventMonsterCount@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000ca17c	4	?gEventTownArmy@@3PAVarmyGroup@@A	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000cc82c	1	?gRequestingGames@@3CA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x00093430	4	?gFullCombatScreenDrawn@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000ca178	1	?giCurPlayerHighBit@@3EA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
+0x000ca178	1	?gCurPlayerTopBit@@3EA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x0009343c	1	?gHighScoreRank@@3CA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000a9e4c	4	?gClosingApp@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000a99d8	4	?lTemp@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000a9e48	4	_?gLastCycleTickCount@?1??AppWndProc@@YGJPAUHWND__@@IIJ@Z@4HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000ca160	4	?gbBerserk@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000b4bac	4	?fBerserkFactor@@3MA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000b9cc0	5184	?gaiTurnValueOfMine@@3PAY0EI@CA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
+0x000b9cc0	5184	?gTurnValueOfMine@@3PAY0EI@CA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000ca180	1	?gbActualBoatFound@@3CA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000ca198	1	_?gSVSearchArrayInUse@?1??StrategicValueOfPosition@philAI@@QAEHPAVhero@@FFCPAH@Z@4CA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000ca174	4	?gReduceByBerserk@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
+0x000ca174	4	?gDiscountForRampageFlag@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x0009ef80	4	_?gEvaluatingTravelGates@?1??ValueOfEventAtPosition@philAI@@QAEHPAVhero@@FFHPAH@Z@4HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000bb158	4	?gDefaultEventType@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000cc670	120	?iLastIds@@3PAHA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
@@ -332,11 +332,11 @@ rva	size	symbol	provenance
 0x000a9948	1	?gGameInitialized@@3CA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000a9958	4	_?gInShutDown@?1??ShutDown@@YAXPAD@Z@4HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000b220c	4	?fReduceFactor@@3MA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000b2218	4	?giHumanTownConquered@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
+0x000b2218	4	?gHumanTownConquered@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000b2178	144	?gfHeroInteractionBonus@@3PAMA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000b4bb0	10368	?gaiLiveChanceOfPos@@3PAY0EI@FA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000bb100	28	?costTemp@@3PAHA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000c8cb4	4	?gEventTownId@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
+0x000c8cb4	4	?gHeroGarrisonId@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000cb768	2056	?outque@@3Uoutque_t@@A	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000ca29c	8	?remoteidstr@@3PADA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x0009f058	4	?gLastConfirm@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
@@ -357,42 +357,42 @@ rva	size	symbol	provenance
 0x0008a6e0	4	_SPELL_AI_BERSERK_MODIFIER	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x0008a6f0	4	_SPELL_AI_SHIELD_MODIFIER	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000d7f60	4	?gLeftRightSave@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000bb138	4	?gArtifactChoice3@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000b2210	4	?gTownValue@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
+0x000bb138	4	?gItemPurchaseScore@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
+0x000b2210	4	?gEventTownScore@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000ca290	4	?oldsec@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000ca298	4	?stime@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000cd948	1068	?screenImage@@3UWingImage@@A	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000c8cb8	4	?iLastFrameRateTimer@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000a99c8	16	?rcTemp@@3UtagRECT@@A	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000a99e0	4	?gTempX@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
+0x000a99e0	4	?iTempX@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000a99e4	4	?iTempY@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000bb130	4	?gArtifactChoice1@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000bb134	4	?gArtifactChoice2@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000ca15c	4	?gEventSeen@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
+0x000bb130	4	?gPrizeUnguardedValue@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
+0x000bb134	4	?gPrizeGuardedWorth@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
+0x000ca15c	4	?gCellSeen@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x0009f7c0	144	_gSmackSoundFormats	Typed Smacker globals and localized window titles; complete payload and retail uses
 0x0009f850	162	?SmackOptions@@3PAUSSmackOptions@@A	Typed Smacker globals and localized window titles; complete payload and retail uses
 0x0009f8f4	44	_gSmackVolumes	Typed Smacker globals and localized window titles; complete payload and retail uses
-0x000cc8d0	1	?gSmackNum@@3CA	Typed Smacker globals and localized window titles; complete payload and retail uses
-0x000cc8d4	4	_gSmackCompleted	Typed Smacker globals and localized window titles; complete payload and retail uses
+0x000cc8d0	1	?gMovieId@@3CA	Typed Smacker globals and localized window titles; complete payload and retail uses
+0x000cc8d4	4	_gSmackEnded	Typed Smacker globals and localized window titles; complete payload and retail uses
 0x000cc8d8	52	_gSmackWaveCaps	Typed Smacker globals and localized window titles; complete payload and retail uses
 0x000cc910	84	_gSmackSummary	Typed Smacker globals and localized window titles; complete payload and retail uses
 0x000cc964	768	_gSmackSavedPalette	Typed Smacker globals and localized window titles; complete payload and retail uses
-0x000ccc68	1	_gSmackMainDone	Typed Smacker globals and localized window titles; complete payload and retail uses
-0x000ccc70	12	_gSmackSoundFormat	Typed Smacker globals and localized window titles; complete payload and retail uses
-0x000ccc80	16	_gSmackWaveFormat	Typed Smacker globals and localized window titles; complete payload and retail uses
-0x000ccc90	4	_gSmackLastFramePlayed	Typed Smacker globals and localized window titles; complete payload and retail uses
-0x000ccc94	4	_gSmackSound	Typed Smacker globals and localized window titles; complete payload and retail uses
-0x000ccc98	4	_gSmackResource	Typed Smacker globals and localized window titles; complete payload and retail uses
+0x000ccc68	1	_gSmackStop	Typed Smacker globals and localized window titles; complete payload and retail uses
+0x000ccc70	12	_gSmackAudioFormat	Typed Smacker globals and localized window titles; complete payload and retail uses
+0x000ccc80	16	_gSmackPcmFormat	Typed Smacker globals and localized window titles; complete payload and retail uses
+0x000ccc90	4	_gSmackPrevFrame	Typed Smacker globals and localized window titles; complete payload and retail uses
+0x000ccc94	4	_gSmkSounds	Typed Smacker globals and localized window titles; complete payload and retail uses
+0x000ccc98	4	_gSmkResource	Typed Smacker globals and localized window titles; complete payload and retail uses
 0x000ccc9c	4	_gSmackFont	Typed Smacker globals and localized window titles; complete payload and retail uses
-0x000ccca0	4	_gSmackDriver	Typed Smacker globals and localized window titles; complete payload and retail uses
-0x000ccca4	4	_gSmackCollectSummary	Typed Smacker globals and localized window titles; complete payload and retail uses
+0x000ccca0	4	_gSmackDigDriver	Typed Smacker globals and localized window titles; complete payload and retail uses
+0x000ccca4	4	_gSmackTrackSummary	Typed Smacker globals and localized window titles; complete payload and retail uses
 0x000ccca8	4	_gSmackPrimary	Typed Smacker globals and localized window titles; complete payload and retail uses
-0x000cccac	4	_gSmackCompanion	Typed Smacker globals and localized window titles; complete payload and retail uses
+0x000cccac	4	_gSmackSecond	Typed Smacker globals and localized window titles; complete payload and retail uses
 0x0009e700	6	?gAppName@@3PADA	Typed Smacker globals and localized window titles; complete payload and retail uses
 0x0009e708	19	?gTitle@@3PADA	Typed Smacker globals and localized window titles; complete payload and retail uses
 0x000cccbc	1024	_s_pendingArmyName	Typed town-message buffers; complete two-function instruction/reference and payload controls
 0x000cd0bc	1024	_s_armyCommandText	Typed town-message buffers; complete two-function instruction/reference and payload controls
-0x000cd4bc	1024	_s_dwellingArmyName	Typed town-message buffers; complete two-function instruction/reference and payload controls
+0x000cd4bc	1024	_s_dwellingArmyLabel	Typed town-message buffers; complete two-function instruction/reference and payload controls
 0x000a7168	768	?gText@@3PADA	Complete typed array payload and independently verified references; remove census splits inside source arrays
 0x000a7838	120	?cNetBoxLine@@3PAY0DM@DA	Complete typed array payload and independently verified references; remove census splits inside source arrays
 0x000a9e7c	36	?gNbEvents@@3PAPAXA	Complete typed array payload and independently verified references; remove census splits inside source arrays
@@ -430,7 +430,7 @@ rva	size	symbol	provenance
 0x00092c30	40	?gMonthNames@@3PAPADA	Dialog/resource pointer tables; both retail images, full slot/payload controls
 0x000932d0	20	?gScoreLabels@@3PAPADA	Dialog/resource pointer tables; both retail images, full slot/payload controls
 0x000a995c	1	_?gInMemError@?1??MemError@@YAXXZ@4CA	Typed initializer, pointer payload and retail caller/member/index dataflow
-0x0009e720	4	_gcCDTrackName	Typed initializer, pointer payload and retail caller/member/index dataflow
+0x0009e720	4	_gCDTrackName	Typed initializer, pointer payload and retail caller/member/index dataflow
 0x0009edac	4	?gNbListenName@@3PAEA	Typed initializer, pointer payload and retail caller/member/index dataflow
 0x000b4aa8	240	?iPlacesVisited@@3PAY01HA	Typed initializer, pointer payload and retail caller/member/index dataflow
 0x000a1388	128	_gInputCharacterMapCp1251	Complete payload and compiled/retail use

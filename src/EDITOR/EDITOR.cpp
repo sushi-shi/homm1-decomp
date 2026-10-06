@@ -4,7 +4,7 @@
 // the functions both programs define.
 // Descriptive names: ShowStatusText, ClearStatusText, gStatusTextShown,
 // gStatusTextClearTime, gStatusTextHoldTime, gStatusText,
-// gCommandLineInterpreted, gpMapHeader, gNewMapFormat, gSelectionX,
+// gCommandLineInterpreted, gMapHeader, gNewMapFormat, gSelectionX,
 // gSelectionY, gSelectionWidth, gSelectionHeight, gGeneratingMaps,
 // gNextCellOwner, gEditButtonHelp, gEditAreaHelp, EditorStartupHook, EditorIdleHook,
 // IncrementArgumentA, IncrementArgumentB.
@@ -47,7 +47,7 @@
 DATA(0x0043ede4)
 i8 gCommandLineInterpreted = 1;
 DATA(0x00451ea4)
-editManager* gpEditManager;
+editManager* gEditManager;
 DATA(0x004528d0)
 i32 gStatusTextShown;
 DATA(0x004528f0)
@@ -57,7 +57,7 @@ i32 gStatusTextHoldTime;
 DATA(0x00451ea8)
 char gStatusText[EDITOR_STATUS_TEXT_CAPACITY];
 DATA(0x00451e98)
-SMapHeader* gpMapHeader;
+SMapHeader* gMapHeader;
 DATA(0x0043f398)
 i32 gNewMapFormat = 1;
 DATA(0x0043f3a0)
@@ -107,21 +107,21 @@ VA(0x004084aa, 0x106)
 i32 oldmain(void) {
     palette* editorPalette;
 
-    if (gpExec->InitSystem())
+    if (gExec->InitSystem())
         ShutDown(localization::Tr("editor.startup.initialize.failed"));
-    KBChangeMenu(hmnuDflt);
-    editorPalette = gpResourceManager->GetPalette("kb.pal");
+    KBChangeMenu(gDefaultMenu);
+    editorPalette = gResourceManager->GetPalette("kb.pal");
     PostprocessPalette(editorPalette->m_data);
     gMapX = 0;
     gMapY = 0;
-    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_NORMAL, editorPalette);
-    if (gpExec->AddManager(gpEditManager, BASE_MANAGER_PRIORITY_UNASSIGNED))
+    gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_NORMAL, editorPalette);
+    if (gExec->AddManager(gEditManager, BASE_MANAGER_PRIORITY_UNASSIGNED))
         ShutDown(localization::Tr("startup.manager.failed"));
-    gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, editorPalette);
-    gpExec->MainLoop();
-    gpExec->RemoveManager(gpEditManager);
-    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, editorPalette);
-    gpResourceManager->Dispose(editorPalette);
+    gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, editorPalette);
+    gExec->MainLoop();
+    gExec->RemoveManager(gEditManager);
+    gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, editorPalette);
+    gResourceManager->Dispose(editorPalette);
     ShutDown(NULL);
     return 0;
 }
@@ -143,8 +143,8 @@ VA(0x004085d1, 0x2e)
 void DelayTicks(i32 ticks) {
     i32 unused = 0;
 
-    glTimers[DELAY_TICKS_TIMER_SLOT] = KBTickCount() + ticks * DELAY_TICK_MILLISECONDS;
-    DelayTil(glTimers + DELAY_TICKS_TIMER_SLOT);
+    gTimers[DELAY_TICKS_TIMER_SLOT] = KBTickCount() + ticks * DELAY_TICK_MILLISECONDS;
+    DelayTil(gTimers + DELAY_TICKS_TIMER_SLOT);
 }
 
 VA(0x004085ff, 0x3b)
@@ -184,15 +184,10 @@ void ShutDown(char* message) {
     if (message) {
         strcpy(buffer, message);
         SetFullScreenStatus(0);
-        MessageBoxA(
-            hwndApp,
-            buffer,
-            localization::Tr("shutdown.unexpected.title"),
-            MB_ICONHAND
-        );
+        MessageBoxA(gAppWindow, buffer, localization::Tr("shutdown.unexpected.title"), MB_ICONHAND);
     }
     gClosingApp = 1;
-    gpExec->ShutDownSystem();
+    gExec->ShutDownSystem();
     if (gEventHandle) {
         CloseHandle(gEventHandle);
         gEventHandle = NULL;
@@ -209,14 +204,14 @@ i32 InterpretCommandLine(void) {
     i32 i;
 
     gSpecialMouseMasks = 1;
-    giDebugLevel = DEBUG_LEVEL_NONE;
+    gDebugLevel = DEBUG_LEVEL_NONE;
     size = strlen(gCommandLine);
     for (i = 0; i < size; i++) {
         if (gCommandLine[i] == '/' && i + 1 < size) {
             switch (toupper(gCommandLine[i + 1])) {
                 case 'D':
                     if (i + 2 < size)
-                        giDebugLevel = gCommandLine[i + 2] - '0';
+                        gDebugLevel = gCommandLine[i + 2] - '0';
                     break;
                 case 'B':
                     if (i + 2 < size)
@@ -237,8 +232,8 @@ i32 EarlySetup(void) {
 
     if (gEarlySetupDone)
         return 0;
-    sprintf(cAggPathName, "%s%s", gDataPath, "heroes.agg");
-    DEFAULT_AGGREGATE_NAME = cAggPathName;
+    sprintf(gAggPathName, "%s%s", gDataPath, "heroes.agg");
+    DEFAULT_AGGREGATE_NAME = gAggPathName;
     InitMainClasses();
     GetGraphicsInfo();
     ReadPrefs();
@@ -247,7 +242,7 @@ i32 EarlySetup(void) {
     switch (SetupCDDrive()) {
         case CD_SETUP_NO_DRIVE:
             MessageBoxA(
-                hwndApp,
+                gAppWindow,
                 localization::Tr("startup.cd.inaccessible"),
                 localization::Tr("startup.error.title"),
                 MB_ICONHAND
@@ -256,7 +251,7 @@ i32 EarlySetup(void) {
             break;
         case CD_SETUP_NOT_FOUND:
             MessageBoxA(
-                hwndApp,
+                gAppWindow,
                 localization::Tr("editor.startup.cd.required"),
                 localization::Tr("startup.error.title"),
                 MB_ICONHAND
@@ -265,7 +260,7 @@ i32 EarlySetup(void) {
             break;
         case CD_SETUP_NO_APP_PATH:
             MessageBoxA(
-                hwndApp,
+                gAppWindow,
                 localization::Tr("startup.directory.invalid"),
                 localization::Tr("startup.error.title"),
                 MB_ICONHAND
@@ -274,7 +269,7 @@ i32 EarlySetup(void) {
             break;
         case CD_SETUP_NO_DATA:
             MessageBoxA(
-                hwndApp,
+                gAppWindow,
                 localization::Tr("startup.data.missing"),
                 localization::Tr("startup.error.title"),
                 MB_ICONHAND
@@ -282,9 +277,9 @@ i32 EarlySetup(void) {
             exit(0);
             break;
     }
-    hmnuDflt = LoadMenuA(hInstApp, "mnuDflt");
+    gDefaultMenu = LoadMenuA(gAppInstance, "mnuDflt");
     for (i = 0; i < MAP_CELL_GROUND_TILE_COUNT; i++)
-        giGroundToTerrain[i] = i / MAP_CELL_TILES_PER_TERRAIN;
+        gGroundToTerrain[i] = i / MAP_CELL_TILES_PER_TERRAIN;
     return 1;
 }
 
@@ -302,38 +297,38 @@ bool IsCDDrive(i32 driveIndex) {
 
 VA(0x004089ce, 0x20c)
 void InitMainClasses(void) {
-    gpExec = new executive;
-    gpInputManager = new inputManager;
-    gpMouseManager = new mouseManager;
-    gpWindowManager = new heroWindowManager;
-    gpResourceManager = new resourceManager;
-    gpBufferPalette = new palette;
-    gpEditManager = new editManager;
+    gExec = new executive;
+    gInputManager = new inputManager;
+    gMouseManager = new mouseManager;
+    gWindowManager = new heroWindowManager;
+    gResourceManager = new resourceManager;
+    gBufferPalette = new palette;
+    gEditManager = new editManager;
 }
 
 VA(0x00408bda, 0x137)
 void DeleteMainClasses(void) {
-    if (gpEditManager)
-        delete gpEditManager;
-    gpEditManager = NULL;
-    if (gpBufferPalette)
-        delete gpBufferPalette;
-    gpBufferPalette = NULL;
-    if (gpResourceManager)
-        delete gpResourceManager;
-    gpResourceManager = NULL;
-    if (gpWindowManager)
-        delete gpWindowManager;
-    gpWindowManager = NULL;
-    if (gpMouseManager)
-        delete gpMouseManager;
-    gpMouseManager = NULL;
-    if (gpInputManager)
-        delete gpInputManager;
-    gpInputManager = NULL;
-    if (gpExec)
-        delete gpExec;
-    gpExec = NULL;
+    if (gEditManager)
+        delete gEditManager;
+    gEditManager = NULL;
+    if (gBufferPalette)
+        delete gBufferPalette;
+    gBufferPalette = NULL;
+    if (gResourceManager)
+        delete gResourceManager;
+    gResourceManager = NULL;
+    if (gWindowManager)
+        delete gWindowManager;
+    gWindowManager = NULL;
+    if (gMouseManager)
+        delete gMouseManager;
+    gMouseManager = NULL;
+    if (gInputManager)
+        delete gInputManager;
+    gInputManager = NULL;
+    if (gExec)
+        delete gExec;
+    gExec = NULL;
 }
 
 // The editor's dialogs carry text only: no resource, artifact or creature
@@ -374,9 +369,9 @@ void NormalDialog(
 
     nextId = NORMAL_DIALOG_TEXT_WIDGET_FIRST_ID;
     showMessageText = 1;
-    bigFont = gpResourceManager->GetFont("bigfont.fnt");
+    bigFont = gResourceManager->GetFont("bigfont.fnt");
     wrappedLines = bigFont->LineLength(text, NORMAL_DIALOG_TEXT_LINE_WIDTH);
-    gpResourceManager->Dispose(bigFont);
+    gResourceManager->Dispose(bigFont);
     totalHeight = wrappedLines * NORMAL_DIALOG_TEXT_LINE_HEIGHT;
     if (dialogType != NORMAL_DIALOG_TYPE_QUICK_VIEW)
         totalHeight += NORMAL_DIALOG_BUTTON_AREA_HEIGHT;
@@ -426,13 +421,13 @@ void NormalDialog(
     gNormalDialogWindow->BroadcastMessage(msg);
 
     if (dialogType == NORMAL_DIALOG_TYPE_QUICK_VIEW) {
-        gpMouseManager->ReallyHidePointer();
-        gpWindowManager->AddWindow(gNormalDialogWindow, WINDOW_Z_ORDER_APPEND, 1);
+        gMouseManager->ReallyHidePointer();
+        gWindowManager->AddWindow(gNormalDialogWindow, WINDOW_Z_ORDER_APPEND, 1);
         QuickViewWait();
-        gpWindowManager->RemoveWindow(gNormalDialogWindow);
-        gpMouseManager->ReallyShowPointer();
+        gWindowManager->RemoveWindow(gNormalDialogWindow);
+        gMouseManager->ReallyShowPointer();
     } else {
-        gpWindowManager->DoDialog(gNormalDialogWindow, EventWindowHandler, 0);
+        gWindowManager->DoDialog(gNormalDialogWindow, EventWindowHandler, 0);
     }
     delete gNormalDialogWindow;
 }
@@ -470,7 +465,7 @@ void QuickViewWait(void) {
     while (!done) {
         PollSound();
         Process1WindowsMessage();
-        event = gpInputManager->GetEvent();
+        event = gInputManager->GetEvent();
         done = event.type == MESSAGE_RIGHT_BUTTON_UP || event.type == MESSAGE_LEFT_BUTTON_DOWN
                || event.type == MESSAGE_LEFT_BUTTON_UP;
     }
@@ -486,14 +481,14 @@ void ShowStatusText(char* text) {
     gStatusTextShown = 1;
     gStatusTextHoldTime = KBTickCount() + EDITOR_STATUS_TEXT_HOLD_MILLISECONDS;
     FillBitmapArea(
-        gpWindowManager->m_screen,
+        gWindowManager->m_screen,
         EDITOR_STATUS_BAR_X,
         EDITOR_STATUS_BAR_Y,
         EDITOR_STATUS_BAR_WIDTH,
         EDITOR_STATUS_BAR_HEIGHT,
         0
     );
-    gpEditManager->m_statusFont->DrawBoundedString(
+    gEditManager->m_statusFont->DrawBoundedString(
         text,
         EDITOR_STATUS_BAR_X,
         EDITOR_STATUS_BAR_Y,
@@ -502,7 +497,7 @@ void ShowStatusText(char* text) {
         1,
         1
     );
-    gpWindowManager->UpdateScreenRegion(
+    gWindowManager->UpdateScreenRegion(
         EDITOR_STATUS_BAR_X,
         EDITOR_STATUS_BAR_Y,
         EDITOR_STATUS_BAR_WIDTH,
@@ -515,8 +510,8 @@ void ClearStatusText(void) {
     gStatusTextClearTime = 0;
     if (gStatusTextShown) {
         gStatusTextShown = 0;
-        gpEditManager->m_window->DrawWindow(0);
-        gpWindowManager->UpdateScreenRegion(
+        gEditManager->m_window->DrawWindow(0);
+        gWindowManager->UpdateScreenRegion(
             EDITOR_STATUS_BAR_X,
             EDITOR_STATUS_BAR_Y,
             EDITOR_STATUS_BAR_WIDTH,
@@ -530,18 +525,18 @@ void UpdateAppSpecificMenus(void*) {}
 
 VA(0x004091e0, 0x3c)
 void CleanUpMenus(void) {
-    if (hmnuApp) {
-        SetMenu(hwndApp, NULL);
-        if (hmnuDflt)
-            DestroyMenu(hmnuDflt);
+    if (gAppMenu) {
+        SetMenu(gAppWindow, NULL);
+        if (gDefaultMenu)
+            DestroyMenu(gDefaultMenu);
     }
-    hmnuApp = NULL;
+    gAppMenu = NULL;
 }
 
 VA(0x0040921c, 0x1b)
 void EarlyShutDownSystem(void) {
-    if (gpEditManager)
-        gpEditManager->SelectTool(EDIT_MANAGER_NO_TOOL);
+    if (gEditManager)
+        gEditManager->SelectTool(EDIT_MANAGER_NO_TOOL);
 }
 
 // The editor always asks before quitting.
@@ -554,7 +549,7 @@ VA(0x00409241, 0x37)
 i32 HandleAppSpecificMenuCommands(i32 command) {
     switch (command) {
         case APP_MENU_QUIT:
-            PostMessageA(hwndApp, WM_CLOSE, 0, 0);
+            PostMessageA(gAppWindow, WM_CLOSE, 0, 0);
             break;
         default:
             return 1;

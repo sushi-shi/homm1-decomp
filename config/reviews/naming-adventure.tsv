@@ -1,0 +1,80 @@
+kind	owner	old	new	evidence
+param	CalcTerrainCost	waterMode	heroClass	every caller (CURSOR MoveHero, ADVMGR ShowRoute, GAME IsMobile, SEARCH SeedPosition) passes hero::m_heroClass; class 1 pays the grass row
+param	searchArray::SeedPosition	costMode	heroClass	advManager and philAI callers pass hero::m_heroClass; forwarded to CalcTerrainCost
+enum	FindPathTerrainConstant	FINDPATH_WATER_MODE	FINDPATH_BARBARIAN_CLASS	compared with the hero class: barbarians (class 1) ignore rough terrain
+enum	FindPathTerrainConstant	FINDPATH_WATER_TERRAIN	FINDPATH_BARBARIAN_TERRAIN	the grass cost row (TERRAIN_GRASS) a barbarian pays everywhere, not water
+local	searchArray::FindNearestObject	directionCosts	directionOccupied	filled by TestPossibleDirections' occupied argument (SeedPosition's s_directionOccupied)
+local	army::GetBestDirection	targetCol/theDstRowPos/sourceColumnCheckNum/curSrcRow	targetColumn/targetRow/srcCol/curSourceRow	hex column/row of target and source; slot order kept by declaration order
+local	army::GetBestDirection	lastFl/iLeftFl/savedMovingUp/iIsMovingDown	isMovingRight/goingLeft/goingUp/isMovingDown	set when the target column/row is right/left/above/below the source
+local	combatManager::DoCompAI	origMasks	flyerMask	holds GetFlyerMask per side
+local	combatManager::DoCompAI	strongerVal	theyOutshoot	set when the enemy's shooting strength beats ours (pairs with ourOutshoot)
+local	advManager::StartCursor	oldDeltaX/directionY	deltaX/deltaY	normalDirTable step of the new direction
+local	advManager::MoveHero	nextPy	startY	the hero's y before the step, compared after the move with posX
+local	advManager::ValidMove	curDirX/firstDirY/downMask	deltaX/deltaY/southMask	direction step and MAP_DIRECTION_SOUTH_MASK test
+member	advManager	m_lastHoverCell	m_hoverCellX	paired with m_hoverCellY, set from the mouse x, added to m_mapOriginX
+member	adventureSoundCell	volume	distance	InsertSound stores the ring distance; it indexes gEnvironmentVolume and stops past ENVIRONMENT_SOUND_MAX_DISTANCE
+enum	AdventureEnvironmentSoundConstant	ENVIRONMENT_SOUND_DEFAULT_VOLUME	ENVIRONMENT_SOUND_FAR_DISTANCE	the distance a slot resets to (beyond MAX_DISTANCE), not a volume
+param	advManager::TownQuickView	(unnamed)	locatorSlot	callers pass the locator slot or QUICK_VIEW_NO_LOCATOR, as HeroQuickView
+param	advManager::ComboDraw(i32)	update	animate	forwarded into ComboDraw(originX, originY, animate)
+local	advManager::HeroQuickView/TownQuickView	row2	bottomRowCount	stack count of the second icon row, pairs with topRow
+local	advManager::SetHeroContext	n/cellPtrItem	index/currCell	locator-slot loop index as in SetTownContext; the hero's own cell
+local	advManager::PuzzleDraw	savedDrawY	rowPixelY	y * CELL_PIXELS; nothing is saved
+local	advManager::ViewWorld	prevHero/prevTilesets/ii/lettersNode/workPosY	currHero/mapTilesets/tileset/lettersIcons/rowPixelY	current hero (CURRENT_HERO flag); tree6/mtn6/town6 icons; the cell's tileset id; letters.icn; row pixel y
+local	advManager::ControlPanel	anyMobilized	heroWasMobilized	m_heroContextLocked saved around DemobilizeCurrHero, as AdvPanel
+local	advManager::SetInitialMapOrigin	ownTownNode	firstTownPointer	the player's first town record, not a list node
+local	advManager::ShowRoute/CheckDimNextHeroBut	buttonFrame/frame	flagCommand	holds WIDGET_COMMAND_SET/CLEAR_FLAGS, not a frame
+member	advManager	m_selectedCell	m_pendingCommand	holds the AdventureCommand ProcessHover/ProcessSelect queue and DoAdvCommand runs
+member	advManager	m_boatShadowIcon	m_shadowIcon	loads shadow32.icn; every draw is guarded by "not a boat"
+member	advManager	m_updateMinX/m_updateMinY	m_scrollOffsetX/m_scrollOffsetY	MoveHero's per-step walk scroll, copied to gScrollX/Y by UpdateScreen
+member	advManager	m_updateMaxX	m_animationFrame	UpdateScreen's 0..5 animation cycle added to animated object/overlay frames
+member	advManager	m_updateMaxY	m_flagFrameCounter	only DrawCursor's flag-wave frame counter
+member	advManager	m_lastQuickViewX/Y, m_mineGuardianFacingLeft	m_combatMonsterX/Y, m_combatMonsterFacingLeft	set by CombatMonsterEvent for any monster fight; DrawCell draws that monster facing the hero
+enum	AdventureQuickViewCellConstant	QUICK_VIEW_NONE/QUICK_VIEW_CLEARED	COMBAT_MONSTER_CELL_NONE/COMBAT_MONSTER_CELL_CLEARED	values of m_combatMonsterX/Y (block renamed AdventureCombatMonsterCellConstant)
+member	advManager	m_visibilityMap	m_routeMap	only holds the shown route's route.icn frames (ShowRoute, MoveHero, DrawCell); macro ADVMGR_VISIBILITY_AT -> ADVMGR_ROUTE_AT
+member	advManager	m_puzzleIcon	m_radarIcon	loads radar.icn; only UpdateRadar draws it
+member	advManager	m_openState	m_heroesLogoShown	game::ShowHeroesLogo draws the logo over the radar once and sets it; Open/UpdateRadar clear it
+param	advManager::CompleteDraw(i32)	update	forceDraw	forwarded as CompleteDraw(origin, origin, forceDraw)
+param	advManager::CombatMonsterEvent	fromX/fromY	combatX/combatY	the fight cell DoCombat uses; PlayerMonsterInteract passes its combatX/combatY
+local	advManager::DoAdvCommand	oldHero/pos	selectedHero/pathIndex	the current hero the command moves; index into the search path directions
+local	advManager::ProcessHover	prevHero/location	curHero/hoverCell	the current hero; the hovered cell
+local	advManager::DrawCell	pixelX7/pixelY3/newCell0/savedFrame/heroYOffset6/savedShowHero/position/flagColorValue/drawHeroIcon0	cellPixelX/cellPixelY/drawnCell/heroFrame/heroYOffset/occupyingHero/heroIcon/playerColor/showHero	decompiler suffixes and wrong roles: cell pixels, drawn cell, hero sprite frame/icon/owner colour
+local	advManager::UpdBottomViewResMsg	oldIconW/iconHVal/y/prevCountString	iconWidth/iconHeight/textY/countText	widget size, text offset and fresh count text
+local	advManager::UpdBottomViewHero	nextX/col/newHeroName	iconDrawX/labelDrawX/heroNameCopy	icon and label x of the current stack; copy of m_shortName
+member	town	m_threat	m_nameIndex	GetTownName indexes gTownNames with it; NewMap deals unique values; no threat reader
+member	town	m_garrison	m_dwellingAvailable	creatures available per dwelling (recruitUnit::m_available, weekly growth); the garrison is m_army
+member	game	m_viewArmyResult	m_dialogAnimationCounter	ViewArmyHandler/TavernHandler/combat increment it modulo a frame count
+member	playerData	m_obelisksVisited	m_puzzlePiecesRemoved	48-bit set of uncovered puzzle pieces (VisitObelisk sets 48/obelisks bits per visit; ViewPuzzle draws covers where clear)
+method	playerData	CountVisitedObelisks	CountPuzzlePiecesRemoved	counts the 48 piece bits; ComputeUALoc compares with an 11-piece threshold
+enum	UltimateHintConstant	ULTIMATE_HINT_OBELISK_MIN/ULTIMATE_HINT_PERCENT_PER_OBELISK	ULTIMATE_HINT_PIECE_MIN/ULTIMATE_HINT_PERCENT_PER_PIECE	compared with the removed-piece count
+param	townManager::Open	id	priority	stored in m_priority (baseManager::Open's priority)
+param	townManager::RecruitHero	cannotRecruit	quickView	CastleHandler passes its right-click flag; selects QuickViewWait over DoDialog
+param	townManager::DrawTown	drawFlags	advanceAnimation	only use: townObject::Draw(advanceAnimation)
+local	townManager::Main	hasHero	isArmySlot	set for garrison and hero strip slots alike
+local	townManager::BuyBuild	typeId	widgetSlot	cost-entry/widget index, not a resource type
+local	townManager::SetupThievesGuild	isTied/newPos/baseRanking/numThieves	numAtRank/tiedPlayer/playerOrder/numGuilds	tie count, tied player loop, sorted player order, guild count
+local	CastleHandler	baseQuick	quickViewVal	right-click flag, as MageGuildHandler
+local	recruitUnit::recruitUnit	i	resourceIndex	resource loop, as QuickViewRecruit
+local	town::Deallocate	found	foundIndex	the town's position in m_townIds or -1
+local	game::NewMap	nextThreatVal	nameId	unique gTownNames index pick
+local	ComputeUALoc / game::VisitObelisk	numObelisks / visitedFlag/newPieces	nRemovedPieces / piecesRemoved/piecesTotal	piece counts, not obelisks or flags
+param	game::ShowCampaignInfo	fromMenu	viewOnly	ADVMGR's in-game view passes 1 (close/restart shown); KB's briefing passes 0
+param	game::ExperienceValueOfStack/GetLuck/ShowMoraleInfo/ShowLuckInfo	h	heroPointer	generic one-letter hero parameter
+param	game::RestoreCell	obj	objectType	the trigger code restored into m_triggerType
+param	game::GetNumThievesGuilds	color	player	indexes m_players; both callers pass giCurPlayer
+local	game (NumOfGivenArtifact, InitCampaignMap, LoadGame, RandomizeEvents, ViewArmy, Overview, TransmitSaveGame)	jj/jId/savedState/oldHandle/nextCell/theTileset/spacing/oldMod/note/idIndex/activeId/classCountYVal/prevSize/segCountPos/sizeVal	artSlot/resourceIdx/savedWon/theLoadHandle/myCell/curOverTileset/monsterLeft/stackModifier/statLabel/countId/animWidgetId/heroClassCount/dataSize/totalSegments/segmentsInBlock	artifact slot; resource index; saved scenarios won; the open save file; the current cell; overlay tileset; monster widget x; attack/defense modifier; widget ids; class count; save sizes and segment counts
+param	advManager::CombatMonsterEvent	count	monsterCount	monsters split over the gpMonGroup slots
+param	advManager::PlayerMonsterInteract/ComputerMonsterInteract	handled	removeMonsterObject	set when the monster joins or is beaten; every caller erases the object when set
+local	advManager::CheckAdjacentMon	posX/posY/dead/tile	monsterX/monsterY/clearMonster/monCell	FindAdjacentMonster's cell and the erase flag passed to *MonsterInteract
+local	advManager::TownEvent	recRef/curHero/defender/result	eventTown/attackingHero/defendingHero/combatOutcome	the visited town, DoCombat's first and second hero and its result
+local	advManager::DoNetCombat	leader/nextAttacker/selAttArmyPtr/defendArmy/party/res/tempTown	secondHro/attackingHro/attackTroops/secondArmy/firstSide/combatRes/battleTown	ReceiveHeroTownData's out-parameters as DoCombat consumes them; party is the attacker's owner
+local	advManager::DoCombat	curPlayer/senderNum/res	defenderSide/senderPlayer/combatRes	the defending player (owner of secondHero or the town), never the current one; remote sender; combat result
+local	advManager::ReceiveHeroTownData	defenderOwner/mainResult/lastPacketTimeNum	secondOwner/confirmSent/lastReceiveTick	combat.secondOwner; the confirm transmit result; tick of the last fragment
+local	advManager::ComputerMonsterInteract	quantity/creatureCountIdx/retVal	purchaseWorth/monsterCount/won	EvaluateOneTimeCreaturePurchase's value out-parameter; the stack count; philAI's win flag
+local	advManager (CombatMonsterEvent, GiveExperience, DoEvent, DoAIEvent)	res/savedLevel/res/res	combatRes/levelNow/fightOutcome/fightOutcome	combat results; the level after the gain
+local	swapManager::DrawSelector	leftArmyBase/rightMonsterBaseVal/curTop/armySpacingVal/art1/curArt2/newTop/itemGap/mainX/mainY	leftArmyLeft/rightArmyLeft/armyRow/armyStride/leftArtifactCol/rightArtifactCol/artifactY0/artifactsSpacing/selectorX0/selectorY0	swapwin layout: army and artifact grid origins and steps, the selector frame position
+local	swapManager::SplitMons/SwapMons	dstTroopsPtr/idPos/amountWidgetVal/lastI, sourceTroops/destTroops	targetTroops/textControl/amountWidgetId/placeSlot, selectedArmy/targetTroops	the two heroes' armies, the prompt/amount widget ids, the destination slot
+local	HandleViewGeneral	pos/result	helpIndex/dialogEnded	gViewGeneralHelp row; set when a button ends the dialog
+global	advManager.h	TrigX/TrigY	gTriggerX/gTriggerY	the cell whose trigger MoveHero reports to DoEvent; alias keeps the storage spelling
+global	advManager.h	EveryOther	gEveryOther	walk alternate-frame/footstep toggle; alias keeps the storage spelling
+global	advManager.h	S1cursorDirection/BaseFrame/FrameCount/Cycle/Turning	gSavedCursorDirection/BaseFrame/FrameCount/Cycle/Turning	cursor state DrawCursor saves and restores around gDrawSavedCursor; aliases keep the storage spelling
+global	advManager.h	startVals	gStepScrollStart	the scroll offset (16, 0, -16) MoveHero starts the second half-step from; alias keeps the storage spelling

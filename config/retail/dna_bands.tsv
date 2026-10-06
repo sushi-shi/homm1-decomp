@@ -1067,7 +1067,7 @@ rva	size	name	class	source	symbol	detail
 0x00069f41	0xf	FUN_00469F41	linker-pad			-
 0x00069f50	0x2c	FUN_00469F50	helper-exact	base:BASE/Audio	??1?$RefPtr@VAudioDevice@audiere@@@audiere@@QAE@XZ	6 byte-identical candidates
 0x00069f7c	0x4	FUN_00469F7C	linker-pad			-
-0x00069f80	0x2c	FUN_00469F80	helper-exact	base:BASE/Audio	??1AudiereSampleNode@@QAE@XZ	6 byte-identical candidates
+0x00069f80	0x2c	FUN_00469F80	helper-exact	base:BASE/Audio	??1?$AudiereNode@Vsample@@@@QAE@XZ	6 byte-identical candidates
 0x00069fac	0x4	FUN_00469FAC	linker-pad			-
 0x00069fb0	0x19c	FUN_00469FB0	unknown			-
 0x0006a14c	0x9f	FUN_0046A14C	unknown			-
