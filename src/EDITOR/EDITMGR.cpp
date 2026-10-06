@@ -6,7 +6,7 @@
 // SelectTool, Open, Close and Main; SetTileVariant, MakeMapCode,
 // ShowStatusWarning, ScatterDetails, gMapCodeLetters, gEditMapHeader,
 // gSelectionColor, gEditErrors, gEditErrorCount, gVaryTiles,
-// gPickMapNameDummy.
+// gPickMapNameDummy, gOverlayTypes.
 
 #include <match.h>
 
@@ -55,6 +55,24 @@
 
 #define EDITMGR_CPP_PATH "U:\\HMM\\VSS\\HMM1\\Source\\Editor\\EDITMGR.CPP"
 
+// The monochrome remap, a copy of the game's (EDITMGR's .data opens with it).
+DATA(0x0043b0f8)
+u8 gMonoColorMap[256] = {
+    10,  11,  12,  12,  13,  14,  14,  15,  16,  16,  17,  18,  18,  19,  20,  20,  21,  22,  22,
+    23,  24,  24,  25,  26,  26,  27,  28,  28,  29,  30,  30,  31,  32,  33,  34,  34,  35,  36,
+    36,  37,  38,  38,  39,  40,  40,  41,  42,  42,  43,  44,  44,  45,  46,  46,  47,  48,  48,
+    49,  50,  50,  51,  52,  52,  53,  54,  55,  56,  57,  58,  59,  60,  61,  62,  63,  64,  65,
+    66,  67,  68,  69,  70,  71,  72,  73,  74,  75,  76,  77,  78,  79,  80,  81,  82,  83,  84,
+    85,  86,  87,  88,  89,  90,  91,  92,  93,  94,  95,  96,  97,  98,  99,  100, 101, 102, 103,
+    104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122,
+    123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141,
+    142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160,
+    161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179,
+    180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198,
+    199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217,
+    218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236,
+    237, 238, 239, 240, 241, 242, 243, 244, 245,
+};
 // The objects the editor places (the object tool's panel and the random map
 // generator): OVERLAY_TYPE_COUNT records of name, tileset, footprint masks and
 // frames.
@@ -8915,16 +8933,20 @@ DATA(0x0043e5d4)
 char* gMapCodeLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 DATA(0x00451218)
 i32 gSelectionColor;
+// The edited map's header lives in a 2000-byte character buffer: retail
+// places it 4-byte aligned, which VC6 gives no record-typed object, and no
+// code reads past the header's 0x554 bytes. Its users view it as SMapHeader.
 DATA(0x0045121c)
-SMapHeader gEditMapHeader;
+char gEditMapHeader[EDIT_MAP_HEADER_BUFFER_SIZE];
+// Zero-initialized: .bss after the uninitialized objects, in definition order.
 DATA(0x004519ec)
-char* gEditErrors[EDIT_MANAGER_ERROR_CAPACITY];
+char* gEditErrors[EDIT_MANAGER_ERROR_CAPACITY] = {0};
 DATA(0x00451b7c)
-i32 gEditErrorCount;
+i32 gEditErrorCount = 0;
 DATA(0x00451b80)
-i32 gVaryTiles;
+i32 gVaryTiles = 0;
 DATA(0x00451b84)
-char gPickMapNameDummy[4];
+char gPickMapNameDummy[4] = "";
 
 VA(0x004017e0, 0xfb)
 editManager::editManager(void) {
@@ -8938,7 +8960,7 @@ editManager::editManager(void) {
     m_zoomedOut = EDIT_ZOOM_OUT;
     ResetArea(0, 0, MAP_CELL_GRID_SIZE, MAP_CELL_GRID_SIZE);
     SaveUndo();
-    gMapHeader = &gEditMapHeader;
+    gMapHeader = (SMapHeader*)gEditMapHeader;
     m_animationFrame = 0;
     m_tool = EDIT_MANAGER_NO_TOOL;
     m_toolManager = NULL;
@@ -10755,11 +10777,15 @@ i16 editManager::SaveMap(char* name) {
     data = MAP_HEADER_ID;
     write(handle, &data, sizeof(data));
     if (gNewMapFormat) {
-        write(handle, &gEditMapHeader.difficulty, sizeof(gEditMapHeader) - 2 * sizeof(i16));
+        write(
+            handle,
+            &((SMapHeader*)gEditMapHeader)->difficulty,
+            sizeof(SMapHeader) - 2 * sizeof(i16)
+        );
         formatWord = MAP_HEADER_ID;
         write(handle, &formatWord, sizeof(formatWord));
     } else {
-        write(handle, &gEditMapHeader, sizeof(gEditMapHeader) - sizeof(i16));
+        write(handle, gEditMapHeader, sizeof(SMapHeader) - sizeof(i16));
     }
     data = EDIT_MAP_VERSION;
     write(handle, &data, sizeof(data));
@@ -10811,13 +10837,13 @@ i16 editManager::LoadMap(char* name) {
         return BASE_MANAGER_ERROR;
     read(handle, &headerId, sizeof(headerId));
     if (headerId == MAP_HEADER_ID) {
-        gEditMapHeader.id = headerId;
-        read(handle, &gEditMapHeader.difficulty, sizeof(gEditMapHeader) - sizeof(i16));
+        ((SMapHeader*)gEditMapHeader)->id = headerId;
+        read(handle, &((SMapHeader*)gEditMapHeader)->difficulty, sizeof(SMapHeader) - sizeof(i16));
         read(handle, &headerId, sizeof(headerId));
     } else {
         NewMap(0);
     }
-    mapFormat = gEditMapHeader.format;
+    mapFormat = ((SMapHeader*)gEditMapHeader)->format;
     if (mapFormat >= MAP_HEADER_ID && mapFormat <= MAP_HEADER_ID + 10)
         gNewMapFormat = 1;
     else

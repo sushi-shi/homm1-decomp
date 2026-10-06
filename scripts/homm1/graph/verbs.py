@@ -165,6 +165,32 @@ def link_main(argv: list[str] | None = None) -> int:
         sys.argv = ["homm1 link", *argv]
         return link_direct()
     configure_if_needed()
+    from homm1.core.paths import DEFAULT_IMAGE, image_key
+    if image_key() != DEFAULT_IMAGE:
+        # another image links through its own `candidate-<image>` edge
+        if not argv:
+            return ninja([f"candidate-{image_key()}"])
+        rc = ninja([image_key()])
+        if rc:
+            return rc
+        if graph.RESOURCE_RES in manifest_targets():
+            rc = ninja([graph.RESOURCE_RES])
+            if rc:
+                return rc
+            if not any(a == "--res" or a.startswith("--res=") for a in argv):
+                argv = ["--res", str(REPO / graph.RESOURCE_RES), *argv]
+        if not any(a == "--order" or a == "--obj" or a.startswith("--order=")
+                   for a in argv):
+            from homm1.graph.fixed_asm import unit as fixed_asm_unit
+            from homm1.manifest import units
+            for record in units():
+                unit = record["unit"]
+                if fixed_asm_unit(unit, record["source"]) is not None:
+                    argv.extend(["--obj", f"{graph.LINK_OMF_DIR}/{unit}.obj"])
+                else:
+                    argv.extend(["--obj", f"{graph.BASE_DIR}/{unit}.obj"])
+        sys.argv = ["homm1 link", *argv]
+        return link_direct()
     from homm1.graph.emit import era_rc_available
     if graph.RESOURCE_RES not in manifest_targets() and era_rc_available():
         # The rc edge is decided at configure time; installing the pinned

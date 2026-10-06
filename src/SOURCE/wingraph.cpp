@@ -75,6 +75,11 @@ DATA(0x004cdddc)
 HPALETTE gAppPalette = NULL;
 DATA(0x004cdde0)
 HINSTANCE gDDrawLibrary = NULL;
+#ifdef HOMM1_EDITOR
+// EDITOR.EXE's compile has one more object at the end of wingraph's .bss
+// (0x00453444), which no code of the editor reads.
+i32 gUnusedData453444 = 0;
+#endif
 DATA(0x004cdd78)
 RECT gDDClientRect;
 DATA(0x004cd938)

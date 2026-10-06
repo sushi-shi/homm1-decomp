@@ -268,13 +268,24 @@ def prune_orphan_artifacts(units: list[dict]) -> int:
 # --------------------------------------------------------------------------- #
 # the graph
 # --------------------------------------------------------------------------- #
-def era_rc_available() -> bool:
+def retail_exe_rel(image: str) -> str:
+    from homm1.core.paths import retail_exe
+    exe = retail_exe(image)
+    return exe.relative_to(REPO).as_posix() if exe.is_relative_to(REPO) else str(exe)
+
+
+def retail_dir_rel(image: str) -> str:
+    from homm1.core.paths import retail_dir
+    return retail_dir(image).relative_to(REPO).as_posix()
+
+
+def era_rc_available(script: str | None = None) -> bool:
     """Whether the installed VC4 tree carries the pinned RC/CVTRES and the
     resource script exists, so the candidate can link its `.rsrc`."""
     try:
         from homm1 import toolchain
         from homm1.tool.rc import RESOURCE_TOOLCHAIN
-        return ((REPO / graph.RESOURCE_SCRIPT).is_file()
+        return ((REPO / (script or G.RESOURCE_SCRIPT)).is_file()
                 and toolchain.resources_installed(RESOURCE_TOOLCHAIN, msvc_dir()))
     except OSError:
         return False
@@ -344,27 +355,27 @@ def emit_link_phase(w: ninja_syntax.Writer, cl_edges: list[tuple]) -> None:
         # is the payload gate.
         w.rule("rc", command=(f"$py -m homm1.tool.rc --out $out --src $in "
                               f"--verify-exe {RETAIL_EXE} "
-                              f"--report {graph.RESOURCE_REPORT}"),
+                              f"--report {G.RESOURCE_REPORT}"),
                description="rc $out")
-        w.build(graph.RESOURCE_RES, "rc", inputs=graph.RESOURCE_SCRIPT,
+        w.build(G.RESOURCE_RES, "rc", inputs=G.RESOURCE_SCRIPT,
                 implicit=[RETAIL_EXE, graph.TOOLCHAIN_ID]
                          + _mods("tool/rc.py", "core/pe.py", "toolchain.py")
                          + LOCALIZATION_MODS + TOOL_MODS)
     else:
         w.comment("VC4 tree has no pinned RC.EXE/CVTRES.EXE; candidate links "
                   "without resources")
-    res_flag = f" --res {graph.RESOURCE_RES}" if with_res else ""
+    res_flag = f" --res {G.RESOURCE_RES}" if with_res else ""
     w.rule("link",
-           command=(f"$py -m homm1.graph.link --out {graph.CANDIDATE_EXE} "
+           command=(f"$py -m homm1.graph.link --out {G.CANDIDATE_EXE} "
                     f"--objs-dir {G.BASE_DIR}{res_flag} $objects"),
            description="link candidate HEROESW.EXE + map")
-    w.build([graph.CANDIDATE_EXE, graph.CANDIDATE_MAP], "link",
+    w.build([G.CANDIDATE_EXE, G.CANDIDATE_MAP], "link",
             inputs=link_objs,
-            implicit=([graph.RESOURCE_RES] if with_res else [])
+            implicit=([G.RESOURCE_RES] if with_res else [])
                      + [MANIFEST] + LINK_MODS,
             variables={"objects": " ".join(f"--obj {obj}" for obj in link_objs)})
     w.build("candidate", "phony",
-            inputs=[graph.CANDIDATE_EXE, graph.CANDIDATE_MAP])
+            inputs=[G.CANDIDATE_EXE, G.CANDIDATE_MAP])
     w.newline()
 
 
@@ -430,8 +441,11 @@ def emit_image_pipeline(w: ninja_syntax.Writer, image: str, scan: Scanner) -> li
            command=(f"{py} -m homm1.delink.run --target-dir {P.TARGET_DIR} "
                     f"--delink-dir {P.DELINK_RAW} && touch $out"),
            description=f"delink {image} -> target objs")
+    # The data manifest and literal pools read the compiled objects (their
+    # strings, vtables and pools), so a literal-only edit, which moves no
+    # claim, re-delinks too.
     w.build(P.DELINK_STAMP, f"delink_{image}", inputs=[P.BINDINGS, exe],
-            implicit=[*delink_tables, *DELINK_MODS, graph.TOOLCHAIN_ID])
+            implicit=[*objs, *delink_tables, *DELINK_MODS, graph.TOOLCHAIN_ID])
     w.rule(f"normalize_{image}",
            command=(f"{py} -m homm1.compare.normalize --base-dir {P.BASE_DIR} "
                     f"--target-dir {P.TARGET_DIR} --out-dir {P.COMPARE_DIR} "
@@ -452,8 +466,45 @@ def emit_image_pipeline(w: ninja_syntax.Writer, image: str, scan: Scanner) -> li
             implicit=REPORT_MODS)
     outputs = objs + [P.BINDINGS, P.DELINK_STAMP, P.OBJDIFF_JSON, P.REPORT_JSON]
     w.build(image, "phony", inputs=outputs)
+    emit_image_link_phase(w, image, units, py)
     w.newline()
     return outputs
+
+
+def emit_image_link_phase(w: ninja_syntax.Writer, image: str, units: list[dict],
+                          py: str) -> None:
+    """The image's opt-in candidate (`candidate-<image>`): its own objects,
+    the shared MASM units' OMF twins (one source and flag set for every image)
+    and its resource script when the pinned RC is installed."""
+    from homm1.graph.fixed_asm import unit as fixed_asm_unit
+    P = SimpleNamespace(**graph.image_paths(image))
+    link_objs = []
+    for u in units:
+        if fixed_asm_unit(u["unit"], u["source"]) is not None:
+            link_objs.append(f"{graph.LINK_OMF_DIR}/{u['unit']}.obj")
+        else:
+            link_objs.append(f"{P.BASE_DIR}/{u['unit']}.obj")
+    with_res = bool(P.RESOURCE_SCRIPT) and era_rc_available(P.RESOURCE_SCRIPT)
+    exe = retail_exe_rel(image)
+    if with_res:
+        w.rule(f"rc_{image}",
+               command=(f"{py} -m homm1.tool.rc --out $out --src $in "
+                        f"--verify-exe {exe} --report {P.RESOURCE_REPORT}"),
+               description=f"rc {image} $out")
+        w.build(P.RESOURCE_RES, f"rc_{image}", inputs=P.RESOURCE_SCRIPT,
+                implicit=[exe, graph.TOOLCHAIN_ID]
+                         + _mods("tool/rc.py", "core/pe.py", "toolchain.py")
+                         + LOCALIZATION_MODS + TOOL_MODS)
+    res_flag = f" --res {P.RESOURCE_RES}" if with_res else ""
+    w.rule(f"link_{image}",
+           command=(f"{py} -m homm1.graph.link --out {P.CANDIDATE_EXE} "
+                    f"--objs-dir {P.BASE_DIR}{res_flag} $objects"),
+           description=f"link candidate {image} + map")
+    w.build([P.CANDIDATE_EXE, P.CANDIDATE_MAP], f"link_{image}", inputs=link_objs,
+            implicit=([P.RESOURCE_RES] if with_res else []) + [MANIFEST] + LINK_MODS
+                     + [f"{retail_dir_rel(image)}/link_order.tsv"],
+            variables={"objects": " ".join(f"--obj {obj}" for obj in link_objs)})
+    w.build(f"candidate-{image}", "phony", inputs=[P.CANDIDATE_EXE, P.CANDIDATE_MAP])
 
 
 def emit(out: Path | None = None) -> tuple[int, int]:
@@ -690,11 +741,19 @@ def emit(out: Path | None = None) -> tuple[int, int]:
                command="$py -m homm1.verify check --no-readme && touch $out",
                description="verify check (MAX gate + fast+normal tiers)")
         # link-diff compares the linked candidate with its banked ceiling.
+        # Every other image with a banked ceiling links its candidate for it.
+        from homm1.verify.link_diff import ceiling_path
+        image_candidates = []
+        for image in pinned_images():
+            if (image != "game" and any(image in _images(u) for u in _all())
+                    and ceiling_path(image).is_file()):
+                image_candidates += [graph.image_paths(image)["CANDIDATE_EXE"],
+                                     ceiling_path(image).relative_to(REPO).as_posix()]
         w.build(VERIFY_STAMP, "verify_check",
                 inputs=[G.REPORT_JSON, FINGERPRINTS],
                 # the fast tier's localization gate reads the catalogs
-                implicit=[MANIFEST, graph.CANDIDATE_EXE, *VERIFY_BASELINES,
-                          *VERIFY_MODS, *LOCALIZATION_MODS])
+                implicit=[MANIFEST, G.CANDIDATE_EXE, *image_candidates,
+                          *VERIFY_BASELINES, *VERIFY_MODS, *LOCALIZATION_MODS])
         w.newline()
 
         image_outputs = []

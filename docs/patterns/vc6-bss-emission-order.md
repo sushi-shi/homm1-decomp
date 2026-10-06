@@ -51,6 +51,13 @@ Measured with the pinned HoMM1 Buka VC6 SP5 compiler under
   and the device guard after it (0x004cdf71). Any count of declarations
   from four up orders them as retail (four gives `$S20`/`$S31`).
 
+- **Alignment.** A record-typed (struct, class or union) global of 8 bytes
+  or more starts 8-byte aligned, whatever `#pragma pack` or `/Zp1`-`/Zp4`
+  gives its members, and so does an array of such records; a character or
+  `short` array of any size, and a record under 8 bytes, start 4-byte aligned.
+  A `.data` or `.bss` section is 4-byte aligned, or 8 when it holds an
+  8-aligned object.
+
 ## Use
 
 Within one retail object, ascending `.bss` address among uninitialized

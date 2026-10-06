@@ -98,6 +98,44 @@ BASE_LIBRARY_AFTER = "audiere.lib"
 #: used /OPT:REF.)
 LINK_RETAIL_FLAGS = ["/OPT:NOREF"]
 
+#: The per-image link line. The game's facts are documented above; EDITOR.EXE
+#: (the same toolchain, Rich header and CRT) imports KERNEL32, USER32, GDI32,
+#: ADVAPI32, WING32 and audiere: its first thunk run (0x0041b320..0x0041b4fa,
+#: after wingraph) reads KERNEL32, USER32, GDI32, ADVAPI32, WING32, and BASE
+#: starts at BASEMGR (0x0041b500); audiere's two thunks follow the CRT. Its
+#: NB10 record names U:\HMM\VSS\HMM1\temp\release\editor\editor.pdb at
+#: age 1 (one link), and it keeps LINK's default stack.
+#: LINK.EXE sorts its import thunks with MSVCRT's qsort, so the C runtime the
+#: linker ran against decides each DLL's IAT order. The game's IAT is the
+#: median-of-three qsort's (wine's builtin msvcrt reproduces it); the editor's
+#: is the VC6 runtime's middle-pivot qsort: every IAT slot of the editor
+#: candidate equals retail's only when LINK runs against the VC6 SP5
+#: MSVCRT.DLL (`runtime`, pinned in config/toolchains.json).
+PROFILES = {
+    "game": {
+        "libs": LINK_LIBS,
+        "pdb": RETAIL_PDB,
+        "pdb_drive": PDB_DRIVE,
+        "base_library_from": BASE_LIBRARY_FROM,
+        "flags": ["/STACK:0x10240,0x1000"],
+    },
+    "editor": {
+        "libs": ["oldnames.lib", "kernel32.lib", "user32.lib", "gdi32.lib",
+                 "advapi32.lib", "wing32.lib", "audiere.lib", "msvcprt.lib"],
+        "pdb": r"U:\HMM\VSS\HMM1\temp\release\editor\editor.pdb",
+        "pdb_drive": "u:",
+        "base_library_from": 0x0001b500,
+        "flags": [],
+        "runtime": "native/MSVCRT.DLL",
+    },
+}
+
+
+def profile() -> dict:
+    """The selected image's link line."""
+    from homm1.core.paths import image_key
+    return PROFILES[image_key()]
+
 def retail_link_times() -> tuple[str, int, str]:
     """(PDB creation time, PDB age, link time) read from the retail image.
 
@@ -111,6 +149,7 @@ def retail_link_times() -> tuple[str, int, str]:
     import struct
     from homm1.core.pe import image
     data = image().data
+    # the editor's single link stamped the PDB and the image alike
     pe = struct.unpack_from("<I", data, 0x3C)[0]
     stamp = struct.unpack_from("<I", data, pe + 8)[0]
     nb10 = data.rindex(b"NB10")
@@ -123,19 +162,20 @@ def retail_link_times() -> tuple[str, int, str]:
 
 
 def retail_pdb_drive() -> Path:
-    """Map wine's drive E: to build/pdb-drive and return the host path of
-    RETAIL_PDB's directory (created)."""
+    """Map the retail PDB's wine drive to build/pdb-drive and return the host
+    path of the selected image's PDB directory (created)."""
     import os
     from homm1.core.paths import BUILD
+    prof = profile()
     root = BUILD / "pdb-drive"
     prefix = Path(os.environ.get("WINEPREFIX") or Path.home() / ".wine")
-    link = prefix / "dosdevices" / PDB_DRIVE
+    link = prefix / "dosdevices" / prof["pdb_drive"]
     if not (link.is_symlink() and link.resolve() == root.resolve()):
         link.parent.mkdir(parents=True, exist_ok=True)
         if link.is_symlink() or link.exists():
             link.unlink()
         link.symlink_to(root)
-    folder = root.joinpath(*RETAIL_PDB.split("\\")[1:-1])
+    folder = root.joinpath(*prof["pdb"].split("\\")[1:-1])
     folder.mkdir(parents=True, exist_ok=True)
     return folder
 
@@ -230,13 +270,28 @@ def _unit_of(obj: Path) -> str | None:
     return "/".join(parts[-2:]) if len(parts) >= 2 else None
 
 
+def _image_unit_starts() -> dict[str, int]:
+    """{unit: lowest code span} from another image's reviewed link_order.tsv:
+    its shared units' claims spell game addresses, so the image's own table
+    (placements-derived rows and reviewed image-only spans) orders them."""
+    from homm1.core.paths import retail_dir
+    from homm1.core.tsv import read as read_tsv
+    out: dict[str, int] = {}
+    for r in read_tsv(retail_dir() / "link_order.tsv")[2]:
+        lo = int(r["lo"], 16)
+        out[r["unit"]] = min(lo, out.get(r["unit"], lo))
+    return out
+
+
 def first_claimed_rva(obj: Path, claims_dir: Path | None = None) -> int | None:
     """The unit's lowest claimed function RVA (dynamic initializers excluded)."""
     from homm1 import graph
-    from homm1.core.paths import image_key
+    from homm1.core.paths import DEFAULT_IMAGE, image_key
     claims_dir = Path(claims_dir or REPO / graph.CLAIMS_DIR)
     image = image_key()          # fragments also carry other images' claims
     unit = _unit_of(obj)
+    if image != DEFAULT_IMAGE:
+        return _image_unit_starts().get(unit)
     f = claims_dir / f"{unit}.tsv" if unit else None
     lo = None
     if f is not None and f.is_file():
@@ -283,6 +338,7 @@ def candidate(out: Path, objs_dir: Path, *, mapfile: Path | None = None,
     from homm1.graph import implib
     from homm1.tool import link as link_tool
 
+    prof = profile()
     out = Path(out).resolve()
     mapf = Path(mapfile).resolve() if mapfile else out.with_suffix(".map")
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -299,7 +355,7 @@ def candidate(out: Path, objs_dir: Path, *, mapfile: Path | None = None,
               + ")")
         if base_library:
             members = [o for o in objs
-                       if (first_claimed_rva(o) or -1) >= BASE_LIBRARY_FROM]
+                       if (first_claimed_rva(o) or -1) >= prof["base_library_from"]]
             objs = [o for o in objs if o not in members]
             print(f"[link] {len(objs)} explicit object(s); {len(members)} "
                   f"BASE member(s) in {BASE_LIBRARY}, searched after "
@@ -312,14 +368,14 @@ def candidate(out: Path, objs_dir: Path, *, mapfile: Path | None = None,
         f"/OUT:{winepath(out)}", f"/MAP:{winepath(mapf)}",
         "/NOLOGO", "/SUBSYSTEM:WINDOWS", f"/BASE:{base}",
         "/INCREMENTAL:YES" if incremental else "/INCREMENTAL:NO",
-        "/STACK:0x10240,0x1000",
+        *prof["flags"],
     ]
     if keep_all:
         rsp_lines += LINK_RETAIL_FLAGS
     if not dry_run:
-        pdb = retail_pdb_drive() / RETAIL_PDB.rsplit("\\", 1)[1]
+        pdb = retail_pdb_drive() / prof["pdb"].rsplit("\\", 1)[1]
         pdb.unlink(missing_ok=True)       # a fresh PDB, as for the image
-    rsp_lines += ["/DEBUG", f"/PDB:{RETAIL_PDB}"]
+    rsp_lines += ["/DEBUG", f"/PDB:{prof['pdb']}"]
     rsp_lines.append(f"/NODEFAULTLIB:{CRT_REPLACES}")
     rsp_lines += list(extra_flags)
 
@@ -328,12 +384,12 @@ def candidate(out: Path, objs_dir: Path, *, mapfile: Path | None = None,
     available = {p.name.lower(): str(p) for p in made}
     available.update({p.name.lower(): str(p)
                       for _dll, _names, p in implib.survey() if p is not None})
-    for name in (*LINK_LIBS, CRT_LIBRARY):
+    for name in (*prof["libs"], CRT_LIBRARY):
         if name not in available:
             path = implib.toolchain_lib(Path(name).stem)
             if path is not None:
                 available[name] = str(path)
-    libs += [available.get(n, n) for n in (*LINK_LIBS, CRT_LIBRARY)]  # substitute IN PLACE
+    libs += [available.get(n, n) for n in (*prof["libs"], CRT_LIBRARY)]  # substitute IN PLACE
     if members:
         base_lib = out.parent / BASE_LIBRARY
         at = next((i + 1 for i, x in enumerate(libs)
@@ -365,13 +421,24 @@ def candidate(out: Path, objs_dir: Path, *, mapfile: Path | None = None,
         stale.unlink(missing_ok=True)
 
     logf = out.parent / f"{out.stem}.link.log"
+    linker = None
+    if prof.get("runtime"):
+        from homm1 import toolchain
+        from homm1.core.paths import compiler_id
+        from homm1.tool.wine import native_crt_linker
+        try:
+            runtime = toolchain.linker_runtime(compiler_id(), prof["runtime"])
+        except ValueError as e:
+            raise ToolError(f"{e} (`homm1 toolchain install {compiler_id()} "
+                            "--media <iso> --patch <sp5>` provides it)") from e
+        linker = native_crt_linker(runtime)
     try:
         pdb_time, age, link_time = retail_link_times()
         for _ in range(age - 1):          # the links that aged the PDB
             link_tool.link([f"@{winepath(rsp)}"], cwd=out.parent,
-                           expect=[out, mapf], at=pdb_time)
+                           expect=[out, mapf], at=pdb_time, exe=linker)
         output = link_tool.link([f"@{winepath(rsp)}"], cwd=out.parent,
-                                expect=[out, mapf], at=link_time)
+                                expect=[out, mapf], at=link_time, exe=linker)
     except ToolError as e:
         full = getattr(e, "output", None) or str(e)
         logf.write_text(full)

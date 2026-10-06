@@ -86,8 +86,10 @@ def winepath(p: Path | str) -> str:
     session inheriting our stderr holds the caller's pipe open forever."""
     exe = require("winepath")
     try:
+        # a winepath that boots the session starts the server in UTC, as
+        # ensure_wineserver does
         return subprocess.check_output([exe, "-w", str(p)],
-                                       text=True,
+                                       text=True, env={**os.environ, "TZ": "UTC"},
                                        stderr=subprocess.DEVNULL).strip()
     except subprocess.CalledProcessError as e:
         raise ToolError(f"winepath -w {p} failed (rc={e.returncode}) - the "
@@ -98,11 +100,14 @@ def winepath(p: Path | str) -> str:
 def ensure_wineserver() -> None:
     """`wineserver -p60`: keep the server 60s past the last client, so parallel
     `wine cl` invocations under ninja skip the cold start, yet it exits on
-    its own afterwards (bare `-p` persisted forever and leaked). Idempotent."""
+    its own afterwards (bare `-p` persisted forever and leaked). Idempotent.
+    A server this starts keeps UTC: its zone is every wine process's local
+    time, which a native C runtime's time() reads (native_crt_linker)."""
     ws = shutil.which("wineserver")
     if ws:
-        subprocess.run([ws, "-p60"], check=False, stdin=subprocess.DEVNULL,
-                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        subprocess.run([ws, "-p60"], check=False, env={**os.environ, "TZ": "UTC"},
+                       stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
+                       stderr=subprocess.DEVNULL)
 
 
 def shutdown_wineserver() -> None:
@@ -209,6 +214,58 @@ def verify_prefix() -> None:
     if "include" not in val:
         raise ToolError("wine registry INCLUDE unset - run init_prefix() "
                         "(a cold wineserver can fail the first winepath)")
+
+
+#: The era linker's name when it runs against a native period MSVCRT.DLL.
+#: Wine's DLL overrides are keyed by executable name, so only this copy loads
+#: the native runtime; every other tool keeps the builtin one.
+NATIVE_CRT_LINKER = "LINKNCRT.EXE"
+
+
+def native_crt_linker(runtime: Path) -> Path:
+    """A copy of the era LINK.EXE that imports `runtime` (a native MSVCRT.DLL)
+    in place of wine's builtin msvcrt; returns its path.
+
+    MSVCRT is a KnownDLL, so wine loads it from the prefix's 32-bit system
+    directory, never from the linker's own directory: the native file goes
+    there and an AppDefaults override selects it for NATIVE_CRT_LINKER alone
+    (the wineserver, which maps the KnownDLLs at start and keeps the time
+    zone the native runtime's time() reads, is restarted in UTC).
+    The builtin load order of every other process is unchanged, and a prefix
+    update that restores wine's placeholder is undone on the next call.
+    """
+    import filecmp
+    from homm1.core.paths import BUILD
+    root = toolchain_root()
+    ensure_link_deps()
+    prefix = Path(os.environ.get("WINEPREFIX") or Path.home() / ".wine")
+    windows = prefix / "drive_c" / "windows"
+    system = windows / "syswow64" if (windows / "syswow64").is_dir() else windows / "system32"
+    if not system.is_dir():
+        raise ToolError(f"wine prefix {prefix} has no system directory - run `homm1 init`")
+    target = system / "msvcrt.dll"
+    if not (target.is_file() and filecmp.cmp(target, runtime, shallow=False)):
+        shutil.copyfile(runtime, target)
+    # The server maps the KnownDLLs when it starts, and its time zone is the
+    # local time a native MSVCRT's time() reads: restart it in UTC, the zone
+    # faked_clock gives the linker.
+    shutdown_wineserver()
+    subprocess.run([require("wineserver"), "-w"], check=False)
+    ensure_wineserver()
+    folder = BUILD / "link" / "native-crt"
+    folder.mkdir(parents=True, exist_ok=True)
+    for name in ("link.exe", "mspdb60.dll", "msobj10.dll", "msdis110.dll"):
+        source = find_ci(root / "bin", name)
+        if source is None:
+            continue
+        copy = folder / (NATIVE_CRT_LINKER if name == "link.exe" else source.name)
+        if not (copy.is_file() and filecmp.cmp(copy, source, shallow=False)):
+            shutil.copyfile(source, copy)
+    key = rf"HKEY_CURRENT_USER\Software\Wine\AppDefaults\{NATIVE_CRT_LINKER}\DllOverrides"
+    got = _reg("query", key, "/v", "msvcrt", capture=True)
+    if "native" not in got.stdout:
+        _reg("add", key, "/v", "msvcrt", "/d", "native", "/f")
+    return folder / NATIVE_CRT_LINKER
 
 
 from homm1.core.usage import logged

@@ -21,7 +21,9 @@ extern i8 gCommandLineInterpreted;
 extern i32 gStatusTextShown;
 // When the status bar text is cleared (0: kept until replaced).
 extern i32 gStatusTextClearTime;
+#define gStatusTextHoldTime giStatusTextWaitTime // spelling fixes .bss order
 extern i32 gStatusTextHoldTime;
+#define gStatusText gStatusTxt // spelling fixes .bss order
 extern char gStatusText[];
 
 // gClearFlags' initial value: the first fourteen object classes.
@@ -32,8 +34,11 @@ H1_ENUM_CONST_END(EditorClearConstant)
 // The map rectangle a drag selects (gSelectionX < 0: none); the map view
 // outlines it.
 extern i32 gSelectionX;
+#define gSelectionY gnSelRow // spelling fixes .bss order
 extern i32 gSelectionY;
+#define gSelectionWidth gSelectedWidth // spelling fixes .bss order
 extern i32 gSelectionWidth;
+#define gSelectionHeight gcSelectionRows // spelling fixes .bss order
 extern i32 gSelectionHeight;
 // The object classes the eraser removes (one bit per clearwin.bin toggle).
 extern i32 gClearFlags;
@@ -83,9 +88,12 @@ H1_ENUM_CONST_BEGIN(EditorGeneratorConstant)
 H1_ENUM_CONST_END(EditorGeneratorConstant)
 
 // The cell an eventsManager dialog edits, and the dialog's window.
+#define gEditCell gpCell // spelling fixes .bss order
 extern class mapCell* gEditCell;
+#define gEditDialog gEditDlg // spelling fixes .bss order
 extern class heroWindow* gEditDialog;
 // The edited map's header (difficulty, size, name and description).
+#define gMapHeader gpMapHeader // spelling fixes .bss order
 extern struct SMapHeader* gMapHeader;
 // The random map generator's settings (editnew.bin): the share of each
 // terrain and the density of each object class, in percent; whether towns are
@@ -105,6 +113,7 @@ H1_ENUM_END(GeneratorDensity)
 // The terrain names the generator's status line shows.
 extern char* gGeneratorTerrainNames[];
 // RemoveSmallRegions counts the map's land cells here.
+#define gLandCellCount gcLandSquares // spelling fixes .bss order
 extern i32 gLandCellCount;
 // Set while the generator works unseen (gSaveUnseen): the map view draws
 // clouds only and the radar black.

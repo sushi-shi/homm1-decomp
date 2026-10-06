@@ -24,30 +24,32 @@
 #include <stdlib.h>
 #include <string.h>
 
+// Zero-initialized: .bss in definition order, as in EDITOR.CPP's and
+// EDITMGR's editor state.
 DATA(0x00452940)
-iconWidget* gDensityTracks[EDITOR_GENERATOR_DENSITY_COUNT];
+iconWidget* gDensityTracks[EDITOR_GENERATOR_DENSITY_COUNT] = {0};
 DATA(0x00452958)
-editHeroExtra gHeroEdit;
+editHeroExtra gHeroEdit = {0};
 DATA(0x004529a4)
-heroWindow* gClearWindow;
+heroWindow* gClearWindow = 0;
 DATA(0x004529a8)
-i16 gEventsLastHoverId;
+i16 gEventsLastHoverId = 0;
 DATA(0x004529ac)
-iconWidget* gTerrainKnobs[EDITOR_GENERATOR_TERRAIN_COUNT];
+iconWidget* gTerrainKnobs[EDITOR_GENERATOR_TERRAIN_COUNT] = {0};
 DATA(0x004529c8)
-editMapCellPair* gEditCellPair;
+editMapCellPair* gEditCellPair = 0;
 DATA(0x004529cc)
-iconWidget* gDensityKnobs[EDITOR_GENERATOR_DENSITY_COUNT];
+iconWidget* gDensityKnobs[EDITOR_GENERATOR_DENSITY_COUNT] = {0};
 DATA(0x004529e0)
-iconWidget* gTerrainTracks[EDITOR_GENERATOR_TERRAIN_COUNT];
+iconWidget* gTerrainTracks[EDITOR_GENERATOR_TERRAIN_COUNT] = {0};
 DATA(0x00452a00)
-editTownExtra gTownEdit;
+editTownExtra gTownEdit = {0};
 DATA(0x00452a48)
-i32 gMonsterCount;
+i32 gMonsterCount = 0;
 DATA(0x00452a4c)
-heroWindow* gDetailsWindow;
+heroWindow* gDetailsWindow = 0;
 DATA(0x00452a50)
-heroWindow* gNewMapWindow;
+heroWindow* gNewMapWindow = 0;
 
 VA(0x004092c0, 0x32)
 eventsManager::eventsManager(void) {
@@ -1041,10 +1043,7 @@ i16 MapDetailsWindowHandler(tag_message& message) {
             } else if (message.id == DETAILS_WINDOW_DESCRIPTION) {
                 gDetailsWindow->BroadcastMessage(request);
                 for (i = 0; i < MAP_HEADER_LANGUAGE_COUNT; i++)
-                    strcpy(
-                        gMapHeader->description[i],
-                        request.text
-                    );
+                    strcpy(gMapHeader->description[i], request.text);
             } else if (message.id == DETAILS_WINDOW_MAP_CODE) {
                 gDetailsWindow->BroadcastMessage(request);
                 strcpy(gText, request.text);

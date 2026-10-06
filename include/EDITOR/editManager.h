@@ -40,7 +40,9 @@ H1_ENUM_CONST_BEGIN(EditManagerConstant)
     EDIT_MAP_OBELISK_LIMIT = 48,
     // The version word the editor writes after the header (hexadecimal 1112;
     // the game reads map extras from version MAP_EXTRA_VERSION on).
-    EDIT_MAP_VERSION = 0x1112
+    EDIT_MAP_VERSION = 0x1112,
+    // gEditMapHeader's buffer; the header takes its first sizeof(SMapHeader).
+    EDIT_MAP_HEADER_BUFFER_SIZE = 2000
 H1_ENUM_CONST_END(EditManagerConstant)
 
 // m_zoomedOut: 32-pixel cells (14 visible per side) or 16-pixel cells (28);
@@ -114,8 +116,8 @@ H1_ENUM_BEGIN(EditTool)
 H1_ENUM_END(EditTool)
 
 H1_ENUM_CONST_BEGIN(EditToolButtonConstant)
-    // buttons.icn: the terrain tool button's frame pair; each tool's pair
-    // follows (normal, selected).
+// buttons.icn: the terrain tool button's frame pair; each tool's pair
+// follows (normal, selected).
     EDIT_TOOL_BUTTON_FRAME = 26
 H1_ENUM_CONST_END(EditToolButtonConstant)
 
@@ -233,24 +235,25 @@ struct editMap {
     editMapCellPair cellPairs[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 };
 
-// The editor's town and hero map-extra records end in a reserved block:
+// The editor's town and hero map-extra records end in 50 unread bytes:
 // PlaceOverlay zero-fills the new record, the town and hero dialogs copy it
 // whole and SaveMap writes m_extraSizes bytes, but no code of either program
-// reads it (the game's readers stop at mapTownExtra/mapHeroExtra).
+// reads them (the game's readers stop at mapTownExtra/mapHeroExtra) and every
+// shipped map, NWC's and Buka's, holds zeros there.
 H1_ENUM_CONST_BEGIN(EditExtraConstant)
-    EDIT_EXTRA_RESERVED_SIZE = 50
+    EDIT_EXTRA_UNUSED_SIZE = 50
 H1_ENUM_CONST_END(EditExtraConstant)
 
 // A town's map-extra record as the editor keeps it.
 struct editTownExtra {
     mapTownExtra record;
-    u8 reserved[EDIT_EXTRA_RESERVED_SIZE];
+    u8 unused14[EDIT_EXTRA_UNUSED_SIZE];
 };
 
 // A placed hero's map-extra record as the editor keeps it.
 struct editHeroExtra {
     mapHeroExtra record;
-    u8 reserved[EDIT_EXTRA_RESERVED_SIZE];
+    u8 unused19[EDIT_EXTRA_UNUSED_SIZE];
 };
 
 class editManager : public baseManager {
@@ -392,10 +395,11 @@ public:
 };
 #pragma pack(pop)
 
+#define gEditManager gpEditManager // spelling fixes .bss order
 extern editManager* gEditManager;
 extern char* gMapCodeLetters;
 extern i32 gSelectionColor;
-extern SMapHeader gEditMapHeader;
+extern char gEditMapHeader[];
 extern char* gEditErrors[];
 extern i32 gEditErrorCount;
 // Set while the random-map generator lays terrain: SetTileVariant then

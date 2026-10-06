@@ -12,6 +12,15 @@ struct mapStep {
     i32 y;
 };
 
+// The chain tables keep their offsets as plain pairs: an array of 8-byte
+// structs would take 8-byte alignment, and retail starts MAPOBJ's .data at a
+// 4-byte boundary.
+H1_ENUM_CONST_BEGIN(MapStepAxis)
+    MAP_STEP_X = 0,
+    MAP_STEP_Y = 1,
+    MAP_STEP_AXES = 2
+H1_ENUM_CONST_END(MapStepAxis)
+
 // PlaceTowns: castle slots (one per player), the land regions it numbers and
 // the object classes a road between castles erases.
 H1_ENUM_CONST_BEGIN(TownPlacementConstant)

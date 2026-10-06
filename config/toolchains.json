@@ -8243,6 +8243,13 @@
         "media_id": "patch"
       }
     },
+    "linker_runtime_files": {
+      "native/MSVCRT.DLL": {
+        "media_path": "os/system/msvcrt.dll",
+        "sha256": "887eb5ce93edb7192ca3e9220f07f9ca0f94db02af5862ebcbdfcb852db99fd1",
+        "media_id": "patch"
+      }
+    },
     "release_files": {
       "bin/ML.EXE": {
         "sha256": "94595b9ccc09dbcaf6b877aa11a35576f78de2ab0eb39546abfde430b79dce2f"

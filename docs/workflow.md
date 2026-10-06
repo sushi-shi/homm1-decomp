@@ -40,4 +40,6 @@ must not duplicate generated status. Generated data lives in ignored `build/`.
 `link-diff`: the bytes in which the candidate differs from the retail image,
 per region (headers, each section, the trailing overlay, the file size), may
 not exceed the ceiling in `config/link_diff.tsv`. Lower counts pass and are
-blessed with `homm1 verify link-diff --update`.
+blessed with `homm1 verify link-diff --update`. The editor's candidate
+(`homm1 --image editor link`) is checked the same way against
+`config/retail/editor/link_diff.tsv`.

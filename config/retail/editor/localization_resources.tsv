@@ -1,0 +1,15 @@
+id	resource	path	command	flags	english_sha256	russian_sha256
+editor.resource.EDITOR.ok	EDITOR	[4]	1		-	e0cc7d310659e16d02b13398b69ab8f374d7266bdabf03754c2e018ca73e0357
+editor.resource.EDITOR.title	EDITOR	[1]	65535		-	2d1a058e4b0394283e5b31371cba74beb6fb284bc78bf4399b9f07ea2524781a
+editor.resource.EDITOR.version	EDITOR	[2]	65535		-	8167356428ef04095eff0811dd0057abc99edeedbcf5ed4aebea8c026e0e4f68
+editor.resource.MNUDFLT.command40005	MNUDFLT	[1, 0]	40005	0	-	fb8c4eca26f06da95706418c774d8dc671d2a2f0d8b1763a4858d3f64ed78f24
+editor.resource.MNUDFLT.command40006	MNUDFLT	[1, 1]	40006	0	-	344327d9614eda1d2d5aed7aa884ac601adb37652267414fbed72159a00e5354
+editor.resource.MNUDFLT.command40007	MNUDFLT	[1, 2]	40007	0	-	9d35e0024ef77f989bbec519fc15aa39d8ccbb859e7b8b3f7892925113345052
+editor.resource.MNUDFLT.command40008	MNUDFLT	[1, 3]	40008	0	-	75703efbe0ce9684be5084ef045f263b9064ae27a4bcd41bf4fe07c6ef3d3ee3
+editor.resource.MNUDFLT.command40009	MNUDFLT	[1, 4]	40009	128	-	f2c072526550df48e64a0ea876bcec76cb18b80b071f8f7ae993df89fbab0518
+editor.resource.MNUDFLT.command40052	MNUDFLT	[2, 0]	40052	0	-	64656d3daf0607e941bf5b93ac0b720968f342f23462cf9df26c6a8c876b5da3
+editor.resource.MNUDFLT.command40053	MNUDFLT	[2, 2]	40053	128	-	b45164a98f24737eeb70a2fed5af76c313a2fb88f39ad73c6cc3825c60ddeb4e
+editor.resource.MNUDFLT.command40140	MNUDFLT	[0, 0]	40140	128	-	a43b5125f5c6eaaa3591ef4efe9801a8fc9652acceee17d66a4e0afa62717bae
+editor.resource.MNUDFLT.popup.0	MNUDFLT	[0]		16	-	3787702393d3a9256383212c340a848b5dfbb303ca19b5c613b23c0145f94646
+editor.resource.MNUDFLT.popup.1	MNUDFLT	[1]		16	-	a0da6df61399e2930fdb085f894fc40c1c2d56a408127a5bb379251aa736b4ba
+editor.resource.MNUDFLT.popup.2	MNUDFLT	[2]		144	-	2303fe532eb4e974a42062588d60bf565531eb1f834ceaad76f1b7479582a76a

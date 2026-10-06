@@ -24,12 +24,12 @@
 
 // The cell after a chain link in each of the eight directions.
 DATA(0x0044c0e4)
-static mapStep gChainSteps[CHAIN_DIRECTION_COUNT] =
+static i32 gChainSteps[CHAIN_DIRECTION_COUNT][MAP_STEP_AXES] =
     {{1, -2}, {1, -1}, {1, 2}, {1, 1}, {-1, 2}, {-1, 1}, {-1, -2}, {-1, -1}};
 
 // A chain's sideways shift when it turns right ([0]) or left ([1]).
 DATA(0x0044c124)
-static mapStep gChainTurns[CHAIN_DIRECTION_COUNT][2] = {
+static i32 gChainTurns[CHAIN_DIRECTION_COUNT][2][MAP_STEP_AXES] = {
     {{1, 3}, {-1, 0}},
     {{1, 0}, {0, 0}},
     {{-1, 0}, {-3, 1}},
@@ -42,6 +42,11 @@ static mapStep gChainTurns[CHAIN_DIRECTION_COUNT][2] = {
 
 DATA(0x0044c1a4)
 static i32 gMineSiteKinds[5] = {2, 3, 4, 5, 6};
+
+// No retail code reads this; it holds its retail .bss place, before
+// GenerateRandomMap's empty status text.
+DATA(0x00452ef4)
+i32 gUnusedData452ef4;
 
 VA(0x00410fa0, 0x3c5)
 void editManager::GenerateRandomMap(void) {
@@ -163,18 +168,6 @@ i32 editManager::HasEnoughCastles(void) {
         }
     }
     return count >= RANDOM_MAP_MIN_CASTLES;
-}
-
-VA(0x00411ef7, 0x62)
-void ScaleByDensity(i32* count, i32 density) {
-    i32 base;
-
-    base = *count;
-    *count = base * (base + 50) / 100;
-    if (density < 50)
-        *count = *count * (density + 50) / 100;
-    else
-        *count = *count * density / 50;
 }
 
 VA(0x0041143a, 0x601)
@@ -442,6 +435,18 @@ void editManager::RemoveSmallRegions(void) {
                 gLandCellCount++;
 }
 
+VA(0x00411ef7, 0x62)
+void ScaleByDensity(i32* count, i32 density) {
+    i32 base;
+
+    base = *count;
+    *count = base * (base + 50) / 100;
+    if (density < 50)
+        *count = *count * (density + 50) / 100;
+    else
+        *count = *count * density / 50;
+}
+
 VA(0x00411f59, 0x3ce)
 void editManager::PlaceObstacleChains(i32 density, i32 tileset) {
     i32 chance;
@@ -543,12 +548,12 @@ void editManager::PlaceObstacleChains(i32 density, i32 tileset) {
                     chance = 40;
                 if (Random(1, 100) < chance) {
                     if (Random(0, 1)) {
-                        rootX += gChainTurns[direction][0].x;
-                        rootY += gChainTurns[direction][0].y;
+                        rootX += gChainTurns[direction][0][MAP_STEP_X];
+                        rootY += gChainTurns[direction][0][MAP_STEP_Y];
                         direction = (direction + 10) % 8;
                     } else {
-                        rootX += gChainTurns[direction][1].x;
-                        rootY += gChainTurns[direction][1].y;
+                        rootX += gChainTurns[direction][1][MAP_STEP_X];
+                        rootY += gChainTurns[direction][1][MAP_STEP_Y];
                         direction = (direction + 6) % 8;
                     }
                 }
@@ -628,14 +633,14 @@ i32 editManager::PlaceChainLink(i32* x, i32* y, i32 direction, i32 tileset, char
     }
     if (specific && CanPlaceOverlay(specific, *x, *y)) {
         PlaceOverlay(specific, *x, *y);
-        *x += gChainSteps[direction].x;
-        *y += gChainSteps[direction].y;
+        *x += gChainSteps[direction][MAP_STEP_X];
+        *y += gChainSteps[direction][MAP_STEP_Y];
         return 1;
     }
     if (CanPlaceOverlay(generic, *x, *y)) {
         PlaceOverlay(generic, *x, *y);
-        *x += gChainSteps[direction].x;
-        *y += gChainSteps[direction].y;
+        *x += gChainSteps[direction][MAP_STEP_X];
+        *y += gChainSteps[direction][MAP_STEP_Y];
         return 1;
     }
     return 0;
