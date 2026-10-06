@@ -306,3 +306,29 @@ DATA(0x00451f70)
 i32 gSelectionY;
 DATA(0x00451f80)
 i32 gSelectionHeight;
+// The random map generator's settings (EVENTMGR's random map window edits
+// them; MAPOBJ reads them).
+DATA(0x0043f3a8)
+double gRandomTerrainPercent[EDITOR_TERRAIN_COUNT] = {30.0, 30.0, 20.0, 0.0, 0.0, 0.0, 20.0};
+DATA(0x0043f3e0)
+double gRandomMapDensity[RANDOM_MAP_DENSITY_COUNT] = {50.0, 50.0, 50.0, 50.0, 50.0};
+DATA(0x0043f408)
+i32 gRandomMapClimate = 1;
+DATA(0x0043f78c)
+char* gEditTerrainNames[EDITOR_TERRAIN_COUNT] = {
+    localization::Tr("editor.terrain.name.0"),
+    localization::Tr("editor.terrain.name.1"),
+    localization::Tr("editor.terrain.name.2"),
+    localization::Tr("editor.terrain.name.3"),
+    localization::Tr("editor.terrain.name.4"),
+    localization::Tr("editor.terrain.name.5"),
+    localization::Tr("editor.terrain.name.6")
+};
+DATA(0x00451e98)
+SMapHeader* gpMapHeader;
+DATA(0x0045259c)
+i32 gLandCellCount;
+DATA(0x004528e0)
+i32 gRandomMapPromptSave;
+DATA(0x004528e4)
+i32 gGeneratingMaps;

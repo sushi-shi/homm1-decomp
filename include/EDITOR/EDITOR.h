@@ -6,6 +6,8 @@
 
 #include <Domains.h>
 
+struct SMapHeader;
+
 // The status bar: the bottom 16-pixel row of the 640x480 screen.
 H1_ENUM_CONST_BEGIN(EditorStatusBarConstant)
     EDITOR_STATUS_BAR_X = 0,
@@ -60,6 +62,39 @@ H1_ENUM_CONST_END(EditorToolHelpConstant)
 
 extern char* gTerrainToolHelp[];
 extern char* gClearToolHelp[];
+
+H1_ENUM_CONST_BEGIN(EditorRandomMapConstant)
+    EDITOR_TERRAIN_COUNT = 7,
+    RANDOM_MAP_DENSITY_COUNT = 5,
+    // GenerateRandomMap retries a map without enough castles this often.
+    RANDOM_MAP_ATTEMPTS = 5
+H1_ENUM_CONST_END(EditorRandomMapConstant)
+
+// gRandomMapDensity's settings, 0..100 (50: normal).
+H1_ENUM_BEGIN(RandomMapDensity)
+    RANDOM_MAP_MOUNTAINS = 0,
+    RANDOM_MAP_TREES = 1,
+    RANDOM_MAP_OBJECTS = 2,
+    RANDOM_MAP_TREASURE = 3,
+    RANDOM_MAP_MONSTERS = 4
+H1_ENUM_END(RandomMapDensity)
+
+// The random map window's settings: each terrain's share of the map in
+// percent (TerrainType order) and the densities.
+extern double gRandomTerrainPercent[];
+extern double gRandomMapDensity[];
+// Set: snow keeps to the poles and desert and lava to the middle rows.
+extern i32 gRandomMapClimate;
+// The terrain names the generator's status line shows.
+extern char* gEditTerrainNames[];
+// The map header the editor edits (EDITMGR's gMapHeader).
+extern SMapHeader* gpMapHeader;
+// RemoveSmallRegions counts the map's land cells here.
+extern i32 gLandCellCount;
+// Set by the random map window: offer to save each generated map.
+extern i32 gRandomMapPromptSave;
+// Set while the random-map generator runs: the map view draws clouds only.
+extern i32 gGeneratingMaps;
 
 void ShowStatusText(char* text);
 void ClearStatusText(void);

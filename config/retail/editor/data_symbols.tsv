@@ -106,6 +106,7 @@ rva	size	symbol	provenance
 0x00051e94	4	?DEFAULT_AGGREGATE_NAME@@3PADA	game 0xa7498 (SOURCE/KB): 1 code reference(s) from placed bodies
 0x00051ea0	4	?gpWindowManager@@3PAVheroWindowManager@@A	game 0xa74a8 (SOURCE/KB): 44 code reference(s) from placed bodies
 0x00051f74	4	?gpResourceManager@@3PAVresourceManager@@A	game 0xa74d8 (SOURCE/KB): 149 code reference(s) from placed bodies
+0x00051f88	140	?giGroundToTerrain@@3PACA	game 0xa7638 (SOURCE/KB): fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x00052014	351	?gLastFilename@@3PADA	game 0xa76c4 (SOURCE/KB): fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x00052178	2	?gMapX@@3FA	game 0xa7824 (SOURCE/KB): fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x0005217a	2	?gMapY@@3FA	game 0xa7826 (SOURCE/KB): fields of this image's own compile of the shared source (VA_AT body, masked-identical)

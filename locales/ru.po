@@ -350,6 +350,44 @@ msgstr "Редактор Героев"
 msgid "editor.instance.title"
 msgstr "Редактор Героев"
 
+#: src/EDITOR/MAPOBJ.cpp
+#, c-format
+msgid "editor.random.saved"
+msgstr "'%s' сохранена успешно"
+
+#: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.status.land"
+msgstr "Генерация карты - анализирую земной массив..."
+
+#: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.status.mountains"
+msgstr "Генерация карты - размещаю горы..."
+
+#: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.status.objects"
+msgstr "Генерация карты - размещаю объекты..."
+
+#: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.status.save_prompt"
+msgstr "Нажмите 'ОК' чтобы сохранить карту, 'ОТМЕНА', чтобы отменить."
+
+#: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.status.smoothing"
+msgstr "Генерация карты - шлифую рельеф..."
+
+#: src/EDITOR/MAPOBJ.cpp
+#, c-format
+msgid "editor.random.status.terrain"
+msgstr "Генерация карты - рисую землю - %s"
+
+#: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.status.treasure"
+msgstr "Генерация карты - размещаю сокровища..."
+
+#: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.status.trees"
+msgstr "Генерация карты - размещаю деревья..."
+
 #: src/EDITOR/EDITOR.cpp
 msgid "editor.startup.initialize.failed"
 msgstr "Не могу инициировать систему"
@@ -381,6 +419,34 @@ msgstr "Болото\n\n Все герои, кроме варвара, за 1 ш
 #: src/EDITOR/EDITOR.cpp
 msgid "editor.terrain.help.water"
 msgstr "Вода\n\nЗдесь можно путешествовать только на корабле."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.name.0"
+msgstr "Вода"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.name.1"
+msgstr "Трава"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.name.2"
+msgstr "Снег"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.name.3"
+msgstr "Болото"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.name.4"
+msgstr "Лава"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.name.5"
+msgstr "Пустыня"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.name.6"
+msgstr "Земля"
 
 #: src/SOURCE/kbwin.cpp
 msgid "editor.window.app_name"

@@ -114,6 +114,7 @@ class Placer:
         self.image_sizes: dict[int, int] = {}             # game rva -> this image's size
         self.image_callees: dict[int, set[str]] = {}      # rva -> callee symbol(s)
         self.image_vtables: dict[int, tuple[str, int, str]] = {}  # rva -> (name, size, why)
+        self.compgen_users: dict[int, set[str]] = defaultdict(set)  # game rva -> image units
         self.data: dict[int, tuple[int, str]] = {}
         self.problems: list[str] = []
 
@@ -523,6 +524,8 @@ class Placer:
                                 vtables[value].add(vt)
                         continue
                     found[b["rva"]].add(value - addend)
+                    if b["channel"] == "data_compgen":
+                        self.compgen_users[b["rva"]].add(unit)
         for erva, rows in vtables.items():
             if len(rows) == 1:
                 self.image_vtables[erva] = next(iter(rows))
@@ -557,6 +560,14 @@ class Placer:
         return (vtable.name, size,
                 f"image-only: this image's constructor stores it; its {len(slots)} slot(s) "
                 f"hold the claimed methods")
+
+    def link_units(self) -> list[str]:
+        rows = read_tsv(retail_dir(self.image) / "link_order.tsv")[2]
+        out = []
+        for r in sorted(rows, key=lambda r: int(r["lo"], 16)):
+            if r["unit"] not in out:
+                out.append(r["unit"])
+        return out
 
     def run(self) -> None:
         self.place_functions()
@@ -616,6 +627,15 @@ def write_tables(p: Placer, out: Path | None = None) -> dict:
         elif b["channel"] == "data_compgen" and b["unit"] in p.shared \
                 and not RVA_NAMED.match(b["name"]):
             compgen.append([f"0x{erva:08x}", f"0x{b['size']:x}", b["name"], b["unit"],
+                            b["kind"] or "common"])
+        elif b["channel"] == "data_compgen" and p.compgen_users.get(grva) \
+                and not RVA_NAMED.match(b["name"]):
+            # A compiler constant the game's owner does not bring: the linker
+            # keeps the COMDAT of the first image unit, in link order, whose
+            # own compile references it.
+            order = {u: i for i, u in enumerate(p.link_units())}
+            owner = min(p.compgen_users[grva], key=lambda u: order.get(u, len(order)))
+            compgen.append([f"0x{erva:08x}", f"0x{b['size']:x}", b["name"], owner,
                             b["kind"] or "common"])
     write_tsv(out / "data_symbols.tsv", [
         digest_line, "# Reviewed game data names placed by their code users."],

@@ -392,10 +392,10 @@ void terrainManager::RandomizeTiles(void) {
         gEditManager->BlendTerrain(i, 1, 1, 0, 0);
     for (y = 0; y < EDIT_MANAGER_MAP_SIZE; y++) {
         for (x = 0; x < EDIT_MANAGER_MAP_SIZE; x++) {
-            tileTerrain = gEditManager->m_cells[x][y].ground / MAP_CELL_TILES_PER_TERRAIN;
-            tile = gEditManager->m_cells[x][y].ground;
+            tileTerrain = gEditManager->m_cells[x][y].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN;
+            tile = gEditManager->m_cells[x][y].m_tileIndex;
             if (tileTerrain * MAP_CELL_TILES_PER_TERRAIN == tile)
-                gEditManager->m_cells[x][y].ground += Random(0, TERRAIN_TILE_VARIANT_COUNT - 1);
+                gEditManager->m_cells[x][y].m_tileIndex += Random(0, TERRAIN_TILE_VARIANT_COUNT - 1);
         }
     }
 }

@@ -10,6 +10,7 @@
 #include <BASE/baseManager.h>
 #include <Domains.h>
 #include <H1/Macros.h>
+#include <SOURCE/mapCell.h>
 
 class font;
 class heroWindow;
@@ -18,7 +19,9 @@ struct tag_message;
 H1_ENUM_CONST_BEGIN(EditManagerConstant)
     EDIT_MANAGER_NO_TOOL = -1,
     // The editor edits one map of this many cells per side.
-    EDIT_MANAGER_MAP_SIZE = 72
+    EDIT_MANAGER_MAP_SIZE = 72,
+    // m_mapFileName: an 8.3 map file name.
+    EDIT_MAP_FILE_NAME_SIZE = 16
 H1_ENUM_CONST_END(EditManagerConstant)
 
 // Widget ids of the editor's main window the tool managers handle.
@@ -30,20 +33,6 @@ H1_ENUM_BEGIN(EditorWidgetId)
 H1_ENUM_END(EditorWidgetId)
 
 #pragma pack(push, 1)
-// One cell of the edited map (the constructor's map reset writes every byte).
-struct editMapCell {
-    u8 ground;
-    u8 unknown1;
-    u8 unknown2;
-    u8 unknown3;
-    u8 unknown4;
-    u8 unknown5;
-    u8 unknown6;
-    u8 unknown7;
-    u8 unknown8;
-    u8 unknown9;
-};
-
 // A per-cell word pair the map reset clears.
 struct editMapCellPair {
     i16 first;
@@ -72,7 +61,10 @@ public:
     // The executive manager of the selected tool.
     baseManager* m_toolManager;
     heroWindow* m_window;
-    editMapCell m_cells[EDIT_MANAGER_MAP_SIZE][EDIT_MANAGER_MAP_SIZE];
+    // The edited map: the game's ten-byte cells (the random map generator
+    // reads the tile, object, overlay and trigger bytes at the game's
+    // offsets).
+    mapCell m_cells[EDIT_MANAGER_MAP_SIZE][EDIT_MANAGER_MAP_SIZE];
     editMapCellPair m_cellPairs[EDIT_MANAGER_MAP_SIZE][EDIT_MANAGER_MAP_SIZE];
     u8 m_unknown11c97[0x11b80];
     i32 m_unknown23817;
@@ -83,7 +75,8 @@ public:
     // The map cell under the cursor.
     i16 m_cursorX;
     i16 m_cursorY;
-    u8 m_unknown2545b[0x10];
+    // The map's file name (SaveMap's argument).
+    char m_mapFileName[EDIT_MAP_FILE_NAME_SIZE];
     i16 m_dispatchMask;
 
     editManager(void);
@@ -110,6 +103,34 @@ public:
     void FillGround(i16 x, i16 y, i16 width, i16 height, i16 terrain);
     // Fits the terrain's edge tiles to their neighbours over the whole map.
     void BlendTerrain(i16 terrain, u8, u8 restoreOthers, u8 secondPass, u8 skipFirstPass);
+    i16 SaveMap(char* name);
+    // Clears the map's objects and ground in the width x height cells at
+    // (x, y).
+    void ResetArea(i32 x, i32 y, i32 width, i32 height);
+    // Starts a new map (random: for the generator).
+    void NewMap(i32 random);
+    // The random map generator (src/EDITOR/MAPOBJ.cpp).
+    void GenerateRandomMap(void);
+    // At least four castles stand on the map.
+    i32 HasEnoughCastles(void);
+    // Grows `percent` of the map's cells of terrain from random seeds over
+    // cells of baseTerrain (100: the whole map).
+    void PaintRandomTerrain(i32 terrain, i32 percent, i32 baseTerrain);
+    // Merges terrain regions of at most fifteen cells into a neighbour and
+    // counts the land cells.
+    void RemoveSmallRegions(void);
+    // Lays chains of the tileset's mountains or trees.
+    void PlaceObstacleChains(i32 density, i32 tileset);
+    // Places one chain link at (*x, *y) facing `direction` and steps on.
+    i32 PlaceChainLink(i32* x, i32* y, i32 direction, i32 tileset, char kind);
+    void PlaceTowns(void);
+    // Places a sawmill (kind 0), an alchemist's lab (1) or the mine of
+    // resource `kind` with its river at (x, y).
+    void PlaceResourceSite(i32 x, i32 y, i32 kind);
+    void PlaceRandomObjects(i32 density, i32 strength);
+    void PlaceTreasures(i32 density, i32 strength);
+    // Scatters decorative objects over bare ground.
+    void ScatterDecorations(void);
     virtual i16 Open(i16 priority) OVERRIDE;
     virtual void Close(void) OVERRIDE;
     virtual i16 Main(tag_message& message) OVERRIDE;
@@ -117,5 +138,12 @@ public:
 #pragma pack(pop)
 
 extern editManager* gEditManager;
+// Set while the generator blends terrain: every border tile's variant is
+// re-rolled (EDITMGR).
+extern i32 gVaryTiles;
+
+// Scales a generator count by a 0..100 density setting (50: unchanged apart
+// from the size bonus).
+void ScaleByDensity(i32* count, i32 density);
 
 #endif // HOMM1_EDITOR_EDITMANAGER_H
