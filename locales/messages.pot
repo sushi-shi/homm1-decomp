@@ -1075,6 +1075,34 @@ msgstr ""
 msgid "event.skeleton.treasure"
 msgstr ""
 
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.abandoned"
+msgstr ""
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.approach"
+msgstr ""
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.attacked"
+msgstr ""
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.ghosts_join"
+msgstr ""
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.ghosts_still_wait"
+msgstr ""
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.ghosts_wait"
+msgstr ""
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.waiting_ghosts_join"
+msgstr ""
+
 #: src/BASE/RESMGR.cpp
 #, c-format
 msgid "file.aggregate.open_failed"

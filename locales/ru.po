@@ -1074,6 +1074,34 @@ msgstr "Оракул - информация об игроках"
 msgid "event.skeleton.treasure"
 msgstr "Сокровище"
 
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.abandoned"
+msgstr "Похоже, хозяева покинули эту крепость."
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.approach"
+msgstr "Перед вами хорошо укрепленная крепость. Мост опущен. Вы стучите в ворота, но никто не отвечает. Тишина.\n\nВы уверены, что хотите войти?"
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.attacked"
+msgstr "Пока вы пытаетесь выломать ворота крепости, на вас нападают разъяренные паладины, выкрикивая что-то на незнакомом вам языке.  И все же вам кажется, что это было своего рода предупреждение..."
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.ghosts_join"
+msgstr "Вы победили паладинов и освободили злых призраков, которых они стерегли.  Как ни странно, призраки молча присоединяются к вам."
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.ghosts_still_wait"
+msgstr "Призраки все еще ждут, чтобы присоединиться к вам, но в вашей армии нет для них места."
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.ghosts_wait"
+msgstr "Вы победили паладинов и освободили злых призраков, которых они стерегли.  Как ни странно, призраки готовы присоединиться к вам, как только в вашей армии найдется для них место."
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.waiting_ghosts_join"
+msgstr "Призраки молча присоединяются к вам."
+
 #: src/BASE/RESMGR.cpp
 #, c-format
 msgid "file.aggregate.open_failed"

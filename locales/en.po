@@ -1074,6 +1074,34 @@ msgstr "Shrine - Player Rankings"
 msgid "event.skeleton.treasure"
 msgstr "Treasure"
 
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.abandoned"
+msgstr "The stronghold seems abandoned by its owners."
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.approach"
+msgstr "You see a well-fortified stronghold before you. The bridge is lowered. You knock on the gate, but nobody's answering. Silence.\n\nAre you sure you want to enter?"
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.attacked"
+msgstr "While you are trying to break the gate to get inside the stronghold, you are attacked by furious paladins, shouting something in a language you do not know.  Yet you have a feeling that this is a warning of some sort..."
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.ghosts_join"
+msgstr "You've defeated the paladins and freed the evil ghosts they were guarding.  Strangely, the ghosts silently join your cause."
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.ghosts_still_wait"
+msgstr "Ghosts are still waiting to join your cause, but you don't have a room for them in your army."
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.ghosts_wait"
+msgstr "You've defeated the paladins and freed the evil ghosts they were guarding.  Strangely, the ghosts wished to join your cause once you'll find a room for them in your army."
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.stronghold.waiting_ghosts_join"
+msgstr "Ghosts silently join your cause."
+
 #: src/BASE/RESMGR.cpp
 #, c-format
 msgid "file.aggregate.open_failed"

@@ -1158,7 +1158,10 @@ void combatManager::DoVictory(i8 winningSide) {
                     m_playerId[winningSide] == GAME_PLAYER_NONE
                     || !gThisNetHumanPlayer[m_playerId[winningSide]]
                 )) {
-                PlayMusic(MUSIC_TRACK_BATTLE_WON);
+                PlayMusic(
+                    IsCampaignFinalBattle() ? MUSIC_TRACK_CAMPAIGN_FINAL_VICTORY
+                                            : MUSIC_TRACK_BATTLE_WON
+                );
                 m_winLoseWindow = new heroWindow(0x9f, 2, "wincmbt.bin");
                 if (m_winLoseWindow == NULL)
                     MemError();
