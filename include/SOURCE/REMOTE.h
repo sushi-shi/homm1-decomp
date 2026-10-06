@@ -71,6 +71,11 @@ H1_ENUM_BEGIN(MultiplayerBaseType)
     MULTIPLAYER_BASE_UNSET = 10
 H1_ENUM_END(MultiplayerBaseType)
 
+// TransmitSaveGame and ReceiveSaveGame move the saved game LZHUF-encoded in
+// modem games, and in network games once the other side is ready.
+#define REMOTE_SAVE_ENCODED()                                                                      \
+    (!gMapBaseType || (gMapBaseType == MULTIPLAYER_BASE_NETWORK && gRemoteReady))
+
 // UnloadRemoteDriver's driver: the serial (com_*) driver for modem and direct
 // connect games, NetBIOS (nb_*) for network games (RemoteCleanup).
 H1_ENUM_BEGIN(RemoteDriverType)

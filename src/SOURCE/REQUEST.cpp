@@ -590,7 +590,7 @@ void fileRequester::DoKnob(void) {
     offset = n - m_scrollKnob->m_y;
     gInputManager->Flush();
     event = gInputManager->GetEvent();
-    while (event.type != MESSAGE_LEFT_BUTTON_UP && event.type != MESSAGE_RIGHT_BUTTON_UP) {
+    while (!IS_BUTTON_RELEASE_MESSAGE(event.type)) {
         if (event.type == MESSAGE_MOUSE_MOVE) {
             if (event.y < offset + FILE_REQUESTER_GUTTER_TOP)
                 event.y = offset + FILE_REQUESTER_GUTTER_TOP;

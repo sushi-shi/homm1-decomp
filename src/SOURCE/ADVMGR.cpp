@@ -4161,7 +4161,7 @@ void advManager::DoHeroKnob(void) {
     offset = y - m_scrollLeftButton->m_y;
     gInputManager->Flush();
     message = gInputManager->GetEvent();
-    while (message.type != MESSAGE_LEFT_BUTTON_UP && message.type != MESSAGE_RIGHT_BUTTON_UP) {
+    while (!IS_BUTTON_RELEASE_MESSAGE(message.type)) {
         if (message.type == MESSAGE_MOUSE_MOVE) {
             if (message.y < offset + LOCATOR_SCROLL_BASE_Y)
                 message.y = offset + LOCATOR_SCROLL_BASE_Y;
@@ -4210,7 +4210,7 @@ void advManager::DoTownKnob(void) {
     offset = y - m_scrollRightButton->m_y;
     gInputManager->Flush();
     message = gInputManager->GetEvent();
-    while (message.type != MESSAGE_LEFT_BUTTON_UP && message.type != MESSAGE_RIGHT_BUTTON_UP) {
+    while (!IS_BUTTON_RELEASE_MESSAGE(message.type)) {
         if (message.type == MESSAGE_MOUSE_MOVE) {
             if (message.y < offset + LOCATOR_SCROLL_BASE_Y)
                 message.y = offset + LOCATOR_SCROLL_BASE_Y;

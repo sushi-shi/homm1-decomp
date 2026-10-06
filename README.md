@@ -94,8 +94,8 @@ review inputs, not defect totals. Preserve banked matches.
   read. Combat and AI (**233 functions**, [ledger](docs/common-code-combat.tsv)):
   **15 families** retained at **81 sites** (22 of them calls shortened by
   declared defaults), 4 rejected by measurement, 25 kept explicit, 4 deferred.
-  Adventure, town, hero, network, Windows and BASE (**764 functions**, [ledger](docs/common-code-adventure.tsv)): **17 families**
-  retained at **307 sites** (65 of them calls shortened by declared defaults),
+  Adventure, town, hero, network, Windows and BASE (**764 functions**, [ledger](docs/common-code-adventure.tsv)): **19 families**
+  retained at **317 sites** (65 of them calls shortened by declared defaults),
   1 rejected by measurement, 77 kept explicit, 5 deferred to typed enum domains
   or another unit's owner.
 
