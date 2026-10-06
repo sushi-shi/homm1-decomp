@@ -1300,7 +1300,8 @@ void combatManager::KeepAttack(void) {
     mod = 2;
     if (m_heroes[COMBAT_DEFENDER_SIDE])
         mod += m_heroes[COMBAT_DEFENDER_SIDE]->m_primaryStats[HERO_PRIMARY_ATTACK];
-    if (m_combatTowns[COMBAT_DEFENDER_SIDE]->m_buildings & 1)
+    if (m_combatTowns[COMBAT_DEFENDER_SIDE]->m_buildings
+        & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_MAGE_GUILD))
         mod += m_combatTowns[COMBAT_DEFENDER_SIDE]->m_buildState + 1;
     mod -= hisStack->m_stats.defense;
     if (mod > 20)
@@ -1309,11 +1310,13 @@ void combatManager::KeepAttack(void) {
         mod = -20;
     numRolls = 5;
     for (k = 7; k <= 12; k++) {
-        if (m_combatTowns[COMBAT_DEFENDER_SIDE]->m_buildings & (1 << k))
+        if (m_combatTowns[COMBAT_DEFENDER_SIDE]->m_buildings
+            & H1_ENUM_BIT(BuildingSlotType, H1_ENUM_DECODE(BuildingSlotType, k)))
             numRolls += 4;
     }
     for (k = 0; k <= 4; k++) {
-        if (m_combatTowns[COMBAT_DEFENDER_SIDE]->m_buildings & (1 << k))
+        if (m_combatTowns[COMBAT_DEFENDER_SIDE]->m_buildings
+            & H1_ENUM_BIT(BuildingSlotType, H1_ENUM_DECODE(BuildingSlotType, k)))
             numRolls++;
     }
     arrowDamage = 0;

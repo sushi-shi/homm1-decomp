@@ -50,14 +50,6 @@ and `include`. Preserve banked matches and the linked-image identity.
   floor, both programs); about 2,000 0/1 flag literals became `true`/`false`
   on `b8`/`b32` storage, and compiler-proven NULL/bool/enum replacements are
   at 0.
-- [ ] Common-code review (helpers, accessors, macros): every source unit is
-  read. Combat and AI (**233 functions**, [ledger](docs/common-code-combat.tsv)):
-  **15 families** retained at **81 sites** (22 of them calls shortened by
-  declared defaults), 4 rejected by measurement, 25 kept explicit, 4 deferred.
-  Adventure, town, hero, network, Windows and BASE (**764 functions**, [ledger](docs/common-code-adventure.tsv)): **19 families**
-  retained at **317 sites** (65 of them calls shortened by declared defaults),
-  1 rejected by measurement, 77 kept explicit, 5 deferred to typed enum domains
-  or another unit's owner.
 
 ## Branches
 

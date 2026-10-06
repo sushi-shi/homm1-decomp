@@ -1685,8 +1685,8 @@ void game::RandomizeEvents(void) {
                     for (j = 0; j < MINE_FOOTPRINT_HEIGHT; j++) {
                         for (i = 0; i < MINE_FOOTPRINT_WIDTH; i++) {
                             if (!m_map[x + i][y - j].m_objectMetadata
-                                || (m_map[x + i][y - j].m_triggerType & MAP_TRIGGER_TYPE_MASK)
-                                       == (myCell->m_triggerType & MAP_TRIGGER_TYPE_MASK))
+                                || MAP_TRIGGER_OBJECT(m_map[x + i][y - j].m_triggerType)
+                                       == MAP_TRIGGER_OBJECT(myCell->m_triggerType))
                                 m_map[x + i][y - j].m_objectMetadata = id;
                         }
                     }

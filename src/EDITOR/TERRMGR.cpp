@@ -281,8 +281,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) terrainManager::Main(tag_message& mes
                             anchorY += gEditManager->m_viewY;
                             gEditManager->SaveUndo();
                             event = gInputManager->GetEvent();
-                            while (event.type != MESSAGE_LEFT_BUTTON_UP
-                                   && event.type != MESSAGE_RIGHT_BUTTON_UP) {
+                            while (!IS_BUTTON_RELEASE_MESSAGE(event.type)) {
                                 Process1WindowsMessage();
                                 gMouseManager->Main(event);
                                 if (event.type == MESSAGE_MOUSE_MOVE) {

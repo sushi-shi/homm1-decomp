@@ -23,6 +23,7 @@
 #include <BASE/iconWidget.h>
 #include <BASE/inputManager.h>
 #include <BASE/message.h>
+#include <BASE/Misc.h>
 #include <BASE/miscwin.h>
 #include <BASE/mouseManager.h>
 #include <BASE/resourceManager.h>
@@ -10167,7 +10168,7 @@ void editManager::DoRadar(void) {
     DrawRadar(1);
     UpdateMapView();
     input = gInputManager->GetEvent();
-    while (input.type != MESSAGE_LEFT_BUTTON_UP && input.type != MESSAGE_RIGHT_BUTTON_UP) {
+    while (!IS_BUTTON_RELEASE_MESSAGE(input.type)) {
         Process1WindowsMessage();
         if (input.type == MESSAGE_MOUSE_MOVE) {
             while (input.type == MESSAGE_MOUSE_MOVE) {
@@ -10226,7 +10227,7 @@ void editManager::DoHorizontalKnob(void) {
     message.type = MESSAGE_MOUSE_MOVE;
     message.x = x;
     message.y = y;
-    while (message.type != MESSAGE_LEFT_BUTTON_UP && message.type != MESSAGE_RIGHT_BUTTON_UP) {
+    while (!IS_BUTTON_RELEASE_MESSAGE(message.type)) {
         Process1WindowsMessage();
         if (message.type == MESSAGE_MOUSE_MOVE) {
             latest = message;
@@ -10284,7 +10285,7 @@ void editManager::DoVerticalKnob(void) {
     message.type = MESSAGE_MOUSE_MOVE;
     message.x = x;
     message.y = y;
-    while (message.type != MESSAGE_LEFT_BUTTON_UP && message.type != MESSAGE_RIGHT_BUTTON_UP) {
+    while (!IS_BUTTON_RELEASE_MESSAGE(message.type)) {
         Process1WindowsMessage();
         if (message.type == MESSAGE_MOUSE_MOVE) {
             latest = message;
@@ -10774,7 +10775,7 @@ void editManager::WriteTowns(i32 file) {
     empty.y = EDIT_MAP_NO_RECORD;
     empty.type = 0;
     for (x = 0; x < GAME_TOWN_COUNT - count; x++)
-        write(file, &empty, sizeof(empty));
+        WRITE_FILE_VALUE(file, empty);
 }
 #undef cell
 
@@ -10835,19 +10836,19 @@ void editManager::WriteMines(i32 file) {
     empty.type = EDIT_MAP_NO_RECORD;
     if (cityX != -1) {
         type = MAP_OBJECT_TRIGGER(MAP_OBJECT_DRAGON_CITY);
-        write(file, &cityX, 1);
-        write(file, &cityY, 1);
-        write(file, &type, 1);
+        WRITE_FILE_VALUE(file, cityX);
+        WRITE_FILE_VALUE(file, cityY);
+        WRITE_FILE_VALUE(file, type);
     } else {
-        write(file, &empty, sizeof(empty));
+        WRITE_FILE_VALUE(file, empty);
     }
     if (lighthouseX != -1) {
         type = MAP_OBJECT_TRIGGER(MAP_OBJECT_LIGHTHOUSE);
-        write(file, &lighthouseX, 1);
-        write(file, &lighthouseY, 1);
-        write(file, &type, 1);
+        WRITE_FILE_VALUE(file, lighthouseX);
+        WRITE_FILE_VALUE(file, lighthouseY);
+        WRITE_FILE_VALUE(file, type);
     } else {
-        write(file, &empty, sizeof(empty));
+        WRITE_FILE_VALUE(file, empty);
     }
     if (lighthouseCount > 1)
         AddError(localization::Tr("editor.check.lighthouse.multiple"));
@@ -10873,16 +10874,16 @@ void editManager::WriteMines(i32 file) {
                     else
                         type = H1_ENUM_ENCODE(ResourceType, RESOURCE_MERCURY);
                 }
-                write(file, &x, 1);
-                write(file, &y, 1);
-                write(file, &type, 1);
+                WRITE_FILE_VALUE(file, x);
+                WRITE_FILE_VALUE(file, y);
+                WRITE_FILE_VALUE(file, type);
                 sprintf(gText, "Mine %02d: (%02d,%02d) type: %02d\n", mineSlot, x, y, type);
                 mineSlot++;
             }
         }
     }
     for (x = 0; x < GAME_MINE_COUNT - mineSlot; x++)
-        write(file, &empty, sizeof(empty));
+        WRITE_FILE_VALUE(file, empty);
 }
 #undef cell
 #undef lighthouseX
@@ -10930,7 +10931,7 @@ void editManager::WriteObelisks(i32 file) {
     }
     if (!obeliskCount)
         obeliskCount++;
-    write(file, &obeliskCount, 1);
+    WRITE_FILE_VALUE(file, obeliskCount);
     if (obeliskCount > EDIT_MAP_OBELISK_LIMIT) {
         sprintf(gText, localization::Tr("editor.check.obelisks.many"), obeliskCount);
         AddError(gText);
@@ -10959,7 +10960,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) editManager::SaveMap(char* name) {
     if (handle == -1)
         return BASE_MANAGER_ERROR;
     data = MAP_HEADER_ID;
-    write(handle, &data, sizeof(data));
+    WRITE_FILE_VALUE(handle, data);
     if (gNewMapFormat) {
         write(
             handle,
@@ -10967,30 +10968,30 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) editManager::SaveMap(char* name) {
             offsetof(SMapHeader, format) - offsetof(SMapHeader, difficulty)
         );
         formatWord = MAP_HEADER_ID;
-        write(handle, &formatWord, sizeof(formatWord));
+        WRITE_FILE_VALUE(handle, formatWord);
     } else {
         write(handle, gEditMapHeader, offsetof(SMapHeader, format));
     }
     data = EDIT_MAP_VERSION;
-    write(handle, &data, sizeof(data));
+    WRITE_FILE_VALUE(handle, data);
     data = MAP_CELL_GRID_SIZE;
-    write(handle, &data, sizeof(data));
+    WRITE_FILE_VALUE(handle, data);
     data = MAP_CELL_GRID_SIZE;
-    write(handle, &data, sizeof(data));
+    WRITE_FILE_VALUE(handle, data);
     write(handle, m_map.cells, sizeof(m_map.cells));
     WriteTowns(handle);
     WriteMines(handle);
     WriteArtifacts(handle);
     WriteObelisks(handle);
     write(handle, m_mapSounds, sizeof(m_mapSounds));
-    write(handle, &m_extraCount, sizeof(m_extraCount));
+    WRITE_FILE_VALUE(handle, m_extraCount);
     for (i = MAP_EXTRA_FIRST_RECORD; i < m_extraCount; i++) {
-        write(handle, &m_extraSizes[i], sizeof(m_extraSizes[i]));
+        WRITE_FILE_VALUE(handle, m_extraSizes[i]);
         write(handle, m_extras[i], m_extraSizes[i]);
     }
     if (gNewMapFormat) {
         write(handle, m_map.cellPairs, sizeof(m_map.cellPairs));
-        write(handle, &gNextObjectId, sizeof(gNextObjectId));
+        WRITE_FILE_VALUE(handle, gNextObjectId);
     }
     close(handle);
     gMouseManager->SetPointer(EDIT_POINTER_DEFAULT);
@@ -11019,7 +11020,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) editManager::LoadMap(char* name) {
     handle = open(fileName, O_BINARY);
     if (handle == -1)
         return BASE_MANAGER_ERROR;
-    read(handle, &headerId, sizeof(headerId));
+    READ_FILE_VALUE(handle, headerId);
     if (headerId == MAP_HEADER_ID) {
         ((SMapHeader*)gEditMapHeader)->id = headerId;
         read(
@@ -11027,7 +11028,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) editManager::LoadMap(char* name) {
             &((SMapHeader*)gEditMapHeader)->difficulty,
             sizeof(SMapHeader) - offsetof(SMapHeader, difficulty)
         );
-        read(handle, &headerId, sizeof(headerId));
+        READ_FILE_VALUE(handle, headerId);
     } else {
         NewMap(false);
     }
@@ -11037,8 +11038,8 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) editManager::LoadMap(char* name) {
     else
         gNewMapFormat = false;
     gMouseManager->SetPointer(EDIT_POINTER_WAIT);
-    read(handle, &width, sizeof(width));
-    read(handle, &height, sizeof(height));
+    READ_FILE_VALUE(handle, width);
+    READ_FILE_VALUE(handle, height);
     read(handle, m_map.cells, sizeof(m_map.cells));
     read(handle, ignored, GAME_TOWN_COUNT * sizeof(editMapRecord));
     read(handle, ignored, GAME_MINE_COUNT * sizeof(editMapRecord));
@@ -11046,9 +11047,9 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) editManager::LoadMap(char* name) {
     read(handle, ignored, 1);
     read(handle, ignored, sizeof(m_mapSounds));
     if (headerId == EDIT_MAP_VERSION) {
-        read(handle, &m_extraCount, sizeof(m_extraCount));
+        READ_FILE_VALUE(handle, m_extraCount);
         for (i = MAP_EXTRA_FIRST_RECORD; i < m_extraCount; i++) {
-            read(handle, &m_extraSizes[i], sizeof(m_extraSizes[i]));
+            READ_FILE_VALUE(handle, m_extraSizes[i]);
             m_extras[i] = malloc(m_extraSizes[i]);
             read(handle, m_extras[i], m_extraSizes[i]);
         }
@@ -11057,7 +11058,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) editManager::LoadMap(char* name) {
     }
     if (gNewMapFormat) {
         read(handle, m_map.cellPairs, sizeof(m_map.cellPairs));
-        read(handle, &gNextObjectId, sizeof(gNextObjectId));
+        READ_FILE_VALUE(handle, gNextObjectId);
     }
     close(handle);
     gMouseManager->SetPointer(EDIT_POINTER_DEFAULT);

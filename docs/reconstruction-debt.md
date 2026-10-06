@@ -258,8 +258,21 @@ C++ BASE unit) are read in full: [function checklist](common-code-adventure-func
 [candidate catalogue](common-code-adventure.tsv). Compiler-generated bodies,
 the assembly units (BITS, BMAP2, Icon2b, Icon2bc, TILE) and the vendored LZHUF
 code are outside the checklist. Declared default arguments (`NormalDialog`,
-`TransmitRemoteData`) count as recovered source conveniences: they shorten calls
-without changing code.
+`TransmitRemoteData`, `FightValueOfStack`) count as recovered source
+conveniences: they shorten calls without changing code.
+
+The families once deferred to the typed domains are decided. The opposite
+combat side (`COMBAT_OPPOSING_SIDE`), the object type of a trigger byte
+(`MAP_TRIGGER_OBJECT`) and the building bit (`H1_ENUM_BIT(BuildingSlotType,
+slot)`) are dual-view forms: the VC6 view expands to the open-coded
+expression and the strict view types the operand, so every converted site is
+byte-identical. Enum-indexed arrays are `H1_ENUM_ARRAY`s; the player seat and
+roster slot arrays have no domain and stay plain. The building mask test is
+the whole operation, so no wrapper is added beside `TOWN_BUILDING_COMPLETE`,
+and the one modem-response truncation stays explicit (a single site is no
+repetition). The trigger-byte sites that stay explicit are different
+operations: in-place event-bit clears, comparisons with the map-file object
+domain, secondary-trigger transfers and presence tests.
 
 **Unions and varargs.** Alternate views and manual argument access are kept only
 where retail evidence requires them. Eight unions remain; the other two `rg`
@@ -325,8 +338,13 @@ with the same passes as the game. Every editor function stays exact.
   SaveMap and LoadMap name the header range with `offsetof`, the generator's
   cell grids go through `MAP_GRID_CELL` and the object footprints through
   `OVERLAY_FOOTPRINT_CELL`/`_BIT`.
-- Helpers: the editor reuses `CELL_TERRAIN` (31 neighbour reads) and
-  `SET_WIDGET_MESSAGE` (4); `EDIT_CASTLE_FRAME`/`EDIT_TOWN_FRAME`,
+- Helpers: the editor reuses the game's helpers at 83 sites: `CELL_TERRAIN`
+  (31 neighbour reads), `READ_FILE_VALUE`/`WRITE_FILE_VALUE` (29 map-file
+  values; WriteTowns' 32-bit coordinates written as single bytes stay
+  explicit), `IS_BUTTON_RELEASE_MESSAGE` (6 drag loops), `SET_WIDGET_MESSAGE`
+  (5), `MAP_TRIGGER_OBJECT` (5), `MANHATTAN_LENGTH` (5 generator distances)
+  and the building bit `H1_ENUM_BIT(BuildingSlotType, slot)` (2), each
+  byte-identical; `EDIT_CASTLE_FRAME`/`EDIT_TOWN_FRAME`,
   `MAP_GRID_CELL`, `OVERLAY_FOOTPRINT_CELL`/`_BIT` and `OVERLAY_TERRAIN_BIT`
   are recovered at every site. `MAP_CELL_IN_BOUNDS` does not apply: the
   editor's bounds tests compare `> MAP_CELL_GRID_SIZE - 1`. The generator's
@@ -385,3 +403,13 @@ shows up in the measuring commands above.
   game and editor unit parses with typed domains, `H1_ENUM_ARRAY` indices and
   `b8`/`b32` boolean storage (about 470 declarations retyped); the gate runs
   in `homm1 build verify`.
+- Common-code review (helpers, accessors, macros): every source unit of both
+  programs is read. Combat and AI (**233 functions**,
+  [ledger](common-code-combat.tsv)): **19 families** retained at **164
+  sites** (22 of them calls shortened by declared defaults) plus the typed
+  enum arrays, 4 rejected by measurement, 25 kept explicit. Adventure, town,
+  hero, network, Windows and BASE (**764 functions**,
+  [ledger](common-code-adventure.tsv)): **23 families** retained at **404
+  sites** (69 of them calls shortened by declared defaults) plus the typed
+  enum arrays, 1 rejected by measurement, 78 kept explicit. The editor-only
+  units reuse the game's helpers at 83 sites. No family is deferred.
