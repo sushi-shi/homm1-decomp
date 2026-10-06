@@ -429,7 +429,8 @@ def candidate(out: Path, objs_dir: Path, *, mapfile: Path | None = None,
         try:
             runtime = toolchain.linker_runtime(compiler_id(), prof["runtime"])
         except ValueError as e:
-            raise ToolError(f"{e} (`homm1 toolchain install {compiler_id()} "
+            raise ToolError(f"{e} (the pinned release bundle, `homm1 toolchain "
+                            f"install`, or `homm1 toolchain install --id {compiler_id()} "
                             "--media <iso> --patch <sp5>` provides it)") from e
         linker = native_crt_linker(runtime)
     try:

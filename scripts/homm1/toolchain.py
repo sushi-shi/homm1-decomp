@@ -86,8 +86,18 @@ def linker_runtime_entries(name):
     """The period C runtime DLL a linked image's LINK ran against. LINK.EXE
     imports qsort from MSVCRT.DLL and sorts its import thunks with it, so the
     runtime decides the IAT order (docs/patterns/link6-iat-qsort-runtime.md).
-    It comes from the same pinned media; release bundles may omit it."""
+    It comes from the same pinned media; the toolchain-buka-2003-v2 release
+    bundle carries it, v1 does not."""
     return dict(pins()[name].get('linker_runtime_files', {}))
+
+
+def linker_runtime_installed(name, directory=None):
+    """True when every pinned linker runtime file is present with its hash."""
+    try:
+        _verify_entries(name, directory or root(name), linker_runtime_entries(name))
+    except (KeyError, ValueError):
+        return False
+    return True
 
 
 def linker_runtime(name, relative, directory=None):
@@ -223,6 +233,8 @@ def install_release(archive=None, compiler=None):
             verify(name, staged_root / name)
             if resource_entries(name):
                 verify_resources(name, staged_root / name)
+            if linker_runtime_entries(name):
+                _verify_entries(name, staged_root / name, linker_runtime_entries(name))
         for name in contract['components']:
             source = staged_root / name
             destination = root(name)
@@ -258,6 +270,10 @@ def command(args):
             state = ('verified' if resources_installed(args.id) else
                      'not installed (install from the media to link .rsrc)')
             print(f'{args.id}: resource compiler and CVTRES {state}')
+        if linker_runtime_entries(args.id):
+            state = ('verified' if linker_runtime_installed(args.id) else
+                     'not installed (the editor link needs it)')
+            print(f'{args.id}: linker runtime {state}')
 
 
 def library_symbols(name):

@@ -8259,9 +8259,9 @@
       }
     },
     "release": {
-      "tag": "toolchain-buka-2003-v1",
-      "asset": "homm1-toolchain-buka-2003-v1.tar.xz",
-      "sha256": "41d9e1b6b75f637014726b5585f39c786d8079a847989b94cc77c836dd1d8061",
+      "tag": "toolchain-buka-2003-v2",
+      "asset": "homm1-toolchain-buka-2003-v2.tar.xz",
+      "sha256": "ea8efe04f52f36e0371dd5dde77e25e552a2f221819a663ca39530b005b3713c",
       "components": [
         "vc6",
         "wing10",
