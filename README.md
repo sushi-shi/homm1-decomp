@@ -46,13 +46,10 @@ and `include`. Preserve banked matches and the linked-image identity.
   names it, and neither the game nor the editor image reads one. The mouse's
   saved area and the player's unused save span are named from their code
   users, and 20 spans with no user at all are `m_unused*`/`m_padding*`.
-- [ ] Name bare constants: **2,254** open literals (`homm1 verify constants`
-  floor, both programs; the editor-only units hold 328, nearly all 0/1 flags
-  waiting for the boolean types); compiler-proven NULL/bool/enum replacements
-  are at 0.
-- [ ] Strict enum view (`/std:c++20`): **60 of 61** units do not compile yet,
-  so typed arrays (`H1_ENUM_ARRAY`) and enum destinations are checked only
-  where a unit parses.
+- [ ] Name bare constants: **1,616** open literals (`homm1 verify constants`
+  floor, both programs); about 2,000 0/1 flag literals became `true`/`false`
+  on `b8`/`b32` storage, and compiler-proven NULL/bool/enum replacements are
+  at 0.
 - [ ] Common-code review (helpers, accessors, macros): every source unit is
   read. Combat and AI (**233 functions**, [ledger](docs/common-code-combat.tsv)):
   **15 families** retained at **81 sites** (22 of them calls shortened by

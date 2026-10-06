@@ -381,3 +381,7 @@ shows up in the measuring commands above.
   canonical, 288 retained, 48 merged); **98** members merged into shared
   domains and **43** unused members retired; **168** cross-domain value
   collisions remain, each with a reviewed reason.
+- Strict enum view (`/std:c++20`, `homm1 verify strict-view`, floor 0): every
+  game and editor unit parses with typed domains, `H1_ENUM_ARRAY` indices and
+  `b8`/`b32` boolean storage (about 470 declarations retyped); the gate runs
+  in `homm1 build verify`.
