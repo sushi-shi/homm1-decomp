@@ -380,6 +380,8 @@ public:
     void WaitForPlayer(char* text, i32 player);
     void SettleOverlay(i32 x, i32 y);
     void RandomizeTerrainTiles(void);
+    // Whether the cell is one of a town's 4 x 3 cells.
+    b32 OnTownFootprint(i32 x, i32 y);
     void ProcessMapExtra(void);
     i8 SetupTowns(void);
     void ProcessOnMapHeroes(void);

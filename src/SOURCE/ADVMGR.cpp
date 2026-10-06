@@ -4548,6 +4548,9 @@ void advManager::PuzzleDraw(i32 left, i32 top, i32 markX, i32 markY) {
     for (y = 0; y < ADVMGR_VIEW_CELL_COUNT; y++) {
         for (x = 0; x < ADVMGR_VIEW_CELL_COUNT; x++) {
             DrawCell(left + x, top + y, x, y, ADVMGR_DRAW_GROUND, true, false);
+            // Off the map the stone border has nothing on it.
+            if (!MAP_CELL_IN_BOUNDS(left + x, top + y))
+                continue;
             screenX = x * CELL_PIXELS;
             rowPixelY = y * CELL_PIXELS;
             cell = GetCell(left + x, top + y);
@@ -6152,6 +6155,8 @@ void advManager::SummonBoat(void) {
     i16 clipX;
     i16 clipY;
     i16 clipHeight;
+    i16 boatX;
+    i16 boatY;
 
     summonHero = gGame->GetHero(gCurPlayerData->m_currentHero);
     okCell = false;
@@ -6160,12 +6165,12 @@ void advManager::SummonBoat(void) {
     if (destinationCell->m_tileIndex < MAP_CELL_TILES_PER_TERRAIN)
         goto summon_done;
     for (iDir = MAP_DIRECTION_FIRST; iDir < MAP_DIRECTION_COUNT; iDir++) {
-        destinationCell = GetCell(
-            m_mapOriginX + gNormalDirTable[iDir].x
-                + ADVMGR_VIEW_CENTER,
-            m_mapOriginY + gNormalDirTable[iDir].y
-                + ADVMGR_VIEW_CENTER
-        );
+        boatX = m_mapOriginX + gNormalDirTable[iDir].x + ADVMGR_VIEW_CENTER;
+        boatY = m_mapOriginY + gNormalDirTable[iDir].y + ADVMGR_VIEW_CENTER;
+        // Beside the map's edge there is no water to put the boat on.
+        if (!MAP_CELL_IN_BOUNDS(boatX, boatY))
+            continue;
+        destinationCell = GetCell(boatX, boatY);
         if (destinationCell->m_objectIndex == MAP_CELL_NO_FRAME
             && destinationCell->m_tileIndex < MAP_CELL_TILES_PER_TERRAIN) {
             okCell = true;
@@ -6222,10 +6227,8 @@ void advManager::SummonBoat(void) {
                 gWindowManager
                     ->FizzleForward(clipX, clipY, clipWidth, clipHeight, FIZZLE_USE_DEFAULT_DELAY);
             }
-            boatRec->x = m_mapOriginX + gNormalDirTable[iDir].x
-                         + ADVMGR_VIEW_CENTER;
-            boatRec->y = m_mapOriginY + gNormalDirTable[iDir].y
-                         + ADVMGR_VIEW_CENTER;
+            boatRec->x = boatX;
+            boatRec->y = boatY;
             boatRec->savedTriggerType = destinationCell->m_triggerType;
             boatRec->savedEventData = destinationCell->m_objectMetadata;
             destinationCell->m_triggerType = MAP_EVENT_TRIGGER(MAP_OBJECT_SHIP);

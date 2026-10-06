@@ -938,3 +938,6 @@ section 1, each with the reproduction it was checked against.
   distances, and artifacts taken without a free slot.
 - *Combat (BUG-CMB-1–2):* berserk stacks that loop or act without an
   action, and commander skills that wrap the stack's attack and defense.
+- *Adventure map (BUG-ADV-1–5):* the skeleton's unpaid gold, Summon Boat at
+  the map's edge, the campfire's sound, the puzzle's off-map cells, and
+  heroes and towns without records under other objects.
