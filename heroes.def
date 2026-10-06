@@ -1,0 +1,5 @@
+NAME HEROES
+STACKSIZE 0x10240,0x1000
+EXPORTS
+    AppAbout
+    AppWndProc=?AppWndProc@@YGJPAXIIJ@Z

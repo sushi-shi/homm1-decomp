@@ -1,0 +1,1347 @@
+#include <H1/Ints.h>
+
+#include <SOURCE/kbwin.h>
+
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#include <direct.h>
+#include <fcntl.h>
+#include <io.h>
+#include <mmsystem.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include <BASE/Misc.h>
+#include <BASE/mouseManager.h>
+#include <BASE/soundmgr.h>
+#include <SOURCE/KB.h>
+#include <BASE/heroWindow.h>
+#include <BASE/heroWindowManager.h>
+#include <BASE/inputManager.h>
+#include <BASE/message.h>
+#include <BASE/miscwin.h>
+#include <BASE/soundManager.h>
+#include <SOURCE/cursorTypes.h>
+#include <SOURCE/dialogTypes.h>
+#include <SOURCE/wingraph.h>
+
+extern "C" i32 __stdcall
+WinMain(void* instance, void* previousInstance, char* commandLine, i32 showCommand) {
+    DWORD error;
+    MSG message;
+
+    hInstApp = instance;
+    gEventHandle = CreateEventA(NULL, FALSE, FALSE, "Heroes");
+    error = GetLastError();
+    if (gEventHandle == NULL || error == ERROR_ALREADY_EXISTS) {
+        sprintf(gText, "Only one copy of %s may run at a time", "Heroes of Might and Magic");
+        MessageBoxA(NULL, gText, "Startup Error", MB_ICONHAND);
+        return 0;
+    }
+
+    memset(gCommandLine, 0, KBWIN_COMMAND_LINE_CLEAR_SIZE);
+    strncpy(gCommandLine, commandLine, KBWIN_COMMAND_LINE_LIMIT);
+    if (EarlySetup() == 0)
+        return 0;
+    if (AppInit(instance, previousInstance, showCommand, commandLine) == 0)
+        return 0;
+
+    for (;;) {
+        if (PeekMessageA(&message, NULL, 0, 0, PM_REMOVE) != FALSE) {
+            if (message.message == WM_QUIT)
+                break;
+            TranslateMessage(&message);
+            DispatchMessageA(&message);
+        } else {
+            if (AppIdle() != 0)
+                WaitMessage();
+        }
+    }
+    ShutDown(NULL);
+    return static_cast<i32>(message.wParam);
+}
+
+BOOL AppInit(void* instance, void* previousInstance, i32 showCommand, char* commandLine) {
+    WNDCLASSA appClass;
+    HMENU windowMenu;
+    RECT rc;
+
+    LogInt("hInstApp", reinterpret_cast<i32>(hInstApp));
+    memset(bProcessMessage, 0, KBWIN_MESSAGE_FILTER_SIZE);
+    bProcessMessage[WM_CREATE] = 1;
+    bProcessMessage[WM_KEYDOWN] = 1;
+    bProcessMessage[WM_KEYUP] = 1;
+    bProcessMessage[WM_MOUSEMOVE] = 1;
+    bProcessMessage[WM_LBUTTONDOWN] = 1;
+    bProcessMessage[WM_LBUTTONDBLCLK] = 1;
+    bProcessMessage[WM_RBUTTONDOWN] = 1;
+    bProcessMessage[WM_RBUTTONDBLCLK] = 1;
+    bProcessMessage[WM_LBUTTONUP] = 1;
+    bProcessMessage[WM_RBUTTONUP] = 1;
+    bProcessMessage[WM_TIMER] = 1;
+    bProcessMessage[WM_ACTIVATEAPP] = 1;
+    bProcessMessage[WM_ERASEBKGND] = 1;
+    bProcessMessage[WM_MOVE] = 1;
+    bProcessMessage[WM_SIZE] = 1;
+    bProcessMessage[WM_COMMAND] = 1;
+    bProcessMessage[WM_PALETTECHANGED] = 1;
+    bProcessMessage[WM_QUERYNEWPALETTE] = 1;
+    bProcessMessage[WM_PAINT] = 1;
+    bProcessMessage[WM_DESTROY] = 1;
+    bProcessMessage[WM_QUIT] = 1;
+    bProcessMessage[WM_CLOSE] = 1;
+    bProcessMessage[MM_MCINOTIFY] = 1;
+
+    if (previousInstance == NULL) {
+        appClass.hCursor = NULL;
+        appClass.hIcon = LoadIconA(static_cast<HINSTANCE>(instance), "Heroes");
+        appClass.lpszMenuName = NULL;
+        appClass.lpszClassName = gAppName;
+        appClass.hbrBackground =
+            reinterpret_cast<HBRUSH>(COLOR_WINDOW + 1);
+        appClass.hInstance = static_cast<HINSTANCE>(instance);
+        appClass.style = KBWIN_CLASS_STYLE;
+        appClass.lpfnWndProc = reinterpret_cast<WNDPROC>(
+            AppWndProc
+        );
+        appClass.cbWndExtra = 0;
+        appClass.cbClsExtra = 0;
+        if (RegisterClassA(&appClass) == 0)
+            return FALSE;
+    }
+
+    if (gConfig.gfx[gCurExe].showMenu != 0)
+        giCurWindowsStyleFlags = KBWIN_WINDOWED_STYLE;
+    else
+        giCurWindowsStyleFlags = KBWIN_FULLSCREEN_STYLE;
+    rc.left = rc.top = 0;
+    rc.right = gConfig.gfx[gCurExe].width - 1;
+    rc.bottom = gConfig.gfx[gCurExe].height - 1;
+    AdjustWindowRect(&rc, giCurWindowsStyleFlags, gConfig.gfx[gCurExe].showMenu);
+    if (gConfig.gfx[gCurExe].showMenu != 0)
+        windowMenu = static_cast<HMENU>(hmnuDflt);
+    else
+        windowMenu = NULL;
+    hwndApp = CreateWindowExA(
+        0,
+        gAppName,
+        gTitle,
+        giCurWindowsStyleFlags,
+        gConfig.gfx[gCurExe].x,
+        gConfig.gfx[gCurExe].y,
+        rc.right - rc.left + 1,
+        rc.bottom - rc.top + 1,
+        NULL,
+        windowMenu,
+        static_cast<HINSTANCE>(instance),
+        NULL
+    );
+    if (hwndApp != NULL) {
+        ShowWindow(static_cast<HWND>(hwndApp), showCommand);
+        SetWindowLongA(static_cast<HWND>(hwndApp), GWL_STYLE, giCurWindowsStyleFlags);
+        if (gConfig.gfx[gCurExe].showMenu == 0)
+            SetMenuStatus(0);
+        InitGraphics();
+        SetCursor(LoadCursorA(NULL, IDC_ARROW));
+        oldmain();
+        return TRUE;
+    } else {
+        return FALSE;
+    }
+}
+
+BOOL AppIdle(void) {
+    if (gForegroundApp != 0)
+        return TRUE;
+    else
+        return TRUE;
+}
+
+long __stdcall AppWndProc(void* window, u32 message, u32 messageParam, long messageData) {
+    static i32 gLastGTimerTickCount = 0;
+    static i32 gLastCycleTickCount = 0;
+    if (giDebugLevel == KBWIN_TRACE_DEBUG_LEVEL)
+        LogStr(
+            "AWP",
+            KBTickCount() % KBWIN_TRACE_TICK_MODULUS / KBWIN_TRACE_TICK_DIVISOR,
+            reinterpret_cast<i32>(window),
+            message,
+            messageParam,
+            messageData
+        );
+    if (message > KBWIN_PROCESS_MESSAGE_MAX || bProcessMessage[message] == 0)
+        return DefWindowProcA(static_cast<HWND>(window), message, messageParam, messageData);
+
+    switch (message) {
+        case WM_CREATE:
+            srand(KBTickCount());
+            SetTimer(static_cast<HWND>(window), KBWIN_TIMER_ID, KBWIN_TIMER_INTERVAL, NULL);
+            GdiSetBatchLimit(1);
+            return 0;
+        case WM_KEYDOWN:
+        case WM_KEYUP:
+            if (KeyboardMessageHandler(window, message, messageParam, messageData) == 0)
+                return 0;
+            break;
+        case WM_MOUSEMOVE:
+        case WM_LBUTTONDOWN:
+        case WM_LBUTTONUP:
+        case WM_LBUTTONDBLCLK:
+        case WM_RBUTTONDOWN:
+        case WM_RBUTTONUP:
+        case WM_RBUTTONDBLCLK:
+            if (MouseMessageHandler(window, message, messageParam, messageData) == 0)
+                return 0;
+            break;
+        case WM_TIMER:
+            lTemp = KBTickCount();
+            if (gLastGTimerTickCount + KBWIN_POLL_INTERVAL < lTemp) {
+                gLastGTimerTickCount = lTemp;
+                SetReady2Poll();
+            }
+            if (gLastCycleTickCount + KBWIN_CYCLE_INTERVAL < lTemp) {
+                gLastCycleTickCount = lTemp;
+                if (gGraphicsType == WINGRAPH_GRAPHICS_WING
+                    && gMainVideoModeColorDepth != WINGRAPH_COLOR_DEPTH) {
+                    gLastCycleTickCount += KBWIN_CYCLE_WING_DELAY;
+                    if (gHeroMoving)
+                        return 0;
+                }
+                CycleColors();
+            }
+            return 0;
+        case MM_MCINOTIFY:
+            if (messageParam == MCI_NOTIFY_SUCCESSFUL)
+                gpSoundManager
+                    ->CDPlay(gpSoundManager->m_cdTrack, 0, gpSoundManager->m_cdPlayFrame, 1);
+            break;
+        case WM_ACTIVATEAPP:
+            gForegroundApp = messageParam;
+            return 0;
+        case WM_ERASEBKGND:
+            return 1;
+        case WM_MOVE:
+            if (hwndApp == NULL)
+                return 0;
+            lTemp = GetWindowLongA(static_cast<HWND>(hwndApp), GWL_STYLE);
+            if ((lTemp & (WS_MINIMIZE | WS_MAXIMIZE)) == 0 && gClosingApp == 0
+                && gConfig.gfx[gCurExe].fullScreen == 0) {
+                GetWindowRect(static_cast<HWND>(window), &rcTemp);
+                gConfig.gfx[gCurExe].x = rcTemp.left;
+                gConfig.gfx[gCurExe].y = rcTemp.top;
+                WritePrefs();
+            }
+            return 0;
+        case WM_SIZE:
+            if (hwndApp != NULL) {
+                lTemp = GetWindowLongA(static_cast<HWND>(hwndApp), GWL_STYLE);
+                gMinimized = lTemp & WS_MINIMIZE;
+                if ((lTemp & WS_MINIMIZE) == 0)
+                    EarlyResizeWindow(0, 0, 0, 0);
+                if ((lTemp & (WS_MINIMIZE | WS_MAXIMIZE)) == 0
+                    && (LOWORD(messageData) < KBWIN_MIN_WIDTH
+                        || HIWORD(messageData) < KBWIN_MIN_HEIGHT)) {
+                    gTempX = LOWORD(messageData) > KBWIN_MIN_WIDTH ? LOWORD(messageData)
+                                                                   : KBWIN_MIN_WIDTH;
+                    iTempY = HIWORD(messageData) > KBWIN_MIN_HEIGHT ? HIWORD(messageData)
+                                                                    : KBWIN_MIN_HEIGHT;
+                    ResizeWindow(KBWIN_KEEP_POSITION, KBWIN_KEEP_POSITION, gTempX, iTempY);
+                    return 0;
+                }
+            }
+            iMainWinScreenWidth = LOWORD(messageData);
+            gMainWinScreenHeight = HIWORD(messageData);
+            if (iMainWinScreenWidth < 1)
+                iMainWinScreenWidth = 1;
+            if (gMainWinScreenHeight < 1)
+                gMainWinScreenHeight = 1;
+            if (hwndApp != NULL && (lTemp & (WS_MINIMIZE | WS_MAXIMIZE)) == 0 && gClosingApp == 0
+                && gConfig.gfx[gCurExe].fullScreen == 0) {
+                gConfig.gfx[gCurExe].width = iMainWinScreenWidth;
+                gConfig.gfx[gCurExe].height = gMainWinScreenHeight;
+                WritePrefs();
+            }
+            return 0;
+        case WM_COMMAND:
+            return AppCommand(window, message, messageParam, messageData);
+        case WM_PALETTECHANGED:
+            if (reinterpret_cast<u32>(window)
+                == messageParam)
+                break;
+        case WM_QUERYNEWPALETTE:
+            return QueryNewPalette();
+        case WM_PAINT:
+            AppPaint(window, NULL);
+            return 0;
+        case WM_CLOSE:
+            if (window == hwndApp) {
+                if (GameUnsaved() != 0) {
+                    NormalDialog(
+                        "Are you sure you want to quit?",
+                        NORMAL_DIALOG_TYPE_YES_NO,
+                        -1,
+                        -1,
+                        NORMAL_DIALOG_NO_RESOURCE,
+                        0,
+                        NORMAL_DIALOG_NO_RESOURCE,
+                        0,
+                        NORMAL_DIALOG_NO_OR_TEXT
+                    );
+                    if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
+                        DestroyWindow(static_cast<HWND>(window));
+                    return 0;
+                }
+            }
+        case WM_DESTROY:
+            gClosingApp = 1;
+            PostQuitMessage(0);
+        case WM_QUIT:
+            ShutDown(NULL);
+            break;
+    }
+    return DefWindowProcA(static_cast<HWND>(window), message, messageParam, messageData);
+}
+
+extern "C"
+BOOL __stdcall AppAbout(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
+    i32 wmId;
+    WORD codeNotify;
+    HWND hwndCtl;
+    switch (message) {
+        case WM_INITDIALOG:
+            return TRUE;
+        case WM_COMMAND:
+            wmId = wParam & 0xffff;
+            hwndCtl = reinterpret_cast<HWND>(lParam);
+            codeNotify = (wParam >> 16) & 0xffff;
+            if (wmId == IDOK)
+                EndDialog(hDlg, 1);
+            break;
+    }
+    PollSound();
+    return FALSE;
+}
+
+void AppExit(void) {
+    CleanUpWinGraphics();
+    CleanUpMenus();
+}
+
+void Process1WindowsMessage(void) {
+    static i32 gLastGetMessage = 0;
+    static i32 gLastAilServe = 0;
+    MSG message;
+    i32 currentTick;
+
+    while (PeekMessageA(&message, NULL, 0, 0, PM_REMOVE) != FALSE) {
+        TranslateMessage(&message);
+        DispatchMessageA(&message);
+    }
+    currentTick = KBTickCount();
+    if (currentTick - gLastAilServe > 20) {
+        gLastAilServe = currentTick;
+        if (gbNoSound == 0)
+            gpSoundManager->ServiceSound();
+    }
+    if (currentTick - gLastGetMessage > 150) {
+        gLastGetMessage = currentTick;
+        if (GetMessageA(&message, NULL, 0, 0) != FALSE) {
+            TranslateMessage(&message);
+            DispatchMessageA(&message);
+        }
+    }
+}
+
+void ResizeWindow(i32 x, i32 y, i32 width, i32 height) {
+    i32 xpos;
+    RECT rect;
+    i32 ypos;
+    if (gConfig.gfx[gCurExe].fullScreen != 0)
+        return;
+    GetWindowRect(hwndApp, &rect);
+    if (x == KBWIN_KEEP_POSITION)
+        xpos = rect.left;
+    else
+        xpos = x;
+    if (y == KBWIN_KEEP_POSITION)
+        ypos = rect.top;
+    else
+        ypos = y;
+    rect.left = 0;
+    rect.top = 0;
+    rect.right = width - 1;
+    rect.bottom = height - 1;
+    AdjustWindowRect(&rect, giCurWindowsStyleFlags, gConfig.gfx[gCurExe].showMenu);
+    MoveWindow(hwndApp, xpos, ypos, rect.right - rect.left + 1, rect.bottom - rect.top + 1, TRUE);
+    gConfig.gfx[gCurExe].x = xpos;
+    gConfig.gfx[gCurExe].y = ypos;
+    gConfig.gfx[gCurExe].width = width;
+    gConfig.gfx[gCurExe].height = height;
+    WritePrefs();
+}
+
+i32 AppCommand(void* window, u32 message, u32 messageParam, i32 messageData) {
+    DLGPROC appDialogProc;
+    i32 command;
+
+    command = LOWORD(messageParam);
+    switch (command) {
+        case KBWIN_MENU_ABOUT:
+            appDialogProc = reinterpret_cast<DLGPROC>(
+                AppAbout
+            );
+            DialogBoxParamA(
+                static_cast<HINSTANCE>(hInstApp),
+                "HEROES",
+                static_cast<HWND>(window),
+                appDialogProc,
+                0
+            );
+            break;
+        case KBWIN_MENU_HELP:
+            WinHelpA(static_cast<HWND>(hwndApp), ".\\HELP\\HEROES.HLP", HELP_FINDER, 0);
+            break;
+        case KBWIN_MENU_SIZE_640_480:
+            ResizeWindow(
+                KBWIN_KEEP_POSITION,
+                KBWIN_KEEP_POSITION,
+                KBWIN_WIDTH_640,
+                KBWIN_HEIGHT_480
+            );
+            break;
+        case KBWIN_MENU_SIZE_800_600:
+            ResizeWindow(
+                KBWIN_KEEP_POSITION,
+                KBWIN_KEEP_POSITION,
+                KBWIN_WIDTH_800,
+                KBWIN_HEIGHT_600
+            );
+            break;
+        case KBWIN_MENU_SIZE_1024_768:
+            ResizeWindow(
+                KBWIN_KEEP_POSITION,
+                KBWIN_KEEP_POSITION,
+                KBWIN_WIDTH_1024,
+                KBWIN_HEIGHT_768
+            );
+            break;
+        case KBWIN_MENU_SIZE_1280_1024:
+            ResizeWindow(
+                KBWIN_KEEP_POSITION,
+                KBWIN_KEEP_POSITION,
+                KBWIN_WIDTH_1280,
+                KBWIN_HEIGHT_1024
+            );
+            break;
+        case KBWIN_MENU_FULLSCREEN:
+            SetFullScreenStatus(1 - gConfig.gfx[gCurExe].fullScreen);
+            break;
+        default:
+            return HandleAppSpecificMenuCommands(command);
+    }
+    return 0;
+}
+
+void UpdateDfltMenu(void* menu) {
+    i32 result;
+    i32 value;
+
+    if (gConfig.gfx[gCurExe].showMenu == 0)
+        return;
+    if (gMainVideoModeWidth <= KBWIN_WIDTH_640)
+        EnableMenuItem(static_cast<HMENU>(menu), KBWIN_MENU_SIZE_640_480, MF_GRAYED);
+    if (gMainVideoModeWidth <= KBWIN_WIDTH_800)
+        EnableMenuItem(static_cast<HMENU>(menu), KBWIN_MENU_SIZE_800_600, MF_GRAYED);
+    if (gMainVideoModeWidth <= KBWIN_WIDTH_1024)
+        EnableMenuItem(static_cast<HMENU>(menu), KBWIN_MENU_SIZE_1024_768, MF_GRAYED);
+    if (gMainVideoModeWidth <= KBWIN_WIDTH_1280)
+        EnableMenuItem(static_cast<HMENU>(menu), KBWIN_MENU_SIZE_1280_1024, MF_GRAYED);
+    if (gDDrawAttached == FALSE)
+        EnableMenuItem(static_cast<HMENU>(menu), KBWIN_MENU_FULLSCREEN, MF_GRAYED);
+}
+
+void KBChangeMenu(void* menu) {
+    if (menu == NULL)
+        menu = hmnuCurrent;
+    else
+        hmnuCurrent = menu;
+    hmnuApp = menu;
+    if (gConfig.gfx[gCurExe].showMenu) {
+        if (menu != NULL) {
+            SetMenu(hwndApp, menu);
+            UpdateDfltMenu(menu);
+            UpdateAppSpecificMenus(menu);
+            DrawMenuBar(hwndApp);
+        }
+    } else {
+        SetMenu(hwndApp, NULL);
+        DrawMenuBar(hwndApp);
+    }
+}
+
+void SetMenuStatus(i32 showMenu) {
+    i32 clientWidth;
+    i32 height;
+    i32 windowStyle;
+    i32 replacedStyle;
+    if (gConfig.gfx[gCurExe].fullScreen && showMenu)
+        return;
+    clientWidth = gConfig.gfx[gCurExe].width;
+    height = gConfig.gfx[gCurExe].height;
+    gConfig.gfx[gCurExe].showMenu = showMenu;
+    KBChangeMenu(NULL);
+    gConfig.gfx[gCurExe].width = clientWidth;
+    gConfig.gfx[gCurExe].height = height;
+    WritePrefs();
+    windowStyle = GetWindowLongA(hwndApp, GWL_STYLE);
+    if (gConfig.gfx[gCurExe].showMenu)
+        giCurWindowsStyleFlags = WS_VISIBLE | WS_CLIPSIBLINGS | WS_OVERLAPPEDWINDOW;
+    else
+        giCurWindowsStyleFlags = WS_VISIBLE | WS_CLIPSIBLINGS;
+    replacedStyle = SetWindowLongA(hwndApp, GWL_STYLE, giCurWindowsStyleFlags);
+    ShowWindow(hwndApp, SW_SHOWNA);
+    ResizeWindow(
+        KBWIN_KEEP_POSITION,
+        KBWIN_KEEP_POSITION,
+        gConfig.gfx[gCurExe].width,
+        gConfig.gfx[gCurExe].height
+    );
+}
+
+void SetNoDialogMenus(i32 menusEnabled) {
+    static i32 gNoDialogMenusOn = 0;
+    if (gNoDialogMenusOn && !menusEnabled)
+        return;
+    if (!gNoDialogMenusOn && menusEnabled)
+        return;
+    if (!hmnuApp)
+        return;
+    gNoDialogMenusOn = 1 - menusEnabled;
+    SetMenus(hmnuApp, menusEnabled);
+}
+
+void SetMenus(void* menu, i32 enabled) {
+    i32 itemIndex;
+    i32 numItems;
+    u32 id;
+    i32 scanIndex;
+    i32 k;
+    i32 change;
+
+    numItems = GetMenuItemCount(static_cast<HMENU>(menu));
+    for (itemIndex = 0; itemIndex < numItems; itemIndex++) {
+        id = GetMenuItemID(static_cast<HMENU>(menu), itemIndex);
+        if (id == static_cast<u32>(-1)) {
+            SetMenus(GetSubMenu(static_cast<HMENU>(menu), itemIndex), enabled);
+            change = 0;
+        } else {
+            change = 0;
+            if (enabled) {
+                change = 1;
+            } else {
+                scanIndex = 0;
+                for (k = 0; k < KBWIN_MENU_ENTRY_COUNT; k++) {
+                    if (gMenuEnableStatus[k].command == id)
+                        scanIndex = k;
+                }
+                if (gInSetupDialog)
+                    change = 1 - gMenuEnableStatus[scanIndex].setupEnabled;
+                else
+                    change = 1 - gMenuEnableStatus[scanIndex].normalEnabled;
+            }
+        }
+        if (change != 0)
+            EnableMenuItem(static_cast<HMENU>(menu), id, enabled == 0 ? MF_GRAYED : MF_ENABLED);
+    }
+    UpdateDfltMenu(menu);
+}
+
+void SetGameDefaults(void) {
+    i32 cpuType;
+    i32 i;
+
+    gConfig.musicVolume = 1;
+    gConfig.soundVolume = 1;
+    gConfig.autosave = 1;
+    gConfig.showRoute = 1;
+    gConfig.blackoutComputer = 0;
+    for (i = 0; i < CONFIG_EXECUTABLE_COUNT; i++) {
+        gConfig.gfx[i].showMenu = 1;
+        gConfig.gfx[i].x = DEFAULT_WINDOW_ORIGIN;
+        gConfig.gfx[i].y = DEFAULT_WINDOW_ORIGIN;
+        if (gMainVideoModeWidth <= DEFAULT_WINDOW_WIDTH && gDDrawAttached) {
+            gConfig.gfx[i].fullScreen = 1;
+            gConfig.gfx[i].width = DEFAULT_SMALL_WINDOW_WIDTH;
+            gConfig.gfx[i].height = DEFAULT_SMALL_WINDOW_HEIGHT;
+        } else {
+            gConfig.gfx[i].fullScreen = 1;
+            gConfig.gfx[i].width = DEFAULT_WINDOW_WIDTH;
+            gConfig.gfx[i].height = DEFAULT_WINDOW_HEIGHT;
+        }
+    }
+    gConfig.blackoutComputer = 0;
+    gConfig.currentMapOffset = 0;
+    gConfig.firstMapOffset = Random(0, DEFAULT_MAP_OFFSET_LIMIT);
+    gConfig.cdOffset = 0;
+    gConfig.musicSource = SOUND_MUSIC_SOURCE_CD;
+    gFirstTimeThrough = 1;
+    cpuType = GetCPUType();
+    if ((cpuType & 0xff) >= CPU_FAMILY_PENTIUM) {
+        gConfig.walkSpeed = WALK_SPEED_CANTER;
+        gConfig.slowVideo = 0;
+    } else {
+        gConfig.walkSpeed = WALK_SPEED_GALLOP;
+        gConfig.slowVideo = 1;
+    }
+}
+
+void ReadPrefsFromFile(void) {
+    FILE* fp;
+    i32 result;
+    char buffer[100];
+
+    sprintf(gText, "%s", "HEROES.CFG");
+    if (access(gText, 0) == -1) {
+        memset(&gConfig, 0, sizeof(gConfig));
+        SetGameDefaults();
+        WritePrefs();
+    } else {
+        fp = fopen(gText, "rb");
+        if (fp == NULL)
+            FileError(gText);
+        fread(&gConfig, sizeof(gConfig), 1, fp);
+        if (gConfig.gfx[gCurExe].width <= 0)
+            gConfig.gfx[gCurExe].width = MINIMUM_WINDOW_WIDTH;
+        if (gConfig.gfx[gCurExe].height <= 0)
+            gConfig.gfx[gCurExe].height = MINIMUM_WINDOW_HEIGHT;
+        if (gConfig.gfx[gCurExe].x < 0)
+            gConfig.gfx[gCurExe].x = 0;
+        if (gConfig.gfx[gCurExe].x > gMainVideoModeHeight - WINDOW_POSITION_MARGIN)
+            gConfig.gfx[gCurExe].x = gMainVideoModeHeight - WINDOW_POSITION_MARGIN;
+        if (gConfig.gfx[gCurExe].y < 0)
+            gConfig.gfx[gCurExe].y = 0;
+        if (gConfig.gfx[gCurExe].y > gMainVideoModeWidth - WINDOW_POSITION_MARGIN)
+            gConfig.gfx[gCurExe].y = gMainVideoModeWidth - WINDOW_POSITION_MARGIN;
+        result = fclose(fp);
+        if (gConfig.walkSpeed == CONFIG_UNINITIALIZED) {
+            SetGameDefaults();
+            WritePrefs();
+        }
+    }
+    strcpy(gcRegCDRomPath, "");
+    strcpy(gcRegAppPath, "");
+}
+
+void ReadPrefsFromRegistry(void) {
+    HKEY key;
+    DWORD cbData;
+    char szTemp[REGISTRY_TEXT_BUFFER_SIZE];
+    DWORD dataType;
+    char szSubKey[REGISTRY_TEXT_BUFFER_SIZE];
+    i32 rc;
+
+    strcpy(szTemp, "");
+    strcpy(szSubKey, "SOFTWARE\\New World Computing\\Heroes of Might and Magic\\1.0");
+    key = NULL;
+    rc = RegOpenKeyExA(HKEY_LOCAL_MACHINE, szSubKey, 0, KEY_READ, &key);
+    if (rc == ERROR_SUCCESS) {
+        cbData = REGISTRY_DWORD_BYTES;
+        if (RegQueryValueExA(
+                key,
+                "Music Volume",
+                NULL,
+                &dataType,
+                reinterpret_cast<LPBYTE>(&gConfig.musicVolume),
+                &cbData
+            )
+            != ERROR_SUCCESS) {
+            memset(&gConfig, 0, sizeof(gConfig));
+            SetGameDefaults();
+            RegCloseKey(key);
+            WritePrefs();
+            return;
+        }
+        RegQueryValueExA(
+            key,
+            "Music Volume",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.musicVolume),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Sound Volume",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.soundVolume),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Walk Speed",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.walkSpeed),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Show Route",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.showRoute),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Blackout Computer",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.blackoutComputer),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Sound Quality",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.musicSource),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Direct Connect Com Port",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.comPort[CONFIG_CONNECTION_DIRECT]),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Direct Connect Baud Rate",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.baudRate[CONFIG_CONNECTION_DIRECT]),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Modem Com Port",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.comPort[CONFIG_CONNECTION_MODEM]),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Modem Baud Rate",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.baudRate[CONFIG_CONNECTION_MODEM]),
+            &cbData
+        );
+        cbData = REGISTRY_TEXT_VALUE_SIZE;
+        RegQueryValueExA(
+            key,
+            "Modem Init String",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(gConfig.modemInitString),
+            &cbData
+        );
+        cbData = REGISTRY_DWORD_BYTES;
+        RegQueryValueExA(
+            key,
+            "Autosave",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.autosave),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "CD Offset",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.cdOffset),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Slow Video",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.slowVideo),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "First Map Offset",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.firstMapOffset),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Current Map Offset",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.currentMapOffset),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Main Game Show Menu",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].showMenu),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Main Game X",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].x),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Main Game Y",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].y),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Main Game Width",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].width),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Main Game Height",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].height),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Main Game Full Screen",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].fullScreen),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Editor Show Menu",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].showMenu),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Editor X",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].x),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Editor Y",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].y),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Editor Width",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].width),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Editor Height",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].height),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Editor Full Screen",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].fullScreen),
+            &cbData
+        );
+        cbData = REGISTRY_TEXT_VALUE_SIZE;
+        if (RegQueryValueExA(
+                key,
+                "AppPath",
+                NULL,
+                &dataType,
+                reinterpret_cast<LPBYTE>(gcRegAppPath),
+                &cbData
+            )
+            != ERROR_SUCCESS)
+            strcpy(gcRegAppPath, "");
+        if (RegQueryValueExA(
+                key,
+                "CDDrive",
+                NULL,
+                &dataType,
+                reinterpret_cast<LPBYTE>(gcRegCDRomPath),
+                &cbData
+            )
+            != ERROR_SUCCESS)
+            strcpy(gcRegCDRomPath, "");
+        RegCloseKey(key);
+    }
+}
+
+void ReadPrefs(void) {
+    ReadPrefsFromRegistry();
+}
+
+void WritePrefsToFile(void) {
+    FILE* file;
+    char buffer[100];
+
+    memset(buffer, 0, sizeof(buffer));
+    sprintf(gText, "%s", "HEROES.CFG");
+    file = fopen(gText, "wb");
+    if (file == NULL)
+        FileError(gText);
+    fwrite(&gConfig, sizeof(gConfig), 1, file);
+    fclose(file);
+}
+
+void WritePrefsToRegistry(void) {
+    HKEY key;
+    char szTemp[REGISTRY_TEXT_BUFFER_SIZE];
+    char szSubKey[REGISTRY_TEXT_BUFFER_SIZE];
+    i32 rc;
+
+    strcpy(szTemp, "");
+    strcpy(szSubKey, "SOFTWARE\\New World Computing\\Heroes of Might and Magic\\1.0");
+    key = NULL;
+    rc = RegOpenKeyExA(HKEY_LOCAL_MACHINE, szSubKey, 0, KEY_READ, &key);
+    if (rc == ERROR_SUCCESS) {
+        RegSetValueExA(
+            key,
+            "Music Volume",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.musicVolume),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Sound Volume",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.soundVolume),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Walk Speed",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.walkSpeed),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Show Route",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.showRoute),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Blackout Computer",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.blackoutComputer),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Sound Quality",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.musicSource),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Direct Connect Com Port",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.comPort[CONFIG_CONNECTION_DIRECT]),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Direct Connect Baud Rate",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.baudRate[CONFIG_CONNECTION_DIRECT]),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Modem Com Port",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.comPort[CONFIG_CONNECTION_MODEM]),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Modem Baud Rate",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.baudRate[CONFIG_CONNECTION_MODEM]),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Modem Init String",
+            0,
+            REG_SZ,
+            reinterpret_cast<LPBYTE>(gConfig.modemInitString),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Autosave",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.autosave),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "CD Offset",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.cdOffset),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Slow Video",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.slowVideo),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "First Map Offset",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.firstMapOffset),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Current Map Offset",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.currentMapOffset),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Main Game Show Menu",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].showMenu),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Main Game X",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].x),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Main Game Y",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].y),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Main Game Width",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].width),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Main Game Height",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].height),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Main Game Full Screen",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].fullScreen),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Editor Show Menu",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].showMenu),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Editor X",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].x),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Editor Y",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].y),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Editor Width",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].width),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Editor Height",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].height),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Editor Full Screen",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].fullScreen),
+            REGISTRY_DWORD_BYTES
+        );
+        RegCloseKey(key);
+    }
+}
+
+void WritePrefs(void) {
+    UpdateSystemOptionsMenu();
+    WritePrefsToRegistry();
+}
+
+i32 SetupCDDrive(void) {
+    i32 count;
+    u32 logicalDrives;
+    i32 cd;
+    i32 fh;
+    i32 pass;
+    u32 nError;
+    char cdDrives[CD_DRIVE_LETTER_COUNT];
+    i8 numCD;
+    HKEY hRegKey;
+    i32 pos;
+    char mciCommand[MCI_COMMAND_BUFFER_SIZE];
+    char szReturn[MCI_COMMAND_BUFFER_SIZE];
+    char szSubKey[REGISTRY_TEXT_BUFFER_SIZE];
+    char driveText[REGISTRY_TEXT_BUFFER_SIZE];
+    i32 rc;
+
+    sprintf(gText, ".\\DATA\\HEROES.AGG");
+    fh = open(gText, _O_BINARY);
+    if (fh == -1) {
+        if (_chdir(gcRegAppPath) == -1)
+            return CD_SETUP_NO_APP_PATH;
+        fh = open(gText, _O_BINARY);
+        if (fh == -1)
+            return CD_SETUP_NO_DATA;
+    }
+    close(fh);
+    logicalDrives = 0;
+    logicalDrives = GetLogicalDrives();
+    count = 0;
+    memset(cdDrives, 0, sizeof(cdDrives));
+    for (cd = CD_FIRST_DRIVE_LETTER; cd < CD_DRIVE_LETTER_COUNT; cd++) {
+        if (logicalDrives & (1 << cd)) {
+            if (IsCDDrive(cd)) {
+                cdDrives[count] = static_cast<char>(cd);
+                count++;
+            }
+        }
+    }
+    numCD = static_cast<char>(count);
+    gCDDrive = cdDrives[gConfig.cdOffset];
+    if (gCDDrive < CD_FIRST_DRIVE_LETTER)
+        gCDDrive = cdDrives[0];
+    if (strlen(gcRegCDRomPath)) {
+        sprintf(gText, "%s\\_autorun\\autorun.exe", gcRegCDRomPath);
+        fh = open(gText, _O_BINARY);
+        if (fh != -1) {
+            close(fh);
+            sprintf(gText + 2, "%s", gSoundPath);
+            strcpy(gSoundPath, gText);
+            sprintf(gText + 2, "%s", gAnimPath);
+            strcpy(gAnimPath, gText);
+            return CD_SETUP_READY;
+        }
+    }
+    if (gCDDrive < CD_FIRST_DRIVE_LETTER)
+        return CD_SETUP_NO_DRIVE;
+    for (pass = 0; pass < CD_SETUP_ATTEMPTS; pass++) {
+        for (cd = 0; cd < numCD; cd++) {
+            wsprintfA(mciCommand, "open %c: type cdaudio alias CD", cdDrives[cd] + 'A');
+            nError = mciSendStringA(mciCommand, szReturn, CD_MCI_RESULT_LAST, NULL);
+            if (nError == 0) {
+                wsprintfA(mciCommand, "info CD UPC wait");
+                nError = mciSendStringA(mciCommand, szReturn, CD_MCI_RESULT_LAST, NULL);
+                wsprintfA(mciCommand, "close CD");
+                nError = mciSendStringA(mciCommand, szReturn, CD_MCI_RESULT_LAST, NULL);
+            }
+            sprintf(gText, "%c:\\_autorun\\autorun.exe", cdDrives[cd] + 'A', gSoundPath);
+            fh = open(gText, _O_BINARY);
+            if (fh == -1)
+                continue;
+            pos = _lseek(fh, 0, SEEK_END);
+            if (pos != -1) {
+                pos = _lseek(fh, -CD_AUTORUN_TAIL_BYTES, SEEK_CUR);
+                if (pos != -1)
+                    pos = read(fh, szReturn, CD_AUTORUN_TAIL_BYTES);
+            }
+            close(fh);
+            strcpy(szSubKey, "SOFTWARE\\New World Computing\\Heroes of Might and Magic\\1.0");
+            hRegKey = NULL;
+            rc = RegOpenKeyExA(HKEY_LOCAL_MACHINE, szSubKey, 0, KEY_WRITE, &hRegKey);
+            if (rc == ERROR_SUCCESS) {
+                wsprintfA(driveText, "%c:", cdDrives[cd] + 'A');
+                pass = RegSetValueExA(
+                    hRegKey,
+                    "CDDrive",
+                    0,
+                    REG_SZ,
+                    reinterpret_cast<LPBYTE>(driveText),
+                    lstrlenA(driveText) + 1
+                );
+                RegCloseKey(hRegKey);
+            }
+            sprintf(gText, "%c:%s", cdDrives[cd] + 'A', gSoundPath);
+            strcpy(gSoundPath, gText);
+            sprintf(gText, "%c:%s", cdDrives[cd] + 'A', gAnimPath);
+            strcpy(gAnimPath, gText);
+            return CD_SETUP_READY;
+        }
+        Sleep(CD_SETUP_RETRY_DELAY);
+    }
+    return CD_SETUP_NOT_FOUND;
+}
+
+void SetWinText(heroWindow* window, i16 id) {
+    i32 i;
+    tag_message message;
+    for (i = 0; i < static_cast<i32>(WINDOW_TEXT_ENTRY_COUNT); i++) {
+        if (gWinSetup[i].windowId == id) {
+            SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, gWinSetup[i].widgetId);
+            message.text = gWinSetupText[i];
+            window->BroadcastMessage(message);
+        }
+    }
+}
+
+i32 KBTickCount(void) {
+    return GetTickCount();
+}
+
+void ProcessAssert(i32 condition, char* file, i32 line) {
+    i32 unusedAssertWord;
+    if (condition == 0) {
+        sprintf(gText, "Assert statement failed in module %s, line %d.", file, line);
+        MessageBoxA(hwndApp, gText, "Assert Failure", MB_ICONHAND);
+        unusedAssertWord = 0;
+        ShutDown(gText);
+    }
+}
+
+char* FindToken(char* text, char token) {
+    i32 pos;
+    i32 len;
+
+    len = strlen(text);
+    for (pos = 0; len > pos; pos++) {
+        if (text[pos] == token)
+            return text + pos;
+    }
+    return NULL;
+}
+
+char* FindLastToken(char* text, char token) {
+    i32 pos;
+    i32 len;
+
+    len = strlen(text);
+    for (pos = len - 1; pos >= 0; pos--) {
+        if (text[pos] == token)
+            return text + pos;
+    }
+    return NULL;
+}
+
+char gAppName[] = "Heroes";
+char gTitle[] = "Heroes of Might and Magic";
+void* hwndApp = NULL;
+i32 gForegroundApp = 0;
+void* hmnuApp = NULL;
+void* gEventHandle = NULL;
+i32 gClosingApp = 0;
+void* hInstApp;
+struct tagRECT rcTemp;
+i32 gMainWinScreenHeight;
+void* hmnuCurrent;
+i32 gTempX;
+i32 iTempY;
+i32 lTemp;
+u8 bProcessMessage[KBWIN_MESSAGE_FILTER_SIZE];
+char gCommandLine[KBWIN_COMMAND_LINE_CLEAR_SIZE];
+i32 iMainWinScreenWidth;

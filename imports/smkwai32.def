@@ -1,0 +1,13 @@
+LIBRARY smkwai32
+EXPORTS
+    SmackClose @14 NONAME
+    SmackDoFrame @17 NONAME
+    SmackGoto @20 NONAME
+    SmackNextFrame @21 NONAME
+    SmackOpen @22 NONAME
+    SmackSoundOnOff @26 NONAME
+    SmackToBuffer @28 NONAME
+    SmackToBufferRect @29 NONAME
+    SmackVolumePan @31 NONAME
+    SmackWait @32 NONAME
+    SmackSoundUseMSS @50 NONAME

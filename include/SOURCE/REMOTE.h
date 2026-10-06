@@ -1,0 +1,211 @@
+#ifndef HOMM1_SOURCE_REMOTE_H
+#define HOMM1_SOURCE_REMOTE_H
+
+enum RemoteMessageType {
+    REMOTE_MESSAGE_DEFAULT = -1,
+    REMOTE_MESSAGE_NONE = 0,
+    REMOTE_MESSAGE_CONFIRM = 1,
+    REMOTE_MESSAGE_RELIABLE = 2,
+    REMOTE_MESSAGE_UNRELIABLE = 3,
+    REMOTE_MESSAGE_HEARTBEAT = 4
+};
+
+enum RemoteBoxCommand {
+    BOX_REMOTE_SAVE = 1,
+    BOX_REMOTE_SETUP = 0x1f
+};
+
+enum RemoteCommand {
+    REMOTE_COMMAND_SAVE_INIT_RESPONSE = 2,
+    REMOTE_COMMAND_SAVE_DATA = 3,
+    REMOTE_COMMAND_SAVE_ACK_REQUEST = 4,
+    REMOTE_COMMAND_SAVE_ACK_RESPONSE = 5,
+    REMOTE_COMMAND_SAVE_FINISH = 6,
+    REMOTE_COMMAND_CHAT = 11,
+    REMOTE_COMMAND_HERO_TOWN_DATA = 0x15,
+    REMOTE_COMMAND_HERO_TOWN_CONFIRM = 0x16,
+    REMOTE_COMMAND_COMBAT_ACTION = 0x17,
+    REMOTE_COMMAND_PLAYER_EXIT = 30
+};
+
+enum RemoteConstant {
+    REMOTE_BROADCAST_PLAYER = 0x7f,
+    REMOTE_MESSAGE_HEADER_SIZE = 9,
+    REMOTE_MESSAGE_SIZE = 0x100,
+    REMOTE_QUEUE_CAPACITY = 7,
+    REMOTE_RECENT_ID_COUNT = 30,
+    REMOTE_RETRY_COUNT = 7,
+    REMOTE_CONFIRM_POLL_COUNT = 200,
+    REMOTE_NET_NAME_LAST = 10
+};
+
+enum RemoteGameMode {
+    REMOTE_GAME_NONE = 0,
+    REMOTE_GAME_NETWORK_HOST = 1,
+    REMOTE_GAME_NETWORK_GUEST = 2,
+    REMOTE_GAME_MODEM_HOST = 3,
+    REMOTE_GAME_MODEM_GUEST = 4,
+    REMOTE_GAME_UNSET = 10
+};
+
+enum MultiplayerBaseType {
+    MULTIPLAYER_BASE_MODEM = 0,
+    MULTIPLAYER_BASE_NETWORK = 1,
+    MULTIPLAYER_BASE_HOT_SEAT = 2,
+    MULTIPLAYER_BASE_UNSET = 10
+};
+
+enum RemoteDriverType {
+    REMOTE_DRIVER_SERIAL = 0,
+    REMOTE_DRIVER_NETBIOS = 1
+};
+
+#pragma pack(push, 1)
+struct RemotePacketHeader {
+    i8 source;
+    i8 destination;
+    u8 sequence;
+    u8 payloadSize;
+    u16 crc;
+};
+#pragma pack(pop)
+
+#define REMOTE_PACKET(buffer) (reinterpret_cast<RemotePacketHeader*>(buffer))
+
+#pragma pack(push, 1)
+struct RemoteMessage {
+    i8 sender;
+    i32 id;
+    i8 type;
+    i8 command;
+    i16 payloadSize;
+    union {
+        char data[REMOTE_MESSAGE_SIZE - REMOTE_MESSAGE_HEADER_SIZE];
+        struct {
+            i32 saveSize;
+            i32 playerExited;
+        };
+        struct {
+            i16 index;
+            char data[REMOTE_MESSAGE_SIZE - REMOTE_MESSAGE_HEADER_SIZE - 2];
+        } segment;
+    } payload;
+};
+#pragma pack(pop)
+
+extern i8 gInNetSetup;
+extern i32 gIDCtr;
+extern u8 GameMode;
+extern u8 gPacketSequence;
+extern i32 gNetNameIndex;
+extern char PacketSend[];
+extern i32 gNumNetGuests;
+extern i32 gLastConfirm;
+extern i32 iInOrder[REMOTE_QUEUE_CAPACITY];
+extern RemoteMessage rcvBuf[REMOTE_QUEUE_CAPACITY];
+extern char rcvBufOut[REMOTE_MESSAGE_SIZE];
+
+i32 SendRemoteData(u8* dataToSend, u8*, i32 destination, i32 length);
+i32 ReceiveRemoteData(u8*, u8* data, i32 decodeType);
+i32 TransmitRemoteData(
+    char* data,
+    i32 destination,
+    i32 length,
+    i8 command,
+    i8 reliable,
+    i8 allowRetryDialog,
+    i8 messageType,
+    i8 gamePosDestination
+);
+char* GetRemoteData(i8 remove);
+i32 TransmitAndWait(
+    char* bytes,
+    i32 destination,
+    i32 length,
+    i8 command,
+    i8 responseCommand,
+    char** response
+);
+void RemoteCleanup(void);
+void UnloadRemoteDriver(i16 networkDriver);
+i32 FileSize(char* filename);
+void WriteModemPacket(char* buffer, i32 length);
+char ReadPacket(void);
+void calc_crc(u16* crc, u8* data, i32 length);
+i32 EncodePacket(u8* data, i8 source, i8 destination, i32 length);
+i32 DecodePacket(u8* data, i32 source);
+i8 InitNetHost(void);
+i8 InitNetGuest(void);
+i8 WaitForHost(void);
+i8 WaitForGuest(void);
+
+extern i32 gLastHeartbeatSend;
+extern i32 gLastHeartbeatReceive;
+extern RemoteMessage sndBuf;
+extern RemoteMessage rcvBufIn;
+extern i32 iLastIds[REMOTE_RECENT_ID_COUNT];
+extern i32 gInOrderCtr;
+extern i32 gCurLastID;
+extern i8 gInitNetGuestStatus;
+extern i8 gWaitForHostStatus;
+void PollRemote();
+void RemoteMain(i32 gameMode);
+i32 nbnet_init(void);
+
+enum ModemResponseLimit {
+    MODEM_RESPONSE_LAST = 79
+};
+
+enum ModemPacketControl {
+    MODEM_PACKET_START = 0,
+    MODEM_PACKET_END = 1,
+    MODEM_PACKET_ESCAPE = 0x70
+};
+
+enum ModemPacketConstant {
+    MODEM_PACKET_MAX_LENGTH = 0x100
+};
+
+extern i32 iLastActionTime;
+extern i32 iModemCommandPos;
+extern char cModemCommand[];
+extern char GUIMRresponse[];
+extern char GUIMRresp[];
+extern i32 GUIMRrespptr;
+extern i32 GUIMRc;
+extern i32 iLastDialPos;
+extern char numbuf[];
+struct inque_t {
+    i32 readPosition;
+    i32 writePosition;
+    char data[4096];
+};
+extern inque_t inque;
+extern struct outque_t outque;
+extern i32 gBaudBits;
+extern i32 inescape;
+extern i32 newpacket;
+extern i32 packetlen;
+extern char packet[];
+extern char idstr[];
+extern char remoteidstr[];
+extern i32 oldsec;
+extern i32 stime;
+extern i32 remotestage;
+extern i32 localstage;
+extern i32 WFDCStage;
+
+void GUIModemCommand(char* message, char* command);
+void ModemCommand(char* command);
+void ModemSetup(void);
+i32 Dial(void);
+i32 Wait(void);
+void Connect(void);
+i8 GUIModemResponse(char* message, char* response);
+i32 write_buffer(char* buffer, i32 length);
+i32 read_byte(void);
+i8 GUIModemCommandExec(void);
+i8 GUIModemResponseExec(void);
+i32 WaitForDirectConnect(void);
+
+#endif

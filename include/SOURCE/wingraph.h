@@ -1,0 +1,158 @@
+#ifndef HOMM1_SOURCE_WINGRAPH_H
+#define HOMM1_SOURCE_WINGRAPH_H
+
+#define WIN32_LEAN_AND_MEAN
+
+#include <windows.h>
+
+#include <ddraw.h>
+#include <wing.h>
+
+struct IDirectDraw;
+struct IUnknown;
+typedef long(__stdcall* DirectDrawCreateProc)(GUID*, IDirectDraw**, IUnknown*);
+
+enum WingraphPaintConstant {
+    WINGRAPH_WIDTH = 640,
+    WINGRAPH_HEIGHT = 480,
+    WINGRAPH_PAINT_ALIGN_MASK = 0xfffc,
+    WINGRAPH_PALETTE_SIZE = 256,
+    WINGRAPH_SYSTEM_PALETTE_SIZE = 10,
+    WINGRAPH_SYSTEM_PALETTE_END = WINGRAPH_SYSTEM_PALETTE_SIZE,
+    WINGRAPH_MUTABLE_PALETTE_END = WINGRAPH_PALETTE_SIZE - WINGRAPH_SYSTEM_PALETTE_SIZE,
+    WINGRAPH_LIMITED_COMBAT_HEIGHT = 458,
+    WINGRAPH_COLOR_DEPTH = 8,
+    WINGRAPH_PALETTE_COMPONENT_COUNT = 3,
+    WINGRAPH_PALETTE_VALUE_SHIFT = 2,
+    WINGRAPH_SCROLL_MARGIN = 16,
+    WINGRAPH_SCROLL_SIZE = WINGRAPH_HEIGHT - WINGRAPH_SCROLL_MARGIN * 2,
+    WINGRAPH_PAINT_TIMEOUT = 10000,
+    WINGRAPH_PAINT_X_END = WINGRAPH_WIDTH,
+    WINGRAPH_PAINT_Y_END = WINGRAPH_HEIGHT
+};
+
+enum WingraphGraphicsType {
+    WINGRAPH_GRAPHICS_WING = 1,
+    WINGRAPH_GRAPHICS_DIRECT_DRAW = 2
+};
+
+enum DirectDrawReportCode {
+    DDSD_REPORT_NONE = 0,
+    DDSD_REPORT_GENERIC = 1,
+    DDSD_REPORT_INVALIDCLIPLIST = 2,
+    DDSD_REPORT_INVALIDOBJECT = 3,
+    DDSD_REPORT_INVALIDPARAMS = 4,
+    DDSD_REPORT_INVALIDRECT = 5,
+    DDSD_REPORT_NOALPHAHW = 6,
+    DDSD_REPORT_NOBLTHW = 7,
+    DDSD_REPORT_NOCLIPLIST = 8,
+    DDSD_REPORT_NODDROPSHW = 9,
+    DDSD_REPORT_SURFACELOST = 10,
+    DDSD_REPORT_UNSUPPORTED = 11,
+    DDSD_REPORT_NOMIRRORHW = 12,
+    DDSD_REPORT_NORASTEROPHW = 13,
+    DDSD_REPORT_NOROTATIONHW = 14,
+    DDSD_REPORT_NOSTRETCHHW = 15,
+    DDSD_REPORT_SURFACEBUSY = 16,
+    DDSD_REPORT_NOZBUFFERHW = 17,
+    DDSD_REPORT_OUTOFMEMORY = 18,
+    DDSD_REPORT_CLIPPERISUSINGHWND = 19,
+    DDSD_REPORT_NOEXCLUSIVEMODE = 20,
+    DDSD_REPORT_NOT8BITCOLOR = 21,
+    DDSD_REPORT_NOPALETTEATTACHED = 22,
+    DDSD_REPORT_NOPALETTEHW = 23,
+    DDSD_REPORT_LOCKEDSURFACES = 24,
+    DDSD_REPORT_IMPLICITLYCREATED = 25,
+    DDSD_REPORT_WRONGMODE = 26,
+    DDSD_REPORT_INCOMPATIBLEPRIMARY = 27,
+    DDSD_REPORT_NOCLIPPERATTACHED = 28,
+    DDSD_REPORT_UNKNOWN = 100
+};
+
+struct WingPalette {
+    WORD version;
+    WORD entryCount;
+    PALETTEENTRY entries[WINGRAPH_PALETTE_SIZE];
+};
+
+struct WingImage {
+    BITMAPINFOHEADER header;
+    RGBQUAD colors[256];
+    void* bits;
+};
+
+extern i32 gGraphicsType;
+extern i32 gMainVideoModeHeight;
+extern i32 gMainVideoModeWidth;
+extern BOOL gDDrawAttached;
+extern BOOL gWinGAttached;
+extern BOOL gWinGraphBusy;
+extern HPALETTE hpalApp;
+extern HINSTANCE gDDrawLibrary;
+extern DirectDrawCreateProc gDirectDrawCreate;
+extern IDirectDraw* gDD;
+extern IDirectDrawSurface* gDDSPrimary;
+extern IDirectDrawSurface* gDDSOne;
+extern IDirectDrawClipper* gClipper;
+extern IDirectDrawPalette* gDDPal;
+extern i16 gDDRestoreLineBase;
+extern i16 gDDSetPaletteLineBase;
+extern i16 gDDInitializePaletteLineBase;
+extern i16 gDDUpdatePaletteLineBase;
+extern i16 gDDCleanUpLineBase;
+extern i16 gCreatePrimaryLineBase;
+extern i16 gSetupClipperLineBase;
+extern i16 gDDInitLineBase;
+extern i16 gDDCreateSurfaceLineBase;
+extern BOOL gInDDSD;
+extern i16 gDDSetFullScreenLineBase;
+extern i16 gDDPaintLineBase;
+extern RECT gDDClientRect;
+extern RECT gDDSourceRect;
+extern RECT gDDDestinationRect;
+extern i32 gDDResult;
+extern _DDSURFACEDESC gDDSurfaceDesc;
+extern i32 gPaintStart;
+extern i32 gBusyRetry;
+extern HDC hdcImage;
+extern HBITMAP gbmOldMonoBitmap;
+extern WingImage screenImage;
+extern WingPalette LogicalPalette;
+extern i32 Orientation;
+extern void* gInitWin;
+extern i32 gTtlBlts;
+extern i32 gMainVideoModeColorDepth;
+
+void DDRestoreDisplayMode();
+void SetFullScreenStatus(i32 fullScreen);
+void DDSD(i32 error, char* file, i32 line);
+BOOL DDSetPalette();
+BOOL SetPalette();
+void DDCleanUpWinGraphics();
+void DDInitializePalette();
+void WGInitializePalette();
+void WGInitGraphics();
+void WGCleanUpWinGraphics();
+BOOL DDAppPaint(void* window, void* paintDC);
+BOOL WGAppPaint(void* window, void* paintDC);
+void DDUpdatePalette(i8* paletteData);
+void WGUpdatePalette(i8* paletteData);
+BOOL DDQueryNewPalette();
+BOOL WGQueryNewPalette();
+void DisconnectDLLs();
+void ConnectToDLLs();
+void InitGraphics();
+void DDInitGraphics();
+void CreatePrimary();
+void SetupClipper();
+IDirectDrawSurface* DDCreateSurface(u32 width, u32 height, i32 primary);
+void RestoreDisplayMode();
+void InitializePalette();
+BOOL AppPaint(void* window, void* paintDC);
+void UpdatePalette(i8* paletteData);
+void CleanUpWinGraphics();
+BOOL QueryNewPalette();
+BOOL SetGraphicsType(i32 graphicsType);
+void GetGraphicsInfo(void);
+
+#endif

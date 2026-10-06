@@ -1,0 +1,281 @@
+HEROES ICON "heroes.ico"
+
+HEROES DIALOG 22, 17, 144, 75
+STYLE 0x800000C0
+FONT 8, "System"
+BEGIN
+    ICON            "HEROES", -1, 9, 23, 18, 20
+    CTEXT           "Heroes of Might and Magic", -1, 22, 5, 101, 8
+    CTEXT           "Version 1.0", -1, 51, 32, 42, 8
+    CTEXT           "Copyright 1995-6, New World Computing", -1, 7, 47, 132, 8
+    DEFPUSHBUTTON   "OK", 1, 53, 59, 32, 14, 0x20000
+END
+
+MNUADV MENU
+BEGIN
+    POPUP "&File"
+    BEGIN
+        POPUP "&New Game"
+        BEGIN
+            MENUITEM "&Standard Game", 40102
+            POPUP "&Campaign Game"
+            BEGIN
+                MENUITEM "Play Lord &Ironfist", 40104
+                MENUITEM "Play Lord &Slayer", 40105
+                MENUITEM "Play Queen &Lamanda", 40106
+                MENUITEM "Play Lord &Alamar", 40107
+            END
+            POPUP "&Multi-Player Game"
+            BEGIN
+                POPUP "&Hot Seat"
+                BEGIN
+                    MENUITEM "&2 Players", 40110
+                    MENUITEM "&3 Players", 40111
+                    MENUITEM "&4 Players", 40112
+                END
+                POPUP "&Network"
+                BEGIN
+                    MENUITEM "&Host", 40114
+                    MENUITEM "&Guest", 40115
+                END
+                POPUP "&Modem"
+                BEGIN
+                    MENUITEM "&Host (Dials)", 40117
+                    MENUITEM "&Guest (Answers)", 40118
+                END
+                POPUP "&Direct-Connect"
+                BEGIN
+                    MENUITEM "&Host", 40120
+                    MENUITEM "&Guest", 40121
+                END
+            END
+        END
+        POPUP "&Load Game"
+        BEGIN
+            MENUITEM "&Standard Game", 40123
+            MENUITEM "&Campaign Game", 40124
+            POPUP "&Multi-Player Game"
+            BEGIN
+                POPUP "&Hot Seat"
+                BEGIN
+                    MENUITEM "&2 Players", 40127
+                    MENUITEM "&3 Players", 40128
+                    MENUITEM "&4 Players", 40129
+                END
+                POPUP "&Network"
+                BEGIN
+                    MENUITEM "&Host", 40131
+                    MENUITEM "&Guest", 40132
+                END
+                POPUP "&Modem"
+                BEGIN
+                    MENUITEM "&Host (Dials)", 40134
+                    MENUITEM "&Guest (Answers)", 40135
+                END
+                POPUP "&Direct-Connect"
+                BEGIN
+                    MENUITEM "&Host", 40137
+                    MENUITEM "&Guest", 40138
+                END
+            END
+        END
+        MENUITEM "&Save Game", 40139
+        MENUITEM SEPARATOR
+        MENUITEM "&Quit", 40140
+    END
+    POPUP "&Control Panel"
+    BEGIN
+        POPUP "&Music"
+        BEGIN
+            MENUITEM "Off", 40016
+            MENUITEM "On - 100%", 40017, CHECKED
+            MENUITEM "On - 90%", 40018
+            MENUITEM "On - 80%", 40019
+            MENUITEM "On - 70%", 40020
+            MENUITEM "On - 60%", 40021
+            MENUITEM "On - 50%", 40022
+            MENUITEM "On - 40%", 40023
+            MENUITEM "On - 30%", 40024
+            MENUITEM "On - 20%", 40025
+            MENUITEM "On - 10%", 40026
+        END
+        POPUP "&Sound"
+        BEGIN
+            MENUITEM "Off", 40028
+            MENUITEM "On - 100%", 40029, CHECKED
+            MENUITEM "On - 90%", 40030
+            MENUITEM "On - 80%", 40031
+            MENUITEM "On - 70%", 40032
+            MENUITEM "On - 60%", 40033
+            MENUITEM "On - 50%", 40034
+            MENUITEM "On - 40%", 40035
+            MENUITEM "On - 30%", 40036
+            MENUITEM "On - 20%", 40037
+            MENUITEM "On - 10%", 40038
+        END
+        POPUP "Speed"
+        BEGIN
+            MENUITEM "&Jump", 40040
+            MENUITEM "&Gallop", 40041
+            MENUITEM "&Canter", 40042, CHECKED
+            MENUITEM "&Trot", 40043
+            MENUITEM "&Walk", 40044
+        END
+        MENUITEM "&CD Stereo", 40045, CHECKED
+        MENUITEM "Show &Path", 40046, CHECKED
+        MENUITEM "&View Enemy Moves", 40047, CHECKED
+    END
+    POPUP "&Adventure"
+    BEGIN
+        MENUITEM "View &World", 40012
+        MENUITEM "View &Puzzle", 40013
+        MENUITEM "&Cast Spell", 40014
+        MENUITEM "&Dig", 40015
+    END
+    POPUP "&Display"
+    BEGIN
+        MENUITEM "&640 x 480", 40005
+        MENUITEM "&800 x 600", 40006
+        MENUITEM "&1024 x 768", 40007
+        MENUITEM "1&280 x 1024", 40008
+        MENUITEM "&Full Screen (F4)", 40009
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&Help Topics", 40052
+        MENUITEM SEPARATOR
+        MENUITEM "&About Heroes of Might and Magic", 40053
+    END
+END
+
+MNUDFLT MENU
+BEGIN
+    POPUP "&File"
+    BEGIN
+        POPUP "&New Game"
+        BEGIN
+            MENUITEM "&Standard Game", 40102
+            POPUP "&Campaign Game"
+            BEGIN
+                MENUITEM "Play Lord &Ironfist", 40104
+                MENUITEM "Play Lord &Slayer", 40105
+                MENUITEM "Play Queen &Lamanda", 40106
+                MENUITEM "Play Lord &Alamar", 40107
+            END
+            POPUP "&Multi-Player Game"
+            BEGIN
+                POPUP "&Hot Seat"
+                BEGIN
+                    MENUITEM "&2 Players", 40110
+                    MENUITEM "&3 Players", 40111
+                    MENUITEM "&4 Players", 40112
+                END
+                POPUP "&Network"
+                BEGIN
+                    MENUITEM "&Host", 40114
+                    MENUITEM "&Guest", 40115
+                END
+                POPUP "&Modem"
+                BEGIN
+                    MENUITEM "&Host (Dials)", 40117
+                    MENUITEM "&Guest (Answers)", 40118
+                END
+                POPUP "&Direct-Connect"
+                BEGIN
+                    MENUITEM "&Host", 40120
+                    MENUITEM "&Guest", 40121
+                END
+            END
+        END
+        POPUP "&Load Game"
+        BEGIN
+            MENUITEM "&Standard Game", 40123
+            MENUITEM "&Campaign Game", 40124
+            POPUP "&Multi-Player Game"
+            BEGIN
+                POPUP "&Hot Seat"
+                BEGIN
+                    MENUITEM "&2 Players", 40127
+                    MENUITEM "&3 Players", 40128
+                    MENUITEM "&4 Players", 40129
+                END
+                POPUP "&Network"
+                BEGIN
+                    MENUITEM "&Host", 40131
+                    MENUITEM "&Guest", 40132
+                END
+                POPUP "&Modem"
+                BEGIN
+                    MENUITEM "&Host (Dials)", 40134
+                    MENUITEM "&Guest (Answers)", 40135
+                END
+                POPUP "&Direct-Connect"
+                BEGIN
+                    MENUITEM "&Host", 40137
+                    MENUITEM "&Guest", 40138
+                END
+            END
+        END
+        MENUITEM "&Save Game", 40139
+        MENUITEM SEPARATOR
+        MENUITEM "&Quit", 40140
+    END
+    POPUP "&Display"
+    BEGIN
+        MENUITEM "&640 x 480", 40005
+        MENUITEM "&800 x 600", 40006
+        MENUITEM "&1024 x 768", 40007
+        MENUITEM "1&280 x 1024", 40008
+        MENUITEM "&Full Screen (F4)", 40009
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&Help Topics", 40052
+        MENUITEM SEPARATOR
+        MENUITEM "&About Heroes of Might and Magic", 40053
+    END
+END
+
+MNUCMBT MENU
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&Quit", 40140
+    END
+    POPUP "&Display"
+    BEGIN
+        MENUITEM "&640 x 480", 40005
+        MENUITEM "&800 x 600", 40006
+        MENUITEM "&1024 x 768", 40007
+        MENUITEM "1&280 x 1024", 40008
+        MENUITEM "&Full Screen (F4)", 40009
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&Help Topics", 40052
+        MENUITEM SEPARATOR
+        MENUITEM "&About Heroes of Might and Magic", 40053
+    END
+END
+
+MNUTOWN MENU
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&Quit", 40140
+    END
+    POPUP "&Display"
+    BEGIN
+        MENUITEM "&640 x 480", 40005
+        MENUITEM "&800 x 600", 40006
+        MENUITEM "&1024 x 768", 40007
+        MENUITEM "1&280 x 1024", 40008
+        MENUITEM "&Full Screen (F4)", 40009
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&Help Topics", 40052
+        MENUITEM SEPARATOR
+        MENUITEM "&About Heroes of Might and Magic", 40053
+    END
+END

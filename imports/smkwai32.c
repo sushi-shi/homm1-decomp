@@ -1,0 +1,11 @@
+void SmackClose(void) {}
+void SmackDoFrame(void) {}
+void SmackGoto(void) {}
+void SmackNextFrame(void) {}
+void SmackOpen(void) {}
+void SmackSoundOnOff(void) {}
+void SmackToBuffer(void) {}
+void SmackToBufferRect(void) {}
+void SmackVolumePan(void) {}
+void SmackWait(void) {}
+void SmackSoundUseMSS(void) {}

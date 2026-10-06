@@ -1,0 +1,6 @@
+#ifndef HOMM1_BASE_MAKEFILEID_H
+#define HOMM1_BASE_MAKEFILEID_H
+
+u32 MAKEFILEID(char* text);
+
+#endif
