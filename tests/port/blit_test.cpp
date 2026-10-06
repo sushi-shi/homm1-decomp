@@ -116,6 +116,7 @@ struct IconBuilder {
         }
         ic.m_frameCount = static_cast<i16>(frames.size());
         ic.m_data = data.get();
+        ic.m_dataSize = static_cast<u32>(size);
         return &ic;
     }
 };
@@ -322,6 +323,53 @@ void TestIconsKnown() {
     }
 }
 
+// Malformed frames, as a damaged archive could hold them: commands that run
+// past the icon's data, rows wider and taller than the frame, a frame number
+// past the table. Every blitter must stay inside the icon's data and the
+// destination (the sanitizer build checks the exactly-sized blocks), and a
+// frame that fits still draws as before.
+void TestIconsMalformed() {
+    IconBuilder b;
+    // A row of 12 pixels in a 4-wide frame, then 5 rows in a 2-high frame.
+    b.Add(0, 0, 4, 2, {0x0C, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 0x00, 0x00, 0x00, 0x00, 0x01, 13,
+                       0x80});
+    // Mono: a skip then a long fill.
+    b.Add(0, 0, 4, 2, {0x84, 0x7F, 0x00, 0x80});
+    // Last in the data, with no end command: a run that claims 9 pixels
+    // with only 2 present.
+    b.Add(0, 0, 4, 2, {0x01, 7, 0x00, 0x09, 8, 9});
+    icon* ic = b.Build();
+    for (i32 frame = 0; frame < 4; ++frame) {
+        Canvas c(4, 2);
+        IconToBitmap(ic, &c.bmp, 0, 0, frame, 0);
+        FlipIconToBitmap(ic, &c.bmp, 3, 0, frame, 0);
+        MonoIconToBitmap(ic, &c.bmp, 0, 0, frame, 5, 0);
+        FlipMonoIconToBitmap(ic, &c.bmp, 3, 0, frame, 5, 0);
+        Canvas s(640, 2);
+        DimIconToBitmap(ic, &s.bmp, 0, 0, frame, 0);
+        FlipDimIconToBitmap(ic, &s.bmp, 3, 0, frame, 0);
+        for (i32 x = -6; x <= 6; x += 3) {
+            gClipColumn = 0;
+            ClippedIconToBitmap(ic, &c.bmp, x, x / 3, frame, 0);
+            FlipClippedIconToBitmap(ic, &c.bmp, x, x / 3, frame, 0);
+        }
+    }
+    // The pixels the data holds are drawn as the asm drew them; those past
+    // its end are 0.
+    Canvas c(4, 2, 0x33);
+    IconToBitmap(ic, &c.bmp, 0, 0, 2, 0);
+    EXPECT(c.At(0, 0) == 7 && c.At(0, 1) == 8 && c.At(1, 1) == 9 && c.At(2, 1) == 0);
+    // The overlong row runs on into the next row, as in the asm, and stops
+    // at the end of the destination.
+    Canvas w(4, 2);
+    IconToBitmap(ic, &w.bmp, 0, 0, 0, 0);
+    EXPECT(w.At(0, 0) == 1 && w.At(3, 1) == 8);
+    // A frame past the table draws nothing.
+    Canvas n(4, 2, 0x33);
+    IconToBitmap(ic, &n.bmp, 0, 0, 3, 0);
+    EXPECT(n.At(0, 0) == 0x33);
+}
+
 void TestIconsStress() {
     for (int round = 0; round < 40; ++round) {
         IconBuilder b;
@@ -390,14 +438,13 @@ void TestTiles() {
     ts.m_tileCount = 2;
     ts.m_tileWidth = size;
     ts.m_tileHeight = size;
-    // index <= m_tileCount is accepted, so the data holds count + 1 tiles.
-    std::unique_ptr<u8[]> data(new u8[3 * size * size]);
-    for (int i = 0; i < 3 * size * size; ++i)
+    std::unique_ptr<u8[]> data(new u8[2 * size * size]);
+    for (int i = 0; i < 2 * size * size; ++i)
         data[i] = static_cast<u8>(i * 7 + 1);
     ts.m_data = data.get();
 
     const u32 flags[4] = {0, 0x8000, 0x4000, 0xC000};
-    for (u32 index = 0; index <= 2; ++index)
+    for (u32 index = 0; index < 2; ++index)
         for (u32 flag : flags) {
             Canvas c(20, 12);
             TileToBitmap(&ts, flag | index | 0x3000, &c.bmp, 5, 3);
@@ -410,15 +457,36 @@ void TestTiles() {
                 }
             EXPECT(c.At(4, 3) == 0 && c.At(13, 3) == 0 && c.At(5, 2) == 0 && c.At(5, 11) == 0);
         }
-    Canvas c(20, 12);
-    TileToBitmap(&ts, 3, &c.bmp, 0, 0); // index > m_tileCount: ignored
-    EXPECT(c.At(0, 0) == 0);
+    // An index past the last tile draws nothing (the asm drew the bytes
+    // after the last tile for index == m_tileCount).
+    for (u32 index = 2; index <= 3; ++index) {
+        Canvas c(20, 12);
+        TileToBitmap(&ts, index, &c.bmp, 0, 0);
+        EXPECT(c.At(0, 0) == 0);
+    }
+
+    // Tiles that are not square, flipped, and tiles drawn at the edge of the
+    // destination: everything stays inside the tileset's data and the
+    // exactly-sized destination (checked by the sanitizer build).
+    tileset wide{0};
+    wide.m_tileCount = 1;
+    wide.m_tileWidth = 16;
+    wide.m_tileHeight = 3;
+    std::unique_ptr<u8[]> wideData(new u8[16 * 3]);
+    memset(wideData.get(), 9, 16 * 3);
+    wide.m_data = wideData.get();
+    for (u32 flag : flags) {
+        Canvas e(16, 3);
+        TileToBitmap(&wide, flag, &e.bmp, 0, 0);
+        Canvas edge(20, 12);
+        TileToBitmap(&ts, flag, &edge.bmp, 15, 8);
+    }
 
     // Unflipped and vertical-only rows copy whole DWORDs (width & ~3) and
     // both pointers advance by that amount (plus stride - width on the
     // destination), so a 6-wide tile's second row lands 6 bytes on.
     tileset odd{0};
-    odd.m_tileCount = 0;
+    odd.m_tileCount = 1;
     odd.m_tileWidth = 6;
     odd.m_tileHeight = 2;
     u8 oddData[12] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
@@ -435,6 +503,7 @@ int main() {
     TestBits();
     TestBmap2();
     TestIconsKnown();
+    TestIconsMalformed();
     TestIconsStress();
     TestTiles();
     if (gFailures != 0) {

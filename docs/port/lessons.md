@@ -263,6 +263,19 @@ Windows uptime.
   (section 17).
 - `nix flake check` builds the native program and the sanitizer build and
   runs their tests.
+- The parsers of file data are fuzzed (`-DHOMM1_FUZZERS=ON`,
+  `tests/port/fuzz`): saved games, maps through the new game set-up, the
+  editor's map reader, high scores, every resource decoder with draws into
+  exactly-sized buffers, the record codecs and the network save decoder.
+  The checks that came of it share one rule: a file is refused through the
+  game's own error path where it is read (file error, damaged archive), not
+  clamped where it is later used, and every shipped file must still load,
+  which the replay tests check under every set-up. Code that walks data in
+  place (icon frames, tiles, text) is bounded to its data and its
+  destination instead, since a frame's format is not known when it is
+  loaded. The fuzzers also found what no file can be blamed for: text
+  layout that never ended on a word wider than its box. Each finding has a
+  replayed regression input that needs no game data in the repository.
 - Scripted input (`HOMM1_INPUT_REPLAY`) drives the real binary headless, so a
   sanitizer build can be run through menus, a new game and a loaded save
   under Xvfb (`docs/port/README.md`).

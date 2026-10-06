@@ -195,6 +195,56 @@ void PostprocessIcon(icon* loadedIcon) {}
 
 #include <string.h>
 
+// The icon routines below read only inside the icon's data (m_dataSize
+// bytes: a command outside it ends the frame, a pixel outside it is 0) and
+// write only inside the destination's pixel block. The original trusted the
+// frame's commands and the place it was drawn at.
+static u8 IconDataByte(icon* sourceIcon, i32 at, u8 outside) {
+    if (at < 0 || static_cast<u32>(at) >= sourceIcon->m_dataSize)
+        return outside;
+    return sourceIcon->m_data[at];
+}
+
+// Copies count pixel bytes of the icon's data from offset `from` to offset
+// `to` of the destination's pixels.
+static void CopyIconRun(bitmap* destination, i32 to, icon* sourceIcon, i32 from, i32 count) {
+    i32 size = static_cast<u16>(destination->m_width) * static_cast<u16>(destination->m_height);
+    i32 i;
+    if (count <= 0)
+        return;
+    if (to >= 0 && count <= size - to && from >= 0
+        && static_cast<u32>(from) + static_cast<u32>(count) <= sourceIcon->m_dataSize) {
+        memcpy(destination->m_pixels + to, sourceIcon->m_data + from, count);
+        return;
+    }
+    for (i = 0; i < count; i++) {
+        if (to + i >= 0 && to + i < size)
+            destination->m_pixels[to + i] = IconDataByte(sourceIcon, from + i, 0);
+    }
+}
+
+// Fills count pixels from offset `to` of the destination's pixels.
+static void FillIconRun(bitmap* destination, i32 to, i32 color, i32 count) {
+    i32 size = static_cast<u16>(destination->m_width) * static_cast<u16>(destination->m_height);
+    if (count <= 0)
+        return;
+    if (to < 0) {
+        count += to;
+        to = 0;
+    }
+    if (count > size - to)
+        count = size - to;
+    if (count > 0)
+        memset(destination->m_pixels + to, color, count);
+}
+
+// Whether frame names a frame whose header lies in the icon's data; a frame
+// outside the table draws nothing.
+static i32 IconFrameKnown(icon* sourceIcon, i32 frame) {
+    return frame >= 0 && frame < sourceIcon->m_frameCount
+           && static_cast<u32>(frame + 1) * sizeof(IconEntry) <= sourceIcon->m_dataSize;
+}
+
 void ClippedMonoIconToBitmap(
     icon* sourceIcon,
     bitmap* destination,
@@ -210,50 +260,39 @@ void ClippedMonoIconToBitmap(
 ) {
     i32 clipRight = clipX + clipW - 1;
     i32 clipBottom = clipY + clipH - 1;
+    if (!IconFrameKnown(sourceIcon, frame))
+        return;
     IconEntry* entry = sourceIcon->m_frames + frame;
-    u8* source = sourceIcon->m_data + entry->srcOffset;
+    i32 source = entry->srcOffset;
     i32 curX = x + entry->x;
     i32 curY = y + entry->y;
+    i32 run;
     bool decoding = true;
     while (decoding) {
-        if (static_cast<i8>(*source) < 0) {
-            if ((*source & ICON_MONO_SKIP_MASK) != 0) {
-                curX += *source & ICON_MONO_SKIP_MASK;
+        run = IconDataByte(sourceIcon, source, ICON_MONO_END_COMMAND);
+        if (static_cast<i8>(run) < 0) {
+            if ((run & ICON_MONO_SKIP_MASK) != 0) {
+                curX += run & ICON_MONO_SKIP_MASK;
                 source++;
             } else
                 decoding = false;
-        } else if (*source != ICON_MONO_NEWLINE_COMMAND) {
-            if (curY >= clipY && curY <= clipBottom && curX + *source >= clipX
-                && curX <= clipRight) {
+        } else if (run != ICON_MONO_NEWLINE_COMMAND) {
+            if (curY >= clipY && curY <= clipBottom && curX + run >= clipX && curX <= clipRight) {
                 if (curX >= clipX) {
-                    if (curX + *source <= clipRight)
-                        memset(
-                            destination->m_pixels + curX + curY * LOGICAL_SCREEN_WIDTH,
-                            color,
-                            *source
-                        );
+                    if (curX + run <= clipRight)
+                        FillIconRun(destination, curX + curY * LOGICAL_SCREEN_WIDTH, color, run);
                     else
-                        memset(
-                            destination->m_pixels + curX + curY * LOGICAL_SCREEN_WIDTH,
-                            color,
-                            clipRight - curX + 1
-                        );
+                        FillIconRun(destination, curX + curY * LOGICAL_SCREEN_WIDTH, color,
+                                    clipRight - curX + 1);
                 } else {
-                    if (curX + *source <= clipRight)
-                        memset(
-                            destination->m_pixels + clipX + curY * LOGICAL_SCREEN_WIDTH,
-                            color,
-                            curX + *source - clipX
-                        );
+                    if (curX + run <= clipRight)
+                        FillIconRun(destination, clipX + curY * LOGICAL_SCREEN_WIDTH, color,
+                                    curX + run - clipX);
                     else
-                        memset(
-                            destination->m_pixels + clipX + curY * LOGICAL_SCREEN_WIDTH,
-                            color,
-                            clipW
-                        );
+                        FillIconRun(destination, clipX + curY * LOGICAL_SCREEN_WIDTH, color, clipW);
                 }
             }
-            curX += *source;
+            curX += run;
             source++;
         } else {
             curX = x + entry->x;
@@ -267,9 +306,9 @@ static i32 gMiscOldField;
 static i32 gClipY;
 static i32 gClipLimitY;
 static i32 gClipRowStart;
-static u8* gClipRow;
+static i32 gClipRow;
 static IconEntry* gClipFrameEntry;
-static u8* gClipSource;
+static i32 gClipSource;
 static i32 gClipLimitX;
 static i32 gClipX;
 static u32 gClipRun;
@@ -288,8 +327,10 @@ void ClipIconToBitmap(
     i32 clipW,
     i32 clipH
 ) {
+    if (!IconFrameKnown(sourceIcon, frame))
+        return;
     gClipFrameEntry = sourceIcon->m_frames + frame;
-    gClipSource = sourceIcon->m_data + gClipFrameEntry->srcOffset;
+    gClipSource = gClipFrameEntry->srcOffset;
     gClipX = gClipRowStart = x + gClipFrameEntry->x;
     gClipY = y + gClipFrameEntry->y;
     if (ICON_FITS_CLIP(
@@ -308,9 +349,9 @@ void ClipIconToBitmap(
         gClipLimitX = clipX + clipW - 1;
         gClipLimitY = clipY + clipH - 1;
     }
-    gClipRow = destination->m_pixels + gClipY * destination->m_width;
+    gClipRow = gClipY * destination->m_width;
     for (;;) {
-        gClipRun = *gClipSource++;
+        gClipRun = IconDataByte(sourceIcon, gClipSource++, ICON_MONO_END_COMMAND);
         if (static_cast<i8>(gClipRun) < 0) {
             if (gClipRun & ICON_MONO_SKIP_MASK)
                 gClipX += gClipRun & ICON_MONO_SKIP_MASK;
@@ -318,19 +359,23 @@ void ClipIconToBitmap(
                 break;
         } else if (gClipRun != 0) {
             if (gClipInside) {
-                memcpy(gClipRow + gClipX, gClipSource, gClipRun);
+                CopyIconRun(destination, gClipRow + gClipX, sourceIcon, gClipSource, gClipRun);
             } else if (gClipY >= clipY && gClipY <= gClipLimitY && gClipX + gClipRun >= clipX
                        && gClipX <= gClipLimitX) {
                 if (gClipX >= clipX) {
                     if (gClipX + gClipRun <= gClipLimitX)
-                        memcpy(gClipRow + gClipX, gClipSource, gClipRun);
+                        CopyIconRun(destination, gClipRow + gClipX, sourceIcon, gClipSource,
+                                    gClipRun);
                     else
-                        memcpy(gClipRow + gClipX, gClipSource, gClipLimitX - gClipX + 1);
+                        CopyIconRun(destination, gClipRow + gClipX, sourceIcon, gClipSource,
+                                    gClipLimitX - gClipX + 1);
                 } else {
-                    if (gClipX + *gClipSource <= gClipLimitX)
-                        memcpy(gClipRow + gClipX, gClipSource, gClipX + gClipRun - clipX);
+                    if (gClipX + IconDataByte(sourceIcon, gClipSource, 0) <= gClipLimitX)
+                        CopyIconRun(destination, gClipRow + gClipX, sourceIcon, gClipSource,
+                                    gClipX + gClipRun - clipX);
                     else
-                        memcpy(gClipRow + gClipX, gClipSource, clipW);
+                        CopyIconRun(destination, gClipRow + gClipX, sourceIcon, gClipSource,
+                                    clipW);
                 }
             }
             gClipX += gClipRun;

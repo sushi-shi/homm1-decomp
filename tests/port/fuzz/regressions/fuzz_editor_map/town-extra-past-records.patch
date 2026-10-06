@@ -1,0 +1,5 @@
+# The castle at 24,26 names extra record 127 of 19: the writer read the
+# record through a pointer past the loaded records.
+base MAPS\AES31000.MAP
+set 18919 7F
+expect refused

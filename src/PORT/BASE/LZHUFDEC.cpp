@@ -2,6 +2,8 @@
 
 #include <H1/Ints.h>
 
+#include <BASE/LZHUF.h>
+
 #include <string.h>
 
 // The decoder state and tables are defined in vendor/lzhuf/encoder.cpp (the
@@ -45,6 +47,24 @@ const i32 kTreeSize = kCharacterCount * 2 - 1;             // 627 nodes
 const i32 kRoot = kTreeSize - 1;
 const u16 kMaxFrequency = 0x8000;
 
+// Bounded decoding (DecodeDataBounded): the end of the input, or NULL when
+// the stream is trusted (DecodeData), and how many bytes the decoder has
+// asked for beyond it. Those read as zero bits. The decoder refills its bit
+// buffer ahead of need and so asks for up to kReadSlack bytes past the last
+// code byte of a complete stream; asking for more means the stream ended
+// early, and decoding stops.
+const char* gInputEnd = NULL;
+u32 gPastEnd = 0;
+const u32 kReadSlack = 2;
+
+u32 NextInputByte() {
+    if (gInputEnd != NULL && dataPtr >= gInputEnd) {
+        gPastEnd++;
+        return 0;
+    }
+    return static_cast<u8>(*dataPtr++);
+}
+
 // Tops up the 16-bit bit buffer with whole input bytes until more than 8 bits
 // are buffered, and returns the widened buffer. getlen is compared as a
 // signed byte and each byte is shifted by (8 - getlen) & 31, as in the asm.
@@ -54,7 +74,7 @@ const u16 kMaxFrequency = 0x8000;
 u32 FillBitBuffer(i8& length) {
     u32 buffer = getbuf;
     do {
-        u32 byte = static_cast<u8>(*dataPtr++);
+        u32 byte = NextInputByte();
         buffer |= byte << ((8u - static_cast<u32>(static_cast<u8>(length))) & 31u);
         length = static_cast<i8>(static_cast<u8>(length) + 8u);
     } while (length <= 8);
@@ -194,7 +214,7 @@ extern "C" void Decode() {
     u32 r = kWindowSize - kLookAhead;
     u32 count = 0;
 
-    while (count < textsize + decodeLen) {
+    while (count < textsize + decodeLen && gPastEnd <= kReadSlack) {
         // Walk from the root to a leaf, one input bit per level.
         u32 node = static_cast<u16>(son[kRoot]);
         while (node < static_cast<u32>(kTreeSize))
@@ -227,4 +247,21 @@ extern "C" void Decode() {
             r = (r + 1) & kWindowMask;
         } while (k < length);
     }
+}
+
+i32 DecodeDataBounded(char* destination, u32 capacity, char* source, u32 sourceLength) {
+    if (sourceLength < 4)
+        return -1;
+    const u8* header = reinterpret_cast<const u8*>(source);
+    u32 claimed = (static_cast<u32>(header[0]) << 24) | (static_cast<u32>(header[1]) << 16)
+                  | (static_cast<u32>(header[2]) << 8) | header[3];
+    if (claimed > capacity)
+        return -1;
+    gInputEnd = source + sourceLength;
+    gPastEnd = 0;
+    i32 decoded = DecodeData(destination, source);
+    bool ended = gPastEnd > kReadSlack;
+    gInputEnd = NULL;
+    gPastEnd = 0;
+    return ended ? -1 : decoded;
 }

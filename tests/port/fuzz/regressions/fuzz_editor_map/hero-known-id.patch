@@ -1,0 +1,5 @@
+# The same hero with hero id 5: accepted, checked and written.
+base MAPS\AES31000.MAP
+set 8678 C7 01
+set 58672 05
+expect accepted

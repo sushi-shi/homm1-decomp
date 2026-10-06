@@ -1,0 +1,7 @@
+# A map header with size 127 and difficulty -128: the scenario list showed
+# them by indexing the 3 size names and the 5 difficulty names. The list now
+# treats such a header as absent.
+base MAPS\AES31000.MAP
+set 2 80 7F
+bytes 00            # a standard game for two
+expect accepted

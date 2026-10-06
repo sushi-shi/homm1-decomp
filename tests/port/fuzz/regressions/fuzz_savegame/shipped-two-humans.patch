@@ -1,0 +1,4 @@
+# The shipped network save, loaded for a hot seat game of two: accepted.
+base DATA\REMOTE.GAM
+bytes 01
+expect accepted

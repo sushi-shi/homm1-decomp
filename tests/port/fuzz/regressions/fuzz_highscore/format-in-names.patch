@@ -1,0 +1,12 @@
+# Ten entries whose player and scenario names hold printf conversions: the
+# high score screen used each name as a format and read and wrote through
+# arguments that were never passed.
+bytes 25 73 25 73 25 73 25 73 25 73 25 6E 00 00 00 00 00      # player: %s%s%s%s%s%n
+bytes 25 6E 25 6E 25 73 00 00 00 00 00 00 00 00 00            # scenario: %n%n%s
+bytes F4 01 00 00                                              # score 500
+fill 51 00
+bytes 25 73 25 73 25 73 25 73 25 73 25 6E 00 00 00 00 00
+bytes 25 6E 25 6E 25 73 00 00 00 00 00 00 00 00 00
+bytes F4 01 00 00
+fill 51 00
+expect accepted

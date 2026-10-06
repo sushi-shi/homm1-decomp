@@ -30,6 +30,7 @@
 extern "C" void PollSound() {}
 
 extern "C" char* dataPtr;
+extern "C" u8 text_buf[4155];
 
 namespace {
 
@@ -44,7 +45,9 @@ u32 Rand() {
     return gSeed;
 }
 
-void RoundTrip(const char* name, const std::vector<u8>& input) {
+// dirtyWindow: the decoder's window holds other data when decoding starts,
+// as on a machine that compressed or decompressed something else before.
+void RoundTrip(const char* name, const std::vector<u8>& input, bool dirtyWindow = false) {
     u32 size = static_cast<u32>(input.size());
     std::vector<char> source(input.begin(), input.end());
     std::vector<char> packed(static_cast<size_t>(size) * 2 + 64);
@@ -57,6 +60,8 @@ void RoundTrip(const char* name, const std::vector<u8>& input) {
     memset(stream.get() + encoded, 0, kReadSlack);
     std::unique_ptr<char[]> output(new char[size]);
 
+    if (dirtyWindow)
+        memset(text_buf, 'x', sizeof(text_buf));
     i32 decoded = DecodeData(output.get(), stream.get());
     size_t consumed = static_cast<size_t>(dataPtr - stream.get());
     bool ok = decoded == static_cast<i32>(size) && memcmp(output.get(), input.data(), size) == 0
@@ -98,6 +103,39 @@ std::vector<u8> Structured(size_t size) {
     return v;
 }
 
+void Check(bool condition, const char* what) {
+    printf("%-40s %s\n", what, condition ? "ok" : "FAIL");
+    if (!condition)
+        ++gFailures;
+}
+
+// DecodeDataBounded reads only the stream it is given and writes only the
+// output it is given; exactly-sized heap blocks let the sanitizers see any
+// access outside them.
+void Bounded() {
+    std::vector<u8> input = Structured(5000);
+    u32 size = static_cast<u32>(input.size());
+    std::vector<char> source(input.begin(), input.end());
+    std::vector<char> packed(size * 2 + 64);
+    u32 length = static_cast<u32>(EncodeData(packed.data(), source.data(), size)) + 4;
+    std::unique_ptr<char[]> exact(new char[length]);
+    memcpy(exact.get(), packed.data(), length);
+    std::unique_ptr<char[]> output(new char[size]);
+    Check(DecodeDataBounded(output.get(), size, exact.get(), length) == static_cast<i32>(size)
+              && memcmp(output.get(), input.data(), size) == 0,
+          "bounded: exact-size stream");
+    Check(DecodeDataBounded(output.get(), size - 1, exact.get(), length) == -1,
+          "bounded: output a byte too small");
+    u32 half = length / 2;
+    std::unique_ptr<char[]> truncated(new char[half]);
+    memcpy(truncated.get(), packed.data(), half);
+    Check(DecodeDataBounded(output.get(), size, truncated.get(), half) == -1, "bounded: truncated stream");
+    Check(DecodeDataBounded(output.get(), size, exact.get(), 3) == -1, "bounded: no length");
+    // A length and no code: the decoder must stop at the end of the input.
+    std::unique_ptr<char[]> empty(new char[4]{0, 0, 0x13, static_cast<char>(0x88)});
+    Check(DecodeDataBounded(output.get(), size, empty.get(), 4) == -1, "bounded: length only");
+}
+
 } // namespace
 
 int main() {
@@ -107,6 +145,10 @@ int main() {
     RoundTrip("two bytes", {0x00, 0xFF});
     RoundTrip("three zero bytes", {0, 0, 0});
     RoundTrip("60 spaces", Repeat(" ", 60));
+    // Runs of spaces match into the window's initial spaces; the decoder
+    // must start from the same window whatever it held before.
+    RoundTrip("spaces, dirty window", Repeat("Unknown         ", 40), true);
+    RoundTrip("one space run, dirty window", {'a', ' ', ' ', ' ', ' ', 'b'}, true);
     RoundTrip("61 x", Repeat("x", 61));
     RoundTrip("repetitive 5000", Repeat("a", 5000));
     RoundTrip("pattern abcab", Repeat("abcab", 7777));
@@ -132,6 +174,8 @@ int main() {
         size_t size = 1 + Rand() % 9000;
         RoundTrip("mixed", i % 2 ? Random(size, i % 4 == 1 ? 0x0F : 0xFF) : Structured(size));
     }
+
+    Bounded();
 
     if (gFailures != 0) {
         printf("%d failure(s)\n", gFailures);

@@ -30,11 +30,16 @@ bitmap::bitmap(i16 type, i16 width, i16 height)
 }
 
 bitmap::bitmap(i16 id) : resource(RESOURCE_CATEGORY_BITMAP, id, RESOURCE_REFERENCE_INITIAL, NULL) {
+    u32 entrySize = gResourceManager->GetFileSize(id);
     gResourceManager->PointToFile(id);
     m_bitmapType = (gResourceManager->ReadWord());
     m_width = gResourceManager->ReadWord();
     m_height = gResourceManager->ReadWord();
     i32 size = m_width * m_height;
+    // The pixels follow the type, width and height in the archive entry.
+    if (m_width < 0 || m_height < 0 || entrySize < BITMAP_HEADER_SIZE
+        || static_cast<u32>(size) > entrySize - BITMAP_HEADER_SIZE)
+        gResourceManager->InvalidResource(id);
     m_pixels = static_cast<u8*>(malloc(size));
     PollSound();
     gResourceManager->ReadBlock(m_pixels, size);

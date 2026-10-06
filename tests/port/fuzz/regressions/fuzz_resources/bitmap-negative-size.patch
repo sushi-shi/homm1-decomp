@@ -1,0 +1,5 @@
+# A bitmap of -1 x 4 pixels.
+bytes 21 00 FF FF 04 00
+bytes 01 02 03 04
+bytes 01                    # kind
+expect refused

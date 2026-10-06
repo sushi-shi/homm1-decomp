@@ -287,6 +287,8 @@ the start of a direct-connection and of a modem game. With
 `HOMM1_NET_TRACE=FILE` each instance writes a hash of every saved game it
 sends, receives and loads, and of every battle's outcome (result, armies as
 fought, heroes); the hashes must agree at every hand-off.
+The `*_replay` tests replay the fuzz harnesses' regression inputs (see
+[Fuzzing the file parsers](#fuzzing-the-file-parsers)).
 `nix flake check` builds the native and sanitizer builds and runs their tests
 (without game data), and builds the Windows programs.
 `-DHOMM1_SANITIZERS_RECOVER=ON` keeps going after undefined behaviour, to
@@ -330,6 +332,50 @@ run's output. The survey programs of a build without sanitizers also run
 under valgrind (`nix shell nixpkgs#valgrind`; `valgrind --track-origins=yes
 build/port/tests/port/homm1_survey combat MAP 5 1`), which finds the reads
 of uninitialised memory the sanitizers do not.
+
+### Fuzzing the file parsers
+
+`tests/port/fuzz` holds libFuzzer harnesses for every parser of file data
+that a player can be handed: saved games (`fuzz_savegame`, through
+`game::LoadGame` after the load requester lists the folder), maps and
+campaign maps (`fuzz_map`, through the scenario list and `game::NewMap`),
+the editor's map reader with its checks and writer (`fuzz_editor_map`),
+high score tables (`fuzz_highscore`, through the high score screen), the
+resource archive and every decoder that reads a resource in place, drawing
+what it decodes into exactly-sized buffers (`fuzz_resources`), the WinHelp
+converter on a help file and its contents file (`fuzz_help`), the record
+codecs (`fuzz_records`), the network and serial message codecs, packets and
+payloads (`fuzz_remote`) and the network save compressor (`fuzz_lzhuf`). The
+game's own units run headless; its error exits (`FileError`, `ShutDown`)
+are wrapped to throw, so a file the game refuses is an ordinary outcome.
+
+```sh
+cmake -S . -B build/fuzz -G Ninja -DCMAKE_CXX_COMPILER=clang++ -DHOMM1_FUZZERS=ON
+ninja -C build/fuzz
+HOMM1_HELP=path/to/HEROES.HLP python3 tests/port/fuzz/seeds.py ~/.local/share/homm1-buka/game /tmp/seeds
+mkdir -p /tmp/corpus/fuzz_map
+HOMM1_DATA=~/.local/share/homm1-buka/game build/fuzz/tests/port/fuzz/fuzz_map \
+    -rss_limit_mb=2048 -max_total_time=1800 /tmp/corpus/fuzz_map /tmp/seeds/fuzz_map
+```
+
+`HOMM1_FUZZERS` needs Clang and turns the sanitizers on; the fuzzers are not
+part of the default build. The harnesses that run the game's units need
+`HOMM1_DATA` (they start the game on a scratch folder that links the data).
+`fuzz_map` and `fuzz_savegame` read the new game dialog's choices from a
+byte after the file, `fuzz_resources` the kind of resource and `fuzz_help`
+the length of the contents file that follows the help file; the
+comments at the top of each harness give the format, and `seeds.py` writes
+seeds in it. `-fork=1 -ignore_crashes=1` keeps a campaign going past
+findings; `HOMM1_FUZZ_LOAD_ONLY=1` stops `fuzz_map` after `game::LoadMap`.
+
+Every harness is also built, in every configuration, as `<name>_replay`,
+which ctest runs over the regression inputs in
+`tests/port/fuzz/regressions/<name>` and, with `HOMM1_DATA`, over the
+shipped files, which must all be accepted (each map under every standard
+game set-up, the whole resource archive). A regression input is either the
+input itself or a `.patch` recipe that builds it from a shipped file or from
+bytes and says whether the game must accept or refuse it (the format is at
+the top of `ReplayMain.cpp`), so no game data is checked in.
 
 ### Unattended runs
 

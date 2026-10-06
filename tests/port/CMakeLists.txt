@@ -97,3 +97,8 @@ endif()
 add_test(NAME net_game_test
   COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/net_game_test.py $<TARGET_FILE:homm1>)
 set_tests_properties(net_game_test PROPERTIES SKIP_RETURN_CODE 77 TIMEOUT 1200)
+
+# The file parsers' fuzz harnesses: replayed over their checked-in
+# regression inputs by default, built as libFuzzer programs with
+# -DHOMM1_FUZZERS=ON.
+add_subdirectory(fuzz)

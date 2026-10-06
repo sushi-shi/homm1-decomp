@@ -26,6 +26,13 @@
 #include <string.h>
 
 i32 ShowThisMap(char* fileName) {
+    // Names are copied into fields sized for the original's 8.3 names; a
+    // longer name, which a host with long file names lists, would overflow
+    // them and is not shown.
+    char* extension = FindLastToken(fileName, '.');
+    if (strlen(fileName) > FILE_REQUESTER_LISTED_NAME_LIMIT
+        || (extension && strlen(extension) >= FILE_REQUESTER_EXTENSION_SIZE))
+        return 0;
 #ifdef HOMM1_EDITOR
     if (strnicmp(fileName, "AES3", FILE_REQUESTER_SHIPPED_MAP_PREFIX_LENGTH)
         && strnicmp(fileName, "BEM2", FILE_REQUESTER_SHIPPED_MAP_PREFIX_LENGTH)
@@ -168,7 +175,10 @@ fileRequester::fileRequester(
             if (!mapFile.LoadFile(fullFileName))
                 FileError(fullFileName);
             ReadMapHeader(mapFile, header);
-            if (header.id == MAP_HEADER_ID) {
+            // The size and difficulty index the tables of their names.
+            if (header.id == MAP_HEADER_ID && header.size >= MAP_SIZE_SMALL
+                && header.size <= MAP_SIZE_LARGE && header.difficulty >= MAP_DIFFICULTY_EASY
+                && header.difficulty <= MAP_DIFFICULTY_FORGET_IT) {
                 CopyTextField(
                     m_mapNames[entryIndex].text,
                     sizeof(m_mapNames[entryIndex].text),
@@ -752,7 +762,7 @@ void fileRequester::ShowMapInfo(void) {
     gReqExtraWindow->BroadcastMessage(msg);
     if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE)
         gMapDifficulty = m_mapInfo[m_selectedIndex].difficulty;
-    sprintf(gText, gCurMapName);
+    sprintf(gText, "%s", gCurMapName);
     SET_WIDGET_MESSAGE(msg, WIDGET_COMMAND_SET_TEXT, levelId);
     if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE)
         msg.text = gMapDifficultyNames[m_mapInfo[m_selectedIndex].difficulty];

@@ -1,0 +1,9 @@
+# A font whose glyph icon has 2 frames: drawing and measuring index frames up
+# to 161. Refused as a damaged archive.
+bytes 0C 00 09 00
+bytes 46 55 5A 5A 2E 49 43 4E 00 00 00 00 00
+bytes 02 00 1B 00 00 00                     # 2 frames, 27 bytes
+repeat 2 00 00 00 00 08 00 01 00 18 00 00 00
+bytes 08 00 80
+bytes 04                    # kind
+expect refused

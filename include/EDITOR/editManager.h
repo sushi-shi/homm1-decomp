@@ -365,6 +365,7 @@ public:
     i16 LoadMap(char* name);
     void WriteMapFile(class RecordWriter& file);
     i32 ReadMapFile(class RecordReader& file);
+    i32 MapObjectsValid(void);
     i16 PickMap(char* unusedName, char* unusedExtension, i16 mode);
     void ClearErrors(void);
     void ShowErrors(void);

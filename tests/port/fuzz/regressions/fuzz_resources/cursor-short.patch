@@ -1,0 +1,5 @@
+# A pointer bitmap of 10 bytes: the header and 32 x 32 pixels were read from
+# whatever followed the entry, or left uninitialised.
+fill 10 01
+bytes 07            # kind: cursor
+expect refused

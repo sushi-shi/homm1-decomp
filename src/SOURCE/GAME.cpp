@@ -589,7 +589,17 @@ i16 game::LoadGame(char* filename, b32 origData, b32) {
         if (strcmp(filename, "REMOTE.GAM"))
             strcpy(gGame->m_saveName, filename);
     }
-    if (!theLoadHandle.Ok())
+    // The player count and the current player index the player tables, and
+    // the search for the player to watch below needs a human among the
+    // players. The difficulties and the map size index the tables of their
+    // names.
+    for (ix = 0; ix < m_playerCount && ix < GAME_PLAYER_COUNT && !gThisNetHumanPlayer[ix]; ix++)
+        ;
+    if (!theLoadHandle.Ok() || m_playerCount < 1 || m_playerCount > GAME_PLAYER_COUNT
+        || gCurPlayer < 0 || gCurPlayer >= m_playerCount || ix >= m_playerCount
+        || m_difficulty < 0 || m_difficulty >= DIFFICULTY_COUNT || m_mapSize < MAP_SIZE_SMALL
+        || m_mapSize > MAP_SIZE_LARGE || m_mapDifficulty < MAP_DIFFICULTY_EASY
+        || m_mapDifficulty > MAP_DIFFICULTY_FORGET_IT)
         FileError(pathName);
     gAdvManager->m_heroContextLocked = false;
     gCurPlayerData = &gGame->m_players[gCurPlayer];
@@ -4468,7 +4478,21 @@ b32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
                       | static_cast<u32>(static_cast<u8>(curInData[3]));
         if (decodedSize > REMOTE_SAVE_DECODE_BUFFER_SIZE)
             goto refused;
+#ifdef HOMM1_PORT
+        // The portable decoder reads no further than the receive buffer (its
+        // zeroed tail stands in for the four bytes the original's senders
+        // leave off) and refuses a stream that ends before its save.
+        dataSize = DecodeDataBounded(
+            decodedData,
+            REMOTE_SAVE_DECODE_BUFFER_SIZE,
+            curInData,
+            dataSize + REMOTE_SAVE_BUFFER_EXTRA
+        );
+        if (dataSize < 0)
+            goto refused;
+#else
         dataSize = DecodeData(decodedData, curInData);
+#endif
     } else {
         decodedData = curInData;
     }

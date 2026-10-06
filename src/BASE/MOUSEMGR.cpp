@@ -132,7 +132,13 @@ void mouseManager::SetPointer(i16 frame) {
         else
             sprintf(filename, "CMSE%s%02d.BMP", gColorMice ? "CO" : "BW", frame + 1);
 
-        gResourceManager->PointToFile(gResourceManager->MakeId(filename));
+        i16 fileId = gResourceManager->MakeId(filename);
+        // The header and the 32 x 32 pixels are read from the archive entry;
+        // a shorter entry left them to whatever followed it.
+        if (gResourceManager->GetFileSize(fileId)
+            < MOUSE_CURSOR_BITMAP_HEADER_BYTES + MOUSE_CURSOR_COLOR_BYTES)
+            gResourceManager->InvalidResource(fileId);
+        gResourceManager->PointToFile(fileId);
         gResourceManager->ReadBlock(gColorBits[cursorIndex], MOUSE_CURSOR_BITMAP_HEADER_BYTES);
         gResourceManager->ReadBlock(gColorBits[cursorIndex], MOUSE_CURSOR_COLOR_BYTES);
         memset(

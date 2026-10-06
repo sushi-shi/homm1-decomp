@@ -12,6 +12,7 @@ set(HOMM1_LOCALE "ru" CACHE STRING "Language compiled into the program (locales/
 option(HOMM1_SANITIZERS "Build with AddressSanitizer and UndefinedBehaviorSanitizer" OFF)
 option(HOMM1_SANITIZERS_RECOVER "Report undefined behaviour and continue (for surveys)" OFF)
 option(HOMM1_WARNINGS_AS_ERRORS "Treat warnings in port and platform code as errors" ON)
+option(HOMM1_FUZZERS "Build the libFuzzer harnesses of the file parsers (Clang; implies HOMM1_SANITIZERS)" OFF)
 
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING "" FORCE)
@@ -95,11 +96,22 @@ set(HOMM1_CODEPAGE ${CMAKE_MATCH_1})
 # signed arithmetic wraps, and no type-based alias analysis.
 set(HOMM1_SEMANTICS -fsigned-char -fwrapv -fno-strict-aliasing)
 set(HOMM1_SANITIZE_FLAGS)
+if(HOMM1_FUZZERS)
+  if(NOT CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    message(FATAL_ERROR "HOMM1_FUZZERS needs Clang (libFuzzer): -DCMAKE_CXX_COMPILER=clang++")
+  endif()
+  set(HOMM1_SANITIZERS ON)
+endif()
 if(HOMM1_SANITIZERS)
   set(HOMM1_SANITIZE_FLAGS -fsanitize=address,undefined -fno-omit-frame-pointer)
   if(NOT HOMM1_SANITIZERS_RECOVER)
     list(APPEND HOMM1_SANITIZE_FLAGS -fno-sanitize-recover=undefined)
   endif()
+endif()
+# Coverage instrumentation for libFuzzer everywhere; only the fuzzers link
+# the fuzzing engine itself (tests/port/fuzz).
+if(HOMM1_FUZZERS)
+  list(APPEND HOMM1_SANITIZE_FLAGS -fsanitize=fuzzer-no-link)
 endif()
 
 set(HOMM1_STRICT_WARNINGS

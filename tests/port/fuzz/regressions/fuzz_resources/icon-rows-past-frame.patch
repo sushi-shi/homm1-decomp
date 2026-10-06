@@ -1,0 +1,9 @@
+# A 2x1 frame with a row of 100 skipped and drawn pixels and 20 more rows:
+# the unclipped blitters wrote past the frame's place in the destination.
+bytes 01 00 2A 00 00 00
+bytes 00 00 00 00 02 00 01 00 0C 00 00 00
+bytes E4 05 01 02 03 04 05
+repeat 20 00
+bytes 01 09 80
+bytes 00                    # kind
+expect accepted

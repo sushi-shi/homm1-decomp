@@ -1,0 +1,6 @@
+# A backdrop of 1 x 500 pixels read row by row into the 640 x 480 screen:
+# the last 20 rows were written past it.
+bytes 21 00 01 00 F4 01
+fill 500 07
+bytes 01                    # kind
+expect refused

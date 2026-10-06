@@ -1,0 +1,5 @@
+# A saved game whose game difficulty (9) indexes past the four difficulties.
+base DATA\REMOTE.GAM
+set 224 09
+bytes 00
+expect refused

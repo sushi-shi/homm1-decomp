@@ -1,0 +1,6 @@
+# An artifact (cell 10,10) numbered 98: the writer marked entry 98 of its
+# 37-entry artifact table.
+base MAPS\AES31000.MAP
+set 8672 62
+set 8678 B0
+expect refused

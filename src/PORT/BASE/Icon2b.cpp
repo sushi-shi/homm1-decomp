@@ -14,9 +14,12 @@
 #include <string.h>
 
 using IconBlit::IconFrame;
+using IconBlit::IconSource;
+using IconBlit::IconTarget;
 using IconBlit::IsNegative;
 using IconBlit::LoadIconFrame;
 using IconBlit::Offset32;
+using IconBlit::TargetOf;
 
 // Last frame header decoded by any icon blitter (see IconFrame.h). Public in
 // Icon2b.asm; _gIconUnused is private there and never referenced.
@@ -65,13 +68,14 @@ void IconToBitmap(icon* ic, bitmap* bmp, i32 x, i32 y, i32 frame, i32 offsetMode
     if (PastEdge(x, f.width, bmp->m_width) || PastEdge(y, f.height, bmp->m_height))
         return;
 
-    u8* pixels = bmp->m_pixels;
+    IconTarget target = TargetOf(bmp);
+    const IconSource& source = f.source;
     u32 stride = static_cast<u16>(bmp->m_width);
     ptrdiff_t rowStart = Offset32(static_cast<u32>(y), stride, static_cast<u32>(x));
     ptrdiff_t to = rowStart;
-    const u8* command = f.commands;
+    ptrdiff_t command = f.commands;
     for (;;) {
-        u8 code = *command++;
+        u8 code = source.Command(command++);
         if (code & 0x80) {
             u32 skip = code & 0x7F;
             if (skip == 0)
@@ -81,7 +85,7 @@ void IconToBitmap(icon* ic, bitmap* bmp, i32 x, i32 y, i32 frame, i32 offsetMode
             rowStart += stride;
             to = rowStart;
         } else {
-            memcpy(pixels + to, command, code);
+            target.Copy(to, source, command, code);
             command += code;
             to += code;
         }
@@ -100,13 +104,14 @@ void FlipIconToBitmap(icon* ic, bitmap* bmp, i32 x, i32 y, i32 frame, i32 offset
     if (PastEdge(y, f.height, bmp->m_height))
         return;
 
-    u8* pixels = bmp->m_pixels;
+    IconTarget target = TargetOf(bmp);
+    const IconSource& source = f.source;
     u32 stride = static_cast<u16>(bmp->m_width);
     ptrdiff_t rowStart = Offset32(static_cast<u32>(y), stride, static_cast<u32>(x));
     ptrdiff_t to = rowStart;
-    const u8* command = f.commands;
+    ptrdiff_t command = f.commands;
     for (;;) {
-        u8 code = *command++;
+        u8 code = source.Command(command++);
         if (code & 0x80) {
             u32 skip = code & 0x7F;
             if (skip == 0)
@@ -117,7 +122,7 @@ void FlipIconToBitmap(icon* ic, bitmap* bmp, i32 x, i32 y, i32 frame, i32 offset
             to = rowStart;
         } else {
             for (u32 i = 0; i < code; ++i)
-                pixels[to--] = *command++;
+                target.Put(to--, source.Pixel(command++));
         }
     }
 }
@@ -132,13 +137,14 @@ void MonoIconToBitmap(icon* ic, bitmap* bmp, i32 x, i32 y, i32 frame, i32 color,
         return;
 
     u8 fill = static_cast<u8>(color);
-    u8* pixels = bmp->m_pixels;
+    IconTarget target = TargetOf(bmp);
+    const IconSource& source = f.source;
     u32 stride = static_cast<u16>(bmp->m_width);
     ptrdiff_t rowStart = Offset32(static_cast<u32>(y), stride, static_cast<u32>(x));
     ptrdiff_t to = rowStart;
-    const u8* command = f.commands;
+    ptrdiff_t command = f.commands;
     for (;;) {
-        u8 code = *command++;
+        u8 code = source.Command(command++);
         if (code & 0x80) {
             u32 skip = code & 0x7F;
             if (skip == 0)
@@ -148,7 +154,7 @@ void MonoIconToBitmap(icon* ic, bitmap* bmp, i32 x, i32 y, i32 frame, i32 color,
             rowStart += stride;
             to = rowStart;
         } else {
-            memset(pixels + to, fill, code);
+            target.Fill(to, fill, code);
             to += code;
         }
     }
@@ -174,13 +180,14 @@ void FlipMonoIconToBitmap(
         return;
 
     u8 fill = static_cast<u8>(color);
-    u8* pixels = bmp->m_pixels;
+    IconTarget target = TargetOf(bmp);
+    const IconSource& source = f.source;
     u32 stride = static_cast<u16>(bmp->m_width);
     ptrdiff_t rowStart = Offset32(static_cast<u32>(y), stride, static_cast<u32>(x));
     ptrdiff_t to = rowStart;
-    const u8* command = f.commands;
+    ptrdiff_t command = f.commands;
     for (;;) {
-        u8 code = *command++;
+        u8 code = source.Command(command++);
         if (code & 0x80) {
             u32 skip = code & 0x7F;
             if (skip == 0)
@@ -191,7 +198,7 @@ void FlipMonoIconToBitmap(
             to = rowStart;
         } else {
             for (u32 i = 0; i < code; ++i)
-                pixels[to--] = fill;
+                target.Put(to--, fill);
         }
     }
 }
@@ -205,13 +212,14 @@ void DimIconToBitmap(icon* ic, bitmap* bmp, i32 x, i32 y, i32 frame, i32 offsetM
     if (PastEdge(x, f.width, bmp->m_width) || PastEdge(y, f.height, bmp->m_height))
         return;
 
-    u8* pixels = bmp->m_pixels;
+    IconTarget target = TargetOf(bmp);
+    const IconSource& source = f.source;
     u32 stride = static_cast<u16>(bmp->m_width);
     ptrdiff_t rowStart = Offset32(static_cast<u32>(y), stride, static_cast<u32>(x));
     ptrdiff_t to = rowStart;
-    const u8* command = f.commands;
+    ptrdiff_t command = f.commands;
     for (;;) {
-        u8 code = *command++;
+        u8 code = source.Command(command++);
         if (code & 0x80) {
             u32 skip = code & 0x7F;
             if (skip == 0)
@@ -222,7 +230,7 @@ void DimIconToBitmap(icon* ic, bitmap* bmp, i32 x, i32 y, i32 frame, i32 offsetM
             to = rowStart;
         } else {
             for (u32 i = 0; i < code; ++i, ++to)
-                pixels[to] = gDimPalette[pixels[to]];
+                target.Put(to, gDimPalette[target.Get(to)]);
         }
     }
 }
@@ -237,13 +245,14 @@ void FlipDimIconToBitmap(icon* ic, bitmap* bmp, i32 x, i32 y, i32 frame, i32 off
     if (PastEdge(y, f.height, bmp->m_height))
         return;
 
-    u8* pixels = bmp->m_pixels;
+    IconTarget target = TargetOf(bmp);
+    const IconSource& source = f.source;
     u32 stride = static_cast<u16>(bmp->m_width);
     ptrdiff_t rowStart = Offset32(static_cast<u32>(y), stride, static_cast<u32>(x));
     ptrdiff_t to = rowStart;
-    const u8* command = f.commands;
+    ptrdiff_t command = f.commands;
     for (;;) {
-        u8 code = *command++;
+        u8 code = source.Command(command++);
         if (code & 0x80) {
             u32 skip = code & 0x7F;
             if (skip == 0)
@@ -254,7 +263,7 @@ void FlipDimIconToBitmap(icon* ic, bitmap* bmp, i32 x, i32 y, i32 frame, i32 off
             to = rowStart;
         } else {
             for (u32 i = 0; i < code; ++i, --to)
-                pixels[to] = gDimPalette[pixels[to]];
+                target.Put(to, gDimPalette[target.Get(to)]);
         }
     }
 }

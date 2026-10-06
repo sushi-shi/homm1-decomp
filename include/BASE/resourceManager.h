@@ -60,6 +60,7 @@ public:
     resource* Query(i16 resourceId);
     void RemoveResource(resource* resourceToRemove);
     i16 LoadAggregateHeader(char* aggregateName);
+    void InvalidResource(i16 fileId);
     void PointToFile(i16 fileId);
     u32 GetFileSize(i16 fileId);
     void SavePosition();

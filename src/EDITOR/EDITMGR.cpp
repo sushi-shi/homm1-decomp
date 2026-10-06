@@ -10911,9 +10911,60 @@ i16 editManager::LoadMap(char* name) {
     return BASE_MANAGER_SUCCESS;
 }
 
+// The cells of a map just read, checked where the editor relies on them: the
+// town and hero cells name extra records that exist, a hero's record names a
+// hero, an artifact cell names an artifact, a mine has room for the cell
+// right of it, which holds its resource marker, and no cell becomes a hero
+// without a record when the object over it is cleared. The original trusted them
+// and indexed past its tables for a map that broke any of these.
+i32 editManager::MapObjectsValid(void) {
+    i32 x;
+    i32 y;
+    mapCell* cell;
+    mapHeroExtra* heroRecord;
+
+    for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
+        for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
+            cell = &m_map.cells[x][y];
+            switch (cell->m_triggerType) {
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN:
+                case MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_TOWN:
+                case MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_CASTLE:
+                    if (cell->m_objectMetadata >= m_extraCount)
+                        return 0;
+                    break;
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_ARTIFACT:
+                    if (cell->m_objectIndex >= EDIT_MAP_ARTIFACT_SLOTS)
+                        return 0;
+                    break;
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_MINE:
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_SAWMILL:
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_ALCHEMIST_LAB:
+                    if (x + 1 >= MAP_CELL_GRID_SIZE)
+                        return 0;
+                    break;
+            }
+            // Clearing an object makes the cell's secondary trigger its
+            // trigger, without a record: it cannot be a hero.
+            if ((cell->m_secondaryTrigger & MAP_TRIGGER_TYPE_MASK) == MAP_FILE_OBJECT_HERO)
+                return 0;
+            if ((cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_FILE_OBJECT_HERO) {
+                if (cell->m_objectMetadata < MAP_EXTRA_FIRST_RECORD
+                    || cell->m_objectMetadata >= m_extraCount)
+                    return 0;
+                heroRecord = static_cast<mapHeroExtra*>(m_extras[cell->m_objectMetadata]);
+                if (heroRecord->heroId < 0 || heroRecord->heroId >= GAME_HERO_COUNT)
+                    return 0;
+            }
+        }
+    }
+    return 1;
+}
+
 // Reads what WriteMapFile writes. The town, mine, artifact, obelisk and sound
 // tables are rebuilt on saving and skipped here. A record count beyond the
-// table or a record longer than the file makes the map invalid.
+// table, a record longer than the file or cells that name records or
+// objects that do not exist make the map invalid.
 i32 editManager::ReadMapFile(RecordReader& file) {
     u8 headerBytes[MAP_HEADER_RECORD_SIZE];
     i16 width;
@@ -10981,7 +11032,7 @@ i32 editManager::ReadMapFile(RecordReader& file) {
         }
         gNextObjectId = file.GetI16();
     }
-    return file.Ok();
+    return file.Ok() && MapObjectsValid();
 }
 
 i16 editManager::PickMap(char*, char*, i16 mode) {

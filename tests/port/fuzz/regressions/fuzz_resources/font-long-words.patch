@@ -1,0 +1,11 @@
+# A font whose 162 glyphs are all 8 pixels wide, measured and wrapped on
+# text with words wider than the box and with line breaks: LineLength never
+# ended on a word longer than a line, LineWidth never got past a line break,
+# and DrawBoundedString read and wrote before its copy of the text.
+bytes 0C 00 09 00                           # height 12, glyph offset 9
+bytes 46 55 5A 5A 2E 49 43 4E 00 00 00 00 00   # glyph icon FUZZ.ICN
+bytes A2 00 9B 07 00 00                     # 162 frames, 1947 bytes
+repeat 162 00 00 00 00 08 00 01 00 98 07 00 00   # 8x1 at 0,0, commands at 1944
+bytes 08 00 80                              # one row of 8, end
+bytes 04                    # kind: font
+expect accepted

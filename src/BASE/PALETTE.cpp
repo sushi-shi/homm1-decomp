@@ -15,6 +15,8 @@ palette::palette(void) : resource(RESOURCE_CATEGORY_PALETTE, -1, RESOURCE_REFERE
 palette::palette(i16 id)
     : resource(RESOURCE_CATEGORY_PALETTE, id, RESOURCE_REFERENCE_INITIAL, NULL) {
     m_data = static_cast<i8*>(malloc(PALETTE_DATA_SIZE));
+    if (gResourceManager->GetFileSize(id) < PALETTE_DATA_SIZE)
+        gResourceManager->InvalidResource(id);
     gResourceManager->PointToFile(id);
     gResourceManager->ReadBlock(m_data, PALETTE_DATA_SIZE);
 }
