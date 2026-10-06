@@ -26,7 +26,12 @@ image's config/retail directory:
   placements.tsv         source claims of units the image shares with the game
                          (they translate the shared source's game-space claims)
   function_referents.tsv names of placed functions and paired import thunks
-  data_vtables.tsv, data_compgen.tsv   placed provider rows
+  data_vtables.tsv, data_compgen.tsv   placed provider rows; a class only
+                         the image compiles names its vtable from a
+                         masked-identical constructor of the image's own
+                         compile when every slot holds that class's claimed
+                         function
+
 
 Units are shared when config/units.toml lists the image in their `images`.
 """
@@ -110,6 +115,10 @@ class Placer:
         self.image_sizes: dict[int, int] = {}             # game rva -> this image's size
         self.image_callees: dict[int, set[str]] = {}      # rva -> callee symbol(s)
         self.data: dict[int, tuple[int, str]] = {}
+        # rva -> (size, name, evidence): vtables of classes only this image has
+        self.image_vtables: dict[int, tuple[int, str, str]] = {}
+        # rva -> (size, name, unit): floating constants of the image's own units
+        self.image_fp: dict[int, tuple[int, str, str]] = {}
         self.problems: list[str] = []
 
     # -- functions ----------------------------------------------------------
@@ -335,7 +344,9 @@ class Placer:
         pairs.sort()
         self.pairs, self.keys = pairs, [g for g, _e in pairs]
         for b in self.bindings:
-            if b["space"] == "text" or not b["name"]:
+            # literal-pool names spell the game address: the image's own
+            # compile places its literals (never the game's by their bytes)
+            if b["space"] == "text" or not b["name"] or RVA_NAMED.match(b["name"]):
                 continue
             placed = self.place_datum(b["rva"], b["size"], b["name"], b["space"])
             if placed is not None:
@@ -457,6 +468,15 @@ class Placer:
                  and b["channel"] in (*SRC_CHANNELS, "data_vtables", "data_compgen")}
         claims_dir = image_build(self.image) / "gen/claims"
         found: dict[int, set[int]] = defaultdict(set)
+        # vftables the image's own bodies store: symbol -> {address}, and the
+        # slot symbols of each from its compiled object
+        vftables: dict[str, set[int]] = defaultdict(set)
+        vfslots: dict[str, list[str]] = {}
+        image_funcs: dict[str, int] = {}
+        for frag in sorted(claims_dir.rglob("*.tsv")):
+            for r in read_tsv(frag)[2]:
+                if r.get("space") == self.image and r["kind"] == "func":
+                    image_funcs[mask(r["name"])] = int(r["rva"], 16)
         from homm1.manifest import units as image_units
         for unit in sorted(u["unit"] for u in image_units(image=self.image)):
             frag = claims_dir / f"{unit}.tsv"
@@ -500,13 +520,46 @@ class Placer:
                             self.image_callees.setdefault(target, set()).add(callee)
                     if r.typ != 0x6:
                         continue
-                    b = names.get(mask(c.symbols[r.symbol_index].name))
+                    target_name = c.symbols[r.symbol_index].name
+                    b = names.get(mask(target_name))
                     if b is None:
+                        off = r.site - sym.value
+                        addend = struct.unpack_from("<i", body, off)[0]
+                        value = struct.unpack_from("<I", retail, off)[0] - 0x400000
+                        if VFTABLE.match(target_name):
+                            vftables[target_name].add(value - addend)
+                            vfslots.setdefault(target_name, _vftable_slots(c, target_name))
+                        elif FP_CONSTANT.match(target_name):
+                            payload = _symbol_payload(c, target_name)
+                            at = value - addend
+                            if payload and self.pe.read(at, len(payload)) == payload:
+                                held = self.image_fp.get(at)
+                                if held and held[1] != target_name:
+                                    self.problems.append(
+                                        f"constant 0x{at:x}: {held[1]} and {target_name}")
+                                else:
+                                    self.image_fp[at] = (len(payload), target_name, unit)
                         continue
                     off = r.site - sym.value
                     addend = struct.unpack_from("<i", body, off)[0]
                     value = struct.unpack_from("<I", retail, off)[0] - 0x400000
                     found[b["rva"]].add(value - addend)
+        for name, addrs in sorted(vftables.items()):
+            slots = vfslots.get(name) or []
+            if len(addrs) != 1 or not slots:
+                continue
+            rva = next(iter(addrs))
+            raw = self.pe.read(rva, 4 * len(slots))
+            values = [struct.unpack_from("<I", raw, 4 * i)[0] - 0x400000
+                      for i in range(len(slots))] if raw else []
+            if values and all(image_funcs.get(mask(slot)) == value
+                              for slot, value in zip(slots, values)):
+                self.image_vtables[rva] = (
+                    4 * len(slots), name,
+                    f"stored by this image's own compile (masked-identical); all "
+                    f"{len(slots)} slots hold the class's claimed functions")
+            else:
+                self.problems.append(f"vtable {name} at 0x{rva:x}: slots disagree")
         for grva, eaddrs in found.items():
             # code users outrank an initializer-bytes match
             if grva in self.data and not self.data[grva][1].startswith("complete initialized"):
@@ -530,6 +583,38 @@ GENERATED = ("placements.tsv", "function_referents.tsv", "data_vtables.tsv",
              "data_compgen.tsv", "data_symbols.tsv", "link_order.tsv", "data.tsv")
 
 
+VFTABLE = re.compile(r"^\?\?_7.+@@6B@$")
+FP_CONSTANT = re.compile(r"^__real@(?:4|8)@[0-9a-f]+$")
+
+
+def _symbol_payload(c, name: str) -> bytes:
+    """The raw bytes of a constant's own COMDAT section."""
+    sym = next((y for y in c.symbols.values() if y.name == name and y.section > 0), None)
+    if sym is None:
+        return b""
+    sec = c.sections[sym.section - 1]
+    data = c.section_bytes(sec)
+    size = 8 if name.startswith("__real@8@") else 4
+    return data[sym.value:sym.value + size] if len(data) >= sym.value + size else b""
+
+
+def _vftable_slots(c, name: str) -> list[str]:
+    """The slot symbols of a compiled vftable, in slot order."""
+    sym = next((y for y in c.symbols.values() if y.name == name and y.section > 0), None)
+    if sym is None:
+        return []
+    relocs = sorted((r for r in c.relocations
+                     if r.section == sym.section and r.typ == 0x6 and r.site >= sym.value),
+                    key=lambda r: r.site)
+    slots, at = [], sym.value
+    for r in relocs:
+        if r.site != at:
+            break
+        slots.append(c.symbols[r.symbol_index].name)
+        at += 4
+    return slots
+
+
 def write_tables(p: Placer, out: Path | None = None) -> dict:
     out = out or retail_dir(p.image)
     digest_line = f"# Generated by `homm1 --image {p.image} audit placements --write-config`."
@@ -550,8 +635,13 @@ def write_tables(p: Placer, out: Path | None = None) -> dict:
         if erva not in taken:
             referents.append([f"0x{erva:08x}", name, why])
             taken.add(erva)
+    from homm1.core.paths import image_build
+    own_claims = {int(r["rva"], 16)
+                  for frag in sorted((image_build(p.image) / "gen/claims").rglob("*.tsv"))
+                  for r in read_tsv(frag)[2]
+                  if r.get("space") == p.image and r["kind"] == "func"}
     for erva, callees in sorted(p.image_callees.items()):
-        if erva not in taken and len(callees) == 1:
+        if erva not in taken and erva not in own_claims and len(callees) == 1:
             referents.append([f"0x{erva:08x}", next(iter(callees)),
                               "callee of a body compiled for this image from shared source"])
     # LIBCMT bodies the DNA census matches exactly (masked) to one member
@@ -628,6 +718,10 @@ def write_tables(p: Placer, out: Path | None = None) -> dict:
     starts.update({erva: game_kinds.get(grva, "") for grva, (erva, _w) in p.data.items()})
     for grva, (erva, _n, _w, _s) in p.symbols.items():
         starts.setdefault(erva, game_kinds.get(grva, ""))
+    for erva in p.image_vtables:
+        starts[erva] = "vtable"
+    for erva in p.image_fp:
+        starts[erva] = "fppool"
     # the image's own source data claims (src/<IMAGE>) are starts too
     from homm1.core.paths import image_build
     for frag in sorted((image_build(p.image) / "gen/claims").rglob("*.tsv")):
@@ -649,6 +743,12 @@ def write_tables(p: Placer, out: Path | None = None) -> dict:
     write_tsv(out / "function_referents.tsv", [
         digest_line, "# Names of game functions and import thunks placed in this image."],
         ["rva", "name", "provenance"], referents)
+    for erva, (size, name, why) in sorted(p.image_vtables.items()):
+        vtables.append([f"0x{erva:08x}", f"0x{size:x}", name, "primary", why])
+    vtables.sort()
+    for erva, (size, name, unit) in sorted(p.image_fp.items()):
+        compgen.append([f"0x{erva:08x}", f"0x{size:x}", name, unit, "fppool"])
+    compgen.sort()
     write_tsv(out / "data_vtables.tsv", [digest_line],
               ["rva", "size", "name", "kind", "note"], vtables)
     write_tsv(out / "data_compgen.tsv", [digest_line],

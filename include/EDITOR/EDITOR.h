@@ -6,6 +6,8 @@
 
 #include <Domains.h>
 
+struct SMapHeader;
+
 // The status bar: the bottom 16-pixel row of the 640x480 screen.
 H1_ENUM_CONST_BEGIN(EditorStatusBarConstant)
     EDITOR_STATUS_BAR_X = 0,
@@ -23,6 +25,24 @@ extern i32 gStatusTextShown;
 extern i32 gStatusTextClearTime;
 extern i32 gStatusTextHoldTime;
 extern char gStatusText[];
+
+// The map header the editor edits (EDITMGR's gMapHeader).
+extern SMapHeader* gpMapHeader;
+// Cleared while a map without the editor's format word is loaded: such maps
+// keep no object owners, so the eraser clears whole cells.
+extern i32 gNewMapFormat;
+// The eraser's and terrain tool's drag rectangle in map cells (x -1: none).
+extern i32 gSelectionX;
+extern i32 gSelectionY;
+extern i32 gSelectionWidth;
+extern i32 gSelectionHeight;
+// Set while the random-map generator runs: the map view draws clouds only.
+extern i32 gGeneratingMaps;
+// The last object number given to placed cells (editCellOwner).
+extern i16 gNextCellOwner;
+// The right-click help of editwind.bin's buttons and areas.
+extern char* gEditButtonHelp[];
+extern char* gEditAreaHelp[];
 
 void ShowStatusText(char* text);
 void ClearStatusText(void);

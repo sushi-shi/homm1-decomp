@@ -3912,6 +3912,134 @@ msgctxt "editor.window.title"
 msgid "Heroes Editor"
 msgstr "Редактор Героев"
 
+msgctxt "editor.map.saved"
+msgid "'%s' saved successfully"
+msgstr "'%s' сохранена успешно"
+
+msgctxt "editor.quit.confirm"
+msgid "Do you really want to quit?\n"
+msgstr "Вы действительно хотите выйти?\n"
+
+msgctxt "editor.map.new.confirm"
+msgid "Do you want to clear the map and start from  scratch? "
+msgstr "Вы хотите отчистить карту и начать с  нуля? "
+
+msgctxt "editor.check.stone_liths.single"
+msgid "Only one set of stone liths on the map. Another set of stone liths must be placed."
+msgstr "Только одни путевые врата на карте. Необходимо установить еще одни путевые врата."
+
+msgctxt "editor.check.whirlpool.single"
+msgid "Only 1 whirlpool on the map. Another whirlpool must be placed."
+msgstr "Только 1 водоворот на карте. Необходимо поместить еще один водоворот."
+
+msgctxt "editor.check.castles.few"
+msgid "There are fewer than 4 castles on the map!\n"
+msgstr "На карте меньше 4 замков!\n"
+
+msgctxt "editor.check.castles.unset"
+msgid "Some castles have no properties set. All of these castles will be turned into towns!\n"
+msgstr "Для некоторых замков не заданы свойства. Все эти замки будут превращены в города!\n"
+
+msgctxt "editor.check.castles.mixed"
+msgid "Castles with set properties were found, but all castles were given properties. All of these castles will be turned into towns!\n"
+msgstr "Найдены замки с заданными свойствами, но всем замкам были заданы свойства. Все эти замки будут превращены в города!\n"
+
+msgctxt "editor.check.lighthouse.multiple"
+msgid "More than one lighthouse on the map"
+msgstr "Более одного маяка на карте"
+
+msgctxt "editor.check.dragon_city.multiple"
+msgid "More than one Dragon City on the map"
+msgstr "Более одного Драконьего города на карте"
+
+msgctxt "editor.check.obelisks.many"
+msgid "%d obelisks on the map. There must be no more than 48 of them."
+msgstr "%d обелисков на карте. Их должно быть не более 48 штук."
+
+msgctxt "editor.map.old_format"
+msgid "Warning -\nThis is an old map.\n\nAll maps created in the DOS version of Heroes, including this map, are in the old format. This format does not support removing objects. Any map created for the Win version of Heroes, like any map created with this editor, works normally."
+msgstr "Внимание -\nЭто старая карта.\n\nВсе карты, созданные в DOS версии Героев, включая эту карту, созданы в старом формате. Этот формат не поддерживает удаление объектов. Любые из карт, созданные под Win версию Героев как и любая карта, созданная с помощью этого редактора, работает нормально."
+
+msgctxt "editor.check.next"
+msgid "%s\n\nShow the next error?"
+msgstr "%s\n\nПоказать следующую ошибку?"
+
+msgctxt "editor.map.random.name"
+msgid "Random %d"
+msgstr "Случайная %d"
+
+msgctxt "editor.map.unnamed"
+msgid "No name %d"
+msgstr "Нет имени %d"
+
+msgctxt "editor.map.no_description"
+msgid "No description"
+msgstr "Нет описания"
+
+msgctxt "table.gEditButtonHelp.1"
+msgid "Scroll\n\nScroll the screen in the indicated direction."
+msgstr "Прокрутка\n\nПрокрутить экран в указанном направлении."
+
+msgctxt "table.gEditButtonHelp.2"
+msgid "Switch between zoomed and normal view."
+msgstr "Переключение между режимом увеличения и обычным просмотром."
+
+msgctxt "table.gEditButtonHelp.3"
+msgid "Undo the last action. Press again to redo the undone action."
+msgstr "Отменить последнее действие. Нажмите еще раз, чтобы повторить отмененное действие."
+
+msgctxt "table.gEditButtonHelp.4"
+msgid "Change the map's name, description and other map information."
+msgstr "Изменить название карты, описание и другую информацию о карте."
+
+msgctxt "table.gEditButtonHelp.5"
+msgid "Start a new map from scratch."
+msgstr "Начать новую карту с нуля."
+
+msgctxt "table.gEditButtonHelp.6"
+msgid "Load an existing map."
+msgstr "Загрузить существующую карту."
+
+msgctxt "table.gEditButtonHelp.7"
+msgid "Save the map to disk."
+msgstr "Сохранить карту на диск."
+
+msgctxt "table.gEditButtonHelp.8"
+msgid "Quit"
+msgstr "Выйти"
+
+msgctxt "table.gEditButtonHelp.9"
+msgid "Use the random map generator."
+msgstr "Использовать генератор случайных карт."
+
+msgctxt "table.gEditAreaHelp.1"
+msgid "Radar map\n\nControls the camera position."
+msgstr "Радарная карта\n\nУправляет положением камеры."
+
+msgctxt "table.gEditAreaHelp.2"
+msgid "Scrolling\n\nUsed to move the map along the screen's axes."
+msgstr "Скроллинг\n\nИспользуется для перемещения карты по осям экрана."
+
+msgctxt "table.gEditAreaHelp.3"
+msgid "Terrain\n\nUsed to paint different types of terrain."
+msgstr "Земля\n\nИспользуется для рисования разных типов земли."
+
+msgctxt "table.gEditAreaHelp.4"
+msgid "Objects\n\nUsed to place objects (mountains, trees, etc.) on the map."
+msgstr "Объекты\n\nИспользуется для размещения объектов (горы, деревья и т.п.) на карте."
+
+msgctxt "table.gEditAreaHelp.5"
+msgid "Information\n\nUsed to set monster counts and edit heroes and towns."
+msgstr "Информация\n\nИспользуется для указания количества монстров, редактирования героев и городов."
+
+msgctxt "table.gEditAreaHelp.6"
+msgid "Eraser\n\nUsed to remove objects from the map."
+msgstr "Ластик\n\nИспользуется для удаления объектов с карты."
+
+msgctxt "table.gEditAreaHelp.7"
+msgid "Map\n\nThe map itself is drawn here!"
+msgstr "Карта\n\nЗдесь рисуют саму карту!"
+
 msgctxt "startup.instance.already_running"
 msgid "Only one copy of %s may run at a time"
 msgstr "Только одна копия %s может быть запущена одновременно"

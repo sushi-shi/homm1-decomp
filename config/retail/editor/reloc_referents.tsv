@@ -1,2 +1,3 @@
-# Reviewed relocation referents requiring more than containment (none yet).
+# Reviewed relocation referents requiring more than containment.
 function_rva	target_rva	site_rva	owner	addend	occurrences	provenance
+0x00007667	0x000519e8	0x0000768f	?gEditErrors@@3PAPADA	0xFFFFFFFC	1	EDITOR.EXE editManager::ClearErrors frees gEditErrors[gEditErrorCount - 1]; the indexed load biases the table base by -4; complete instruction and addend proof

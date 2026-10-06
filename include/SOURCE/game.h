@@ -223,6 +223,7 @@ H1_ENUM_CONST_END(BoatRecordConstant)
 // and castle bits, which the record's castle flag decides).
 H1_ENUM_CONST_BEGIN(MapTownRecordConstant)
     MAP_TOWN_TYPE_MASK = 0x7f,
+    MAP_TOWN_CASTLE_FLAG = 0x80,
     MAP_TOWN_OWNER_UNSET = -2,
     MAP_TOWN_EXTRA_BUILDING_MASK = 0x1f9f,
     // mapHeroExtra::artifacts: a placed hero's four starting artifacts.

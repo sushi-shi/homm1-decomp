@@ -178,8 +178,8 @@ fileRequester::fileRequester(
                 FileError(fullFileName);
             READ_FILE_VALUE(file, headerData);
             if (headerData.id == MAP_HEADER_ID) {
-                strcpy(m_mapNames[entryIndex].text, headerData.name);
-                strcpy(m_mapInfo[entryIndex].description, headerData.description);
+                strcpy(m_mapNames[entryIndex].text, headerData.name[0]);
+                strcpy(m_mapInfo[entryIndex].description, headerData.description[0]);
                 m_mapInfo[entryIndex].difficulty = headerData.difficulty;
                 m_mapInfo[entryIndex].size = headerData.size;
             } else {

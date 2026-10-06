@@ -57,7 +57,11 @@ H1_ENUM_CONST_END(FileRequesterScrollGeometry)
 // version; versions from MAP_EXTRA_VERSION carry map-extra records).
 H1_ENUM_CONST_BEGIN(MapHeaderConstant)
     MAP_HEADER_ID = 1000,
-    MAP_EXTRA_VERSION = 1112
+    MAP_EXTRA_VERSION = 1112,
+    MAP_HEADER_NAME_COUNT = 10,
+    MAP_HEADER_NAME_SIZE = 15,
+    MAP_HEADER_DESCRIPTION_COUNT = 8,
+    MAP_HEADER_DESCRIPTION_SIZE = 121
 H1_ENUM_CONST_END(MapHeaderConstant)
 
 // SMapHeader::size, gMapSize and game::m_mapSize: retail gMapSizeNames
@@ -122,14 +126,19 @@ struct FileRequesterMapInfo {
     char description[FILE_REQUESTER_MAP_DESCRIPTION_SIZE];
 };
 
-// .MAP header as the requester reads it: 0x554 bytes, id 1000 marks a valid
-// map; the name and description offsets are fixed by the constructor.
+// .MAP header: 0x554 bytes, id 1000 marks a valid map. The requester shows
+// the first name and description; the editor's NewMap fills eight of each
+// (fifteen and 121 bytes apart), and its maps end the header with the format
+// word (1000 for the editor's own format; maps without it are two bytes
+// shorter). No code reads the bytes between the descriptions and the format.
 struct SMapHeader {
     i16 id;
     i8 difficulty;
     i8 size;
-    char name[0x96];
-    char description[0x4ba];
+    char name[MAP_HEADER_NAME_COUNT][MAP_HEADER_NAME_SIZE];
+    char description[MAP_HEADER_DESCRIPTION_COUNT][MAP_HEADER_DESCRIPTION_SIZE];
+    u8 unknown462[0xf0];
+    i16 format;
 };
 
 // PickLoadGame allocates 0x1bc bytes; constructor, Open, Main and Update fix

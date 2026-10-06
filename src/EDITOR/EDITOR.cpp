@@ -4,7 +4,9 @@
 // the functions both programs define.
 // Descriptive names: ShowStatusText, ClearStatusText, gStatusTextShown,
 // gStatusTextClearTime, gStatusTextHoldTime, gStatusText,
-// gCommandLineInterpreted, EditorStartupHook, EditorIdleHook,
+// gCommandLineInterpreted, gpMapHeader, gNewMapFormat, gSelectionX,
+// gSelectionY, gSelectionWidth, gSelectionHeight, gGeneratingMaps,
+// gNextCellOwner, gEditButtonHelp, gEditAreaHelp, EditorStartupHook, EditorIdleHook,
 // IncrementArgumentA, IncrementArgumentB.
 
 #include <match.h>
@@ -54,6 +56,46 @@ DATA(0x00452174)
 i32 gStatusTextHoldTime;
 DATA(0x00451ea8)
 char gStatusText[EDITOR_STATUS_TEXT_CAPACITY];
+DATA(0x00451e98)
+SMapHeader* gpMapHeader;
+DATA(0x0043f398)
+i32 gNewMapFormat = 1;
+DATA(0x0043f3a0)
+i32 gSelectionX = -1;
+DATA(0x00451f70)
+i32 gSelectionY;
+DATA(0x00451e9c)
+i32 gSelectionWidth;
+DATA(0x00451f80)
+i32 gSelectionHeight;
+DATA(0x004528e4)
+i32 gGeneratingMaps;
+DATA(0x0045245c)
+i16 gNextCellOwner;
+DATA(0x0043f744)
+char* gEditButtonHelp[10] = {
+    "",
+    localization::Tr("table.gEditButtonHelp.1"),
+    localization::Tr("table.gEditButtonHelp.2"),
+    localization::Tr("table.gEditButtonHelp.3"),
+    localization::Tr("table.gEditButtonHelp.4"),
+    localization::Tr("table.gEditButtonHelp.5"),
+    localization::Tr("table.gEditButtonHelp.6"),
+    localization::Tr("table.gEditButtonHelp.7"),
+    localization::Tr("table.gEditButtonHelp.8"),
+    localization::Tr("table.gEditButtonHelp.9"),
+};
+DATA(0x0043f76c)
+char* gEditAreaHelp[8] = {
+    "",
+    localization::Tr("table.gEditAreaHelp.1"),
+    localization::Tr("table.gEditAreaHelp.2"),
+    localization::Tr("table.gEditAreaHelp.3"),
+    localization::Tr("table.gEditAreaHelp.4"),
+    localization::Tr("table.gEditAreaHelp.5"),
+    localization::Tr("table.gEditAreaHelp.6"),
+    localization::Tr("table.gEditAreaHelp.7"),
+};
 
 VA(0x004084a0, 0x5)
 void EditorStartupHook(void) {}
