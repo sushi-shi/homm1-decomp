@@ -182,6 +182,9 @@ DATA(0x004a9904)
 i32 gHeroMoving = 0;
 DATA(0x004a9908)
 i32 gInSmacker = 0;
+// No retail code reads this; it holds its retail .bss place.
+DATA(0x004a990c)
+i32 gUnusedKBCount = 0;
 DATA(0x004a9910)
 i32 gRemoteReady = 0;
 DATA(0x004a9914)
@@ -220,6 +223,11 @@ DATA(0x004a9948)
 i8 gGameInitialized = 0;
 DATA(0x004a9949)
 i8 gShowHighScore = 0;
+// No retail code reads this; it holds its retail .bss place.
+DATA(0x004a994c)
+i32 gUnusedKBTicks = 0;
+DATA(0x004a9950)
+i8 gUnusedKBFlag = 0;
 DATA(0x004a9951)
 i8 gInPollSound = 0;
 
@@ -4445,6 +4453,9 @@ i32 gHighMemBuffer = 4000;
 
 DATA(0x004a9414)
 i32 gHumanPlayer[4];
+// No retail code reads this; it holds its retail .bss place.
+DATA(0x004a9424)
+i32 gOldKBMark;
 DATA(0x004a7b74)
 i32 gMaxExtentX;
 DATA(0x004a7b78)
@@ -4465,6 +4476,9 @@ DATA(0x004a7b90)
 inputManager* gInputManager;
 DATA(0x004a762c)
 i32 gMaxMapExtra;
+// No retail code reads this; it holds its retail .bss place.
+DATA(0x004a7630)
+i32 gKBOldWord;
 DATA(0x004a7834)
 palette* gPalette;
 DATA(0x004a74d8)
@@ -4505,6 +4519,9 @@ DATA(0x004a9560)
 i32 gMinExtentX;
 DATA(0x004a9564)
 i32 gMinExtentY;
+// No retail code reads this; it holds its retail .bss place.
+DATA(0x004a9568)
+i32 gSpareKBIntPos;
 DATA(0x004a7b9c)
 i8 gMapBaseType;
 DATA(0x004a7fb4)
@@ -4529,18 +4546,27 @@ DATA(0x004a7620)
 i32 gShowIntro;
 DATA(0x004a98a0)
 i32 gTimers[GLOBAL_TIMER_COUNT];
+// No retail code reads this; it holds its retail .bss place.
+DATA(0x004a98b8)
+i32 gKBOldField;
 DATA(0x004a7fbc)
 i32 gScore;
 DATA(0x004a9404)
 armyGroup* gMonGroup;
 DATA(0x004a9428)
 configStruct gConfig;
+// No retail code reads this; it holds its retail .bss place.
+DATA(0x004a9554)
+i32 gOldKBMask;
 DATA(0x004a7a10)
 char gRegAppPath[352];
 DATA(0x004a9410)
 i8 gCampaignChoice;
 DATA(0x004a7ba0)
 class game* gGame;
+// No retail code reads this; it holds its retail .bss place.
+DATA(0x004a7ba4)
+i32 gKBOldId;
 DATA(0x004a7823)
 i8 gRetreatWin;
 DATA(0x004a7b8d)
@@ -4605,6 +4631,9 @@ DATA(0x004a7634)
 class highScoreManager* gHighScoreManager;
 DATA(0x004a70c4)
 i8 gFunctionComplete;
+// No retail code reads this; it holds its retail .bss place.
+DATA(0x004a70c8)
+u8 gKBFreeData[156];
 DATA(0x004a7ba8)
 i8 gIAmGreatest;
 DATA(0x004a7824)
@@ -4629,6 +4658,9 @@ DATA(0x004a74c8)
 i8 gWaitForRemoteReceive;
 DATA(0x004a95d0)
 char gLastMapName[352];
+// No retail code reads this; it holds its retail .bss place.
+DATA(0x004a9730)
+i32 gExtraKBType;
 DATA(0x004a940c)
 townManager* gTownManager;
 DATA(0x004a782c)

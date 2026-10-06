@@ -338,6 +338,9 @@ BOOL __stdcall AppAbout(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
 
 DATA(0x004a9e4c)
 i32 gClosingApp = 0;
+// No retail code reads this; it holds its retail .bss place.
+DATA(0x004a9e50)
+i32 gUnusedWindowCount = 0;
 
 VA(0x00443766, 0xf)
 void AppExit(void) {

@@ -1081,7 +1081,7 @@ old_rva	new_rva	name	note
 0x0006878c	0x00054459	?Open@fileRequester@@UAEFF@Z	
 0x000688c0	0x000688c0	??0baseManager@@QAE@XZ	
 0x000689a0	0x000689a0	?CleanupSamples@@YAXXZ	
-0x00068b02	0x00068b02	?FindSampleNode@@YAPAUAudiereSampleNode@@PAVsample@@@Z	
+0x00068b02	0x00068b02	?FindSampleNode@@YAPAU?$AudiereNode@Vsample@@@@PAVsample@@@Z	
 0x00068b37	0x00068b37	?PlaySample@@YAXPAVsample@@@Z	
 0x00068bbd	0x00054826	?SetOK@fileRequester@@QAEXC@Z	
 0x00068c47	0x0005488d	?Main@fileRequester@@UAEFAAUtag_message@@@Z	
@@ -2070,7 +2070,7 @@ old_rva	new_rva	name	note
 0x000cc44c	0x000cb3dc	?remotestage@@3HA	
 0x000cc480	0x000cb410	?sndBuf@@3URemoteMessage@@A	
 0x000cc580	0x000cb510	?WFDCStage@@3HA	
-0x000cc6d8	0x000cb664	?rcvBufIn@@3URemoteMessage@@A	
+0x000cc6d8	0x000cb664	?rcvBufIn@@3PADA	
 0x000cc7d8	0x000cb768	?outque@@3Uoutque_t@@A	
 0x000cc8b0	0x000cc8b0	?gSearchSeedingComplete@@3HA	
 0x000cd6e0	0x000cc670	?iLastIds@@3PAHA	

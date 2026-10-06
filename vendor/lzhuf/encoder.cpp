@@ -30,17 +30,32 @@ extern "C" {
 DATA(0x004d4d0c) i16 match_position;
 DATA(0x004d45ac) i16 prnt[TREE_SIZE + CHARACTER_COUNT];
 DATA(0x004d20ac) i16 son[TREE_SIZE];
+// No retail code reads this; it holds its retail .bss place.
+DATA(0x004d2594)
+FILE* infile;
 DATA(0x004d4d0e) u16 getbuf;
 DATA(0x004d6f1a) u8 getlen;
 DATA(0x004d6f1c) u8 text_buf[WINDOW_SIZE + LOOK_AHEAD - 1];
+// No retail code reads this; it holds its retail .bss place.
+DATA(0x004d7f58)
+i32 gLzhufOldPad;
 DATA(0x004cfbb8) u16 freq[TREE_SIZE + 1];
 DATA(0x004d4d14) i16 match_length;
 DATA(0x004d259c) i16 lson[WINDOW_SIZE + 1];
+// No retail code reads this; it holds its retail .bss place.
+DATA(0x004d45a0)
+i32 gLzhufOldId;
 DATA(0x004d4d18) i16 rson[WINDOW_SIZE + 257];
 DATA(0x004d00a0) i16 dad[WINDOW_SIZE + 1];
+// No retail code reads this; it holds its retail .bss place.
+DATA(0x004d20a4)
+i32 gOldLzhufKeyPos;
 #define textsize decodeSkip // spelling fixes .bss order
 DATA(0x004d4d10) u32 textsize;
 DATA(0x004d45a4) u32 codesize;
+// No retail code reads this; it holds its retail .bss place.
+DATA(0x004d45a8)
+i32 gOldLzhufPtr;
 #define putbuf encbuf // spelling fixes .bss order
 DATA(0x004d7f5c) u16 putbuf;
 DATA(0x004d7f5e) u8 putlen;

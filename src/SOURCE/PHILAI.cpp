@@ -39,6 +39,9 @@
 
 DATA(0x004ca188)
 i8 gShowComputerRoute = 0;
+// No retail code reads this; it holds its retail .bss place.
+DATA(0x004ca18c)
+i32 gUnusedPhilAIWords[3] = {0, 0, 0};
 DATA(0x0049ef78)
 float gAttackHumanBonus = 2.0f;
 DATA(0x0049ef7c)

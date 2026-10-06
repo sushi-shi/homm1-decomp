@@ -79,19 +79,19 @@ rva	size	symbol	provenance
 0x00054ef0	4	_sClipInside	game 0xcfbb0: 3 code reference(s) from placed bodies
 0x00054ef4	4	_sClipLeft	game 0xcfbb4: 5 code reference(s) from placed bodies
 0x00054ef8	4	_gMusicSuspensions	game 0xcdde8: 5 code reference(s) from placed bodies
-0x00054efc	4	?stream@AudiereMusic@@2V?$RefPtr@VOutputStream@audiere@@@audiere@@A	game 0xcddec: 41 code reference(s) from placed bodies
+0x00054efc	4	?channel@AudiereMusic@@2V?$RefPtr@VOutputStream@audiere@@@audiere@@A	game 0xcddec: 41 code reference(s) from placed bodies
 0x00054f00	352	_gMusicFilename	game 0xcddf0: 3 code reference(s) from placed bodies
-0x00055060	4	?device@AudiereDevice@@2V?$RefPtr@VAudioDevice@audiere@@@audiere@@A	game 0xcdf50: 34 code reference(s) from placed bodies
-0x00055068	4	_gSampleBuffer	game 0xcdf58: 2 code reference(s) from placed bodies
-0x0005506c	4	_gSampleFrames	game 0xcdf5c: 6 code reference(s) from placed bodies
-0x00055070	4	_gSampleChannels	game 0xcdf60: 3 code reference(s) from placed bodies
-0x00055074	4	_gSampleRate	game 0xcdf64: 2 code reference(s) from placed bodies
-0x00055078	4	_gSampleFormat	game 0xcdf68: 3 code reference(s) from placed bodies
-0x0005507c	4	?source@AudiereMusic@@2V?$RefPtr@VSampleSource@audiere@@@audiere@@A	game 0xcdf6c: 24 code reference(s) from placed bodies
-0x00055084	400	_gMusicPositions	game 0xcdf74: 7 code reference(s) from placed bodies
-0x00055214	4	_gSamples	game 0xce104: 21 code reference(s) from placed bodies
-0x00055218	4	_gSampleSuspensions	game 0xce108: 5 code reference(s) from placed bodies
-0x0005521c	4	_gMusicSource	game 0xce10c: 2 code reference(s) from placed bodies
+0x00055060	4	?driver@AudiereDevice@@2V?$RefPtr@VAudioDevice@audiere@@@audiere@@A	game 0xcdf50: 34 code reference(s) from placed bodies
+0x00055068	4	_gSampleBufferly	game 0xcdf58: 2 code reference(s) from placed bodies
+0x0005506c	4	_gSampleFrames0	game 0xcdf5c: 6 code reference(s) from placed bodies
+0x00055070	4	_gSampleChannelsa58	game 0xcdf60: 3 code reference(s) from placed bodies
+0x00055074	4	_gSampleRate7	game 0xcdf64: 2 code reference(s) from placed bodies
+0x00055078	4	_gSampleFormata98	game 0xcdf68: 3 code reference(s) from placed bodies
+0x0005507c	4	?origin@AudiereMusic@@2V?$RefPtr@VSampleSource@audiere@@@audiere@@A	game 0xcdf6c: 24 code reference(s) from placed bodies
+0x00055084	400	_gMusicPositionsaat	game 0xcdf74: 7 code reference(s) from placed bodies
+0x00055214	4	_gSamplesa	game 0xce104: 21 code reference(s) from placed bodies
+0x00055218	4	_gSampleSuspensionsa6	game 0xce108: 5 code reference(s) from placed bodies
+0x0005521c	4	_gMusicSourcejxy	game 0xce10c: 2 code reference(s) from placed bodies
 0x0003b0f8	256	?gMonoColorMap@@3PAEA	game 0x92090 (SOURCE/KB): 5 code reference(s) from placed bodies
 0x0003eda0	48	?gRadarTerrainColor@@3PAFA	game 0x90588 (SOURCE/KB): complete initialized bytes (48) unique in the image; no code user
 0x0003eddc	4	?bShowIt@@3HA	game 0xa98bc (SOURCE/KB): 2 code reference(s) from placed bodies

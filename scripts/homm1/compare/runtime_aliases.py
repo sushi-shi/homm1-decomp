@@ -12,6 +12,9 @@ A few defaults are not the function's own symbol but an assembler label at
 the same address in the runtime member. LIBCMT's stricmp.obj defines the
 function `__stricmp` (COFF type 0x20) and the untyped label `__strcmpi` at
 the same `.text` offset, so OLDNAMES' `strcmpi` also reaches `__stricmp`.
+VC6's LIBCMT types `__stricmp`, `__strcmpi` and `__stricoll` as functions at
+one address; every name of such a group is compared as the group's first
+(`__strcmpi`), so `stricmp` and `strcmpi` calls name the same body.
 
 `aliases()` reads both pinned libraries and returns `{alias: function}` for
 every OLDNAMES name, composed through such a label. Comparison applies it to
@@ -93,19 +96,26 @@ def oldnames_defaults(path: Path) -> dict[str, str]:
 
 def label_functions(path: Path, names: set[str]) -> dict[str, str]:
     """{label: function} for runtime labels in `names` that share their
-    address with exactly one function-typed external of the same member."""
+    address with exactly one function-typed external of the same member, and
+    {function: first name} for a function in `names` that shares its address
+    with other function-typed externals."""
     found: dict[str, str] = {}
     for body in _members(path):
         defined = [s for s in _symbols(body).values()
                    if s.storage_class == canon.EXTERNAL_STORAGE and s.section > 0]
         for label in defined:
-            if label.name not in names or label.typ & canon.FUNCTION_TYPE:
+            if label.name not in names:
                 continue
             functions = [s.name for s in defined
                          if s.typ & canon.FUNCTION_TYPE
                          and (s.section, s.value) == (label.section, label.value)]
-            if len(functions) == 1:
-                found[label.name] = functions[0]
+            if not label.typ & canon.FUNCTION_TYPE:
+                if len(functions) == 1:
+                    found[label.name] = functions[0]
+            elif len(functions) > 1 and label.name != min(functions):
+                # VC6's stricmp.obj types __stricmp, __strcmpi and __stricoll
+                # as functions at one address: one body, named by the first.
+                found[label.name] = min(functions)
     return found
 
 
