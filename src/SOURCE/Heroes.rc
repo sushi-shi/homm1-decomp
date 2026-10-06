@@ -1,0 +1,283 @@
+LANGUAGE HOMM1_RESOURCE_LANGUAGE, HOMM1_RESOURCE_SUBLANGUAGE
+
+109 ICON "heroes.ico"
+
+HEROES DIALOG 22, 17, 144, 75
+STYLE 0x800000C0
+FONT 8, "System"
+BEGIN
+    ICON            "HEROES", -1, 9, 23, 18, 20
+    CTEXT           localization::Tr("resource.HEROES.title"), -1, 22, 5, 101, 8
+    CTEXT           localization::Tr("resource.HEROES.version"), -1, 51, 32, 42, 8
+    CTEXT           "Copyright 1995-6, New World Computing", -1, 7, 47, 132, 8
+    DEFPUSHBUTTON   localization::Tr("resource.HEROES.ok"), 1, 53, 59, 32, 14, 0x20000
+END
+
+MNUADV MENU
+BEGIN
+    POPUP localization::Tr("resource.MNUADV.popup.0")
+    BEGIN
+        POPUP localization::Tr("resource.MNUADV.popup.0_0")
+        BEGIN
+            MENUITEM localization::Tr("resource.MNUADV.command40102"), 40102
+            POPUP localization::Tr("resource.MNUADV.popup.0_0_1")
+            BEGIN
+                MENUITEM localization::Tr("resource.MNUADV.command40104"), 40104
+                MENUITEM localization::Tr("resource.MNUADV.command40105"), 40105
+                MENUITEM localization::Tr("resource.MNUADV.command40106"), 40106
+                MENUITEM localization::Tr("resource.MNUADV.command40107"), 40107
+            END
+            POPUP localization::Tr("resource.MNUADV.popup.0_0_2")
+            BEGIN
+                POPUP localization::Tr("resource.MNUADV.popup.0_0_2_0")
+                BEGIN
+                    MENUITEM localization::Tr("resource.MNUADV.command40110"), 40110
+                    MENUITEM localization::Tr("resource.MNUADV.command40111"), 40111
+                    MENUITEM localization::Tr("resource.MNUADV.command40112"), 40112
+                END
+                POPUP localization::Tr("resource.MNUADV.popup.0_0_2_1")
+                BEGIN
+                    MENUITEM localization::Tr("resource.MNUADV.command40114"), 40114
+                    MENUITEM localization::Tr("resource.MNUADV.command40115"), 40115
+                END
+                POPUP localization::Tr("resource.MNUADV.popup.0_0_2_2")
+                BEGIN
+                    MENUITEM localization::Tr("resource.MNUADV.command40117"), 40117
+                    MENUITEM localization::Tr("resource.MNUADV.command40118"), 40118
+                END
+                POPUP localization::Tr("resource.MNUADV.popup.0_0_2_3")
+                BEGIN
+                    MENUITEM localization::Tr("resource.MNUADV.command40120"), 40120
+                    MENUITEM localization::Tr("resource.MNUADV.command40121"), 40121
+                END
+            END
+        END
+        POPUP localization::Tr("resource.MNUADV.popup.0_1")
+        BEGIN
+            MENUITEM localization::Tr("resource.MNUADV.command40123"), 40123
+            MENUITEM localization::Tr("resource.MNUADV.command40124"), 40124
+            POPUP localization::Tr("resource.MNUADV.popup.0_1_2")
+            BEGIN
+                POPUP localization::Tr("resource.MNUADV.popup.0_1_2_0")
+                BEGIN
+                    MENUITEM localization::Tr("resource.MNUADV.command40127"), 40127
+                    MENUITEM localization::Tr("resource.MNUADV.command40128"), 40128
+                    MENUITEM localization::Tr("resource.MNUADV.command40129"), 40129
+                END
+                POPUP localization::Tr("resource.MNUADV.popup.0_1_2_1")
+                BEGIN
+                    MENUITEM localization::Tr("resource.MNUADV.command40131"), 40131
+                    MENUITEM localization::Tr("resource.MNUADV.command40132"), 40132
+                END
+                POPUP localization::Tr("resource.MNUADV.popup.0_1_2_2")
+                BEGIN
+                    MENUITEM localization::Tr("resource.MNUADV.command40134"), 40134
+                    MENUITEM localization::Tr("resource.MNUADV.command40135"), 40135
+                END
+                POPUP localization::Tr("resource.MNUADV.popup.0_1_2_3")
+                BEGIN
+                    MENUITEM localization::Tr("resource.MNUADV.command40137"), 40137
+                    MENUITEM localization::Tr("resource.MNUADV.command40138"), 40138
+                END
+            END
+        END
+        MENUITEM localization::Tr("resource.MNUADV.command40139"), 40139
+        MENUITEM SEPARATOR
+        MENUITEM localization::Tr("resource.MNUADV.command40140"), 40140
+    END
+    POPUP localization::Tr("resource.MNUADV.popup.1")
+    BEGIN
+        POPUP localization::Tr("resource.MNUADV.popup.1_0")
+        BEGIN
+            MENUITEM localization::Tr("resource.MNUADV.command40016"), 40016
+            MENUITEM localization::Tr("resource.MNUADV.command40017"), 40017, CHECKED
+            MENUITEM localization::Tr("resource.MNUADV.command40018"), 40018
+            MENUITEM localization::Tr("resource.MNUADV.command40019"), 40019
+            MENUITEM localization::Tr("resource.MNUADV.command40020"), 40020
+            MENUITEM localization::Tr("resource.MNUADV.command40021"), 40021
+            MENUITEM localization::Tr("resource.MNUADV.command40022"), 40022
+            MENUITEM localization::Tr("resource.MNUADV.command40023"), 40023
+            MENUITEM localization::Tr("resource.MNUADV.command40024"), 40024
+            MENUITEM localization::Tr("resource.MNUADV.command40025"), 40025
+            MENUITEM localization::Tr("resource.MNUADV.command40026"), 40026
+        END
+        POPUP localization::Tr("resource.MNUADV.popup.1_1")
+        BEGIN
+            MENUITEM localization::Tr("resource.MNUADV.command40028"), 40028
+            MENUITEM localization::Tr("resource.MNUADV.command40029"), 40029, CHECKED
+            MENUITEM localization::Tr("resource.MNUADV.command40030"), 40030
+            MENUITEM localization::Tr("resource.MNUADV.command40031"), 40031
+            MENUITEM localization::Tr("resource.MNUADV.command40032"), 40032
+            MENUITEM localization::Tr("resource.MNUADV.command40033"), 40033
+            MENUITEM localization::Tr("resource.MNUADV.command40034"), 40034
+            MENUITEM localization::Tr("resource.MNUADV.command40035"), 40035
+            MENUITEM localization::Tr("resource.MNUADV.command40036"), 40036
+            MENUITEM localization::Tr("resource.MNUADV.command40037"), 40037
+            MENUITEM localization::Tr("resource.MNUADV.command40038"), 40038
+        END
+        POPUP localization::Tr("resource.MNUADV.popup.1_2")
+        BEGIN
+            MENUITEM localization::Tr("resource.MNUADV.command40040"), 40040
+            MENUITEM localization::Tr("resource.MNUADV.command40041"), 40041
+            MENUITEM localization::Tr("resource.MNUADV.command40042"), 40042, CHECKED
+            MENUITEM localization::Tr("resource.MNUADV.command40043"), 40043
+            MENUITEM localization::Tr("resource.MNUADV.command40044"), 40044
+        END
+        MENUITEM localization::Tr("resource.MNUADV.command40045"), 40045, CHECKED
+        MENUITEM localization::Tr("resource.MNUADV.command40046"), 40046, CHECKED
+        MENUITEM localization::Tr("resource.MNUADV.command40047"), 40047, CHECKED
+    END
+    POPUP localization::Tr("resource.MNUADV.popup.2")
+    BEGIN
+        MENUITEM localization::Tr("resource.MNUADV.command40012"), 40012
+        MENUITEM localization::Tr("resource.MNUADV.command40013"), 40013
+        MENUITEM localization::Tr("resource.MNUADV.command40014"), 40014
+        MENUITEM localization::Tr("resource.MNUADV.command40015"), 40015
+    END
+    POPUP localization::Tr("resource.MNUADV.popup.3")
+    BEGIN
+        MENUITEM localization::Tr("resource.MNUADV.command40005"), 40005
+        MENUITEM localization::Tr("resource.MNUADV.command40006"), 40006
+        MENUITEM localization::Tr("resource.MNUADV.command40007"), 40007
+        MENUITEM localization::Tr("resource.MNUADV.command40008"), 40008
+        MENUITEM localization::Tr("resource.MNUADV.command40009"), 40009
+    END
+    POPUP localization::Tr("resource.MNUADV.popup.4")
+    BEGIN
+        MENUITEM localization::Tr("resource.MNUADV.command40052"), 40052
+        MENUITEM SEPARATOR
+        MENUITEM localization::Tr("resource.MNUADV.command40053"), 40053
+    END
+END
+
+MNUDFLT MENU
+BEGIN
+    POPUP localization::Tr("resource.MNUDFLT.popup.0")
+    BEGIN
+        POPUP localization::Tr("resource.MNUDFLT.popup.0_0")
+        BEGIN
+            MENUITEM localization::Tr("resource.MNUDFLT.command40102"), 40102
+            POPUP localization::Tr("resource.MNUDFLT.popup.0_0_1")
+            BEGIN
+                MENUITEM localization::Tr("resource.MNUDFLT.command40104"), 40104
+                MENUITEM localization::Tr("resource.MNUDFLT.command40105"), 40105
+                MENUITEM localization::Tr("resource.MNUDFLT.command40106"), 40106
+                MENUITEM localization::Tr("resource.MNUDFLT.command40107"), 40107
+            END
+            POPUP localization::Tr("resource.MNUDFLT.popup.0_0_2")
+            BEGIN
+                POPUP localization::Tr("resource.MNUDFLT.popup.0_0_2_0")
+                BEGIN
+                    MENUITEM localization::Tr("resource.MNUDFLT.command40110"), 40110
+                    MENUITEM localization::Tr("resource.MNUDFLT.command40111"), 40111
+                    MENUITEM localization::Tr("resource.MNUDFLT.command40112"), 40112
+                END
+                POPUP localization::Tr("resource.MNUDFLT.popup.0_0_2_1")
+                BEGIN
+                    MENUITEM localization::Tr("resource.MNUDFLT.command40114"), 40114
+                    MENUITEM localization::Tr("resource.MNUDFLT.command40115"), 40115
+                END
+                POPUP localization::Tr("resource.MNUDFLT.popup.0_0_2_2")
+                BEGIN
+                    MENUITEM localization::Tr("resource.MNUDFLT.command40117"), 40117
+                    MENUITEM localization::Tr("resource.MNUDFLT.command40118"), 40118
+                END
+                POPUP localization::Tr("resource.MNUDFLT.popup.0_0_2_3")
+                BEGIN
+                    MENUITEM localization::Tr("resource.MNUDFLT.command40120"), 40120
+                    MENUITEM localization::Tr("resource.MNUDFLT.command40121"), 40121
+                END
+            END
+        END
+        POPUP localization::Tr("resource.MNUDFLT.popup.0_1")
+        BEGIN
+            MENUITEM localization::Tr("resource.MNUDFLT.command40123"), 40123
+            MENUITEM localization::Tr("resource.MNUDFLT.command40124"), 40124
+            POPUP localization::Tr("resource.MNUDFLT.popup.0_1_2")
+            BEGIN
+                POPUP localization::Tr("resource.MNUDFLT.popup.0_1_2_0")
+                BEGIN
+                    MENUITEM localization::Tr("resource.MNUDFLT.command40127"), 40127
+                    MENUITEM localization::Tr("resource.MNUDFLT.command40128"), 40128
+                    MENUITEM localization::Tr("resource.MNUDFLT.command40129"), 40129
+                END
+                POPUP localization::Tr("resource.MNUDFLT.popup.0_1_2_1")
+                BEGIN
+                    MENUITEM localization::Tr("resource.MNUDFLT.command40131"), 40131
+                    MENUITEM localization::Tr("resource.MNUDFLT.command40132"), 40132
+                END
+                POPUP localization::Tr("resource.MNUDFLT.popup.0_1_2_2")
+                BEGIN
+                    MENUITEM localization::Tr("resource.MNUDFLT.command40134"), 40134
+                    MENUITEM localization::Tr("resource.MNUDFLT.command40135"), 40135
+                END
+                POPUP localization::Tr("resource.MNUDFLT.popup.0_1_2_3")
+                BEGIN
+                    MENUITEM localization::Tr("resource.MNUDFLT.command40137"), 40137
+                    MENUITEM localization::Tr("resource.MNUDFLT.command40138"), 40138
+                END
+            END
+        END
+        MENUITEM localization::Tr("resource.MNUDFLT.command40139"), 40139
+        MENUITEM SEPARATOR
+        MENUITEM localization::Tr("resource.MNUDFLT.command40140"), 40140
+    END
+    POPUP localization::Tr("resource.MNUDFLT.popup.1")
+    BEGIN
+        MENUITEM localization::Tr("resource.MNUDFLT.command40005"), 40005
+        MENUITEM localization::Tr("resource.MNUDFLT.command40006"), 40006
+        MENUITEM localization::Tr("resource.MNUDFLT.command40007"), 40007
+        MENUITEM localization::Tr("resource.MNUDFLT.command40008"), 40008
+        MENUITEM localization::Tr("resource.MNUDFLT.command40009"), 40009
+    END
+    POPUP localization::Tr("resource.MNUDFLT.popup.2")
+    BEGIN
+        MENUITEM localization::Tr("resource.MNUDFLT.command40052"), 40052
+        MENUITEM SEPARATOR
+        MENUITEM localization::Tr("resource.MNUDFLT.command40053"), 40053
+    END
+END
+
+MNUCMBT MENU
+BEGIN
+    POPUP localization::Tr("resource.MNUCMBT.popup.0")
+    BEGIN
+        MENUITEM localization::Tr("resource.MNUCMBT.command40140"), 40140
+    END
+    POPUP localization::Tr("resource.MNUCMBT.popup.1")
+    BEGIN
+        MENUITEM localization::Tr("resource.MNUCMBT.command40005"), 40005
+        MENUITEM localization::Tr("resource.MNUCMBT.command40006"), 40006
+        MENUITEM localization::Tr("resource.MNUCMBT.command40007"), 40007
+        MENUITEM localization::Tr("resource.MNUCMBT.command40008"), 40008
+        MENUITEM localization::Tr("resource.MNUCMBT.command40009"), 40009
+    END
+    POPUP localization::Tr("resource.MNUCMBT.popup.2")
+    BEGIN
+        MENUITEM localization::Tr("resource.MNUCMBT.command40052"), 40052
+        MENUITEM SEPARATOR
+        MENUITEM localization::Tr("resource.MNUCMBT.command40053"), 40053
+    END
+END
+
+MNUTOWN MENU
+BEGIN
+    POPUP localization::Tr("resource.MNUTOWN.popup.0")
+    BEGIN
+        MENUITEM localization::Tr("resource.MNUTOWN.command40140"), 40140
+    END
+    POPUP localization::Tr("resource.MNUTOWN.popup.1")
+    BEGIN
+        MENUITEM localization::Tr("resource.MNUTOWN.command40005"), 40005
+        MENUITEM localization::Tr("resource.MNUTOWN.command40006"), 40006
+        MENUITEM localization::Tr("resource.MNUTOWN.command40007"), 40007
+        MENUITEM localization::Tr("resource.MNUTOWN.command40008"), 40008
+        MENUITEM localization::Tr("resource.MNUTOWN.command40009"), 40009
+    END
+    POPUP localization::Tr("resource.MNUTOWN.popup.2")
+    BEGIN
+        MENUITEM localization::Tr("resource.MNUTOWN.command40052"), 40052
+        MENUITEM SEPARATOR
+        MENUITEM localization::Tr("resource.MNUTOWN.command40053"), 40053
+    END
+END

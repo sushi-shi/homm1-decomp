@@ -1,0 +1,6296 @@
+msgid ""
+msgstr ""
+"Language: ru\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.confirm_end_turn"
+msgstr "Один или более героев все еще могут ходить. Окончить ход?"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.confirm_load"
+msgstr "Загрузить новую игру? (Данная игра будет потеряна)."
+
+#: src/SOURCE/ADVMGR.cpp src/SOURCE/kbwin.cpp
+msgid "adventure.confirm_quit"
+msgstr "Вы хотите выйти из игры?"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.confirm_restart"
+msgstr "Вы действительно хотите начать сначала?  (Данная игра будет потеряна)."
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.dimension_door.failed"
+msgstr "Не удалось перенестись!"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.quick.none"
+msgstr "Нет"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.quick.unknown"
+msgstr "Неизвестно"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.quick_info.artifact"
+msgstr "Артефакт"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.quick_info.border"
+msgstr "Граница"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.quick_info.uncharted"
+msgstr "Неизученная земля"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.save.success"
+msgstr "Игра успешно сохранена."
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.search.clear_ground"
+msgstr "Попробуйте искать на чистой земле."
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.search.eye_of_goros_enemy"
+msgstr "О, ужас - враг нашел первым Око Гороса! Воины покинули вас, и вы проиграли."
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.search.eye_of_goros_found"
+msgstr "Проведя многие часы в поисках, вы таки нашли Око Гороса!"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.search.found_prefix"
+msgstr "Поздравляем! Потратив уйму времени, вы таки нашли "
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.search.no_artifact_room"
+msgstr "У вас нет места для еще одного артефакта!"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.search.nothing_here"
+msgstr "Здесь ничего нет.\nГде же он?"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.search.on_land"
+msgstr "Попробуйте поискать на земле!!!"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.search.requires_full_day"
+msgstr "Поиски артефакта займут весь день. Попробуйте завтра."
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.spell.identify_hero"
+msgstr "Вражеские герои полностью опознаны."
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.spell.too_tired"
+msgstr "Ваш герой слишком устал, чтобы направлять сегодня заклинания. Попробуйте завтра."
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.status_help"
+msgstr "Статус\nВ этом окне сообщается информация о статусе вашего героя или королевства, а также показывает календарь. Щелчком левой кнопки мыши вы можете менять эти окна."
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.summon_boat.failed"
+msgstr "Не удалось вызвать корабль!"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.town_gate.land_required"
+msgstr "Заклинание Врата города провалено! Вы должны быть на суше, чтобы это заклинание сработало."
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.town_gate.no_town"
+msgstr "Нет доступного города. Не удалось направить Врата города!"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.town_gate.occupied"
+msgstr "Ближайший город оккупирован. Не удалось направить Врата города!"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.world_map_help"
+msgstr "Карта мира (Левой кнопкой мыши осматривать районы карты)."
+
+#: src/SOURCE/GAME.cpp
+msgid "army.dismiss.confirm"
+msgstr "Вы хотите распустить этот отряд?"
+
+#: src/SOURCE/SWAPMGR.cpp
+#, c-format
+msgid "army.transfer.prompt"
+msgstr "Перенести %s воинов от %s к %s?"
+
+#: src/SOURCE/SWAPMGR.cpp
+msgid "artifact.trade.forbidden"
+msgstr "Нельзя передать этот предмет."
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "calendar.day.label"
+msgstr "День"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "calendar.month.label"
+msgstr "Месяц"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "calendar.week.label"
+msgstr "Неделя"
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "campaign.next.confirm"
+msgstr "Ваша кампания была сохранена как %s. Желаете начать новый сценарий?"
+
+#: src/SOURCE/KB.cpp
+msgid "campaign.replay.confirm"
+msgstr "Вы хотите переиграть этот сценарий?"
+
+#: src/SOURCE/GAME.cpp
+msgid "campaign.restart.confirm"
+msgstr "Вы хотите начать сначала сценарий?"
+
+#. fixed-width character field
+#: src/SOURCE/KB.cpp
+msgid "campaign.town_name.0"
+msgstr "   Предвратье   "
+
+#. fixed-width character field
+#: src/SOURCE/KB.cpp
+msgid "campaign.town_name.4"
+msgstr "Замок Айронфиста"
+
+#. fixed-width character field
+#: src/SOURCE/KB.cpp
+msgid "campaign.town_name.5"
+msgstr " Замок Слэйера  "
+
+#. fixed-width character field
+#: src/SOURCE/KB.cpp
+msgid "campaign.town_name.6"
+msgstr " Замок Ламанды  "
+
+#. fixed-width character field
+#: src/SOURCE/KB.cpp
+msgid "campaign.town_name.7"
+msgstr " Замок Аламара  "
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "campaign.victory"
+msgstr "Мои герои! Наши враги были разбиты, а их замки преданы разорению. Великий поход окончен, и я предстаю перед вами как всеми признанный Великий Король!\n\nМы достигли  победы за %d дней!"
+
+#: src/SOURCE/SPELLS.cpp
+#, c-format
+msgid "combat.armageddon.damage"
+msgstr "Армагеддон наносит %d ед. урона."
+
+#: src/SOURCE/COMMAND.cpp
+msgid "combat.artifact.captured"
+msgstr "Вы захватили вражеский артефакт!"
+
+#: src/SOURCE/COMMAND.cpp
+msgid "combat.casualties.attacker"
+msgstr "Нападающие:"
+
+#: src/SOURCE/COMMAND.cpp
+msgid "combat.casualties.defender"
+msgstr "Обороняющиеся:"
+
+#: src/SOURCE/COMMAND.cpp
+msgid "combat.casualties.title"
+msgstr "Потери"
+
+#: src/SOURCE/COMMAND.cpp
+msgid "combat.confirm.retreat"
+msgstr "Вы действительно хотите отступить?"
+
+#: src/SOURCE/ARMY.cpp
+msgid "combat.fragment.attack"
+msgstr "Атака"
+
+#: src/SOURCE/ARMY.cpp src/SOURCE/CMBTMGR.cpp
+msgid "combat.fragment.damage_points"
+msgstr "ед. урона"
+
+#: src/SOURCE/ARMY.cpp
+msgid "combat.fragment.destroy_plural"
+msgstr "уничтожен."
+
+#: src/SOURCE/ARMY.cpp
+msgid "combat.fragment.destroy_singular"
+msgstr "уничтожено."
+
+#: src/SOURCE/ARMY.cpp src/SOURCE/CMBTMGR.cpp
+msgid "combat.fragment.dies"
+msgstr "умирает."
+
+#: src/SOURCE/ARMY.cpp
+msgid "combat.fragment.does_damage"
+msgstr "наносит"
+
+#: src/SOURCE/ARMY.cpp src/SOURCE/CMBTMGR.cpp
+msgid "combat.fragment.killed"
+msgstr "умирает."
+
+#: src/SOURCE/ARMY.cpp
+msgid "combat.fragment.troop"
+msgstr "воин"
+
+#: src/SOURCE/ARMY.cpp
+msgid "combat.fragment.troops"
+msgstr "воинов"
+
+#: src/SOURCE/ARMY.cpp
+#, c-format
+msgid "combat.genie.half_army.buka"
+msgstr "%s %s уничтожил вражеских воинов!"
+
+#: src/SOURCE/ARMY.cpp
+#, c-format
+msgid "combat.luck.bad.buka"
+msgstr "Неудача! Атака %s наносит меньший урон."
+
+#: src/SOURCE/ARMY.cpp
+#, c-format
+msgid "combat.luck.good.buka"
+msgstr "Удача! Отряд %s наносит двойной урон!"
+
+#: src/SOURCE/CMBTMGR.cpp
+#, c-format
+msgid "combat.morale.bad"
+msgstr "Низкая мораль заставляет %s замереть в панике."
+
+#: src/SOURCE/CMBTMGR.cpp
+#, c-format
+msgid "combat.morale.good"
+msgstr "Высокая мораль дает отряду %s еще одну атаку."
+
+#: src/SOURCE/EVENTS.cpp
+#, c-format
+msgid "combat.network.attacked"
+msgstr "%s игрок, ваш герой %s атакован!"
+
+#: src/SOURCE/EVENTS.cpp
+msgid "combat.network.canceled"
+msgstr "Игра прервана."
+
+#: src/SOURCE/EVENTS.cpp
+msgid "combat.network.hero"
+msgstr "Герой"
+
+#: src/SOURCE/EVENTS.cpp src/SOURCE/GAME.cpp
+msgid "combat.network.receive_error"
+msgstr "Ошибка получения информации. Продолжать?"
+
+#: src/SOURCE/EVENTS.cpp
+msgid "combat.network.town"
+msgstr "Город"
+
+#: src/SOURCE/COMMAND.cpp
+msgid "combat.spell.already_cast"
+msgstr "Вы уже направили заклинание в этом раунде."
+
+#: src/SOURCE/SPELLS.cpp
+#, c-format
+msgid "combat.spell.cast"
+msgstr "Направить %s"
+
+#: src/SOURCE/SPELLS.cpp
+#, c-format
+msgid "combat.spell.cast_target"
+msgstr "Направить %s на %s"
+
+#: src/SOURCE/COMMAND.cpp
+msgid "combat.spell.no_hero"
+msgstr "У вас нет героя, чтобы направлять заклинания."
+
+#: src/SOURCE/SPELLS.cpp
+msgid "combat.spell.teleport_here"
+msgstr "Переместиться сюда"
+
+#: src/SOURCE/COMMAND.cpp
+#, c-format
+msgid "combat.surrender.offer"
+msgstr "%s говорит:\n\n\"Я приму вашу капитуляцию и пропущу вас и ваших воинов за %d золотых."
+
+#: src/SOURCE/CMBTMGR.cpp
+msgid "combat.tower.garrison.damage.prefix"
+msgstr "Гарнизон наносит"
+
+#: src/SOURCE/COMMAND.cpp
+msgid "common.none"
+msgstr "Нет"
+
+#: src/SOURCE/KB.cpp
+msgid "congratulations.victory.title"
+msgstr "Великая победа!"
+
+#: src/SOURCE/KB.cpp
+msgid "dialog.choice.or"
+msgstr "или"
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "dialog.income.per_day"
+msgstr "%d/день"
+
+#: src/SOURCE/wingraph.cpp
+msgid "display.color_mode.required"
+msgstr "Для героев требуется режим 256 цветов экрана или более.\n\nЧтобы изменить режим цветности, нажмите правую кнопку мыши на рабочем столе Windows и в открывшемся окне выберите 'Свойства', а затем 'Установки'. Здесь вы и сможете определить цветность экрана."
+
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.check.castles.few"
+msgstr "На карте меньше 4 замков!\n"
+
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.check.castles.mixed"
+msgstr "Найдены замки с заданными свойствами, но всем замкам были заданы свойства. Все эти замки будут превращены в города!\n"
+
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.check.castles.unset"
+msgstr "Для некоторых замков не заданы свойства. Все эти замки будут превращены в города!\n"
+
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.check.dragon_city.multiple"
+msgstr "Более одного Драконьего города на карте"
+
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.check.lighthouse.multiple"
+msgstr "Более одного маяка на карте"
+
+#: src/EDITOR/EDITMGR.cpp
+#, c-format
+msgid "editor.check.next"
+msgstr "%s\n\nПоказать следующую ошибку?"
+
+#: src/EDITOR/EDITMGR.cpp
+#, c-format
+msgid "editor.check.obelisks.many"
+msgstr "%d обелисков на карте. Их должно быть не более 48 штук."
+
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.check.stone_liths.single"
+msgstr "Только одни путевые врата на карте. Необходимо установить еще одни путевые врата."
+
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.check.whirlpool.single"
+msgstr "Только 1 водоворот на карте. Необходимо поместить еще один водоворот."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.clear.options.help"
+msgstr "Обеспечивает более детальное управление процессом удаления объектов."
+
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.cell.unavailable"
+msgstr "Информация доступна только для клеток с героями, монстрами или ворот городов и замков."
+
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.hero.troop_type.range"
+msgstr "Должно быть между 0 и 27"
+
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.monster.count.range"
+msgstr "Должно быть между 0 и 127.  (0 позволяет компьютеру определить число случайно.)"
+
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.town.mage_guild.range"
+msgstr "Должно быть между 1 и 4"
+
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.town.old_editor"
+msgstr "Невозможно редактировать город созданный старым редактором"
+
+#: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.town.troop_type.range"
+msgstr "Должно быть между 0 и 27"
+
+#: src/SOURCE/kbwin.cpp
+msgid "editor.instance.event_name"
+msgstr "Редактор Героев"
+
+#: src/SOURCE/kbwin.cpp
+msgid "editor.instance.title"
+msgstr "Редактор Героев"
+
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.map.new.confirm"
+msgstr "Вы хотите отчистить карту и начать с  нуля? "
+
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.map.no_description"
+msgstr "Нет описания"
+
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.map.old_format"
+msgstr "Внимание -\nЭто старая карта.\n\nВсе карты, созданные в DOS версии Героев, включая эту карту, созданы в старом формате. Этот формат не поддерживает удаление объектов. Любые из карт, созданные под Win версию Героев как и любая карта, созданная с помощью этого редактора, работает нормально."
+
+#: src/EDITOR/EDITMGR.cpp
+#, c-format
+msgid "editor.map.random.name"
+msgstr "Случайная %d"
+
+#: src/EDITOR/EDITMGR.cpp
+#, c-format
+msgid "editor.map.saved"
+msgstr "'%s' сохранена успешно"
+
+#: src/EDITOR/EDITMGR.cpp
+#, c-format
+msgid "editor.map.unnamed"
+msgstr "Нет имени %d"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.0"
+msgstr "1 - Вода"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.1"
+msgstr "2 - Трава"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.2"
+msgstr "3 - Снег"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.3"
+msgstr "4 - Болота"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.4"
+msgstr "5 - Лава"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.5"
+msgstr "6 - Пустыня"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.6"
+msgstr "7 - Грязь"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.7"
+msgstr "8 - Города"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.8"
+msgstr "9 - Монстры"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.9"
+msgstr "10 - Артефакты"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.category.10"
+msgstr "11 - Сокровища"
+
+#: src/EDITOR/OVERLAY.cpp
+msgid "editor.overlay.limit.artifacts"
+msgstr "Установлено максимальное количество артефактов."
+
+#: src/EDITOR/OVERLAY.cpp
+msgid "editor.overlay.limit.dragon_city"
+msgstr "На карте уже стоит Драконий город."
+
+#: src/EDITOR/OVERLAY.cpp
+msgid "editor.overlay.limit.lighthouse"
+msgstr "На карте уже стоит маяк."
+
+#: src/EDITOR/OVERLAY.cpp
+#, c-format
+msgid "editor.overlay.limit.mines"
+msgstr "Лимит шахт, мельниц и алхимических лабораторий (%d) достигнут."
+
+#: src/EDITOR/OVERLAY.cpp
+#, c-format
+msgid "editor.overlay.limit.towns"
+msgstr "Лимит городов (%d) достигнут."
+
+#: src/EDITOR/OVERLAY.cpp
+msgid "editor.overlay.place.unsuitable"
+msgstr "Неподходящее место"
+
+#: src/EDITOR/OVERLAY.cpp
+msgid "editor.overlay.resource.unsuitable"
+msgstr "Неподходящее место"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.overlay.selected.help"
+msgstr "Выбранный объект."
+
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.quit.confirm"
+msgstr "Вы действительно хотите выйти?\n"
+
+#: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.castles.failed"
+msgstr "Невозможно установить замки"
+
+#: src/EDITOR/MAPOBJ.cpp
+#, c-format
+msgid "editor.random.saved"
+msgstr "'%s' сохранена успешно"
+
+#: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.status.castles"
+msgstr "Генерация карты - размещаю замки..."
+
+#: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.status.land"
+msgstr "Генерация карты - анализирую земной массив..."
+
+#: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.status.mountains"
+msgstr "Генерация карты - размещаю горы..."
+
+#: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.status.objects"
+msgstr "Генерация карты - размещаю объекты..."
+
+#: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.status.roads"
+msgstr "Генерация карты - соединяю замки..."
+
+#: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.status.save_prompt"
+msgstr "Нажмите 'ОК' чтобы сохранить карту, 'ОТМЕНА', чтобы отменить."
+
+#: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.status.smoothing"
+msgstr "Генерация карты - шлифую рельеф..."
+
+#: src/EDITOR/MAPOBJ.cpp
+#, c-format
+msgid "editor.random.status.terrain"
+msgstr "Генерация карты - рисую землю - %s"
+
+#: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.status.treasure"
+msgstr "Генерация карты - размещаю сокровища..."
+
+#: src/EDITOR/MAPOBJ.cpp
+msgid "editor.random.status.trees"
+msgstr "Генерация карты - размещаю деревья..."
+
+#: src/EDITOR/Editor.rc
+msgid "editor.resource.EDITOR.ok"
+msgstr "ОК"
+
+#: src/EDITOR/Editor.rc
+msgid "editor.resource.EDITOR.title"
+msgstr "Редактор Героев"
+
+#: src/EDITOR/Editor.rc
+msgid "editor.resource.EDITOR.version"
+msgstr "Версия 1.1"
+
+#: src/EDITOR/Editor.rc
+msgid "editor.resource.MNUDFLT.command40005"
+msgstr "&640 x 480"
+
+#: src/EDITOR/Editor.rc
+msgid "editor.resource.MNUDFLT.command40006"
+msgstr "&800 x 600"
+
+#: src/EDITOR/Editor.rc
+msgid "editor.resource.MNUDFLT.command40007"
+msgstr "&1024 x 768"
+
+#: src/EDITOR/Editor.rc
+msgid "editor.resource.MNUDFLT.command40008"
+msgstr "1&280 x 1024"
+
+#: src/EDITOR/Editor.rc
+msgid "editor.resource.MNUDFLT.command40009"
+msgstr "&Полный экран (F4)"
+
+#: src/EDITOR/Editor.rc
+msgid "editor.resource.MNUDFLT.command40052"
+msgstr "&Темы помощи"
+
+#: src/EDITOR/Editor.rc
+msgid "editor.resource.MNUDFLT.command40053"
+msgstr "&О Героях Меча и Магии"
+
+#: src/EDITOR/Editor.rc
+msgid "editor.resource.MNUDFLT.command40140"
+msgstr "&Выйти"
+
+#: src/EDITOR/Editor.rc
+msgid "editor.resource.MNUDFLT.popup.0"
+msgstr "&Файл"
+
+#: src/EDITOR/Editor.rc
+msgid "editor.resource.MNUDFLT.popup.1"
+msgstr "&Экран"
+
+#: src/EDITOR/Editor.rc
+msgid "editor.resource.MNUDFLT.popup.2"
+msgstr "&Помощь"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.startup.cd.required"
+msgstr "У вас должен быть компакт-диск героев в CD приводе, чтобы\nиспользовать редактор Героев Меча и Магии.  \n\nПожалуйста, вставьте компакт-диск и попробуйте еще раз."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.startup.initialize.failed"
+msgstr "Не могу инициировать систему"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.0"
+msgstr "Свойства города/замка"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.1"
+msgstr "Изменить"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.2"
+msgstr "ID"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.3"
+msgstr "Название"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.4"
+msgstr "Кол-во."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.5"
+msgstr "Мон 1"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.6"
+msgstr "Мон 2"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.7"
+msgstr "Мон 3"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.8"
+msgstr "Мон 4"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.9"
+msgstr "Мон 5"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.10"
+msgstr "Владелец:"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.11"
+msgstr "Случ."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.12"
+msgstr "Нейт."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.13"
+msgstr "Гильдия магов / Ур."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.14"
+msgstr "Гильдия воров"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.15"
+msgstr "Таверна"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.16"
+msgstr "Верфь"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.17"
+msgstr "Колодец"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.18"
+msgstr "Жилище 1"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.19"
+msgstr "Жилище 2"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.20"
+msgstr "Жилище 3"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.21"
+msgstr "Жилище 4"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.22"
+msgstr "Жилище 5"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.23"
+msgstr "Жилище 6"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.24"
+msgstr "Свойства монстра\n\n \n\n0 для случайного кол-ва.\n\nили введите положительное число"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.25"
+msgstr "Свойства героя"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.26"
+msgstr "ID"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.27"
+msgstr "Имя"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.28"
+msgstr "Кол-во."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.29"
+msgstr "Мон 1"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.30"
+msgstr "Мон 2"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.31"
+msgstr "Мон 3"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.32"
+msgstr "Мон 4"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.33"
+msgstr "Мон 5"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.34"
+msgstr "Хозяин:"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.35"
+msgstr "ID героя"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.36"
+msgstr "Артефакт 1"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.37"
+msgstr "Артефакт 2"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.38"
+msgstr "Артефакт 3"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.39"
+msgstr "Артефакт 4"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.40"
+msgstr "Опыт"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.41"
+msgstr "Вода:\n\nЗемля:\n\nСнег:\n\nБолота:\n\nЛава:\n\nПустыня:\n\nГрязь:"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.42"
+msgstr "Города:\n\nМонстры:\n\nАртефакты:\n\nСокровища:"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.43"
+msgstr "Все закрасить:"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.44"
+msgstr "Обновить карту:"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.45"
+msgstr "Легкая:\n\nОбычная:\n\nТяжелая:\n\nНепроходимая:"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.46"
+msgstr "Маленькая:\n\nСредняя:\n\nБольшая:"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.47"
+msgstr "Название:"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.48"
+msgstr "Описание:"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.49"
+msgstr "Префикс файла:"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.50"
+msgstr "Нет"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.51"
+msgstr "Много"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.52"
+msgstr "Вода:"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.53"
+msgstr "Трава:"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.54"
+msgstr "Снег:"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.55"
+msgstr "Болото:"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.56"
+msgstr "Лава:"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.57"
+msgstr "Пустыня:"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.58"
+msgstr "Грязь:"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.59"
+msgstr "Мало"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.60"
+msgstr "Много"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.61"
+msgstr "Горы:"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.62"
+msgstr "Деревья:"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.63"
+msgstr "Шахты:"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.64"
+msgstr "Сокровища:"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.65"
+msgstr "Монстры:"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.66"
+msgstr "Доля земли:"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.67"
+msgstr "Вразброс:"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.68"
+msgstr "По центру:"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.table.gWinSetupText.69"
+msgstr "Сохранить без просмотра:"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.help.desert"
+msgstr "Пустыня\n\n Все герои, кроме варвара, за 1 шаг тратят 2 единицы движения."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.help.dirt"
+msgstr "Земля\n\nНет ограничений."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.help.grass"
+msgstr "Трава\n\nНет ограничений."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.help.lava"
+msgstr "Лава\n\nНет ограничений."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.help.snow"
+msgstr "Снег\n\nВсе герои, кроме варвара, за 1 шаг тратят 1,5 единицы движения."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.help.swamp"
+msgstr "Болото\n\n Все герои, кроме варвара, за 1 шаг тратят 1,5 единицы движения."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.help.water"
+msgstr "Вода\n\nЗдесь можно путешествовать только на корабле."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.name.0"
+msgstr "Вода"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.name.1"
+msgstr "Трава"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.name.2"
+msgstr "Снег"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.name.3"
+msgstr "Болото"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.name.4"
+msgstr "Лава"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.name.5"
+msgstr "Пустыня"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.terrain.name.6"
+msgstr "Земля"
+
+#: src/SOURCE/kbwin.cpp
+msgid "editor.window.app_name"
+msgstr "Редактор Героев"
+
+#: src/SOURCE/kbwin.cpp
+msgid "editor.window.title"
+msgstr "Редактор Героев"
+
+#: src/SOURCE/KB.cpp
+msgid "endgame.enemy.captured_artifact"
+msgstr "Враг захватил Могущественный артефакт!"
+
+#: src/SOURCE/KB.cpp
+msgid "endgame.enemy.captured_dragon_city"
+msgstr "Враг захватил Драконий город!"
+
+#: src/SOURCE/KB.cpp
+msgid "endgame.enemy.captured_town"
+msgstr "Враг захватил город XX!!"
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "endgame.heroes.abandon_player"
+msgstr "%s игрок был брошен своими героями, а сам изгнан из этих земель."
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "endgame.heroes.abandon_you"
+msgstr "%s игрок, ваши герои покинули вас, а вы были изгнаны из этих земель."
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "endgame.last_town.lost"
+msgstr "%s игрок, вы потеряли ваш последний город. Если вы не захватите новый город до следующей недели, вы будете уничтожены."
+
+#: src/SOURCE/EVENTS.cpp
+#, c-format
+msgid "event.artifact.disappears"
+msgstr "Это %s. Но едва вы добрались до артефакта, как он таинственным образом исчез..."
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.artifact.full"
+msgstr "Вы не можете подобрать этот артефакт, у вас нет места для него!"
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.shrine.no_spellbook"
+msgstr "  К сожалению, у вас нет Волшебной книги, чтобы запомнить заклинание."
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.shrine.rankings"
+msgstr "Оракул - информация об игроках"
+
+#: src/SOURCE/EVENTS.cpp
+msgid "event.skeleton.treasure"
+msgstr "Сокровище"
+
+#: src/BASE/RESMGR.cpp
+#, c-format
+msgid "file.aggregate.open_failed"
+msgstr "Не могу открыть файл: %s"
+
+#: src/SOURCE/REQUEST.cpp
+#, c-format
+msgid "file.humans.computer"
+msgstr "Выбранная игра предназначена для %d человек. Разрешается ли занять оставшиеся %d мест компьютеру? "
+
+#: src/SOURCE/REQUEST.cpp
+#, c-format
+msgid "file.humans.minimum"
+msgstr "Выбранная вами игра позволяет играть только %d игрокам. Вам нужна игра как минимум для %d человек."
+
+#: src/SOURCE/REQUEST.cpp
+msgid "file.load.label"
+msgstr "Загрузить:"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "file.open.failed"
+msgstr "Ошибка открытия файла %s!"
+
+#: src/SOURCE/REQUEST.cpp
+msgid "file.players.label"
+msgstr "Игроки"
+
+#: src/SOURCE/REQUEST.cpp
+msgid "file.save.label"
+msgstr "Сохранить:"
+
+#: src/SOURCE/REQUEST.cpp
+msgid "file.selection.required"
+msgstr "Выберите файл из списка или отмените действия."
+
+#: src/SOURCE/KB.cpp
+msgid "game.load.confirm"
+msgstr "Загрузить новую игру? (Данная игра будет потеряна)."
+
+#: src/SOURCE/GAME.cpp
+msgid "game.opponent.required"
+msgstr "Игра требует как минимум одного оппонента."
+
+#: src/SOURCE/KB.cpp
+msgid "game.restart.confirm"
+msgstr "Вы действительно хотите начать сначала?  (Данная игра будет потеряна)."
+
+#: src/SOURCE/HERO.cpp
+msgid "hero.dismiss.confirm"
+msgstr "Вы действительно хотите уволить героя?"
+
+#: src/SOURCE/HERO.cpp
+#, c-format
+msgid "hero.experience.details"
+msgstr "%d уровень\n\n%d оч. опыта\nСледующий уровень: %d"
+
+#: src/SOURCE/SWAPMGR.cpp
+#, c-format
+msgid "hero.meeting.title"
+msgstr "Встречаются %s и %s"
+
+#: src/SOURCE/HERO.cpp src/SOURCE/VIEW.cpp
+#, c-format
+msgid "hero.title"
+msgstr "%s %s"
+
+#: src/SOURCE/REMOTE.cpp
+msgid "modem.connecting"
+msgstr "Налаживаю соединение..."
+
+#: src/SOURCE/REMOTE.cpp
+msgid "modem.dialing"
+msgstr "Набор номера..."
+
+#: src/SOURCE/REMOTE.cpp
+msgid "modem.initializing"
+msgstr "Инициирование модема..."
+
+#: src/SOURCE/REMOTE.cpp
+msgid "modem.ring.wait"
+msgstr "Ожидание звонка..."
+
+#: src/SOURCE/SETUP.cpp
+msgid "modem.telephone.required"
+msgstr "Укажите номер телефона."
+
+#: src/SOURCE/REMOTE.cpp
+msgid "network.direct.wait"
+msgstr "Ожидание другого компьютера для прямого соединения.\n\nНажмите 'ОТМЕНА', чтобы отменить действие."
+
+#: src/SOURCE/REMOTE.cpp
+msgid "network.guest.wait"
+msgstr "Ожидание гостя.\n\n Нажмите 'ОТМЕНА', чтобы закончить."
+
+#: src/SOURCE/REMOTE.cpp
+msgid "network.host.wait"
+msgstr "Ожидание хоста.\n\n Нажмите 'ОТМЕНА', чтобы закончить."
+
+#: src/SOURCE/KB.cpp
+msgid "network.incoming.close"
+msgstr "[ Входящая информация, необходимо закрыть... ]"
+
+#: src/SOURCE/REMOTE.cpp
+msgid "network.initialize.failed"
+msgstr "Не удалось инициировать сетевое соединение"
+
+#: src/SOURCE/REMOTE.cpp
+msgid "network.initialize.slots_full"
+msgstr "Не удалось инициировать сетевое соединение, все места заняты!"
+
+#: src/SOURCE/REMOTE.cpp
+msgid "network.initialize.wait"
+msgstr "Инициирование сети.\n\n Нажмите 'ОТМЕНА', чтобы закончить."
+
+#: src/SOURCE/REMOTE.cpp
+msgid "network.netbios.missing"
+msgstr "НЕТБИОС не загружена."
+
+#: src/SOURCE/REMOTE.cpp
+msgid "network.peer.wait"
+msgstr "Компьютер другого игрока не отвечает. Желаете продолжить ожидание? "
+
+#: src/SOURCE/KB.cpp
+msgid "network.player.eliminated"
+msgstr "Вы были исключены из игры!"
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "network.player.exit.computer"
+msgstr "Игрок %d покинул игру. Данная игра была сохранена как 'ИГРОК ВЫШЕЛ'. Вы желаете продолжить игру с компьютерным игроком, занявшим место выбывшего %d игрока?"
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "network.player.timeout.computer"
+msgstr "%d игрок был выкинут из игры. Данная игра была сохранена как 'ИГРОК ВЫШЕЛ'. Желаете ли вы продолжить игру и заместить выбывшего %d игрока компьютером?"
+
+#: src/SOURCE/GAME.cpp
+msgid "network.receive.title"
+msgstr "Получение данных"
+
+#: src/SOURCE/REMOTE.cpp
+msgid "network.send.retry"
+msgstr "Ошибка отправки данных. Продолжать?"
+
+#: src/SOURCE/GAME.cpp
+msgid "network.send.title"
+msgstr "Пересылка данных"
+
+#: src/SOURCE/KB.cpp
+msgid "network.setup.wait"
+msgstr "Ожидаю других игроков для установки игры."
+
+#: src/SOURCE/KB.cpp
+#, c-format
+msgid "player.vanquished"
+msgstr "%s игрок разгромлен!"
+
+#: src/SOURCE/RECRUIT.cpp
+msgid "recruitment.available.label"
+msgstr "Доступно: "
+
+#: src/SOURCE/RECRUIT.cpp
+msgid "recruitment.garrison.full"
+msgstr "Нет места в гарнизоне для этой армии."
+
+#: src/SOURCE/RECRUIT.cpp
+msgid "recruitment.title.prefix"
+msgstr "Нанять "
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.HEROES.ok"
+msgstr "ОК"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.HEROES.title"
+msgstr "Герои Меча и Магии"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.HEROES.version"
+msgstr "Версия 1.1"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40005"
+msgstr "&640 x 480"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40006"
+msgstr "&800 x 600"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40007"
+msgstr "&1024 x 768"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40008"
+msgstr "1&280 x 1024"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40009"
+msgstr "&Полный экран (F4)"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40012"
+msgstr "Показать &мир"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40013"
+msgstr "Показать &загадку"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40014"
+msgstr "&Направить заклинание"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40015"
+msgstr "&Копать"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40016"
+msgstr "Выкл."
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40017"
+msgstr "Вкл. - 100%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40018"
+msgstr "Вкл. - 90%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40019"
+msgstr "Вкл. - 80%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40020"
+msgstr "Вкл. - 70%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40021"
+msgstr "Вкл. - 60%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40022"
+msgstr "Вкл. - 50%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40023"
+msgstr "Вкл. - 40%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40024"
+msgstr "Вкл. - 30%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40025"
+msgstr "Вкл. - 20%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40026"
+msgstr "Вкл. - 10%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40028"
+msgstr "Выкл."
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40029"
+msgstr "Вкл. - 100%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40030"
+msgstr "Вкл. - 90%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40031"
+msgstr "Вкл. - 80%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40032"
+msgstr "Вкл. - 70%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40033"
+msgstr "Вкл. - 60%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40034"
+msgstr "Вкл. - 50%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40035"
+msgstr "Вкл. - 40%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40036"
+msgstr "Вкл. - 30%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40037"
+msgstr "Вкл. - 20%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40038"
+msgstr "Вкл. - 10%"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40040"
+msgstr "&Прыжками"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40041"
+msgstr "&Галопом"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40042"
+msgstr "&Рысью"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40043"
+msgstr "&Аллюром"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40044"
+msgstr "&Шагом"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40045"
+msgstr "&CD стерео"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40046"
+msgstr "Показывать &путь"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40047"
+msgstr "&Показывать движение врага"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40052"
+msgstr "&Темы помощи"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40053"
+msgstr "&О Героях Меча и Магии"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40102"
+msgstr "&Обычная игра"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40104"
+msgstr "Играть за лорда &Айронфиста"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40105"
+msgstr "Играть за вождя &Слэйера"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40106"
+msgstr "Играть за царицу &Ламанду"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40107"
+msgstr "Играть за колдуна &Аламара"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40110"
+msgstr "&2 игрока"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40111"
+msgstr "&3 игрока"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40112"
+msgstr "&4 игрока"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40114"
+msgstr "&Сервер"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40115"
+msgstr "&Гость"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40117"
+msgstr "&Сервер (Звонки)"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40118"
+msgstr "&Гость (Ответы)"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40120"
+msgstr "&Сервер"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40121"
+msgstr "&Гость"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40123"
+msgstr "&Обычная игра"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40124"
+msgstr "&Кампания"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40127"
+msgstr "&2 игрока"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40128"
+msgstr "&3 игрока"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40129"
+msgstr "&4 игрока"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40131"
+msgstr "&Сервер"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40132"
+msgstr "&Гость"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40134"
+msgstr "&Сервер (Звонки)"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40135"
+msgstr "&Гость (Ответы)"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40137"
+msgstr "&Сервер"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40138"
+msgstr "&Гость"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40139"
+msgstr "&Сохранить игру"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.command40140"
+msgstr "&Выйти"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.0"
+msgstr "&Файл"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.1"
+msgstr "&Панель управления"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.2"
+msgstr "&Стратегическая карта"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.3"
+msgstr "&Экран"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.4"
+msgstr "&Помощь"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.0_0"
+msgstr "&Новая игра"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.0_0_1"
+msgstr "&Кампания"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.0_0_2"
+msgstr "&Сетевая игра"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.0_0_2_0"
+msgstr "&За одним компьютером"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.0_0_2_1"
+msgstr "&Сеть"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.0_0_2_2"
+msgstr "&Модем"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.0_0_2_3"
+msgstr "&Прямое соединение"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.0_1"
+msgstr "&Загрузить игру"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.0_1_2"
+msgstr "&Сетевая игра"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.0_1_2_0"
+msgstr "&За одной машиной"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.0_1_2_1"
+msgstr "&Сеть"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.0_1_2_2"
+msgstr "&Модем"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.0_1_2_3"
+msgstr "&Прямое соединение"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.1_0"
+msgstr "&Музыка"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.1_1"
+msgstr "&Звук"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUADV.popup.1_2"
+msgstr "Скорость"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUCMBT.command40005"
+msgstr "&640 x 480"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUCMBT.command40006"
+msgstr "&800 x 600"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUCMBT.command40007"
+msgstr "&1024 x 768"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUCMBT.command40008"
+msgstr "1&280 x 1024"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUCMBT.command40009"
+msgstr "&Полный экран (F4)"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUCMBT.command40052"
+msgstr "&Темы помощи"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUCMBT.command40053"
+msgstr "&О героях Меча и Магии"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUCMBT.command40140"
+msgstr "&Выйти"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUCMBT.popup.0"
+msgstr "&Файл"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUCMBT.popup.1"
+msgstr "&Экран"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUCMBT.popup.2"
+msgstr "&Помощь"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40005"
+msgstr "&640 x 480"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40006"
+msgstr "&800 x 600"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40007"
+msgstr "&1024 x 768"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40008"
+msgstr "1&280 x 1024"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40009"
+msgstr "&Полный экран (F4)"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40052"
+msgstr "&Темы помощи"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40053"
+msgstr "&О Героях Меча и Магии"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40102"
+msgstr "&Обычная игра"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40104"
+msgstr "Играть за лорда &Айронфиста"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40105"
+msgstr "Играть за вождя &Слэйера"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40106"
+msgstr "Играть за царицу &Ламанду"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40107"
+msgstr "Играть за колдуна &Аламара"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40110"
+msgstr "&2 игрока"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40111"
+msgstr "&3 игрока"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40112"
+msgstr "&4 игрока"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40114"
+msgstr "&Сервер"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40115"
+msgstr "&Гость"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40117"
+msgstr "&Сервер (Звонки)"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40118"
+msgstr "&Гость (Ответы)"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40120"
+msgstr "&Сервер"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40121"
+msgstr "&Гость"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40123"
+msgstr "&Обычная игра"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40124"
+msgstr "&Кампания"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40127"
+msgstr "&2 игрока"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40128"
+msgstr "&3 игрока"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40129"
+msgstr "&4 игрока"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40131"
+msgstr "&Сервер"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40132"
+msgstr "&Гость"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40134"
+msgstr "&Сервер (Звонки)"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40135"
+msgstr "&Гость (Ответы)"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40137"
+msgstr "&Сервер"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40138"
+msgstr "&Гость"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40139"
+msgstr "&Сохранить игру"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.command40140"
+msgstr "&Выйти"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.popup.0"
+msgstr "&Файл"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.popup.1"
+msgstr "&Экран"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.popup.2"
+msgstr "&Помощь"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.popup.0_0"
+msgstr "&Новая игра"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.popup.0_0_1"
+msgstr "&Кампания"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.popup.0_0_2"
+msgstr "&Сетевая игра"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.popup.0_0_2_0"
+msgstr "&За одной машиной"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.popup.0_0_2_1"
+msgstr "&Сеть"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.popup.0_0_2_2"
+msgstr "&Модем"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.popup.0_0_2_3"
+msgstr "&Прямое соединение"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.popup.0_1"
+msgstr "&Загрузить игру"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.popup.0_1_2"
+msgstr "&Сетевая игра"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.popup.0_1_2_0"
+msgstr "&За одной машиной"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.popup.0_1_2_1"
+msgstr "&Сеть"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.popup.0_1_2_2"
+msgstr "&Модем"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUDFLT.popup.0_1_2_3"
+msgstr "&Прямое соединение"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUTOWN.command40005"
+msgstr "&640 x 480"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUTOWN.command40006"
+msgstr "&800 x 600"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUTOWN.command40007"
+msgstr "&1024 x 768"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUTOWN.command40008"
+msgstr "1&280 x 1024"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUTOWN.command40009"
+msgstr "&Полный экран (F4)"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUTOWN.command40052"
+msgstr "&Темы помощи"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUTOWN.command40053"
+msgstr "&О Героях Меча и Магии"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUTOWN.command40140"
+msgstr "&Выйти"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUTOWN.popup.0"
+msgstr "&Файл"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUTOWN.popup.1"
+msgstr "&Экран"
+
+#: src/SOURCE/Heroes.rc
+msgid "resource.MNUTOWN.popup.2"
+msgstr "&Помощь"
+
+#: src/SOURCE/COMMAND.cpp
+msgid "resource.gold.insufficient"
+msgstr "У вас недостаточно золота!"
+
+#: src/SOURCE/GAME.cpp
+msgid "save.name.autosave"
+msgstr "АВТОСОХРАНЕНИЕ"
+
+#: src/SOURCE/KB.cpp
+msgid "save.name.campaign"
+msgstr "НОВЫЙ СЦЕНАРИЙ"
+
+#: src/SOURCE/GAME.cpp
+msgid "save.name.new_game"
+msgstr "НОВАЯ ИГРА"
+
+#: src/SOURCE/GAME.cpp src/SOURCE/KB.cpp
+msgid "save.name.player_exit"
+msgstr "ИГРОК ВЫШЕЛ"
+
+#: src/SOURCE/GAME.cpp
+msgid "scenario.bay.description"
+msgstr "Большая земля, полная ущелий, идущих по кругу."
+
+#: src/SOURCE/GAME.cpp
+msgid "scenario.bay.name"
+msgstr "Вблизи залива"
+
+#: src/SOURCE/GAME.cpp src/SOURCE/KB.cpp
+msgid "scenario.claw.description"
+msgstr "Грифоны будут защищать вас пока вы не будете готовы сделать ваш ход."
+
+#: src/SOURCE/GAME.cpp src/SOURCE/KB.cpp
+msgid "scenario.claw.name"
+msgstr "Когти (Легкая)"
+
+#: src/SOURCE/GAME.cpp
+msgid "scenario.info.no"
+msgstr "Нет"
+
+#: src/SOURCE/GAME.cpp
+msgid "scenario.info.yes"
+msgstr "Да"
+
+#: src/SOURCE/KB.cpp
+msgid "score.name.prompt"
+msgstr "Наберите ваше имя русскими буквами."
+
+#: src/SOURCE/SETUP.cpp
+msgid "setup.modem.initialization_prompt"
+msgstr "Пожалуйста, укажите значения строки инициализации модема или нажмите 'ENTER'."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "shutdown.unexpected.title"
+msgstr "Неожиданное прерывание программы"
+
+#: src/SOURCE/SPELLS.cpp
+msgid "spell.dragon.immune"
+msgstr "Магия не действует на драконов!"
+
+#: src/SOURCE/SPELLS.cpp
+msgid "spell.dwarf.resisted"
+msgstr "Сопротивляемость магии гномов отразила заклинание!"
+
+#: src/SOURCE/SPELLS.cpp
+#, c-format
+msgid "spell.fireball.damage"
+msgstr "Огненный шар наносит %d ед. урона."
+
+#: src/SOURCE/SPELLS.cpp
+#, c-format
+msgid "spell.lightning.damage"
+msgstr "Молния наносит %d ед. урона отряду %s."
+
+#: src/SOURCE/SPELLS.cpp
+#, c-format
+msgid "spell.meteor.damage"
+msgstr "Звездопад наносит %d ед. урона."
+
+#: src/SOURCE/GAME.cpp
+msgid "spell.none.available"
+msgstr "Нет заклинаний."
+
+#: src/SOURCE/SPELLS.cpp
+#, c-format
+msgid "spell.resurrect.plural"
+msgstr "%d %s были воскрешены из мертвых!"
+
+#: src/SOURCE/SPELLS.cpp
+#, c-format
+msgid "spell.resurrect.singular"
+msgstr "%d %s был воскрешен из мертвых!"
+
+#: src/SOURCE/SPELLS.cpp
+#, c-format
+msgid "spell.storm.damage"
+msgstr "Шторм наносить %d ед. урона."
+
+#: src/SOURCE/SPELLS.cpp
+msgid "spell.target.select"
+msgstr "Выберите цель заклинания"
+
+#: src/SOURCE/SPELLS.cpp
+msgid "spell.teleport.invalid"
+msgstr "Ошибочная точка телепортации"
+
+#: src/SOURCE/SPELLS.cpp
+msgid "spell.teleport.select"
+msgstr "Выберите место назначения."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "startup.cd.inaccessible"
+msgstr "Нет доступа к CD приводу."
+
+#: src/SOURCE/KB.cpp
+msgid "startup.cd.required"
+msgstr "У вас должен быть компакт-диск Героев в CD приводе, чтобы играть\nв Героев Меча и Магии. \n\nВставьте диск и попробуйте еще раз."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "startup.data.missing"
+msgstr "Невозможно найти файлы данных Героев.  Пожалуйста, переустановите программу."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "startup.directory.invalid"
+msgstr "Невозможно изменить директорию. Пожалуйста, переустановите программу."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp src/SOURCE/kbwin.cpp
+msgid "startup.error.title"
+msgstr "Ошибка загрузки"
+
+#: src/SOURCE/KB.cpp
+msgid "startup.initialize.failed"
+msgstr "Не удалось инициализировать игру!"
+
+#: src/BASE/EXEC.cpp
+msgid "startup.input.failed"
+msgstr "Ошибка инициации клавиатуры или мышки."
+
+#: src/SOURCE/kbwin.cpp
+#, c-format
+msgid "startup.instance.already_running"
+msgstr "Только одна копия %s может быть запущена одновременно"
+
+#: src/SOURCE/kbwin.cpp
+msgid "startup.instance.event_name"
+msgstr "Герои"
+
+#: src/SOURCE/kbwin.cpp
+msgid "startup.instance.game_title"
+msgstr "Герои Меча и Магии"
+
+#: src/SOURCE/KB.cpp
+msgid "startup.loading.game"
+msgstr "Загрузка Героев Меча и Магии (версия 1.1)"
+
+#: src/BASE/EXEC.cpp src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "startup.manager.failed"
+msgstr "Не могу добавить менеджера!"
+
+#: src/BASE/EXEC.cpp
+msgid "startup.mouse.failed"
+msgstr "Ошибка инициации мышки."
+
+#: src/BASE/EXEC.cpp
+msgid "startup.resources.failed"
+msgstr "Ошибка инициации ресурсов. Вероятно, проблемы с диском."
+
+#: src/BASE/EXEC.cpp
+msgid "startup.sound.failed"
+msgstr "Ошибка инициации звука."
+
+#: src/BASE/EXEC.cpp
+msgid "startup.windows.failed"
+msgstr "Вероятно, ошибка диска или памяти."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gAPanelHelp.0"
+msgstr "Осмотреть весь мир."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gAPanelHelp.1"
+msgstr "Посмотреть головоломку."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gAPanelHelp.2"
+msgstr "Направить заклинание."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gAPanelHelp.3"
+msgstr "Копать в поисках Могущественного артефакта."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gAPanelHelp.4"
+msgstr "Закрыть это меню ничего не делая."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gAdvMenuHelp.0"
+msgstr "Следующий герой\n\nВыбрать следующего героя."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gAdvMenuHelp.1"
+msgstr "Продолжить движение \n\nПродолжить движение героя по намеченному пути."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gAdvMenuHelp.2"
+msgstr "Обзор королевства\n\nОсмотреть ваши владения."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gAdvMenuHelp.3"
+msgstr "Окончить ход\n\nОкончить ход и передать управление компьютеру."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gAdvMenuHelp.4"
+msgstr "Игровые действия\n\nОткрывает окно игровых действий."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gAdvMenuHelp.5"
+msgstr "Настройки игры\n\nОткрыть окно настроек игры."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gAlignmentNames.0"
+msgstr "люди"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gAlignmentNames.1"
+msgstr "равнинные"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gAlignmentNames.2"
+msgstr "лесные"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gAlignmentNames.3"
+msgstr "горные"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gAlignmentNames.4"
+msgstr "нейтральные"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNames.0"
+msgstr "Крестьянин"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNames.1"
+msgstr "Лучник"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNames.2"
+msgstr "Копейщик"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNames.3"
+msgstr "Мечник"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNames.4"
+msgstr "Всадник"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNames.5"
+msgstr "Паладин"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNames.6"
+msgstr "Гоблин"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNames.7"
+msgstr "Орк"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNames.8"
+msgstr "Волк"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNames.9"
+msgstr "Огр"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNames.10"
+msgstr "Тролль"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNames.11"
+msgstr "Циклоп"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNames.12"
+msgstr "Фея"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNames.13"
+msgstr "Гном"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNames.14"
+msgstr "Эльф"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNames.15"
+msgstr "Друид"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNames.16"
+msgstr "Единорог"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNames.17"
+msgstr "Феникс"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNames.18"
+msgstr "Кентавр"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNames.19"
+msgstr "Горгулья"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNames.20"
+msgstr "Грифон"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNames.21"
+msgstr "Минотавр"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNames.22"
+msgstr "Гидра"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNames.23"
+msgstr "Дракон"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNames.24"
+msgstr "Разбойник"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNames.25"
+msgstr "Кочевник"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNames.26"
+msgstr "Призрак"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNames.27"
+msgstr "Джинн"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.0"
+msgstr "крестьян"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.1"
+msgstr "лучников"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.2"
+msgstr "копейщиков"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.3"
+msgstr "мечников"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.4"
+msgstr "всадников"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.5"
+msgstr "паладинов"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.6"
+msgstr "гоблинов"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.7"
+msgstr "орков"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.8"
+msgstr "волков"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.9"
+msgstr "огров"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.10"
+msgstr "троллей"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.11"
+msgstr "циклопов"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.12"
+msgstr "фей"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.13"
+msgstr "гномов"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.14"
+msgstr "эльфов"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.15"
+msgstr "друидов"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.16"
+msgstr "единорогов"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.17"
+msgstr "фениксов"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.18"
+msgstr "кентавров"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.19"
+msgstr "горгулий"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.20"
+msgstr "грифонов"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.21"
+msgstr "минотавров"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.22"
+msgstr "гидр"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.23"
+msgstr "драконов"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.24"
+msgstr "разбойников"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.25"
+msgstr "кочевников"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.26"
+msgstr "призраков"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyNamesPlural.27"
+msgstr "джиннов"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmySizeNames.0"
+msgstr "Мало"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmySizeNames.1"
+msgstr "Мало"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmySizeNames.2"
+msgstr "Немного"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmySizeNames.3"
+msgstr "Немного"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmySizeNames.4"
+msgstr "Свора"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmySizeNames.5"
+msgstr "Свора"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmySizeNames.6"
+msgstr "Много"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmySizeNames.7"
+msgstr "Много"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmySizeNames.8"
+msgstr "Орда"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmySizeNames.9"
+msgstr "Орда"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmySizeNames.10"
+msgstr "Тьма!"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmySizeNames.11"
+msgstr "Тьма"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyStatText.0"
+msgstr "Атака: "
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyStatText.1"
+msgstr "Защита: "
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyStatText.2"
+msgstr "Выстрелов: "
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyStatText.3"
+msgstr "Урон: "
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyStatText.4"
+msgstr "Здоровье: "
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyStatText.5"
+msgstr "Скорость: "
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyStatText.6"
+msgstr "Мораль: "
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyStatText.7"
+msgstr "Удача: "
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArmyStatText.8"
+msgstr "Стрел: "
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.0"
+msgstr "Книга всезнания\n(Знания +12)\n\nКнига всезнания увеличивает Знания на 12 единиц."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.1"
+msgstr "Меч власти\n(Атака +12)\n\nМеч власти увеличивает навык атаки на 12 единиц."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.2"
+msgstr "Защитная накидка\n(Защита +12)\n\nЗащитная накидка увеличивает защиту на 12 единиц."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.3"
+msgstr "Жезл магии\n(Сила магии +12)\n\nЖезл магии увеличивает силу заклинаний на 12 единиц."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.4"
+msgstr "Ожерелье тайной магии\n(Сила магии +4)\n\nОжерелье тайной магии увеличивает силу магии на 4 единицы."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.5"
+msgstr "Магический браслет\n(Сила магии +2)\n\nМагический браслет увеличивает силу заклинаний на 2 единицы."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.6"
+msgstr "Кольцо мага\n(Сила магии +2)\n\nКольцо мага увеличивает силу магии на 2 единицы."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.7"
+msgstr "Брошь ведьмы\n(Сила магии +3)\n\nБрошь ведьмы увеличивает силу магии на 3 единицы."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.8"
+msgstr "Медаль отваги\n\nМедаль отваги увеличивает мораль."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.9"
+msgstr "Медаль мужества\n\nМедаль мужества увеличивает мораль."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.10"
+msgstr "Медаль доблести\n\nМедаль доблести увеличивает мораль."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.11"
+msgstr "Медаль почета\n\nМедаль почета увеличивает мораль."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.12"
+msgstr "Символ неудачи\n\nСимвол неудачи сильно уменьшает мораль."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.13"
+msgstr "Громовая палица\n(Атака +1)\n\nГромовая палица увеличивает навык атаки на 1 единицу."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.14"
+msgstr "Защитная перчатка\n(Защита +1)\n\nЗащитная перчатка увеличивает навык защиты на 1 единицу."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.15"
+msgstr "Шлем защитника\n(Защита +1)\n\nШлем защитника увеличивает навык защиты на 1 единицу."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.16"
+msgstr "Гигантский цеп\n(Атака +1)\n\nГигантский цеп увеличивает навык атаки на 1 единицу."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.17"
+msgstr "Баллиста\n\nБаллиста позволяет вашей катапульте дважды стрелять в один ход боя."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.18"
+msgstr "Незримый щит\n(Защита +2)\n\nНезримый щит увеличивает навык защиты на 2 единицы."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.19"
+msgstr "Драконий меч\n(Атака +3)\n\nДраконий меч увеличивает навык атаки на 3 единицы."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.20"
+msgstr "Топор власти\n(Атака +2)\n\nТопор власти увеличивает навык атаки на 2 единицы."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.21"
+msgstr "Божественный доспех\n(Защита +3)\n\nБожественный доспех увеличивает навык защиты на 3 единицы."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.22"
+msgstr "Малый свиток знания\n(Знания +2)\n\nМалый свиток знания увеличивает Знания на 2 единицы."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.23"
+msgstr "Большой свиток знания\n(Знания +3)\n\nБольшой свиток знания увеличивает Знания на 3 единицы."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.24"
+msgstr "Могущественный свиток знания\n(Знания +4)\n\nМогущественный свиток знания увеличивает Знания на 4 единицы."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.25"
+msgstr "Свиток высшего знания\n(Знания +5)\n\nСвиток высшего знания увеличивает Знания на 5 единиц."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.26"
+msgstr "Бездонный мешок\n\nБездонный мешок приносит вам 1000 золотых в день."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.27"
+msgstr "Бездонная сума\n\nБездонная сума приносит вам 750 золотых в день."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.28"
+msgstr "Бездонный кошель\n\nБездонный кошель приносит вам 500 золотых в день."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.29"
+msgstr "Башмаки кочевника\n\nБашмаки кочевника увеличивают дальность передвижения по суше."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.30"
+msgstr "Башмаки путника\n\nБашмаки путника увеличивают подвижность отряда на суше."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.31"
+msgstr "Лапка кролика\n\nЛапка кролика увеличивает удачу в бою."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.32"
+msgstr "Золотая подкова\n\nЗолотая подкова увеличивает удачу в бою."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.33"
+msgstr "Монета\n\nСчастливая монета увеличивает удачу в бою."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.34"
+msgstr "Клевер\n\nКлевер увеличивает удачу в бою."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.35"
+msgstr "Компас\n\nКомпас увеличивает подвижность отряда на суше и на море."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.36"
+msgstr "Астролябия\n\nАстролябия увеличивает подвижность отряда на море."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactDesc.37"
+msgstr "Волшебная книга\n\nВолшебная книга позволяет направлять заклинания."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.4"
+msgstr "Вы вызволяете волшебницу, заточенную в проклятой гробнице, и в награду она вручает вам изысканное алмазное ожерелье."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.5"
+msgstr "Изучая завалы в заброшенной шахте, вы спасаете артель гномов-старателей. В знак благодарности их старшина дарит вам золотой браслет."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.6"
+msgstr "Вы спешите на звук отчаянного вопля боли и видите кентавра, попавшего в западню. Вы помогаете ему освободиться, и он вручает вам кожаный мешочек. Заглянув внутрь, вы видите ослепительное бриллиантовое кольцо."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.7"
+msgstr "Рядом с останками сожженной колдуньи лежит изящная брошь прекрасной работы. Осторожно приблизившись к обугленному трупу, вы забираете брошь себе."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.8"
+msgstr "В награду за спасение прекрасной девы от посягательств ненавистного барона королевский герольд вручает вам Медаль отваги."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.9"
+msgstr "Вы спасаете маленького мальчика от стаи кровожадных волков и провожаете в имение родителей. Счастливый отец награждает вас Медалью мужества."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.10"
+msgstr "Вы вырываете принцессу соседнего королевства из мерзких лап презренных работорговцев и в награду за подвиг получаете Медаль доблести."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.11"
+msgstr "Вы избавляете округу от ужасного минотавра, добычей которому служили благородные рыцари, и становитесь кавалером Медали почета."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.12"
+msgstr "На обочине пустынной дороги вы находите медаль. Вы подобрали ее и обнаружили, что стали несчастным обладателем Символа неудачи, который понижает мораль вашей армии."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.13"
+msgstr "Во время жуткой грозы молния бьет в дерево, разнося его на мелкие щепки. Среди обломков вы обнаруживаете таинственную палицу."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.14"
+msgstr "Вы повстречали печально известного Черного Рыцаря! Ваш поединок заканчивается вничью, и рыцарь в знак уважения дарит вам пару латных перчаток."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.15"
+msgstr "Краем глаза вы замечаете золотистый блеск среди пышной зелени. Приглядевшись внимательнее, вы находите под кустами великолепный золотой шлем."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.16"
+msgstr "Неуклюжий гигант нанес себе смертельную рану собственным боевым цепом. Вы прекрасно владеете этим оружием и с уверенностью вынимаете цеп из мертвых рук гиганта."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.17"
+msgstr "Пробираясь через развалины древней крепости, вы находите орудие, которое превратило ее в руины, удивительную баллисту замысловатой конструкции."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.18"
+msgstr "В руках у каменной статуи воина - великолепный серебряный щит. Как только вы забираете щит себе, статуя рассыпается в прах."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.19"
+msgstr "Вы пробираетесь узкой тропой, как вдруг ближайший куст загорается ярким пламенем. Постепенно в огненном смерче проступают очертания прекрасной дамы, которая протягивает вам меч чудесной работы."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.20"
+msgstr "Вы видите серебряный топор, вогнанный в землю по самую рукоять. Ваши воины пытаются выдернуть его, но усилия их тщетны. Вам же хватило одного усилия и топор у вас в руках!"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.21"
+msgstr "Шайка разбойников обыскивает тела мертвых воинов. Вы разгоняете мародеров и вдруг замечаете, что в спешке они потеряли великолепный доспех."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.22"
+msgstr " Перед вами возникает парящий в воздухе стеклянный ларец со свитком внутри, лежащем на подушке из пурпурного бархата. Повинуясь вашему прикосновению, крышка ларца открывается, и свиток оказывается у вас в руках."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.23"
+msgstr "Вы навещаете местного мудреца и рассказываете о цели вашего путешествия. Он достает из мешка пожелтевший свиток и передает его вам."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.24"
+msgstr "Вы стоите перед останками давно умершей жрицы друидов. Пожелтевшие от времени кости проглядывают через прорехи истлевшего одеяния. Пошевелив груду ветоши, вы находите древний свиток."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.25"
+msgstr "Груда пожелтевших костей и обрывки истлевшей материи - вот все, что осталось от жрицы друидов. Среди этих останков вы замечаете таинственный свиток."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.26"
+msgstr "Маленький лепрекон пританцовывает у волшебного мешка. Завидев вас, он замирает на месте, затем издает возмущенный возглас, топает ножкой и растворяется в воздухе. Следуя старинной поговорке, \"Кто успел - тот и съел\", вы забираете мешок себе."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.27"
+msgstr "Благородная путешественница, отбившаяся от спутников, просит вас о помощи. Проводив ее до дома, вы получаете в награду суму, полную золота."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.28"
+msgstr "Однажды вам в руки попадает наполненный золотом кожаный кошель, принадлежавший великому королю, который умел превращать любой предмет в золото."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.29"
+msgstr "Бродячий торговец просит вас защитить его от банды гоблинов. В награду он дарит вам пару изящных башмаков, испещеренных загадочными древними письменами."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.30"
+msgstr "Обнаружив пару замечательных башмаков украшенных бисером, вы благодарите загадочного благодетеля и оставляете их себе."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.31"
+msgstr "В уплату за охрану в пути странствующий торговец предлагает вам лапку кролика. По его словам, она принесет вам удачу в бою."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.32"
+msgstr "Попавший в ловушку единорог испуганно кричит. Вы успокаиваете его и освобождаете от пут. Всхрапнув и ударив копытом, он уносится прочь. Там, где он только что стоял, осталась лежать золотая подкова."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.33"
+msgstr "Вы поймали озорного бесенка, который не давал покоя всей округе. В обмен на свободу он предлагает вам волшебную монету."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.34"
+msgstr "Посреди мертвой лощины, заполненной иссохшей растительностью, вы, к своему удивлению, замечете веселый зеленый побег четырехлистного клевера."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.35"
+msgstr "Странноватый старикашка утверждает, что он - великий изобретатель, и просит вас испытать его новое творение. Надувшись от важности, он вручает вам компас."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.36"
+msgstr "Старый мореход стал добычей людоедов. Вы спасаете его, и в знак благодарности он дарит вам чудесный инструмент, позволяющий измерять расстояния по звездам."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactEvent.37"
+msgstr "Волшебная книга?!"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.0"
+msgstr "Книга всезнания"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.1"
+msgstr "Меч власти"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.2"
+msgstr "Защитная накидка"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.3"
+msgstr "Жезл магии"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.4"
+msgstr "Ожерелье тайной магии"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.5"
+msgstr "Магический браслет"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.6"
+msgstr "Кольцо мага"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.7"
+msgstr "Брошь ведьмы"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.8"
+msgstr "Медаль отваги"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.9"
+msgstr "Медаль мужества"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.10"
+msgstr "Медаль доблести"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.11"
+msgstr "Медаль почета"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.12"
+msgstr "Символ неудачи"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.13"
+msgstr "Громовая алица "
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.14"
+msgstr "Защитная перчатка"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.15"
+msgstr "Шлем защитника"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.16"
+msgstr "Гигантский цеп"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.17"
+msgstr "Баллиста"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.18"
+msgstr "Незримый щит"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.19"
+msgstr "Драконий меч"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.20"
+msgstr "Топор власти"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.21"
+msgstr "Божественный доспех"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.22"
+msgstr "Малый свиток знания"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.23"
+msgstr "Большой свиток знания"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.24"
+msgstr "Могущественный свиток знания"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.25"
+msgstr "Свиток высшего знания"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.26"
+msgstr "Бездонный мешок"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.27"
+msgstr "Бездонная сума"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.28"
+msgstr "Бездонный кошель"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.29"
+msgstr "Башмаки кочевника"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.30"
+msgstr "Башмаки путника"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.31"
+msgstr "Лапка кролика"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.32"
+msgstr "Золотая подкова"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.33"
+msgstr "Счастливая монета"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.34"
+msgstr "Клевер"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.35"
+msgstr "Компас"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.36"
+msgstr "Астролябия"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gArtifactNames.37"
+msgstr "Волшебная книга"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gBattleResults.0"
+msgstr "Враг сдался!"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gBattleResults.1"
+msgstr "Враг повержен!"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gBattleResults.2"
+msgstr "Великая победа!"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gBattleResults.3"
+msgstr "\n\nЗа мужество, проявленное в бою, %s получает %d оч. опыта."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gBattleResults.4"
+msgstr "%s сдается врагу и отступает с позором."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gBattleResults.5"
+msgstr "%s трусливо бежит с поля боя."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gBattleResults.6"
+msgstr "Ваши войска потерпели поражение и %s покидает вас."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gBattleResults.7"
+msgstr "Ваши силы сдались врагу и отступили с позором."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gBattleResults.8"
+msgstr "Ваши трусливые войска бежали с поля боя."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gBattleResults.9"
+msgstr "Ваши войска потерпели поражение."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gBattleResults.10"
+msgstr "\n\nЗа мужество, проявленное в бою, %s получает %d оч. опыта, и получает %d уровень(я)."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCPanelHelp.0"
+msgstr "Начать одиночную или сетевую игру."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCPanelHelp.1"
+msgstr "Загрузить ранее сохраненную игру."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCPanelHelp.2"
+msgstr "Выйти из Героев Меча и Магии и вернуться в ОС."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCPanelHelp.3"
+msgstr "Выйти из этого меню, ничего не делая."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCPanelHelp.4"
+msgstr "Сохранить данную игру."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCPanelHelp.5"
+msgstr "Включить или выключить музыку"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCPanelHelp.6"
+msgstr "Включить или выключить фоновые звуки"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCPanelHelp.7"
+msgstr "Изменить скорость передвижения героев по карте."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCPanelHelp.8"
+msgstr "Изменить качество звука. CD-стерео имеет наилучшее качество, и, как правило, не снижает производительность системы. Однако некоторые системы не способны воспроизводить звук с компакт-диска; тогда приходится использовать 8-битный звук."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCPanelHelp.9"
+msgstr "Вкл./Выкл. 'Показать путь'. Если опция отмечена, первый щелчок по объекту на игровой карте показывает путь до него, а по второму щелчку начинается движение. Если эта опция отключена, движение к заданной точке начинается по первому щелчку мыши."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCPanelHelp.10"
+msgstr "Включение/выключение режима 'Показать перемещения противника'. Если этот режим включен, будут показаны перемещения всех противников на открытой части игровой карты. Следует иметь в виду, что при игре по сети или модему этот режим автоматически отключается."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCPanelHelp.11"
+msgstr "Показать информацию о текущем сценарии."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCampaignScenarioNames.0"
+msgstr "Вы захватили плацдарм в новой стране. Вместе с вами еще три славных героя вступили в жестокий спор за обладание маленьким островком. Всех вас влечет к его центру - городу Предвратье. Город стоит посреди острова, и обладание им равносильно победе. Берегитесь дракона, который стережет подступы к Предвратью!"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCampaignScenarioNames.1"
+msgstr "Путь к материку преграждает Архипелаг Древних. Он состоит из четырех островов, каждым из которых владеет один правитель. Все четыре властителя должны быть разгромлены, и сделать это надо сейчас или никогда! Конечно, вам не обойтись без кораблей, но пользуйтесь ими мудро."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCampaignScenarioNames.2"
+msgstr "Страна погрузилась в водоворот кровавой бойни. Но люди готовы пойти за героем, который овладеет Оком Гороса. Артефакт был захоронен и потерян в стародавние времена. Первый, кто отыщет Око, объединит народы и покорит эту землю."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCampaignScenarioNames.3"
+msgstr "Теперь соседи видят в вас серьезного соперника. Все они стремятся завоевать центральный континент. Земля огромна, а враги далеко. Но здесь мало ресурсов, и они сильно охраняются. Вы должны победить всех и стать хозяином целого материка."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCampaignScenarioNames.4"
+msgstr "Страна рыцарей, которой правит Лорд Айронфист, разделена извилистой Половодной рекой. Айронфист надеется, что она защитит его. Единственный прибрежный город, где есть верфь, находится далеко на востоке. Вы победите. Если захватите замок Айронфиста на северо-западе."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCampaignScenarioNames.5"
+msgstr "Далеко на севере, за Непроходимой пустыней, лежат Мерзлые пустоши. Там обосновался Вождь Слэйер - кровожадный предводитель варварских кланов. Как только заставы в ущелье падут, орды варваров хлынут на юг. Замок Вождя Слэйера стоит к северо-востоку от ущелья."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCampaignScenarioNames.6"
+msgstr "Предупрежденная о вашем приближении, Царица Ламанда сотворила заклятье, затопившее подходы к единственному порту. Вы должны найти портал, чтобы захватить порт. Единственный участок суши доступный для высадки находится на северо-востоке. Оттуда вам надо пробиваться к замку на северо-западе."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCampaignScenarioNames.7"
+msgstr "Замок чернокнижников стоит в кратере вулкана. Чтобы пробиться к замку Колдуна Аламара, вам следует пройти через Лабиринт Минотавра. Маги уверены в своей неуязвимости и не ожидают атаки. Горгульи поджидают вас на истинной дороге к выходу из Лабиринта."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCampaignScenarioNames.8"
+msgstr "Великая победа не за горами, но поверженные лорды еще опасны! Они объединили остатки своих сил и двинули несметные рати на ваши замки. Если вы укротите драконов, мятежные лорды сложат оружие. Захватите Драконий город на центральном острове и победа будет в ваших руках!"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCampaignScenarioText.0"
+msgstr "Предвратье"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCampaignScenarioText.1"
+msgstr "Архипелаг"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCampaignScenarioText.2"
+msgstr "Больные земли"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCampaignScenarioText.3"
+msgstr "Свобода любой ценой"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCampaignScenarioText.4"
+msgstr "Замок Айронфиста"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCampaignScenarioText.5"
+msgstr "Замок Слэйера"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCampaignScenarioText.6"
+msgstr "Замок Ламанды"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCampaignScenarioText.7"
+msgstr "Замок Аламара"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCampaignScenarioText.8"
+msgstr "Царь горы"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCampaignSideNames.0"
+msgstr "Лорд Айронфист"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCampaignSideNames.1"
+msgstr "Вождь Слэйер"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCampaignSideNames.2"
+msgstr "Царица Ламанда"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCampaignSideNames.3"
+msgstr "Колдун Аламар"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCampaignWinTexts.0"
+msgstr "Предвратье в ваших руках! Враги оставили свои замки на произвол судьбы и позорно бежали. Они нашли себе новые земли и снова копят силы. Промедление смерти подобно!"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCampaignWinTexts.1"
+msgstr "Архипелаг Древних покорен и присоединен к вашим владеньям. За горизонтом лежит обширный неисследованный враждебный континент."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCampaignWinTexts.2"
+msgstr "Целительная сила Ока Гороса возрождает измученную землю. Люди собираются под ваши знамена, а противники отступают. Грядет война за власть над миром!"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCampaignWinTexts.3"
+msgstr "Победа осталась за вами, враги расползлись по своим логовам. Вам еще предстоит захватить их родовые замки, по одному выкуривая их из насиженных нор."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCampaignWinTexts.4"
+msgstr "Сопротивление рыцарей сломлено! Их страна лежит у ваших ног."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCampaignWinTexts.5"
+msgstr "Замок варваров взят штурмом, а их армии разбиты!"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCampaignWinTexts.6"
+msgstr "Вы пробились через лесной лабиринт и сравняли с землей замок Ламанды."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCampaignWinTexts.7"
+msgstr "Вы преследовали горгулий до самого замка Колдуна Аламара и повергли в прах чернокнижников."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCampaignWinTexts.8"
+msgstr "Драконы встают под ваши знамена, и мятежные лорды молят о пощаде. Теперь вы и только вы - великий властелин единой и необозримой страны!"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCastleInfo.0"
+msgstr "Построить Гильдию магов"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCastleInfo.1"
+msgstr "Построены все этажи Гильдии магов."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCastleInfo.2"
+msgstr "Нельзя построить следующий этаж."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCastleInfo.3"
+msgstr "Построить следующий этаж Гильдии магов "
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gCastleInfo.4"
+msgstr "Постройка '%s' уже возведена"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gCastleInfo.5"
+msgstr "Нельзя возвести постройку '%s'"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gCastleInfo.6"
+msgstr "Нельзя возвести постройку '%s'"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gCastleInfo.7"
+msgstr "Возвести постройку '%s'"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCastleInfo.8"
+msgstr "Герой вам не по карману."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gCastleInfo.9"
+msgstr "Нельзя нанять - у вас уже %d героев."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCastleInfo.10"
+msgstr "Нельзя нанять - в этом городе у вас уже есть герой."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCastleInfo.11"
+msgstr "Нанять нового героя "
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCastleInfo.12"
+msgstr "Выйти из замка"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCastleInfo.13"
+msgstr "Возможности замка"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gClassNames.0"
+msgstr "Рыцарь"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gClassNames.1"
+msgstr "Варвар"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gClassNames.2"
+msgstr "Колдунья"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gClassNames.3"
+msgstr "Чернокнижник"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gColorNames.0"
+msgstr "синий"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gColorNames.1"
+msgstr "зеленый"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gColorNames.2"
+msgstr "красный"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gColorNames.3"
+msgstr "желтый"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCombatHelp.0"
+msgstr "Включить автобой"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCombatHelp.1"
+msgstr "Пропустить ход отряда"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gCombatMessage.1"
+msgstr "%s - идти сюда."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gCombatMessage.2"
+msgstr "%s - перелететь сюда."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gCombatMessage.3"
+msgstr "Атаковать %s"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gCombatMessage.4"
+msgstr "Стрелять в %s (осталось %d выстрелов)"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCombatMessage.5"
+msgstr "Возможности героя"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCombatMessage.6"
+msgstr "Вражеский герой"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gCombatMessage.7"
+msgstr "Информация о воине (%s)"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gCombatMessage.8"
+msgstr "Нет стрел!"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gConventionalMemoryUnits.0"
+msgstr "Кб общей памяти "
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDifficultyNames.0"
+msgstr "Легкая"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDifficultyNames.1"
+msgstr "Обычная"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDifficultyNames.2"
+msgstr "Тяжелая"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDifficultyNames.3"
+msgstr "Эксперт"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.0"
+msgstr "В Мазанке покупают крестьян."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.1"
+msgstr "На Стрельбище покупают лучников."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.2"
+msgstr "В Кузнице покупают копейщиков."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.3"
+msgstr "Оружейная позволяет покупать мечников."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.4"
+msgstr "На Ристалище покупают всадников."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.5"
+msgstr "В Соборе покупают паладинов."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.6"
+msgstr "В Древо-доме покупают фей."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.7"
+msgstr "В Коттеджах покупают гномов."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.8"
+msgstr "На Стрельбище покупают эльфов."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.9"
+msgstr "В Стоунхендже покупают друидов."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.10"
+msgstr "В Загоне покупают единорогов."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.11"
+msgstr "В Алой башне покупают фениксов."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.12"
+msgstr "В Хижине покупают гоблинов."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.13"
+msgstr "В Хибаре покупают орков."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.14"
+msgstr "В Логове покупают волков."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.15"
+msgstr "В Доме огров покупают огров."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.16"
+msgstr "Под Мостом покупают троллей."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.17"
+msgstr "В Пирамиде покупают циклопов."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.18"
+msgstr "В Пещере покупают кентавров."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.19"
+msgstr "В Крипте покупают горгулий."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.20"
+msgstr "В Гнезде покупают грифонов."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.21"
+msgstr "В Лабиринте покупают Минотавров."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.22"
+msgstr "В Болоте покупают гидр."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingDescriptions.23"
+msgstr "В Черной башне покупают драконов."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.0"
+msgstr "Мазанка"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.1"
+msgstr "Стрельбище"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.2"
+msgstr "Кузница"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.3"
+msgstr "Оружейная"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.4"
+msgstr "Ристалище"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.5"
+msgstr "Собор"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.6"
+msgstr "Древо-дом"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.7"
+msgstr "Избушка"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.8"
+msgstr "Стрельбище"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.9"
+msgstr "Стоунхендж"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.10"
+msgstr "Загон"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.11"
+msgstr "Алая башня"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.12"
+msgstr "Хижина"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.13"
+msgstr "Хибара"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.14"
+msgstr "Логово"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.15"
+msgstr "Дом огров"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.16"
+msgstr "Мост"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.17"
+msgstr "Пирамида"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.18"
+msgstr "Пещера"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.19"
+msgstr "Крипта"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.20"
+msgstr "Гнездо"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.21"
+msgstr "Лабиринт"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.22"
+msgstr "Болото"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gDwellingNames.23"
+msgstr "Черная башня"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditAreaHelp.1"
+msgstr "Радарная карта\n\nУправляет положением камеры."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditAreaHelp.2"
+msgstr "Скроллинг\n\nИспользуется для перемещения карты по осям экрана."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditAreaHelp.3"
+msgstr "Земля\n\nИспользуется для рисования разных типов земли."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditAreaHelp.4"
+msgstr "Объекты\n\nИспользуется для размещения объектов (горы, деревья и т.п.) на карте."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditAreaHelp.5"
+msgstr "Информация\n\nИспользуется для указания количества монстров, редактирования героев и городов."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditAreaHelp.6"
+msgstr "Ластик\n\nИспользуется для удаления объектов с карты."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditAreaHelp.7"
+msgstr "Карта\n\nЗдесь рисуют саму карту!"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditButtonHelp.1"
+msgstr "Прокрутка\n\nПрокрутить экран в указанном направлении."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditButtonHelp.2"
+msgstr "Переключение между режимом увеличения и обычным просмотром."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditButtonHelp.3"
+msgstr "Отменить последнее действие. Нажмите еще раз, чтобы повторить отмененное действие."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditButtonHelp.4"
+msgstr "Изменить название карты, описание и другую информацию о карте."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditButtonHelp.5"
+msgstr "Начать новую карту с нуля."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditButtonHelp.6"
+msgstr "Загрузить существующую карту."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditButtonHelp.7"
+msgstr "Сохранить карту на диск."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditButtonHelp.8"
+msgstr "Выйти"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditButtonHelp.9"
+msgstr "Использовать генератор случайных карт."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.0"
+msgstr "Алхимик\n\nВы стали хозяином лаборатории местного алхимика. Она будет приносить вам по 1 единице ртути в день."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gEventText.1"
+msgstr "Указатель\n\nНа указателе написано:\n\n%s находится неподалеку отсюда."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.2"
+msgstr "Буй\n\nВаши спутники замечают морской буй. Он указывает верный курс."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.3"
+msgstr "Буй\n\nВаши спутники замечают морской буй. Он указывает верный курс, и это повышает их мораль."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.4"
+msgstr "Влага оседает на стенах и тонкими струйками стекает на землю. Повсюду видны следы побоища, но больше в пещере ничего нет."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.5"
+msgstr "Огромный демон выступает из тени, и вы бросаетесь в атаку. Победив в нелегком поединке, вы получаете 1000 очков опыта."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.6"
+msgstr "Огромный демон выступает из тени, и вы бросаетесь в атаку. Победив в нелегком поединке, вы поучаете 1000 очков опыта и волшебный артефакт."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.7"
+msgstr "Огромный демон выступает из тени, и вы бросаетесь в атаку. Победив в нелегком поединке, вы получаете 1000 очков опыта и 2500 золотых."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.8"
+msgstr "Вы попали в плен к огромному демону. Он предлагает вам свободу в обмен на 2500 золотых. Если вы откажетесь, он сожрет вас. Будете платить?"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.9"
+msgstr "Поняв, что у вас нет 2500 золотых, демон вонзает в вас свои жуткие когти. Ваш взор застилает кровавая пелена и мир погружается во тьму."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.10"
+msgstr "Пещера демона\n\nИз пещеры веет промозглой затхлостью. Два огромных красных глаза светятся во тьме. Желаете войти внутрь?"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.11"
+msgstr "Ларец\n\nОбследовав окрестности, вы находите клад. Вы можете взять золото или раздать его крестьянам в обмен на опыт. Хотите взять золото?"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.12"
+msgstr "Кольцо фейри\n\nВаше войско вступает внутрь кольца фейри, но ничего не происходит."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.13"
+msgstr "Кольцо фейри\n\nВаше войско вступает внутрь кольца фейри, чары которого принесут вам удачу в грядущем сражении."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.14"
+msgstr "Костер\n\nОбыскав вражеский лагерь, вы находите спрятанный клад."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.15"
+msgstr "Фонтан\n\nВы припадаете к струям волшебного фонтана, но ничего не происходит."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.16"
+msgstr "Фонтан\n\nБлагоуханная влага волшебного фонтана принесет вам удачу в грядущем сражении."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.17"
+msgstr "Беседка\n\nНа ступенях беседки появляется старый рыцарь. \"Мне жаль, храбрый воин, но я уже научил тебя всему, что знаю сам.\""
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.18"
+msgstr "Беседка\n\nНа ступенях беседки появляется старый рыцарь. \"О храбрый воин, я научу тебя всему, что знаю сам; пусть мой опыт поможет тебе в твоих странствиях.\""
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.19"
+msgstr "Лампа джинна\n\nВы находите засыпанную землей помятую и закопченную лампа. Хотите ее потереть?"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.20"
+msgstr "Кладбище\n\nВы осторожно приближаетесь к захоронению древних воинов. Хотите вскрыть их могилы?"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.21"
+msgstr "Одержав победу над призраками, вы несколько часов подряд обыскиваете могилы, но ничего не находите. Ваш недостойный поступок отрицательно влияет на мораль войска."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.22"
+msgstr "Одержав победу над призраками, вы обыскиваете могилы и удаляетесь с находкой!"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.23"
+msgstr "Хижина\n\nГруппа гоблинов в поисках славы желает примкнуть к вашему войску. Согласны ли вы принять их?"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.24"
+msgstr "Вы не можете принять новых рекрутов в свое войско, его ряды полны."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.25"
+msgstr "Хижина\n\nПриблизившись к жилищу гоблинов, вы обнаруживаете, что оно пустует."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.26"
+msgstr "Мазанка\n\nГруппа крестьян в поисках славы желает примкнуть к вашему войску. Согласны ли вы принять их? "
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.27"
+msgstr "Вы не можете принять новых рекрутов в свое войско, его ряды полны."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.28"
+msgstr "Мазанка\n\nПриблизившись к жилищу крестьян, вы обнаруживаете, что оно пустует."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.29"
+msgstr "Избушка\n\nГруппа лучников в поисках славы желает примкнуть к вашему войску. Согласны ли вы принять их?"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.30"
+msgstr "Вы не можете принять новых рекрутов в свое войско, его ряды полны."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.31"
+msgstr "Избушка\n\nПриблизившись к жилищу лучников, вы обнаруживаете, что оно пустует."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.32"
+msgstr "Избушка\n\nГруппа гномов в поисках славы желает примкнуть к вашему войску. Согласны ли вы принять их?"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.33"
+msgstr "Вы не можете принять новых рекрутов в свое войско, его ряды полны."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.34"
+msgstr "Избушка\n\nПриблизившись к жилищу гномов, вы обнаруживаете, что оно пустует."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.35"
+msgstr "Мазанка\n\nГруппа крестьян в поисках славы желает примкнуть к вашему войску. Согласны ли вы принять их?"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.36"
+msgstr "Вы не можете принять новых рекрутов в свое войско, его ряды полны."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.37"
+msgstr "Мазанка\n\nПриблизившись к жилищу крестьян, вы обнаруживаете, что оно пустует."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.38"
+msgstr "Город драконов\n\nВы подошли к Городу драконов, славному своими богатствами и неисчислимыми опасностями. Вы хотите атаковать его?"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.39"
+msgstr "Вы одержали победу над могучими драконами. Отдавая должное вашей доблести, они готовы ежедневно платить в вашу казну по 1000 золотых и оборонять город от неприятелей."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.40"
+msgstr "Маяк\n\nТеперь маяк ваш, и все ваши корабли будут преодолевать большее расстояние за один ход."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.41"
+msgstr "Водяная мельница\n\nМельник обращается к вам со словами: \"Сожалею, господин, но сегодня золота у меня нет. Приходите на следующей неделе.\""
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.42"
+msgstr "Водяная мельница\n\nМельник обращается к вам со словами: \"Господин, я трудился в поте лица и прошу вас принять мою скромную лепту. Приходите на следующей неделе, и вы получите еще столько же.\""
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.43"
+msgstr "Рудная шахта\n\nВы стали хозяином рудной шахты. Она будет приносить вам по 2 единицы руды в день."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.44"
+msgstr "Серные копи\n\nВы стали хозяином серных копей. Они будут приносить вам по 1 единице серы в день."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.45"
+msgstr "Кристальная шахта\n\nВы стали хозяином кристальной шахты. Она будет приносить вам по одной мере кристаллов в день."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.46"
+msgstr "Самоцветная шахта\n\nВы стали хозяином самоцветной шахты. Она будет приносить вам по 1 единице самоцветов в день."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.47"
+msgstr "Золотая шахта\n\nВы стали хозяином золотой шахты. Она будет приносить вам по 1000 золотых в день."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gEventText.48"
+msgstr "Последователи\n\nГруппа %s в поисках славы желает примкнуть к вашему войску. Вы согласны принять их?"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.49"
+msgstr "Оскорбленные отказом быть принятыми в ваши ряды, они нападают на вас!"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.50"
+msgstr "Обелиск\n\nПеред вами обелиск, высеченный из невиданного камня. Вы вглядываетесь в его гладкую поверхность и вдруг замечаете, что на ней начинают проступать таинственные знаки. Знаки складываются во фрагмент древней карты. Вы торопливо срисовываете его, и знаки исчезают так же внезапно, как и появились."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.51"
+msgstr "Обелиск\n\nВы уже посещали этот обелиск."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.52"
+msgstr "Оазис\n\nВы находите оазис, но его колодец пересох, и вы удаляетесь ни с чем."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.53"
+msgstr "Оазис\n\nСтранствующий торговец, бредущий пешком, окликает вас и рассказывает, что его лошадь убежала и он остался один в чужом краю. В благодарность за помощь он приводит ваше войско к оазису, что повышает их мораль в грядущем сражении."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gEventText.54"
+msgstr "Вы нашли ресурс (%s)."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.55"
+msgstr "Лесопилка\n\nВы стали хозяином лесопилки. Она будет приносить вам по 2 единицы древесины в день."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.56"
+msgstr "Оракул\n\nВнутри величественного храма восседает слепой оракул. Вы рассказываете ему о целях вашего похода, и он показывает вам сильные и слабые стороны ваших противников в волшебном хрустальном шаре."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.57"
+msgstr "Святилище\n\nВ центре небольшого храма, скрытого от чужих глаз, стоит старый деревянный алтарь. На алтаре покоится золотая пластина, на которой начертан секрет древнего магического заклинания "
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.58"
+msgstr "Разбитый корабль\n\nВолны прибили к скалам полузатонувший корпус большого пиратского корабля. Вы хотите заглянуть внутрь?"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.59"
+msgstr "Одержав победу над призраками, вы несколько часов подряд обыскиваете останки корабля, но ничего не находите. Ваш недостойный поступок отрицательно влияет на мораль войска."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.60"
+msgstr "Одержав победу над призраками, вы обыскиваете останки корабля и удаляетесь с находкой!"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.61"
+msgstr "Статуя\n\nНад вами возвышается огромная статуя ангела. Внезапно ангел открывает глаза, и ваши воины с радостью ощущают, что их мораль возрасла."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.62"
+msgstr "Статуя\n\nНад вами возвышается гигантская статуя ангела. Ваши воины окружают ее, но она остается мертвой и неподвижной."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.63"
+msgstr "Шатры\n\nВаше внимание привлекает группа шатров, пологи которых трепещут на жарком ветру пустыни. В шатрах никого нет. Пройдет время, и быть может, сюда придет новый отряд кочевников."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.64"
+msgstr "Шатры\n\nВаше внимание привлекает группа шатров, пологи которых трепещут на жарком ветру пустыни. Вы хотите принять в ваше войско отряд кочевников?"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.65"
+msgstr "Фургоны\n\nЯркие фургоны разбойников пусты. Пройдет время, и быть может, здесь обоснуется новая шайка."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.66"
+msgstr "Фургоны\n\nВдалеке слышится музыка и смех. Вы идете на эти звуки и находите  яркие фургоны, в которых живут разбойники. Вы хотите принять в ваше войско шайку разбойников?"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.67"
+msgstr "Водоворот\n\nВаш корабль попадает в водоворот. Часть вашего войска исчезает в пучине."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.68"
+msgstr "Ветряная мельница\n\nМельник обращается к вам со словами: \"Сожалею, господин, но сегодня у меня ничего нет. Приходите на следующей неделе.\""
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.69"
+msgstr "Ветряная мельница\n\n Мельник обращается к вам со словами: \"Господин, я работал не покладая рук, и прошу вас принять мой скромный дар. Приходите на следующей неделе, у меня опять найдется, чем вас порадовать.\""
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.70"
+msgstr "Артефакт\n\nВы находите древний артефакт. Вы направляетесь к нему, но дорогу вам преграждает шайка разбойников, готовых драться за свою добычу."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gEventText.71"
+msgstr "Артефакт\n\nМаленький лепрекон предлагает вам %s в обмен на 2000 золотых. Вы хотите приобрести артефакт?"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.72"
+msgstr "Оскорбленный вашим отказом от такой выгодной сделки лепрекон в гневе топает ножкой и исчезает."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.73"
+msgstr "Вы достаете кошель, но вдруг обнаруживаете, что у вас нет 2000 золотых. Лепрекон топает ножкой и с презрением поворачивается к вам спиной."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gEventText.74"
+msgstr "Перебив разбойников, вы обыскиваете их трупы и обнаруживаете %s."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.75"
+msgstr "Скелет\n\nВы обнаруживаете останки незадачливого искателя приключений. Пошарив в груде лохмотьев, прикрывающих скелет, вы ничего не находите."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gEventText.76"
+msgstr "Скелет\n\nВы обнаруживаете останки незадачливого искателя приключений. Пошарив в груде лохмотьев, вы находите"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gExtendedMemoryUnits.0"
+msgstr "Кб верхней памяти (XMS или EMS) и"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gGameTypeHelp.0"
+msgstr "Играть одиночный сценарий против компьютерных оппонентов."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gGameTypeHelp.1"
+msgstr "Играть кампанию, состоящую из серии отдельных сценариев."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gGameTypeHelp.2"
+msgstr "Играть против других игроков-людей на одном компьютере, по сети или модему."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gGameTypeHelp.3"
+msgstr "Играть тренировочную игру."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gGameTypeHelp.4"
+msgstr "Отменить и вернуться в главное меню."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHandicapNames.0"
+msgstr "Чел.-"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHandicapNames.1"
+msgstr "Чел.-Легкая игра"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHandicapNames.2"
+msgstr "Чел.-Обычная игра"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHandicapNames.3"
+msgstr "Чел.-Тяжелая игра"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHandicapNames.4"
+msgstr "Чел.-Эксперт"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gHeroLevel.0"
+msgstr "%s получает"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroLevel.1"
+msgstr " уровень опыта.\n"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gHeroLevel.2"
+msgstr " %d уровня опыта.\n"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.0.0"
+msgstr "Лорд Килбурн"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.0.1"
+msgstr "Килбурн"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.1.0"
+msgstr "Лорд Хаарт"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.1.1"
+msgstr "Хаарт"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.2.0"
+msgstr "Сэр Галлант"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.2.1"
+msgstr "Галлант"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.3.0"
+msgstr "Артуриус"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.3.1"
+msgstr "Артуриус"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.4.0"
+msgstr "Тиро"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.4.1"
+msgstr "Тиро"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.5.0"
+msgstr "Максимус"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.5.1"
+msgstr "Максимус"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.6.0"
+msgstr "Эктор"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.6.1"
+msgstr "Эктор"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.7.0"
+msgstr "Димитрий"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.7.1"
+msgstr "Димитрий"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.8.0"
+msgstr "Амброзий"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.8.1"
+msgstr "Амброзий"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.9.0"
+msgstr "Сундакс"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.9.1"
+msgstr "Сундакс"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.10.0"
+msgstr "Эргон"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.10.1"
+msgstr "Эргон"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.11.0"
+msgstr "Келзен"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.11.1"
+msgstr "Келзен"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.12.0"
+msgstr "Тсабу"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.12.1"
+msgstr "Тсабу"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.13.0"
+msgstr "Крэг Хак"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.13.1"
+msgstr "Крэг"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.14.0"
+msgstr "Джоджош"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.14.1"
+msgstr "Джоджош"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.15.0"
+msgstr "Атлас"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.15.1"
+msgstr "Атлас"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.16.0"
+msgstr "Йог"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.16.1"
+msgstr "Йог"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.17.0"
+msgstr "Антоний"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.17.1"
+msgstr "Антоний"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.18.0"
+msgstr "Ариэль"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.18.1"
+msgstr "Ариэль"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.19.0"
+msgstr "Ватавна"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.19.1"
+msgstr "Ватавна"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.20.0"
+msgstr "Карлавн"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.20.1"
+msgstr "Карлавн"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.21.0"
+msgstr "Ребекка"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.21.1"
+msgstr "Ребекка"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.22.0"
+msgstr "Луна"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.22.1"
+msgstr "Луна"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.23.0"
+msgstr "Астра"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.23.1"
+msgstr "Астра"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.24.0"
+msgstr "Наташа"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.24.1"
+msgstr "Наташа"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.25.0"
+msgstr "Гем"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.25.1"
+msgstr "Гем"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.26.0"
+msgstr "Троян"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.26.1"
+msgstr "Троян"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.27.0"
+msgstr "Агар"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.27.1"
+msgstr "Агар"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.28.0"
+msgstr "Кродо"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.28.1"
+msgstr "Кродо"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.29.0"
+msgstr "Фалагар"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.29.1"
+msgstr "Фалагар"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.30.0"
+msgstr "Барок"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.30.1"
+msgstr "Барок"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.31.0"
+msgstr "Арий"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.31.1"
+msgstr "Арий"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.32.0"
+msgstr "Кастор"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.32.1"
+msgstr "Кастор"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.33.0"
+msgstr "Сандро"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.33.1"
+msgstr "Сандро"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.34.0"
+msgstr "Расмонт"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.34.1"
+msgstr "Рас"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.35.0"
+msgstr "Виспер"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroNames.35.1"
+msgstr "Виспер"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroScreen.0"
+msgstr "Обзор королевства"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gHeroScreen.1"
+msgstr "%s - информация"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroScreen.2"
+msgstr "Дополнительная статистика героя"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroScreen.3"
+msgstr "Информация о высокой морали"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroScreen.4"
+msgstr "Информация об обычной морали"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroScreen.5"
+msgstr "Информация о плохой морали"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroScreen.6"
+msgstr "Информация о хорошей удаче"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroScreen.7"
+msgstr "Информация об обычной удаче"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroScreen.8"
+msgstr "Информация о плохой удаче"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroScreen.9"
+msgstr "Показать опыт"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gHeroScreen.10"
+msgstr "Отряд %s"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroScreen.11"
+msgstr "Пусто"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gHeroScreen.12"
+msgstr "Передвинуть сюда отряд %s"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gHeroScreen.13"
+msgstr "Отряды %s и %s меняются местами"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroScreen.14"
+msgstr "Показать заклинания"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gHeroScreen.15"
+msgstr "Описание артефакта '%s'"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gHeroScreen.16"
+msgstr "%s %s будет уволен(а)?"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroScreen.17"
+msgstr "Закрыть экрана героя"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHeroScreen.18"
+msgstr "Экран героя"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHumanPlayerTypeNames.0"
+msgstr "Человек\n"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHumanPlayerTypeNames.1"
+msgstr "Человек\nЛегкая игра"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHumanPlayerTypeNames.2"
+msgstr "Человек\nОбычная игра"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHumanPlayerTypeNames.3"
+msgstr "Человек\nТяжелая игра"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gHumanPlayerTypeNames.4"
+msgstr "Человек\nЭксперт"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gInitMenuHelp.0"
+msgstr "Начать одиночную или сетевую игру."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gInitMenuHelp.1"
+msgstr "Загрузить сохраненную игру."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gInitMenuHelp.2"
+msgstr "Открыть таблицу рекордов."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gInitMenuHelp.3"
+msgstr "Посмотреть список авторов."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gInitMenuHelp.4"
+msgstr "Выйти из Героев Меча и Магии и вернуться в систему."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gLuckInfoText.0"
+msgstr "Хорошая удача\n\nЕсли удача вашего войска выше обычной, атаки отдельных отрядов на поле боя иногда оказываются более результативными (их сила удваивается)."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gLuckInfoText.1"
+msgstr "Обычная удача\n\nС обычной удачей ваше войско не имеет ни преимуществ, ни недостатков на поле боя."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gLuckInfoText.2"
+msgstr "Плохая удача\n\nЕсли вашему войску не везет, урон, наносимый  отдельными отрядами на поле боя, может оказаться вдвое меньше обычного."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gLuckInfoText.3"
+msgstr "%s\n\n\nТекущие компоненты удачи:"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gLuckInfoText.4"
+msgstr "\nЛапка кролика +1"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gLuckInfoText.5"
+msgstr "\nПодкова +1"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gLuckInfoText.6"
+msgstr "\nМонета +1"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gLuckInfoText.7"
+msgstr "\nКлевер +1"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gLuckInfoText.8"
+msgstr "\nКруг фейри +1"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gLuckInfoText.9"
+msgstr "\nФонтан +1"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gLuckInfoText.10"
+msgstr "\nнет"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gLuckText.0"
+msgstr "Проклятая"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gLuckText.1"
+msgstr "Ужасная"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gLuckText.2"
+msgstr "Плохая"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gLuckText.3"
+msgstr "Обычная"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gLuckText.4"
+msgstr "Хорошая"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gLuckText.5"
+msgstr "Отличная"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gLuckText.6"
+msgstr "Божественная"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMapDifficultyNames.0"
+msgstr "Легкая"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMapDifficultyNames.1"
+msgstr "Обычная"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMapDifficultyNames.2"
+msgstr "Тяжелая"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMapDifficultyNames.3"
+msgstr "Невозможная"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMapDifficultyNames.4"
+msgstr "Невероятная"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMapSizeNames.0"
+msgstr "Маленькая"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMapSizeNames.1"
+msgstr "Средняя"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMapSizeNames.2"
+msgstr "Большая"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMemoryErrorTitle.0"
+msgstr "Не хватает памяти"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMemoryRequirements.0"
+msgstr "Игре Герои Меча и Магии требуется как минимум:"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMineNames.0"
+msgstr "Лесопилка"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMineNames.1"
+msgstr "Лаборатория алхимика"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMineNames.2"
+msgstr "Рудная шахта"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMineNames.3"
+msgstr "Серная шахта"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMineNames.4"
+msgstr "Кристальная шахта"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMineNames.5"
+msgstr "Самоцветная шахта"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMineNames.6"
+msgstr "Золотоносная шахта"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMonthNames.0"
+msgstr "Кузнечика"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMonthNames.1"
+msgstr "Муравья"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMonthNames.2"
+msgstr "Стрекозы"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMonthNames.3"
+msgstr "Паука"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMonthNames.4"
+msgstr "Бабочки"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMonthNames.5"
+msgstr "Шмеля"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMonthNames.6"
+msgstr "Цикады"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMonthNames.7"
+msgstr "Земляного червя"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMonthNames.8"
+msgstr "Шершня"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMonthNames.9"
+msgstr "Жука"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMoraleInfoText.0"
+msgstr "Высокая мораль\n\nВысокая мораль может дать в бою вашим бойцам дополнительную атаку."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMoraleInfoText.1"
+msgstr "Обычная мораль\n\nС обычной моралью ваши армии никогда не получат дополнительную атаку и не будут прокляты."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMoraleInfoText.2"
+msgstr "Низкая мораль\n\nНизкая мораль может привести к потере хода в бою вашими бойцами."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gMoraleInfoText.3"
+msgstr "%s\n\n\nМодификаторы морали:"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMoraleInfoText.4"
+msgstr "\nБонус рыцаря +1"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gMoraleInfoText.5"
+msgstr "\nВсе %s бойцы +1"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMoraleInfoText.6"
+msgstr "\nВоины 3 рас -1"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMoraleInfoText.7"
+msgstr "\nВоины 4 рас -2"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMoraleInfoText.8"
+msgstr "\nМедаль отваги +1"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMoraleInfoText.9"
+msgstr "\nМедаль мужества +1"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMoraleInfoText.10"
+msgstr "\nМедаль доблести +1"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMoraleInfoText.11"
+msgstr "\nМедаль почета +1"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMoraleInfoText.12"
+msgstr "\nСимвол неудачи -2"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMoraleInfoText.13"
+msgstr "\nПосещен буй +1"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMoraleInfoText.14"
+msgstr "\nПосещен оазис +1"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMoraleInfoText.15"
+msgstr "\nПосещена статуя +2"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMoraleInfoText.16"
+msgstr "\nРасхититель гробниц -1"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMoraleInfoText.17"
+msgstr "\nРасхититель обломков -1"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gMoraleInfoText.18"
+msgstr "\nТрусость в бою %d"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMoraleInfoText.19"
+msgstr "\nНет"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMoraleInfoText.20"
+msgstr "\nВоины 5 рас -3"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMoraleText.0"
+msgstr "Предательская"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMoraleText.1"
+msgstr "Ужасная"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMoraleText.2"
+msgstr "Плохая"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMoraleText.3"
+msgstr "Обычная"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMoraleText.4"
+msgstr "Хорошая"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMoraleText.5"
+msgstr "Отличная"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gMoraleText.6"
+msgstr "Кровавая!"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gNeutralBuildingDescriptions.0"
+msgstr "Гильдия магов позволяет разучивать новые заклинания."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gNeutralBuildingDescriptions.1"
+msgstr "Гильдия воров дает информацию о врагах. Также, Гильдия воров дает разведывательную информацию о вражеских городах.  Дополнительные гильдии дают дополнительную информацию."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gNeutralBuildingDescriptions.2"
+msgstr "Таверна увеличивает мораль бойцов, защищающих замок."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gNeutralBuildingDescriptions.3"
+msgstr "Верфь позволяет строить корабли."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gNeutralBuildingDescriptions.4"
+msgstr "Колодец увеличивает прирост всех воинов на 2 в неделю."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gNeutralBuildingDescriptions.5"
+msgstr "Шатры дают рабочих, которые могут возвести замок."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gNeutralBuildingDescriptions.6"
+msgstr "Замок улучшает защиту города и увеличивает доход."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gNeutralBuildingNames.0"
+msgstr "Гильдия магов"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gNeutralBuildingNames.1"
+msgstr "Гильдия воров"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gNeutralBuildingNames.2"
+msgstr "Таверна"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gNeutralBuildingNames.3"
+msgstr "Верфь"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gNeutralBuildingNames.4"
+msgstr "Колодец"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gNeutralBuildingNames.5"
+msgstr "Шатры"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gNeutralBuildingNames.6"
+msgstr "Замок"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gNewGameHelp.0"
+msgstr "Принять установки и начать игру."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gNewGameHelp.1"
+msgstr "Вернуться в главное меню."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gNewGameHelp.2"
+msgstr "Бросить вызов 'Царь горы' компьютерным игрокам. Ваша наглая выходка оскорбит компьютерных игроков и они, оставив друг друга в покое, будут стремиться разгромить вас в прах."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gNewGameHelp.3"
+msgstr "Выберите сценарий, на котором хотите играть."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gNewGameHelp.4"
+msgstr "Изменить начальную сложность игры. Чем больший уровень сложности вы выберете, тем с меньшим количеством ресурсов вы начнете игру."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gNewGameHelp.5"
+msgstr "Изменить уровень сложности для этого соперника. Более умные компьютерные игроки ведут себя более агрессивно и тратят больше времени на ход."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gNewGameHelp.6"
+msgstr "Изменить цвет вашего знамени."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gNewGameHelp.7"
+msgstr "Уровень сложности отражает соотношение различных параметров игры. Указанное количество очков будет прибавлено к вашему финальному счету."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gNewGameHelp.8"
+msgstr "Изменить стартовую сложность игры другого игрока. Чем больший уровень сложности вы выберете, тем с меньшим количеством ресурсов вы начнете игру."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gNewTurnText.0"
+msgstr "%s игрок, у вас осталось всего %d дней на то, чтобы завоевать хотя бы один город; иначе вы будете навеки изгнаны из страны."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gNewTurnText.1"
+msgstr "%s игрок, настал последний день, когда вы еще можете завоевать себе город; в противном случае вы будете навеки изгнаны из страны."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gNewTurnText.2"
+msgstr "Астрологи объявляют месяц %s.\n\nНаселение всех жилищ возросло."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gNewTurnText.3"
+msgstr "Астрологи объявляют, что этому месяцу покровительствует сила %s.\n\nПопуляция %s удваивается!\n\nНаселение всех жилищ возросло."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gNewTurnText.4"
+msgstr "Астрологи объявляют месяц ЧУМЫ!\n\nНаселение всех жилищ уменьшилось вдвое."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gNewTurnText.5"
+msgstr "Астрологи объявляют неделю %s.\n\nНаселение всех жилищ возросло."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gNewTurnText.6"
+msgstr "Астрологи объявляют, что этой неделе покровительствует сила %s.\n\nПопуляция %s +5.\n\nНаселение всех жилищ возросло."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.1"
+msgstr "Лаборатория алхимика"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.2"
+msgstr "Указатель"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.3"
+msgstr "Буй"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.4"
+msgstr "Скелет"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.5"
+msgstr "Пещера демона"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.6"
+msgstr "Ларец с сокровищами"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.7"
+msgstr "Кольцо фейри"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.8"
+msgstr "Костер"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.9"
+msgstr "Фонтан"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.10"
+msgstr "Беседка"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.11"
+msgstr "Древняя лампа"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.12"
+msgstr "Кладбище"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.13"
+msgstr "Лачуга"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.14"
+msgstr "Дом"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.15"
+msgstr "Будка"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.16"
+msgstr "Хижина"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.17"
+msgstr "Хижина"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.18"
+msgstr "Таверна 1"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.19"
+msgstr "Таверна 2"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.20"
+msgstr "Таверна 3"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.21"
+msgstr "Таверна 4"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.22"
+msgstr "Драконий город"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.23"
+msgstr "Маяк"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.24"
+msgstr "Водяная мельница"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.25"
+msgstr "Шахта"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.26"
+msgstr "Бивуак"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.27"
+msgstr "Обелиск"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.28"
+msgstr "Оазис"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.29"
+msgstr "Ресурсы"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.30"
+msgstr "Розовый куст"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.31"
+msgstr "Яма в песке"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.32"
+msgstr "Лесопилка"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.33"
+msgstr "Святилище"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.34"
+msgstr "Святилище"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.35"
+msgstr "Кораблекрушение"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.36"
+msgstr "Статуя"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.37"
+msgstr "Пень"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.38"
+msgstr "Лебединое озеро"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.39"
+msgstr "Шатры"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.40"
+msgstr "Город"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.41"
+msgstr "Менгир"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.42"
+msgstr "Фургоны"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.43"
+msgstr "Колодец"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.44"
+msgstr "Водоворот"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.45"
+msgstr "Ветряная мельница"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.46"
+msgstr "Дуб"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.47"
+msgstr "Мегалит"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.48"
+msgstr "Артефакт"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.49"
+msgstr "Тут ничего нет"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.52"
+msgstr "Горы"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.53"
+msgstr "Горы"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.54"
+msgstr "Горы"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.55"
+msgstr "Горы"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.56"
+msgstr "Деревья"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.57"
+msgstr "Деревья"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.58"
+msgstr "Деревья"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.59"
+msgstr "Деревья"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.60"
+msgstr "Деревья"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gObjectNames.62"
+msgstr "Корабль"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gOverviewText.0"
+msgstr "Обзор королевства     Месяц: %d, Неделя: %d, День: %d"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gOverviewText.1"
+msgstr "Ваш Драконий город."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gOverviewText.2"
+msgstr "Ваш маяк."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gPlayerTypeNames.0"
+msgstr "Нет"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gPlayerTypeNames.1"
+msgstr "Глупый"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gPlayerTypeNames.2"
+msgstr "Средний"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gPlayerTypeNames.3"
+msgstr "Умный"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gPlayerTypeNames.4"
+msgstr "Гений"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gResourceNames.0"
+msgstr "Древесина"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gResourceNames.1"
+msgstr "Ртуть"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gResourceNames.2"
+msgstr "Руда"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gResourceNames.3"
+msgstr "Сера"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gResourceNames.4"
+msgstr "Кристаллы"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gResourceNames.5"
+msgstr "Самоцветы"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gResourceNames.6"
+msgstr "Золото"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gScoreLabels.0"
+msgstr "Дней:"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gScoreLabels.1"
+msgstr "Очки:"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gScoreLabels.2"
+msgstr "Сложность:"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gScoreLabels.3"
+msgstr "Счет:"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gScoreLabels.4"
+msgstr "Ранг:"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupBaudHelp.0"
+msgstr "Скорость соединения 2400 бод. \n\nДля модемов со скоростью 14400 бод используйте скорость 19200 бод. Для модемов со скоростью 28800 бод используйте скорость 38400 бод."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupBaudHelp.1"
+msgstr "Скорость соединения 9600 бод. \n\nДля модемов со скоростью 14400 бод используйте скорость 19200 бод. Для модемов со скоростью 28800 бод используйте скорость 38400 бод."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupBaudHelp.2"
+msgstr "Скорость соединения 19200 бод.\n\nДля модемов со скоростью 14400 бод используйте скорость 19200 бод. Для модемов со скоростью 28800 бод используйте скорость 38400 бод."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupBaudHelp.3"
+msgstr "Скорость соединения 38400 бод.\n\nДля модемов со скоростью 14400 бод используйте скорость 19200 бод. Для модемов со скоростью 28800 бод используйте скорость 38400 бод."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupBaudHelp.4"
+msgstr "Отменить и вернуться в главное меню."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupCampaignGameHelp.0"
+msgstr "Играть за Лорда Айронфиста."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupCampaignGameHelp.1"
+msgstr "Играть за Вождя Слэйера."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupCampaignGameHelp.2"
+msgstr "Играть за Царицу Ламанду."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupCampaignGameHelp.3"
+msgstr "Играть за Колдуна Аламара."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupCampaignGameHelp.4"
+msgstr "Отменить и вернуться в главное меню."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupComPortHelp.0"
+msgstr "Использовать порт COM 1 для модемного соединения."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupComPortHelp.1"
+msgstr "Использовать порт COM 2 для модемного соединения."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupComPortHelp.2"
+msgstr "Использовать порт COM 3 для модемного соединения."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupComPortHelp.3"
+msgstr "Использовать порт COM 4 для модемного соединения."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupComPortHelp.4"
+msgstr "Отменить и вернуться в главное меню."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupDCBaudHelp.0"
+msgstr "Скорость соединения 2400 бод. \n\nДля компьютеров с устаревшим чипом UART 8250 следует использовать скорость 19200 бод, а для компьютеров с более современным чипом UART 16550 - скорость 38400 бод. Если вы не уверены, какой у вас чип, начните с более низких скоростей. В большинстве компьютеров, произведенных в 1994 году и позднее, используется чип UART 16550."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupDCBaudHelp.1"
+msgstr "Скорость соединения 9600 бод. \n\n Для компьютеров с устаревшим чипом UART 8250 следует использовать скорость 19200 бод, а для компьютеров с более современным чипом UART 16550 - скорость 38400 бод. Если вы не уверены, какой у вас чип, начните с более низких скоростей. В большинстве компьютеров, произведенных в 1994 году и позднее, используется чип UART 16550."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupDCBaudHelp.2"
+msgstr "Скорость соединения 19200 бод.\n\n Для компьютеров с устаревшим чипом UART 8250 следует использовать скорость 19200 бод, а для компьютеров с более современным чипом UART 16550 - скорость 38400 бод. Если вы не уверены, какой у вас чип, начните с более низких скоростей. В большинстве компьютеров, произведенных в 1994 году и позднее, используется чип UART 16550."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupDCBaudHelp.3"
+msgstr "Скорость соединения 38400 бод.\n\n Для компьютеров с устаревшим чипом UART 8250 следует использовать скорость 19200 бод, а для компьютеров с более современным чипом UART 16550 - скорость 38400 бод. Если вы не уверены, какой у вас чип, начните с более низких скоростей. В большинстве компьютеров, произведенных в 1994 году и позднее, используется чип UART 16550."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupDCBaudHelp.4"
+msgstr "Отменить и вернуться в главное меню. "
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupDCComPortHelp.0"
+msgstr "Использовать порт COM 1 для прямого соединения."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupDCComPortHelp.1"
+msgstr "Использовать порт COM 2 для прямого соединения."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupDCComPortHelp.2"
+msgstr "Использовать порт COM 3 для прямого соединения."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupDCComPortHelp.3"
+msgstr "Использовать порт COM 4 для прямого соединения."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupDCComPortHelp.4"
+msgstr "Отменить и вернуться в главное меню."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupDCGameHelp.0"
+msgstr "Хост задает настройки игры."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupDCGameHelp.1"
+msgstr "Гость ожидает, пока хост определит опции игры."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupDCGameHelp.2"
+msgstr "Изменить порт прямого соединения."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupDCGameHelp.3"
+msgstr "Отменить и вернуться в главное меню."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupGameHelp.0"
+msgstr "Одиночная игра на отдельной карте."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupGameHelp.1"
+msgstr "Одиночная игра на серии карт."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupGameHelp.2"
+msgstr "Сетевая игра, где несколько игроков-людей сражаются друг против друга на одной карте."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupGameHelp.3"
+msgstr "Отменить и вернуться в главное меню."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupHotSeatGameHelp.0"
+msgstr "Играть с 2 людьми и, опционально, до 2 дополнительных компьютерных игроков."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupHotSeatGameHelp.1"
+msgstr "Играть с 3 людьми и, опционально, с 1 компьютерным игроком."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupHotSeatGameHelp.2"
+msgstr "Играть с 4 людьми."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupHotSeatGameHelp.3"
+msgstr "Отменить и вернуться в главное меню."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupModemGameHelp.0"
+msgstr "Хост определяет настройки игры, выбирает номер дозвона и размещает вызовы."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupModemGameHelp.1"
+msgstr "Гость ожидает вызова хоста."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupModemGameHelp.2"
+msgstr "Изменить настройки модема."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupModemGameHelp.3"
+msgstr "Отменить и вернуться в главное меню."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupMultiPlayerGameHelp.0"
+msgstr "Играть за одним компьютером, где от 2 до 4 игроков сражаются за одной машиной, меняясь по очереди местами при передаче хода."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupMultiPlayerGameHelp.1"
+msgstr "Играть по локальной сети, где машины 2 игроков соединены между собой."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupMultiPlayerGameHelp.2"
+msgstr "Играть по модему, где 2 игрока используют свои компьютеры, соединенные между собой по телефонной линии с использованием модема."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupMultiPlayerGameHelp.3"
+msgstr "Играть через прямое соединение, где 2 игрока играют на машинах соединенных через порты по ноль-модему."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupMultiPlayerGameHelp.4"
+msgstr "Отменить и вернуться в главное меню."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupNetworkGameHelp.0"
+msgstr "Сервер задает настройки игры. Может быть, только один хост в одном сетевом соединении."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupNetworkGameHelp.1"
+msgstr "Гость ожидает, пока сервер задаст настройки игры, после чего он автоматически вступит в игру. В игре по сети может быть только 1 гость."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSetupNetworkGameHelp.2"
+msgstr "Отменить и вернуться в главное меню."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpeedText.1"
+msgstr "Низкая"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpeedText.2"
+msgstr "Средняя"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpeedText.3"
+msgstr "Высокая"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpeedText.4"
+msgstr "Оч. высокая"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.0"
+msgstr "Огненный шар\n\nОгромный огненный шар взрывается над выбранным участком поля боя, поражая всех находящихся поблизости участников сражения."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.1"
+msgstr "Молния\n\nМощный электрический разряд поражает выбранную группу воинов."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.2"
+msgstr "Телепортация\n\nПереносит выбранную группу воинов в любое свободное место на поле боя."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.3"
+msgstr "Лечение\n\nНейтрализует все враждебные чары, насланные на ваших воинов."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.4"
+msgstr "Воскрешение\n\nВоскрешает воинов в группе, которой был нанесен урон."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.5"
+msgstr "Ускорение\n\nСкорость любой группы воинов становится 'очень высокой'."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.6"
+msgstr "Замедление\n\nУменьшает скорость даже самой быстрой группы вражеских воинов."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.7"
+msgstr "Ослепление\n\nЗатуманивает взоры воинов в выбранной группе и тем самым не позволяет им перемещаться по полю боя."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.8"
+msgstr "Благословение\n\nУвеличивает до максимума урон, наносимый выбранной группой воинов."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.9"
+msgstr "Защита\n\nУвеличивает навык защиты воинов выбранной группы."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.10"
+msgstr "Проклятие\n\nУменьшает до минимума урон, причиняемый выбранной группой воинов."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.11"
+msgstr "Убить нежить\n\nМгновенно загоняет призраков в покинутые ими могилы."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.12"
+msgstr "Антимагия\n\nДелает невозможным применение враждебных чар против выбранной группы воинов."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.13"
+msgstr "Снять чары\n\nНейтрализует любые чары, насланные на всех участников сражения."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.14"
+msgstr "Берсерк\n\nЗаставляет выбранную группу воинов нападать на ближайшую к ней соседнюю группу."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.15"
+msgstr "Армагеддон\n\nМогущественные силы поражают всех участников сражения, нанося им жестокий урон."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.16"
+msgstr "Шторм\n\nСилы стихий обрушиваются на поле боя, нанося урон всем участникам сражения."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.17"
+msgstr "Звездопад\n\nЗвездопад поражает выбранный участок поля боя, нанося урон всем находящимся поблизости участникам сражения."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.18"
+msgstr "Паралич\n\nГруппу, против которой направлено это заклинание, поражает паралич, и она теряет способность передвигаться или отвечать на удары."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.19"
+msgstr "Шахты\n\nДелает видимыми все шахты на игровой карте."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.20"
+msgstr "Ресурсы\n\nДелает видимыми все ресурсы на игровой карте."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.21"
+msgstr "Артефакты\n\nДелает видимыми все артефакты на игровой карте."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.22"
+msgstr "Города\n\nДелает видимыми все города и замки на игровой карте."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.23"
+msgstr "Герои\n\nДелает видимыми всех героев на игровой карте."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.24"
+msgstr "Все\n\nДелает видимой всю игровую карту."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.25"
+msgstr "Опознать героя\n\nПозволяет получить подробную информацию о вражеских героях."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.26"
+msgstr "Корабль\n\nПереносит ближайший незанятый дружественный корабль в соответствующую точку побережья. Дружественным считается корабль, который вы только что построили, либо тот, на котором после вас никто не плавал."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.27"
+msgstr "Портал\n\nПереносит вас в точку на карте, расположенную поблизости."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellDesc.28"
+msgstr "Врата города\n\nПереносит вас в любой принадлежащий вам город или замок."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellHelp.0"
+msgstr "Предыдущая страница "
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellHelp.1"
+msgstr "Следующая страница"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellHelp.2"
+msgstr "Путевые заклинания"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellHelp.3"
+msgstr "Боевые заклинания"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellHelp.4"
+msgstr "Закрыть магическую книгу"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellHelp.5"
+msgstr "Заклинания"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellHelp.6"
+msgstr "Выбрать заклинание"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellHelp.7"
+msgstr "Боевые заклинания"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellNames.0"
+msgstr "Огненный шар"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellNames.1"
+msgstr "Молния"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellNames.2"
+msgstr "Телепортация"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellNames.3"
+msgstr "Лечение"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellNames.4"
+msgstr "Воскрешение"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellNames.5"
+msgstr "Ускорение"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellNames.6"
+msgstr "Замедление"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellNames.7"
+msgstr "Ослепление"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellNames.8"
+msgstr "Благословение"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellNames.9"
+msgstr "Защита"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellNames.10"
+msgstr "Проклятие"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellNames.11"
+msgstr "Убить нежить"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellNames.12"
+msgstr "Антимагия"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellNames.13"
+msgstr "Снять чары"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellNames.14"
+msgstr "Берсерк"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellNames.15"
+msgstr "Армагеддон"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellNames.16"
+msgstr "Шторм"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellNames.17"
+msgstr "Звездопад"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellNames.18"
+msgstr "Паралич"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellNames.19"
+msgstr "Шахты"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellNames.20"
+msgstr "Ресурсы"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellNames.21"
+msgstr "Артефакты"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellNames.22"
+msgstr "Города"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellNames.23"
+msgstr "Герои"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellNames.24"
+msgstr "Все"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellNames.25"
+msgstr "Опознать героя"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellNames.26"
+msgstr "Корабль"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellNames.27"
+msgstr "Портал"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gSpellNames.28"
+msgstr "Врата города"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gStatDesc.0"
+msgstr "Ваш навык атаки - бонус, добавляемый к навыку атаки каждого воина."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gStatDesc.1"
+msgstr "Ваш навык защиты - бонус, добавляемый к навыку защиты каждого воина."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gStatDesc.2"
+msgstr "Ваш уровень силы магии определяет длительность действия или силу заклинания."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gStatDesc.3"
+msgstr "Ваш уровень знания определяет количество запоминаемых заклинаний."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gStatDesc.4"
+msgstr "Ваш уровень навыка осадного дела определяет, сколько раз будет стрелять ваша катапульта при осаде замка."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gStatNames.0"
+msgstr "Атака"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gStatNames.1"
+msgstr "Защита"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gStatNames.2"
+msgstr "Сила магии"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gStatNames.3"
+msgstr "Знания"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gStatNames.4"
+msgstr "Осада"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTerrainNames.0"
+msgstr "Вода"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTerrainNames.1"
+msgstr "Трава"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTerrainNames.2"
+msgstr "Снег"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTerrainNames.3"
+msgstr "Болото"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTerrainNames.4"
+msgstr "Лава"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTerrainNames.5"
+msgstr "Пустыня"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTerrainNames.6"
+msgstr "Равнина"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gTownCommand.0"
+msgstr "Разделить отряд %s"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownCommand.1"
+msgstr "Нельзя забрать последних воинов у героя "
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gTownCommand.2"
+msgstr "Соединить отряды %s"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gTownCommand.3"
+msgstr "Разделить отряд %s"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gTownCommand.4"
+msgstr "Отряд %s"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownCommand.5"
+msgstr "Нельзя перенести в гарнизон последний отряд."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gTownCommand.6"
+msgstr "Передвинуть сюда отряд %s"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gTownCommand.7"
+msgstr "Отряды %s и %s меняются местами"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownCommand.8"
+msgstr "Выйти из города"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownCommand.10"
+msgstr "Обзор королевства"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownCommand.11"
+msgstr "Пусто"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gTownCommand.12"
+msgstr "Отряд %s"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownCommand.13"
+msgstr "Показать героя"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownCommand.14"
+msgstr "Гильдия магов"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownCommand.15"
+msgstr "Гильдия воров"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownCommand.16"
+msgstr "Таверна"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownCommand.17"
+msgstr "Верфь"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownCommand.18"
+msgstr "Колодец"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownCommand.19"
+msgstr "Шатры"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownCommand.20"
+msgstr "Замок"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#, c-format
+msgid "table.gTownCommand.21"
+msgstr "Нанять %s"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownNames.0"
+msgstr "Блэкбридж"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownNames.1"
+msgstr "Сосновый холм"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownNames.2"
+msgstr "Вудхавен"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownNames.3"
+msgstr "Хилстон"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownNames.4"
+msgstr "Вайтшилд"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownNames.5"
+msgstr "Бладрейн"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownNames.6"
+msgstr "Клык дракона"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownNames.7"
+msgstr "Грейвинд"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownNames.8"
+msgstr "Блэквинд"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownNames.9"
+msgstr "Портсмис"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownNames.10"
+msgstr "Мидлгейт"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownNames.11"
+msgstr "Тундара"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownNames.12"
+msgstr "Вулкания"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownNames.13"
+msgstr "Занзобар"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownNames.14"
+msgstr "Атлантиум"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownNames.15"
+msgstr "Байвоч"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownNames.16"
+msgstr "Вилдабар"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownNames.17"
+msgstr "Фонтанхед"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownNames.18"
+msgstr "Вертиго"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownNames.19"
+msgstr "Винтеркил"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownNames.20"
+msgstr "Найтшэдоу"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownNames.21"
+msgstr "Сэндкастер"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownNames.22"
+msgstr "Лайксайд"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownNames.23"
+msgstr "Олимпус"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownNames.24"
+msgstr "Некрополис"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownNames.25"
+msgstr "Бурлок"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownNames.26"
+msgstr "Ксабран"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownNames.27"
+msgstr "Драгадун"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownNames.28"
+msgstr "Аламар"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownNames.29"
+msgstr "Калиндра"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownNames.30"
+msgstr "Блэкфанг"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownNames.31"
+msgstr "Бесенжи"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownNames.32"
+msgstr "Алгари"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownNames.33"
+msgstr "Сорпигал"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownNames.34"
+msgstr "Даск"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gTownNames.35"
+msgstr "Эрликиум"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gViewGeneralHelp.0"
+msgstr "Остановить катапульту"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gViewGeneralHelp.1"
+msgstr "Направить заклинание"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gViewGeneralHelp.2"
+msgstr "Отступить"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gViewGeneralHelp.3"
+msgstr "Сдаться"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gViewGeneralHelp.4"
+msgstr "Отмена"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gViewGeneralHelp.5"
+msgstr "Возможности героя"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gViewGeneralLabels.0"
+msgstr "Атака: "
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gViewGeneralLabels.1"
+msgstr "Защита: "
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gViewGeneralLabels.2"
+msgstr "Сила магии: "
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gViewGeneralLabels.3"
+msgstr "Знания: "
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gViewGeneralLabels.4"
+msgstr "Мораль: "
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gViewGeneralLabels.5"
+msgstr "Удача: "
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gWeekNames.0"
+msgstr "Белки"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gWeekNames.1"
+msgstr "Кролика"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gWeekNames.2"
+msgstr "Суслика"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gWeekNames.3"
+msgstr "Барсука"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gWeekNames.4"
+msgstr "Крысы"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gWeekNames.5"
+msgstr "Орла"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gWeekNames.6"
+msgstr "Горностая"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gWeekNames.7"
+msgstr "Ворона"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gWeekNames.8"
+msgstr "Мангуста"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gWeekNames.9"
+msgstr "Собаки"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gWeekNames.10"
+msgstr "Муравьеда"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gWeekNames.11"
+msgstr "Ящерицы"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gWeekNames.12"
+msgstr "Черепахи"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gWeekNames.13"
+msgstr "Дикобраза"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.gWeekNames.14"
+msgstr "Кондора"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.0"
+msgstr "Купить книгу:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.1"
+msgstr "Ресурсов:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.2"
+msgstr "Построить:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.3"
+msgstr "Замок:  Улучшить город/Нанять героя"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.4"
+msgstr "Гильдия магов"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.5"
+msgstr "Гильдия воров"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.6"
+msgstr "Таверна"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.7"
+msgstr "Верфь"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.8"
+msgstr "Колодец"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.9"
+msgstr "Нанять героя"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.10"
+msgstr "Музыка"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.11"
+msgstr "Эффекты"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.12"
+msgstr "Качество\nзвука"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.13"
+msgstr "Скорость"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.14"
+msgstr "Путь"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.15"
+msgstr "Показывать\nход врагов"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.16"
+msgstr "Портал:\nВыберите место назначения"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.17"
+msgstr "Атака"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.18"
+msgstr "Защита"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.19"
+msgstr "Сила магии"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.20"
+msgstr "Знания"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.21"
+msgstr "Указанные заклинания были добавлены в вашу Волшебную книгу."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.22"
+msgstr "Выбрать сложность:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.23"
+msgstr "Легкая"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.24"
+msgstr "Обычная"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.25"
+msgstr "Тяжелая"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.26"
+msgstr "Эксперт"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.27"
+msgstr "Уровень противника:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.28"
+msgstr "Норма"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.29"
+msgstr "Норма"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.30"
+msgstr "Норма"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.31"
+msgstr "Цвет:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.32"
+msgstr "Царь горы:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.33"
+msgstr "Сценарий:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.34"
+msgstr "Герои"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.35"
+msgstr "Замки"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.36"
+msgstr "Города"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.37"
+msgstr "Шахты"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.38"
+msgstr "Ресурсы"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.39"
+msgstr "Золота в день:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.40"
+msgstr "Атака:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.41"
+msgstr "Защита:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.42"
+msgstr "Сила магии:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.43"
+msgstr "Знания:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.44"
+msgstr "Защитники:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.45"
+msgstr "Нанять героя"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.46"
+msgstr "Строить корабль:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.47"
+msgstr "Цена:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.48"
+msgstr "Атака"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.49"
+msgstr "Защита"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.50"
+msgstr "Сила магии"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.51"
+msgstr "Знания  "
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.52"
+msgstr "Таверна"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.53"
+msgstr "Таверна увеличивает мораль воинов гарнизона."
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.54"
+msgstr "Гильдия воров: Достижения игроков"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.55"
+msgstr "1-й"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.56"
+msgstr "2-й"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.57"
+msgstr "3-й"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.58"
+msgstr "4-й"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.59"
+msgstr "Городов:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.60"
+msgstr "Замков:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.61"
+msgstr "Героев:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.62"
+msgstr "Казна:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.63"
+msgstr "Дерево, кристаллы и руда:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.64"
+msgstr "Самоцветы, сера и ртуть:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.65"
+msgstr "Найдено обелисков:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.66"
+msgstr "Общая сила армии:"
+
+#: src/SOURCE/KB.cpp
+msgid "table.gWinSetupText.67"
+msgstr "Карта мира"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.musicQualityText.0"
+msgstr "8 бит моно"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.musicQualityText.1"
+msgstr "8 бит стерео"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.musicQualityText.2"
+msgstr "CD стерео"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.onOffText.0"
+msgstr "Выкл."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.onOffText.1"
+msgstr "Вкл."
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.onOffText.2"
+msgstr "Вкл.\nГромкость 9"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.onOffText.3"
+msgstr "Вкл.\nГромкость 8"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.onOffText.4"
+msgstr "Вкл.\nГромкость 7"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.onOffText.5"
+msgstr "Вкл.\nГромкость 6"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.onOffText.6"
+msgstr "Вкл.\nГромкость 5"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.onOffText.7"
+msgstr "Вкл.\nГромкость 4"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.onOffText.8"
+msgstr "Вкл.\nГромкость 3"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.onOffText.9"
+msgstr "Вкл.\nГромкость 2"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.onOffText.10"
+msgstr "Вкл.\nГромкость 1"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.walkSpeedText.0"
+msgstr "Шагом"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.walkSpeedText.1"
+msgstr "Рысью"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.walkSpeedText.2"
+msgstr "Аллюром"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.walkSpeedText.3"
+msgstr "Галопом"
+
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+msgid "table.walkSpeedText.4"
+msgstr "Прыжками"
+
+#: src/SOURCE/TOWNMGR.cpp
+msgid "town.boat.unavailable"
+msgstr "Нельзя построить еще один корабль."
+
+#: src/SOURCE/TOWNMGR.cpp
+#, c-format
+msgid "town.build.mage_guild_level"
+msgstr "Гильдия магов, %d этаж"
+
+#: src/SOURCE/TOWNMGR.cpp
+msgid "town.build.requires"
+msgstr "\nНужно:"
+
+#: src/SOURCE/TOWNMGR.cpp
+msgid "town.mage.spells"
+msgstr "Указанные заклинания доступны здесь."
+
+#: src/SOURCE/TOWNMGR.cpp
+msgid "town.screen.title"
+msgstr "Экран города"
+
+#: src/SOURCE/TOWNMGR.cpp
+msgid "town.spellbook.no_space"
+msgstr "Вам следует купить Волшебную книгу, чтобы воспользоваться Гильдией магов, но сейчас у вас нет места для книги. Передайте другому герою один из артефактов."
+
+#: src/SOURCE/TOWNMGR.cpp
+msgid "town.split.garrison"
+msgstr "гарнизона"
+
+#: src/SOURCE/TOWNMGR.cpp
+msgid "town.split.hero_army"
+msgstr "героя"
+
+#: src/SOURCE/TOWNMGR.cpp
+#, c-format
+msgid "town.split.prompt"
+msgstr "Перенести %s из армии %s в армию %s?"
+
+#: src/SOURCE/TOWNMGR.cpp
+msgid "town.well.empty"
+msgstr "Доступно:\nНЕТ\nПрирост:\nН/Д"
+
+#: src/SOURCE/TOWNMGR.cpp
+#, c-format
+msgid "town.well.growth"
+msgstr "Доступно:\n%d\nПрирост:\n%d/нед."
+
+#: src/SOURCE/GAME.cpp
+#, c-format
+msgid "turn.player.prompt"
+msgstr "Ходит %s игрок."
+
+#: src/SOURCE/GAME.cpp
+msgid "ui.new_game.difficulty_rating"
+msgstr "Сложность:"
+
+#: src/SOURCE/kbwin.cpp
+msgid "window.gAppName"
+msgstr "Герои"
+
+#: src/SOURCE/kbwin.cpp
+msgid "window.gTitle"
+msgstr "Герои Меча и Магии"

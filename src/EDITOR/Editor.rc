@@ -1,0 +1,36 @@
+LANGUAGE HOMM1_RESOURCE_LANGUAGE, HOMM1_RESOURCE_SUBLANGUAGE
+
+109 ICON "editor.ico"
+
+EDITOR DIALOG 22, 17, 144, 75
+STYLE 0x800000C0
+FONT 8, "System"
+BEGIN
+    ICON            "EDITOR", -1, 9, 23, 18, 20
+    CTEXT           localization::Tr("editor.resource.EDITOR.title"), -1, 22, 5, 101, 8
+    CTEXT           localization::Tr("editor.resource.EDITOR.version"), -1, 51, 32, 42, 8
+    CTEXT           "Copyright 1995-6, New World Computing", -1, 7, 47, 132, 8
+    DEFPUSHBUTTON   localization::Tr("editor.resource.EDITOR.ok"), 1, 53, 59, 32, 14, 0x20000
+END
+
+MNUDFLT MENU
+BEGIN
+    POPUP localization::Tr("editor.resource.MNUDFLT.popup.0")
+    BEGIN
+        MENUITEM localization::Tr("editor.resource.MNUDFLT.command40140"), 40140
+    END
+    POPUP localization::Tr("editor.resource.MNUDFLT.popup.1")
+    BEGIN
+        MENUITEM localization::Tr("editor.resource.MNUDFLT.command40005"), 40005
+        MENUITEM localization::Tr("editor.resource.MNUDFLT.command40006"), 40006
+        MENUITEM localization::Tr("editor.resource.MNUDFLT.command40007"), 40007
+        MENUITEM localization::Tr("editor.resource.MNUDFLT.command40008"), 40008
+        MENUITEM localization::Tr("editor.resource.MNUDFLT.command40009"), 40009
+    END
+    POPUP localization::Tr("editor.resource.MNUDFLT.popup.2")
+    BEGIN
+        MENUITEM localization::Tr("editor.resource.MNUDFLT.command40052"), 40052
+        MENUITEM SEPARATOR
+        MENUITEM localization::Tr("editor.resource.MNUDFLT.command40053"), 40053
+    END
+END

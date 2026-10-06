@@ -1,0 +1,780 @@
+#include <H1/Ints.h>
+
+#include <BASE/audio.h>
+#include <BASE/heroWindowManager.h>
+#include <BASE/icon.h>
+#include <BASE/Icon2b.h>
+#include <BASE/Icond2b.h>
+#include <BASE/inputManager.h>
+#include <BASE/mouseManager.h>
+#include <SOURCE/advManager.h>
+#include <SOURCE/EVENTS.h>
+#include <SOURCE/game.h>
+#include <SOURCE/hero.h>
+#include <SOURCE/KB.h>
+#include <SOURCE/kbwin.h>
+#include <SOURCE/mapCell.h>
+#include <SOURCE/mapObjectTypes.h>
+#include <SOURCE/NOOPT.h>
+#include <SOURCE/philAI.h>
+#include <SOURCE/playerData.h>
+#include <SOURCE/searchArray.h>
+#include <SOURCE/town.h>
+
+void advManager::StartCursor(i8 direction) {
+    i16 deltaX;
+    i16 newX;
+    i16 deltaY;
+    i16 newY;
+
+    m_cursorDirection = direction;
+    m_cursorFrame = GetCursorBaseFrame(direction) + 1;
+    m_cursorCycle =
+        gConfig.walkSpeed > WALK_SPEED_FIRST ? CURSOR_CYCLE_RUNNING : SLOW_CURSOR_CYCLE_START;
+    deltaX = gNormalDirTable[direction].x;
+    deltaY = gNormalDirTable[direction].y;
+    m_previousCursorMapX = m_cursorMapX;
+    m_previousCursorMapY = m_cursorMapY;
+    m_cursorMapX += deltaX;
+    m_cursorMapY += deltaY;
+    newX = m_mapOriginX + m_cursorMapX;
+    newY = m_mapOriginY + m_cursorMapY;
+    m_mapData[newX][newY].m_flags |= MAP_CELL_HERO_CURSOR;
+}
+
+void advManager::StopCursor(b8 stopSound) {
+    if (stopSound) {
+        gMoveSoundMade = true;
+        m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
+        m_cursorFrameCount = 0;
+        gEveryOther = 0;
+    }
+    m_cursorCycle = CURSOR_CYCLE_STOPPED;
+    if (m_previousCursorMapX != CURSOR_CELL_NONE) {
+        m_mapData[m_mapOriginX + m_previousCursorMapX][m_mapOriginY + m_previousCursorMapY]
+            .m_flags &= ~MAP_CELL_HERO_CURSOR;
+        m_previousCursorMapX = m_previousCursorMapY = CURSOR_CELL_NONE;
+    }
+    m_cursorTurning = 0;
+}
+
+void advManager::DrawCursor(void) {
+    i16 drawX;
+    i16 posY;
+    i16 drawFrame;
+
+    if (gShowIt == false || gSpecialHideCursor)
+        return;
+    if (gDrawSavedCursor) {
+        m_cursorDirection = gSavedCursorDirection;
+        m_cursorFrame = gSavedCursorBaseFrame;
+        m_cursorFrameCount = gSavedCursorFrameCount;
+        m_cursorCycle = gSavedCursorCycle;
+        m_cursorTurning = gSavedCursorTurning;
+    }
+    drawX = m_scrollOffsetX + CURSOR_DRAW_X;
+    posY = m_scrollOffsetY + CURSOR_DRAW_Y;
+    if (m_cursorType == ADVMGR_HERO_ICON_BOAT)
+        posY -= CURSOR_BOAT_DRAW_Y_ADJUST;
+    if (m_cursorFrame & HERO_FRAME_MIRROR_FLAG) {
+        drawX += CURSOR_SHADOW_FLIP_X_ADJUST;
+        drawFrame = (m_cursorFrame & HERO_FRAME_INDEX_MASK) + m_cursorFrameCount;
+        if (m_drawHeroShadows && m_cursorType != ADVMGR_HERO_ICON_BOAT)
+            FlipDimIconToBitmap(
+                m_shadowIcon,
+                gWindowManager->m_screen,
+                drawX,
+                posY,
+                drawFrame,
+                ICON_DRAW_OFFSET_FULL
+            );
+        FlipIconToBitmap(
+            m_heroIcons[m_cursorType],
+            gWindowManager->m_screen,
+            drawX,
+            posY,
+            drawFrame,
+            ICON_DRAW_OFFSET_FULL
+        );
+        if (m_cursorType == ADVMGR_HERO_ICON_BOAT) {
+            if (m_cursorCycle == CURSOR_CYCLE_STOPPED)
+                drawFrame = m_cursorFrame & HERO_FRAME_INDEX_MASK;
+            FlipIconToBitmap(
+                m_boatFlagIcons[gCurPlayerData->m_color],
+                gWindowManager->m_screen,
+                drawX,
+                posY,
+                drawFrame,
+                ICON_DRAW_OFFSET_FULL
+            );
+        } else {
+            if (m_cursorCycle == CURSOR_CYCLE_STOPPED)
+                drawFrame = (m_cursorFrame & HERO_FRAME_INDEX_MASK)
+                            + (m_flagFrameCounter & CURSOR_FLAG_FRAME_CYCLE_MASK)
+                            + CURSOR_FLAG_FRAME_BASE;
+            FlipIconToBitmap(
+                m_flagIcons[gCurPlayerData->m_color],
+                gWindowManager->m_screen,
+                drawX,
+                posY,
+                drawFrame,
+                ICON_DRAW_OFFSET_FULL
+            );
+            m_flagFrameCounter++;
+        }
+    } else {
+        drawFrame = m_cursorFrame + m_cursorFrameCount;
+        if (m_drawHeroShadows && m_cursorType != ADVMGR_HERO_ICON_BOAT)
+            DimIconToBitmap(
+                m_shadowIcon,
+                gWindowManager->m_screen,
+                drawX,
+                posY,
+                drawFrame,
+                ICON_DRAW_OFFSET_FULL
+            );
+        IconToBitmap(
+            m_heroIcons[m_cursorType],
+            gWindowManager->m_screen,
+            drawX,
+            posY,
+            drawFrame,
+            ICON_DRAW_OFFSET_FULL
+        );
+        if (m_cursorType == ADVMGR_HERO_ICON_BOAT) {
+            if (m_cursorCycle == CURSOR_CYCLE_STOPPED)
+                drawFrame = m_cursorFrame;
+            IconToBitmap(
+                m_boatFlagIcons[gCurPlayerData->m_color],
+                gWindowManager->m_screen,
+                drawX,
+                posY,
+                drawFrame,
+                ICON_DRAW_OFFSET_FULL
+            );
+        } else {
+            if (m_cursorCycle == CURSOR_CYCLE_STOPPED)
+                drawFrame = m_cursorFrame + (m_flagFrameCounter & CURSOR_FLAG_FRAME_CYCLE_MASK)
+                            + CURSOR_FLAG_FRAME_BASE;
+            IconToBitmap(
+                m_flagIcons[gCurPlayerData->m_color],
+                gWindowManager->m_screen,
+                drawX,
+                posY,
+                drawFrame,
+                ICON_DRAW_OFFSET_FULL
+            );
+            m_flagFrameCounter++;
+        }
+    }
+    if (m_cursorCycle && gConfig.walkSpeed != WALK_SPEED_JUMP) {
+        m_cursorFrameCount++;
+        if (gConfig.walkSpeed == WALK_SPEED_GALLOP
+            && (m_cursorFrameCount == SKIPPED_ANIMATION_FRAME
+                || m_cursorFrameCount == SKIPPED_ANIMATION_FRAME_EARLY))
+            m_cursorFrameCount++;
+        if (gConfig.walkSpeed == WALK_SPEED_WALK) {
+            gEveryOther = 1 - gEveryOther;
+            if (gEveryOther)
+                m_cursorFrameCount--;
+        }
+    }
+    if (m_cursorFrameCount >= CURSOR_LAST_FRAME_COUNT)
+        m_cursorFrameCount = 0;
+    if (!m_cursorTurning) {
+        if (m_cursorFrameCount == FOOTSTEP_ANIMATION_FRAME
+            || (gConfig.walkSpeed == WALK_SPEED_JUMP && !gMoveSoundMade)) {
+            gMoveSoundMade = true;
+            if (!gEveryOther)
+                PlaySample(
+                    m_cursorSamples[CELL_TERRAIN(GetCell(
+                        m_mapOriginX + ADVMGR_VIEW_CENTER,
+                        m_mapOriginY + ADVMGR_VIEW_CENTER
+                    ))]
+                );
+        }
+    }
+    if (!gDrawSavedCursor) {
+        gSavedCursorDirection = m_cursorDirection;
+        gSavedCursorBaseFrame = m_cursorFrame;
+        gSavedCursorFrameCount = m_cursorFrameCount;
+        gSavedCursorCycle = m_cursorCycle;
+        gSavedCursorTurning = m_cursorTurning;
+    }
+}
+
+i16 advManager::GetCursorBaseFrame(i16 direction) {
+    if (static_cast<i32>(direction) > static_cast<i32>(MAP_DIRECTION_SOUTH)) {
+        switch (direction) {
+            case MAP_DIRECTION_SOUTH_WEST:
+                return CURSOR_BOAT_BASE_FRAME_5;
+            case MAP_DIRECTION_WEST:
+                return CURSOR_BOAT_BASE_FRAME_6;
+            case MAP_DIRECTION_NORTH_WEST:
+                return CURSOR_BOAT_BASE_FRAME_7;
+            default:
+                return 0;
+        }
+    } else {
+        return static_cast<i32>(direction) * CURSOR_FRAMES_PER_DIRECTION;
+    }
+}
+
+void advManager::TurnTo(i8 direction) {
+    i16 inc = 1;
+    i16 frameIndex;
+    i16 directionDifference = direction - m_cursorDirection;
+    i32 delayTime;
+
+    if (directionDifference == 0)
+        return;
+    if ((directionDifference < 0 && directionDifference >= -DIRECTION_HALF_COUNT)
+        || (directionDifference > 0 && directionDifference > DIRECTION_HALF_COUNT))
+        inc = -1;
+    m_cursorTurning = 1;
+    frameIndex = m_cursorDirection * TURN_FRAME_MULTIPLIER;
+    delayTime = gStepDelay[gConfig.walkSpeed];
+    if (gConfig.walkSpeed == WALK_SPEED_WALK)
+        delayTime *= CURSOR_SLOW_TURN_MULTIPLIER;
+    if (gConfig.walkSpeed == WALK_SPEED_TROT)
+        delayTime = delayTime * 1.5;
+    do {
+        m_cursorCycle = CURSOR_CYCLE_RUNNING;
+        m_cursorFrame = m_cursorType < ADVMGR_HERO_ICON_CLASS_END ? gHorseFrameFlip[frameIndex]
+                                                                  : gBoatFrameFlip[frameIndex];
+        m_cursorFrameCount = 0;
+        gTimers[CURSOR_TURN_TIMER_SLOT] = KBTickCount() + delayTime;
+        if (gConfig.walkSpeed != WALK_SPEED_JUMP) {
+            if (ComboDraw(m_mapOriginX, m_mapOriginY, false))
+                UpdateScreen(false, false);
+            if (gShowIt)
+                DelayTil(&gTimers[CURSOR_TURN_TIMER_SLOT]);
+        }
+        frameIndex += inc;
+        if (frameIndex < 0)
+            frameIndex = CURSOR_TURN_FRAME_COUNT - 1;
+        frameIndex %= CURSOR_TURN_FRAME_COUNT;
+    } while (frameIndex != direction * TURN_FRAME_MULTIPLIER);
+    m_cursorDirection = direction;
+    StopCursor(true);
+    if (gShowIt)
+        DelayTil(&gTimers[CURSOR_TURN_TIMER_SLOT]);
+    if (ComboDraw(m_mapOriginX, m_mapOriginY, false))
+        UpdateScreen(false, false);
+}
+
+b32 advManager::GetMoveShowIt(i8 direction) {
+    i16 dy;
+    hero* movingHero;
+    i16 dx;
+
+    if (gCurPlayerData->CurrentHero() == HERO_ID_NONE)
+        return false;
+    movingHero = gGame->GetHero(gCurPlayerData->m_currentHero);
+    dx = gNormalDirTable[direction].x;
+    dy = gNormalDirTable[direction].y;
+    if ((gThisNetHumanPlayer[gCurPlayer] || (!gConfig.blackoutComputer && !gRemoteOn))
+        && ((gGame->m_mapExtra[movingHero->m_x][movingHero->m_y] & gCurWatchPlayerHighBit)
+            || (gGame->m_mapExtra[movingHero->m_x + dx][movingHero->m_y + dy]
+                & gCurWatchPlayerHighBit)))
+        return true;
+    else
+        return false;
+}
+
+mapCell* advManager::MoveHero(
+    i8 direction,
+    b8 stopAfterMove,
+    i32* eventX,
+    i32* eventY,
+    b32* outOfMobility,
+    b8 processEvent,
+    b8* adjacentMonster
+) {
+    mapCell* cellPtr;
+    i32 inc;
+    i32 posX;
+    mapCell* nextCellItem;
+    i8 theTerrain;
+    mapCell* retCell;
+    i16 xInc;
+    i16 yInc;
+    i16 pixelsPerStep;
+    hero* champion;
+    i32 startY;
+    i32 delayNum;
+    i16 numSteps;
+
+    if (gThisNetHumanPlayer[gCurPlayer])
+        SetNoDialogMenus(0);
+    *adjacentMonster = false;
+    *outOfMobility = false;
+    gHeroMoving = true;
+    retCell = NULL;
+    champion = gGame->GetHero(gCurPlayerData->m_currentHero);
+    posX = champion->m_x;
+    startY = champion->m_y;
+    xInc = gNormalDirTable[direction].x;
+    yInc = gNormalDirTable[direction].y;
+    gShowIt = GetMoveShowIt(direction);
+    theTerrain = CELL_TERRAIN(GetCell(champion->m_x, champion->m_y));
+    nextCellItem = GetCell(champion->m_x + xInc, champion->m_y + yInc);
+    if (champion->m_remainingMobility < CalcTerrainCost(
+            theTerrain,
+            direction & CURSOR_DIAGONAL_DIRECTION_BIT,
+            champion->m_remainingMobility,
+            champion->m_heroClass
+        )) {
+        *outOfMobility = true;
+        StopCursor(true);
+        goto movementDone;
+    }
+    MobilizeCurrHero(false);
+    *eventX = champion->m_x + xInc;
+    *eventY = champion->m_y + yInc;
+    if (m_cursorDirection != direction)
+        TurnTo(direction);
+    champion->m_direction = direction;
+    if (champion->IsEmbarked()
+        && nextCellItem->m_triggerType == MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST)) {
+        boatRecord* boat;
+        mapCell* boatCell;
+
+        for (inc = 0; inc < GAME_BOAT_COUNT; inc++) {
+            if (gGame->m_boats[inc].heroId == champion->m_id)
+                break;
+        }
+        boat = &gGame->m_boats[inc];
+        boatCell = GetCell(champion->m_x, champion->m_y);
+        boat->savedTriggerType = boatCell->m_triggerType;
+        boat->savedEventData = boatCell->m_objectMetadata;
+        boat->direction = m_cursorDirection;
+        boat->heroId |= BOAT_OCCUPIED_FLAG;
+        boatCell->m_triggerType = MAP_EVENT_TRIGGER(MAP_OBJECT_SHIP);
+        boatCell->m_objectMetadata = inc;
+        boat->x = champion->m_x;
+        boat->y = champion->m_y;
+        StopCursor(true);
+        CompleteDraw(m_mapOriginX, m_mapOriginY, false);
+        UpdateScreen(false, false);
+        m_cursorActive = false;
+    }
+    if (nextCellItem->m_triggerType & MAP_TRIGGER_EVENT) {
+        switch (MAP_TRIGGER_OBJECT(nextCellItem->m_triggerType)) {
+            case MAP_OBJECT_SHIP:
+                if (champion->IsEmbarked())
+                    goto movementDone;
+                StopCursor(true);
+                m_cursorActive = false;
+                gWindowManager->SaveFizzleSource(
+                    COAST_FIZZLE_X,
+                    COAST_FIZZLE_Y,
+                    COAST_FIZZLE_WIDTH,
+                    COAST_FIZZLE_HEIGHT
+                );
+                CompleteDraw(m_mapOriginX, m_mapOriginY, false);
+                gWindowManager->FizzleForward(
+                    COAST_FIZZLE_X,
+                    COAST_FIZZLE_Y,
+                    COAST_FIZZLE_WIDTH,
+                    COAST_FIZZLE_HEIGHT,
+                    FIZZLE_USE_DEFAULT_DELAY
+                );
+                break;
+            case MAP_OBJECT_BUOY:
+                if (!champion->IsEmbarked())
+                    goto movementDone;
+                else
+                    goto stoppingEvent;
+            case MAP_OBJECT_HERO:
+                if (champion->IsEmbarked()) {
+                    if (gGame->GetHero(nextCellItem->m_objectMetadata)->IsEmbarked())
+                        goto stoppingEvent;
+                    else
+                        goto movementDone;
+                }
+            case MAP_OBJECT_SIGNPOST:
+            case MAP_OBJECT_SKELETON:
+            case MAP_OBJECT_TREASURE_CHEST:
+            case MAP_OBJECT_CAMPFIRE:
+            case MAP_OBJECT_FOUNTAIN:
+            case MAP_OBJECT_ANCIENT_LAMP:
+            case MAP_OBJECT_MONSTER:
+            case MAP_OBJECT_OBELISK:
+            case MAP_OBJECT_OASIS:
+            case MAP_OBJECT_RESOURCE:
+            case MAP_OBJECT_STATUE:
+            case MAP_OBJECT_WELL:
+            case MAP_OBJECT_ARTIFACT:
+                if (champion->IsEmbarked())
+                    goto movementDone;
+            stoppingEvent:
+                StopCursor(true);
+                CompleteDraw(m_mapOriginX, m_mapOriginY, false);
+                UpdateScreen(false, false);
+                champion->m_remainingMobility -= CalcTerrainCost(
+                    theTerrain,
+                    direction & CURSOR_DIAGONAL_DIRECTION_BIT,
+                    champion->m_remainingMobility,
+                    champion->m_heroClass
+                );
+                if (champion->m_remainingMobility < CalcTerrainCost(
+                        (CELL_TERRAIN(nextCellItem)),
+                        0,
+                        champion->m_remainingMobility,
+                        champion->m_heroClass
+                    )) {
+                    champion->m_remainingMobility = 0;
+                    stopAfterMove = true;
+                }
+                retCell = nextCellItem;
+                goto movementDone;
+            case MAP_OBJECT_TOWN:
+                if (gGame->GetTown(nextCellItem->m_objectMetadata)->m_owner != gCurPlayer
+                    && gGame->GetTown(nextCellItem->m_objectMetadata)->HasGarrison()) {
+                    StopCursor(true);
+                    CompleteDraw(m_mapOriginX, m_mapOriginY, false);
+                    UpdateScreen(false, false);
+                    champion->m_remainingMobility -= CalcTerrainCost(
+                        theTerrain,
+                        direction & CURSOR_DIAGONAL_DIRECTION_BIT,
+                        champion->m_remainingMobility,
+                        champion->m_heroClass
+                    );
+                    if (champion->m_remainingMobility < CalcTerrainCost(
+                            (CELL_TERRAIN(nextCellItem)),
+                            0,
+                            champion->m_remainingMobility,
+                            champion->m_heroClass
+                        )) {
+                        champion->m_remainingMobility = 0;
+                        stopAfterMove = true;
+                    }
+                    retCell = nextCellItem;
+                    goto movementDone;
+                }
+                break;
+            default:
+                break;
+        }
+    }
+    if (!ValidMove(direction))
+        goto movementDone;
+    if (champion->m_locationType == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN)) {
+        town* occupiedTown;
+
+        occupiedTown = gGame->GetTown(champion->m_occupiedTown);
+        occupiedTown->m_occupyingHeroId = TOWN_OCCUPYING_HERO_NONE;
+    }
+    if (m_routeShown)
+        ADVMGR_ROUTE_AT(champion->m_x + xInc, champion->m_y + yInc) = ROUTE_CELL_NONE;
+    m_scrollOffsetX = m_scrollOffsetY = 0;
+    gGame->SetVisibility(
+        m_mapOriginX + xInc + ADVMGR_VIEW_CENTER,
+        m_mapOriginY + yInc + ADVMGR_VIEW_CENTER,
+        gCurPlayer,
+        gHeroScoutRadius[champion->m_heroClass]
+    );
+    m_forceCompleteDraw = true;
+    pixelsPerStep = gPixelsPerStep[gConfig.walkSpeed];
+    delayNum = gStepDelay[gConfig.walkSpeed];
+    StartCursor(direction);
+    if (gConfig.walkSpeed == WALK_SPEED_JUMP) {
+        if (gEveryOther)
+            m_cursorFrame--;
+        gMoveSoundMade = false;
+        MoveOrigin(xInc, yInc);
+        champion->m_x += xInc;
+        champion->m_y += yInc;
+        if (ComboDraw(false))
+            UpdateScreen(false, false);
+        gEveryOther = 1 - gEveryOther;
+    } else {
+        gEnlargeScreenBlit = false;
+        gNoBorder = true;
+        numSteps = CURSOR_MOVE_HALF_TILE_PIXELS / pixelsPerStep;
+        for (inc = 0; inc < numSteps * MOVE_TILE_HALF_COUNT; inc++) {
+            i32 tick;
+
+            if (inc == numSteps) {
+                MoveOrigin(xInc, yInc);
+                champion->m_x += xInc;
+                champion->m_y += yInc;
+                m_scrollOffsetX = gStepScrollStart[xInc + 1];
+                m_scrollOffsetY = gStepScrollStart[yInc + 1];
+            }
+            tick = KBTickCount();
+            if (inc + 1 == numSteps * MOVE_TILE_HALF_COUNT) {
+                m_scrollOffsetX = 0;
+                m_scrollOffsetY = 0;
+            } else {
+                m_scrollOffsetX += xInc * pixelsPerStep;
+                m_scrollOffsetY += yInc * pixelsPerStep;
+            }
+            if (ComboDraw(false)) {
+                gLimitUpdMinX = UPDATE_NONE;
+                UpdateScreen(false, false);
+            }
+            if (gShowIt)
+                DelayTilMilli(tick + delayNum);
+        }
+        gNoBorder = false;
+        DrawAdventureBorder();
+        gEnlargeScreenBlit = true;
+    }
+    champion->m_remainingMobility -= CalcTerrainCost(
+        theTerrain,
+        direction & CURSOR_DIAGONAL_DIRECTION_BIT,
+        champion->m_remainingMobility,
+        champion->m_heroClass
+    );
+    if (champion->m_remainingMobility < CalcTerrainCost(
+            (CELL_TERRAIN(nextCellItem)),
+            0,
+            champion->m_remainingMobility,
+            champion->m_heroClass
+        )) {
+        champion->m_remainingMobility = 0;
+        stopAfterMove = true;
+    }
+    StopCursor(stopAfterMove);
+    if (processEvent && stopAfterMove && ComboDraw(false))
+        UpdateScreen(false, false);
+    SetEnvironmentOrigin(m_mapOriginX + ADVMGR_VIEW_CENTER, m_mapOriginY + ADVMGR_VIEW_CENTER, 0);
+    inc =
+        GetCell(m_mapOriginX + ADVMGR_VIEW_CENTER, m_mapOriginY + ADVMGR_VIEW_CENTER)->m_tileIndex;
+    if (gGroundToTerrain[inc] != m_currentTerrain && inc % MAP_CELL_TILES_PER_TERRAIN < 4) {
+        m_currentTerrain = gGroundToTerrain[inc];
+        PlayMusic(TERRAIN_MUSIC_TRACK(m_currentTerrain));
+    }
+    m_scrollOffsetX = m_scrollOffsetY = 0;
+    cellPtr = GetCell(m_mapOriginX + m_cursorMapX, m_mapOriginY + m_cursorMapY);
+    *eventX = m_mapOriginX + m_cursorMapX;
+    *eventY = m_mapOriginY + m_cursorMapY;
+    if ((cellPtr->m_triggerType & MAP_TRIGGER_EVENT)
+        || (champion->IsEmbarked()
+            && cellPtr->m_triggerType == MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST))) {
+        retCell = cellPtr;
+        switch (MAP_TRIGGER_OBJECT(cellPtr->m_triggerType)) {
+            case MAP_OBJECT_ROSEBUSH:
+            case MAP_OBJECT_TREE_STUMP:
+            case MAP_OBJECT_OAK_TREE:
+            case MAP_OBJECT_NOTHING_HERE:
+            case MAP_OBJECT_SHADOW:
+            case MAP_OBJECT_RESOURCE_SHADOW:
+            case MAP_OBJECT_MOUNTAINS:
+            case MAP_OBJECT_MOUNTAINS_2:
+            case MAP_OBJECT_MOUNTAINS_3:
+            case MAP_OBJECT_MOUNTAINS_4:
+            case MAP_OBJECT_TREES:
+            case MAP_OBJECT_TREES_2:
+            case MAP_OBJECT_TREES_3:
+            case MAP_OBJECT_TREES_4:
+            case MAP_OBJECT_TREES_5:
+                retCell = NULL;
+                break;
+        }
+        goto movementDone;
+    } else
+        goto movementDone;
+movementDone:
+    UpdateRadar(true, true);
+    gHeroMoving = false;
+    if (posX != champion->m_x || startY != champion->m_y) {
+        if (gMapExtra[champion->m_x][champion->m_y] & MAP_EXTRA_MONSTER_ADJACENT) {
+            if (champion->IsEmbarked())
+                goto adjacentDone;
+            if (retCell && MAP_TRIGGER_OBJECT(retCell->m_triggerType) == MAP_OBJECT_SHIP)
+                goto adjacentDone;
+            CheckAdjacentMon(adjacentMonster);
+            if (champion->m_owner == GAME_PLAYER_NONE)
+                retCell = NULL;
+        }
+    }
+adjacentDone:
+    if (gThisNetHumanPlayer[gCurPlayer])
+        SetNoDialogMenus(1);
+    return retCell;
+}
+
+void advManager::CheckAdjacentMon(b8* adjacentMonster) {
+    i32 monsterX;
+    i32 monsterY;
+    hero* curHero;
+    b8 clearMonster;
+    mapCell* heroCell;
+    mapCell* monCell;
+
+    curHero = gGame->GetHero(gCurPlayerData->m_currentHero);
+    clearMonster = false;
+    if (FindAdjacentMonster(
+            curHero->m_x,
+            curHero->m_y,
+            &monsterX,
+            &monsterY,
+            SEARCH_INVALID_COORDINATE,
+            SEARCH_INVALID_COORDINATE
+        )) {
+        StopCursor(true);
+        CompleteDraw(m_mapOriginX, m_mapOriginY, false);
+        UpdateScreen(false, false);
+        monCell = GetCell(monsterX, monsterY);
+        heroCell = GetCell(curHero->m_x, curHero->m_y);
+        if (gThisNetHumanPlayer[gCurPlayer])
+            PlayerMonsterInteract(
+                monCell,
+                heroCell,
+                curHero,
+                &clearMonster,
+                curHero->m_x,
+                curHero->m_y,
+                true,
+                monsterX,
+                monsterY
+            );
+        else
+            ComputerMonsterInteract(monCell, curHero, &clearMonster);
+        if (clearMonster) {
+            EraseObj(monCell, monsterX, monsterY);
+            if (gThisNetHumanPlayer[gCurPlayer])
+                FizzleCenter(EVENT_FIZZLE_HERO_LOSS);
+        }
+        *adjacentMonster = true;
+    }
+}
+
+i16 advManager::ValidMoveWithEvent(hero* movingHero, i16 direction) {
+    i16 deltaY;
+    i16 newY;
+    i16 deltaX;
+    i16 newX;
+    mapCell* cellPtr;
+
+    deltaX = gNormalDirTable[direction].x;
+    deltaY = gNormalDirTable[direction].y;
+    newX = movingHero->m_x + deltaX;
+    newY = movingHero->m_y + deltaY;
+    if (newX < 0 || newX > MAP_CELL_GRID_SIZE - 1 || newY < 0 || newY > MAP_CELL_GRID_SIZE - 1)
+        return 0;
+    cellPtr = &m_mapData[newX][newY];
+    switch (MAP_TRIGGER_OBJECT(cellPtr->m_triggerType)) {
+        case MAP_OBJECT_BUOY:
+            if (!movingHero->IsEmbarked())
+                return 1;
+            else
+                return 0;
+        case MAP_OBJECT_HERO:
+            if (movingHero->IsEmbarked()) {
+                if (gGame->GetHero(cellPtr->m_objectMetadata)->IsEmbarked())
+                    return 1;
+                else
+                    return 0;
+            }
+        case MAP_OBJECT_SIGNPOST:
+        case MAP_OBJECT_SKELETON:
+        case MAP_OBJECT_TREASURE_CHEST:
+        case MAP_OBJECT_CAMPFIRE:
+        case MAP_OBJECT_FOUNTAIN:
+        case MAP_OBJECT_ANCIENT_LAMP:
+        case MAP_OBJECT_MONSTER:
+        case MAP_OBJECT_OBELISK:
+        case MAP_OBJECT_OASIS:
+        case MAP_OBJECT_RESOURCE:
+        case MAP_OBJECT_STATUE:
+        case MAP_OBJECT_WELL:
+        case MAP_OBJECT_ARTIFACT:
+            if (m_cursorType == ADVMGR_HERO_ICON_BOAT)
+                return 0;
+            else
+                return 1;
+    }
+    return ValidMove(direction);
+}
+
+i16 advManager::ValidMove(i16 direction) {
+    i16 deltaX;
+    i16 southMask;
+    mapCell* hereCellItem;
+    mapCell* destCell;
+    i16 deltaY;
+    i16 north;
+    i16 newX;
+    i16 newY;
+
+    deltaX = gNormalDirTable[direction].x;
+    deltaY = gNormalDirTable[direction].y;
+    newX = m_mapOriginX + deltaX;
+    newY = m_mapOriginY + deltaY;
+    if (newX < -ADVMGR_VIEW_CENTER || newX > MAP_CELL_GRID_SIZE - ADVMGR_VIEW_CENTER - 1)
+        return 0;
+    if (newY < -ADVMGR_VIEW_CENTER || newY > MAP_CELL_GRID_SIZE - ADVMGR_VIEW_CENTER - 1)
+        return 0;
+    destCell = &m_mapData[newX + m_cursorMapX][newY + m_cursorMapY];
+    if (destCell->m_secondaryTrigger & MAP_CELL_SECONDARY_BLOCKED)
+        return 0;
+    if (CELL_TERRAIN(destCell) == TERRAIN_WATER) {
+        if (m_cursorType != ADVMGR_HERO_ICON_BOAT
+            && destCell->m_triggerType != MAP_EVENT_TRIGGER(MAP_OBJECT_SHIP)
+            && destCell->m_triggerType != MAP_EVENT_TRIGGER(MAP_OBJECT_SHIPWRECK))
+            return 0;
+    } else {
+        if (m_cursorType == ADVMGR_HERO_ICON_BOAT
+            && destCell->m_triggerType != MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST)
+            && destCell->m_triggerType != MAP_EVENT_TRIGGER(MAP_OBJECT_WHIRLPOOL))
+            return 0;
+    }
+    hereCellItem = &m_mapData[m_mapOriginX + m_cursorMapX][m_mapOriginY + m_cursorMapY];
+    north = (1 << direction) & MAP_DIRECTION_NORTH_MASK;
+    southMask = (1 << direction) & MAP_DIRECTION_SOUTH_MASK;
+    if (north && CELL_HAS_NON_SHADOW_OBJECT(hereCellItem)
+        && hereCellItem->m_triggerType != MAP_EVENT_TRIGGER(MAP_OBJECT_WHIRLPOOL))
+        return 0;
+    if (southMask && CELL_HAS_NON_SHADOW_OBJECT(destCell)
+        && destCell->m_triggerType != MAP_EVENT_TRIGGER(MAP_OBJECT_WHIRLPOOL))
+        return 0;
+    return 1;
+}
+
+void advManager::MoveOrigin(i16 directionX, i16 directionY) {
+    i16 cellY;
+    i16 cellX;
+    i16 oldOriginX;
+    i16 oldOriginY;
+
+    oldOriginX = m_mapOriginX;
+    oldOriginY = m_mapOriginY;
+    m_mapOriginX += directionX;
+    m_mapOriginY += directionY;
+    directionX = oldOriginX - m_mapOriginX;
+    directionY = oldOriginY - m_mapOriginY;
+    if (directionX != 0 || directionY != 0) {
+        m_mapData[oldOriginX + m_cursorMapX][oldOriginY + m_cursorMapY].m_flags &=
+            ~MAP_CELL_HERO_CURSOR;
+        m_cursorMapX += directionX;
+        m_cursorMapY += directionY;
+        cellX = m_mapOriginX + m_cursorMapX;
+        cellY = m_mapOriginY + m_cursorMapY;
+        m_mapData[cellX][cellY].m_flags |= MAP_CELL_HERO_CURSOR;
+        if (m_previousCursorMapX != CURSOR_CELL_NONE) {
+            m_mapData[oldOriginX + m_previousCursorMapX][oldOriginY + m_previousCursorMapY]
+                .m_flags &= ~MAP_CELL_HERO_CURSOR;
+            m_previousCursorMapX += directionX;
+            m_previousCursorMapY += directionY;
+            cellX = m_mapOriginX + m_previousCursorMapX;
+            cellY = m_mapOriginY + m_previousCursorMapY;
+            m_mapData[cellX][cellY].m_flags |= MAP_CELL_HERO_CURSOR;
+        }
+    }
+    m_forceCompleteDraw = true;
+}
+
+b8 gMoveSoundMade = true;
+i16 gPixelsPerStep[WALK_SPEED_COUNT] = {1, 4, 6, 8, 16};
+i16 gStepDelay[WALK_SPEED_COUNT] = {30, 45, 30, 15, 15};
+i8 gEveryOther = 0;
+i16 gStepScrollStart[3] = {16, 0, -16};
+i16 gSavedCursorCycle;
+i16 gSavedCursorFrameCount;
+i16 gSavedCursorTurning;
+i16 gSavedCursorBaseFrame;
+i8 gSavedCursorDirection;
