@@ -1,1 +1,10 @@
 kind	owner	old	new	evidence
+param	BalanceTerrainPercents	fixed	changedTerrain	the slider row NewMapWindowHandler and DragNewMapSlider just changed (TERRAIN_INVALID from NewMapDialog when the window closes); with one, only grass is topped up, nothing is held fixed
+aliased	BalanceTerrainPercents	unfixedTotal/total	othersTotal/landTotal	the sum of every terrain but the changed one, and the sum from grass on compared with NEW_MAP_MINIMUM_LAND; aliases keep the slot spellings
+param	DragNewMapSlider	terrain	terrainRow	selects gTerrainPercent/gTerrainKnobs (set) or gDensityPercent/gDensityKnobs; callers pass 1 for the terrain tracks and knobs, 0 for the density ones
+local	eventsManager::UpdateTownWindow	building	toggleIndex	counts the building toggles from TOWN_WINDOW_FIRST_BUILDING while the loop index walks the building slots
+local	ClearWindowHandler	set/index	wasSet/flagIndex	the toggled gClearFlags bit's state before the click, and its bit index (toggle id - CLEAR_WINDOW_FIRST_TOGGLE)
+enum	ExtraWindowConstant	EXTRA_WINDOW_NEUTRAL_OWNER	EXTRA_WINDOW_FIRST_PLAYER	owner = id - 0x240, so 0x240 is player 0's radio; neutral (GAME_PLAYER_NONE) is 0x23f and the town's unset owner (MAP_TOWN_OWNER_UNSET) 0x23e
+enum	CellWindowConstant	CELL_WINDOW_OBJECT_FLAG	CELL_WINDOW_EVENT_TOGGLE	the toggle flips m_triggerType's MAP_TRIGGER_EVENT bit
+enum	EventsDialogButton	DIALOG_BUTTON_1/DIALOG_BUTTON_2	EVENTS_DIALOG_CANCEL/EVENTS_DIALOG_OK	slot 1 restores the cell or keeps the record (NewMapDialog returns 0), slot 2 applies (ClearOptionsDialog erases)
+global	EditCell	giDebugLevel	gDebugLevel	the readable name of KB.h's aliased global (the storage spelling was written out)
