@@ -1,13 +1,8 @@
-# Data-name migration in progress; only rows explicitly marked Buka are Buka evidence.
+# Reviewed data names: each row names the Buka datum that starts at its rva.
 rva	size	symbol	provenance
-0x0008d538	12	??_7highScoreManager@@6B@	retail ctor vptr; three slots Open10bf,Close1228,Main1285
-0x0009f50c	4	$SG16676	VC4 literal `at+` including terminator
-0x0009f510	8	$SG16677	VC4 literal `KB.LOG` plus alignment byte
-0x0009f518	2	$SG16678	VC4 newline literal including terminator
 0x000a0ff8	12	?gMouseOffset@@3PAHA	Unique typed payload and cursor-family argument/index flow
 0x000cfb40	4	?gMouseCursorType@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000a1004	150	?gHotSpot@@3PAY01EA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000a3b34	4	?gDialogNestCount@@3HA	dialog nesting counter
 0x000a1374	18	?gDynamicConstruct@@3PADA	Typed initializer, pointer payload and retail caller/member/index dataflow
 0x000a15cc	56	?gResourceManagerInitError@@3PADA	Buka localized char-array initializer and executive::InitSystem operand; buka-localization.tsv
 0x000a1604	39	?gInputManagerInitError@@3PADA	Buka localized char-array initializer and executive::InitSystem operand; buka-localization.tsv
@@ -23,10 +18,6 @@ rva	size	symbol	provenance
 0x000a14b8	256	_gDimPalette	Buka typed MASM initializer and every complete-body reference checked
 0x000a15b8	4	_gBitmapSourceSkip	Buka typed MASM initializer and every complete-body reference checked
 0x000a15bc	4	_gBitmapRowSkip	Buka typed MASM initializer and every complete-body reference checked
-0x000a3f44	16	$anon_str_1ce0c62ab6602cf3ca037b8a224b95bfa06fd3b38eeef85bccb13f647286bce2_0	code-required resourceManager literal identity
-0x000a3f54	20	$anon_str_7bbccdc9700208c3c280ce39079f0dbdfefbb724c3441ff972805b19116b57e0_0	code-required open-error literal identity
-0x000a3f68	32	$anon_str_ca2427e0f3917c25fd1e64b0d475896ac3002453e2d73c433c391a34fbc830ff_0	code-required invalid-aggregate literal identity
-0x000a3f88	76	$anon_str_eb27b9b48e8c2732b85397bc8636fc7eeb79802771cac487ea5e2a5fc9705844_0	code-required missing-resource literal identity
 0x000a149c	4	_gClipRowsLeft	Buka typed MASM initializer and every complete-body reference checked
 0x000a14a0	4	_gClipLeftSkip	Buka typed MASM initializer and every complete-body reference checked
 0x000a14a4	4	_gClipVisibleWidth	Buka typed MASM initializer and every complete-body reference checked
@@ -39,28 +30,19 @@ rva	size	symbol	provenance
 0x000a1940	1254	_initialSon	Buka complete lzhuf instruction/reference proof and typed initializer
 0x000a1e28	1882	_initialParent	Buka complete lzhuf instruction/reference proof and typed initializer
 0x000a2584	1256	_initialFrequency	Buka complete lzhuf instruction/reference proof and typed initializer
-0x000a5408	64	_positionLength$S481	code-required position-code table
-0x000a5448	64	_positionCode$S482	code-required position-code table
 0x000d7f5c	2	_encbuf	Buka complete lzhuf instruction/reference proof and typed initializer
 0x000d7f5e	1	_putlen	Buka complete lzhuf instruction/reference proof and typed initializer
-0x000a5490	13	??_C@_0N@PCJN@Data?5decoded?$AA@	code-required pooled literal identity
 0x000a1484	4	_gIconXAdjust	Buka typed MASM initializer and every complete-body reference checked
 0x000a1488	4	_gIconYAdjust	Buka typed MASM initializer and every complete-body reference checked
 0x000a148c	4	_gIconDataBase	Buka typed MASM initializer and every complete-body reference checked
 0x000a1490	4	_gIconWidth	Buka typed MASM initializer and every complete-body reference checked
 0x000a1494	4	_gIconHeight	Buka typed MASM initializer and every complete-body reference checked
-0x000a54ec	4	__adjust_fdiv	LIBC FDIV-erratum flag read by cl's Pentium fdiv check, code-required identity
-0x000cad50	448	?gNetPeerNcb@@3PAU_NCB@@A	nb_init retail operand and loop/memset extent; pinned Win32 record or Buka queue/name identity; code layout only
 0x000ce178	1800	?gAndMaskBitmapInfo@@3PAUtagBITMAP@@A	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000ce880	1800	?bmpColor@@3PAUtagBITMAP@@A	Buka typed payload, unique anchored code uses and disjoint data owners
-0x000ce670	300	?hMouseCursor@@3PAPAXA	75 cursor handles
-0x000ce7a0	300	?hbmpAndMask@@3PAPAXA	75 mask bitmap handles
 0x000cf1e0	300	?cColorBits@@3PAPAEA	Buka typed payload, unique anchored code uses and disjoint data owners
-0x000cea00	300	?hbmpColor@@3PAPAXA	75 color bitmap handles
 0x000cf438	1500	?cursorIconInfo@@3PAU_ICONINFO@@A	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000cfa14	300	?cAndBits@@3PAPAEA	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000ce110	1	?gFadeSavedUpdate@@3CA	Buka typed payload, unique anchored code uses and disjoint data owners
-0x000cf540	96	?gCyclePal@@3PACA	SetPalette copies32RGBtriplets and cycle helper references same table
 0x000cfbb8	1256	_freq	Buka complete lzhuf instruction/reference proof and typed initializer
 0x000d00a0	8194	_dad	Buka complete lzhuf instruction/reference proof and typed initializer
 0x000d20a8	4	_decodeLen	Buka complete lzhuf instruction/reference proof and typed initializer

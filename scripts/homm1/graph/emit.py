@@ -75,6 +75,8 @@ RETAIL_EXE = targets(REPO)["game"].destination.relative_to(REPO).as_posix()
 COMPDB = "build/clangd/compile_commands.json"
 RELOC_REFERENTS = "config/retail/reloc_referents.tsv"
 FUNCTION_REFERENTS = "config/retail/function_referents.tsv"
+ABSOLUTE_RELOCATIONS = "config/retail/absolute_relocations.tsv"
+DATA_SYMBOLS = "config/retail/data_symbols.tsv"
 
 #: The census + provider tables homm1.model joins the claims against. Named
 #: rather than globbed: reloc_referents.tsv is a DELINKER input and belongs on
@@ -663,8 +665,8 @@ def emit(out: Path | None = None) -> tuple[int, int]:
                description="delink HEROESW.EXE -> target objs")
         w.build(G.DELINK_STAMP, "delink",
                 inputs=[G.BINDINGS, RETAIL_EXE],
-                implicit=[RELOC_REFERENTS, FUNCTION_REFERENTS, *DELINK_MODS,
-                          graph.TOOLCHAIN_ID])
+                implicit=[RELOC_REFERENTS, FUNCTION_REFERENTS, ABSOLUTE_RELOCATIONS,
+                          DATA_SYMBOLS, *DELINK_MODS, graph.TOOLCHAIN_ID])
         w.newline()
 
         w.comment("=== normalize: base + target -> content-addressed copies ===")
