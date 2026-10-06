@@ -1,0 +1,90 @@
+kind	owner	old	new	evidence
+local	combatManager::ValidSpellTarget	newHex	destHex	teleport destination hex tested with CanFit; slot set validated
+local	combatManager::CastSpell	destination	targetTailHex	rear hex of a wide target at the teleport landing; quantity before resurrection; spell%02d sample (removes class-name shadow); set validated
+local	combatManager::CastSpell	quantity	quantityBefore	rear hex of a wide target at the teleport landing; quantity before resurrection; spell%02d sample (removes class-name shadow); set validated
+local	combatManager::CastSpell	sample	spellSound	rear hex of a wide target at the teleport landing; quantity before resurrection; spell%02d sample (removes class-name shadow); set validated
+local	combatManager::CastMassSpell	curLast	lastSide	side loop bounds; MAKEFILEID result; set validated
+local	combatManager::CastMassSpell	team	firstSide	side loop bounds; MAKEFILEID result; set validated
+local	combatManager::CastMassSpell	fileIdNo	effectFile	side loop bounds; MAKEFILEID result; set validated
+local	combatManager::CancelSideSpells	curArmy	target	stack loop; set validated
+local	combatManager::CancelSideSpells	ii	armyIndex	stack loop; set validated
+local	combatManager::Fireball	prevDmg	baseDamage	damage dealt, not a previous value; set validated
+local	combatManager::Fireball	curArmyPtr	target	damage dealt, not a previous value; set validated
+local	combatManager::Fireball	adjHexes	affectedHexes	damage dealt, not a previous value; set validated
+local	combatManager::MeteorShower	prevDmg	baseDamage	j is the meteor.icn frame; set validated
+local	combatManager::MeteorShower	curArmyPtr	target	j is the meteor.icn frame; set validated
+local	combatManager::MeteorShower	adjHexes	affectedHexes	j is the meteor.icn frame; set validated
+local	combatManager::MeteorShower	j	frame	j is the meteor.icn frame; set validated
+local	combatManager::ElementalStorm	prevDamage	damage	five passes of storm.icn frames; set validated (reorder)
+local	combatManager::ElementalStorm	indexNum	armyIdx	five passes of storm.icn frames; set validated (reorder)
+local	combatManager::ElementalStorm	curArmyPtr	target	five passes of storm.icn frames; set validated (reorder)
+local	combatManager::ElementalStorm	oldCycle	stormRound	five passes of storm.icn frames; set validated (reorder)
+local	combatManager::ElementalStorm	frm	frame	five passes of storm.icn frames; set validated (reorder)
+local	combatManager::ElementalStorm	sideIdxNo	side	five passes of storm.icn frames; set validated (reorder)
+local	combatManager::ElementalStorm	hit	anyAffected	five passes of storm.icn frames; set validated (reorder)
+local	combatManager::Armageddon	sideIdxNo	combatSideIndex	kb.pal copy faded to red; jx indexes palette colors; set validated (reorder)
+local	combatManager::Armageddon	index	armyIdx	kb.pal copy faded to red; jx indexes palette colors; set validated (reorder)
+local	combatManager::Armageddon	palDataEntry	paletteBytes	kb.pal copy faded to red; jx indexes palette colors; set validated (reorder)
+local	combatManager::Armageddon	curArmy	stack	kb.pal copy faded to red; jx indexes palette colors; set validated (reorder)
+local	combatManager::Armageddon	jx	color	kb.pal copy faded to red; jx indexes palette colors; set validated (reorder)
+local	combatManager::Armageddon	workPalItem	effectPalette	kb.pal copy faded to red; jx indexes palette colors; set validated (reorder)
+local	combatManager::Armageddon	curPal	gamePal	kb.pal copy faded to red; jx indexes palette colors; set validated (reorder)
+local	combatManager::DoSpellAI	selectedSpellVal	chosenSpell	entry indexes hero spell slots; set validated (reorder)
+local	combatManager::DoSpellAI	bestEffectVal	bestValue	entry indexes hero spell slots; set validated (reorder)
+local	combatManager::DoSpellAI	spellEffect	effect	entry indexes hero spell slots; set validated (reorder)
+local	combatManager::DoSpellAI	entry	slot	entry indexes hero spell slots; set validated (reorder)
+local	combatManager::DoSpellAI	candHex	hex	entry indexes hero spell slots; set validated (reorder)
+local	combatManager::DetermineEffectOfSpell	owner	side	owner is the side whose stacks are scanned; set validated
+local	combatManager::DetermineEffectOfSpell	curHexVal	hex	owner is the side whose stacks are scanned; set validated
+local	combatManager::DetermineEffectOfSpell	spellEffect	effect	owner is the side whose stacks are scanned; set validated
+local	combatManager::DetermineEffectOfSpell	targetPtr	targetCreature	owner is the side whose stacks are scanned; set validated
+local	combatManager::ClearEffects	idx	armyIndex	gArmyEffected[side][armyIndex]; validated
+local	combatManager::EffectSpellCure	curSide	sideIndex	sums of harmful/beneficial effect values; 'quantity' holds quantity*fightValue, not a quantity; set validated (reorder)
+local	combatManager::EffectSpellCure	prevNegEffect	negTotal	sums of harmful/beneficial effect values; 'quantity' holds quantity*fightValue, not a quantity; set validated (reorder)
+local	combatManager::EffectSpellCure	posEffect	posTotal	sums of harmful/beneficial effect values; 'quantity' holds quantity*fightValue, not a quantity; set validated (reorder)
+local	combatManager::EffectSpellCure	quantity	armyWorth	sums of harmful/beneficial effect values; 'quantity' holds quantity*fightValue, not a quantity; set validated (reorder)
+local	combatManager::EffectSpellCure	entry	stackNum	sums of harmful/beneficial effect values; 'quantity' holds quantity*fightValue, not a quantity; set validated (reorder)
+local	combatManager::EffectSpellCure	armyPtr	creature	sums of harmful/beneficial effect values; 'quantity' holds quantity*fightValue, not a quantity; set validated (reorder)
+local	combatManager::EffectSpellDamage	unusedTotal	leftDamage	unusedTotal is used: damage left over after whole kills; facing counts adjacent directions 0..5; killed vs killed+wounded value; set validated (reorder)
+local	combatManager::EffectSpellDamage	fightValue	killedValue	unusedTotal is used: damage left over after whole kills; facing counts adjacent directions 0..5; killed vs killed+wounded value; set validated (reorder)
+local	combatManager::EffectSpellDamage	facing	neighborIndex	unusedTotal is used: damage left over after whole kills; facing counts adjacent directions 0..5; killed vs killed+wounded value; set validated (reorder)
+local	combatManager::EffectSpellDamage	partValue	damagedValue	unusedTotal is used: damage left over after whole kills; facing counts adjacent directions 0..5; killed vs killed+wounded value; set validated (reorder)
+local	army::CanFit	mapCell	adjacentCell	combat hexcell next to the hex (GetAdjacentCellIndex), not a map cell; local shadowed class mapCell; validated
+local	army::ValidFlight	oldOpponent	enemyStack	mask of blocked attack directions; GetBestDirection results; set validated (reorder)
+local	army::ValidFlight	destHexNo	enemyHex	mask of blocked attack directions; GetBestDirection results; set validated (reorder)
+local	army::ValidFlight	attackDirectionsNum	attackDirectionsMask	mask of blocked attack directions; GetBestDirection results; set validated (reorder)
+local	army::ValidFlight	curAttackDirection	bestAttackDirection	mask of blocked attack directions; GetBestDirection results; set validated (reorder)
+local	army::ValidFlight	orient	landingDirection	mask of blocked attack directions; GetBestDirection results; set validated (reorder)
+local	army::ValidFlight	nextHexValue	adjacentHex	mask of blocked attack directions; GetBestDirection results; set validated (reorder)
+local	army::ValidFlight	hitHex	attackHex	mask of blocked attack directions; GetBestDirection results; set validated (reorder)
+local	army::FlyTo	oldX	boxLeft	union redraw box of previous and current extents, not 'old' values; set validated
+local	army::FlyTo	oldY	boxTop	union redraw box of previous and current extents, not 'old' values; set validated
+local	army::FlyTo	oldMaxExtentX	boxRightX	union redraw box of previous and current extents, not 'old' values; set validated
+local	army::FlyTo	maxY	boxBottom	union redraw box of previous and current extents, not 'old' values; set validated
+local	hexcell::DrawOccupant	frame	occupantFacing	holds occupant->m_facing; validated
+local	hexcell::DrawWall	lastFlip	level	lastFlip is DrawTower's 'level' mirror flag (castleSide[attacker]); levelValue is m_wallDamage frame; set validated (reorder)
+local	hexcell::DrawWall	levelValue	rubbleFrame	lastFlip is DrawTower's 'level' mirror flag (castleSide[attacker]); levelValue is m_wallDamage frame; set validated (reorder)
+local	armyGroup::IsHomogeneous	numCreatureTypes	numTypeRuns	counts type changes between occupied slots, not distinct types; validated (initializers, no reorder)
+local	armyGroup::IsHomogeneous	prev	prevType	counts type changes between occupied slots, not distinct types; validated (initializers, no reorder)
+param	army::ValidFlight	useDestination	pathMode	callers pass ARMY_PATH_ANY_TARGET_HEX (PATH.h); matches ValidPath/FindPath pathMode; update include/SOURCE/army.h decl
+param	combatManager::EffectSpellCure	cure	cureOnly	1 drops beneficial effects (Cure); same flag as CastMassSpell/CancelSideSpells cureOnly; update combatManager.h decl
+param	armyGroup::GetMorale	h	armyHero	all callers pass the group's hero; update armyGroup.h
+param	armyGroup::GetMorale	t	occupiedTown	town whose tavern adds morale (combat town / castle); update armyGroup.h
+param	armyGroup::IsHomogeneous	countRaces	alignmentMode	compared with ARMY_GROUP_EMPTY_SLOT (-1), not a boolean; update armyGroup.h
+param	armyGroup::DamageGroup	damagePercent	casualtyFraction	value is a 0..1 fraction (*100 for the roll, <0.999, >=1.0); update armyGroup.h
+param	strip::strip	portraitId	portraitIconId	callers pass gpResourceManager->MakeId(...) icon id; update strip.h
+member	hexcell	m_occupantFrame	m_occupantFootprintHalf	holds ARMY_FACING_LEFT/RIGHT marking which half of a two-hex stack the cell holds (GenerateMap, CastSpell teleport); DrawOccupant skips the half equal to the facing; uses in CMBTMGR/SPELLS/HEXCELL
+member	hexcell	m_obstacleType	m_obstacleIcon	stores a CombatIconSlot (COMBAT_ICON_CASTLE / COMBAT_ICON_OBSTACLES) that DrawObstacle tests; pairs with m_groundIcon; writers in CMBTMGR GenerateMap
+enum	HexcellConstant	HEXCELL_OCCUPANT_FRAME_NONE	HEXCELL_FOOTPRINT_HALF_NONE	sentinel of m_occupantFootprintHalf for one-hex stacks
+static	SPELLAI file static (0x0048a6ec)	SPELL_AI_STONESKIN_MODIFIER	SPELL_AI_PROTECTION_MODIFIER	only reader is RawEffectSpellInfluence SPELL_PROTECTION; the game has no stoneskin spell
+static	SPELLAI file static (0x0048a6f0)	SPELL_AI_SHIELD_MODIFIER	SPELL_AI_ANTI_MAGIC_MODIFIER	only reader is RawEffectSpellInfluence SPELL_ANTI_MAGIC; the game has no shield spell
+kept	hexcell::DrawTower	level	level	it is the castle mirror flag
+kept	combatManager::DetermineEffectOfSpell	bDone	bDone	no bucket-3..4 'done' spelling reads well (done=7)
+kept	combatManager::DoSpellAI	bestHexWork	bestHexWork	bestHex is the out-param name elsewhere; no fit for bestTargetHex
+kept	combatManager::Fireball	xPos,hit	xPos,hit	x / anyAffected do not fit slots [0-1]/[0-0]
+kept	combatManager::MeteorShower	hit,rockIcon	hit,rockIcon	anyAffected/meteorIcon do not fit [0-1]
+kept	combatManager::CastSpell	targetCreature,armySide,occupantIndex,teleported	targetCreature,armySide,occupantIndex,teleported	acceptable; target/targetSide/targetIndex/teleportArmy do not fit
+kept	combatManager::Armageddon	dmg	dmg	damage (bucket 8) does not fit [3-6]
+kept	army::FlyTo	colFrom,curRow,headOccupant,tailSlot,k,y1,y2	colFrom,curRow,headOccupant,tailSlot,k,y1,y2	sourceColumn/sourceRow/frontCell/rearCell/step/launchY/landPosY do not fit the [3-4]/[4-4]/[11-12]/[10-11]/[11]/[12]/[13] slots; names are understandable
+kept	army::ValidFlight	n,heldTemp,k,m	n,heldTemp,k,m	n is a direction loop index (direction=7, dir=13 do not fit [14-15]); heldTemp/k/m are dead
+static	SPELLAI file statics	SPELL_AI_PARALYZE_MODIFIER/SPELL_AI_BERSERK_MODIFIER	SPELL_AI_BERSERK_MODIFIER/SPELL_AI_PARALYZE_MODIFIER	RawEffectSpellInfluence reads 0x0048a6dc for SPELL_BERZERKER and 0x0048a6e0 for SPELL_PARALYZE

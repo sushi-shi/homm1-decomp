@@ -527,15 +527,14 @@ src/SOURCE/SPELLAI.cpp	*	1	trivial-function-literal	1 store gSpellAIEffectShift	
 src/SOURCE/SPELLAI.cpp	*	0	trivial-function-literal	0 store gSpellAIEffectShift	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/SPELLAI.cpp	*	1	trivial-function-literal	1 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
 src/SOURCE/SPELLAI.cpp	*	0	trivial-function-literal	0 store bDone	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/SPELLAI.cpp	*	0	trivial-function-literal	0 store spellEffect	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/SPELLAI.cpp	*	1	trivial-function-literal	1 store bDone	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/SPELLAI.cpp	*	0	trivial-function-literal	0 store effect	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLAI.cpp	*	1	trivial-function-literal	1 store bDone	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/SPELLAI.cpp	*	0	trivial-function-literal	0 store gArmyEffected[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/SPELLAI.cpp	*	0	trivial-function-literal	0 equality	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
-src/SOURCE/SPELLAI.cpp	*	0	trivial-function-literal	0 store posEffect	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/SPELLAI.cpp	*	1	trivial-function-literal	1 equality cure	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/SPELLAI.cpp	*	0	trivial-function-literal	0 store posTotal	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLAI.cpp	*	1	trivial-function-literal	1 equality cureOnly	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
 src/SOURCE/SPELLAI.cpp	*	0	trivial-function-literal	0 store stacksKilled[[][]]	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/SPELLAI.cpp	*	0	trivial-function-literal	0 store partValue[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLAI.cpp	*	0	trivial-function-literal	0 store damagedValue[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/SPELLAI.cpp	*	1	trivial-function-literal	1 store gArmyEffected[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/SPELLS.cpp	*	1	trivial-function-literal	1 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
 src/SOURCE/SPELLS.cpp	*	0	trivial-function-literal	0 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
@@ -551,11 +550,13 @@ src/SOURCE/SPELLS.cpp	*	1	trivial-function-literal	1 store m_animationFrame	a fl
 src/SOURCE/SPELLS.cpp	*	0	trivial-function-literal	0 store m_redrawExtent	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/SPELLS.cpp	*	1	trivial-function-literal	1 equality cureOnly	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
 src/SOURCE/SPELLS.cpp	*	0	trivial-function-literal	0 store m_gridUpdateRow	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/SPELLS.cpp	*	0	trivial-function-literal	0 array-index adjHexes	the first or second element of a local buffer, table or slot pair
+src/SOURCE/SPELLS.cpp	*	0	trivial-function-literal	0 array-index affectedHexes	the first or second element of a local buffer, table or slot pair
 src/SOURCE/SPELLS.cpp	*	0	trivial-function-literal	0 store hit	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLS.cpp	*	0	trivial-function-literal	0 store anyAffected	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/SPELLS.cpp	*	1	trivial-function-literal	1 equality	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
 src/SOURCE/SPELLS.cpp	*	1	trivial-function-literal	1 store gArmyEffected[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/SPELLS.cpp	*	1	trivial-function-literal	1 store hit	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLS.cpp	*	1	trivial-function-literal	1 store anyAffected	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/SPELLS.cpp	*	0	trivial-function-literal	0 store m_updateFlags	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/SPELLS.cpp	*	1	trivial-function-literal	1 store m_updateFlags	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/VIEW.cpp	*	0	trivial-function-literal	0 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)

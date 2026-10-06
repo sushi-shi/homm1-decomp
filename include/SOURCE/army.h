@@ -185,7 +185,7 @@ public:
     // Undoes m_spellEffect when it expires.
     void CancelSpell(void);
     i16 CanFit(i16* hex);
-    i16 ValidFlight(i16 destination, i8 useDestination);
+    i16 ValidFlight(i16 destination, i8 pathMode);
     i16 FlyTo(void);
     i16 FlyTo(i16 destination);
     i16 FindPath(i16 sourceHex, i16 targetHex, i8, i8 ignoreSpeed, i8 pathMode);

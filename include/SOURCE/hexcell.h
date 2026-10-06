@@ -7,10 +7,12 @@
 #include <H1/Macros.h>
 #include <SOURCE/combatTypes.h>
 
-// m_occupantFrame: the facing DrawOccupant last drew the occupant with; the
-// constructor and TakeOccupant reset it to NONE so the next frame redraws.
+// m_occupantFootprintHalf: which half of a two-hex stack the cell holds
+// (ARMY_FACING_LEFT on the left hex, ARMY_FACING_RIGHT on the right one);
+// NONE for a one-hex stack or an empty cell. DrawOccupant draws the stack
+// from the cell whose half differs from its facing, so it draws once.
 H1_ENUM_CONST_BEGIN(HexcellConstant)
-    HEXCELL_OCCUPANT_FRAME_NONE = -1
+    HEXCELL_FOOTPRINT_HALF_NONE = -1
 H1_ENUM_CONST_END(HexcellConstant)
 
 #pragma pack(push, 1)
@@ -21,13 +23,15 @@ public:
     // DrawGround draws this combat icon at this frame.
     i8 m_groundIcon;
     i8 m_groundFrame;
-    // Castle pieces (5) draw towers and walls; other obstacles use frame 7.
-    i8 m_obstacleType;
+    // The combat icon slot the obstacle draws from: COMBAT_ICON_CASTLE wall
+    // pieces draw as towers and walls, COMBAT_ICON_OBSTACLES rocks draw frame
+    // m_obstacleIndex.
+    i8 m_obstacleIcon;
     // -1 when no obstacle stands on the hex (ValidHexToStandOn).
     H1_ENUM_STORAGE(CombatObstacleIndex, i8) m_obstacleIndex;
     H1_ENUM_STORAGE(CombatSide, i8) m_occupantSide;
     i8 m_occupantIndex;
-    i8 m_occupantFrame;
+    i8 m_occupantFootprintHalf;
     // army::ResetPath clears the per-cell path mark.
     i8 m_pathFlag;
     // --- constructors ---

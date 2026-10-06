@@ -22,7 +22,7 @@ strip::strip(
     i16 x,
     i16 y,
     i8 stripType,
-    i16 portraitId,
+    i16 portraitIconId,
     i8 portraitFrame,
     class armyGroup* army,
     i16 firstBorderId,
@@ -34,7 +34,7 @@ strip::strip(
     m_x = x;
     m_y = y;
     m_stripType = stripType;
-    m_portraitIcon = gpResourceManager->GetIcon(portraitId);
+    m_portraitIcon = gpResourceManager->GetIcon(portraitIconId);
     m_portraitFrame = portraitFrame;
     m_army = army;
     m_stripIcon = gpResourceManager->GetIcon("strip.icn");

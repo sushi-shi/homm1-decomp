@@ -377,7 +377,7 @@ public:
     i32 FirstResurrectable(i32 startHex, i32* hex, i32 spell);
     // DetermineEffectOfSpell passes the effect, then a side and flag, a hex,
     // or the spell, base damage and hex.
-    void EffectSpellCure(i32* effect, i32 targetSide, i8 cure);
+    void EffectSpellCure(i32* effect, i32 targetSide, i8 cureOnly);
     void EffectSpellResurrect(i32* effect, i32 hex);
     void EffectSpellDamage(i32* effect, i32 spell, i32 damagePerPower, i32 targetHex);
     void CombineGroups(class armyGroup* from, class armyGroup* to);
@@ -548,7 +548,7 @@ H1_ENUM_BEGIN(CombatControlId)
     COMBAT_CONTROL_FIELD = 0x40
 H1_ENUM_END(CombatControlId)
 
-// clang-format off
+    // clang-format off
 // cmbtwin.bin's status line: CombatMessage sets the text widget (id 12),
 // redraws widgets 2..12 of the text bar and blits the bar's screen rectangle.
 H1_ENUM_CONST_BEGIN(CombatStatusLineConstant)

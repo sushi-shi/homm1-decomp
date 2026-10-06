@@ -365,7 +365,8 @@ void combatManager::GenerateMap(void) {
             }
             m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_occupantSide = COMBAT_SIDE_NONE;
             m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_occupantIndex = COMBAT_ARMY_INDEX_NONE;
-            m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_occupantFrame = HEXCELL_OCCUPANT_FRAME_NONE;
+            m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_occupantFootprintHalf =
+                HEXCELL_FOOTPRINT_HALF_NONE;
             m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_obstacleIndex = COMBAT_OBSTACLE_NONE;
             m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_pathFlag = 0;
         }
@@ -383,7 +384,7 @@ void combatManager::GenerateMap(void) {
             }
         }
         for (y = 0; y < COMBAT_GRID_ROWS; y++) {
-            m_hexCells[y * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN].m_obstacleType =
+            m_hexCells[y * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN].m_obstacleIcon =
                 COMBAT_ICON_CASTLE;
             m_hexCells[y * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN].m_obstacleIndex =
                 COMBAT_WALL_INTACT;
@@ -406,9 +407,9 @@ void combatManager::GenerateMap(void) {
                 m_hexCells[i * COMBAT_GRID_COLUMNS + COMBAT_GRID_FIRST_INNER_COLUMN + 1]
                     .m_occupantIndex = armyCount;
                 m_hexCells[i * COMBAT_GRID_COLUMNS + COMBAT_GRID_FIRST_INNER_COLUMN]
-                    .m_occupantFrame = ARMY_FACING_LEFT;
+                    .m_occupantFootprintHalf = ARMY_FACING_LEFT;
                 m_hexCells[i * COMBAT_GRID_COLUMNS + COMBAT_GRID_FIRST_INNER_COLUMN + 1]
-                    .m_occupantFrame = ARMY_FACING_RIGHT;
+                    .m_occupantFootprintHalf = ARMY_FACING_RIGHT;
             }
             armyCount++;
         }
@@ -430,9 +431,9 @@ void combatManager::GenerateMap(void) {
                 m_hexCells[i * COMBAT_GRID_COLUMNS + COMBAT_GRID_LAST_INNER_COLUMN - 1]
                     .m_occupantIndex = armyCount;
                 m_hexCells[i * COMBAT_GRID_COLUMNS + COMBAT_GRID_LAST_INNER_COLUMN - 1]
-                    .m_occupantFrame = ARMY_FACING_LEFT;
+                    .m_occupantFootprintHalf = ARMY_FACING_LEFT;
                 m_hexCells[i * COMBAT_GRID_COLUMNS + COMBAT_GRID_LAST_INNER_COLUMN]
-                    .m_occupantFrame = ARMY_FACING_RIGHT;
+                    .m_occupantFootprintHalf = ARMY_FACING_RIGHT;
             }
             armyCount++;
         }
@@ -447,7 +448,7 @@ void combatManager::GenerateMap(void) {
                 x = SRandom(3, 5);
                 y = SRandom(0, 4);
             }
-            m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_obstacleType = COMBAT_ICON_OBSTACLES;
+            m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_obstacleIcon = COMBAT_ICON_OBSTACLES;
             m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_obstacleIndex = SRandom(0, 2);
             if ((m_terrainType == TERRAIN_WATER || m_terrainType == TERRAIN_LAVA)
                 && m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_obstacleIndex
