@@ -17,7 +17,7 @@ for argument in "$@"; do
   case "$argument" in
     --help|-h)
       printf '%s\n' \
-        "$title. Game data: ${store_data:-HOMM1_GAME=PATH on first run (the Buka 2003 CD image, CD or installed game folder, or a .zip/.7z)}" \
+        "$title. Game data: ${store_data:-HOMM1_GAME=PATH on first run (the Buka 2003 CD image, CD or installed game folder, or a .zip/.7z/.rar)}" \
         "Writable files (saves, maps, high scores) live in \$XDG_DATA_HOME/$state_name/game; settings in \$XDG_CONFIG_HOME/homm1." \
         "--data DIR or HOMM1_DATA runs on DIR as it is. The program's own options:"
       exec "$program" --help
@@ -46,7 +46,7 @@ else
   source_file="$layer/.source"
   if [[ ! -f "$source_file" || ( -n "${HOMM1_GAME:-}" && "$(cat -- "$source_file")" != "$HOMM1_GAME" ) ]]; then
     if [[ -z "${HOMM1_GAME:-}" ]]; then
-      printf '%s\n' "First run: set HOMM1_GAME to your Buka 2003 game (its CD image, the CD, an installed game folder, or a .zip/.7z of one), e.g." \
+      printf '%s\n' "First run: set HOMM1_GAME to your Buka 2003 game (its CD image, the CD, an installed game folder, or a .zip/.7z/.rar of one), e.g." \
         "  HOMM1_GAME=~/Games/heroes.iso $(basename -- "$0")" \
         "Later runs use the copy imported into $layer." >&2
       exit 1

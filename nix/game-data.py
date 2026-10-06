@@ -5,7 +5,9 @@
 
 PATH is what `nix run .#play -- --game` takes: an installed game folder, the
 CD (a mount or a copy of its files), its .iso image or a .zip/.7z of either,
-or a folder holding only such an image.
+or a folder holding only such an image. A .rar of any of these (archive.org's
+`***REMOVED***` holds the CD image) is unpacked first
+with unar, 7-Zip's RAR decoder not being free.
 The copy is found and checked with play.py's own rules (the resource archive
 by SHA-256, the other files by name and size; the CD's installer is unpacked
 with unshield, images are read with 7z) and laid out as
@@ -25,11 +27,14 @@ import argparse
 import importlib.util
 from pathlib import Path
 import shutil
+import subprocess
 import sys
 import tempfile
 
 #: The game folder's directories the native programs read.
 GAME_DIRS = ("DATA", "ANIM", "SOUND", "MAPS", "GAMES", "HELP")
+#: Archives unpacked with unar before play.py looks for the game in them.
+ARCHIVES = (".rar",)
 
 
 def load_runner(path: Path):
@@ -59,13 +64,30 @@ def check(play, install: Path) -> list[str]:
 
 
 def image_in(play, given: Path) -> Path:
-    """A folder holding no game but exactly one image stands for that image
+    """A folder holding no game but exactly one image or archive stands for it
     (a flake input that is the folder of the .iso)."""
     if not given.is_dir() or play.search(given, play.AGG[0], depth=3) is not None \
             or play.search(given, play.CABINET, depth=2) is not None:
         return given
-    images = [p for p in given.iterdir() if p.is_file() and p.suffix.lower() in play.IMAGES]
+    images = [p for p in given.iterdir()
+              if p.is_file() and p.suffix.lower() in (*play.IMAGES, *ARCHIVES)]
     return images[0] if len(images) == 1 else given
+
+
+def unpack_archive(play, given: Path, work: Path) -> Path:
+    """`given`, or the image or folder a .rar of it holds, unpacked into `work`."""
+    given = image_in(play, given)
+    if not given.is_file() or given.suffix.lower() not in ARCHIVES:
+        return given
+    target = work / "archive"
+    play.say(f"unpacking {given}")
+    result = subprocess.run([play.tool("unar"), "-quiet", "-no-directory", "-output-directory",
+                             str(target), str(given)],
+                            stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True,
+                            errors="replace")
+    if result.returncode:
+        raise play.PlayError(f"{given}: unar failed: {result.stderr.strip()[-400:]}")
+    return image_in(play, target)
 
 
 def main() -> int:
@@ -82,9 +104,12 @@ def main() -> int:
         return 1
     try:
         with tempfile.TemporaryDirectory(prefix=".import-", dir=args.work) as work:
-            copies = [play.locate(image_in(play, path.expanduser().resolve()),
-                                  Path(work) / str(i), False)
-                      for i, path in enumerate(args.game)]
+            copies = []
+            for i, path in enumerate(args.game):
+                scratch = Path(work) / str(i)
+                scratch.mkdir()
+                given = unpack_archive(play, path.expanduser().resolve(), scratch)
+                copies.append(play.locate(given, scratch, False))
             install = next((c.install for c in copies if c.install), None)
             if install is None:
                 raise play.PlayError("no installed game in " + ", ".join(map(str, args.game))

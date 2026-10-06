@@ -47,12 +47,16 @@ nix run github:sushi-shi/homm1-decomp/port#heroes-editor     # the scenario edit
 ```
 
 Supply your own copy of the Buka 2003 edition: its CD image, the CD's files
-or an installed game folder (a `.zip` or `.7z` of one works too). Tested
-image: `Герои. Платиновая версия [Бука].iso`, SHA-256:
+or an installed game folder (a `.zip`, `.7z` or `.rar` of one works too).
+Tested image: `Герои. Платиновая версия [Бука].iso`, SHA-256:
 
 ```text
 cd9f410094783e40c537bbca20990c0e9128e6fe71fecff5fd54ccc8bdd99c72
 ```
+
+archive.org keeps it as `***REMOVED***` in
+[***REMOVED***](https://archive.org/details/***REMOVED***);
+`HOMM1_GAME` may name the downloaded `.rar`.
 
 The first launch checks the copy (the resource archive by SHA-256, the other
 files by name and size) and imports its data into
@@ -117,6 +121,28 @@ sudo nixos-rebuild switch --flake '.#<host>'
 heroes             # the game
 heroes-editor      # the scenario editor
 ```
+
+Instead of a local copy, a module of the configuration can fetch the one on archive.org:
+
+```nix
+{ pkgs, ... }:
+let
+  heroes-buka = pkgs.fetchurl {
+    name = "heroes-platinum-buka.rar";   # the importer goes by the extension
+    url = "https://archive.org/download/***REMOVED***/%D0%93%D0%B5%D1%80%D0%BE%D0%B8.%20%D0%9F%D0%BB%D0%B0%D1%82%D0%B8%D0%BD%D0%BE%D0%B2%D0%B0%D1%8F%20%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F%20%5B%D0%91%D1%83%D0%BA%D0%B0%5D.rar";
+    hash = "sha256-YWAmitzQ5TozJxS8Jph6ATp7KB0BRjJFS7+JOjnQBPk=";
+  };
+in {
+  programs.homm1 = { enable = true; game = heroes-buka; };
+  system.extraDependencies = [ heroes-buka ];
+}
+```
+
+The 1 GB archive is downloaded into the store once. `system.extraDependencies`
+(`home.extraDependencies` with home-manager) keeps it through garbage
+collection, so a rebuild that imports the game again does not download it
+again. The same archive holds Heroes II for the
+[HoMM2 port](https://github.com/sushi-shi/homm2-decomp/tree/port).
 
 With home-manager, the same options install the game for one user:
 

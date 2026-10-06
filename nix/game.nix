@@ -2,7 +2,7 @@
 # `heroes` and `heroes-editor` on the native programs, with desktop entries.
 #
 #   game     the player's copy of the Buka 2003 edition: its CD image, the CD,
-#            an installed game folder or a .zip/.7z of one (nix/game-data.py).
+#            an installed game folder or a .zip/.7z/.rar of one (nix/game-data.py).
 #            Checked and laid out in the store at install time, locally, never
 #            substituted from a cache; the icons come from its programs. Without
 #            it the launchers import $HOMM1_GAME on their first run.
@@ -21,7 +21,7 @@ let
   });
   importer = pkgs.writeShellApplication {
     name = "homm1-import";
-    runtimeInputs = [ pkgs.python3 pkgs.p7zip pkgs.unshield ];
+    runtimeInputs = [ pkgs.python3 pkgs.p7zip pkgs.unar pkgs.unshield ];
     text = ''exec python3 ${./game-data.py} --runner ${runner} "$@"'';
   };
   data = pkgs.runCommand "homm1-game-data" {
