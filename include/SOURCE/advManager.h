@@ -54,14 +54,14 @@ H1_ENUM_CONST_BEGIN(AdventureFrameTimerConstant)
     TIMER_DELAY = 120
 H1_ENUM_CONST_END(AdventureFrameTimerConstant)
 
-// m_lastQuickViewX/Y: the map cell of the monster DoCombat turns to face the
+// m_combatMonsterX/Y: the map cell of the monster DoCombat turns to face the
 // attacker (DrawCell draws it facing); the constructor starts it at NONE
 // (-99, off every drawable cell) and DoCombat clears the x back to CLEARED
 // (-1) after the redraw.
-H1_ENUM_CONST_BEGIN(AdventureQuickViewCellConstant)
-    QUICK_VIEW_NONE = -99,
-    QUICK_VIEW_CLEARED = -1
-H1_ENUM_CONST_END(AdventureQuickViewCellConstant)
+H1_ENUM_CONST_BEGIN(AdventureCombatMonsterCellConstant)
+    COMBAT_MONSTER_CELL_NONE = -99,
+    COMBAT_MONSTER_CELL_CLEARED = -1
+H1_ENUM_CONST_END(AdventureCombatMonsterCellConstant)
 
 // m_hoverCellX/m_hoverCellY before the mouse hovers a view cell.
 H1_ENUM_CONST_BEGIN(AdventureCursorConstant)
@@ -93,8 +93,8 @@ H1_ENUM_BEGIN(AdventureHeroIcon)
     ADVMGR_HERO_ICON_BOAT = 4
 H1_ENUM_END(AdventureHeroIcon)
 
-// m_selectedCell: the action ProcessSelect queues and advManager::DoSelect
-// runs.
+// m_pendingCommand: the action ProcessHover/ProcessSelect queue and
+// advManager::DoAdvCommand runs.
 H1_ENUM_BEGIN(AdventureCommand)
     ADVMGR_COMMAND_NONE = -1,
     ADVMGR_COMMAND_MOVE_TO = 1,
@@ -207,12 +207,12 @@ struct adventureSoundCell {
 #pragma pack(push, 1)
 class advManager : public baseManager {
 public:
-    i8 m_selectedCell;
+    i8 m_pendingCommand;
     class widget* m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_WIDGET_COUNT];
     class widget* m_bottomViewSecondaryWidgets[ADVMGR_BOTTOM_VIEW_WIDGET_COUNT];
     class heroWindow* m_adventureWindow;
     // ShowRoute clears 72*72 bytes and stores signed route frames.
-    i8* m_visibilityMap;
+    i8* m_routeMap;
     i8 m_routeShown;
     i8 m_currentTerrain;
     char m_unused9b[4];
@@ -227,7 +227,7 @@ public:
     class tileset* m_cloudTiles;
     class tileset* m_stoneTiles;
     class icon* m_objectIcons[ADVMGR_OBJECT_ICON_COUNT];
-    class icon* m_puzzleIcon;
+    class icon* m_radarIcon;
     class icon* m_cloudOverlayIcon;
     i16 m_mapOriginX;
     i16 m_mapOriginY;
@@ -237,13 +237,13 @@ public:
     i16 m_hoverCellY;
     i16 m_commandTargetX;
     i16 m_commandTargetY;
-    i16 m_updateMinX;
-    i16 m_updateMinY;
-    i16 m_updateMaxX;
-    i16 m_updateMaxY;
+    i16 m_scrollOffsetX;
+    i16 m_scrollOffsetY;
+    i16 m_animationFrame;
+    i16 m_flagFrameCounter;
     i8 m_animationPhases[ADVMGR_ANIMATION_PHASE_COUNT];
     class icon* m_heroIcons[ADVMGR_HERO_ICON_COUNT];
-    class icon* m_boatShadowIcon;
+    class icon* m_shadowIcon;
     class icon* m_flagIcons[ADVMGR_PLAYER_COLOR_COUNT];
     class icon* m_boatFlagIcons[ADVMGR_PLAYER_COLOR_COUNT];
     i8 m_cursorActive;
@@ -262,15 +262,15 @@ public:
     i32 m_heroContextLocked;
     i32 m_townContextLocked;
     i8 m_forceCompleteDraw;
-    i8 m_lastQuickViewX;
-    i8 m_lastQuickViewY;
-    i8 m_mineGuardianFacingLeft;
+    i8 m_combatMonsterX;
+    i8 m_combatMonsterY;
+    i8 m_combatMonsterFacingLeft;
     i32 m_activeSoundMask;
     adventureSoundCell m_activeSounds[ADVMGR_ACTIVE_SOUND_COUNT];
     class sample* m_loopingSamples[ADVMGR_ENVIRONMENT_SOUND_COUNT];
     class sample* m_cursorSamples[ADVMGR_CURSOR_SAMPLE_COUNT];
     i8 m_identifyHeroActive;
-    i8 m_openState;
+    i8 m_heroesLogoShown;
     // Main drops message types outside this mask (Open sets 0x32f).
     i16 m_messageTypeMask;
     // --- constructors ---
@@ -327,7 +327,7 @@ public:
     i32 ProcessHover(struct tag_message* message);
     void UpdateScreen(i8 cursorUpdate, i8 forceUpdate);
     void CompleteDraw(i16 originX, i16 originY, i32 forceDraw);
-    void CompleteDraw(i32 update);
+    void CompleteDraw(i32 forceDraw);
     i32 GetCloudLookup(i32 x, i32 y);
     void DrawCell(
         i16 mapX,
@@ -454,8 +454,8 @@ public:
         i32 x,
         i32 y,
         i8 heroDefends,
-        i32 fromX,
-        i32 fromY
+        i32 combatX,
+        i32 combatY
     );
     void TransferArtifacts(class hero* sourceHero, class hero* destHero);
     void HeroLoses(class hero* lostHero);
@@ -662,7 +662,7 @@ H1_ENUM_CONST_END(AdventureLocatorWidget)
 // locators.icn frames: the empty hero slots (one per slot), the empty town
 // slots from EMPTY_TOWN_FIRST, the occupied hero frame, and the town frames
 // by town type from TOWN_FIRST, CASTLE_OFFSET further on once it has a castle.
-// m_visibilityMap while a route is shown (ShowRoute, DrawCell): a 1-based
+// m_routeMap while a route is shown (ShowRoute, DrawCell): a 1-based
 // route.icn frame (FRAME_MASK) with FLIPPED mirroring it. The last step is
 // the DESTINATION mark; steps the hero reaches today move REACHABLE_OFFSET
 // frames on to the second arrow set.
@@ -817,7 +817,7 @@ H1_ENUM_CONST_BEGIN(AdventureDrawConstant)
     HERO_BOAT_Y_OFFSET = -10
 H1_ENUM_CONST_END(AdventureDrawConstant)
 
-// UpdateScreen's dirty box and animation clock: m_updateMaxX cycles through
+// UpdateScreen's animation clock and dirty box: m_animationFrame cycles through
 // 6 steps and the columns start at 0/1/3/5; no limit box means the whole
 // 448-pixel viewport at 16,16; odd steps advance columns 1 and 3, even ones
 // 0 and 2, each modulo 6 frames.
@@ -897,7 +897,7 @@ H1_ENUM_CONST_BEGIN(AdventureSummonBoatConstant)
 H1_ENUM_CONST_END(AdventureSummonBoatConstant)
 
 // ViewPuzzle: puzzle.icn has one piece per obelisk bit
-// (playerData::m_obelisksVisited); the window sits beside the viewport; the
+// (playerData::m_puzzlePiecesRemoved); the window sits beside the viewport; the
 // view centre is nudged off the artifact by coordinate residues mod 3 (and
 // mod 2), then the uncovered pieces fizzle in over 220 ms.
 H1_ENUM_CONST_BEGIN(AdventurePuzzleViewConstant)

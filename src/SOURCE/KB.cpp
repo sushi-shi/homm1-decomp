@@ -1836,7 +1836,7 @@ void InitVars(void) {
     gPalette = NULL;
     gpPhilAI->m_debugFont = NULL;
     gbCombatSurrender = 0;
-    gpGame->m_viewArmyResult = 0;
+    gpGame->m_dialogAnimationCounter = 0;
     gbInNewGameSetup = 0;
     for (i = 0; i < MAP_CELL_GROUND_TILE_COUNT; i++)
         giGroundToTerrain[i] = i / MAP_CELL_TILES_PER_TERRAIN;
@@ -1855,29 +1855,29 @@ void InitVars(void) {
 }
 
 VA(0x004406b3, 0x3f2)
-void game::ShowMoraleInfo(hero* h, i32 dialogType) {
+void game::ShowMoraleInfo(hero* heroPointer, i32 dialogType) {
     i32 newFaction;
     i32 i;
     i32 alignments;
     i32 length;
     char buffer[200];
 
-    if (h->m_army.GetMorale(h, NULL) > 0)
+    if (heroPointer->m_army.GetMorale(heroPointer, NULL) > 0)
         sprintf(buffer, gMoraleInfoText[MORALE_INFO_GOOD]);
-    else if (h->m_army.GetMorale(h, NULL) == 0)
+    else if (heroPointer->m_army.GetMorale(heroPointer, NULL) == 0)
         sprintf(buffer, gMoraleInfoText[MORALE_INFO_NEUTRAL]);
     else
         sprintf(buffer, gMoraleInfoText[MORALE_INFO_BAD]);
     sprintf(gText, gMoraleInfoText[MORALE_INFO_HEADER], buffer);
     length = strlen(gText);
-    if (!h->m_heroClass)
+    if (!heroPointer->m_heroClass)
         strcat(gText, gMoraleInfoText[MORALE_INFO_KNIGHT]);
-    alignments = h->m_army.IsHomogeneous(ARMY_GROUP_EMPTY_SLOT);
+    alignments = heroPointer->m_army.IsHomogeneous(ARMY_GROUP_EMPTY_SLOT);
     if (alignments > ARMY_GROUP_ALIGNMENT_NO_BONUS_LAST) {
         newFaction = 0;
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
-            if (h->m_army.m_creatureTypes[i] != CREATURE_NONE)
-                newFaction = h->m_army.m_creatureTypes[i] / CREATURE_FACTION_SIZE;
+            if (heroPointer->m_army.m_creatureTypes[i] != CREATURE_NONE)
+                newFaction = heroPointer->m_army.m_creatureTypes[i] / CREATURE_FACTION_SIZE;
         }
         sprintf(buffer, gMoraleInfoText[MORALE_INFO_ALL_TROOPS], gAlignmentNames[newFaction]);
         strcat(gText, buffer);
@@ -1894,28 +1894,28 @@ void game::ShowMoraleInfo(hero* h, i32 dialogType) {
         sprintf(buffer, gMoraleInfoText[MORALE_INFO_FIVE_ALIGNMENTS]);
         strcat(gText, buffer);
     }
-    if (h->HasArtifact(ARTIFACT_MEDAL_OF_VALOR))
+    if (heroPointer->HasArtifact(ARTIFACT_MEDAL_OF_VALOR))
         strcat(gText, gMoraleInfoText[MORALE_INFO_MEDAL_OF_VALOR]);
-    if (h->HasArtifact(ARTIFACT_MEDAL_OF_COURAGE))
+    if (heroPointer->HasArtifact(ARTIFACT_MEDAL_OF_COURAGE))
         strcat(gText, gMoraleInfoText[MORALE_INFO_MEDAL_OF_COURAGE]);
-    if (h->HasArtifact(ARTIFACT_MEDAL_OF_HONOR))
+    if (heroPointer->HasArtifact(ARTIFACT_MEDAL_OF_HONOR))
         strcat(gText, gMoraleInfoText[MORALE_INFO_MEDAL_OF_HONOR]);
-    if (h->HasArtifact(ARTIFACT_MEDAL_OF_DISTINCTION))
+    if (heroPointer->HasArtifact(ARTIFACT_MEDAL_OF_DISTINCTION))
         strcat(gText, gMoraleInfoText[MORALE_INFO_MEDAL_OF_DISTINCTION]);
-    if (h->HasArtifact(ARTIFACT_FIZBIN_OF_MISFORTUNE))
+    if (heroPointer->HasArtifact(ARTIFACT_FIZBIN_OF_MISFORTUNE))
         strcat(gText, gMoraleInfoText[MORALE_INFO_FIZBIN]);
-    if (h->m_eventFlags & HERO_EVENT_BUOY)
+    if (heroPointer->m_eventFlags & HERO_EVENT_BUOY)
         strcat(gText, gMoraleInfoText[MORALE_INFO_BUOY]);
-    if (h->m_eventFlags & HERO_EVENT_OASIS)
+    if (heroPointer->m_eventFlags & HERO_EVENT_OASIS)
         strcat(gText, gMoraleInfoText[MORALE_INFO_OASIS]);
-    if (h->m_eventFlags & HERO_EVENT_STATUE)
+    if (heroPointer->m_eventFlags & HERO_EVENT_STATUE)
         strcat(gText, gMoraleInfoText[MORALE_INFO_STATUE]);
-    if (h->m_eventFlags & HERO_EVENT_GRAVEYARD)
+    if (heroPointer->m_eventFlags & HERO_EVENT_GRAVEYARD)
         strcat(gText, gMoraleInfoText[MORALE_INFO_GRAVEYARD]);
-    if (h->m_eventFlags & HERO_EVENT_SHIPWRECK)
+    if (heroPointer->m_eventFlags & HERO_EVENT_SHIPWRECK)
         strcat(gText, gMoraleInfoText[MORALE_INFO_SHIPWRECK]);
-    if (h->m_cowardice) {
-        sprintf(buffer, gMoraleInfoText[MORALE_INFO_COWARDICE], h->m_cowardice);
+    if (heroPointer->m_cowardice) {
+        sprintf(buffer, gMoraleInfoText[MORALE_INFO_COWARDICE], heroPointer->m_cowardice);
         strcat(gText, buffer);
     }
     if (length == strlen(gText))
@@ -1924,30 +1924,30 @@ void game::ShowMoraleInfo(hero* h, i32 dialogType) {
 }
 
 VA(0x00440aa5, 0x1cd)
-void game::ShowLuckInfo(hero* h, i32 dialogType) {
+void game::ShowLuckInfo(hero* heroPointer, i32 dialogType) {
     i32 alignments;
     i32 size;
     char buffer[200];
 
-    if (gpGame->GetLuck(h, NULL) > 0)
+    if (gpGame->GetLuck(heroPointer, NULL) > 0)
         sprintf(buffer, gLuckInfoText[LUCK_INFO_GOOD]);
-    else if (gpGame->GetLuck(h, NULL) == 0)
+    else if (gpGame->GetLuck(heroPointer, NULL) == 0)
         sprintf(buffer, gLuckInfoText[LUCK_INFO_NEUTRAL]);
     else
         sprintf(buffer, gLuckInfoText[LUCK_INFO_BAD]);
     sprintf(gText, gLuckInfoText[LUCK_INFO_HEADER], buffer);
     size = strlen(gText);
-    if (h->HasArtifact(ARTIFACT_LUCKY_RABBITS_FOOT))
+    if (heroPointer->HasArtifact(ARTIFACT_LUCKY_RABBITS_FOOT))
         strcat(gText, gLuckInfoText[LUCK_INFO_RABBITS_FOOT]);
-    if (h->HasArtifact(ARTIFACT_GOLDEN_HORSESHOE))
+    if (heroPointer->HasArtifact(ARTIFACT_GOLDEN_HORSESHOE))
         strcat(gText, gLuckInfoText[LUCK_INFO_HORSESHOE]);
-    if (h->HasArtifact(ARTIFACT_GAMBLERS_LUCKY_COIN))
+    if (heroPointer->HasArtifact(ARTIFACT_GAMBLERS_LUCKY_COIN))
         strcat(gText, gLuckInfoText[LUCK_INFO_LUCKY_COIN]);
-    if (h->HasArtifact(ARTIFACT_FOUR_LEAF_CLOVER))
+    if (heroPointer->HasArtifact(ARTIFACT_FOUR_LEAF_CLOVER))
         strcat(gText, gLuckInfoText[LUCK_INFO_CLOVER]);
-    if (h->m_eventFlags & HERO_EVENT_FAERIE_RING)
+    if (heroPointer->m_eventFlags & HERO_EVENT_FAERIE_RING)
         strcat(gText, gLuckInfoText[LUCK_INFO_FAERIE_RING]);
-    if (h->m_eventFlags & HERO_EVENT_FOUNTAIN)
+    if (heroPointer->m_eventFlags & HERO_EVENT_FOUNTAIN)
         strcat(gText, gLuckInfoText[LUCK_INFO_FOUNTAIN]);
     if (size == strlen(gText))
         strcat(gText, gLuckInfoText[LUCK_INFO_NONE]);
@@ -2533,7 +2533,7 @@ char* GetTownName(i32 i) {
         && gCampaignScenarios[gpGame->m_campaignScenario].victoryTownX == townPointer->m_x
         && gCampaignScenarios[gpGame->m_campaignScenario].victoryTownY == townPointer->m_y)
         return gCampaignScenarios[gpGame->m_campaignScenario].victoryTownName;
-    return gTownNames[townPointer->m_threat];
+    return gTownNames[townPointer->m_nameIndex];
 }
 
 VA(0x00442254, 0x39)

@@ -5412,7 +5412,7 @@ site_rva	target_rva	symbol
 0x0002b962	0x00072790	_BitTest
 0x0002b9bc	0x000a7ba0	?gpGame@@3PAVgame@@A
 0x0002ba92	0x000a7ba0	?gpGame@@3PAVgame@@A
-0x0002be40	0x0002b929	?CountVisitedObelisks@playerData@@QAECXZ
+0x0002be40	0x0002b929	?CountPuzzlePiecesRemoved@playerData@@QAECXZ
 0x0002be52	0x0006fd8a	?Random@@YAHHH@Z
 0x0002be85	0x00072790	_BitTest
 0x0002bebb	0x0006fd8a	?Random@@YAHHH@Z
@@ -7965,7 +7965,7 @@ site_rva	target_rva	symbol
 0x0004cc69	0x0008a51c	__real@4@00000000000000000000
 0x0004cc7a	0x000a7ba0	?gpGame@@3PAVgame@@A
 0x0004cca2	0x000a7ba0	?gpGame@@3PAVgame@@A
-0x0004ccae	0x0002b929	?CountVisitedObelisks@playerData@@QAECXZ
+0x0004ccae	0x0002b929	?CountPuzzlePiecesRemoved@playerData@@QAECXZ
 0x0004ccbe	0x00078538	_abs
 0x0004cccd	0x0008a604	__real@4@4004c000000000000000
 0x0004ccd3	0x0008a448	__real@8@3fffc000000000000000

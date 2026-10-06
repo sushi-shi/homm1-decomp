@@ -64,7 +64,7 @@ void advManager::StopCursor(i8 stopSound) {
     m_cursorTurning = 0;
 }
 
-// Draws the hero shadow first and counts flag frames with m_updateMaxY.
+// Draws the hero shadow first and counts flag frames with m_flagFrameCounter.
 VA(0x00421820, 0x5a4)
 void advManager::DrawCursor(void) {
     i16 drawX;
@@ -80,8 +80,8 @@ void advManager::DrawCursor(void) {
         m_cursorCycle = S1cursorCycle;
         m_cursorTurning = S1cursorTurning;
     }
-    drawX = m_updateMinX + CURSOR_DRAW_X;
-    posY = m_updateMinY + CURSOR_DRAW_Y;
+    drawX = m_scrollOffsetX + CURSOR_DRAW_X;
+    posY = m_scrollOffsetY + CURSOR_DRAW_Y;
     if (m_cursorType == ADVMGR_HERO_ICON_BOAT)
         posY -= CURSOR_BOAT_DRAW_Y_ADJUST;
     if (m_cursorFrame & HERO_FRAME_MIRROR_FLAG) {
@@ -89,7 +89,7 @@ void advManager::DrawCursor(void) {
         drawFrame = (m_cursorFrame & HERO_FRAME_INDEX_MASK) + m_cursorFrameCount;
         if (m_drawHeroShadows && m_cursorType != ADVMGR_HERO_ICON_BOAT)
             FlipDimIconToBitmap(
-                m_boatShadowIcon,
+                m_shadowIcon,
                 gpWindowManager->m_screen,
                 drawX,
                 posY,
@@ -118,7 +118,7 @@ void advManager::DrawCursor(void) {
         } else {
             if (m_cursorCycle == 0)
                 drawFrame = (m_cursorFrame & HERO_FRAME_INDEX_MASK)
-                            + (m_updateMaxY & CURSOR_FLAG_FRAME_CYCLE_MASK)
+                            + (m_flagFrameCounter & CURSOR_FLAG_FRAME_CYCLE_MASK)
                             + CURSOR_FLAG_FRAME_BASE;
             FlipIconToBitmap(
                 m_flagIcons[gpCurPlayer->m_color],
@@ -128,13 +128,13 @@ void advManager::DrawCursor(void) {
                 drawFrame,
                 ICON_DRAW_OFFSET_FULL
             );
-            m_updateMaxY++;
+            m_flagFrameCounter++;
         }
     } else {
         drawFrame = m_cursorFrame + m_cursorFrameCount;
         if (m_drawHeroShadows && m_cursorType != ADVMGR_HERO_ICON_BOAT)
             DimIconToBitmap(
-                m_boatShadowIcon,
+                m_shadowIcon,
                 gpWindowManager->m_screen,
                 drawX,
                 posY,
@@ -162,7 +162,7 @@ void advManager::DrawCursor(void) {
             );
         } else {
             if (m_cursorCycle == 0)
-                drawFrame = m_cursorFrame + (m_updateMaxY & CURSOR_FLAG_FRAME_CYCLE_MASK)
+                drawFrame = m_cursorFrame + (m_flagFrameCounter & CURSOR_FLAG_FRAME_CYCLE_MASK)
                             + CURSOR_FLAG_FRAME_BASE;
             IconToBitmap(
                 m_flagIcons[gpCurPlayer->m_color],
@@ -172,7 +172,7 @@ void advManager::DrawCursor(void) {
                 drawFrame,
                 ICON_DRAW_OFFSET_FULL
             );
-            m_updateMaxY++;
+            m_flagFrameCounter++;
         }
     }
     if (m_cursorCycle && gConfig.walkSpeed != WALK_SPEED_JUMP) {
@@ -483,9 +483,9 @@ mapCell* advManager::MoveHero(
         occupiedTown->m_occupyingHeroId = TOWN_OCCUPYING_HERO_NONE;
     }
     if (m_routeShown)
-        *(m_visibilityMap + (champion->m_x + xInc) + (champion->m_y + yInc) * MAP_CELL_GRID_SIZE) =
+        *(m_routeMap + (champion->m_x + xInc) + (champion->m_y + yInc) * MAP_CELL_GRID_SIZE) =
             0;
-    m_updateMinX = m_updateMinY = 0;
+    m_scrollOffsetX = m_scrollOffsetY = 0;
     gpGame->SetVisibility(
         m_mapOriginX + xInc + ADVMGR_VIEW_CENTER,
         m_mapOriginY + yInc + ADVMGR_VIEW_CENTER,
@@ -517,16 +517,16 @@ mapCell* advManager::MoveHero(
                 MoveOrigin(xInc, yInc);
                 champion->m_x += xInc;
                 champion->m_y += yInc;
-                m_updateMinX = startVals[xInc + 1];
-                m_updateMinY = startVals[yInc + 1];
+                m_scrollOffsetX = startVals[xInc + 1];
+                m_scrollOffsetY = startVals[yInc + 1];
             }
             tick = KBTickCount();
             if (inc + 1 == numSteps * MOVE_TILE_HALF_COUNT) {
-                m_updateMinX = 0;
-                m_updateMinY = 0;
+                m_scrollOffsetX = 0;
+                m_scrollOffsetY = 0;
             } else {
-                m_updateMinX += xInc * pixelsPerStep;
-                m_updateMinY += yInc * pixelsPerStep;
+                m_scrollOffsetX += xInc * pixelsPerStep;
+                m_scrollOffsetY += yInc * pixelsPerStep;
             }
             if (ComboDraw(0)) {
                 gLimitUpdMinX = UPDATE_NONE;
@@ -568,7 +568,7 @@ mapCell* advManager::MoveHero(
         m_currentTerrain = giGroundToTerrain[inc];
         PlayMusic(m_currentTerrain);
     }
-    m_updateMinX = m_updateMinY = 0;
+    m_scrollOffsetX = m_scrollOffsetY = 0;
     cellPtr = GetCell(m_mapOriginX + m_cursorMapX, m_mapOriginY + m_cursorMapY);
     *eventX = m_mapOriginX + m_cursorMapX;
     *eventY = m_mapOriginY + m_cursorMapY;

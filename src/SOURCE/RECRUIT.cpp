@@ -307,7 +307,7 @@ i16 recruitUnit::Main(struct tag_message& message) {
 VA(0x00451697, 0xbc)
 recruitUnit::recruitUnit(armyGroup* army, i8 creatureType, i16* available) {
     i32 unitCosts[RESOURCE_COUNT];
-    i32 i;
+    i32 resourceIndex;
 
     m_sourceType = RECRUIT_SOURCE_EVENT;
     m_army = army;
@@ -315,12 +315,12 @@ recruitUnit::recruitUnit(armyGroup* army, i8 creatureType, i16* available) {
     m_available = available;
     GetMonsterCost(m_creatureType, unitCosts);
     m_goldCost = unitCosts[RESOURCE_GOLD];
-    for (i = 0; i < RESOURCE_NON_GOLD_END; i++) {
-        if (unitCosts[i])
+    for (resourceIndex = 0; resourceIndex < RESOURCE_NON_GOLD_END; resourceIndex++) {
+        if (unitCosts[resourceIndex])
             break;
     }
-    if (i < RESOURCE_NON_GOLD_END) {
-        m_resourceType = i;
+    if (resourceIndex < RESOURCE_NON_GOLD_END) {
+        m_resourceType = resourceIndex;
         m_resourceCost = unitCosts[m_resourceType];
     } else {
         m_resourceType = RESOURCE_NONE;
@@ -331,20 +331,20 @@ recruitUnit::recruitUnit(armyGroup* army, i8 creatureType, i16* available) {
 VA(0x00451753, 0xd9)
 recruitUnit::recruitUnit(town* townData, i8 dwelling) {
     i32 unitCosts[RESOURCE_COUNT];
-    i32 i;
+    i32 resourceIndex;
 
     m_sourceType = RECRUIT_SOURCE_TOWN;
     m_army = &townData->m_army;
     m_creatureType = gDwellingType[townData->m_type][dwelling];
-    m_available = &townData->m_garrison[dwelling];
+    m_available = &townData->m_dwellingAvailable[dwelling];
     GetMonsterCost(m_creatureType, unitCosts);
     m_goldCost = unitCosts[RESOURCE_GOLD];
-    for (i = 0; i < RESOURCE_NON_GOLD_END; i++) {
-        if (unitCosts[i])
+    for (resourceIndex = 0; resourceIndex < RESOURCE_NON_GOLD_END; resourceIndex++) {
+        if (unitCosts[resourceIndex])
             break;
     }
-    if (i < RESOURCE_NON_GOLD_END) {
-        m_resourceType = i;
+    if (resourceIndex < RESOURCE_NON_GOLD_END) {
+        m_resourceType = resourceIndex;
         m_resourceCost = unitCosts[m_resourceType];
     } else {
         m_resourceType = RESOURCE_NONE;
@@ -365,7 +365,7 @@ void QuickViewRecruit(town* townData, i8 dwelling) {
     i32 avail;
 
     monsterType = gDwellingType[townData->m_type][dwelling];
-    avail = townData->m_garrison[dwelling];
+    avail = townData->m_dwellingAvailable[dwelling];
     GetMonsterCost(monsterType, unitCosts);
     goldCost = unitCosts[RESOURCE_GOLD];
     for (resourceIndex = 0; resourceIndex < RESOURCE_NON_GOLD_END; resourceIndex++) {

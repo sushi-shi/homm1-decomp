@@ -82,7 +82,8 @@ public:
     // Retail constructor and HasGarrison establish this packed prefix.
     i8 m_id;
     i8 m_owner;
-    i8 m_threat;
+    // gTownNames index (GetTownName); NewMap deals each town a unique one.
+    i8 m_nameIndex;
     i8 m_type;
     // XformToCastle sign-extends the map coordinates.
     i8 m_x;
@@ -92,7 +93,9 @@ public:
     i16 m_buildings;
     i8 m_buildState;
     i8 m_unknown19;
-    i16 m_garrison[6];
+    // Creatures waiting in each dwelling for recruitment (recruitUnit's
+    // m_available); grows weekly.
+    i16 m_dwellingAvailable[6];
     // ProcessMapExtra files the cell's map-extra index here; SetupTowns
     // marks towns whose extra record carries a custom setup.
     u8 m_extraIndex;

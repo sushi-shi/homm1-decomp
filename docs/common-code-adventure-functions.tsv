@@ -363,7 +363,7 @@ src/SOURCE/GAME.cpp	0x2b400	playerData::Write	read	file-value	Scalar fields thro
 src/SOURCE/GAME.cpp	0x2b5f2	playerData::Read	read	file-value	Scalar fields through READ_FILE_VALUE; arrays and the pad buffer stay explicit.	READ_FILE_VALUE	retained-exact	100	100
 src/SOURCE/GAME.cpp	0x2b7d3	playerData::NextHero	read	none	Next mobile hero search.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x2b8d3	playerData::HasMobileHero	read	none	Mobility scan.		kept-existing-source	100	100
-src/SOURCE/GAME.cpp	0x2b929	playerData::CountVisitedObelisks	read	none	Bit count.		kept-existing-source	100	100
+src/SOURCE/GAME.cpp	0x2b929	playerData::CountPuzzlePiecesRemoved	read	none	Bit count.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x2b97f	playerData::BuildingsOwned	read	town-building-bit	Building-mask counts; typed building flags are deferred.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x2ba35	playerData::NumOfGivenArtifact	read	none	Artifact count.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x2bab9	ComputeUALoc	read	none	Hint placement.		kept-existing-source	100	100

@@ -1652,23 +1652,23 @@ i8 advManager::CombatMonsterEvent(
     i32 x,
     i32 y,
     i8 heroDefends,
-    i32 fromX,
-    i32 fromY
+    i32 combatX,
+    i32 combatY
 ) {
     i16 i;
     i32 res;
 
     DemobilizeCurrHero();
-    if (fromX == -1) {
-        fromX = x;
-        fromY = y;
+    if (combatX == -1) {
+        combatX = x;
+        combatY = y;
     } else {
-        m_lastQuickViewX = fromX;
-        m_lastQuickViewY = fromY;
-        m_mineGuardianFacingLeft = eventHero->m_x < fromX;
+        m_combatMonsterX = combatX;
+        m_combatMonsterY = combatY;
+        m_combatMonsterFacingLeft = eventHero->m_x < combatX;
         if (ComboDraw(0))
             UpdateScreen(0, 0);
-        m_lastQuickViewX = QUICK_VIEW_CLEARED;
+        m_combatMonsterX = COMBAT_MONSTER_CELL_CLEARED;
     }
     CLEAR_ARMY_GROUP(*gpMonGroup);
     if (count / ARMY_GROUP_SLOT_COUNT > 0) {
@@ -1683,8 +1683,8 @@ i8 advManager::CombatMonsterEvent(
     }
     if (heroDefends)
         res = DoCombat(
-            fromX,
-            fromY,
+            combatX,
+            combatY,
             NULL,
             gpMonGroup,
             NULL,
@@ -1697,8 +1697,8 @@ i8 advManager::CombatMonsterEvent(
         );
     else
         res = DoCombat(
-            fromX,
-            fromY,
+            combatX,
+            combatY,
             eventHero,
             &eventHero->m_army,
             NULL,
