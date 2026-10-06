@@ -28,6 +28,8 @@ editor (`EDITOR.EXE`) as a second target.
 - Comments describe behaviour, not how a match was achieved. Keep cast
   reasons, `VA`/`DATA` annotations and `#line` directives (they pin retail
   assertion line numbers).
+- Layout-fitted spellings (globals' .bss order, locals' /Od slots) use
+  `#define clean storage` aliases; generated branches resolve them.
 - Repository text is self-contained: no references to other projects.
 
 ## Layout

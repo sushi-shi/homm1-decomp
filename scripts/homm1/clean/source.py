@@ -308,6 +308,121 @@ def drop_aliases(text: str) -> str:
     return _ALIAS.sub(DROPPED, text)
 
 
+#: Function-scoped `/Od` frame-slot aliases. VC6 orders a function's named
+#: locals by a hash of their spelling (docs/patterns/vc6-od-frame-slots.md);
+#: where the readable name falls in the wrong slot, the function is bracketed
+#:
+#:     #define minX ourFirstX // frame-slot spelling
+#:     void advManager::UpdateRadar() { i32 minX; ... }
+#:     #undef minX
+#:
+#: The body spells the readable name and the matching build compiles the
+#: storage spelling. The generated trees drop the pair and keep the readable
+#: name, which is what the function then spells throughout.
+_LOCAL_ALIAS = re.compile(r"^[ \t]*#[ \t]*define[ \t]+(\w+)[ \t]+(\w+)[ \t]*"
+                          r"//[ \t]*frame-slot spelling[ \t]*$")
+_LOCAL_MARKER = re.compile(r"//[ \t]*frame-slot spelling")
+_UNDEF = re.compile(r"^[ \t]*#[ \t]*undef[ \t]+(\w+)[ \t]*(?://.*)?$")
+
+
+def local_aliases(text: str) -> list[tuple[int, int, dict[str, str]]]:
+    """Each frame-slot alias group as (first define line, last undef line,
+    {readable: storage}), 0-based and inclusive. Raises ValueError for an
+    unbalanced pair, a group that brackets anything but one function
+    definition, or a spelling the define would capture or split."""
+    lines = text.split("\n")
+    groups: list[tuple[int, int, dict[str, str]]] = []
+    closed_names: set[str] = set()
+    i = 0
+    while i < len(lines):
+        if not _LOCAL_MARKER.search(lines[i]):
+            undef = _UNDEF.match(lines[i])
+            if undef and undef.group(1) in closed_names:
+                raise ValueError(f"line {i + 1}: #undef {undef.group(1)} outside its "
+                                 "function's frame-slot alias group")
+            i += 1
+            continue
+        start, names = i, {}
+        while i < len(lines) and _LOCAL_MARKER.search(lines[i]):
+            define = _LOCAL_ALIAS.match(lines[i])
+            if not define:
+                raise ValueError(f"line {i + 1}: malformed frame-slot alias")
+            readable, storage = define.groups()
+            if readable in names or storage in names.values() or readable == storage:
+                raise ValueError(f"line {i + 1}: duplicate frame-slot alias {readable}")
+            names[readable] = storage
+            i += 1
+        body = i
+        while i < len(lines) and not _UNDEF.match(lines[i]) \
+                and not _LOCAL_MARKER.search(lines[i]):
+            i += 1
+        end = i
+        closed: set[str] = set()
+        while i < len(lines) and (undef := _UNDEF.match(lines[i])) and undef.group(1) in names:
+            if undef.group(1) in closed:
+                raise ValueError(f"line {i + 1}: #undef {undef.group(1)} repeated")
+            closed.add(undef.group(1))
+            i += 1
+        if closed != set(names):
+            missing = ", ".join(sorted(set(names) - closed))
+            raise ValueError(f"line {start + 1}: frame-slot alias {missing} is not "
+                             "#undef'd right after the function's closing brace")
+        _check_extent("\n".join(lines[body:end]), names, start + 1)
+        groups.append((start, i - 1, names))
+        closed_names |= closed
+    return groups
+
+
+_ELABORATED = ("class", "struct", "union", "enum")
+
+
+def _check_extent(function: str, names: dict[str, str], line: int) -> None:
+    """The bracketed text must be one function definition in which each
+    readable name only ever spells that function's own local."""
+    words = [(k, s) for k, s in tokens(function) if k not in ("space", "comment")]
+    braces = [n for n, (k, s) in enumerate(words) if k == "punct" and s in "{}"]
+    if not braces or words[braces[0]][1] != "{" or braces[-1] != len(words) - 1:
+        raise ValueError(f"line {line}: a frame-slot alias group must bracket exactly one "
+                         "function definition")
+    depth = 0
+    for n in braces:
+        depth += 1 if words[n][1] == "{" else -1
+        if depth == 0 and n != braces[-1]:
+            raise ValueError(f"line {line}: a frame-slot alias group brackets more than one "
+                             "function definition")
+    if depth:
+        raise ValueError(f"line {line}: unbalanced braces in an aliased function")
+    for readable, storage in names.items():
+        spelled = [n for n, (k, s) in enumerate(words) if k == "word" and s == readable]
+        if not spelled:
+            raise ValueError(f"line {line}: frame-slot alias {readable} is never used")
+        # The storage spelling may still name a type (`class sample* sound;`
+        # behind `#define sound sample`); anything else would be one name in
+        # the matching build and two in the generated trees.
+        if any(k == "word" and s == storage and words[n - 1][1] not in _ELABORATED
+               for n, (k, s) in enumerate(words)):
+            raise ValueError(f"line {line}: {storage} is also spelled inside the function; "
+                             f"without '#define {readable} {storage}' the two would split")
+        for n in spelled:
+            before = "".join(s for _k, s in words[max(0, n - 2):n])
+            after = "".join(s for _k, s in words[n + 1:n + 3])
+            if n < braces[0] or before.endswith((".", "->", "::")) or after == "::" \
+                    or words[n - 1][1] in _ELABORATED:
+                raise ValueError(f"line {line}: {readable} also spells a parameter, member, "
+                                 "qualified name or type that the alias would capture")
+
+
+def drop_local_aliases(text: str) -> str:
+    """`text` without its (validated) frame-slot define and undef lines."""
+    lines = text.split("\n")
+    for start, end, names in local_aliases(text):
+        for n in range(start, end + 1):
+            undef = _UNDEF.match(lines[n])
+            if _LOCAL_MARKER.search(lines[n]) or (undef and undef.group(1) in names):
+                lines[n] = DROPPED
+    return "\n".join(lines)
+
+
 def rename_words(text: str, renames: dict[str, str], **kind) -> str:
     """`text` with each word token in `renames` replaced, outside comments
     and literals."""
@@ -319,8 +434,10 @@ def rename_words(text: str, renames: dict[str, str], **kind) -> str:
 
 def clean_cpp(text: str, *, keep_lines: bool = False) -> str:
     """The clean form; `keep_lines` gives the line-preserving control form."""
-    if not keep_lines:
-        text = drop_aliases(text)
+    if keep_lines:
+        local_aliases(text)         # validated; the control compiles them as-is
+    else:
+        text = drop_local_aliases(drop_aliases(text))
     text = rewrite(rewrite_directives(strip_comments(text), keep_lines=keep_lines),
                    keep_lines=keep_lines)
     return blank(text) if keep_lines else tidy(text)

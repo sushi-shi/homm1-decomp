@@ -264,9 +264,10 @@ i16 combatManager::Open(i16 priority) {
 
 // A wandering-monster cell keeps the surviving count of the side that held
 // it.
+#define i ii // frame-slot spelling
 VA(0x00419519, 0x211)
 void combatManager::Close(void) {
-    i32 ii;
+    i32 i;
     i32 monsterSide;
 
     StopMusic();
@@ -285,16 +286,16 @@ void combatManager::Close(void) {
     gLimitedCombatUpdatePalette = 0;
     gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, NULL);
     delete m_backgroundBuffer;
-    for (ii = 0; ii < COMBAT_SIDE_COUNT; ii++)
-        UpdateArmyGroup(ii);
+    for (i = 0; i < COMBAT_SIDE_COUNT; i++)
+        UpdateArmyGroup(i);
     if (m_battlefieldCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER)) {
         monsterSide = m_playerId[COMBAT_DEFENDER_SIDE] != GAME_PLAYER_NONE ? static_cast<i8>(1)
                                                                            : static_cast<i8>(0);
         m_battlefieldCell->m_objectMetadata = 0;
-        for (ii = 0; ii < ARMY_GROUP_SLOT_COUNT; ii++) {
-            if (m_armyGroups[monsterSide]->m_creatureTypes[ii] != CREATURE_NONE)
+        for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
+            if (m_armyGroups[monsterSide]->m_creatureTypes[i] != CREATURE_NONE)
                 m_battlefieldCell->m_objectMetadata +=
-                    m_armyGroups[monsterSide]->m_creatureCounts[ii];
+                    m_armyGroups[monsterSide]->m_creatureCounts[i];
         }
     }
     gWindowManager->RemoveWindow(m_combatWindow);
@@ -308,6 +309,7 @@ void combatManager::Close(void) {
     m_active = 0;
     m_combatWindowOpen = 0;
 }
+#undef i
 
 // Copy surviving counts back into the side's army group; a dead stack
 // empties its slot.
@@ -525,6 +527,7 @@ char* combatManager::GetBackgroundName(void) {
 
 // MoreTreesNear: tree (9) against mountain (8) objects within two cells of
 // the battle.
+#define radius pass // frame-slot spelling
 VA(0x0041a123, 0x1d5)
 i8 combatManager::MoreTreesNear(void) {
     i32 yPos;
@@ -535,34 +538,34 @@ i8 combatManager::MoreTreesNear(void) {
     i16 mountainCount;
     i16 originX;
     mapCell* cell;
-    i16 pass;
+    i16 radius;
     i8 nearbyTypeGrid[3][MAP_DIRECTION_COUNT];
     i16 dir;
 
     memset(nearbyTypeGrid, -1, sizeof(nearbyTypeGrid));
     originX = m_combatX;
     originY = m_combatY;
-    for (pass = 0; pass < 3; pass++) {
+    for (radius = 0; radius < 3; radius++) {
         for (dir = 0; dir < MAP_DIRECTION_COUNT; dir++) {
-            xPos = originX + gNormalDirTable[dir].x * pass;
-            yPos = originY + gNormalDirTable[dir].y * pass;
+            xPos = originX + gNormalDirTable[dir].x * radius;
+            yPos = originY + gNormalDirTable[dir].y * radius;
             if (MAP_CELL_IN_BOUNDS(xPos, yPos)) {
                 cell = gAdvManager->GetCell(xPos, yPos);
                 nearbyTileset = cell->m_objectTileset & MAP_CELL_TILESET_MASK;
                 if (nearbyTileset == TILESET_MTN32)
-                    nearbyTypeGrid[pass][dir] = 0;
+                    nearbyTypeGrid[radius][dir] = 0;
                 else if (nearbyTileset == TILESET_TREE32)
-                    nearbyTypeGrid[pass][dir] = 1;
+                    nearbyTypeGrid[radius][dir] = 1;
             }
         }
     }
     treeCount = 0;
     mountainCount = 0;
-    for (pass = 0; pass < 3; pass++) {
+    for (radius = 0; radius < 3; radius++) {
         for (dir = 0; dir < MAP_DIRECTION_COUNT; dir++) {
-            if (nearbyTypeGrid[pass][dir] == 0)
+            if (nearbyTypeGrid[radius][dir] == 0)
                 mountainCount++;
-            if (nearbyTypeGrid[pass][dir] == 1)
+            if (nearbyTypeGrid[radius][dir] == 1)
                 treeCount++;
         }
     }
@@ -570,6 +573,7 @@ i8 combatManager::MoreTreesNear(void) {
         return 1;
     return 0;
 }
+#undef radius
 
 VA(0x0041a2f8, 0x1c4)
 void combatManager::LoadIcons(void) {
@@ -701,11 +705,12 @@ i16 combatManager::GetGridIndex(i16 x, i16 y) {
 }
 
 // CheckApplyGoodMorale rolls the group's morale.
+#define moraleSound sample // frame-slot spelling
 VA(0x0041a8f6, 0x1a5)
 void combatManager::CheckApplyGoodMorale(i32 side, i32 index) {
     armyGroup* group;
     army* currentArmy;
-    class sample* sample;
+    class sample* moraleSound;
     i32 moraleLevel;
 
     if (side < 0 || index < 0)
@@ -724,7 +729,7 @@ void combatManager::CheckApplyGoodMorale(i32 side, i32 index) {
         return;
     gInHighMoraleBonus = 1;
     sprintf(gText, "goodmrle.82M");
-    sample = LoadPlaySample(gText);
+    moraleSound = LoadPlaySample(gText);
     if (currentArmy->m_quantity <= 1)
         sprintf(
             gText,
@@ -743,15 +748,17 @@ void combatManager::CheckApplyGoodMorale(i32 side, i32 index) {
     if (currentArmy->m_stats.attributes & MONSTER_FLAGS_TURN_SPENT)
         currentArmy->m_stats.attributes -= MONSTER_FLAGS_TURN_SPENT;
     currentArmy->m_stats.attributes |= MONSTER_FLAGS_HIGH_MORALE;
-    WaitSample(sample);
+    WaitSample(moraleSound);
 }
+#undef moraleSound
 
 // A computer side skips one bad-morale roll in four.
+#define moraleSound sample // frame-slot spelling
 VA(0x0041aa9b, 0x173)
 i32 combatManager::CheckApplyBadMorale(i32 side, i32 index) {
     armyGroup* group;
     army* currentArmy;
-    class sample* sample;
+    class sample* moraleSound;
     i32 moraleLevel;
 
     if (side < 0 || index < 0)
@@ -763,7 +770,7 @@ i32 combatManager::CheckApplyBadMorale(i32 side, i32 index) {
         return 0;
     if (!m_humanPlayerSide[side] && SRandom(1, 4) == 1)
         return 0;
-    sample = LoadPlaySample("BADMRLE.82M");
+    moraleSound = LoadPlaySample("BADMRLE.82M");
     if (currentArmy->m_quantity <= 1)
         sprintf(
             gText,
@@ -781,18 +788,20 @@ i32 combatManager::CheckApplyBadMorale(i32 side, i32 index) {
     currentArmy->SpellEffect(COMBAT_EFFECT_BAD_MORALE, 180);
     currentArmy->Stand(1);
     currentArmy->m_stats.attributes |= MONSTER_FLAGS_TURN_SPENT;
-    WaitSample(sample);
+    WaitSample(moraleSound);
     return 1;
 }
+#undef moraleSound
 
 // GetNextArmy: the fastest unspent stack, alternating sides, high-morale
 // stacks first.
+#define unused temp // frame-slot spelling
 VA(0x0041ac0e, 0x1d9)
 i8 combatManager::GetNextArmy(i32 checkMorale) {
     army* checkArmy;
     i8 speedLevelIndex;
     i32 sideIter;
-    i16 temp;
+    i16 unused;
     i8 armyCounter;
     i8 stackSide;
     i32 skip;
@@ -835,6 +844,7 @@ i8 combatManager::GetNextArmy(i32 checkMorale) {
     GetControl();
     return 0;
 }
+#undef unused
 
 // IsWinner: the other side surrendered, retreated or has no live stack left.
 VA(0x0041ade7, 0xb5)
@@ -858,6 +868,7 @@ i8 combatManager::IsWinner(i8 side) {
 // HoMM1 catapult: a boulder arcs (or, for the top row, flies straight) at
 // a random standing wall piece; a breach roll knocks it down, otherwise
 // the piece is damaged.
+#define catapultSound sampleInfo // frame-slot spelling
 VA(0x0041ae9c, 0xcf2)
 void combatManager::CatAttack(i8 side) {
     i16 yPos;
@@ -873,14 +884,14 @@ void combatManager::CatAttack(i8 side) {
     i16 endX;
     i16 xDelta;
     i16 startX;
-    class sample* sampleInfo;
+    class sample* catapultSound;
     i8 anyStanding;
     i16 startY;
     i16 topPosY;
 
     if (!m_castleSide[COMBAT_DEFENDER_SIDE])
         return;
-    sampleInfo = NULL;
+    catapultSound = NULL;
     castleColumn = side == COMBAT_ATTACKER_SIDE
                        ? COMBAT_CASTLE_WALL_COLUMN
                        : COMBAT_GRID_LAST_COLUMN - COMBAT_CASTLE_WALL_COLUMN;
@@ -895,7 +906,7 @@ void combatManager::CatAttack(i8 side) {
     gMouseManager->ReallyHidePointer();
     boulderIcon = gResourceManager->GetIcon("boulder.icn");
     sprintf(gText, "catsnd%02d.82M", 0);
-    sampleInfo = LoadPlaySample(gText);
+    catapultSound = LoadPlaySample(gText);
     gMinExtentX = 0;
     gMaxExtentX = 200;
     gMinExtentY = 190;
@@ -1037,9 +1048,9 @@ void combatManager::CatAttack(i8 side) {
             frameIndex %= 3;
         }
     }
-    WaitSample(sampleInfo);
+    WaitSample(catapultSound);
     sprintf(gText, "catsnd%02d.82M", 2);
-    sampleInfo = LoadPlaySample(gText);
+    catapultSound = LoadPlaySample(gText);
     if (m_hexCells[m_catapultTargetRow * COMBAT_GRID_COLUMNS + castleColumn].m_obstacleIndex
         == COMBAT_WALL_DAMAGED)
         m_hexCells[m_catapultTargetRow * COMBAT_GRID_COLUMNS + castleColumn].m_obstacleIndex =
@@ -1117,8 +1128,9 @@ void combatManager::CatAttack(i8 side) {
     DrawFrame(1);
     gResourceManager->Dispose(boulderIcon);
     gMouseManager->ReallyShowPointer();
-    WaitSample(sampleInfo);
+    WaitSample(catapultSound);
 }
+#undef catapultSound
 
 // Unreferenced; reloads the armies and rebuilds the field before a full
 // redraw.

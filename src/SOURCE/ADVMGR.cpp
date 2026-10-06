@@ -2333,44 +2333,48 @@ mapCell* advManager::GetCell(i16 x, i16 y) {
         return &m_mapData[x][y];
 }
 
+#define minX ourFirstX  // frame-slot spelling
+#define minY realFirstY // frame-slot spelling
+#define maxX curEndX    // frame-slot spelling
+#define maxY ourLastY   // frame-slot spelling
 VA(0x00406d7e, 0x4f8)
 void advManager::UpdateRadar(i8 updateScreen, i32 partial) {
     i16 y;
-    i32 ourFirstX;
-    i32 ourLastY;
+    i32 minX;
+    i32 maxY;
     i16 x;
     i16 color;
     i16 theOwner;
-    i32 curEndX;
-    i32 realFirstY;
+    i32 maxX;
+    i32 minY;
     mapCell* cellPtrItem;
 
     if (!partial) {
-        ourFirstX = 0;
-        realFirstY = 0;
-        curEndX = MAP_CELL_GRID_SIZE - 1;
-        ourLastY = MAP_CELL_GRID_SIZE - 1;
+        minX = 0;
+        minY = 0;
+        maxX = MAP_CELL_GRID_SIZE - 1;
+        maxY = MAP_CELL_GRID_SIZE - 1;
     } else {
-        ourFirstX = m_mapOriginX - 1;
-        realFirstY = m_mapOriginY - 1;
-        curEndX = m_mapOriginX + ADVMGR_VIEW_CELL_COUNT;
-        ourLastY = m_mapOriginY + ADVMGR_VIEW_CELL_COUNT;
-        if (ourFirstX < 0)
-            ourFirstX = 0;
-        if (realFirstY < 0)
-            realFirstY = 0;
-        if (curEndX > MAP_CELL_GRID_SIZE - 1)
-            curEndX = MAP_CELL_GRID_SIZE - 1;
-        if (ourLastY > MAP_CELL_GRID_SIZE - 1)
-            ourLastY = MAP_CELL_GRID_SIZE - 1;
+        minX = m_mapOriginX - 1;
+        minY = m_mapOriginY - 1;
+        maxX = m_mapOriginX + ADVMGR_VIEW_CELL_COUNT;
+        maxY = m_mapOriginY + ADVMGR_VIEW_CELL_COUNT;
+        if (minX < 0)
+            minX = 0;
+        if (minY < 0)
+            minY = 0;
+        if (maxX > MAP_CELL_GRID_SIZE - 1)
+            maxX = MAP_CELL_GRID_SIZE - 1;
+        if (maxY > MAP_CELL_GRID_SIZE - 1)
+            maxY = MAP_CELL_GRID_SIZE - 1;
     }
 
     if (!gThisNetHumanPlayer[gCurPlayer])
         return;
 
     gAdvManager->m_heroesLogoShown = 0;
-    for (x = ourFirstX; x <= curEndX; x++) {
-        for (y = realFirstY; y <= ourLastY; y++) {
+    for (x = minX; x <= maxX; x++) {
+        for (y = minY; y <= maxY; y++) {
             if (!(gGame->m_mapExtra[x][y] & gCurPlayerBit)) {
                 m_radarIcon->FillToBuffer(
                     x * RADAR_CELL_PIXELS + RADAR_LEFT,
@@ -2446,12 +2450,16 @@ void advManager::UpdateRadar(i8 updateScreen, i32 partial) {
     );
     if (updateScreen)
         gWindowManager->UpdateScreenRegion(
-            ourFirstX * RADAR_CELL_PIXELS + RADAR_LEFT,
-            realFirstY * RADAR_CELL_PIXELS + RADAR_TOP,
-            (curEndX - ourFirstX + 1) * RADAR_CELL_PIXELS,
-            (ourLastY - realFirstY + 1) * RADAR_CELL_PIXELS
+            minX * RADAR_CELL_PIXELS + RADAR_LEFT,
+            minY * RADAR_CELL_PIXELS + RADAR_TOP,
+            (maxX - minX + 1) * RADAR_CELL_PIXELS,
+            (maxY - minY + 1) * RADAR_CELL_PIXELS
         );
 }
+#undef minX
+#undef minY
+#undef maxX
+#undef maxY
 
 VA(0x00407276, 0x50f)
 void advManager::QuickInfo(i16 cellX, i16 cellY) {
