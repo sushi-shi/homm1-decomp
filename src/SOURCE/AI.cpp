@@ -82,7 +82,7 @@ i32 combatManager::AICheckRetreat(void) {
             }
         }
     }
-    theForces[1 - m_currentSide] *= 1.1;
+    theForces[COMBAT_OPPOSING_SIDE(m_currentSide)] *= 1.1;
     realLoot = artifactTotals[m_currentSide];
     if (artifactTotals[m_currentSide] < COMBAT_AI_MIN_ARTIFACT_VALUE)
         return 0;
@@ -154,7 +154,7 @@ void combatManager::DoCompAI(i8) {
     gpMouseManager->ReallyHidePointer();
     curArmy = &m_armies[m_currentSide][m_currentArmyIndex];
     newPlan = COMBAT_AI_ATTACK_NONE;
-    sideEnemy = 1 - m_currentSide;
+    sideEnemy = COMBAT_OPPOSING_SIDE(m_currentSide);
     mainShooters[m_currentSide] = GetShooterMask(m_currentSide);
     mainShooters[sideEnemy] = GetShooterMask(sideEnemy);
     origMasks[m_currentSide] = GetFlyerMask(m_currentSide);
@@ -284,7 +284,7 @@ finish:
         for (newDir = 0; newDir < COMBAT_DIRECTION_ADJACENT_COUNT; newDir++) {
             keptAdj = curArmy->GetAdjacentCellIndex(giNextActionGridIndex, newDir);
             if (keptAdj > 0 && keptAdj <= 43
-                && gpCombatManager->m_hexCells[keptAdj].m_occupantSide == 1 - m_currentSide) {
+                && gpCombatManager->m_hexCells[keptAdj].m_occupantSide == COMBAT_OPPOSING_SIDE(m_currentSide)) {
                 giNextActionGridIndex = keptAdj;
                 return;
             }
@@ -495,7 +495,7 @@ i8 combatManager::AttemptAdjacentAttack(class army* currentArmy) {
         if (openMaskValue & oneBit) {
             hex = currentArmy->GetAdjacentCellIndex(currentArmy->m_hex, direction);
             if (ValidHex(hex) && (currentArmy->m_stats.attributes & MONSTER_FLAGS_WIDE)
-                    && m_hexCells[hex].m_occupantSide != 1 - m_currentSide
+                    && m_hexCells[hex].m_occupantSide != COMBAT_OPPOSING_SIDE(m_currentSide)
                 || m_hexCells[hex].m_occupantIndex == m_currentArmyIndex
                        && m_hexCells[hex].m_occupantSide == m_currentSide) {
                 if (currentArmy->m_facing == ARMY_FACING_RIGHT)
@@ -505,7 +505,7 @@ i8 combatManager::AttemptAdjacentAttack(class army* currentArmy) {
                 if (hex % COMBAT_GRID_COLUMNS != 0
                     && hex % COMBAT_GRID_COLUMNS != COMBAT_GRID_LAST_COLUMN)
                     hex = currentArmy->GetAdjacentCellIndex(otherHex, direction);
-                if (m_hexCells[hex].m_occupantSide != 1 - m_currentSide)
+                if (m_hexCells[hex].m_occupantSide != COMBAT_OPPOSING_SIDE(m_currentSide))
                     hex = ARMY_HEX_INVALID;
             }
             if (hex >= 0)
@@ -514,11 +514,11 @@ i8 combatManager::AttemptAdjacentAttack(class army* currentArmy) {
         oneBit <<= 1;
     }
     if (currentArmy->m_creatureType == CREATURE_GHOST)
-        victim = GetWorstArmy(1 - m_currentSide, enemyMask);
+        victim = GetWorstArmy(COMBAT_OPPOSING_SIDE(m_currentSide), enemyMask);
     else
-        victim = GetBestArmy(1 - m_currentSide, enemyMask);
+        victim = GetBestArmy(COMBAT_OPPOSING_SIDE(m_currentSide), enemyMask);
     if (victim != COMBAT_ARMY_INDEX_NONE) {
-        SET_NEXT_COMBAT_MOVE(m_armies[1 - m_currentSide][victim].m_hex);
+        SET_NEXT_COMBAT_MOVE(m_armies[COMBAT_OPPOSING_SIDE(m_currentSide)][victim].m_hex);
         return 1;
     } else {
         return 0;

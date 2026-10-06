@@ -49,14 +49,14 @@ extern H1_ENUM_STORAGE(TerrainType, i8) giGroundToTerrain[];
 #define CELL_TERRAIN(cell) (giGroundToTerrain[(cell)->m_tileIndex])
 extern i32 bShowIt;
 extern char gText[];
-extern char* gArmyNames[];
+extern H1_ENUM_ARRAY(char*, gArmyNames, CreatureType, CREATURE_COUNT);
 // Locale-independent resource stems; display names stay in the catalog.
-extern char* gArmySpriteNames[28];
-extern char* gArmyNamesPlural[];
+extern H1_ENUM_ARRAY(char*, gArmySpriteNames, CreatureType, CREATURE_COUNT);
+extern H1_ENUM_ARRAY(char*, gArmyNamesPlural, CreatureType, CREATURE_COUNT);
 // A creature's name, singular for counts at most one.
 #define CREATURE_DISPLAY_NAME(type, count)                                                         \
     ((count) <= 1 ? gArmyNames[type] : gArmyNamesPlural[type])
-extern struct tag_monsterInfo gMonsterDatabase[];
+extern H1_ENUM_ARRAY(struct tag_monsterInfo, gMonsterDatabase, CreatureType, CREATURE_COUNT);
 extern i32 gMinimized;
 extern char* gMemoryErrorTitle;
 extern char* gMemoryRequirements;
@@ -94,7 +94,7 @@ extern i8 bDataEntryTime;
 extern H1_ENUM_STORAGE(DialogWaitType, i8) giWaitType;
 extern i8 gbFunctionComplete;
 // Artifact names (0x00492e60).
-extern char* gArtifactNames[];
+extern H1_ENUM_ARRAY(char*, gArtifactNames, ArtifactType, ARTIFACT_COUNT);
 extern char* gNeutralBuildingNames[];
 extern char* gDwellingNames[];
 // BuyBuild's building descriptions (0x00493c90, 0x00493720) and per-dwelling
@@ -127,7 +127,7 @@ extern i16 gScoreMon[][2];
 extern i16 gScoreCampaignMon[][2];
 // Combat effect icon files by effect (0x00490ef0) and the one loaded effect
 // icon (0x004c709c) army draws and PowEffect share.
-extern char* gCombatFxNames[];
+extern H1_ENUM_ARRAY(char*, gCombatFxNames, CombatEffectAnimation, COMBAT_EFFECT_COUNT);
 extern class icon* gCurLoadedSpellIcon;
 
 // HoMM1 KB name table accessor (retail 0x004516bf).
@@ -268,9 +268,9 @@ void NormalDialog(
 );
 extern char* gTownObjectNames[];
 extern char* gSpellDesc[];
-extern char* gSpellNames[];
+extern H1_ENUM_ARRAY(char*, gSpellNames, SpellType, SPELL_COUNT);
 // QuickInfo's name tables.
-extern char* gTerrainNames[];
+extern H1_ENUM_ARRAY(char*, gTerrainNames, TerrainType, TERRAIN_COUNT);
 extern char* gResourceNames[];
 extern char* gMineNames[];
 extern char* gObjectNames[];
@@ -295,6 +295,23 @@ struct exeGfxConfig {
     i32 height;
     i32 fullScreen;
 };
+// gCurExe and the gConfig.gfx rows: the game and the map editor share the
+// registry layout (ReadPrefs/WritePrefs walk both rows; MOUSEMGR tests the
+// editor).
+H1_ENUM_BEGIN(ConfigExecutable)
+    CONFIG_EXECUTABLE_GAME = 0,
+    CONFIG_EXECUTABLE_EDITOR = 1,
+    CONFIG_EXECUTABLE_COUNT = 2
+H1_ENUM_END(ConfigExecutable)
+
+// gConfig.comPort/baudRate rows: the modem's and the direct (null-modem)
+// connection's settings (the "Modem"/"Direct" registry values).
+H1_ENUM_BEGIN(ConfigConnection)
+    CONFIG_CONNECTION_MODEM = 0,
+    CONFIG_CONNECTION_DIRECT = 1,
+    CONFIG_CONNECTION_COUNT = 2
+H1_ENUM_END(ConfigConnection)
+
 // Buka clears 0x12c bytes at the owner base (retail 0x43ff8). Registry
 // operands place musicSource at 0xb4; the old cdOffset and slowVideo fields
 // are absent. The 0x50 interval still needs its original type recovered.
@@ -305,13 +322,13 @@ struct configStruct {
     i32 autosave;
     i32 showRoute;
     i32 blackoutComputer;
-    exeGfxConfig gfx[2];
+    H1_ENUM_ARRAY(exeGfxConfig, gfx, ConfigExecutable, CONFIG_EXECUTABLE_COUNT);
     i32 firstMapOffset;
     i32 currentMapOffset;
     char _pad_0x050[0x64];
     i32 musicSource;
-    i32 comPort[2];
-    i32 baudRate[2];
+    H1_ENUM_ARRAY(i32, comPort, ConfigConnection, CONFIG_CONNECTION_COUNT);
+    H1_ENUM_ARRAY(i32, baudRate, ConfigConnection, CONFIG_CONNECTION_COUNT);
     char modemInitString[100];
 };
 // The running executable's display row of gConfig.gfx: a live lvalue,
@@ -386,7 +403,7 @@ extern i8 gMons32Width[];
 extern class searchArray* gpSearchArray;
 // UpdateRadar's per-owner and per-terrain radar pixel colours.
 extern i16 gRadarOwnerColor[];
-extern i16 gRadarTerrainColor[];
+extern H1_ENUM_ARRAY(i16, gRadarTerrainColor, TerrainType, 24);
 // Route arrow frame by [next step][this step] path direction.
 extern i8 gRouteFrame[][8];
 // Damage multipliers for attack minus defense, -20..20 (0x00492288).
@@ -398,22 +415,16 @@ extern char* gArmySizeNames[6][2];
 // New-game "King of the Hill" option; campaign scenarios preset it.
 extern i8 gbIAmGreatest;
 extern struct campaignScenario gCampaignScenarios[];
-// Victory/defeat window texts (0x00493c60).
-extern char* gBattleResults[];
-// Combat help lines for the auto-combat, skip and other controls.
-extern char* gCombatHelp[];
-// Command help lines for CombatMessage(short) (0x00492ea8).
-extern char* gCombatMessage[];
 // Spell-book hover help lines (0x00493890).
-extern char* gSpellHelp[];
+extern H1_ENUM_ARRAY(char*, gSpellHelp, SpellHelpText, SPELL_HELP_COUNT);
 // CheckHandleNet hands combat packets back while a battle is running.
 extern i8 gInCombat;
 // Neighbour hex per combat hex and direction (0x00490fd8), -1 off grid.
-extern i8 gCombatAdjacency[45][6];
+extern H1_ENUM_ARRAY(i8, gCombatAdjacency[45], CombatHexDirection, COMBAT_DIRECTION_ADJACENT_COUNT);
 // The loaded combat effect icon's file id (0x004c6d64).
 extern i16 gCurLoadedSpellFileId;
 // ProcessCombatMsg records the hero casting from the combat screen.
-extern i32 giCurGeneral;
+extern H1_ENUM_STORAGE(CombatSide, i32) giCurGeneral;
 // Area spells mark each stack once per cast: [side][army slot].
 extern i8 gArmyEffected[COMBAT_SIDE_COUNT][ARMY_GROUP_SLOT_COUNT];
 extern char* gDifficultyNames[];
@@ -424,7 +435,7 @@ extern i32 gMapSize;
 extern char gLastFilename[FILE_REQUESTER_NAME_SIZE];
 extern char gLastMapName[];
 extern char* gMapSizeNames[];
-extern char* gHeroScreen[];
+extern H1_ENUM_ARRAY(char*, gHeroScreen, HeroScreenText, HERO_TEXT_COUNT);
 extern char* gArtifactDesc[];
 extern char* gClassNames[];
 // Per-class sea mobility multiplier and level thresholds (retail 0x492038,
@@ -451,9 +462,9 @@ i32 HandleAppSpecificMenuCommands(i32 command);
 i32 oldmain(void);
 void UpdateAppSpecificMenus(void* hMenu);
 extern i32 bSpecialHideCursor;
-extern i32 gArtifactBaseRV[];
+extern H1_ENUM_ARRAY(i32, gArtifactBaseRV, ArtifactType, ARTIFACT_REGULAR_END);
 extern i8 gDrawSavedCursor;
-extern i8 gSpellAIFlags[];
+extern H1_ENUM_ARRAY(i8, gSpellAIFlags, SpellType, SPELL_COUNT);
 extern i8 gDwellingType[4][6];
 extern float gSpellCastNumMod[];
 // FightValueOfStack's primary-stat power curve, per-spell AI flags and
@@ -463,7 +474,7 @@ extern float gStatPower[];
 // already started from this turn.
 extern i8 giLimitPlayer;
 extern i32 gMineIncome[];
-extern i16 gSpellAIValue[];
+extern H1_ENUM_ARRAY(i16, gSpellAIValue, SpellType, SPELL_COUNT);
 extern class armyGroup* gpMonGroup;
 extern class philAI* gpPhilAI;
 extern i32 gResourceBaseValue[];
@@ -489,8 +500,6 @@ extern i8 iMPExtendedType;
 extern i32 gInSmacker;
 // Spells taught per mage-guild level (retail 0x492514).
 extern i8 gMageGuildSpellCount[];
-extern char* gCastleInfo[];
-extern char* gTownCommand[];
 extern struct TownBuildingExtent gTownBuildingExtents[4][16];
 // KB's tavern recruit dialog handler (retail 0x0045140e).
 H1_ENUM_RETURN(MessageDispatchResult, i16) RecruitHeroHandler(struct tag_message& message);
@@ -512,7 +521,7 @@ extern i16 boatFrameFlip[];
 extern char* gCombatGroundNames[];
 extern char* gCombatObstacleNames[];
 // Hero level names and the per-class primary-skill gain table.
-extern char* gHeroLevel[];
+extern H1_ENUM_ARRAY(char*, gHeroLevel, HeroLevelText, HERO_LEVEL_TEXT_COUNT);
 extern char* gViewGeneralHelp[];
 // Primary stat, morale and luck labels of the general's stats text, and the
 // combat command help lines HandleViewGeneral shows (entries 1-5).
@@ -547,15 +556,14 @@ extern i16 gCrestHeroClass[];
 // vision radius a claimed town grants and the mines placed per type.
 extern i16 gCrestTownTypes[];
 extern char gcWinText[];
-// Event texts, player colour names and the wandering-monster group of the
-// current encounter.
-extern char* gEventText[];
+// Player colour names and the wandering-monster group of the current
+// encounter (the event texts are EVENTS.h gEventText).
 // Scenario-info labels: human seat handicap and map difficulty names.
 extern char* gHandicapNames[];
 // Default hero names (name, short name) restored with the original data, and
 // a per-cell scratch map cleared on every load.
 extern char* gHeroNames[][2];
-extern i8 gHeroSkillBonus[][9][HERO_PRIMARY_STAT_COUNT];
+extern H1_ENUM_ARRAY(i8, gHeroSkillBonus[4][9], HeroPrimaryStat, HERO_PRIMARY_STAT_COUNT);
 extern char* gHumanPlayerTypeNames[];
 // Campaign: the lord picked on stpcmpgn.bin (1-4; PickLoadGame filters *.CGM
 // on it), scenario titles and briefings, two crest bytes per side (the first
@@ -569,12 +577,10 @@ extern i8 gVisRangeTown;
 // Calendar specials: week/month type and the featured creature or name.
 extern i8 giWeekType;
 extern i8 giWeekTypeExtra;
-extern char* gLuckInfoText[];
 extern char* gLuckText[];
 extern i8 gMageGuildSpellPool[4][8];
 extern char* gMapDifficultyNames[];
 extern char* gMonthNames[];
-extern char* gMoraleInfoText[];
 // Morale and luck names, indexed from -3, and their info-window texts.
 extern char* gMoraleText[];
 // New-game screen: right-click help and the human/computer seat labels.
@@ -616,15 +622,6 @@ H1_ENUM_BEGIN(AdvDisposeLevel)
     ADV_DISPOSE_PARTIAL = 1,
     ADV_DISPOSE_FULL = 2
 H1_ENUM_END(AdvDisposeLevel)
-
-// gCurExe and the gConfig.gfx rows: the game and the map editor share the
-// registry layout (ReadPrefs/WritePrefs walk both rows; MOUSEMGR tests the
-// editor).
-H1_ENUM_BEGIN(ConfigExecutable)
-    CONFIG_EXECUTABLE_GAME = 0,
-    CONFIG_EXECUTABLE_EDITOR = 1,
-    CONFIG_EXECUTABLE_COUNT = 2
-H1_ENUM_END(ConfigExecutable)
 
 // InitMenuHandler's right-click help: the gInitMenuHelp row.
 H1_ENUM_BEGIN(MainMenuHelp)
@@ -684,8 +681,10 @@ H1_ENUM_BEGIN(MoraleInfoText)
     MORALE_INFO_SHIPWRECK = 17,
     MORALE_INFO_COWARDICE = 18,
     MORALE_INFO_NONE = 19,
-    MORALE_INFO_FIVE_ALIGNMENTS = 20
+    MORALE_INFO_FIVE_ALIGNMENTS = 20,
+    MORALE_INFO_COUNT = 21
 H1_ENUM_END(MoraleInfoText)
+extern H1_ENUM_ARRAY(char*, gMoraleInfoText, MoraleInfoText, MORALE_INFO_COUNT);
 
 // KB's luck-screen text table: three verdicts, a header, then one line per
 // luck source in the order ShowLuckInfo appends them.
@@ -700,8 +699,10 @@ H1_ENUM_BEGIN(LuckInfoText)
     LUCK_INFO_CLOVER = 7,
     LUCK_INFO_FAERIE_RING = 8,
     LUCK_INFO_FOUNTAIN = 9,
-    LUCK_INFO_NONE = 10
+    LUCK_INFO_NONE = 10,
+    LUCK_INFO_COUNT = 11
 H1_ENUM_END(LuckInfoText)
+extern H1_ENUM_ARRAY(char*, gLuckInfoText, LuckInfoText, LUCK_INFO_COUNT);
 
 // HoMM1 score-to-monster tables pair a threshold word with a monster word.
 H1_ENUM_CONST_BEGIN(ScoreMonsterConstant)

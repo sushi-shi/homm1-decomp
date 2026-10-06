@@ -16,10 +16,17 @@
 // inline operator[], so VC6 frames and C1 state are unchanged); the strict
 // view is an H1EnumArray whose subscript accepts only Domain (or its typed
 // storage), so a raw integer or another domain's value is a strict-view
-// error. ENUM_ARRAY2 nests two domain-indexed dimensions. A dimension with no
-// domain stays a plain array. STEPPED(Domain) gives a stepped domain (a loop
+// error. ENUM_ARRAY2 nests two domain-indexed dimensions; ENUM_ARRAY_ROWS
+// indexes rows of `columns` plain elements by the domain. A dimension with no
+// domain otherwise stays a plain array (`ENUM_ARRAY(T, name[N], D, COUNT)`
+// is N rows indexed by D). STEPPED(Domain) gives a stepped domain (a loop
 // variable or a `+ 1` to the next member) its increment and offset operators
-// in the strict view; the retail view has none.
+// in the strict view; the retail view has none. H1_ENUM_BIT(Domain, value)
+// is `1 << value` for a mask over a domain. H1_ENUM_SHARED(Domain, storage)
+// declares storage the retail program reuses for a domain value and another
+// integer (its comment names the second use). H1_ENUM_DECODE/ENCODE convert at
+// integer storage the retail program shares between a domain and other
+// integers; the storage's comment names the encoding.
 //
 // ID_BEGIN declares a set of codes carried by a shared integer transport (a
 // window's widget ids in tag_message::id and m_dialogResult, Win32 command
@@ -99,6 +106,50 @@ public:
 private:
     Storage value_;
 };
+// A local or field the retail program uses both for a domain value and for
+// another integer (one stack slot reused by two loops, a byte that holds a
+// value or a count): it compares and converts as either face.
+template<typename Domain, typename Storage> class H1EnumShared {
+public:
+    H1EnumShared() = default;
+    constexpr H1EnumShared(Domain value) : value_(static_cast<Storage>(value)) {}
+    template<typename Value>
+        requires(__is_integral(Value))
+    constexpr H1EnumShared(Value value) : value_(static_cast<Storage>(value)) {}
+    constexpr operator Domain() const {
+        return static_cast<Domain>(value_);
+    }
+    constexpr operator Storage() const {
+        return value_;
+    }
+    H1EnumShared& operator+=(int amount) {
+        value_ = static_cast<Storage>(value_ + amount);
+        return *this;
+    }
+    H1EnumShared& operator-=(int amount) {
+        value_ = static_cast<Storage>(value_ - amount);
+        return *this;
+    }
+    H1EnumShared& operator++() {
+        return *this += 1;
+    }
+    Storage operator++(int postfix) {
+        Storage old = value_;
+        *this += 1;
+        return old;
+    }
+    H1EnumShared& operator--() {
+        return *this -= 1;
+    }
+    Storage operator--(int postfix) {
+        Storage old = value_;
+        *this -= 1;
+        return old;
+    }
+
+private:
+    Storage value_;
+};
 template<typename T, typename Domain, int Count> class H1EnumArray {
 public:
     T elements[Count];
@@ -136,10 +187,32 @@ public:
 };
 #define H1_ENUM_ARRAY(type, name, domain, count)                                                   \
     H1EnumArray<type, domain, static_cast<int>(count)> name
+#define H1_ENUM_ARRAY_ROWS(type, name, domain, count, columns)                                     \
+    H1EnumArray<type[columns], domain, static_cast<int>(count)> name
 #define H1_ENUM_ARRAY2(type, name, domain1, count1, domain2, count2)                               \
     H1EnumArray<H1EnumArray<type, domain2, static_cast<int>(count2)>, domain1,                     \
                 static_cast<int>(count1)>                                                          \
         name
+// The bit of a domain value in a mask over that domain: the strict view
+// accepts only a value of Domain.
+template<typename Domain> constexpr int H1EnumBit(Domain value) {
+    return 1 << static_cast<int>(value);
+}
+#define H1_ENUM_BIT(domain, value) H1EnumBit<domain>(value)
+// A domain value read from or written to integer storage the retail program
+// shares with other integers: a local reused for a second quantity, a byte
+// that packs the value with a flag or offset, a table cell carrying several
+// encodings. DECODE accepts only an integer, ENCODE only a value of Domain.
+template<typename Domain, typename Value>
+    requires(__is_integral(Value))
+constexpr Domain H1EnumDecode(Value value) {
+    return static_cast<Domain>(value);
+}
+template<typename Domain> constexpr int H1EnumEncode(Domain value) {
+    return static_cast<int>(value);
+}
+#define H1_ENUM_DECODE(domain, value) H1EnumDecode<domain>(value)
+#define H1_ENUM_ENCODE(domain, value) H1EnumEncode<domain>(value)
 #define H1_ENUM_STEPPED(name)                                                                      \
     inline constexpr name operator+(name a, int amount) {                                          \
         return static_cast<name>(static_cast<int>(a) + amount);                                    \
@@ -214,6 +287,7 @@ public:
     }                                                                                              \
     ;
 #define H1_ENUM_LOCAL(name, storage) name
+#define H1_ENUM_SHARED(name, storage) H1EnumShared<name, storage>
 #else
 #define H1_STRICT_DOMAINS 0
 #define H1_ENUM_BEGIN(name) enum name {
@@ -241,9 +315,14 @@ public:
     }                                                                                              \
     ;
 #define H1_ENUM_LOCAL(name, storage) storage
+#define H1_ENUM_SHARED(name, storage) storage
 #define H1_ENUM_ARRAY(type, name, domain, count) type name[count]
 #define H1_ENUM_ARRAY2(type, name, domain1, count1, domain2, count2) type name[count1][count2]
+#define H1_ENUM_ARRAY_ROWS(type, name, domain, count, columns) type name[count][columns]
 #define H1_ENUM_STEPPED(name)
+#define H1_ENUM_BIT(domain, value) (1 << (value))
+#define H1_ENUM_DECODE(domain, value) (value)
+#define H1_ENUM_ENCODE(domain, value) (value)
 #endif
 
 #endif

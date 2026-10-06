@@ -987,7 +987,7 @@ void army::DoAttack(i32 retaliation) {
     kills = 0;
     castOk = 0;
     if (retaliation)
-        gpCombatManager->m_currentSide = 1 - gpCombatManager->m_currentSide;
+        gpCombatManager->m_currentSide = COMBAT_OPPOSING_SIDE(gpCombatManager->m_currentSide);
     if (m_creatureType == CREATURE_HYDRA) {
         DoHydraAttack();
         if (m_spellEndCondition == ARMY_CANCEL_SPELLS_AFTER_ATTACK && !retaliation)
@@ -1278,7 +1278,7 @@ secondStrike:
     }
     m_targetSide = lastHex = ARMY_HEX_INVALID;
     if (retaliation)
-        gpCombatManager->m_currentSide = 1 - gpCombatManager->m_currentSide;
+        gpCombatManager->m_currentSide = COMBAT_OPPOSING_SIDE(gpCombatManager->m_currentSide);
 }
 
 // @dead-code

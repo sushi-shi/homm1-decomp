@@ -828,13 +828,13 @@ i8 combatManager::GetNextArmy(i32 checkMorale) {
 
 // IsWinner: the other side surrendered, retreated or has no live stack left.
 VA(0x0041ade7, 0xb5)
-i8 combatManager::IsWinner(i8 side) {
+i8 combatManager::IsWinner(H1_ENUM_PARAM(CombatSide, i8) side) {
     i8 isWinner;
     i16 i;
 
-    if (m_sideDefeated[1 - side])
+    if (m_sideDefeated[COMBAT_OPPOSING_SIDE(side)])
         return 1;
-    if (m_sideRetreated[1 - side])
+    if (m_sideRetreated[COMBAT_OPPOSING_SIDE(side)])
         return 1;
     side ^= 1;
     isWinner = 1;

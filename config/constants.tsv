@@ -57,7 +57,6 @@
 *	*	*	call-argument	NormalDialog(* argument [34]	dialog window x and y in pixels (-1 centres it, Buka's default)
 *	*	0	call-argument	NormalDialog(* argument [68]	unused resource quantity: the slot shows no amount (NORMAL_DIALOG_NO_RESOURCE, luck/morale icons)
 *	*	0	call-argument	EventWindow(* argument [57]	unused resource quantity forwarded to NormalDialog (same slots)
-*	*	*	call-argument	GiveExperience(* argument 2	the experience an event gives
 *	*	0	call-argument	RegSetValueExA(* argument 3	RegSetValueExA's Reserved argument, which must be 0
 *	*	[01]	call-argument	DoDialog(* argument 3	heroWindowManager::DoDialog's fade-in flag
 *	*	[01]	call-argument	DrawFrame(i8) argument 1	combatManager::DrawFrame's update-screen flag
@@ -284,7 +283,6 @@ src/SOURCE/ARMY.cpp	*	1	trivial-function-literal	1 equality SRandom()	the chosen
 src/SOURCE/ARMY.cpp	*	*	arithmetic	operator % SRandom()	a random roll folded into a smaller range
 src/SOURCE/HERO.cpp	*	*	call-argument	ViewArmy(* argument [12]	the army view window's x and y in pixels
 src/SOURCE/HERO.cpp	*	*	call-argument	TrimLoopingSounds(* argument 1	the number of looping environment sounds kept
-src/SOURCE/AI.cpp	*	1	call-argument	Get[BW]*Army(* argument 1	the opposing side (1 - m_currentSide)
 src/SOURCE/HERO.cpp	*	1	call-argument	GetExperience(* argument 1	the next level
 src/SOURCE/FLY.cpp	*	0	call-argument	GetBestDirection(* argument 3	no blocked directions
 src/SOURCE/HERO.cpp	*	0	call-argument	NormalDialog(* argument 2	the quick-view test that picks the dialog type
@@ -596,8 +594,6 @@ src/SOURCE/CMBTMGR.cpp	combatManager::CheckApplyBadMorale	2	store	store to m_ani
 src/SOURCE/CMBTMGR.cpp	combatManager::ExperienceValueOfStack	500	arithmetic	*	the experience bonus for defeating a hero
 src/SOURCE/COMMAND.cpp	combatManager::SetCombatDirections	*	array-index	array subscript m_directionMap	the pointer sectors of the wide-stack attack directions
 src/SOURCE/COMMAND.cpp	combatManager::ProcessCombatMsg	*	comparison-or-bound	operator [<>]= mouseX	the auto-combat / skip strip edges in pixels
-src/SOURCE/COMMAND.cpp	*	1	call-argument	*(i8) argument 1	1 - side: the opposing side
-src/SOURCE/COMMAND.cpp	combatManager::DoCommand	1	call-argument	ViewGeneral(* argument 1	1 - side: the opposing side
 src/SOURCE/COMMAND.cpp	WinCombatHandler	*	*	*	the victory animation's frame delay and frame count
 src/SOURCE/COMMAND.cpp	combatManager::ShowWinLoseArtifact	*	*	*	the result panel's pixel layout and widget slots
 src/SOURCE/COMMAND.cpp	combatManager::ShowDeadArmies	*	*	*	the casualty panel's pixel layout and widget slots

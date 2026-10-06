@@ -36,6 +36,18 @@ def _arg(index: int, template: str = "{}"):
     return rule
 
 
+_SIMPLE_OPERAND = re.compile(r"[A-Za-z_][\w.]*(?:->[\w.]+|\[[^\[\]]*\])*|\d+")
+
+
+def _parenthesized(index: int):
+    """The retail `(value)` expansion, without parentheses a lone operand
+    does not need."""
+    def rule(args: list[str]) -> str:
+        value = args[index].strip()
+        return value if _SIMPLE_OPERAND.fullmatch(value) else f"({value})"
+    return rule
+
+
 def _enum_open(args: list[str]) -> str:
     return f"enum {args[0]} {{"
 
@@ -67,7 +79,12 @@ CALL_RULES = {
     "H1_ENUM_ID_END": (1, _enum_close),
     "H1_ENUM_ARRAY": (4, lambda args: f"{args[0]} {args[1]}[{args[3]}]"),
     "H1_ENUM_ARRAY2": (6, lambda args: f"{args[0]} {args[1]}[{args[3]}][{args[5]}]"),
+    "H1_ENUM_ARRAY_ROWS": (5, lambda args: f"{args[0]} {args[1]}[{args[3]}][{args[4]}]"),
     "H1_ENUM_STEPPED": (1, _drop),
+    "H1_ENUM_SHARED": (2, _arg(1)),
+    "H1_ENUM_BIT": (2, lambda args: f"(1 << {_parenthesized(1)(args)})"),
+    "H1_ENUM_DECODE": (2, _parenthesized(1)),
+    "H1_ENUM_ENCODE": (2, _parenthesized(1)),
     "H1_ENUM_PARAM": (2, _arg(1)),
     "H1_ENUM_RETURN": (2, _arg(1)),
     "H1_ENUM_LOCAL": (2, _arg(1)),
@@ -84,6 +101,7 @@ WORD_RULES = {
 #: Names that must not survive anywhere outside literals.
 RESIDUE_NAMES = frozenset(CALL_RULES) | frozenset(WORD_RULES) | {
     "HOMM1_MATCH_H", "HOMM1_DOMAINS_H", "HOMM1_H1_MACROS_H", "H1EnumStorage",
+    "H1EnumShared", "H1EnumArray", "H1EnumBit", "H1EnumDecode", "H1EnumEncode",
 }
 RESIDUE_PREFIXES = ("H1_ENUM_",)
 

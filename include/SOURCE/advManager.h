@@ -236,7 +236,7 @@ public:
     class tileset* m_groundTiles;
     class tileset* m_cloudTiles;
     class tileset* m_stoneTiles;
-    class icon* m_objectIcons[ADVMGR_OBJECT_ICON_COUNT];
+    H1_ENUM_ARRAY(class icon*, m_objectIcons, MapTileset, ADVMGR_OBJECT_ICON_COUNT);
     class icon* m_puzzleIcon;
     class icon* m_cloudOverlayIcon;
     i16 m_mapOriginX;
@@ -252,10 +252,10 @@ public:
     i16 m_updateMaxX;
     i16 m_updateMaxY;
     i8 m_animationPhases[ADVMGR_ANIMATION_PHASE_COUNT];
-    class icon* m_heroIcons[ADVMGR_HERO_ICON_COUNT];
+    H1_ENUM_ARRAY(class icon*, m_heroIcons, AdventureHeroIcon, ADVMGR_HERO_ICON_COUNT);
     class icon* m_boatShadowIcon;
-    class icon* m_flagIcons[ADVMGR_PLAYER_COLOR_COUNT];
-    class icon* m_boatFlagIcons[ADVMGR_PLAYER_COLOR_COUNT];
+    H1_ENUM_ARRAY(class icon*, m_flagIcons, PlayerColor, ADVMGR_PLAYER_COLOR_COUNT);
+    H1_ENUM_ARRAY(class icon*, m_boatFlagIcons, PlayerColor, ADVMGR_PLAYER_COLOR_COUNT);
     i8 m_cursorActive;
     i8 m_drawHeroShadows;
     u8 m_cursorType;
@@ -278,7 +278,7 @@ public:
     i32 m_activeSoundMask;
     adventureSoundCell m_activeSounds[ADVMGR_ACTIVE_SOUND_COUNT];
     class sample* m_loopingSamples[ADVMGR_ENVIRONMENT_SOUND_COUNT];
-    class sample* m_cursorSamples[ADVMGR_CURSOR_SAMPLE_COUNT];
+    H1_ENUM_ARRAY(class sample*, m_cursorSamples, TerrainType, ADVMGR_CURSOR_SAMPLE_COUNT);
     i8 m_identifyHeroActive;
     i8 m_openState;
     // Main drops message types outside this mask (Open sets 0x32f).

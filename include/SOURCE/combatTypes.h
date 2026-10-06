@@ -20,11 +20,33 @@ H1_ENUM_BEGIN(CombatHexDirection)
     COMBAT_DIRECTION_WESTERN_FIRST = 3,
     COMBAT_DIRECTION_WESTERN_LAST = 5,
     COMBAT_DIRECTION_WIDE_FIRST = 6,
-    COMBAT_DIRECTION_OPPOSITE_OFFSET = 3,
+    COMBAT_DIRECTION_ADJACENT_FIRST = 0,
     COMBAT_DIRECTION_ADJACENT_COUNT = 6,
     COMBAT_DIRECTION_LAST = 7,
     COMBAT_DIRECTION_COUNT = 8
 H1_ENUM_END(CombatHexDirection)
+H1_ENUM_STEPPED(CombatHexDirection)
+// The adjacent direction half way round the six.
+#if H1_STRICT_DOMAINS
+inline constexpr CombatHexDirection CombatOppositeAdjacent(CombatHexDirection direction);
+#define COMBAT_OPPOSITE_ADJACENT(direction) CombatOppositeAdjacent(direction)
+#else
+#define COMBAT_OPPOSITE_ADJACENT(direction)                                                        \
+    (((direction) + COMBAT_DIRECTION_OPPOSITE_OFFSET) % COMBAT_DIRECTION_ADJACENT_COUNT)
+#endif
+
+// OppositeDirection turns an adjacent direction half way round the six.
+H1_ENUM_CONST_BEGIN(CombatDirectionConstant)
+    COMBAT_DIRECTION_OPPOSITE_OFFSET = 3
+H1_ENUM_CONST_END(CombatDirectionConstant)
+#if H1_STRICT_DOMAINS
+inline constexpr CombatHexDirection CombatOppositeAdjacent(CombatHexDirection direction) {
+    return static_cast<CombatHexDirection>(
+        (static_cast<int>(direction) + COMBAT_DIRECTION_OPPOSITE_OFFSET)
+        % static_cast<int>(COMBAT_DIRECTION_ADJACENT_COUNT)
+    );
+}
+#endif
 
 // combatManager::m_directionMap: the attack pointer's 24 sectors around the
 // target hex, four per neighbour direction; SetCombatDirections marks
@@ -38,12 +60,30 @@ H1_ENUM_CONST_END(CombatPointerSectorConstant)
 // combatManager's per-side arrays (m_armies, m_heroes, m_playerId, ...).
 // SetupCombat stores the attacker in side 1 and the defender in side 0; -1
 // marks an empty hex or no target.
+// A combat side. combatManager::m_combatResult holds the side that won
+// (CheckWin; a retreating side loses to the other) and DoVictory indexes the
+// per-side tables by it: DRAW (no side) when both sides fall, PENDING from
+// Open until the battle ends; advManager::DoCombat switches on it for losses.
 H1_ENUM_BEGIN(CombatSide)
     COMBAT_SIDE_NONE = -1,
     COMBAT_DEFENDER_SIDE = 0,
     COMBAT_ATTACKER_SIDE = 1,
-    COMBAT_SIDE_COUNT = 2
+    COMBAT_SIDE_COUNT = 2,
+    COMBAT_RESULT_DRAW = COMBAT_SIDE_NONE,
+    COMBAT_RESULT_DEFENDER = COMBAT_DEFENDER_SIDE,
+    COMBAT_RESULT_ATTACKER = COMBAT_ATTACKER_SIDE,
+    COMBAT_RESULT_PENDING = 3
 H1_ENUM_END(CombatSide)
+H1_ENUM_STEPPED(CombatSide)
+// The other of the two sides.
+#if H1_STRICT_DOMAINS
+inline constexpr CombatSide CombatOpposingSide(CombatSide side) {
+    return static_cast<CombatSide>(1 - static_cast<int>(side));
+}
+#define COMBAT_OPPOSING_SIDE(side) CombatOpposingSide(side)
+#else
+#define COMBAT_OPPOSING_SIDE(side) (1 - (side))
+#endif
 
 // army::m_facing, also passed as the sprite orientation: the attacker (side
 // 1) starts at column 1 with facing side ^ 1 = 0, so 0 faces right and 1 is
@@ -123,15 +163,6 @@ H1_ENUM_CONST_BEGIN(CombatHeroHex)
     COMBAT_DEFENDER_HERO_HEX = 26
 H1_ENUM_CONST_END(CombatHeroHex)
 
-// combatManager::m_combatResult, the side that won (CheckWin; a retreating
-// side loses to the other), DRAW when both sides fall, PENDING from Open
-// until the battle ends; advManager::DoCombat switches on it for losses.
-H1_ENUM_BEGIN(CombatResult)
-    COMBAT_RESULT_DRAW = -1,
-    COMBAT_RESULT_DEFENDER = 0,
-    COMBAT_RESULT_ATTACKER = 1,
-    COMBAT_RESULT_PENDING = 3
-H1_ENUM_END(CombatResult)
 
 // A side argument meaning both sides: CastMassSpell's castSide (mass dispel)
 // and the spell AI's FirstArmy/EffectSpellCure target side.

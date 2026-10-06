@@ -130,7 +130,7 @@ void combatManager::DetermineEffectOfSpell(i32 spell, i32* bestEffect, i32* best
         case SPELL_BERZERKER:
         case SPELL_PARALYZE:
             spellMode = SPELL_AI_ENEMY;
-            owner = 1 - m_currentSide;
+            owner = COMBAT_OPPOSING_SIDE(m_currentSide);
             break;
         default:
             *bestEffect = 0;
@@ -173,7 +173,7 @@ void combatManager::DetermineEffectOfSpell(i32 spell, i32* bestEffect, i32* best
             case SPELL_BLESS:
             case SPELL_PROTECTION:
             case SPELL_ANTI_MAGIC:
-                if (spell == SPELL_ANTI_MAGIC && m_heroes[1 - m_currentSide] == NULL)
+                if (spell == SPELL_ANTI_MAGIC && m_heroes[COMBAT_OPPOSING_SIDE(m_currentSide)] == NULL)
                     spellEffect = 0;
                 else
                     spellEffect = RawEffectSpellInfluence(targetPtr, spell) >> gSpellAIEffectShift;
@@ -373,7 +373,7 @@ void combatManager::EffectSpellCure(i32* effect, i32 targetSide, i8 cure) {
         } else
             *effect += prevNegEffect;
         if (targetSide == COMBAT_SIDE_ANY && curSide == m_currentSide)
-            curSide = 1 - m_currentSide;
+            curSide = COMBAT_OPPOSING_SIDE(m_currentSide);
         else
             done = 1;
     }
@@ -490,7 +490,7 @@ void combatManager::EffectSpellDamage(i32* effect, i32 spell, i32 damagePerPower
         if (fightValue[m_currentSide] <= 0)
             *effect = 100000000 - gSpellAIValue[spell];
         else
-            *effect = fightValue[1 - m_currentSide] - fightValue[m_currentSide];
+            *effect = fightValue[COMBAT_OPPOSING_SIDE(m_currentSide)] - fightValue[m_currentSide];
     } else
-        *effect = partValue[1 - m_currentSide] - partValue[m_currentSide];
+        *effect = partValue[COMBAT_OPPOSING_SIDE(m_currentSide)] - partValue[m_currentSide];
 }

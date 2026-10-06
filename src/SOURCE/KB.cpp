@@ -39,6 +39,7 @@
 #include <SOURCE/artifactTypes.h>
 #include <SOURCE/campaignTypes.h>
 #include <SOURCE/creatureTypes.h>
+#include <SOURCE/EVENTS.h>
 #include <SOURCE/kbwin.h>
 #include <SOURCE/dialogTypes.h>
 #include <SOURCE/NOOPT.h>
@@ -1401,7 +1402,7 @@ char* gPowEffectNames[16] = {
     "cloud.icn",
 };
 DATA(0x00490348)
-char* gCombatFxNames[26] = {
+H1_ENUM_ARRAY(char*, gCombatFxNames, CombatEffectAnimation, COMBAT_EFFECT_COUNT) = {
     "redfire.icn", "elecfire.icn", "magic04.icn", "magic01.icn", "magic01.icn",  "magic02.icn",
     "magic02.icn", "magic06.icn",  "magic07.icn", "magic01.icn", "magic06.icn",  "magic08.icn",
     "magic07.icn", "magic01.icn",  "magic01.icn", "magic02.icn", "reddeath.icn", "magic03.icn",
@@ -1409,12 +1410,12 @@ char* gCombatFxNames[26] = {
     "moraleg.icn", "moraleb.icn",
 };
 DATA(0x004903b0)
-i16 gSpellAIValue[29] = {
+H1_ENUM_ARRAY(i16, gSpellAIValue, SpellType, SPELL_COUNT) = {
     500,  350,  300, 400, 550, 900, 400, 500, 300, 350, 250, 0, 100,  150, 1000,
     2000, 1700, 700, 700, 0,   0,   0,   0,   0,   0,   0,   0, 1200, 0,
 };
 DATA(0x004903ec)
-i8 gSpellAIFlags[29] = {
+H1_ENUM_ARRAY(i8, gSpellAIFlags, SpellType, SPELL_COUNT) = {
     3, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
 };
 DATA(0x0049040c)
@@ -1425,7 +1426,7 @@ i8 gMageGuildSpellPool[4][8] = {
     {27, 4, 15, 17, 28, 24, 28, 27},
 };
 DATA(0x0049042c)
-i8 gCombatAdjacency[45][6] = {
+H1_ENUM_ARRAY(i8, gCombatAdjacency[45], CombatHexDirection, COMBAT_DIRECTION_ADJACENT_COUNT) = {
     {-1, -1, -1, -1, -1, -1}, {-1, 2, 10, -1, -1, -1},  {-1, 3, 11, 10, 1, -1},
     {-1, 4, 12, 11, 2, -1},   {-1, 5, 13, 12, 3, -1},   {-1, 6, 14, 13, 4, -1},
     {-1, 7, 15, 14, 5, -1},   {-1, -1, 16, 15, 6, -1},  {-1, -1, -1, -1, -1, -1},
@@ -1450,7 +1451,7 @@ DATA(0x0049057c)
 // Four player colors and the neutral-owner color; the following bytes are linker alignment.
 i16 gRadarOwnerColor[5] = {79, 105, 200, 129, 10};
 DATA(0x00490588)
-i16 gRadarTerrainColor[24] = {
+H1_ENUM_ARRAY(i16, gRadarTerrainColor, TerrainType, 24) = {
     82,  99, 7,   180, 26,  123, 55, 0,  16, 48, 98, 160,
     126, 74, 110, 179, 100, 218, 12, 12, 12, 12, 12, 12,
 };
@@ -3012,7 +3013,7 @@ i32 gStartingResources[4][7] = {
 DATA(0x00490d7c)
 i32 gMineIncome[7] = {2, 1, 2, 1, 1, 1, 1000};
 DATA(0x00490d98)
-i32 gArtifactBaseRV[37] = {
+H1_ENUM_ARRAY(i32, gArtifactBaseRV, ArtifactType, ARTIFACT_REGULAR_END) = {
     9000, 22000, 18000, 14000, 6000, 4000, 4000, 5600, 1200, 1200, 1200, 1200, -1200,
     2000, 1800,  1800,  2000,  1000, 3600, 5600, 4000, 5040, 2700, 3900, 4950, 5850,
     7000, 6000,  4000,  4500,  2250, 1200, 1200, 1200, 1200, 3500, 1500,
@@ -3039,7 +3040,7 @@ float gClassNavigationMod[8] = {1.0f, 1.0f, 2.0f, 1.0f, 1.0f, 1.3f, 1.0f, 1.0f};
 DATA(0x00491400)
 i8 gVisRangeTown = 5;
 DATA(0x00491408)
-tag_monsterInfo gMonsterDatabase[28] = {
+H1_ENUM_ARRAY(tag_monsterInfo, gMonsterDatabase, CreatureType, CREATURE_COUNT) = {
     {20, 18, 9, 12, 1, 1, 1, 0, 1, 1, 1, 1, 5, 0, {3, 0, 18, 0, 5, 0}, 0},
     {150, 256, 17, 8, 10, 10, 1, 3, 5, 3, 2, 3, 5, 12, {3, 0, 4, 0, 5, 0}, 4},
     {200, 399, 20, 5, 15, 15, 2, 0, 5, 9, 3, 4, 6, 0, {3, 0, 4, 0, 5, 0}, 0},
@@ -3266,7 +3267,7 @@ i16 gCrestTownTypes[4] = {3, 2, 0, 1};
 DATA(0x00491ff0)
 i16 gCrestHeroClass[4] = {3, 1, 0, 2};
 DATA(0x00491ff8)
-i8 gHeroSkillBonus[4][9][4] = {
+H1_ENUM_ARRAY(i8, gHeroSkillBonus[4][9], HeroPrimaryStat, HERO_PRIMARY_STAT_COUNT) = {
     {{20, 60, 10, 10},
      {60, 20, 10, 10},
      {20, 60, 10, 10},
@@ -3383,7 +3384,7 @@ i32 gRemoteReady = 0;
 DATA(0x004a9914)
 i32 gHeartbeatSeen = 0;
 DATA(0x0049238c)
-char* gArtifactNames[38] = {
+H1_ENUM_ARRAY(char*, gArtifactNames, ArtifactType, ARTIFACT_COUNT) = {
     localization::Tr("table.gArtifactNames.0"),  localization::Tr("table.gArtifactNames.1"),
     localization::Tr("table.gArtifactNames.2"),  localization::Tr("table.gArtifactNames.3"),
     localization::Tr("table.gArtifactNames.4"),  localization::Tr("table.gArtifactNames.5"),
@@ -3491,7 +3492,7 @@ char* gClassNames[4] = {
     localization::Tr("table.gClassNames.3")
 };
 DATA(0x0049258c)
-char* gArmyNames[28] = {
+H1_ENUM_ARRAY(char*, gArmyNames, CreatureType, CREATURE_COUNT) = {
     localization::Tr("table.gArmyNames.0"),  localization::Tr("table.gArmyNames.1"),
     localization::Tr("table.gArmyNames.2"),  localization::Tr("table.gArmyNames.3"),
     localization::Tr("table.gArmyNames.4"),  localization::Tr("table.gArmyNames.5"),
@@ -3509,13 +3510,13 @@ char* gArmyNames[28] = {
 };
 // Buka separates resource stems from translated creature display names.
 DATA(0x004925fc)
-char* gArmySpriteNames[28] = {"peasant", "archer",   "pikeman", "swordsman", "cavalry", "paladin",
+H1_ENUM_ARRAY(char*, gArmySpriteNames, CreatureType, CREATURE_COUNT) = {"peasant", "archer",   "pikeman", "swordsman", "cavalry", "paladin",
                               "goblin",  "orc",      "wolf",    "ogre",      "troll",   "cyclops",
                               "sprite",  "dwarf",    "elf",     "druid",     "unicorn", "phoenix",
                               "centaur", "gargoyle", "griffin", "minotaur",  "hydra",   "dragon",
                               "rogue",   "nomad",    "ghost",   "genie"};
 DATA(0x0049266c)
-char* gArmyNamesPlural[28] = {
+H1_ENUM_ARRAY(char*, gArmyNamesPlural, CreatureType, CREATURE_COUNT) = {
     localization::Tr("table.gArmyNamesPlural.0"),  localization::Tr("table.gArmyNamesPlural.1"),
     localization::Tr("table.gArmyNamesPlural.2"),  localization::Tr("table.gArmyNamesPlural.3"),
     localization::Tr("table.gArmyNamesPlural.4"),  localization::Tr("table.gArmyNamesPlural.5"),
@@ -3532,7 +3533,7 @@ char* gArmyNamesPlural[28] = {
     localization::Tr("table.gArmyNamesPlural.26"), localization::Tr("table.gArmyNamesPlural.27"),
 };
 DATA(0x004926dc)
-char* gSpellNames[29] = {
+H1_ENUM_ARRAY(char*, gSpellNames, SpellType, SPELL_COUNT) = {
     localization::Tr("table.gSpellNames.0"),  localization::Tr("table.gSpellNames.1"),
     localization::Tr("table.gSpellNames.2"),  localization::Tr("table.gSpellNames.3"),
     localization::Tr("table.gSpellNames.4"),  localization::Tr("table.gSpellNames.5"),
@@ -3575,7 +3576,7 @@ char* gDwellingNames[24] = {
     localization::Tr("table.gDwellingNames.22"), localization::Tr("table.gDwellingNames.23"),
 };
 DATA(0x004927cc)
-char* gTerrainNames[7] = {
+H1_ENUM_ARRAY(char*, gTerrainNames, TerrainType, TERRAIN_COUNT) = {
     localization::Tr("table.gTerrainNames.0"),
     localization::Tr("table.gTerrainNames.1"),
     localization::Tr("table.gTerrainNames.2"),
@@ -3692,7 +3693,7 @@ char* gTownNames[36] = {
     localization::Tr("table.gTownNames.34"), localization::Tr("table.gTownNames.35"),
 };
 DATA(0x004929ac)
-char* gEventText[77] = {
+H1_ENUM_ARRAY(char*, gEventText, MapEventTextId, EVENT_TEXT_COUNT) = {
     localization::Tr("table.gEventText.0"),  localization::Tr("table.gEventText.1"),
     localization::Tr("table.gEventText.2"),  localization::Tr("table.gEventText.3"),
     localization::Tr("table.gEventText.4"),  localization::Tr("table.gEventText.5"),
@@ -3901,7 +3902,7 @@ char* gArmySizeNames[6][2] = {
     {localization::Tr("table.gArmySizeNames.10"), localization::Tr("table.gArmySizeNames.11")},
 };
 DATA(0x00492d24)
-char* gHeroScreen[19] = {
+H1_ENUM_ARRAY(char*, gHeroScreen, HeroScreenText, HERO_TEXT_COUNT) = {
     localization::Tr("table.gHeroScreen.0"),  localization::Tr("table.gHeroScreen.1"),
     localization::Tr("table.gHeroScreen.2"),  localization::Tr("table.gHeroScreen.3"),
     localization::Tr("table.gHeroScreen.4"),  localization::Tr("table.gHeroScreen.5"),
@@ -3914,7 +3915,7 @@ char* gHeroScreen[19] = {
     localization::Tr("table.gHeroScreen.18"),
 };
 DATA(0x00492d70)
-char* gCastleInfo[14] = {
+H1_ENUM_ARRAY(char*, gCastleInfo, TownCastleInfoText, TOWN_CASTLE_INFO_COUNT) = {
     localization::Tr("table.gCastleInfo.0"),
     localization::Tr("table.gCastleInfo.1"),
     localization::Tr("table.gCastleInfo.2"),
@@ -3931,7 +3932,7 @@ char* gCastleInfo[14] = {
     localization::Tr("table.gCastleInfo.13"),
 };
 DATA(0x00492da8)
-char* gLuckInfoText[11] = {
+H1_ENUM_ARRAY(char*, gLuckInfoText, LuckInfoText, LUCK_INFO_COUNT) = {
     localization::Tr("table.gLuckInfoText.0"),
     localization::Tr("table.gLuckInfoText.1"),
     localization::Tr("table.gLuckInfoText.2"),
@@ -3961,7 +3962,7 @@ char* gPlayerTypeNames[5] = {
     localization::Tr("table.gPlayerTypeNames.4")
 };
 DATA(0x00492df8)
-char* gSpellHelp[8] = {
+H1_ENUM_ARRAY(char*, gSpellHelp, SpellHelpText, SPELL_HELP_COUNT) = {
     localization::Tr("table.gSpellHelp.0"),
     localization::Tr("table.gSpellHelp.1"),
     localization::Tr("table.gSpellHelp.2"),
@@ -4026,7 +4027,7 @@ char* gViewGeneralHelp[6] = {
     localization::Tr("table.gViewGeneralHelp.5"),
 };
 DATA(0x00492ea8)
-char* gCombatMessage[9] = {
+H1_ENUM_ARRAY(char*, gCombatMessage, CombatMessageText, COMBAT_TEXT_COUNT) = {
     "",
     localization::Tr("table.gCombatMessage.1"),
     localization::Tr("table.gCombatMessage.2"),
@@ -4038,16 +4039,16 @@ char* gCombatMessage[9] = {
     localization::Tr("table.gCombatMessage.8"),
 };
 DATA(0x00492ecc)
-char* gHeroLevel[3] = {
+H1_ENUM_ARRAY(char*, gHeroLevel, HeroLevelText, HERO_LEVEL_TEXT_COUNT) = {
     localization::Tr("table.gHeroLevel.0"),
     localization::Tr("table.gHeroLevel.1"),
     localization::Tr("table.gHeroLevel.2")
 };
 DATA(0x00492ed8)
-char* gCombatHelp[3] =
+H1_ENUM_ARRAY(char*, gCombatHelp, CombatHelpText, COMBAT_HELP_COUNT) =
     {localization::Tr("table.gCombatHelp.0"), localization::Tr("table.gCombatHelp.1"), ""};
 DATA(0x00492ee4)
-char* gTownCommand[22] = {
+H1_ENUM_ARRAY(char*, gTownCommand, TownCommandText, TOWN_TEXT_COUNT) = {
     localization::Tr("table.gTownCommand.0"),  localization::Tr("table.gTownCommand.1"),
     localization::Tr("table.gTownCommand.2"),  localization::Tr("table.gTownCommand.3"),
     localization::Tr("table.gTownCommand.4"),  localization::Tr("table.gTownCommand.5"),
@@ -4215,7 +4216,7 @@ char* gSetupGameHelp[4] = {
     localization::Tr("table.gSetupGameHelp.3"),
 };
 DATA(0x00493188)
-char* gBattleResults[11] = {
+H1_ENUM_ARRAY(char*, gBattleResults, BattleResultText, BATTLE_RESULT_COUNT) = {
     localization::Tr("table.gBattleResults.0"),
     localization::Tr("table.gBattleResults.1"),
     localization::Tr("table.gBattleResults.2"),
@@ -4239,7 +4240,7 @@ char* gNeutralBuildingDescriptions[7] = {
     localization::Tr("table.gNeutralBuildingDescriptions.6"),
 };
 DATA(0x004931d0)
-char* gMoraleInfoText[21] = {
+H1_ENUM_ARRAY(char*, gMoraleInfoText, MoraleInfoText, MORALE_INFO_COUNT) = {
     localization::Tr("table.gMoraleInfoText.0"),  localization::Tr("table.gMoraleInfoText.1"),
     localization::Tr("table.gMoraleInfoText.2"),  localization::Tr("table.gMoraleInfoText.3"),
     localization::Tr("table.gMoraleInfoText.4"),  localization::Tr("table.gMoraleInfoText.5"),
@@ -4443,6 +4444,7 @@ i8 gInCheckEndGame = 0;
 // symbol-hash walk, not definition order).
 #include <SOURCE/combatTypes.h>
 #include <SOURCE/mapCell.h>
+#include <SOURCE/EVENTS.h>
 
 DATA(0x004a9414)
 i32 gbHumanPlayer[4];
@@ -4569,7 +4571,7 @@ class icon* gCurLoadedSpellIcon;
 DATA(0x004a7bb8)
 void* ppMapExtra[255];
 DATA(0x004a989c)
-i32 giCurGeneral;
+H1_ENUM_STORAGE(CombatSide, i32) giCurGeneral;
 DATA(0x004a7b70)
 i32 giThisGamePos;
 DATA(0x004a749c)

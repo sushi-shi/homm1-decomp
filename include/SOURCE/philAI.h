@@ -6,7 +6,7 @@
 #include <SOURCE/game.h>
 #include <SOURCE/resourceTypes.h>
 
-extern float gafAITurnCostResource[static_cast<i32>(RESOURCE_COUNT)];
+extern H1_ENUM_ARRAY(float, gafAITurnCostResource, ResourceType, RESOURCE_COUNT);
 
 extern i8 giBuildShipyard[GAME_PLAYER_COUNT];
 extern i8 giBuildBoat[GAME_PLAYER_COUNT];

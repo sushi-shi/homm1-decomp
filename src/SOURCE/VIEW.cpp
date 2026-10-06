@@ -25,7 +25,7 @@
 // The combat hero window, with Cast Spell, Retreat and Surrender dimmed when
 // the side cannot use them.
 VA(0x00465ef0, 0x4fe)
-i8 combatManager::ViewGeneral(i32 side, i32 allowActions, i32 quickView) {
+i8 combatManager::ViewGeneral(H1_ENUM_PARAM(CombatSide, i32) side, i32 allowActions, i32 quickView) {
     i16 pictureCtrlVal;
     i16 borderIdNum;
     i32 morale;
@@ -121,7 +121,7 @@ i8 combatManager::ViewGeneral(i32 side, i32 allowActions, i32 quickView) {
         packet.value = WIDGET_FLAG_DIMMED;
         wnd->BroadcastMessage(packet);
     }
-    if (allowActions == 0 || m_heroes[1 - m_currentSide] == NULL || giCurGeneral != m_currentSide) {
+    if (allowActions == 0 || m_heroes[COMBAT_OPPOSING_SIDE(m_currentSide)] == NULL || giCurGeneral != m_currentSide) {
         packet.command = WIDGET_COMMAND_CLEAR_FLAGS;
         packet.id = GENERAL_SURRENDER;
         packet.value = WIDGET_FLAG_ENABLED;
@@ -245,7 +245,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) HandleViewGeneral(tag_message& messag
 
 // The creature quick view, placed beside the stack and clamped to the screen.
 VA(0x00466595, 0x135)
-void combatManager::ViewArmy(army* viewedArmy, i32 side, i32 quickView) {
+void combatManager::ViewArmy(army* viewedArmy, H1_ENUM_PARAM(CombatSide, i32) side, i32 quickView) {
     i16 xWnd;
     i16 viewYOffsetConst;
     i16 yWindow;

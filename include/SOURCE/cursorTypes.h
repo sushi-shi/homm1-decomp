@@ -67,7 +67,7 @@ H1_ENUM_CONST_END(CursorFrameConstant)
 // advManager::ProcessHover picks a role and adds day * DAY_STRIDE for the
 // days of travel (0..DAY_LAST); WATER_ACTION + day marks a buoy or whirlpool
 // reached by boat. WAIT is shown while another (AI or remote) player moves.
-H1_ENUM_BEGIN(AdventurePointerFrame)
+H1_ENUM_ID_BEGIN(AdventurePointerFrame)
     ADVENTURE_POINTER_DEFAULT = 0,
     ADVENTURE_POINTER_WAIT = 1,
     ADVENTURE_POINTER_HERO = 2,
@@ -79,7 +79,7 @@ H1_ENUM_BEGIN(AdventurePointerFrame)
     ADVENTURE_POINTER_SELECT_HERO = 8,
     ADVENTURE_POINTER_ACTION = 9,
     ADVENTURE_POINTER_WATER_ACTION = 28
-H1_ENUM_END(AdventurePointerFrame)
+H1_ENUM_ID_END(AdventurePointerFrame)
 
 H1_ENUM_CONST_BEGIN(AdventurePointerConstant)
     ADVENTURE_POINTER_DAY_STRIDE = 6,

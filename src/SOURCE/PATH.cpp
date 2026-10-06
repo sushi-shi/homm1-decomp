@@ -63,31 +63,32 @@ VA(0x004465f4, 0x72)
 i16 army::GetMoveMask(i16 sourceHex) {
     i16 blockedMaskVal;
     i16 mask;
-    i16 direction;
+    H1_ENUM_LOCAL(CombatHexDirection, i16) direction;
 
     blockedMaskVal = 0;
     mask = 1;
-    for (direction = 0; direction <= COMBAT_DIRECTION_ADJACENT_LAST; direction++) {
+    for (direction = COMBAT_DIRECTION_ADJACENT_FIRST; direction <= COMBAT_DIRECTION_ADJACENT_LAST; direction++) {
         if (!ValidMove(sourceHex, direction))
             blockedMaskVal |= mask;
         mask <<= 1;
     }
-    return blockedMaskVal | (1 << COMBAT_DIRECTION_WIDE_WEST) | (1 << COMBAT_DIRECTION_WIDE_EAST);
+    return blockedMaskVal | H1_ENUM_BIT(CombatHexDirection, COMBAT_DIRECTION_WIDE_WEST)
+           | H1_ENUM_BIT(CombatHexDirection, COMBAT_DIRECTION_WIDE_EAST);
 }
 
 VA(0x00446666, 0xac)
-i16 army::GetAttackMask(i16 sourceHex, i8 targetMode, i8 targetHex) {
-    i16 theDirection;
+i16 army::GetAttackMask(i16 sourceHex, H1_ENUM_PARAM(ArmyAttackTarget, i8) targetMode, i8 targetHex) {
+    H1_ENUM_LOCAL(CombatHexDirection, i16) theDirection;
     i16 hex;
     i16 curDirBit;
     i16 curMask;
-    i16 nDirectionCount;
+    H1_ENUM_LOCAL(CombatHexDirection, i16) nDirectionCount;
 
     curMask = (m_stats.attributes & MONSTER_FLAGS_WIDE) ? 0 : SPECIAL_DIRECTION_MASK;
     curDirBit = 1;
     nDirectionCount = (m_stats.attributes & MONSTER_FLAGS_WIDE) ? COMBAT_DIRECTION_COUNT
                                                                 : COMBAT_DIRECTION_ADJACENT_COUNT;
-    for (theDirection = 0; theDirection < nDirectionCount; theDirection++) {
+    for (theDirection = COMBAT_DIRECTION_ADJACENT_FIRST; theDirection < nDirectionCount; theDirection++) {
         if (!ValidAttack(sourceHex, theDirection, targetMode, targetHex, &hex))
             curMask |= curDirBit;
         curDirBit <<= 1;
@@ -96,12 +97,12 @@ i16 army::GetAttackMask(i16 sourceHex, i8 targetMode, i8 targetHex) {
 }
 
 VA(0x00446712, 0x23)
-i16 army::ValidMove(i16 direction) {
+i16 army::ValidMove(H1_ENUM_PARAM(CombatHexDirection, i16) direction) {
     return ValidMove(m_hex, direction);
 }
 
 VA(0x00446735, 0x187)
-i16 army::ValidMove(i16 sourceHex, i16 direction) {
+i16 army::ValidMove(i16 sourceHex, H1_ENUM_PARAM(CombatHexDirection, i16) direction) {
     i16 destHexNext;
     i8 rearSquare;
     i8 frontValid;
@@ -152,13 +153,13 @@ i16 army::ValidMove(i16 sourceHex, i16 direction) {
 VA(0x004468bc, 0x216)
 i16 army::ValidAttack(
     i16 sourceHex,
-    i16 direction,
-    i16 targetMode,
+    H1_ENUM_PARAM(CombatHexDirection, i16) direction,
+    H1_ENUM_PARAM(ArmyAttackTarget, i16) targetMode,
     i16 requiredTargetHex,
     i16* attackHex
 ) {
     i16 adjacentHex;
-    i8 occupantSide;
+    H1_ENUM_LOCAL(CombatSide, i8) occupantSide;
 
     if (!ValidHex(sourceHex))
         return 0;
@@ -167,14 +168,14 @@ i16 army::ValidAttack(
         if (direction == COMBAT_DIRECTION_WIDE_WEST)
             *attackHex = GetAdjacentCellIndex(
                 sourceHex,
-                m_facing == ARMY_FACING_LEFT ? static_cast<i8>(COMBAT_DIRECTION_NORTHWEST)
-                                             : static_cast<i8>(COMBAT_DIRECTION_NORTHEAST)
+                m_facing == ARMY_FACING_LEFT ? H1_ENUM_CAST(CombatHexDirection, i8, COMBAT_DIRECTION_NORTHWEST)
+                                             : H1_ENUM_CAST(CombatHexDirection, i8, COMBAT_DIRECTION_NORTHEAST)
             );
         else if (direction == COMBAT_DIRECTION_WIDE_EAST)
             *attackHex = GetAdjacentCellIndex(
                 sourceHex,
-                m_facing == ARMY_FACING_LEFT ? static_cast<i8>(COMBAT_DIRECTION_SOUTHWEST)
-                                             : static_cast<i8>(COMBAT_DIRECTION_SOUTHEAST)
+                m_facing == ARMY_FACING_LEFT ? H1_ENUM_CAST(CombatHexDirection, i8, COMBAT_DIRECTION_SOUTHWEST)
+                                             : H1_ENUM_CAST(CombatHexDirection, i8, COMBAT_DIRECTION_SOUTHEAST)
             );
         else {
             switch (m_facing) {
@@ -205,7 +206,7 @@ i16 army::ValidAttack(
                 return 1;
             break;
         case ARMY_ATTACK_TARGET_ENEMY:
-            if (occupantSide == 1 - gpCombatManager->m_currentSide)
+            if (occupantSide == COMBAT_OPPOSING_SIDE(gpCombatManager->m_currentSide))
                 return 1;
             break;
         case ARMY_ATTACK_TARGET_OCCUPIED:
@@ -217,20 +218,20 @@ i16 army::ValidAttack(
 }
 
 VA(0x00446ad2, 0xe4)
-i16 army::GetAdjacentCellIndex(i16 hex, i16 direction)
+i16 army::GetAdjacentCellIndex(i16 hex, H1_ENUM_PARAM(CombatHexDirection, i16) direction)
 #line 311 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\PATH.CPP"
 {
     if (hex == ARMY_HEX_INVALID)
         return ARMY_HEX_INVALID;
     if (direction == COMBAT_DIRECTION_WIDE_WEST)
-        direction = m_facing == ARMY_FACING_RIGHT ? static_cast<i8>(COMBAT_DIRECTION_NORTHWEST)
-                                                  : static_cast<i8>(COMBAT_DIRECTION_NORTHEAST);
+        direction = m_facing == ARMY_FACING_RIGHT ? H1_ENUM_CAST(CombatHexDirection, i8, COMBAT_DIRECTION_NORTHWEST)
+                                                  : H1_ENUM_CAST(CombatHexDirection, i8, COMBAT_DIRECTION_NORTHEAST);
     else if (direction == COMBAT_DIRECTION_WIDE_EAST)
-        direction = m_facing == ARMY_FACING_RIGHT ? static_cast<i8>(COMBAT_DIRECTION_SOUTHWEST)
-                                                  : static_cast<i8>(COMBAT_DIRECTION_SOUTHEAST);
+        direction = m_facing == ARMY_FACING_RIGHT ? H1_ENUM_CAST(CombatHexDirection, i8, COMBAT_DIRECTION_SOUTHWEST)
+                                                  : H1_ENUM_CAST(CombatHexDirection, i8, COMBAT_DIRECTION_SOUTHEAST);
     // clang-format off
 #line 322
-    H1_ASSERT(direction >= 0 && direction < COMBAT_DIRECTION_ADJACENT_COUNT);
+    H1_ASSERT(direction >= COMBAT_DIRECTION_ADJACENT_FIRST && direction < COMBAT_DIRECTION_ADJACENT_COUNT);
     // clang-format on
 #line 323
     H1_ASSERT(hex >= 0 && hex < COMBAT_HEX_COUNT);
@@ -238,7 +239,7 @@ i16 army::GetAdjacentCellIndex(i16 hex, i16 direction)
 }
 
 VA(0x00446bb6, 0xbe)
-i16 GetAdjacentCellIndexNoArmy(i16 hex, i16 direction)
+i16 GetAdjacentCellIndexNoArmy(i16 hex, H1_ENUM_PARAM(CombatHexDirection, i16) direction)
 #line 328 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\PATH.CPP"
 {
     if (hex == ARMY_HEX_INVALID)
@@ -249,7 +250,7 @@ i16 GetAdjacentCellIndexNoArmy(i16 hex, i16 direction)
         direction = COMBAT_DIRECTION_SOUTHWEST;
     // clang-format off
 #line 339
-    H1_ASSERT(direction >= 0 && direction < COMBAT_DIRECTION_ADJACENT_COUNT);
+    H1_ASSERT(direction >= COMBAT_DIRECTION_ADJACENT_FIRST && direction < COMBAT_DIRECTION_ADJACENT_COUNT);
     // clang-format on
 #line 340
     H1_ASSERT(hex >= 0 && hex < COMBAT_HEX_COUNT);
@@ -261,7 +262,7 @@ i16 GetAdjacentCellIndexNoArmy(i16 hex, i16 direction)
 VA(0x00446c74, 0x45a)
 i16 army::ValidRange(i16 targetHex) {
     i16 adjacentHex;
-    i16 res;
+    H1_ENUM_LOCAL(CombatHexDirection, i16) res;
 
     if (!ValidHex(targetHex))
         return 0;
@@ -354,12 +355,12 @@ i16 army::ValidRange(i16 targetHex) {
 VA(0x004470ce, 0x35)
 H1_ENUM_RETURN(CombatHexDirection, i16)
 OppositeDirection(H1_ENUM_PARAM(CombatHexDirection, i16) direction) {
-    if (static_cast<i32>(direction) < COMBAT_DIRECTION_ADJACENT_COUNT)
+    if (direction < COMBAT_DIRECTION_ADJACENT_COUNT)
         return H1_ENUM_CAST(
             CombatHexDirection,
             i16,
             (static_cast<i32>(direction) + COMBAT_DIRECTION_OPPOSITE_OFFSET)
-                % COMBAT_DIRECTION_ADJACENT_COUNT
+                % static_cast<i32>(COMBAT_DIRECTION_ADJACENT_COUNT)
         );
     else {
         if (direction == COMBAT_DIRECTION_WIDE_WEST)
@@ -371,7 +372,8 @@ OppositeDirection(H1_ENUM_PARAM(CombatHexDirection, i16) direction) {
 
 // Nine-hex rows and byte row/column flags.
 VA(0x00447103, 0x7b7)
-i16 army::GetBestDirection(i16 sourceHex, i16 targetHex, i16 blockedMask) {
+H1_ENUM_RETURN(CombatHexDirection, i16)
+army::GetBestDirection(i16 sourceHex, i16 targetHex, i16 blockedMask) {
     i8 targetCol;
     i8 theDstRowPos;
     i8 sourceColumnCheckNum;

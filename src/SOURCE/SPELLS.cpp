@@ -207,7 +207,7 @@ i8 combatManager::ValidSpellTarget(i8 spell, i8 hex) {
         case SPELL_CURSE:
         case SPELL_BERZERKER:
         case SPELL_PARALYZE:
-            if (m_hexCells[hex].m_occupantSide != 1 - m_currentSide)
+            if (m_hexCells[hex].m_occupantSide != COMBAT_OPPOSING_SIDE(m_currentSide))
                 return 0;
             break;
         case SPELL_TURN_UNDEAD:

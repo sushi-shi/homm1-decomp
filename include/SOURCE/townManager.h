@@ -63,8 +63,10 @@ H1_ENUM_BEGIN(TownCommandText)
     TOWN_TEXT_SELECT_ARMY = 12,
     TOWN_TEXT_VIEW_HERO = 13,
     TOWN_TEXT_BUILDING_0 = 14,
-    TOWN_TEXT_DWELLING = 21
+    TOWN_TEXT_DWELLING = 21,
+    TOWN_TEXT_COUNT = 22
 H1_ENUM_END(TownCommandText)
+extern H1_ENUM_ARRAY(char*, gTownCommand, TownCommandText, TOWN_TEXT_COUNT);
 
 H1_ENUM_ID_BEGIN(TownControl)
     TOWN_EMPTY_STATUS_CONTROL_FIRST = 0x1c,
@@ -216,8 +218,10 @@ H1_ENUM_BEGIN(TownCastleInfoText)
     TOWN_CASTLE_INFO_TOWN_OCCUPIED = 10,
     TOWN_CASTLE_INFO_RECRUIT_HERO = 11,
     TOWN_CASTLE_INFO_EXIT = 12,
-    TOWN_CASTLE_INFO_OPTIONS = 13
+    TOWN_CASTLE_INFO_OPTIONS = 13,
+    TOWN_CASTLE_INFO_COUNT = 14
 H1_ENUM_END(TownCastleInfoText)
+extern H1_ENUM_ARRAY(char*, gCastleInfo, TownCastleInfoText, TOWN_CASTLE_INFO_COUNT);
 
 // The tavern window and its animation (the tavern plays MUSIC_TRACK_TAVERN;
 // MUSIC_TRACK_TOWN_FIRST + townTheme[type] is a town's ambient track).

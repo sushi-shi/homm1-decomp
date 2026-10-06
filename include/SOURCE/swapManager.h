@@ -13,6 +13,15 @@ class heroWindow;
 class icon;
 struct tag_message;
 
+// m_selectedSide/m_targetSide: the m_heroes index. DrawSelector draws side 1
+// at the left army/artifact columns, so the left hero is index 1.
+H1_ENUM_BEGIN(SwapManagerSide)
+    SWAP_SIDE_NONE = -1,
+    SWAP_SIDE_RIGHT = 0,
+    SWAP_SIDE_LEFT = 1,
+    SWAP_SIDE_COUNT = 2
+H1_ENUM_END(SwapManagerSide)
+
 // The constructors store the vtable over baseManager and fill this packed
 // tail; Reset chains the five selection bytes.
 #pragma pack(push, 1)
@@ -22,7 +31,7 @@ public:
     icon* m_selectorIcon;
     // Main indexes the pair by side byte: [1] is the constructor's first
     // (left) hero, [0] the second.
-    hero* m_heroes[2];
+    H1_ENUM_ARRAY(hero*, m_heroes, SwapManagerSide, SWAP_SIDE_COUNT);
     i8 m_selectedSide;
     i8 m_targetSide;
     i8 m_selectedSlot;
@@ -67,13 +76,6 @@ H1_ENUM_ID_BEGIN(SwapManagerControl)
     CONTROL_RIGHT_ARMY_COUNT_FIRST = 121
 H1_ENUM_ID_END(SwapManagerControl)
 
-// m_selectedSide/m_targetSide: the m_heroes index. DrawSelector draws side 1
-// at the left army/artifact columns, so the left hero is index 1.
-H1_ENUM_BEGIN(SwapManagerSide)
-    SWAP_SIDE_NONE = -1,
-    SWAP_SIDE_RIGHT = 0,
-    SWAP_SIDE_LEFT = 1
-H1_ENUM_END(SwapManagerSide)
 
 // m_itemType: what the selection holds.
 H1_ENUM_BEGIN(SwapManagerItemType)

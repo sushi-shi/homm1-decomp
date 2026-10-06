@@ -44,13 +44,13 @@ H1_ENUM_END(CalendarPeriodType)
 
 // The first two game::m_mines records are the unique sites: Dragon City
 // (pays 1000 gold a day) and the Lighthouse (ship movement).
-H1_ENUM_BEGIN(GameMineSlot)
+H1_ENUM_CONST_BEGIN(GameMineSlot)
     MINE_SLOT_DRAGON_CITY = 0,
     MINE_SLOT_LIGHTHOUSE = 1,
     // The ordinary mines follow the two unique sites (PerDay, Overview,
     // ComputeDailyGold loop from here).
     MINE_SLOT_STANDARD_FIRST = 2
-H1_ENUM_END(GameMineSlot)
+H1_ENUM_CONST_END(GameMineSlot)
 
 // A mine object covers 2x2 cells from its record's (x, y - 1) to (x + 1, y)
 // (RandomizeEvents, RandomizeMine).
@@ -305,7 +305,7 @@ public:
     // ClaimMine mirrors each mine owner into this byte array.
     i8 m_mineOwners[GAME_MINE_COUNT];
     // GetRandomArtifactId scans artifacts 4..36 for a free (-1) entry.
-    i8 m_randomArtifacts[0x25];
+    H1_ENUM_ARRAY(i8, m_randomArtifacts, ArtifactType, ARTIFACT_REGULAR_END);
     boatRecord m_boats[GAME_BOAT_COUNT];
     i8 m_boatSlots[GAME_BOAT_COUNT];
     // Obelisk events test and set the visiting player bit, one byte per obelisk.

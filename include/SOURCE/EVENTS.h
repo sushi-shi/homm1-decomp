@@ -189,8 +189,10 @@ H1_ENUM_BEGIN(MapEventTextId)
     EVENT_TEXT_LEPRECHAUN_NO_GOLD = 73,
     EVENT_TEXT_ARTIFACT_RECOVERED = 74,
     EVENT_TEXT_SKELETON_EMPTY = 75,
-    EVENT_TEXT_SKELETON_ARTIFACT = 76
+    EVENT_TEXT_SKELETON_ARTIFACT = 76,
+    EVENT_TEXT_COUNT = 77
 H1_ENUM_END(MapEventTextId)
+extern H1_ENUM_ARRAY(char*, gEventText, MapEventTextId, EVENT_TEXT_COUNT);
 
 // HouseEvent's five recruiting houses (straw hut .. ): three gEventText rows
 // each and one creature each.

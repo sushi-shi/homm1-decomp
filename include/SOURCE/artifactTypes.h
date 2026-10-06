@@ -51,7 +51,8 @@ H1_ENUM_BEGIN(ArtifactType)
     // them from 4, and the AI/philAI hero-artifact tests accept ids below
     // REGULAR_END (everything but the magic book).
     ARTIFACT_REGULAR_FIRST = ARTIFACT_ARCANE_NECKLACE,
-    ARTIFACT_REGULAR_END = ARTIFACT_MAGIC_BOOK
+    ARTIFACT_REGULAR_END = ARTIFACT_MAGIC_BOOK,
+    ARTIFACT_COUNT = 38
 H1_ENUM_END(ArtifactType)
 
 #endif // HOMM1_SOURCE_ARTIFACTTYPES_H

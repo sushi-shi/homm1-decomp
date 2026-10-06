@@ -107,7 +107,7 @@ public:
     i8 m_unused2d;
     i16 m_level;
     // GiveTakeArtifactStat raises a fifth stat byte for artifact 17.
-    i8 m_primaryStats[HERO_STARTING_STAT_COUNT];
+    H1_ENUM_ARRAY(i8, m_primaryStats, HeroPrimaryStat, HERO_STARTING_STAT_COUNT);
     i8 m_morale;
     i8 m_luck;
     // ShowMoraleInfo reports the cowardice byte separately.
@@ -236,7 +236,8 @@ H1_ENUM_BEGIN(HeroScreenText)
     HERO_TEXT_ARTIFACT = 15,
     HERO_TEXT_DISMISS = 16,
     HERO_TEXT_EXIT = 17,
-    HERO_TEXT_SCREEN = 18
+    HERO_TEXT_SCREEN = 18,
+    HERO_TEXT_COUNT = 19
 H1_ENUM_END(HeroScreenText)
 
 // Frames HeroView sets on the three luck and three morale icons, and how
@@ -273,7 +274,8 @@ H1_ENUM_ID_END(HeroStatViewControl)
 H1_ENUM_BEGIN(HeroLevelText)
     HERO_LEVEL_TEXT_GAINED = 0,
     HERO_LEVEL_TEXT_ONE_LEVEL = 1,
-    HERO_LEVEL_TEXT_LEVELS = 2
+    HERO_LEVEL_TEXT_LEVELS = 2,
+    HERO_LEVEL_TEXT_COUNT = 3
 H1_ENUM_END(HeroLevelText)
 
 // Spell-power levels the AI weighs specially (philAI army worth, combat

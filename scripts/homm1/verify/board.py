@@ -139,7 +139,15 @@ _ENUM_TYPE_MACRO = re.compile(
     r"\bH1_ENUM_(?:STORAGE|PARAM|RETURN|LOCAL|BITFIELD)\s*\([^()]*\)")
 
 
+#: Domains.h's typed arrays: H1_ENUM_ARRAY*(type, name, ...) declares `name`.
+_ENUM_ARRAY_DECL = re.compile(
+    r"\bH1_ENUM_ARRAY(?:2|_ROWS)?\s*\(\s*[^,]+,\s*([A-Za-z_]\w*)")
+
+
 def _declarator_name(part: str) -> str | None:
+    typed = _ENUM_ARRAY_DECL.search(part)
+    if typed:
+        return typed.group(1)
     head = _DECLSPEC.sub(" ", part)
     head = _ENUM_TYPE_MACRO.sub(" T ", head)
     head = head.split("(", 1)[0]

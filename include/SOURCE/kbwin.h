@@ -49,13 +49,6 @@ H1_ENUM_CONST_BEGIN(KbwinMenuConstant)
     KBWIN_HEIGHT_1024 = 1024
 H1_ENUM_CONST_END(KbwinMenuConstant)
 
-// gConfig.comPort/baudRate rows: the modem's and the direct (null-modem)
-// connection's settings (the "Modem"/"Direct" registry values).
-H1_ENUM_BEGIN(ConfigConnection)
-    CONFIG_CONNECTION_MODEM = 0,
-    CONFIG_CONNECTION_DIRECT = 1
-H1_ENUM_END(ConfigConnection)
-
 // SetupCDDrive's result, dispatched by EarlySetup: READY when the CD is
 // found by its Ogg probe, else why not (no CD-ROM drive, no matching disc, no
 // registered application path, no data directory).

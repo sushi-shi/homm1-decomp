@@ -86,10 +86,10 @@ H1_ENUM_END(ArmyLuck)
 class army {
 public:
     // Attack target (GetCommand clears both to -1).
-    i8 m_targetSide;
+    H1_ENUM_STORAGE(CombatSide, i8) m_targetSide;
     i8 m_targetIndex;
     // ValidRange records the chosen attack direction.
-    i16 m_attackDirection;
+    H1_ENUM_STORAGE(CombatHexDirection, i16) m_attackDirection;
     i8 m_unknown04;
     // ValidPath records the reachable target hex here.
     i8 m_moveTargetHex;
@@ -118,7 +118,7 @@ public:
     i16 m_unknown29;
     // PowEffect frames left on the stack: 4 hit, 5 killed, -1 none.
     i16 m_powFrames;
-    i8 m_side;
+    H1_ENUM_STORAGE(CombatSide, i8) m_side;
     i8 m_index;
     // SpellEffect's running effect index (-1 none); DrawFrame grows the
     // redraw box upward for effects 22-25.
@@ -208,19 +208,19 @@ public:
     i16 FindPath(i16 sourceHex, i16 targetHex, i8, i8 ignoreSpeed, i8 pathMode);
     i16 ValidPath(i16 targetHex, i8 pathMode);
     i16 GetMoveMask(i16 sourceHex);
-    i16 GetAttackMask(i16 sourceHex, i8 targetMode, i8 targetHex);
-    i16 ValidMove(i16 direction);
-    i16 ValidMove(i16 sourceHex, i16 direction);
+    i16 GetAttackMask(i16 sourceHex, H1_ENUM_PARAM(ArmyAttackTarget, i8) targetMode, i8 targetHex);
+    i16 ValidMove(H1_ENUM_PARAM(CombatHexDirection, i16) direction);
+    i16 ValidMove(i16 sourceHex, H1_ENUM_PARAM(CombatHexDirection, i16) direction);
     i16 ValidAttack(
         i16 sourceHex,
-        i16 direction,
-        i16 targetMode,
+        H1_ENUM_PARAM(CombatHexDirection, i16) direction,
+        H1_ENUM_PARAM(ArmyAttackTarget, i16) targetMode,
         i16 requiredTargetHex,
         i16* attackHex
     );
-    i16 GetAdjacentCellIndex(i16 hex, i16 direction);
+    i16 GetAdjacentCellIndex(i16 hex, H1_ENUM_PARAM(CombatHexDirection, i16) direction);
     i16 ValidRange(i16 targetHex);
-    i16 GetBestDirection(i16 sourceHex, i16 targetHex, i16 blockedMask);
+    H1_ENUM_RETURN(CombatHexDirection, i16) GetBestDirection(i16 sourceHex, i16 targetHex, i16 blockedMask);
 };
 #pragma pack(pop)
 
@@ -229,7 +229,7 @@ public:
 #define ARMY_IGNORES_SPELLS(a)                                                                     \
     ((a)->m_creatureType == CREATURE_DRAGON || (a)->m_spellEffect == SPELL_ANTI_MAGIC)
 
-i16 GetAdjacentCellIndexNoArmy(i16 hex, i16 direction);
+i16 GetAdjacentCellIndexNoArmy(i16 hex, H1_ENUM_PARAM(CombatHexDirection, i16) direction);
 // The combat spell-effect icon cache (KB.h gCurLoadedSpellIcon): army draws
 // and PowEffect share one icon, reloaded when the effect file changes.
 // Stale alias of gCurLoadedSpellFileId (0x4c6d64, declared with combatManager);
