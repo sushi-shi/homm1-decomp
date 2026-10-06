@@ -10,6 +10,7 @@ commit.
 | Area | Original | Now |
 | --- | --- | --- |
 | High score files | Each of the ten reads asked for the size of the whole table, so the first read filled every entry and the other nine hit the end of the file; a longer file would overflow the table. | Each entry is read as its own 87-byte record. Same scores for every shipped or game-written file. |
+| High score names | The high score screen passed each entry's player and scenario names from the file to `sprintf` as the format: a `%` in a name read, and with `%n` wrote, through arguments that were never passed. | The names are shown as they are. Every shipped or game-written table shows the same. |
 | Map list text | Map names and descriptions were copied from the map header with `strcpy`: a description of 101 characters or more overflowed the 101-byte list field, and an unterminated name ran into the next one. | Copied bounded to the field and terminated; a too-long description is cut at 100 characters. |
 | Map list scan | The second pass over the folder could insert more names than the first pass counted if files appeared in between. | The second pass stops at the first pass's count. |
 | Archive lookup | A resource id not in the archive read the directory entry one past its end before reporting the error. | The bound is checked first; the same error is reported. |
