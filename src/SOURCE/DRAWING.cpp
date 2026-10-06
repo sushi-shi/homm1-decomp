@@ -224,11 +224,12 @@ void combatManager::DrawBackground(void) {
 // m_limitCreatureCount when m_computeExtent is set, else the whole area.
 // Rows draw obstacles, then occupants (right to left while m_drawRightToLeft is
 // set), with the catapult (row 3) and the two heroes (rows 1 and 2).
+#define armyRight selBoxRight // frame-slot spelling
 VA(0x00423d6c, 0xca3)
 void combatManager::DrawFrame(i8 updateScreen) {
     i16 col;
     i8 anyLimited;
-    i32 selBoxRight;
+    i32 armyRight;
     i32 armyTop;
     i32 i;
     i32 rearDelta;
@@ -256,10 +257,10 @@ void combatManager::DrawFrame(i8 updateScreen) {
                         armyBottom += 60;
                     if (m_armies[side][i].m_facing == ARMY_FACING_LEFT) {
                         armyLeft = col * COMBAT_HEX_WIDTH - 110;
-                        selBoxRight = (col + 1) * COMBAT_HEX_WIDTH + 70;
+                        armyRight = (col + 1) * COMBAT_HEX_WIDTH + 70;
                     } else {
                         armyLeft = col * COMBAT_HEX_WIDTH - 70;
-                        selBoxRight = (col + 1) * COMBAT_HEX_WIDTH + 110;
+                        armyRight = (col + 1) * COMBAT_HEX_WIDTH + 110;
                     }
                     if (m_armies[side][i].m_effectAnimation == COMBAT_EFFECT_GOOD_LUCK
                         || m_armies[side][i].m_effectAnimation == COMBAT_EFFECT_BAD_LUCK
@@ -272,7 +273,7 @@ void combatManager::DrawFrame(i8 updateScreen) {
                         || m_armies[side][i].m_creatureType == CREATURE_ORC
                         || m_armies[side][i].m_creatureType == CREATURE_TROLL) {
                         if (m_armies[side][i].m_facing == ARMY_FACING_LEFT)
-                            selBoxRight += 40;
+                            armyRight += 40;
                         else
                             armyLeft -= 40;
                     }
@@ -282,22 +283,22 @@ void combatManager::DrawFrame(i8 updateScreen) {
                         gMaxExtentY = armyBottom;
                     if (armyLeft < gMinExtentX)
                         gMinExtentX = armyLeft;
-                    if (selBoxRight > gMaxExtentX)
-                        gMaxExtentX = selBoxRight;
+                    if (armyRight > gMaxExtentX)
+                        gMaxExtentX = armyRight;
                     if (m_armies[side][i].m_stats.attributes & MONSTER_FLAGS_WIDE) {
                         rearDelta = side == COMBAT_DEFENDER_SIDE ? -1 : 1;
                         if (m_armies[side][i].m_facing == ARMY_FACING_LEFT) {
                             armyLeft = (col + rearDelta) * COMBAT_HEX_WIDTH - 110;
-                            selBoxRight = (col + rearDelta + 1) * COMBAT_HEX_WIDTH + 70;
+                            armyRight = (col + rearDelta + 1) * COMBAT_HEX_WIDTH + 70;
                         } else {
                             armyLeft = (col + rearDelta) * COMBAT_HEX_WIDTH - 70;
-                            selBoxRight = (col + rearDelta + 1) * COMBAT_HEX_WIDTH + 110;
+                            armyRight = (col + rearDelta + 1) * COMBAT_HEX_WIDTH + 110;
                         }
                     }
                     if (armyLeft < gMinExtentX)
                         gMinExtentX = armyLeft;
-                    if (selBoxRight > gMaxExtentX)
-                        gMaxExtentX = selBoxRight;
+                    if (armyRight > gMaxExtentX)
+                        gMaxExtentX = armyRight;
                 }
             }
         }
@@ -536,3 +537,4 @@ void combatManager::DrawFrame(i8 updateScreen) {
         UpdateCombatArea();
     }
 }
+#undef armyRight

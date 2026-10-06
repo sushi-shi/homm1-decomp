@@ -78,3 +78,4 @@ global	advManager.h	TrigX/TrigY	gTriggerX/gTriggerY	the cell whose trigger MoveH
 global	advManager.h	EveryOther	gEveryOther	walk alternate-frame/footstep toggle; alias keeps the storage spelling
 global	advManager.h	S1cursorDirection/BaseFrame/FrameCount/Cycle/Turning	gSavedCursorDirection/BaseFrame/FrameCount/Cycle/Turning	cursor state DrawCursor saves and restores around gDrawSavedCursor; aliases keep the storage spelling
 global	advManager.h	startVals	gStepScrollStart	the scroll offset (16, 0, -16) MoveHero starts the second half-step from; alias keeps the storage spelling
+aliased	advManager::UpdateRadar	ourFirstX/realFirstY/curEndX/ourLastY	minX/minY/maxX/maxY	the clamped map-cell bounds the radar redraws (whole map or the view plus one cell); readable name aliased over the frame-slot spelling

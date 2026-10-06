@@ -80,19 +80,23 @@ i16 army::CanFit(i16* hex) {
 
 // A non-zero path mode takes the destination as the enemy hex, and CanFit moves the
 // landing hex in place.
+#define direction n // frame-slot spelling
+#define unusedHex heldTemp // frame-slot spelling
+#define unusedStep k // frame-slot spelling
+#define unusedIndex m // frame-slot spelling
 VA(0x0042a8a0, 0x3f0)
 i16 army::ValidFlight(i16 destination, i8 pathMode) {
     i16 enemyHex;
-    i16 heldTemp;
+    i16 unusedHex;
     i16 attackHex;
     i16 attackDirectionsMask;
     i16 adjacentHex;
-    i16 k;
+    i16 unusedStep;
     i8 landingDirection;
-    i16 m;
+    i16 unusedIndex;
     army* enemyStack;
     i16 directionMask;
-    i16 n;
+    i16 direction;
     i8 bestAttackDirection;
 
     if (!ValidHex(destination))
@@ -146,9 +150,9 @@ i16 army::ValidFlight(i16 destination, i8 pathMode) {
             } else {
                 attackDirectionsMask =
                     ~GetAttackMask(m_moveTargetHex, ARMY_ATTACK_TARGET_ASSIGNED, ARMY_HEX_INVALID);
-                for (n = 0; n < COMBAT_DIRECTION_COUNT; n++) {
-                    if (attackDirectionsMask & (1 << n))
-                        m_attackDirection = n;
+                for (direction = 0; direction < COMBAT_DIRECTION_COUNT; direction++) {
+                    if (attackDirectionsMask & (1 << direction))
+                        m_attackDirection = direction;
                 }
             }
             return 1;
@@ -174,6 +178,10 @@ i16 army::ValidFlight(i16 destination, i8 pathMode) {
     }
     return 0;
 }
+#undef direction
+#undef unusedHex
+#undef unusedStep
+#undef unusedIndex
 
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
@@ -184,13 +192,20 @@ i16 army::FlyTo(void) {
 
 // HoMM1 flies along a straight pixel line: six frames per hex of the longer
 // grid axis, the rounding remainder split over the two ends.
+#define sourceColumn colFrom // frame-slot spelling
+#define sourceRow curRow // frame-slot spelling
+#define frontCell headOccupant // frame-slot spelling
+#define rearCell tailSlot // frame-slot spelling
+#define step k // frame-slot spelling
+#define launchY y1 // frame-slot spelling
+#define landPosY y2 // frame-slot spelling
 VA(0x0042acac, 0x70c)
 i16 army::FlyTo(i16 destination) {
     i32 boxRightX;
-    i8 colFrom;
+    i8 sourceColumn;
     i8 flyBackwards;
     i32 boxTop;
-    i8 curRow;
+    i8 sourceRow;
     i32 boxLeft;
     i16 gainX;
     i16 inFlightX;
@@ -199,31 +214,31 @@ i16 army::FlyTo(i16 destination) {
     i16 landX;
     i16 landY;
     i16 adjustX;
-    i16 k;
+    i16 step;
     i8 targetRowIndex;
     i8 aimColumn;
     i16 fullXLen;
     i16 flightSteps;
     i16 startX;
     i16 launchX;
-    i16 y1;
+    i16 launchY;
     i16 adjustY;
     i16 fullYLen;
     i16 startY;
     i16 landPosX;
-    i16 y2;
+    i16 landPosY;
     i32 boxBottom;
 
     if (!ValidHex(destination))
         return 0;
-    colFrom = m_hex % COMBAT_GRID_COLUMNS;
-    curRow = m_hex / COMBAT_GRID_COLUMNS;
+    sourceColumn = m_hex % COMBAT_GRID_COLUMNS;
+    sourceRow = m_hex / COMBAT_GRID_COLUMNS;
     aimColumn = destination % COMBAT_GRID_COLUMNS;
     targetRowIndex = destination / COMBAT_GRID_COLUMNS;
-    fullXLen = aimColumn - colFrom;
+    fullXLen = aimColumn - sourceColumn;
     if (fullXLen < 0)
         fullXLen = -fullXLen;
-    fullYLen = targetRowIndex - curRow;
+    fullYLen = targetRowIndex - sourceRow;
     if (fullYLen < 0)
         fullYLen = -fullYLen;
     flightSteps = fullXLen > fullYLen ? fullXLen : fullYLen;
@@ -242,26 +257,26 @@ i16 army::FlyTo(i16 destination) {
     launchX = startX + gainX;
     landPosX = landX - flightSteps * 6 * gainX;
     adjustX = (launchX + landPosX) / 2 - launchX;
-    y1 = startY + gainY;
-    y2 = landY - flightSteps * 6 * gainY;
-    adjustY = (y1 + y2) / 2 - y1;
+    launchY = startY + gainY;
+    landPosY = landY - flightSteps * 6 * gainY;
+    adjustY = (launchY + landPosY) / 2 - launchY;
     flyBackwards = 0;
     if ((gainX < 0 && m_facing == ARMY_FACING_RIGHT) || (gainX > 0 && m_facing == ARMY_FACING_LEFT))
         flyBackwards = 1;
-    hexcell headOccupant;
-    hexcell tailSlot;
-    headOccupant.TakeOccupant(&gCombatManager->m_hexCells[m_hex]);
+    hexcell frontCell;
+    hexcell rearCell;
+    frontCell.TakeOccupant(&gCombatManager->m_hexCells[m_hex]);
     if (m_stats.attributes & MONSTER_FLAGS_WIDE)
-        tailSlot.TakeOccupant(
+        rearCell.TakeOccupant(
             &gCombatManager->m_hexCells[m_hex + (m_facing == ARMY_FACING_LEFT ? -1 : 1)]
         );
     inFlightX = startX + adjustX;
     inFlightY = startY + adjustY;
     m_animationSequence = ARMY_ANIMATION_WALK;
     m_animationFrame = flyBackwards == 1 ? 5 : 0;
-    headOccupant.m_occupantSide = COMBAT_SIDE_NONE;
+    frontCell.m_occupantSide = COMBAT_SIDE_NONE;
     if (m_stats.attributes & MONSTER_FLAGS_WIDE)
-        tailSlot.m_occupantSide = COMBAT_SIDE_NONE;
+        rearCell.m_occupantSide = COMBAT_SIDE_NONE;
     gCombatManager->DrawFrame(0);
     gWindowManager->m_screen->CopyTo(
         gCombatManager->m_backgroundBuffer,
@@ -273,10 +288,10 @@ i16 army::FlyTo(i16 destination) {
         COMBAT_VIEW_HEIGHT
     );
     gCombatManager->m_backgroundDrawn = 0;
-    for (k = 0; k < flightSteps * 6; k++) {
-        if (k % 6 == 1)
+    for (step = 0; step < flightSteps * 6; step++) {
+        if (step % 6 == 1)
             PlaySample(m_samples[ARMY_SAMPLE_MOVE]);
-        if (k) {
+        if (step) {
             gCombatManager->m_backgroundBuffer->CopyTo(
                 gWindowManager->m_screen,
                 gMinExtentX,
@@ -334,13 +349,13 @@ i16 army::FlyTo(i16 destination) {
     }
     if (!m_spellEndCondition)
         CancelSpell();
-    headOccupant.m_occupantSide = gCombatManager->m_currentSide;
+    frontCell.m_occupantSide = gCombatManager->m_currentSide;
     if (m_stats.attributes & MONSTER_FLAGS_WIDE)
-        tailSlot.m_occupantSide = gCombatManager->m_currentSide;
-    gCombatManager->m_hexCells[destination].TakeOccupant(&headOccupant);
+        rearCell.m_occupantSide = gCombatManager->m_currentSide;
+    gCombatManager->m_hexCells[destination].TakeOccupant(&frontCell);
     if (m_stats.attributes & MONSTER_FLAGS_WIDE)
         gCombatManager->m_hexCells[destination + (m_facing == ARMY_FACING_LEFT ? -1 : 1)]
-            .TakeOccupant(&tailSlot);
+            .TakeOccupant(&rearCell);
     m_hex = destination;
     m_animationSequence = ARMY_ANIMATION_STAND;
     m_animationFrame = 1;
@@ -348,3 +363,10 @@ i16 army::FlyTo(i16 destination) {
     gCombatManager->DrawFrame(1);
     return 1;
 }
+#undef sourceColumn
+#undef sourceRow
+#undef frontCell
+#undef rearCell
+#undef step
+#undef launchY
+#undef landPosY
