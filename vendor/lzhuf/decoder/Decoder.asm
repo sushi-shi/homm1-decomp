@@ -14,21 +14,21 @@ option epilogue:none
 EXTERN d_code:BYTE
 EXTERN d_len:BYTE
 EXTERN dad:WORD
-EXTERN decodeSize:DWORD
+EXTERN decodeLen:DWORD
 EXTERN lson:WORD
 EXTERN son:WORD
 EXTERN prnt:WORD
-EXTERN textsize:DWORD
+EXTERN decodeSkip:DWORD
 EXTERN text_buf:BYTE
 EXTERN rson:WORD
 EXTERN codesize:DWORD
 EXTERN getbuf:WORD
 EXTERN freq:WORD
 EXTERN getlen:BYTE
-EXTERN codePtr:DWORD
+EXTERN dataPtr:DWORD
 EXTERN match_position:WORD
 EXTERN match_length:WORD
-EXTERN decodeOutput:DWORD
+EXTERN outputPos:DWORD
 
 
 .code
@@ -111,7 +111,7 @@ LzhufMemmove ENDP
 ;   }
 ;   unsigned short dx = getbuf;  unsigned char glen = getlen;
 ;   do {                                              // refill whole bytes
-;       dx |= (unsigned short)(*(unsigned char*)codePtr++ << (8 - glen));
+;       dx |= (unsigned short)(*(unsigned char*)dataPtr++ << (8 - glen));
 ;       glen += 8;
 ;   } while (glen <= 8);
 ;   getbuf = dx << 1;  getlen = glen - 1;
@@ -136,7 +136,7 @@ L_7fcd1:
     push ecx
     push edx
     push esi
-    mov ebx,DWORD PTR codePtr
+    mov ebx,DWORD PTR dataPtr
     mov dl,BYTE PTR getlen
     mov si,WORD PTR getbuf
 L_7fce8:
@@ -160,7 +160,7 @@ L_7fcf0:
     dec dl
     sar eax,15
     mov BYTE PTR getlen,dl
-    mov DWORD PTR codePtr,ebx
+    mov DWORD PTR dataPtr,ebx
     pop esi
     pop edx
     pop ecx
@@ -172,7 +172,7 @@ GetBit ENDP
 ; d_code/d_len tables indexed by the next byte, the lower 6 from more bits.
 ;
 ;   unsigned short dx = getbuf;  unsigned char glen = getlen;
-;   while (glen <= 8) { dx |= *(unsigned char*)codePtr++ << (8 - glen); glen += 8; }
+;   while (glen <= 8) { dx |= *(unsigned char*)dataPtr++ << (8 - glen); glen += 8; }
 ;   getbuf = dx << 8;  getlen = glen - 8;
 ;   unsigned i = dx >> 8;
 ;   unsigned c = (unsigned)d_code[i] << 6;
@@ -198,7 +198,7 @@ DecodePosition PROC C
 L_7fd5c:
     push esi
     mov dl,BYTE PTR getlen
-    mov ebx,DWORD PTR codePtr
+    mov ebx,DWORD PTR dataPtr
     mov si,WORD PTR getbuf
 L_7fd70:
     mov al,BYTE PTR [ebx]
@@ -223,7 +223,7 @@ L_7fd7d:
     sub dl,8
     sar eax,8
     mov BYTE PTR getlen,dl
-    mov DWORD PTR codePtr,ebx
+    mov DWORD PTR dataPtr,ebx
     pop esi
 L_7fdb5:
     mov edx,eax
@@ -490,27 +490,27 @@ L_80055:
     ret
 ReconstructDecoderTree ENDP
 
-; void Decode(void): decode until textsize + decodeSize bytes have been
-; produced, writing only bytes [textsize, textsize + decodeSize) to
-; decodeOutput. Every register (EAX too) is restored; the count left in EAX
+; void Decode(void): decode until decodeSkip + decodeLen bytes have been
+; produced, writing only bytes [decodeSkip, decodeSkip + decodeLen) to
+; outputPos. Every register (EAX too) is restored; the count left in EAX
 ; before the final pops is discarded.
 ;
-;   char* output = decodeOutput;  unsigned long length = decodeSize;
+;   char* output = outputPos;  unsigned long length = decodeLen;
 ;   short r = N - F;
-;   for (unsigned long count = 0; count < textsize + length; ) {
+;   for (unsigned long count = 0; count < decodeSkip + length; ) {
 ;       unsigned short c = son[R];
 ;       while (c < T) c = son[c + GetBit()];
 ;       c -= T;
 ;       UpdateDecoderTree(c);
 ;       if (c < 256) {                                // literal
-;           if (count >= textsize) *output++ = (char)c;
+;           if (count >= decodeSkip) *output++ = (char)c;
 ;           text_buf[r++] = (unsigned char)c;  r &= N - 1;  count++;
 ;       } else {                                      // match
 ;           short i = (r - DecodePosition() - 1) & (N - 1);
 ;           short j = c - 255 + THRESHOLD;
 ;           for (short k = 0; k < j; k++) {
 ;               unsigned char b = text_buf[(i + k) & (N - 1)];
-;               if (count >= textsize && count < textsize + length) *output++ = b;
+;               if (count >= decodeSkip && count < decodeSkip + length) *output++ = b;
 ;               text_buf[r++] = b;  r &= N - 1;  count++;
 ;           }
 ;       }
@@ -524,12 +524,12 @@ Decode PROC C
     push edi
     push ebp
     sub esp,12
-    mov esi,DWORD PTR cs:[decodeOutput]
-    mov ebp,DWORD PTR cs:[decodeSize]
+    mov esi,DWORD PTR cs:[outputPos]
+    mov ebp,DWORD PTR cs:[decodeLen]
     mov edx,4036
     xor ecx,ecx
 L_8007e:
-    mov eax,textsize
+    mov eax,decodeSkip
     add eax,ebp
     cmp ecx,eax
     jae L_8017b
@@ -551,7 +551,7 @@ L_800b5:
     call UpdateDecoderTree
     cmp edi,256
     jge L_800f6
-    cmp ecx,DWORD PTR textsize
+    cmp ecx,DWORD PTR decodeSkip
     jb L_800e2
     inc esi
     mov al,BYTE PTR [esp+4]
@@ -598,7 +598,7 @@ L_80142:
     and eax,4095
     mov al,BYTE PTR [eax+text_buf]
     xor ah,ah
-    mov edi,DWORD PTR textsize
+    mov edi,DWORD PTR decodeSkip
     mov WORD PTR [esp+4],ax
     cmp ecx,edi
     jb L_80123

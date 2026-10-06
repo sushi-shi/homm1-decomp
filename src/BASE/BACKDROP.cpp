@@ -19,9 +19,9 @@ backdropWidget::backdropWidget(i16 x, i16 y, i16 width, i16 height, i16 id, i16 
 
 VA(0x0046ceaa, 0x77)
 void backdropWidget::Read(void) {
-    READ_WIDGET_GEOMETRY(this, gpResourceManager);
-    m_id = gpResourceManager->ReadWord();
-    m_kind = gpResourceManager->ReadWord();
+    READ_WIDGET_GEOMETRY(this, gResourceManager);
+    m_id = gResourceManager->ReadWord();
+    m_kind = gResourceManager->ReadWord();
 }
 
 VA(0x0046cf21, 0x19)
@@ -31,7 +31,7 @@ i16 backdropWidget::Main(tag_message& message) {
 
 VA(0x0046cf3a, 0x4e)
 void backdropWidget::Draw(void) {
-    gpWindowManager
+    gWindowManager
         ->UpdateScreenRegion(m_owner->m_posX + m_x, m_owner->m_posY + m_y, m_width, m_height);
 }
 

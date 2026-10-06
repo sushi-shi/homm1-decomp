@@ -36,6 +36,7 @@ output is replaced only when it carries the generator's marker.
 | `#include <match.h>` | `#include <H1/Ints.h>` (match.h also defines the integer aliases) |
 | `#include <Domains.h>`, `<H1/Macros.h>` | deleted with the headers |
 | `#line N "..."` | deleted; the compiler supplies `__FILE__`/`__LINE__` |
+| `#define name storage // spelling fixes .bss order` | deleted; the readable name stays, and MASM references to the storage spelling take it |
 | `//`, `/* */` and MASM/RC/DEF `;` comments | deleted |
 
 Each rule is the expansion that VC6 already compiles in the matching build.
@@ -116,7 +117,8 @@ without `/FORCE`, and an unresolved external fails verification.
 - **Source.** The generated tree is compiled from its Russian localized copy,
   as its own `build.py` does, and must link. Its objects are compared after
   VC6's compiler-local names (`$L`, `$T`, `$SG`, `$E`, `$S`, `$label$N`) are
-  renumbered by first appearance. These counters advance with every macro a
+  renumbered by first appearance, and the matching objects' `.bss` storage
+  spellings are read as their readable names. These counters advance with every macro a
   compilation defines, so they shift once the scaffolding headers are gone.
   Every remaining difference is listed, and the command fails unless the
   differing unit's source uses `H1_ASSERT`, `__FILE__` or `__LINE__`. Without

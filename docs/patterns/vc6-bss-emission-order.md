@@ -23,9 +23,16 @@ Measured with the pinned HoMM1 Buka VC6 SP5 compiler under
   function-local static (`?lzz@?1??f1@@YAHXZ@4HA`). Type, size and definition
   position do not matter.
 - **Equal keys** emit the later definition first (`vaca`, `vaai`, `vabe` with
-  one key, defined in that order, come out `vabe`, `vaai`, `vaca`).
+  one key, defined in that order, come out `vabe`, `vaai`, `vaca`). What
+  counts is the symbol's first declaration in the TU, so an `extern` in a
+  header decides: swapping `gMapName` and `gbBlackoutPlayer` (both key 623)
+  in `KB.h` swaps them in `SOURCE/KB`, while swapping their definitions
+  does not.
 - **Zero-initialized definitions** (`char zz0 = 0;`) also go to `.bss`, after
-  every uninitialized one, in definition order.
+  every uninitialized one, in definition order. A zero-initialized function
+  local static takes its function's position in that order, and empty-string
+  literals placed in `.bss` follow all of them.
+- The same rule holds for the `/O2` units (`SOURCE/FINDPATH`, `SOURCE/SEARCH`).
 - A **static data member** definition is keyed by its full decorated name
   (`?member@Class@@2HA`), in the same sort as the file-scope identifiers
   (15 random members of one class and 15 globals: no inversion).
@@ -52,6 +59,34 @@ window between its retail neighbours is not the retail spelling, or the
 definition is a local static, or it was zero-initialized. A global placed
 after the hash-sorted run (for example `EveryOther` after `S1cursorTurning`
 in `SOURCE/CURSOR`) points to a zero initializer or a local static.
+
+## Applying it
+
+Per object, sort the claimed `.bss` symbols by retail address and keep the
+longest key-ascending run; the rest need a name in the key window left
+between their kept neighbours, a zero initializer, or (for ties) another
+declaration order. Sibling spellings are the strongest evidence a window
+offers: `iMainWinScreenHeight` (key 410) and `iTempX`/`iTempY` (496/497)
+next to `gMainWinScreenWidth` and `iTempY`, `gBigFont`/`gSmallFont` (79/389)
+in `SOURCE/KB`, and `cColorBits` beside `cAndBits` in `BASE/MOUSEMGR` all
+fit their windows without search.
+
+## Alias defines
+
+The source spells the readable name; where that name's key falls outside its
+retail window, the owning header maps it to a spelling whose key fits,
+directly above the `extern` (file statics above their definition, function
+statics above their declaration):
+
+```cpp
+#define gGame gpGame // spelling fixes .bss order
+extern class game* gGame;
+```
+
+The compiler hashes the storage spelling, and function-local statics take it
+into their decorated name (`?s_direction_4@?1??SeedPosition@...`). Tie order
+still follows the first declaration. The generated trees (`homm1 clean`)
+drop these defines.
 
 ## Does not establish
 

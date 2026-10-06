@@ -70,19 +70,28 @@ def snapshot(repo: Path, revision: str = "HEAD", *, working: bool = False
     return commit, files
 
 
-def _units(files: dict[str, bytes]) -> list[dict]:
+def _units(files: dict[str, bytes], *, every_image: bool = False) -> list[dict]:
+    """The game's units (the generated trees build the game only); with
+    `every_image`, also those other images (the editor) link alone."""
     import tomllib
-    return list(tomllib.loads(files["config/units.toml"].decode())["unit"])
+    from homm1.core.paths import DEFAULT_IMAGE
+    from homm1.manifest import unit_images
+    return [u for u in tomllib.loads(files["config/units.toml"].decode())["unit"]
+            if every_image or DEFAULT_IMAGE in unit_images(u)]
 
 
 def selected(files: dict[str, bytes]) -> dict[str, str]:
     """{path: transform} for every file the clean tree carries.
 
-    The tree holds the unit sources, every header, and the resource script.
-    Anything else under src/ fails generation rather than silently vanishing.
+    The tree holds the game's unit sources, every header, and the resource
+    script; units only another image links are left out. Anything else under
+    src/ fails generation rather than silently vanishing.
     """
     chosen = {unit["source"]: "" for unit in _units(files)}
+    other_images = {unit["source"] for unit in _units(files, every_image=True)} - set(chosen)
     for name in files:
+        if name in other_images:
+            continue
         top = name.split("/", 1)[0]
         if top in ("include", "vendor") and name.endswith(".h") \
                 and name not in source.DROP_FILES:
@@ -136,10 +145,16 @@ def generate(files: dict[str, bytes], *, variant: str = "source", control: bool 
         raise ValueError("the classic view needs the snapshot's locales/ catalog")
     output: dict[str, bytes] = {}
     problems: list[str] = []
-    for name, kind in sorted(selected(files).items()):
+    chosen = sorted(selected(files).items())
+    renames = source.aliases(files[name].decode("utf-8") for name, kind in chosen
+                             if kind == "cpp")
+    for name, kind in chosen:
         text = files[name].decode("utf-8")
         try:
-            cleaned = transforms[kind](text, keep_lines=control)
+            if kind == "asm":
+                cleaned = source.clean_asm(text, keep_lines=control, renames=renames)
+            else:
+                cleaned = transforms[kind](text, keep_lines=control)
             if variant == "classic" and kind == "cpp":
                 cleaned = classic.render_cpp(cleaned, catalog)
             elif variant == "classic" and kind == "rc":

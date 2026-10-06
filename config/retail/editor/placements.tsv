@@ -350,7 +350,7 @@ rva	size	kind	name	unit	channel	game_rva	evidence
 0x0002904c	0x258	func	?FlipClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	BASE/Icon2bc	src	0x00070b14	masked game body 0x70b14 (600 bytes, 53 fields masked) unique at a census start
 0x0004b7f8	0x6	data	?gAppName@@3PADA	SOURCE/kbwin	src	0x0009e700	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x0004b808	0x13	data	?gTitle@@3PADA	SOURCE/kbwin	src	0x0009e708	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
-0x0004b81c	0x4	data	_gcCDTrackName	SOURCE/kbwin	src	0x0009e720	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
+0x0004b81c	0x4	data	_gCDTrackName	SOURCE/kbwin	src	0x0009e720	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x0004c4a8	0x4	data	?gFRDummy@@3PADA	SOURCE/REQUEST	src	0x0009f4e0	1 code reference(s) from placed bodies
 0x0004c6c0	0x4	data	?gWinGAttached@@3HA	SOURCE/wingraph	src	0x000a0190	1 code reference(s) from placed bodies
 0x0004c6c4	0x4	data	?gGraphicsType@@3HA	SOURCE/wingraph	src	0x000a0194	11 code reference(s) from placed bodies
@@ -398,17 +398,17 @@ rva	size	kind	name	unit	channel	game_rva	evidence
 0x0004da98	0x4	data	_gClipColumn	BASE/Icon2bc	src	0x000a14ac	20 code reference(s) from placed bodies
 0x00052a58	0x10	data	?rcTemp@@3UtagRECT@@A	SOURCE/kbwin	src	0x000a99c8	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x00052a68	0x4	data	?lTemp@@3HA	SOURCE/kbwin	src	0x000a99d8	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
-0x00052a6c	0x4	data	?gMainWinScreenHeight@@3HA	SOURCE/kbwin	src	0x000a99dc	10 code reference(s) from placed bodies
-0x00052a70	0x4	data	?gTempX@@3HA	SOURCE/kbwin	src	0x000a99e0	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
+0x00052a6c	0x4	data	?iMainWinScreenHeight@@3HA	SOURCE/kbwin	src	0x000a99dc	10 code reference(s) from placed bodies
+0x00052a70	0x4	data	?iTempX@@3HA	SOURCE/kbwin	src	0x000a99e0	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x00052a74	0x4	data	?iTempY@@3HA	SOURCE/kbwin	src	0x000a99e4	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x00052a78	0x4	data	?hInstApp@@3PAUHINSTANCE__@@A	SOURCE/kbwin	src	0x000a99e8	1 code reference(s) from placed bodies
 0x00052a7c	0x400	data	?bProcessMessage@@3PAEA	SOURCE/kbwin	src	0x000a99ec	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
-0x00052e7c	0x4	data	?hmnuCurrent@@3PAUHMENU__@@A	SOURCE/kbwin	src	0x000a9dec	2 code reference(s) from placed bodies
-0x00052e80	0x4	data	?iMainWinScreenWidth@@3HA	SOURCE/kbwin	src	0x000a9df0	10 code reference(s) from placed bodies
-0x00052e84	0x3d	data	?gCommandLine@@3PADA	SOURCE/kbwin	src	0x000a9df4	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
-0x00052ec4	0x4	data	?hwndApp@@3PAUHWND__@@A	SOURCE/kbwin	src	0x000a9e34	26 code reference(s) from placed bodies
+0x00052e7c	0x4	data	?gCurrentMenu@@3PAUHMENU__@@A	SOURCE/kbwin	src	0x000a9dec	2 code reference(s) from placed bodies
+0x00052e80	0x4	data	?gMainWinScreenWidth@@3HA	SOURCE/kbwin	src	0x000a9df0	10 code reference(s) from placed bodies
+0x00052e84	0x3d	data	?gCommandParams@@3PADA	SOURCE/kbwin	src	0x000a9df4	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
+0x00052ec4	0x4	data	?gAppWindow@@3PAUHWND__@@A	SOURCE/kbwin	src	0x000a9e34	26 code reference(s) from placed bodies
 0x00052ec8	0x4	data	?gForegroundApp@@3HA	SOURCE/kbwin	src	0x000a9e38	3 code reference(s) from placed bodies
-0x00052ecc	0x4	data	?hmnuApp@@3PAUHMENU__@@A	SOURCE/kbwin	src	0x000a9e3c	3 code reference(s) from placed bodies
+0x00052ecc	0x4	data	?gAppMenu@@3PAUHMENU__@@A	SOURCE/kbwin	src	0x000a9e3c	3 code reference(s) from placed bodies
 0x00052ed0	0x4	data	?gEventHandle@@3PAXA	SOURCE/kbwin	src	0x000a9e40	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x00052ed4	0x4	data	_?gLastGTimerTickCount@?1??AppWndProc@@YGJPAUHWND__@@IIJ@Z@4HA	SOURCE/kbwin	src	0x000a9e44	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x00052ed8	0x4	data	_?gLastCycleTickCount@?1??AppWndProc@@YGJPAUHWND__@@IIJ@Z@4HA	SOURCE/kbwin	src	0x000a9e48	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
@@ -416,13 +416,13 @@ rva	size	kind	name	unit	channel	game_rva	evidence
 0x00052ee4	0x4	data	_?gLastGetMessage@?1??Process1WindowsMessage@@YAXXZ@4HA	SOURCE/kbwin	src	0x000a9e54	2 code reference(s) from placed bodies
 0x00052ee8	0x4	data	_?gNoDialogMenusOn@?1??SetNoDialogMenus@@YAXH@Z@4HA	SOURCE/kbwin	src	0x000a9e58	3 code reference(s) from placed bodies
 0x00052efc	0x1	data	?gRequestingGames@@3CA	SOURCE/REQUEST	src	0x000cc82c	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
-0x00052f20	0x4	data	?gDDResult@@3HA	SOURCE/wingraph	src	0x000cd8c0	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
-0x00052f28	0x6c	data	?gDDSurfaceDesc@@3U_DDSURFACEDESC@@A	SOURCE/wingraph	src	0x000cd8c8	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
+0x00052f20	0x4	data	?gDDrawStatus@@3HA	SOURCE/wingraph	src	0x000cd8c0	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
+0x00052f28	0x6c	data	?gDDrawSurfaceDesc@@3U_DDSURFACEDESC@@A	SOURCE/wingraph	src	0x000cd8c8	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x00052f98	0x10	data	?gDDSourceRect@@3UtagRECT@@A	SOURCE/wingraph	src	0x000cd938	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x00052fa8	0x42c	data	?screenImage@@3UWingImage@@A	SOURCE/wingraph	src	0x000cd948	36 code reference(s) from placed bodies
 0x000533d8	0x10	data	?gDDClientRect@@3UtagRECT@@A	SOURCE/wingraph	src	0x000cdd78	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
-0x000533e8	0x4	data	?gPaintStart@@3HA	SOURCE/wingraph	src	0x000cdd88	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
-0x000533f0	0x10	data	?gDDDestinationRect@@3UtagRECT@@A	SOURCE/wingraph	src	0x000cdd90	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
+0x000533e8	0x4	data	?gDDPaintStart@@3HA	SOURCE/wingraph	src	0x000cdd88	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
+0x000533f0	0x10	data	?gDDDestRect@@3UtagRECT@@A	SOURCE/wingraph	src	0x000cdd90	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x00053400	0x4	data	?gDDrawAttached@@3HA	SOURCE/wingraph	src	0x000cdda0	3 code reference(s) from placed bodies
 0x00053404	0x4	data	?gInitWin@@3PAXA	SOURCE/wingraph	src	0x000cdda4	2 code reference(s) from placed bodies
 0x0005340c	0x4	data	?gTtlBlts@@3HA	SOURCE/wingraph	src	0x000cddac	2 code reference(s) from placed bodies
@@ -435,34 +435,34 @@ rva	size	kind	name	unit	channel	game_rva	evidence
 0x00053428	0x4	data	?gDDPal@@3PAUIDirectDrawPalette@@A	SOURCE/wingraph	src	0x000cddc8	11 code reference(s) from placed bodies
 0x0005342c	0x4	data	?gBusyRetry@@3HA	SOURCE/wingraph	src	0x000cddcc	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x00053430	0x4	data	?gInDDSD@@3HA	SOURCE/wingraph	src	0x000cddd0	2 code reference(s) from placed bodies
-0x00053434	0x4	data	?hdcImage@@3PAUHDC__@@A	SOURCE/wingraph	src	0x000cddd4	11 code reference(s) from placed bodies
+0x00053434	0x4	data	?gImageDC@@3PAUHDC__@@A	SOURCE/wingraph	src	0x000cddd4	11 code reference(s) from placed bodies
 0x00053438	0x4	data	?gbmOldMonoBitmap@@3PAUHBITMAP__@@A	SOURCE/wingraph	src	0x000cddd8	2 code reference(s) from placed bodies
-0x0005343c	0x4	data	?hpalApp@@3PAUHPALETTE__@@A	SOURCE/wingraph	src	0x000cdddc	8 code reference(s) from placed bodies
+0x0005343c	0x4	data	?gAppPalette@@3PAUHPALETTE__@@A	SOURCE/wingraph	src	0x000cdddc	8 code reference(s) from placed bodies
 0x00053440	0x4	data	?gDDrawLibrary@@3PAUHINSTANCE__@@A	SOURCE/wingraph	src	0x000cdde0	5 code reference(s) from placed bodies
 0x00053448	0x4	data	?gLeftRightSave@@3HA	BASE/BUTTON	src	0x000d7f60	3 code reference(s) from placed bodies
-0x00053450	0x708	data	?bmpAndMask@@3PAUtagBITMAP@@A	BASE/MOUSEMGR	src	0x000ce178	9 code reference(s) from placed bodies
+0x00053450	0x708	data	?gAndMaskBitmapInfo@@3PAUtagBITMAP@@A	BASE/MOUSEMGR	src	0x000ce178	9 code reference(s) from placed bodies
 0x00053b58	0x708	data	?bmpColor@@3PAUtagBITMAP@@A	BASE/MOUSEMGR	src	0x000ce880	8 code reference(s) from placed bodies
 0x00054260	0x12c	data	?hMouseCursor@@3PAPAUHICON__@@A	BASE/MOUSEMGR	src	0x000cef88	8 code reference(s) from placed bodies
 0x0005438c	0x12c	data	?hbmpAndMask@@3PAPAUHBITMAP__@@A	BASE/MOUSEMGR	src	0x000cf0b4	7 code reference(s) from placed bodies
-0x000544b8	0x12c	data	?gColorBits@@3PAPAEA	BASE/MOUSEMGR	src	0x000cf1e0	12 code reference(s) from placed bodies
+0x000544b8	0x12c	data	?cColorBits@@3PAPAEA	BASE/MOUSEMGR	src	0x000cf1e0	12 code reference(s) from placed bodies
 0x000545e4	0x12c	data	?hbmpColor@@3PAPAUHBITMAP__@@A	BASE/MOUSEMGR	src	0x000cf30c	6 code reference(s) from placed bodies
-0x00054710	0x5dc	data	?mouseIconInfo@@3PAU_ICONINFO@@A	BASE/MOUSEMGR	src	0x000cf438	6 code reference(s) from placed bodies
+0x00054710	0x5dc	data	?cursorIconInfo@@3PAU_ICONINFO@@A	BASE/MOUSEMGR	src	0x000cf438	6 code reference(s) from placed bodies
 0x00054cec	0x12c	data	?cAndBits@@3PAPAEA	BASE/MOUSEMGR	src	0x000cfa14	16 code reference(s) from placed bodies
 0x00054e18	0x4	data	?gMouseCursorType@@3HA	BASE/MOUSEMGR	src	0x000cfb40	7 code reference(s) from placed bodies
 0x00054e1c	0x4	data	_?gInSetPointer@?1??SetPointer@mouseManager@@QAEXF@Z@4HA	BASE/MOUSEMGR	src	0x000cfb44	3 code reference(s) from placed bodies
-0x00054e24	0x1	data	?gWindowFadeSavedUpdate@@3CA	BASE/WINMGR	src	0x000ce110	2 code reference(s) from placed bodies
+0x00054e24	0x1	data	?gFadeSavedUpdate@@3CA	BASE/WINMGR	src	0x000ce110	2 code reference(s) from placed bodies
 0x00054e28	0x60	data	?gCyclePal@@3PACA	BASE/WINMGR	src	0x000ce114	22 code reference(s) from placed bodies
 0x00054e88	0x4	data	_?gDialogNestCount@?1??DoDialog@heroWindowManager@@QAEFPAVheroWindow@@P6AFAAUtag_message@@@ZH@Z@4HA	BASE/WINMGR	src	0x000ce174	6 code reference(s) from placed bodies
-0x00054e90	0x4	data	_sClipY	BASE/miscwin	src	0x000cfb50	8 code reference(s) from placed bodies
-0x00054e94	0x4	data	_sClipRight	BASE/miscwin	src	0x000cfb54	5 code reference(s) from placed bodies
-0x00054e98	0x4	data	_sClipBottom	BASE/miscwin	src	0x000cfb58	2 code reference(s) from placed bodies
-0x00054e9c	0x4	data	_sClipSource	BASE/miscwin	src	0x000cfb5c	12 code reference(s) from placed bodies
+0x00054e90	0x4	data	_sClipPosY	BASE/miscwin	src	0x000cfb50	8 code reference(s) from placed bodies
+0x00054e94	0x4	data	_sClipLimitX	BASE/miscwin	src	0x000cfb54	5 code reference(s) from placed bodies
+0x00054e98	0x4	data	_sClipLimitY	BASE/miscwin	src	0x000cfb58	2 code reference(s) from placed bodies
+0x00054e9c	0x4	data	_sClipSrcPtr	BASE/miscwin	src	0x000cfb5c	12 code reference(s) from placed bodies
 0x00054ea0	0x4	data	_sClipX	BASE/miscwin	src	0x000cfb60	18 code reference(s) from placed bodies
 0x00054ea4	0x4	data	_sClipRow	BASE/miscwin	src	0x000cfb64	8 code reference(s) from placed bodies
-0x00054ea8	0x4	data	_sClipEntry	BASE/miscwin	src	0x000cfb68	6 code reference(s) from placed bodies
+0x00054ea8	0x4	data	_sClipFrameEntry	BASE/miscwin	src	0x000cfb68	6 code reference(s) from placed bodies
 0x00054eac	0x4	data	_sClipRun	BASE/miscwin	src	0x000cfb6c	12 code reference(s) from placed bodies
 0x00054ef0	0x4	data	_sClipInside	BASE/miscwin	src	0x000cfbb0	3 code reference(s) from placed bodies
-0x00054ef4	0x4	data	_sClipRowStart	BASE/miscwin	src	0x000cfbb4	5 code reference(s) from placed bodies
+0x00054ef4	0x4	data	_sClipLeft	BASE/miscwin	src	0x000cfbb4	5 code reference(s) from placed bodies
 0x00054ef8	0x4	data	_gMusicSuspensions	BASE/Audio	src	0x000cdde8	5 code reference(s) from placed bodies
 0x00054efc	0x4	data	?stream@AudiereMusic@@2V?$RefPtr@VOutputStream@audiere@@@audiere@@A	BASE/Audio	src	0x000cddec	41 code reference(s) from placed bodies
 0x00054f00	0x160	data	_gMusicFilename	BASE/Audio	src	0x000cddf0	3 code reference(s) from placed bodies
