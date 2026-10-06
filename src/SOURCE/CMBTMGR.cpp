@@ -199,7 +199,7 @@ i16 combatManager::Open(i16 priority) {
     m_backgroundDrawn = 0;
     sample = LoadPlaySample("PREBATTL.82M");
     gNextAction = ACTION_NONE;
-    gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
+    gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, NULL);
     m_sideRetreated[COMBAT_DEFENDER_SIDE] = 0;
     m_sideRetreated[COMBAT_ATTACKER_SIDE] = 0;
     m_combatResult = COMBAT_RESULT_PENDING;
@@ -233,7 +233,7 @@ i16 combatManager::Open(i16 priority) {
     m_combatPalette = gResourceManager->GetPalette("kb.pal");
     KBChangeMenu(gCombatMenu);
     CombatMessage("", 1);
-    gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, m_combatPalette);
+    gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, m_combatPalette);
     gLimitedCombatUpdatePalette = 1;
     gMouseManager->NewUpdate(1);
     gMouseManager->WarpPointer(
@@ -284,7 +284,7 @@ void combatManager::Close(void) {
     }
     DrawCombatBorder();
     gLimitedCombatUpdatePalette = 0;
-    gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
+    gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, NULL);
     delete m_backgroundBuffer;
     for (i = 0; i < COMBAT_SIDE_COUNT; i++)
         UpdateArmyGroup(i);
@@ -547,8 +547,8 @@ i8 combatManager::MoreTreesNear(void) {
     originY = m_combatY;
     for (radius = 0; radius < 3; radius++) {
         for (dir = 0; dir < MAP_DIRECTION_COUNT; dir++) {
-            xPos = originX + normalDirTable[dir].x * radius;
-            yPos = originY + normalDirTable[dir].y * radius;
+            xPos = originX + gNormalDirTable[dir].x * radius;
+            yPos = originY + gNormalDirTable[dir].y * radius;
             if (MAP_CELL_IN_BOUNDS(xPos, yPos)) {
                 cell = gAdvManager->GetCell(xPos, yPos);
                 nearbyTileset = cell->m_objectTileset & MAP_CELL_TILESET_MASK;

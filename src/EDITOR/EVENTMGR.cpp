@@ -1041,10 +1041,7 @@ i16 MapDetailsWindowHandler(tag_message& message) {
             } else if (message.id == DETAILS_WINDOW_DESCRIPTION) {
                 gDetailsWindow->BroadcastMessage(request);
                 for (i = 0; i < MAP_HEADER_LANGUAGE_COUNT; i++)
-                    strcpy(
-                        gMapHeader->description[i],
-                        request.text
-                    );
+                    strcpy(gMapHeader->description[i], request.text);
             } else if (message.id == DETAILS_WINDOW_MAP_CODE) {
                 gDetailsWindow->BroadcastMessage(request);
                 strcpy(gText, request.text);

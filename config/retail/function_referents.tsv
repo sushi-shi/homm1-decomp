@@ -1027,7 +1027,7 @@ rva	name	provenance
 0x0006eed9	?GetEvent@inputManager@@QAE?AUtag_message@@XZ	Buka DoAdvCommand instruction/CFG correspondence: 0x261f, 0x268c
 0x0006f008	?SetPositiveOption@inputManager@@QAEXF@Z	Complete compiled/retail body and actual caller review; descriptive names where originals unavailable
 0x0006f062	?SetKeyCodeType@inputManager@@QAEXF@Z	Buka TU-order, instruction/call or constructor-vtable identity review (identity only, strict body/reference comparison unchanged).
-0x0006f085	?TranslateInputCharacterCp1251@@YAXAAUtag_message@@@Z	Complete compiled/retail body and actual caller review; descriptive names where originals unavailable
+0x0006f085	?TranslateInputCharacter@@YAXAAUtag_message@@@Z	Complete compiled/retail body and actual caller review; descriptive names where originals unavailable
 0x0006f0b9	?AsciiConvert@inputManager@@QAEXAAUtag_message@@@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency
 0x0006f3cb	?MakeScanCodeTable@inputManager@@QAEXXZ	Buka TU-order, instruction/call or constructor-vtable identity review (identity only, strict body/reference comparison unchanged).
 0x0006f870	?BlitBitmapToScreen@@YAXPAVbitmap@@HHHHHH@Z	Buka drawing-family instruction/CFG review: 0x55e0, 0x5628

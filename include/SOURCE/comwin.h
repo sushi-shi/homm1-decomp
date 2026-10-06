@@ -72,9 +72,9 @@ void ShutdownComError(char* function);
 i16 com_init(u8 portNumber, i32 baudRate, i32 useDtr);
 void com_term(i16 port);
 i16 com_rcv(i16 port, u16 requested, void* buffer);
-i16 com_snd(i16 port, u16, u16 length, void* data, i32 priority);
-i16 __cdecl com_sess(i32, i32, ...);
-u8 com_stat(i16 port, u16);
+i16 com_snd(i16 port, u16 session, u16 length, void* data, i32 priority);
+i16 __cdecl com_sess(i32 port, i32 operation, ...);
+u8 com_stat(i16 port, u16 session);
 void comm_wrt_task(void);
 
 #endif

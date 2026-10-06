@@ -944,7 +944,7 @@ rva	name
 0x0006eed9	?GetEvent@inputManager@@QAE?AUtag_message@@XZ
 0x0006f008	?SetPositiveOption@inputManager@@QAEXF@Z
 0x0006f062	?SetKeyCodeType@inputManager@@QAEXF@Z
-0x0006f085	?TranslateInputCharacterCp1251@@YAXAAUtag_message@@@Z
+0x0006f085	?TranslateInputCharacter@@YAXAAUtag_message@@@Z
 0x0006f0b9	?AsciiConvert@inputManager@@QAEXAAUtag_message@@@Z
 0x0006f3cb	?MakeScanCodeTable@inputManager@@QAEXXZ
 0x0006f870	?BlitBitmapToScreen@@YAXPAVbitmap@@HHHHHH@Z
@@ -1316,8 +1316,8 @@ rva	name
 0x000903ec	?gSpellAIFlags@@3PACA
 0x0009040c	?gMageGuildSpellPool@@3PAY07CA
 0x0009042c	?gCombatAdjacency@@3PAY05CA
-0x0009053c	?horseFrameFlip@@3PAFA
-0x0009055c	?boatFrameFlip@@3PAFA
+0x0009053c	?gHorseFrameFlip@@3PAFA
+0x0009055c	?gBoatFrameFlip@@3PAFA
 0x0009057c	?gRadarOwnerColor@@3PAFA
 0x00090588	?gRadarTerrainColor@@3PAFA
 0x000905b8	?gTownObjectNames@@3PAPADA
@@ -1332,7 +1332,7 @@ rva	name
 0x00090a84	?gCastleAmounts@@3PAFA
 0x00090a8c	?gHeroGoldCost@@3FA
 0x00090a90	?gVesaMode@@3PAFA
-0x00090a9c	?normalDirTable@@3PAUtag_tilePoint@@A
+0x00090a9c	?gNormalDirTable@@3PAUtag_tilePoint@@A
 0x00090ac0	?gTownBuildingExtents@@3PAY0BA@UTownBuildingExtent@@A
 0x00090cc0	?gDwellingRequirements@@3PAGA
 0x00090cf0	?gResourceBaseValue@@3PAHA
@@ -1360,7 +1360,7 @@ rva	name
 0x00091ae8	?gScoreMon@@3PAY01FA
 0x00091b58	?gScoreCampaignMon@@3PAY01FA
 0x00091bc8	?gWinSetup@@3PAUWindowTextEntry@@A
-0x00091cd8	?townTheme@@3PACA
+0x00091cd8	?gTownTheme@@3PACA
 0x00091ce0	?gCampaignScenarios@@3PAUcampaignScenario@@A
 0x00091fe0	?gCampaignSideCrests@@3PAY01CA
 0x00091fe8	?gCrestTownTypes@@3PAFA
@@ -1395,8 +1395,8 @@ rva	name
 0x00092b08	?gAdvMenuHelp@@3PAPADA
 0x00092b20	?gLuckText@@3PAPADA
 0x00092b3c	?gMoraleText@@3PAPADA
-0x00092b58	?onOffText@@3PAPADA
-0x00092b84	?walkSpeedText@@3PAPADA
+0x00092b58	?gOnOffText@@3PAPADA
+0x00092b84	?gWalkSpeedText@@3PAPADA
 0x00092b98	?gColorNames@@3PAPADA
 0x00092ba8	?gAlignmentNames@@3PAPADA
 0x00092bbc	?gSpellDesc@@3PAPADA
@@ -1450,7 +1450,7 @@ rva	name
 0x000932d0	?gScoreLabels@@3PAPADA
 0x000932e4	?gHumanPlayerTypeNames@@3PAPADA
 0x000932f8	?gHandicapNames@@3PAPADA
-0x0009330c	?musicQualityText@@3PAPADA
+0x0009330c	?gMusicQualityText@@3PAPADA
 0x00093318	?gWinSetupText@@3PAPADA
 0x00093428	?gRequiredExtendedMemory@@3HA
 0x0009342c	?gRequiredConventionalMemory@@3HA
@@ -1474,7 +1474,7 @@ rva	name
 0x0009f05c	?gLastHeartbeatReceive@@3HA
 0x0009f4e0	?gFRDummy@@3PADA
 0x0009f7c0	_gSmackSoundFormats
-0x0009f850	?SmackOptions@@3PAUSSmackOptions@@A
+0x0009f850	?gSmackOptions@@3PAUSSmackOptions@@A
 0x0009f8f4	_gSmackVolumes
 0x0009f97c	_?indexToCastOn@?1??HandleCastSpell@@YAFAAUtag_message@@@Z@4CA
 0x000a0190	?gWinGAttached@@3HA
@@ -1482,8 +1482,8 @@ rva	name
 0x000a0198	?gMainVideoModeColorDepth@@3HA
 0x000a019c	?gMainVideoModeWidth@@3HA
 0x000a01a0	?gMainVideoModeHeight@@3HA
-0x000a01a4	?Orientation@@3HA
-0x000a01a8	?LogicalPalette@@3UWingPalette@@A
+0x000a01a4	?gOrientation@@3HA
+0x000a01a8	?gLogicalPalette@@3UWingPalette@@A
 0x000a0d70	_gCurrentTrack
 0x000a0d74	_gCDTrackMap
 0x000a0f04	_gEffectsVolume
@@ -1492,7 +1492,7 @@ rva	name
 0x000a0ff8	?gMouseOffset@@3PAHA
 0x000a1004	?gHotSpot@@3PAY01EA
 0x000a1374	?gDynamicConstruct@@3PADA
-0x000a1388	_gInputCharacterMapCp1251
+0x000a1388	_gInputCharacterMap
 0x000a1484	_gIconXAdjust
 0x000a1488	_gIconYAdjust
 0x000a148c	_gIconDataBase
@@ -1874,12 +1874,12 @@ rva	name
 0x000cc6e8	?rcvBufOut@@3URemoteMessage@@A
 0x000cc7e8	?idstr@@3PADA
 0x000cc7f0	?gIDCtr@@3HA
-0x000cc800	?packetlen@@3HA
-0x000cc804	?inescape@@3HA
-0x000cc808	?newpacket@@3HA
+0x000cc800	?gModemPacketLength@@3HA
+0x000cc804	?gModemInEscape@@3HA
+0x000cc808	?gModemNewPacket@@3HA
 0x000cc80c	?gInOrderCtr@@3HA
 0x000cc810	?gCurLastID@@3HA
-0x000cc814	?GameMode@@3EA
+0x000cc814	?gRemoteGameMode@@3EA
 0x000cc815	?gPacketSequence@@3EA
 0x000cc818	?gLastHeartbeatSend@@3HA
 0x000cc81c	?gInNetSetup@@3CA

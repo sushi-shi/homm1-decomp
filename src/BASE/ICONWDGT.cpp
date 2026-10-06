@@ -48,7 +48,7 @@ iconWidget::iconWidget(
     i16 y,
     i16 width,
     i16 height,
-    char* name,
+    char* iconName,
     i8 frame,
     i8 orientation,
     i16 id,
@@ -56,7 +56,7 @@ iconWidget::iconWidget(
     i16 fillColor
 )
     : widget(x, y, width, height, id, kind) {
-    m_icon = gResourceManager->GetIcon(name);
+    m_icon = gResourceManager->GetIcon(iconName);
     m_frame = frame;
     m_fillColor = fillColor;
     m_orientation = orientation;
@@ -64,11 +64,11 @@ iconWidget::iconWidget(
 
 VA(0x0046e041, 0xf9)
 void iconWidget::Read(void) {
-    char name[RESOURCE_NAME_CAPACITY];
+    char iconName[RESOURCE_NAME_CAPACITY];
     READ_WIDGET_GEOMETRY(this, gResourceManager);
-    gResourceManager->Read13(name);
+    gResourceManager->Read13(iconName);
     gResourceManager->SavePosition();
-    m_icon = gResourceManager->GetIcon(name);
+    m_icon = gResourceManager->GetIcon(iconName);
     gResourceManager->RestorePosition();
     m_frame = gResourceManager->ReadWord();
     m_orientation = gResourceManager->ReadWord() & ICON_WIDGET_ORIENTATION_MASK;

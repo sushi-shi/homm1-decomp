@@ -1242,7 +1242,7 @@ void combatManager::DoVictory(i8 winningSide) {
 
 // Walks the defeated hero across a scrolling backdrop until the window's
 // button is released.
-#define screenWidth nextWidth // frame-slot spelling
+#define screenWidth nextWidth  // frame-slot spelling
 #define walkFrame walkFrameNum // frame-slot spelling
 VA(0x004205a2, 0x4dc)
 void combatManager::DoLoseWindow(void) {
@@ -1329,14 +1329,8 @@ void combatManager::DoLoseWindow(void) {
     do {
         if (gTimers[COMBAT_FRAME_TIMER_SLOT] < KBTickCount()) {
             BlitBitmap(scrollBitmap, scrollX, 0, 0xdf, 0x7d, gWindowManager->m_screen, 0xd0, 0x28);
-            walkIcon->FillToBuffer(
-                0x10e,
-                0x8c,
-                walkFrame,
-                0,
-                ICON_DRAW_NORMAL,
-                ICON_DRAW_OFFSET_FULL
-            );
+            walkIcon
+                ->FillToBuffer(0x10e, 0x8c, walkFrame, 0, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
             gWindowManager->UpdateScreenRegion(0xd0, 0x28, 0xdf, 0x7d);
             walkFrame++;
             walkFrame = walkFrame % 8;

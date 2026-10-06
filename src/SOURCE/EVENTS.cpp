@@ -1140,8 +1140,8 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                         break;
                     default:
                         previousCell = GetCell(
-                            x - normalDirTable[visitingHero->m_direction].x,
-                            y - normalDirTable[visitingHero->m_direction].y
+                            x - gNormalDirTable[visitingHero->m_direction].x,
+                            y - gNormalDirTable[visitingHero->m_direction].y
                         );
                         if (GhostEvent(
                                 visitingHero,
@@ -1236,8 +1236,8 @@ void advManager::TownEvent(class mapCell* cell, i32 x, i32 y) {
         eventTown->View();
     } else if (eventTown->HasGarrison()) {
         defendingHero = eventTown->m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE
-                       ? NULL
-                       : gGame->GetHero(eventTown->m_occupyingHeroId);
+                            ? NULL
+                            : gGame->GetHero(eventTown->m_occupyingHeroId);
         combatOutcome = DoCombat(
             x,
             y,
@@ -2469,7 +2469,11 @@ void advManager::PlayerMonsterInteract(
 // HoMM1's computer heroes absorb a willing stack (bit 7) they outmatch by
 // 7:4, otherwise fight it through philAI's quick combat.
 VA(0x00428e5f, 0x139)
-void advManager::ComputerMonsterInteract(class mapCell* cell, class hero* eventHero, i8* removeMonsterObject) {
+void advManager::ComputerMonsterInteract(
+    class mapCell* cell,
+    class hero* eventHero,
+    i8* removeMonsterObject
+) {
     i32 numToBuy;
     i32 purchaseWorth;
     i32 bestSlot;
@@ -2500,8 +2504,7 @@ void advManager::ComputerMonsterInteract(class mapCell* cell, class hero* eventH
         }
     } else {
         monsterCount = cell->m_objectMetadata & MONSTER_COUNT_MASK;
-        won =
-            gPhilAI->CombatMonsterEvent(eventHero, cell->m_objectIndex, &monsterCount, cell);
+        won = gPhilAI->CombatMonsterEvent(eventHero, cell->m_objectIndex, &monsterCount, cell);
         cell->m_objectMetadata = (cell->m_objectMetadata & MONSTER_WILLING_FLAG) + monsterCount;
         if (won)
             *removeMonsterObject = 1;

@@ -1,0 +1,143 @@
+kind	owner	old	new	evidence
+param	border::border	name	bitmapName	GetBitmap(name): the background bitmap's resource name
+local	border::Read	name	bitmapName	Read13 then GetBitmap: the background bitmap name
+param	button::button(char*)	iconId	iconName	a resource name passed to GetIcon(char*), not an id; the i16 overload takes the id
+local	button::Read	name	iconName	Read13 then GetIcon: the button icon name
+param	iconWidget::iconWidget(char*)	name	iconName	GetIcon(char*) argument
+local	iconWidget::Read	name	iconName	Read13 then GetIcon
+param	icon::DrawToBuffer/ClipFillToBuffer/FillToBuffer/DimToBuffer	mode	offsetMode	IconDrawOffsetMode; the Icon*2b blitter prototypes already call it offsetMode
+param	ClippedMonoIconToBitmap/ClipIconToBitmap	mode	offsetMode	same IconDrawOffsetMode argument as the blitters
+enum	TextEntryReadMode	TEXT_ENTRY_READ_MULTILINE	TEXT_ENTRY_READ_SCROLLING	Draw/SetupDisplayString keep one line and scroll it by m_displayOffset; only the other modes are line-limited (LineLength > m_maxLines)
+enum	WindowWidgetRecordType	WIDGET_RECORD_TEXT_ENTRY_MULTILINE	WIDGET_RECORD_TEXT_ENTRY_SCROLLING	the record that reads a TEXT_ENTRY_READ_SCROLLING entry
+local	textEntryWidget::Main	lineLength	lineCount	font::LineLength returns a line count compared with m_maxLines
+local	heroWindow::heroWindow(x,y,name)	idx	finished	set on the end record to stop the read loop; not an index
+local	heroWindow::heroWindow(x,y,name)	jb	resourceFile	MakeId(resourceName) result passed to PointToFile
+local	heroWindow::heroWindow(x,y,name)	rec	recordKind	WindowWidgetRecordType tag read per widget record
+param	heroWindow::Open	flags	updateScreen	only forwarded to DrawWindow's update-screen flag
+param	heroWindow::DrawWindow	flags/update	updateScreen	non-zero blits the window to the screen after drawing
+param	heroWindow::RemoveWidget	w	removedWidget	generic name
+param	heroWindowManager::Open	managerOrder	priority	stored in m_priority; baseManager::Open names it priority
+param	heroWindowManager::AddWindow	openFlags	updateScreen	only forwarded to heroWindow::Open/DrawWindow
+param	heroWindowManager::FadeScreen	steps	increment	passed to FadeIn/FadeOut, which step the palette levels by it
+enum	WindowFadeIncrement	WindowFadeSteps/WINDOW_FADE_STEPS_SHORT/WINDOW_FADE_STEPS_NORMAL	WindowFadeIncrement/WINDOW_FADE_SHORT/WINDOW_FADE_NORMAL	values are palette-level increments, not step counts: 0x80 switches the palette at once (comment called it the long fade); donor SHORT_FADE/NORMAL_FADE
+local	heroWindowManager::Main	ret/w	dispatchResult/window	same loop as heroWindow::BroadcastMessage(dispatchResult)
+local	heroWindowManager::UpdateScreenRegion	savedPointerHidden/px	pointerInside/mousePosX	the flag records that the pointer lies in the updated region (nothing is saved); px is the pointer x beside mouseY
+local	executive::DoDialog	p	node	walks the manager list
+member	inputManager	m_keyState	m_scanCodeTable	filled by MakeScanCodeTable with each scan code's key code; AsciiConvert translates through it (no key state)
+param	KeyboardMessageHandler/MouseMessageHandler	<unnamed>	window/virtualKey/keyFlags	AppWndProc's window handle and wParam; prototype now matches the definition
+param	inputManager::Main/mouseManager::Main	<unnamed>	message	the dispatched message
+param	mouseManager hooks	<unnamed>	SaveAndDraw(buffer,x,y,cursorUpdate)/MovePointer(x,y)/WarpPointer(x,y)/NewUpdate(force)/SetCursorShape(shape)/SetColorMice(enabled)	callers' arguments (advManager::UpdateScreen, philAI CheckDoMain, combat/adventure Open)
+param	font::DrawBoundedString/LineLength	str/maxW	text/maxWidth	DrawString and LineWidth call it text
+local	font::DrawBoundedString	myText/bestDrawX/curPosIdx/u/v/spaceCharValue/theWidths/tempWidth/startIdx	textCopy/alignIndent/position/lineTop/breakChar/space/frameDirectory/widthUsed/lineStart	line-wrapping roles; frame slots kept
+local	font::LineLength	z/theLen/lw/mainStart/curLineEnd/v	lines/textLen/widthUsed/lineStart/lineEnd/breakChar	z counts the wrapped lines LineLength returns
+local	font::LineWidth	curCh/table/theLen/thisWidth	baseGlyph/widths/textLen/widthUsed	same roles as LineLength
+param	PostprocessBitmap/PostprocessIcon/PostprocessPalette	<unnamed>/data	pixels,width,height/loadedIcon/paletteData	bitmap::bitmap(id) and icon::icon pass the loaded pixels and icon; SetPalette names the palette bytes paletteData
+enum	BaseWidgetCommand	WIDGET_COMMAND_DIMMED	WIDGET_FLAGS_ARGUMENT_DIMMED	never a command: widget::Main compares it with the SET_FLAGS message value, and callers store it in message.value
+param	resourceManager::GetMouse/Main	<unnamed>	name/message	the resource-name argument and the dispatched message
+local	resourceManager::LoadAggregateHeader	aggregateFp	aggregateFd	an _open file descriptor stored in m_aggregateFd, not a FILE*
+param	MAKEFILEID	text	name	every caller hashes a resource file name
+param	DimBitmapArea/BlitBitmap/TileToBitmap	bmp,w,h/dx,dy/dest	image,width,height/destinationX,destinationY/destination	same roles as FillBitmapArea and BlitBitmapToScreen
+param	highScoreManager::Open	id	priority	stored in m_priority
+local	highScoreManager::Main	entry	rank	the score row index, as in the constructor and Update
+comment	highScoreManager.h	message.m_type	message.type	tag_message has no m_type
+local	fileRequester::Update	oldHumans/newPlayers/limit/newPos/nameIdIdx/colorVal/textColorValue/eventRec/prevExtra	savedPlayerCount/hasPlayerSuffix/textLimit/length/filenameEntryId/selectedColor/plainColor/message/playersString	the saved game's human count digit, the " (N players)" suffix flag and text, the row's pixel limit and the cut position
+local	fileRequester::DoKnob	offset/n/pos	grabOffset/grabPointerY/topRow	pointer-to-knob offset at the grab, the grab position, the dragged top row
+local	fileRequester::Open	dotPtr/enable	extensionStart/enableOk	the '.' cut from the save name; SetOK's argument
+local	fileRequester::fileRequester	moveValue/dotPtr	shiftRow/extensionStart	the insertion sort's shifting row; the extension split point
+static	BASE/INPUTMGR	gInputCharacterMapCp1251	gInputCharacterMap	the table is the selected language's keyboard catalog (localization::Chars("locale.keyboard")), not a CP1251 constant
+function	BASE/INPUTMGR	TranslateInputCharacterCp1251	TranslateInputCharacter	translates through the locale keyboard table
+local	PopNetBox	dataObj..curLen (16 locals)	cursorVisible/redrawInput/closeWindow/exitForIncomingData/inputText/inputWidth/netBox/noticeStamp/redrawText/boxFont/sendOk/closeDelay/enterPressed/inputLength/event/lineMax	chat box roles: the typed line, its cursor blink, the redraw flags, the 6 s notice timeout, the close-after-incoming-data pause
+param	CanBuild/CanBuy	t/type	townPointer/building	project name for a town pointer; CanBuy's second argument is a building slot passed to GetBuildingCost
+local	CanBuy	rec/i	player/resourceIndex	the current playerData and the resource loop
+param	ReceiveRemotePlayerExit	<unnamed#2>	hadControl	HandleRemoteSuddenExit's gText[1] and PollRemote's newControl: whether the exiting player held the turn; comment called it an unused flag
+param	CheckEndGame	forced	forceWin	non-zero ends the game as a win
+param	game::ShowMoraleInfo/ShowLuckInfo	h	heroPointer	project name for a hero pointer
+param	AddScoreToHighScore	standard	highScoreType	compared with HIGH_SCORE_TYPE_STANDARD/CAMPAIGN and stored in gHighScoreType
+local	AddScoreToHighScore	savedName	scoreFile	the STANDARD.HS/CAMPAIGN.HS path
+param	BVResMsg	s/res/qty	text/resourceType/quantity	stored in gBottomViewText/Resource/ResourceQty
+param	GetTownName	i	townIndex	GetTown(i)
+param	UpdateAppSpecificMenus	hMenu	menu	no Hungarian; AppCommand's menu handle
+param	NullHandler/EarlyResizeWindow	<unnamed>	message/x,y,width,height	handler message; ResizeWindow's rectangle
+local	ShowCongrats	win/scoreAmount/res	window/baseScore/total	GetBaseScore(days) and its difficulty-scaled total
+local	WaitForOtherPlayer	data	received	the received RemoteMessage
+param	AppAbout	hDlg/wParam/lParam	dialog/messageParam/messageData	no Hungarian; AppWndProc's names for the same message words
+local	AppAbout/AppCommand	wmId/codeNotify/hwndCtl/lpfnDlgProc	commandId/notifyCode/childWindow/dialogProc	no Hungarian
+local	SetMenus	disabled/match/pos	update/matchIndex/candidate	the flag selects items whose state is rewritten (set when enabling), not disabled ones
+local	SetupCDDrive	thisFh/tempDrives/pos/subKeyArray	probeFd/drivesCount/tailResult/keyPath	probe file descriptor, CD drive count, the tail-read result, the registry key path
+local	DriveSupportsFreeSpaceQuery	szPath/availToCaller	path/availableToCaller	no Hungarian
+local	DDSD	unused	reportCode	not unused: the DDSD_REPORT_* code printed in the "Direct Draw Error #%d" message
+local	DDCreateSurface/DDInitializePalette/DDUpdatePalette/WGInitializePalette	ddrval/lpSurface/curHdc/curRes/hdc	status/createdSurface/systemDeviceContext/status/screenDC	no Hungarian; one name for a DirectDraw call status
+member	inputManager	m_field_0x34a	m_forceMouseMove	advManager sets it where the same code calls inputManager::ForceMouseMove (after recentring on a town/hero); only the constructor clears it
+param	nb_snd	queueToFree	priority	the node goes to the queue nb_thr_ctl sends first; com_snd calls the same argument priority
+global	SOURCE/netwin	gNbFreeQueue	gNbPriorityQueue (alias)	not a free list: nb_thr_ctl pops it before gNbSndQueue to send, as com_snd's priorityQueue
+param	nb_term/nb_rcv/nb_snd/nb_sess/nb_stat	<unnamed#1>/len	port/maxLength,length	the driver interface's port argument (com_* name it port; NetBIOS ignores it)
+param	com_snd/com_stat/com_sess	<unnamed>	session/session/port,operation	same driver-interface slots as nb_snd/nb_stat/nb_sess
+local	nb_sess/nb_thr_ctl	returnCodeValue/nextList/anyIsFree/keepRunningNum/pktPtr	result/args/releaseSource/running/packet	MOVE clears the source session when the flag is set; the queued packet node
+local	com_snd/comm_wrt_task	res/callRv	success	same name as com_rcv's API result
+global	SOURCE/KB	heroWin	gHeroScreenWindow	g-prefixed name; the hero screen's herowind.bin window (HERO.cpp); gHeroWin is a separate pointer to it
+global	SOURCE/KB	DataEntryWin	gDataEntryWindow	g-prefixed name
+global	SOURCE/KB	mapExtra	gMapExtra	g-prefixed name
+global	SOURCE/KB	DEFAULT_AGGREGATE_NAME	gDefaultAggregateName	g-prefixed name
+global	SOURCE/KB	horseFrameFlip	gHorseFrameFlip	g-prefixed name
+global	SOURCE/KB	boatFrameFlip	gBoatFrameFlip	g-prefixed name
+global	SOURCE/KB	normalDirTable	gNormalDirTable	g-prefixed name
+global	SOURCE/KB	townTheme	gTownTheme	g-prefixed name
+global	SOURCE/KB	onOffText	gOnOffText	g-prefixed name
+global	SOURCE/KB	walkSpeedText	gWalkSpeedText	g-prefixed name
+global	SOURCE/KB	musicQualityText	gMusicQualityText	g-prefixed name
+global	SOURCE/wingraph	screenImage	gScreenImage	g-prefixed name
+global	SOURCE/wingraph	Orientation	gOrientation	g-prefixed name
+global	SOURCE/wingraph	LogicalPalette	gLogicalPalette	g-prefixed name
+global	SOURCE/SMACKMGR	SmackOptions	gSmackOptions	g-prefixed name
+global	SOURCE/REMOTE	GameMode	gRemoteGameMode	g-prefixed name; the RemoteGameMode RemoteMain sets
+global	SOURCE/REMOTE	packetlen	gModemPacketLength	g-prefixed name
+global	SOURCE/REMOTE	newpacket	gModemNewPacket	g-prefixed name
+global	SOURCE/REMOTE	inescape	gModemInEscape	g-prefixed name
+global	SOURCE/REMOTE	packet	gPacket	g-prefixed name
+global	SOURCE/REMOTE	inque	gModemInQueue	g-prefixed name
+global	SOURCE/REMOTE	outque	gModemOutQueue	g-prefixed name
+global	SOURCE/REMOTE	rcvBuf	gReceiveQueue	g-prefixed name; the received-message queue GetRemoteData reads
+global	SOURCE/REMOTE	rcvBufOut	gReceiveOut	g-prefixed name
+global	SOURCE/REMOTE	rcvBufIn	gReceiveIn	g-prefixed name
+global	SOURCE/REMOTE	sndBuf	gSendMessage	g-prefixed name; the outgoing RemoteMessage record
+global	SOURCE/REMOTE	PacketSend	gPacketSend	g-prefixed name
+global	SOURCE/REMOTE	idstr	gModemIdString	g-prefixed name
+global	SOURCE/REMOTE	remoteidstr	gRemoteModemIdString	g-prefixed name
+global	SOURCE/REMOTE	numbuf	gPhoneNumber	g-prefixed name; the dialled telephone number (SETUP prompts for it)
+global	SOURCE/REMOTE	oldsec	gLastIdSendTime	g-prefixed name; tick of the last ID broadcast (compared by whole seconds)
+global	SOURCE/REMOTE	stime	gConnectTick	g-prefixed name; the current tick in the connect loops
+global	SOURCE/REMOTE	remotestage	gRemoteConnectStage	g-prefixed name
+global	SOURCE/REMOTE	localstage	gLocalConnectStage	g-prefixed name
+global	SOURCE/REMOTE	WFDCStage	gDirectConnectStage	g-prefixed name; WaitForDirectConnect's stage
+global	SOURCE/REMOTE	GUIMRresponse	gModemResponseLine	g-prefixed name; the modem line GUIModemResponseExec collects
+global	SOURCE/REMOTE	GUIMRresp	gModemExpectedResponse	g-prefixed name; the response GUIModemResponse waits for
+global	SOURCE/REMOTE	GUIMRrespptr	gModemResponseLength	g-prefixed name; length of the collected modem line
+global	SOURCE/REMOTE	GUIMRc	gModemResponseChar	g-prefixed name; the last byte read from the modem
+param	ReceiveRemoteData	decodeType	source	the sender DecodePacket accepts (REMOTE_BROADCAST_PLAYER or a net position)
+local	WaitForDirectConnect/Connect/calc_crc/FileSize	rng/msg/theCarry/f	idSeed/idMessage/overflow/stream	the six-digit ID seed and "ID%s_%i" packet; the CRC's shifted-out top bit; the FILE*
+local-aliased	textWidget::Read	name	fontName	Read13 then GetFont; frame-slot spelling kept behind a function-scoped define
+local-aliased	heroWindowManager::UpdateScreenRegion	topVal/curBottom	top/bottom	the pointer-overlap rectangle beside left/right
+local-aliased	heroWindowManager::FizzleForward	ccycleBuf/saveFlags	cycleTable/savedUpdateFlags	the CCYCLE lookup table; m_updateFlags saved across the fizzle
+local-aliased	heroWindow::MoveWindow	x/yPrev/oldHgt/toX/toY	oldX/oldY/oldHeight/newX/newY	the old and new window origin and the dirty extent
+local-aliased	executive::DoDialog	ex/saveMgr/savePrev/saveNext/idx	nestedExecutive/savedManagers/savedPrevLinks/savedNextLinks/index	the nested executive runs the dialog; the saved manager-list links are restored afterwards
+local-aliased	font::LineLength/LineWidth/DrawString	thePos/cursor/p/pos	position/chars/chars/drawX	the scan index, the text pointer, the pen x
+local-aliased	MAKEFILEID	line/activeSize	upperName/length	the upper-cased copy of the name and its length
+local-aliased	CleanupSamples	head	nextNode	the node after the deleted head
+local-aliased	resourceManager::Expunge	cur	current	list walk
+local-aliased	ClippedMonoIconToBitmap	clipLast	clipBottom	pairs with clipRight
+local-aliased	fileRequester::Main/Update/fileRequester	ptrX,ptrY/y,firstIdIdx/findHandleWork,headerData	mouseX,mouseY/row,firstRowId/findHandle,header	pointer position, list row, the FindFirstFile handle and the .MAP header
+local-aliased	DecodePacket	theSize	dataSize	the packet's payload byte count
+local-aliased	PopNetBox	dataObj/myBaseId/oldShown	remoteData/firstLineId/pointerWasVisible	the queued remote record, the first line widget id, the pointer visibility to restore
+local-aliased	AddScoreToHighScore	curScores/theDest/nextFile/missingFileValue	entries/shiftRank/file/noScoreFile	same roles as highScoreManager::Update
+local-aliased	SetupCDDrive	activeKeyVal	key	the registry key handle
+local-aliased	oldmain	gameDone	creditsDone	ends the credits screen loop only
+local-aliased	RecruitHeroHandler	pos	heroSlot	which of the two offered heroes is viewed
+local-aliased	ShowCongrats	ii	labelIndex	the score label row
+local	PollRemote	newControl	peerHadControl	ReceiveRemotePlayerExit's hadControl: the timed-out peer held the turn
+local-aliased	PollRemote	newFull	queueFull	set when all receive-queue slots are taken
+local	NormalDialog	amounts/sizedHeight/resCenterX	labelTexts/imageHeight/imageCenterX	the caption under each image (an amount, spell name or nothing) and the image geometry
+local-aliased	NormalDialog	resWidth/resourcePanel/captionText/msg	imageWidth/imageWidget/labelWidget/message	image widget, its caption widget and the widget message
+member	font	m_headerWord	m_glyphOffsetY	the font header's second word; DrawString adds it to y for every glyph
+global	BASE/miscwin	sClipY/sClipLimitY/sClipRowStart/sClipRow/sClipFrameEntry/sClipSource/sClipLimitX/sClipX/sClipRun/sClipInside	gClipY/gClipLimitY/gClipRowStart/gClipRow/gClipFrameEntry/gClipSource/gClipLimitX/gClipX/gClipRun/gClipInside	file statics take the g prefix every other unit uses; storage spellings stay behind aliases
+global	BASE/miscwin	sMiscOldField/sMiscScanTable	gMiscOldField/gMiscScanTable	g prefix; unreferenced objects that hold their .bss places
+global	SOURCE/ADVMGR	USMsg/CDMsg	gUSMsg/gCDMsg	g prefix on the two unreferenced message objects

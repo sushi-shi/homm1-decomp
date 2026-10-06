@@ -246,18 +246,18 @@ i16 com_rcv(i16 port, u16 requested, void* buffer) {
 }
 
 VA(0x0041d1e4, 0x11a)
-i16 com_snd(i16 port, u16, u16 length, void* data, i32 priority) {
+i16 com_snd(i16 port, u16 session, u16 length, void* data, i32 priority) {
     tag_Node* node;
-    BOOL res;
+    BOOL success;
 
     if (gComPorts[port].handle != INVALID_HANDLE_VALUE) {
         if (!length) {
-            res = SetCommBreak(gComPorts[port].handle);
-            if (!res)
+            success = SetCommBreak(gComPorts[port].handle);
+            if (!success)
                 ShutdownComError("Set communications break");
             Sleep(COM_BREAK_DELAY);
-            res = ClearCommBreak(gComPorts[port].handle);
-            if (!res)
+            success = ClearCommBreak(gComPorts[port].handle);
+            if (!success)
                 ShutdownComError("Clear communications break");
             return 0;
         }
@@ -278,14 +278,14 @@ i16 com_snd(i16 port, u16, u16 length, void* data, i32 priority) {
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0041d2fe, 0x8)
-i16 __cdecl com_sess(i32, i32, ...) {
+i16 __cdecl com_sess(i32 port, i32 operation, ...) {
     return 0;
 }
 
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0041d306, 0x51)
-u8 com_stat(i16 port, u16) {
+u8 com_stat(i16 port, u16 session) {
     DWORD modemStatus;
 
     if (gComPorts[port].handle != INVALID_HANDLE_VALUE
@@ -299,7 +299,7 @@ VA(0x0041d357, 0xc8)
 void comm_wrt_task(void) {
     ComPortState* comPort;
     tag_Node* packetNode;
-    BOOL callRv;
+    BOOL success;
     u32 totalWritten;
     DWORD sizeWritten;
 
@@ -312,14 +312,14 @@ void comm_wrt_task(void) {
             return;
         totalWritten = 0;
         while (comPort->handle != INVALID_HANDLE_VALUE && totalWritten < packetNode->len) {
-            callRv = WriteFile(
+            success = WriteFile(
                 comPort->handle,
                 &packetNode->comData[totalWritten],
                 packetNode->len - totalWritten,
                 &sizeWritten,
                 NULL
             );
-            if (!callRv)
+            if (!success)
                 ShutdownComError("Write communications data");
             totalWritten += sizeWritten;
         }

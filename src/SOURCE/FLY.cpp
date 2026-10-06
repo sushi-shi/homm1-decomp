@@ -80,10 +80,10 @@ i16 army::CanFit(i16* hex) {
 
 // A non-zero path mode takes the destination as the enemy hex, and CanFit moves the
 // landing hex in place.
-#define direction n // frame-slot spelling
+#define direction n        // frame-slot spelling
 #define unusedHex heldTemp // frame-slot spelling
-#define unusedStep k // frame-slot spelling
-#define unusedIndex m // frame-slot spelling
+#define unusedStep k       // frame-slot spelling
+#define unusedIndex m      // frame-slot spelling
 VA(0x0042a8a0, 0x3f0)
 i16 army::ValidFlight(i16 destination, i8 pathMode) {
     i16 enemyHex;
@@ -192,13 +192,13 @@ i16 army::FlyTo(void) {
 
 // HoMM1 flies along a straight pixel line: six frames per hex of the longer
 // grid axis, the rounding remainder split over the two ends.
-#define sourceColumn colFrom // frame-slot spelling
-#define sourceRow curRow // frame-slot spelling
+#define sourceColumn colFrom   // frame-slot spelling
+#define sourceRow curRow       // frame-slot spelling
 #define frontCell headOccupant // frame-slot spelling
-#define rearCell tailSlot // frame-slot spelling
-#define step k // frame-slot spelling
-#define launchY y1 // frame-slot spelling
-#define landPosY y2 // frame-slot spelling
+#define rearCell tailSlot      // frame-slot spelling
+#define step k                 // frame-slot spelling
+#define launchY y1             // frame-slot spelling
+#define landPosY y2            // frame-slot spelling
 VA(0x0042acac, 0x70c)
 i16 army::FlyTo(i16 destination) {
     i32 boxRightX;

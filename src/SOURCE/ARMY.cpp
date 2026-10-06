@@ -349,7 +349,7 @@ void army::Wince(void) {
 
 // One hex of walking: six frames redrawn inside the union of the old and
 // new extents; a stack turned away from the step moves before animating.
-#define occupantCell tempCell // frame-slot spelling
+#define occupantCell tempCell   // frame-slot spelling
 #define unusedDistance moveDist // frame-slot spelling
 VA(0x00414084, 0x7d0)
 void army::Walk(i16 direction, i8 standAfter, i8 continued) {
@@ -534,12 +534,12 @@ void army::Walk(i16 direction, i8 standAfter, i8 continued) {
 // A ranged attack: turn toward the target, animate the missile hex by hex
 // over a saved screen patch, apply wall and luck modifiers, report the
 // damage; creature 14 shoots twice.
-#define launchY y1 // frame-slot spelling
-#define landPosY y2 // frame-slot spelling
-#define archerColumn srcCol // frame-slot spelling
-#define defenderRow aimRow // frame-slot spelling
+#define launchY y1               // frame-slot spelling
+#define landPosY y2              // frame-slot spelling
+#define archerColumn srcCol      // frame-slot spelling
+#define defenderRow aimRow       // frame-slot spelling
 #define defenderColumn targetCol // frame-slot spelling
-#define wallRow hitRow // frame-slot spelling
+#define wallRow hitRow           // frame-slot spelling
 VA(0x00414854, 0xc74)
 void army::SpecialAttack(void) {
     DATA(0x004a67d8)

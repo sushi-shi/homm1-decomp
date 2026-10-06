@@ -29,7 +29,7 @@ VA(0x004519f0, 0x66)
 void RemoteCleanup(void) {
     if (!gRemoteOn)
         return;
-    switch (GameMode) {
+    switch (gRemoteGameMode) {
         case REMOTE_GAME_NETWORK_HOST:
         case REMOTE_GAME_NETWORK_GUEST:
             UnloadRemoteDriver(REMOTE_DRIVER_NETBIOS);
@@ -61,16 +61,16 @@ void* ReadFileBlock(char* filename, void* buffer, i32 size, i32 offset) {
 VA(0x00451abb, 0x74)
 i32 FileSize(char* filename) {
     i32 length;
-    FILE* f;
-    f = fopen(filename, "r+b");
-    if (f == NULL) {
-        if (f == NULL)
+    FILE* stream;
+    stream = fopen(filename, "r+b");
+    if (stream == NULL) {
+        if (stream == NULL)
             FileError(filename);
     }
-    fseek(f, 0, SEEK_END);
-    length = ftell(f);
-    fseek(f, 0, SEEK_SET);
-    fclose(f);
+    fseek(stream, 0, SEEK_END);
+    length = ftell(stream);
+    fseek(stream, 0, SEEK_SET);
+    fclose(stream);
     return length;
 }
 
@@ -79,9 +79,9 @@ void RemoteMain(i32 gameMode) {
     char directConnectMessage[164];
 
     gInNetSetup = 1;
-    memset(rcvBuf, 0, sizeof(rcvBuf));
+    memset(gReceiveQueue, 0, sizeof(gReceiveQueue));
     memset(gLastIds, 0, 30);
-    GameMode = gameMode;
+    gRemoteGameMode = gameMode;
     switch (gameMode) {
         case REMOTE_GAME_NETWORK_HOST:
             nbnet_init();
@@ -97,30 +97,30 @@ void RemoteMain(i32 gameMode) {
         modemStart:
             gRemoteOn = 1;
             gNumNetGuests = 1;
-            inque.writePosition = 0;
-            inque.readPosition = 0;
-            outque.writePosition = 0;
-            outque.readPosition = 0;
+            gModemInQueue.writePosition = 0;
+            gModemInQueue.readPosition = 0;
+            gModemOutQueue.writePosition = 0;
+            gModemOutQueue.readPosition = 0;
             gBaudBits = CBR_115200 / gConfig.baudRate[gDirectConnect];
             ModemSetup();
             switch (gameMode) {
                 case REMOTE_GAME_MODEM_HOST:
                     if (!gDirectConnect && Dial()) {
                         RemoteCleanup();
-                        GameMode = REMOTE_GAME_NONE;
+                        gRemoteGameMode = REMOTE_GAME_NONE;
                     }
                     break;
                 case REMOTE_GAME_MODEM_GUEST:
                     if (!gDirectConnect && Wait()) {
                         RemoteCleanup();
-                        GameMode = REMOTE_GAME_NONE;
+                        gRemoteGameMode = REMOTE_GAME_NONE;
                     }
                     break;
                 default:
                     return;
             }
             if (gDirectConnect) {
-                WFDCStage = 0;
+                gDirectConnectStage = 0;
                 gWaitType = DIALOG_WAIT_DIRECT_CONNECT;
                 strcpy(directConnectMessage, localization::Tr("network.direct.wait"));
                 NormalDialog(directConnectMessage, NORMAL_DIALOG_TYPE_WAIT_CANCEL);
@@ -152,14 +152,14 @@ void UnloadRemoteDriver(H1_ENUM_PARAM(RemoteDriverType, i16) networkDriver) {
 VA(0x00451d83, 0xab)
 void calc_crc(u16* crc, u8* data, i32 length) {
     i32 unused = 0;
-    i16 theCarry;
+    i16 overflow;
     i16 mask;
     while (length--) {
         for (mask = REMOTE_CRC_BYTE_TOP_BIT; mask; mask >>= 1) {
-            theCarry = *crc & REMOTE_CRC_TOP_BIT;
+            overflow = *crc & REMOTE_CRC_TOP_BIT;
             *crc <<= 1;
             *crc |= (mask & *data) != 0;
-            if (theCarry)
+            if (overflow)
                 *crc ^= REMOTE_CRC_POLYNOMIAL;
         }
         data++;
@@ -170,45 +170,47 @@ VA(0x00451e2e, 0x7b)
 i32 EncodePacket(RemoteMessage* data, i8 source, i8 destination, i32 length) {
     u16 crc;
 
-    REMOTE_PACKET(PacketSend)->source = source;
-    REMOTE_PACKET(PacketSend)->destination = destination;
-    REMOTE_PACKET(PacketSend)->sequence = gPacketSequence;
-    REMOTE_PACKET(PacketSend)->payloadSize = length;
+    REMOTE_PACKET(gPacketSend)->source = source;
+    REMOTE_PACKET(gPacketSend)->destination = destination;
+    REMOTE_PACKET(gPacketSend)->sequence = gPacketSequence;
+    REMOTE_PACKET(gPacketSend)->payloadSize = length;
     crc = 0;
-    REMOTE_PACKET(PacketSend)->crc = crc;
-    memcpy(PacketSend + sizeof(RemotePacketHeader), data, length);
+    REMOTE_PACKET(gPacketSend)->crc = crc;
+    memcpy(gPacketSend + sizeof(RemotePacketHeader), data, length);
     // API-forced: calc_crc takes unsigned bytes; the wire buffer is char[].
-    calc_crc(&crc, reinterpret_cast<u8*>(PacketSend), length + sizeof(RemotePacketHeader));
-    REMOTE_PACKET(PacketSend)->crc = crc;
+    calc_crc(&crc, reinterpret_cast<u8*>(gPacketSend), length + sizeof(RemotePacketHeader));
+    REMOTE_PACKET(gPacketSend)->crc = crc;
     return length + sizeof(RemotePacketHeader);
 }
 
+#define dataSize theSize // frame-slot spelling
 VA(0x00451ea9, 0xb2)
 i32 DecodePacket(RemoteMessage* data, i32 source) {
     u16 computedCrc;
     u16 crc;
     i32 i;
-    u32 theSize;
+    u32 dataSize;
 
     computedCrc = 0;
-    if (REMOTE_PACKET(packet)->source != source && source != REMOTE_BROADCAST_PLAYER) {
+    if (REMOTE_PACKET(gPacket)->source != source && source != REMOTE_BROADCAST_PLAYER) {
         return 0;
     }
-    if (REMOTE_PACKET(packet)->destination != gThisNetPos
-        && REMOTE_PACKET(packet)->destination != REMOTE_BROADCAST_PLAYER) {
+    if (REMOTE_PACKET(gPacket)->destination != gThisNetPos
+        && REMOTE_PACKET(gPacket)->destination != REMOTE_BROADCAST_PLAYER) {
         return 0;
     }
-    theSize = REMOTE_PACKET(packet)->payloadSize;
-    crc = REMOTE_PACKET(packet)->crc;
-    REMOTE_PACKET(packet)->crc = 0;
+    dataSize = REMOTE_PACKET(gPacket)->payloadSize;
+    crc = REMOTE_PACKET(gPacket)->crc;
+    REMOTE_PACKET(gPacket)->crc = 0;
     // API-forced: calc_crc takes unsigned bytes; the wire buffer is char[].
-    calc_crc(&computedCrc, reinterpret_cast<u8*>(packet), theSize + sizeof(RemotePacketHeader));
+    calc_crc(&computedCrc, reinterpret_cast<u8*>(gPacket), dataSize + sizeof(RemotePacketHeader));
     if (crc != computedCrc) {
         return 0;
     }
-    memcpy(data, packet + sizeof(RemotePacketHeader), theSize);
+    memcpy(data, gPacket + sizeof(RemotePacketHeader), dataSize);
     return 1;
 }
+#undef dataSize
 
 VA(0x00451f5b, 0x10f)
 i32 SendRemoteData(RemoteMessage* dataToSend, u8*, i32 destination, i32 length) {
@@ -220,7 +222,7 @@ i32 SendRemoteData(RemoteMessage* dataToSend, u8*, i32 destination, i32 length) 
 
     out = 1;
     if (gMapBaseType == MULTIPLAYER_BASE_NETWORK) {
-        if (GameMode == REMOTE_GAME_NETWORK_HOST)
+        if (gRemoteGameMode == REMOTE_GAME_NETWORK_HOST)
             destination = gNetNameIndex + 1;
         else
             destination = 0;
@@ -228,11 +230,11 @@ i32 SendRemoteData(RemoteMessage* dataToSend, u8*, i32 destination, i32 length) 
         destination = 1 - gThisNetPos;
     }
     size = EncodePacket(dataToSend, gThisNetPos, destination, length);
-    switch (GameMode) {
+    switch (gRemoteGameMode) {
         case REMOTE_GAME_NETWORK_HOST:
         case REMOTE_GAME_NETWORK_GUEST:
             do {
-                sendStatus = nb_snd(0, destination, size, PacketSend, 0);
+                sendStatus = nb_snd(0, destination, size, gPacketSend, 0);
                 if (sendStatus) {
                     out = 0;
                     goto finished;
@@ -241,7 +243,7 @@ i32 SendRemoteData(RemoteMessage* dataToSend, u8*, i32 destination, i32 length) 
             break;
         case REMOTE_GAME_MODEM_HOST:
         case REMOTE_GAME_MODEM_GUEST:
-            WriteModemPacket(PacketSend, size);
+            WriteModemPacket(gPacketSend, size);
             out = 1;
             break;
     }
@@ -250,29 +252,29 @@ finished:
 }
 
 VA(0x0045206a, 0xcd)
-i32 ReceiveRemoteData(u8*, RemoteMessage* data, i32 decodeType) {
+i32 ReceiveRemoteData(u8*, RemoteMessage* data, i32 source) {
     i32 receiveResult;
     i32 result;
 
     result = 1;
-    switch (GameMode) {
+    switch (gRemoteGameMode) {
         case REMOTE_GAME_NETWORK_HOST:
         case REMOTE_GAME_NETWORK_GUEST:
-            if (GameMode == REMOTE_GAME_NETWORK_HOST)
-                decodeType = gNetNameIndex + 1;
+            if (gRemoteGameMode == REMOTE_GAME_NETWORK_HOST)
+                source = gNetNameIndex + 1;
             else
-                decodeType = 0;
-            receiveResult = nb_rcv(0, 0x100, packet);
+                source = 0;
+            receiveResult = nb_rcv(0, 0x100, gPacket);
             if (receiveResult == 0)
                 return 0;
-            result = DecodePacket(data, decodeType);
+            result = DecodePacket(data, source);
             break;
         case REMOTE_GAME_MODEM_HOST:
         case REMOTE_GAME_MODEM_GUEST:
             receiveResult = ReadPacket();
             if (receiveResult == 0)
                 return 0;
-            result = DecodePacket(data, decodeType);
+            result = DecodePacket(data, source);
             break;
     }
     return result;
@@ -284,17 +286,17 @@ i32 gIDCtr = 0;
 DATA(0x004cc7f4)
 i32 gUnusedRemoteWords[3] = {0, 0, 0};
 DATA(0x004cc800)
-i32 packetlen = 0;
+i32 gModemPacketLength = 0;
 DATA(0x004cc804)
-i32 inescape = 0;
+i32 gModemInEscape = 0;
 DATA(0x004cc808)
-i32 newpacket = 0;
+i32 gModemNewPacket = 0;
 DATA(0x004cc80c)
 i32 gInOrderCtr = 0;
 DATA(0x004cc810)
 i32 gCurLastID = 0;
 DATA(0x004cc814)
-u8 GameMode = 0;
+u8 gRemoteGameMode = 0;
 DATA(0x004cc815)
 u8 gPacketSequence = 0;
 DATA(0x004cc818)
@@ -467,7 +469,7 @@ i32 nbnet_init(void) {
     i32 status;
 
     gNumNetGuests = 0;
-    switch (GameMode) {
+    switch (gRemoteGameMode) {
         case REMOTE_GAME_NETWORK_HOST:
             gWaitType = DIALOG_WAIT_NETBIOS_INIT_HOST;
             sprintf(gText, localization::Tr("network.initialize.wait"));
@@ -530,10 +532,10 @@ VA(0x0045283e, 0x95)
 i32 Dial(void) {
     char dialCommand[40];
     gLastDialPos = 0;
-    sprintf(dialCommand, "ATDT%s", numbuf);
-    sprintf(gText, "%s %s", localization::Tr("modem.dialing"), numbuf);
+    sprintf(dialCommand, "ATDT%s", gPhoneNumber);
+    sprintf(gText, "%s %s", localization::Tr("modem.dialing"), gPhoneNumber);
     GUIModemCommand(gText, dialCommand);
-    sprintf(gText, "%s %s", localization::Tr("modem.dialing"), numbuf);
+    sprintf(gText, "%s %s", localization::Tr("modem.dialing"), gPhoneNumber);
     if (GUIModemResponse(gText, "CONNECT"))
         return 1;
     return 0;
@@ -591,9 +593,9 @@ void ModemCommand(char* command) {
 
 VA(0x00452a5e, 0x6b)
 i8 GUIModemResponse(char* message, char* response) {
-    memset(GUIMRresponse, 0, 80);
-    GUIMRrespptr = 0;
-    strcpy(GUIMRresp, response);
+    memset(gModemResponseLine, 0, 80);
+    gModemResponseLength = 0;
+    strcpy(gModemExpectedResponse, response);
     gWaitType = DIALOG_WAIT_MODEM_RESPONSE;
     NormalDialog(message, NORMAL_DIALOG_TYPE_WAIT_CANCEL);
     if (!gFunctionComplete)
@@ -603,23 +605,23 @@ i8 GUIModemResponse(char* message, char* response) {
 
 VA(0x00452ac9, 0xb3)
 i8 GUIModemResponseExec(void) {
-    GUIMRc = read_byte();
-    if (GUIMRc == -1)
+    gModemResponseChar = read_byte();
+    if (gModemResponseChar == -1)
         return 0;
-    if (GUIMRc == '\n' || GUIMRrespptr == MODEM_RESPONSE_LAST) {
-        GUIMRresponse[GUIMRrespptr] = 0;
-        if (GUIMRrespptr > 17)
-            GUIMRresponse[17] = 0;
+    if (gModemResponseChar == '\n' || gModemResponseLength == MODEM_RESPONSE_LAST) {
+        gModemResponseLine[gModemResponseLength] = 0;
+        if (gModemResponseLength > 17)
+            gModemResponseLine[17] = 0;
         goto compareResponse;
     }
-    if (GUIMRc >= ' ') {
-        GUIMRresponse[GUIMRrespptr] = GUIMRc;
-        ++GUIMRrespptr;
+    if (gModemResponseChar >= ' ') {
+        gModemResponseLine[gModemResponseLength] = gModemResponseChar;
+        ++gModemResponseLength;
     }
     return 0;
 compareResponse:
-    if (strncmp(GUIMRresponse, GUIMRresp, strlen(GUIMRresp)) != 0) {
-        GUIMRrespptr = 0;
+    if (strncmp(gModemResponseLine, gModemExpectedResponse, strlen(gModemExpectedResponse)) != 0) {
+        gModemResponseLength = 0;
         return 0;
     } else {
         return 1;
@@ -653,49 +655,49 @@ void write_byte(i32 value) {
 VA(0x00452be9, 0x276)
 void Connect(void) {
     i32 code;
-    char msg[20];
+    char idMessage[20];
     u32 randSeed = KBTickCount();
     randSeed %= 1000000;
-    idstr[0] = randSeed / 100000 + '0';
-    randSeed -= (idstr[0] - '0') * 100000;
-    idstr[1] = randSeed / 10000 + '0';
-    randSeed -= (idstr[1] - '0') * 10000;
-    idstr[2] = randSeed / 1000 + '0';
-    randSeed -= (idstr[2] - '0') * 1000;
-    idstr[3] = randSeed / 100 + '0';
-    randSeed -= (idstr[3] - '0') * 100;
-    idstr[4] = randSeed / 10 + '0';
-    randSeed -= (idstr[4] - '0') * 10;
-    idstr[5] = randSeed + '0';
-    idstr[6] = 0;
-    oldsec = -1;
-    remotestage = 0;
-    localstage = remotestage;
+    gModemIdString[0] = randSeed / 100000 + '0';
+    randSeed -= (gModemIdString[0] - '0') * 100000;
+    gModemIdString[1] = randSeed / 10000 + '0';
+    randSeed -= (gModemIdString[1] - '0') * 10000;
+    gModemIdString[2] = randSeed / 1000 + '0';
+    randSeed -= (gModemIdString[2] - '0') * 1000;
+    gModemIdString[3] = randSeed / 100 + '0';
+    randSeed -= (gModemIdString[3] - '0') * 100;
+    gModemIdString[4] = randSeed / 10 + '0';
+    randSeed -= (gModemIdString[4] - '0') * 10;
+    gModemIdString[5] = randSeed + '0';
+    gModemIdString[6] = 0;
+    gLastIdSendTime = -1;
+    gRemoteConnectStage = 0;
+    gLocalConnectStage = gRemoteConnectStage;
     do {
         if (ReadPacket()) {
-            packet[packetlen] = 0;
-            if (packetlen != DIRECT_CONNECT_ID_PACKET_LENGTH)
+            gPacket[gModemPacketLength] = 0;
+            if (gModemPacketLength != DIRECT_CONNECT_ID_PACKET_LENGTH)
                 continue;
-            if (strncmp(packet, "ID", 2))
+            if (strncmp(gPacket, "ID", 2))
                 continue;
-            if (!strncmp(packet + 2, idstr, 6)) {
+            if (!strncmp(gPacket + 2, gModemIdString, 6)) {
                 sprintf(gText, "Duplicate ID Strings!\nSorry Please Try Again\n");
                 GOut(gText);
                 RemoteCleanup();
             }
-            strncpy(remoteidstr, packet + 2, 6);
-            remotestage = packet[9] - '0';
-            localstage = remotestage + 1;
-            oldsec = -1;
+            strncpy(gRemoteModemIdString, gPacket + 2, 6);
+            gRemoteConnectStage = gPacket[9] - '0';
+            gLocalConnectStage = gRemoteConnectStage + 1;
+            gLastIdSendTime = -1;
         }
-        stime = KBTickCount();
-        if (stime / 1000 != oldsec / 1000) {
-            oldsec = stime;
-            sprintf(msg, "ID%s_%i", idstr, localstage);
-            WriteModemPacket(msg, strlen(msg));
+        gConnectTick = KBTickCount();
+        if (gConnectTick / 1000 != gLastIdSendTime / 1000) {
+            gLastIdSendTime = gConnectTick;
+            sprintf(idMessage, "ID%s_%i", gModemIdString, gLocalConnectStage);
+            WriteModemPacket(idMessage, strlen(idMessage));
         }
         PollSound();
-    } while (localstage < 2);
+    } while (gLocalConnectStage < 2);
     while (ReadPacket()) {
     }
 }
@@ -703,53 +705,53 @@ void Connect(void) {
 VA(0x00452e5f, 0x2c3)
 i32 WaitForDirectConnect(void) {
     char idMessage[20];
-    u32 rng;
-    switch (WFDCStage) {
+    u32 idSeed;
+    switch (gDirectConnectStage) {
         case DIRECT_CONNECT_MAKE_ID:
-            rng = KBTickCount();
-            rng %= 1000000;
-            idstr[0] = rng / 100000 + '0';
-            rng -= (idstr[0] - '0') * 100000;
-            idstr[1] = rng / 10000 + '0';
-            rng -= (idstr[1] - '0') * 10000;
-            idstr[2] = rng / 1000 + '0';
-            rng -= (idstr[2] - '0') * 1000;
-            idstr[3] = rng / 100 + '0';
-            rng -= (idstr[3] - '0') * 100;
-            idstr[4] = rng / 10 + '0';
-            rng -= (idstr[4] - '0') * 10;
-            idstr[5] = rng + '0';
-            idstr[6] = 0;
-            oldsec = -1;
-            remotestage = 0;
-            localstage = remotestage;
-            WFDCStage++;
+            idSeed = KBTickCount();
+            idSeed %= 1000000;
+            gModemIdString[0] = idSeed / 100000 + '0';
+            idSeed -= (gModemIdString[0] - '0') * 100000;
+            gModemIdString[1] = idSeed / 10000 + '0';
+            idSeed -= (gModemIdString[1] - '0') * 10000;
+            gModemIdString[2] = idSeed / 1000 + '0';
+            idSeed -= (gModemIdString[2] - '0') * 1000;
+            gModemIdString[3] = idSeed / 100 + '0';
+            idSeed -= (gModemIdString[3] - '0') * 100;
+            gModemIdString[4] = idSeed / 10 + '0';
+            idSeed -= (gModemIdString[4] - '0') * 10;
+            gModemIdString[5] = idSeed + '0';
+            gModemIdString[6] = 0;
+            gLastIdSendTime = -1;
+            gRemoteConnectStage = 0;
+            gLocalConnectStage = gRemoteConnectStage;
+            gDirectConnectStage++;
             break;
         case DIRECT_CONNECT_EXCHANGE_ID:
             if (ReadPacket()) {
-                packet[packetlen] = 0;
-                if (packetlen != DIRECT_CONNECT_ID_PACKET_LENGTH)
+                gPacket[gModemPacketLength] = 0;
+                if (gModemPacketLength != DIRECT_CONNECT_ID_PACKET_LENGTH)
                     return 0;
-                if (strncmp(packet, "ID", 2))
+                if (strncmp(gPacket, "ID", 2))
                     return 0;
-                if (!strncmp(packet + 2, idstr, 6)) {
+                if (!strncmp(gPacket + 2, gModemIdString, 6)) {
                     sprintf(gText, "Duplicate ID Strings!\nSorry Please Try Again\n");
                     GOut(gText);
                     RemoteCleanup();
                 }
-                strncpy(remoteidstr, packet + 2, 6);
-                remotestage = packet[9] - '0';
-                localstage = remotestage + 1;
-                oldsec = -1;
+                strncpy(gRemoteModemIdString, gPacket + 2, 6);
+                gRemoteConnectStage = gPacket[9] - '0';
+                gLocalConnectStage = gRemoteConnectStage + 1;
+                gLastIdSendTime = -1;
             }
-            stime = KBTickCount();
-            if (stime / 1000 != oldsec / 1000) {
-                oldsec = stime;
-                sprintf(idMessage, "ID%s_%i", idstr, localstage);
+            gConnectTick = KBTickCount();
+            if (gConnectTick / 1000 != gLastIdSendTime / 1000) {
+                gLastIdSendTime = gConnectTick;
+                sprintf(idMessage, "ID%s_%i", gModemIdString, gLocalConnectStage);
                 WriteModemPacket(idMessage, strlen(idMessage));
             }
-            if (localstage >= 2)
-                WFDCStage++;
+            if (gLocalConnectStage >= 2)
+                gDirectConnectStage++;
             break;
         case DIRECT_CONNECT_DRAIN:
             if (!ReadPacket())
@@ -763,37 +765,37 @@ VA(0x00453122, 0xe4)
 char ReadPacket(void) {
     i32 input;
     char scratch[28];
-    if (inque.writePosition > 4092) {
-        inque.writePosition = 0;
-        newpacket = 1;
+    if (gModemInQueue.writePosition > 4092) {
+        gModemInQueue.writePosition = 0;
+        gModemNewPacket = 1;
     }
 readPacketStart:
-    if (newpacket) {
-        packetlen = 0;
-        newpacket = 0;
+    if (gModemNewPacket) {
+        gModemPacketLength = 0;
+        gModemNewPacket = 0;
     }
     do {
     readNextByte:
         input = read_byte();
         if (input < 0)
             return 0;
-        if (inescape) {
-            inescape = 0;
+        if (gModemInEscape) {
+            gModemInEscape = 0;
             if (input == MODEM_PACKET_END) {
-                newpacket = 1;
+                gModemNewPacket = 1;
                 return 1;
             } else if (input == MODEM_PACKET_START) {
-                newpacket = 1;
+                gModemNewPacket = 1;
                 goto readPacketStart;
             }
         } else if (input == MODEM_PACKET_ESCAPE) {
-            inescape = 1;
+            gModemInEscape = 1;
             goto readNextByte;
         }
-        if (packetlen >= MODEM_PACKET_MAX_LENGTH)
+        if (gModemPacketLength >= MODEM_PACKET_MAX_LENGTH)
             goto readPacketStart;
-        packet[packetlen] = input;
-        ++packetlen;
+        gPacket[gModemPacketLength] = input;
+        ++gModemPacketLength;
     } while (1);
 }
 
@@ -899,27 +901,28 @@ RemoteMessage* GetRemoteData(i8 remove) {
     oldestOrder = 999999999;
     selected = -1;
     for (queueIndex = 0; queueIndex < REMOTE_QUEUE_CAPACITY; queueIndex++) {
-        if (rcvBuf[queueIndex].type && gInOrder[queueIndex] < oldestOrder) {
+        if (gReceiveQueue[queueIndex].type && gInOrder[queueIndex] < oldestOrder) {
             oldestOrder = gInOrder[queueIndex];
             selected = queueIndex;
         }
     }
     if (selected >= 0) {
-        memcpy(&rcvBufOut, &rcvBuf[selected], REMOTE_MESSAGE_SIZE);
+        memcpy(&gReceiveOut, &gReceiveQueue[selected], REMOTE_MESSAGE_SIZE);
         if (remove)
-            rcvBuf[selected].type = REMOTE_MESSAGE_NONE;
-        rcvBuf[selected].sender = NetPosToGamePos(rcvBuf[selected].sender);
-        return &rcvBufOut;
+            gReceiveQueue[selected].type = REMOTE_MESSAGE_NONE;
+        gReceiveQueue[selected].sender = NetPosToGamePos(gReceiveQueue[selected].sender);
+        return &gReceiveOut;
     }
     return NULL;
 }
 
+#define queueFull newFull // frame-slot spelling
 VA(0x004535af, 0x46c)
 void PollRemote(void) {
     DATA(0x004cc828)
     static i8 gInTimeoutFail = 0;
-    i8 newControl;
-    i8 newFull;
+    i8 peerHadControl;
+    i8 queueFull;
     i32 i;
     i32 numQueued;
     i32 result;
@@ -933,14 +936,14 @@ void PollRemote(void) {
     if (gInNetSetup)
         return;
     numQueued = 0;
-    newFull = 0;
+    queueFull = 0;
     if (KBTickCount() - gLastHeartbeatSend > 5000) {
-        sndBuf.sender = gThisNetPos;
-        sndBuf.type = REMOTE_MESSAGE_HEARTBEAT;
-        sndBuf.payloadSize = 1;
-        sndBuf.command = (gCurPlayer << 4) + gCurHourGlassPhase;
-        sndBuf.payload.data[0] = 1;
-        SendRemoteData(&sndBuf, NULL, 1 - gThisNetPos, REMOTE_MESSAGE_HEADER_SIZE + 1);
+        gSendMessage.sender = gThisNetPos;
+        gSendMessage.type = REMOTE_MESSAGE_HEARTBEAT;
+        gSendMessage.payloadSize = 1;
+        gSendMessage.command = (gCurPlayer << 4) + gCurHourGlassPhase;
+        gSendMessage.payload.data[0] = 1;
+        SendRemoteData(&gSendMessage, NULL, 1 - gThisNetPos, REMOTE_MESSAGE_HEADER_SIZE + 1);
         gLastHeartbeatSend = KBTickCount();
     }
     if (KBTickCount() > gLastHeartbeatReceive + 60000 && !gInTimeoutFail) {
@@ -951,72 +954,74 @@ void PollRemote(void) {
             gInTimeoutFail = 1;
             if (gHumanPlayer[gCurPlayer]) {
                 if (gCurPlayer == gThisGamePos)
-                    newControl = 0;
+                    peerHadControl = 0;
                 else
-                    newControl = 1;
+                    peerHadControl = 1;
             } else {
                 if (gThisGamePos == gHostGamePos)
-                    newControl = 0;
+                    peerHadControl = 0;
                 else
-                    newControl = 1;
+                    peerHadControl = 1;
             }
-            ReceiveRemotePlayerExit(1 - gThisGamePos, newControl, 0, 1);
+            ReceiveRemotePlayerExit(1 - gThisGamePos, peerHadControl, 0, 1);
         }
     }
     for (i = 0; i < REMOTE_QUEUE_CAPACITY; i++) {
-        if (rcvBuf[i].type)
+        if (gReceiveQueue[i].type)
             numQueued++;
     }
     if (numQueued == REMOTE_QUEUE_CAPACITY)
-        newFull = 1;
+        queueFull = 1;
     result = 1;
     while (result) {
     nextIncoming:
-        result = ReceiveRemoteData(NULL, REMOTE_MESSAGE(rcvBufIn), REMOTE_BROADCAST_PLAYER);
-        if (result && REMOTE_MESSAGE(rcvBufIn)->sender != gThisNetPos) {
-            if (REMOTE_MESSAGE(rcvBufIn)->type == REMOTE_MESSAGE_CONFIRM) {
-                gLastConfirm = REMOTE_MESSAGE(rcvBufIn)->id;
+        result = ReceiveRemoteData(NULL, REMOTE_MESSAGE(gReceiveIn), REMOTE_BROADCAST_PLAYER);
+        if (result && REMOTE_MESSAGE(gReceiveIn)->sender != gThisNetPos) {
+            if (REMOTE_MESSAGE(gReceiveIn)->type == REMOTE_MESSAGE_CONFIRM) {
+                gLastConfirm = REMOTE_MESSAGE(gReceiveIn)->id;
                 goto done;
-            } else if (REMOTE_MESSAGE(rcvBufIn)->type == REMOTE_MESSAGE_HEARTBEAT) {
-                if (REMOTE_MESSAGE(rcvBufIn)->payloadSize == 1 && REMOTE_MESSAGE(rcvBufIn)->payload.data[0] == 1)
+            } else if (REMOTE_MESSAGE(gReceiveIn)->type == REMOTE_MESSAGE_HEARTBEAT) {
+                if (REMOTE_MESSAGE(gReceiveIn)->payloadSize == 1
+                    && REMOTE_MESSAGE(gReceiveIn)->payload.data[0] == 1)
                     gRemoteReady = 1;
                 gLastHeartbeatReceive = KBTickCount();
                 gHeartbeatSeen = 1;
                 if (gThisGamePos != gHostGamePos && gCurPlayer != gThisGamePos
-                    && gAdvManager->m_active == 1 && REMOTE_MESSAGE(rcvBufIn)->command / 16 != gThisGamePos) {
-                    gCurPlayer = REMOTE_MESSAGE(rcvBufIn)->command / 16;
-                    gCurHourGlassPhase = REMOTE_MESSAGE(rcvBufIn)->command - gCurPlayer * 16;
+                    && gAdvManager->m_active == 1
+                    && REMOTE_MESSAGE(gReceiveIn)->command / 16 != gThisGamePos) {
+                    gCurPlayer = REMOTE_MESSAGE(gReceiveIn)->command / 16;
+                    gCurHourGlassPhase = REMOTE_MESSAGE(gReceiveIn)->command - gCurPlayer * 16;
                 }
                 goto done;
-            } else if (newFull) {
+            } else if (queueFull) {
                 goto done;
             }
-            if (REMOTE_MESSAGE(rcvBufIn)->type == REMOTE_MESSAGE_RELIABLE) {
-                sndBuf.sender = gThisNetPos;
-                sndBuf.id = REMOTE_MESSAGE(rcvBufIn)->id;
-                sndBuf.type = REMOTE_MESSAGE_CONFIRM;
-                sndBuf.payloadSize = 0;
+            if (REMOTE_MESSAGE(gReceiveIn)->type == REMOTE_MESSAGE_RELIABLE) {
+                gSendMessage.sender = gThisNetPos;
+                gSendMessage.id = REMOTE_MESSAGE(gReceiveIn)->id;
+                gSendMessage.type = REMOTE_MESSAGE_CONFIRM;
+                gSendMessage.payloadSize = 0;
                 SendRemoteData(
-                    &sndBuf,
+                    &gSendMessage,
                     NULL,
-                    REMOTE_MESSAGE(rcvBufIn)->sender,
+                    REMOTE_MESSAGE(gReceiveIn)->sender,
                     REMOTE_MESSAGE_HEADER_SIZE
                 );
             }
             for (i = 0; i < REMOTE_QUEUE_CAPACITY; i++) {
-                if (rcvBuf[i].type && rcvBuf[i].id == REMOTE_MESSAGE(rcvBufIn)->id)
+                if (gReceiveQueue[i].type && gReceiveQueue[i].id == REMOTE_MESSAGE(gReceiveIn)->id)
                     goto nextIncoming;
             }
             for (i = 0; i < REMOTE_RECENT_ID_COUNT; i++) {
-                if (gLastIds[i] == REMOTE_MESSAGE(rcvBufIn)->id)
+                if (gLastIds[i] == REMOTE_MESSAGE(gReceiveIn)->id)
                     goto nextIncoming;
             }
             for (i = 0; i < REMOTE_QUEUE_CAPACITY; i++) {
-                if (!rcvBuf[i].type) {
+                if (!gReceiveQueue[i].type) {
                     gInOrder[i] = gInOrderCtr++;
-                    memcpy(&rcvBuf[i], rcvBufIn, REMOTE_MESSAGE_SIZE);
+                    memcpy(&gReceiveQueue[i], gReceiveIn, REMOTE_MESSAGE_SIZE);
                     numQueued++;
-                    gLastIds[gCurLastID] = REMOTE_MESSAGE(rcvBufIn)->id;
+                    gLastIds[gCurLastID] = REMOTE_MESSAGE(gReceiveIn)->id;
                     gCurLastID = (gCurLastID + 1) % REMOTE_RECENT_ID_COUNT;
                     if (numQueued == REMOTE_QUEUE_CAPACITY)
                         goto done;
@@ -1027,6 +1032,7 @@ void PollRemote(void) {
     }
 done:;
 }
+#undef queueFull
 
 VA(0x00453a1b, 0x114)
 i32 TransmitAndWait(
@@ -1094,65 +1100,65 @@ i32 gComIrqs[7] = {1, 2, 3, 4, 5, 7, 9};
 DATA(0x0049f098)
 i32 gUnusedRemoteValue3 = -1;
 DATA(0x004cc7e8)
-char idstr[8];
+char gModemIdString[8];
 DATA(0x004cc6e8)
-RemoteMessage rcvBufOut;
+RemoteMessage gReceiveOut;
 DATA(0x004cb40c)
-i32 GUIMRc;
+i32 gModemResponseChar;
 DATA(0x004cb3e0)
 i32 gModemCommandPos;
 DATA(0x004cb3d8)
-i32 GUIMRrespptr;
+i32 gModemResponseLength;
 DATA(0x004ca28c)
-i32 localstage;
+i32 gLocalConnectStage;
 DATA(0x004ca1a0)
-char numbuf[40];
+char gPhoneNumber[40];
 // No retail code reads this; it holds its retail .bss place.
 DATA(0x004ca1c8)
 u8 gRemoteOldName[156];
 DATA(0x004cc670)
 i32 gLastIds[REMOTE_RECENT_ID_COUNT];
 DATA(0x004cb510)
-i32 WFDCStage;
+i32 gDirectConnectStage;
 DATA(0x004ca29c)
-char remoteidstr[8];
+char gRemoteModemIdString[8];
 // No retail code reads this; it holds its retail .bss place.
 DATA(0x004ca2a4)
 i32 gRemoteOldLong;
 DATA(0x004cb564)
-char PacketSend[256];
+char gPacketSend[256];
 DATA(0x004ca298)
-i32 stime;
+i32 gConnectTick;
 DATA(0x004cb3f0)
 i32 gInOrder[REMOTE_QUEUE_CAPACITY];
 DATA(0x004cb410)
-RemoteMessage sndBuf;
+RemoteMessage gSendMessage;
 DATA(0x004ca264)
 char gModemCommand[40];
 DATA(0x004ca294)
 i32 gLastDialPos;
 DATA(0x004cb3dc)
-i32 remotestage;
+i32 gRemoteConnectStage;
 DATA(0x004cb3e4)
 i32 gNumNetGuests;
 // No retail code reads this; it holds its retail .bss place.
 DATA(0x004cb3e8)
 i32 gOldRemoteIdBits;
 DATA(0x004cb2b0)
-char GUIMRresp[40];
+char gModemExpectedResponse[40];
 DATA(0x004ca290)
-i32 oldsec;
+i32 gLastIdSendTime;
 DATA(0x004ca2a8)
-inque_t inque;
+inque_t gModemInQueue;
 DATA(0x004cb2d8)
-char packet[256];
+char gPacket[256];
 DATA(0x004cb3ec)
 i32 gLastActionTime;
 DATA(0x004cb664)
-char rcvBufIn[REMOTE_MESSAGE_SIZE];
+char gReceiveIn[REMOTE_MESSAGE_SIZE];
 DATA(0x004cb514)
-char GUIMRresponse[80];
+char gModemResponseLine[80];
 DATA(0x004cbf70)
-RemoteMessage rcvBuf[REMOTE_QUEUE_CAPACITY];
+RemoteMessage gReceiveQueue[REMOTE_QUEUE_CAPACITY];
 DATA(0x004cb768)
-outque_t outque;
+outque_t gModemOutQueue;

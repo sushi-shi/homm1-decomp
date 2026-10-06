@@ -68,7 +68,7 @@ i16 widget::Main(tag_message& message) {
                     break;
                 case WIDGET_COMMAND_SET_FLAGS:
                     if (message.id == m_id) {
-                        if (message.value == WIDGET_COMMAND_DIMMED) {
+                        if (message.value == WIDGET_FLAGS_ARGUMENT_DIMMED) {
                             m_flags |= WIDGET_FLAG_DIMMED;
                             return MESSAGE_DISPATCH_CONSUME;
                         }
