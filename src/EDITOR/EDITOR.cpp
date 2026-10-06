@@ -61,7 +61,7 @@ i32 gNewMapFormat = 1;
 DATA(0x004528e4)
 i32 gGeneratingMaps;
 DATA(0x0043f744)
-char* gEditButtonHelp[10] = {
+char* gEditButtonHelp[EDITOR_BUTTON_HELP_COUNT] = {
     "",
     localization::Tr("table.gEditButtonHelp.1"),
     localization::Tr("table.gEditButtonHelp.2"),
@@ -74,7 +74,7 @@ char* gEditButtonHelp[10] = {
     localization::Tr("table.gEditButtonHelp.9"),
 };
 DATA(0x0043f76c)
-char* gEditAreaHelp[8] = {
+char* gEditAreaHelp[EDITOR_AREA_HELP_COUNT] = {
     "",
     localization::Tr("table.gEditAreaHelp.1"),
     localization::Tr("table.gEditAreaHelp.2"),
@@ -182,7 +182,7 @@ void ShutDown(char* message) {
     }
     DeleteMainClasses();
     AppExit();
-    exit(0);
+    exit(EXIT_SUCCESS);
 }
 
 // The /D (debug level) and /B (mouse masks) command-line switches.
@@ -235,7 +235,7 @@ i32 EarlySetup(void) {
                 localization::Tr("startup.error.title"),
                 MB_ICONHAND
             );
-            exit(0);
+            exit(EXIT_SUCCESS);
             break;
         case CD_SETUP_NOT_FOUND:
             MessageBoxA(
@@ -244,7 +244,7 @@ i32 EarlySetup(void) {
                 localization::Tr("startup.error.title"),
                 MB_ICONHAND
             );
-            exit(0);
+            exit(EXIT_SUCCESS);
             break;
         case CD_SETUP_NO_APP_PATH:
             MessageBoxA(
@@ -253,7 +253,7 @@ i32 EarlySetup(void) {
                 localization::Tr("startup.error.title"),
                 MB_ICONHAND
             );
-            exit(0);
+            exit(EXIT_SUCCESS);
             break;
         case CD_SETUP_NO_DATA:
             MessageBoxA(
@@ -262,7 +262,7 @@ i32 EarlySetup(void) {
                 localization::Tr("startup.error.title"),
                 MB_ICONHAND
             );
-            exit(0);
+            exit(EXIT_SUCCESS);
             break;
     }
     gDefaultMenu = LoadMenuA(gAppInstance, "mnuDflt");
@@ -483,7 +483,7 @@ void ShowStatusText(char* text) {
         EDITOR_STATUS_BAR_WIDTH,
         EDITOR_STATUS_BAR_HEIGHT,
         1,
-        1
+        FONT_ALIGN_CENTER
     );
     gWindowManager->UpdateScreenRegion(
         EDITOR_STATUS_BAR_X,
@@ -495,7 +495,7 @@ void ShowStatusText(char* text) {
 
 VA(0x0040918e, 0x4d)
 void ClearStatusText(void) {
-    gStatusTextClearTime = 0;
+    gStatusTextClearTime = EDITOR_STATUS_TEXT_KEPT;
     if (gStatusTextShown) {
         gStatusTextShown = 0;
         gEditManager->m_window->DrawWindow(0);
@@ -606,7 +606,7 @@ i32 gOverlayShownCategory;
 
 // The random map generator's settings (EVENTMGR's editnew.bin and MAPOBJ).
 DATA(0x0043f3a8)
-double gTerrainPercent[EDITOR_GENERATOR_TERRAIN_COUNT] = {30.0, 30.0, 20.0, 0.0, 0.0, 0.0, 20.0};
+double gTerrainPercent[EDITOR_TERRAIN_COUNT] = {30.0, 30.0, 20.0, 0.0, 0.0, 0.0, 20.0};
 DATA(0x0043f3e0)
 double gDensityPercent[EDITOR_GENERATOR_DENSITY_COUNT] = {50.0, 50.0, 50.0, 50.0, 50.0};
 DATA(0x0043f408)
@@ -616,7 +616,7 @@ i32 gSaveUnseen;
 DATA(0x0045259c)
 i32 gLandCellCount;
 DATA(0x0043f78c)
-char* gGeneratorTerrainNames[EDITOR_GENERATOR_TERRAIN_COUNT] = {
+char* gGeneratorTerrainNames[EDITOR_TERRAIN_COUNT] = {
     localization::Tr("editor.terrain.name.0"),
     localization::Tr("editor.terrain.name.1"),
     localization::Tr("editor.terrain.name.2"),

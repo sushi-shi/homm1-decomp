@@ -34,7 +34,7 @@ H1_ENUM_CONST_BEGIN(CampaignScenarioRow)
     CAMPAIGN_SCENARIO_DRAGON_CITY = 8
 H1_ENUM_CONST_END(CampaignScenarioRow)
 
-// HoMM1's campaign scenario table: 85-byte records with the King of the Hill
+// Campaign scenario table: 85-byte records with the King of the Hill
 // flag, the town CheckEndGame watches, the three opponents' player types and
 // every player's starting resources.
 #pragma pack(push, 1)

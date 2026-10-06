@@ -1,4 +1,4 @@
-; HoMM1 clipped icon renderers, plain and mirrored. Retail is hand-written
+; Clipped icon renderers, plain and mirrored. Retail is hand-written
 ; and links both as ONE object (a 90h EVEN pad separates them, not inter-object int3).
 
 .386

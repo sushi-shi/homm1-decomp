@@ -5,6 +5,7 @@
 // are editManager methods. The names are descriptive.
 
 #include <Domains.h>
+#include <SOURCE/mapCell.h>
 
 // A cell offset.
 struct mapStep {
@@ -12,41 +13,68 @@ struct mapStep {
     i32 y;
 };
 
-// PlaceTowns: castle slots (one per player), the land regions it numbers and
-// the object classes a road between castles erases.
+// A cell of a malloc'ed MAP_CELL_GRID_SIZE x MAP_CELL_GRID_SIZE byte grid:
+// RemoveSmallRegions' visited and region marks, PlaceTowns' region numbers
+// and each castle's reach.
+#define MAP_GRID_CELL(grid, x, y) (*((grid) + (x) + (y) * MAP_CELL_GRID_SIZE))
+
+// PlaceTowns: castle slots (one per player) and the land regions it numbers.
 H1_ENUM_CONST_BEGIN(TownPlacementConstant)
     RANDOM_MAP_CASTLE_SLOTS = 4,
-    RANDOM_MAP_REGION_LIMIT = 255,
-    RANDOM_MAP_ROAD_CLEAR_MASK = 0xfc7f
+    RANDOM_MAP_REGION_LIMIT = 255
 H1_ENUM_CONST_END(TownPlacementConstant)
+
+// The cells a placed town or castle clears and levels around its anchor: its
+// TOWN_FOOTPRINT plus a column to the right and the row below the entrance.
+H1_ENUM_CONST_BEGIN(TownSiteConstant)
+    RANDOM_MAP_SITE_LEFT = 2,
+    RANDOM_MAP_SITE_TOP = 2,
+    RANDOM_MAP_SITE_RIGHT = 2,
+    RANDOM_MAP_SITE_BOTTOM = 1,
+    RANDOM_MAP_SITE_WIDTH = 5,
+    RANDOM_MAP_SITE_HEIGHT = 4
+H1_ENUM_CONST_END(TownSiteConstant)
 
 H1_ENUM_CONST_BEGIN(RandomMapConstant)
 // GenerateRandomMap retries a map without enough castles this often.
     RANDOM_MAP_ATTEMPTS = 5,
     // overlayType::terrainMask of an object placeable on every terrain.
     RANDOM_MAP_ANY_TERRAIN = 0xfe,
-    // PaintRandomTerrain's percent that covers the whole map.
+    // PaintRandomTerrain's percent that covers the whole map; densities and
+    // land shares are percents.
     RANDOM_MAP_FULL_PERCENT = 100,
+    // ScaleByDensity leaves a count unchanged at this density.
+    RANDOM_MAP_NEUTRAL_DENSITY = 50,
     // PaintRandomTerrain drifts a seed every eighth step and its walk
     // weights every 64th.
     RANDOM_MAP_SEED_DRIFT_MASK = 7,
     RANDOM_MAP_WEIGHT_DRIFT_MASK = 0x3f,
-    // HasEnoughCastles: the castle frames of the four town32.icn towns.
-    RANDOM_MAP_KNIGHT_CASTLE_FRAME = 22,
-    RANDOM_MAP_BARBARIAN_CASTLE_FRAME = 46,
-    RANDOM_MAP_SORCERESS_CASTLE_FRAME = 70,
-    RANDOM_MAP_WARLOCK_CASTLE_FRAME = 94,
-    RANDOM_MAP_MIN_CASTLES = 4
+    // PaintRandomTerrain gives up a seed search and a walk after these many
+    // steps, and grows at most this many seeds.
+    RANDOM_MAP_SEED_TRIES = 200,
+    RANDOM_MAP_WALK_LIMIT = 1000,
+    RANDOM_MAP_SEED_LIMIT = 20,
+    // RemoveSmallRegions merges a region of at most this many cells.
+    RANDOM_MAP_SMALL_REGION_SIZE = 15,
+    // The placement loops budget this many tries per object (a mine gets
+    // more) and spend an object's tries when it is placed.
+    RANDOM_MAP_TRIES_PER_OBJECT = 100,
+    RANDOM_MAP_TRIES_PER_MINE = 1000,
+    // GenerateRandomMap's terrain index past TERRAIN_LAST once the base
+    // terrain is painted.
+    RANDOM_MAP_END_TERRAIN_SCAN = 99,
+    // PlaceTowns: a castle on another continent than its peers walks its
+    // approach towards water without a step limit.
+    RANDOM_MAP_UNLIMITED_STEPS = 999,
+    // PlaceChainLink: a tileset with no chain of the cell's terrain matches
+    // no object's terrainMask.
+    RANDOM_MAP_NO_CHAIN_TERRAIN = -1,
+    // PlaceRandomObjects: the obelisk objects are named "obelisk<terrain>".
+    RANDOM_MAP_OBELISK_NAME_LENGTH = 7,
+    // gMineSiteKinds: the resources of the five mines' resource marker
+    // frames.
+    RANDOM_MAP_MINE_RESOURCE_COUNT = 5
 H1_ENUM_CONST_END(RandomMapConstant)
-
-// PlaceResourceSite's kinds (PlaceRandomObjects' Random(0, 6)): kinds from
-// RANDOM_MAP_SITE_FIRST_MINE on are the mines of gMineSiteKinds' resources.
-H1_ENUM_BEGIN(RandomMapSiteKind)
-    RANDOM_MAP_SITE_SAWMILL = 0,
-    RANDOM_MAP_SITE_ALCHEMIST_LAB = 1,
-    RANDOM_MAP_SITE_FIRST_MINE = 2,
-    RANDOM_MAP_SITE_KIND_COUNT = 7
-H1_ENUM_END(RandomMapSiteKind)
 
 // Where PlaceTreasures guards a treasure: the diagonal cell of a corner whose
 // two sides are blocked.
@@ -75,6 +103,29 @@ H1_ENUM_BEGIN(ChainDirection)
     CHAIN_RIGHTWARD_END = CHAIN_DOWN_LEFT_STEEP,
     CHAIN_DIRECTION_COUNT = 8
 H1_ENUM_END(ChainDirection)
+
+// A chain turns a quarter (two directions) clockwise or counterclockwise:
+// gChainTurns' second index (the turn's sideways shift), and what
+// PlaceObstacleChains adds to the direction modulo CHAIN_DIRECTION_COUNT.
+H1_ENUM_BEGIN(ChainTurn)
+    CHAIN_TURN_CLOCKWISE = 0,
+    CHAIN_TURN_COUNTERCLOCKWISE = 1,
+    CHAIN_TURN_COUNT = 2
+H1_ENUM_END(ChainTurn)
+
+H1_ENUM_CONST_BEGIN(ChainTurnConstant)
+    CHAIN_CLOCKWISE_STEP = 10,
+    CHAIN_COUNTERCLOCKWISE_STEP = 6
+H1_ENUM_CONST_END(ChainTurnConstant)
+
+// The four objects of a mountain or tree chain, in the object table from the
+// one of the cell's terrain: a direction and its opposite draw one slope.
+H1_ENUM_BEGIN(ChainPiece)
+    CHAIN_PIECE_STEEP_RISING = 0,
+    CHAIN_PIECE_RISING = 1,
+    CHAIN_PIECE_STEEP_FALLING = 2,
+    CHAIN_PIECE_FALLING = 3
+H1_ENUM_END(ChainPiece)
 
 // PlaceObstacleChains' roll for a tree chain's family (the first letter of
 // its objects' names: autumn, pine or deciduous trees).

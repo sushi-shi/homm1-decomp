@@ -1,4 +1,4 @@
-// HoMM1 executive manager scheduling, reconstructed against the retail code.
+// Executive manager scheduling.
 
 #include <match.h>
 
@@ -257,7 +257,6 @@ void executive::MainLoop(void) {
     }
 }
 
-// HoMM2 Buka's Terminate has the same body.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x00473120, 0x18)

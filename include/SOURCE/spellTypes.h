@@ -3,7 +3,7 @@
 
 #include <Domains.h>
 
-// HoMM1 spell ids: the order of retail gSpellNames (0x00493148), which
+// Spell ids: the order of gSpellNames, which
 // combatManager::SpellMessage and the spell shrine print by id. The combat
 // arms agree: ValidSpellTarget sends 1 to enemies, 4 to friends, 11 to
 // ghosts and 0/17 to area hexes; CastSpell reports 1's lightning damage and

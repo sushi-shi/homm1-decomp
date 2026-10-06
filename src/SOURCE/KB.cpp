@@ -804,7 +804,7 @@ i16 RecruitHeroHandler(tag_message& message) {
 }
 #undef heroSlot
 
-// HoMM1 has seven neutral building slots before six per-faction dwellings.
+// Seven neutral building slots come before six per-faction dwellings.
 VA(0x0043e319, 0x30)
 char* GetBuildingName(i32 race, i16 building) {
     if (building < BUILDING_SLOT_DWELLING_FIRST)
@@ -921,7 +921,7 @@ i8 CanBuy(town* townPointer, i16 building) {
     return 1;
 }
 
-// HoMM1 keeps seven neutral value slots ahead of six per-faction dwellings.
+// Seven neutral value slots come before six per-faction dwellings.
 VA(0x0043e656, 0x3d)
 i32 GetBuildingBaseResourceValue(i32 race, i32 building, i32 level) {
     if (building < BUILDING_SLOT_DWELLING_FIRST) {
@@ -2172,7 +2172,7 @@ void GOut(char* text) {
         AiPrint(text);
 }
 
-// HoMM1 maps every remote position other than the host to the one opponent slot.
+// Maps every remote position other than the host to the one opponent slot.
 VA(0x004410d6, 0x1b)
 i8 NetPosToGamePos(i32 netPos) {
     if (netPos == NET_POSITION_HOST)
@@ -2449,7 +2449,7 @@ void FileError(char* filename) {
     ShutDown(message);
 }
 
-// HoMM1's victory screen: campaigns show the scenario's win text; standard
+// The victory screen: campaigns show the scenario's win text; standard
 // games score the days played, rank the result as a creature and file it with
 // the high scores.
 #define labelIndex ii // frame-slot spelling

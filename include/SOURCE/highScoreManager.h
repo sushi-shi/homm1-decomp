@@ -107,7 +107,7 @@ H1_ENUM_CONST_BEGIN(HighScoreRuntimeConstant)
     HIGH_SCORE_EMPTY = -1
 H1_ENUM_CONST_END(HighScoreRuntimeConstant)
 
-// HoMM1 score files hold 0x57-byte records; Update reads name, scenario and
+// Score files hold 0x57-byte records; Update reads name, scenario and
 // score from the fixed prefix.
 #pragma pack(push, 1)
 struct HighScoreEntry {

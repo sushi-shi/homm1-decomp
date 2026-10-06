@@ -1265,7 +1265,7 @@ void advManager::TownEvent(class mapCell* cell, i32 x, i32 y) {
     attackingHero->CheckLevel();
 }
 
-// Adventure-event music cue; HoMM1 keys the ambient track off the map
+// Adventure-event music cue: keys the ambient track off the map
 // object type and records that an event track is playing.
 VA(0x00426be9, 0x1dd)
 void advManager::EventSound(i16 eventType, i16 eventData) {
@@ -2466,7 +2466,7 @@ void advManager::PlayerMonsterInteract(
         *removeMonsterObject = 1;
 }
 
-// HoMM1's computer heroes absorb a willing stack (bit 7) they outmatch by
+// Computer heroes absorb a willing stack (bit 7) they outmatch by
 // 7:4, otherwise fight it through philAI's quick combat.
 VA(0x00428e5f, 0x139)
 void advManager::ComputerMonsterInteract(

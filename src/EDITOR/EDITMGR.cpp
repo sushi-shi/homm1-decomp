@@ -34,6 +34,7 @@
 #include <EDITOR/eventsManager.h>
 #include <EDITOR/overlayManager.h>
 #include <EDITOR/terrainManager.h>
+#include <SOURCE/advManager.h>
 #include <SOURCE/dialogTypes.h>
 #include <SOURCE/EVENTS.h>
 #include <SOURCE/fileRequester.h>
@@ -48,6 +49,7 @@
 
 #include <fcntl.h>
 #include <io.h>
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -62,7 +64,7 @@ DATA(0x0043b1f8)
 overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
     {"neutmtn0",
      TILESET_MTN32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x18e3,
      0xfe,
@@ -73,7 +75,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     52,
+     MAP_OBJECT_MOUNTAINS,
      {5,
       6,
       MAP_CELL_NO_FRAME,
@@ -92,7 +94,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"neutmtn1",
      TILESET_MTN32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x00c3,
      0xfe,
@@ -103,7 +105,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     53,
+     MAP_OBJECT_MOUNTAINS_2,
      {9,
       10,
       MAP_CELL_NO_FRAME,
@@ -122,7 +124,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"neutmtn2",
      TILESET_MTN32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0ce6,
      0xfe,
@@ -133,7 +135,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     54,
+     MAP_OBJECT_MOUNTAINS_3,
      {MAP_CELL_NO_FRAME,
       16,
       17,
@@ -152,7 +154,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"neutmtn3",
      TILESET_MTN32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0066,
      0xfe,
@@ -163,7 +165,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     55,
+     MAP_OBJECT_MOUNTAINS_4,
      {MAP_CELL_NO_FRAME,
       20,
       21,
@@ -182,7 +184,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"bluemtn0",
      TILESET_MTN32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x18e3,
      0x08,
@@ -193,7 +195,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     52,
+     MAP_OBJECT_MOUNTAINS,
      {93,
       94,
       MAP_CELL_NO_FRAME,
@@ -212,7 +214,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"bluemtn1",
      TILESET_MTN32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x00c3,
      0x08,
@@ -223,7 +225,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     53,
+     MAP_OBJECT_MOUNTAINS_2,
      {97,
       98,
       MAP_CELL_NO_FRAME,
@@ -242,7 +244,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"bluemtn2",
      TILESET_MTN32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0ce6,
      0x08,
@@ -253,7 +255,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     54,
+     MAP_OBJECT_MOUNTAINS_3,
      {MAP_CELL_NO_FRAME,
       104,
       105,
@@ -272,7 +274,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"bluemtn3",
      TILESET_MTN32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0066,
      0x08,
@@ -283,7 +285,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     55,
+     MAP_OBJECT_MOUNTAINS_4,
      {MAP_CELL_NO_FRAME,
       108,
       109,
@@ -302,7 +304,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"dsrtmtn0",
      TILESET_MTN32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x18e3,
      0x20,
@@ -313,7 +315,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     52,
+     MAP_OBJECT_MOUNTAINS,
      {71,
       72,
       MAP_CELL_NO_FRAME,
@@ -332,7 +334,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"dsrtmtn1",
      TILESET_MTN32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x00c3,
      0x20,
@@ -343,7 +345,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     53,
+     MAP_OBJECT_MOUNTAINS_2,
      {75,
       76,
       MAP_CELL_NO_FRAME,
@@ -362,7 +364,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"dsrtmtn2",
      TILESET_MTN32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0ce6,
      0x20,
@@ -373,7 +375,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     54,
+     MAP_OBJECT_MOUNTAINS_3,
      {MAP_CELL_NO_FRAME,
       82,
       83,
@@ -392,7 +394,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"dsrtmtn3",
      TILESET_MTN32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0066,
      0x20,
@@ -403,7 +405,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     55,
+     MAP_OBJECT_MOUNTAINS_4,
      {MAP_CELL_NO_FRAME,
       86,
       87,
@@ -422,7 +424,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"grasmtn0",
      TILESET_MTN32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x18e3,
      0x02,
@@ -433,7 +435,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     52,
+     MAP_OBJECT_MOUNTAINS,
      {49,
       50,
       MAP_CELL_NO_FRAME,
@@ -452,7 +454,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"grasmtn1",
      TILESET_MTN32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x00c3,
      0x02,
@@ -463,7 +465,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     53,
+     MAP_OBJECT_MOUNTAINS_2,
      {53,
       54,
       MAP_CELL_NO_FRAME,
@@ -482,7 +484,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"grasmtn2",
      TILESET_MTN32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0ce6,
      0x02,
@@ -493,7 +495,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     54,
+     MAP_OBJECT_MOUNTAINS_3,
      {MAP_CELL_NO_FRAME,
       60,
       61,
@@ -512,7 +514,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"grasmtn3",
      TILESET_MTN32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0066,
      0x02,
@@ -523,7 +525,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     55,
+     MAP_OBJECT_MOUNTAINS_4,
      {MAP_CELL_NO_FRAME,
       64,
       65,
@@ -542,7 +544,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"redmtn00",
      TILESET_MTN32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x18e3,
      0x40,
@@ -553,7 +555,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     52,
+     MAP_OBJECT_MOUNTAINS,
      {27,
       28,
       MAP_CELL_NO_FRAME,
@@ -572,7 +574,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"redmtn01",
      TILESET_MTN32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x00c3,
      0x40,
@@ -583,7 +585,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     53,
+     MAP_OBJECT_MOUNTAINS_2,
      {31,
       32,
       MAP_CELL_NO_FRAME,
@@ -602,7 +604,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"redmtn02",
      TILESET_MTN32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0ce6,
      0x40,
@@ -613,7 +615,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     54,
+     MAP_OBJECT_MOUNTAINS_3,
      {MAP_CELL_NO_FRAME,
       38,
       39,
@@ -632,7 +634,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"redmtn03",
      TILESET_MTN32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0066,
      0x40,
@@ -643,7 +645,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     55,
+     MAP_OBJECT_MOUNTAINS_4,
      {MAP_CELL_NO_FRAME,
       42,
       43,
@@ -662,7 +664,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"snowmtn0",
      TILESET_MTN32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x18e3,
      0x04,
@@ -673,7 +675,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     52,
+     MAP_OBJECT_MOUNTAINS,
      {115,
       116,
       MAP_CELL_NO_FRAME,
@@ -692,7 +694,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"snowmtn1",
      TILESET_MTN32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x00c3,
      0x04,
@@ -703,7 +705,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     53,
+     MAP_OBJECT_MOUNTAINS_2,
      {119,
       120,
       MAP_CELL_NO_FRAME,
@@ -722,7 +724,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"snowmtn2",
      TILESET_MTN32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0ce6,
      0x04,
@@ -733,7 +735,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     54,
+     MAP_OBJECT_MOUNTAINS_3,
      {MAP_CELL_NO_FRAME,
       126,
       127,
@@ -752,7 +754,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"snowmtn3",
      TILESET_MTN32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0066,
      0x04,
@@ -763,7 +765,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     55,
+     MAP_OBJECT_MOUNTAINS_4,
      {MAP_CELL_NO_FRAME,
       130,
       131,
@@ -782,7 +784,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"atmn-02 ",
      TILESET_TREE32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x18e3,
      0xfe,
@@ -793,7 +795,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     56,
+     MAP_OBJECT_TREES,
      {90,
       91,
       MAP_CELL_NO_FRAME,
@@ -812,7 +814,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"atmn-03 ",
      TILESET_TREE32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x00c3,
      0xfe,
@@ -823,7 +825,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     57,
+     MAP_OBJECT_TREES_2,
      {94,
       95,
       MAP_CELL_NO_FRAME,
@@ -842,7 +844,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"atmn-00 ",
      TILESET_TREE32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0ce6,
      0xfe,
@@ -853,7 +855,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     58,
+     MAP_OBJECT_TREES_3,
      {MAP_CELL_NO_FRAME,
       79,
       80,
@@ -872,7 +874,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"atmn-01 ",
      TILESET_TREE32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0066,
      0xfe,
@@ -883,7 +885,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     59,
+     MAP_OBJECT_TREES_4,
      {MAP_CELL_NO_FRAME,
       83,
       84,
@@ -902,7 +904,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"atmn-04 ",
      TILESET_TREE32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0001,
      0xfe,
@@ -913,7 +915,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     60,
+     MAP_OBJECT_TREES_5,
      {96,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -932,7 +934,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"atmn-05 ",
      TILESET_TREE32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0001,
      0xfe,
@@ -943,7 +945,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     60,
+     MAP_OBJECT_TREES_5,
      {97,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -962,7 +964,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"pine-02 ",
      TILESET_TREE32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x18e3,
      0xfe,
@@ -973,7 +975,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     56,
+     MAP_OBJECT_TREES,
      {16,
       17,
       MAP_CELL_NO_FRAME,
@@ -992,7 +994,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"pine-03 ",
      TILESET_TREE32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x00c3,
      0xfe,
@@ -1003,7 +1005,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     57,
+     MAP_OBJECT_TREES_2,
      {20,
       21,
       MAP_CELL_NO_FRAME,
@@ -1022,7 +1024,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"pine-00 ",
      TILESET_TREE32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0ce6,
      0xfe,
@@ -1033,7 +1035,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     58,
+     MAP_OBJECT_TREES_3,
      {MAP_CELL_NO_FRAME,
       5,
       6,
@@ -1052,7 +1054,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"pine-01 ",
      TILESET_TREE32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0066,
      0xfe,
@@ -1063,7 +1065,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     59,
+     MAP_OBJECT_TREES_4,
      {MAP_CELL_NO_FRAME,
       9,
       10,
@@ -1082,7 +1084,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"pine-04 ",
      TILESET_TREE32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0001,
      0xfe,
@@ -1093,7 +1095,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     60,
+     MAP_OBJECT_TREES_5,
      {22,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -1112,7 +1114,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"pine-05 ",
      TILESET_TREE32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0001,
      0xfe,
@@ -1123,7 +1125,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     60,
+     MAP_OBJECT_TREES_5,
      {23,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -1142,7 +1144,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"dsrt-00 ",
      TILESET_TREE32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      30,
      0x0001,
      0x20,
@@ -1153,7 +1155,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     60,
+     MAP_OBJECT_TREES_5,
      {98,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -1172,7 +1174,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"dsrt-01 ",
      TILESET_TREE32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      30,
      0x0001,
      0x20,
@@ -1183,7 +1185,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     60,
+     MAP_OBJECT_TREES_5,
      {99,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -1202,7 +1204,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"dsrt-02 ",
      TILESET_TREE32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      30,
      0x0001,
      0x20,
@@ -1213,7 +1215,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     60,
+     MAP_OBJECT_TREES_5,
      {100,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -1232,7 +1234,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"snow-02 ",
      TILESET_TREE32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x18e3,
      0x04,
@@ -1243,7 +1245,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     56,
+     MAP_OBJECT_TREES,
      {40,
       41,
       MAP_CELL_NO_FRAME,
@@ -1262,7 +1264,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"snow-03 ",
      TILESET_TREE32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x00c3,
      0x04,
@@ -1273,7 +1275,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     57,
+     MAP_OBJECT_TREES_2,
      {44,
       45,
       MAP_CELL_NO_FRAME,
@@ -1292,7 +1294,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"snow-00 ",
      TILESET_TREE32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0ce6,
      0x04,
@@ -1303,7 +1305,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     58,
+     MAP_OBJECT_TREES_3,
      {MAP_CELL_NO_FRAME,
       29,
       30,
@@ -1322,7 +1324,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"snow-01 ",
      TILESET_TREE32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0066,
      0x04,
@@ -1333,7 +1335,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     59,
+     MAP_OBJECT_TREES_4,
      {MAP_CELL_NO_FRAME,
       33,
       34,
@@ -1352,7 +1354,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"snow-04 ",
      TILESET_TREE32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      50,
      0x0001,
      0x04,
@@ -1363,7 +1365,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     60,
+     MAP_OBJECT_TREES_5,
      {46,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -1382,7 +1384,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"snow-05 ",
      TILESET_TREE32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      50,
      0x0001,
      0x04,
@@ -1393,7 +1395,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     60,
+     MAP_OBJECT_TREES_5,
      {47,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -1412,7 +1414,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"snow-06 ",
      TILESET_TREE32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      50,
      0x0001,
      0x04,
@@ -1423,7 +1425,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     60,
+     MAP_OBJECT_TREES_5,
      {48,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -1442,7 +1444,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"snow-07 ",
      TILESET_TREE32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      50,
      0x0001,
      0x04,
@@ -1453,7 +1455,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     60,
+     MAP_OBJECT_TREES_5,
      {49,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -1472,7 +1474,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"tree-02 ",
      TILESET_TREE32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x18e3,
      0xfe,
@@ -1483,7 +1485,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     56,
+     MAP_OBJECT_TREES,
      {66,
       67,
       MAP_CELL_NO_FRAME,
@@ -1502,7 +1504,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"tree-03 ",
      TILESET_TREE32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x00c3,
      0xfe,
@@ -1513,7 +1515,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     57,
+     MAP_OBJECT_TREES_2,
      {70,
       71,
       MAP_CELL_NO_FRAME,
@@ -1532,7 +1534,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"tree-00 ",
      TILESET_TREE32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0ce6,
      0xfe,
@@ -1543,7 +1545,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     58,
+     MAP_OBJECT_TREES_3,
      {MAP_CELL_NO_FRAME,
       55,
       56,
@@ -1562,7 +1564,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"tree-01 ",
      TILESET_TREE32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0066,
      0xfe,
@@ -1573,7 +1575,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     59,
+     MAP_OBJECT_TREES_4,
      {MAP_CELL_NO_FRAME,
       59,
       60,
@@ -1592,7 +1594,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"tree-04 ",
      TILESET_TREE32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0001,
      0xfe,
@@ -1603,7 +1605,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     60,
+     MAP_OBJECT_TREES_5,
      {72,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -1622,7 +1624,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"tree-05 ",
      TILESET_TREE32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0001,
      0xfe,
@@ -1633,7 +1635,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     60,
+     MAP_OBJECT_TREES_5,
      {73,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -1652,7 +1654,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"town_00 ",
      TILESET_TOWN32,
-     1,
+     OVERLAY_KIND_TOWN,
      0,
      0x3def,
      0xfe,
@@ -1663,7 +1665,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0004,
-     40,
+     MAP_OBJECT_TOWN,
      {8,
       9,
       10,
@@ -1682,7 +1684,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"town_01 ",
      TILESET_TOWN32,
-     1,
+     OVERLAY_KIND_TOWN,
      0,
      0x3def,
      0xfe,
@@ -1693,7 +1695,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0004,
-     40,
+     MAP_OBJECT_TOWN,
      {20,
       21,
       22,
@@ -1712,7 +1714,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"town_02 ",
      TILESET_TOWN32,
-     1,
+     OVERLAY_KIND_TOWN,
      0,
      0x3def,
      0xfe,
@@ -1723,7 +1725,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0004,
-     40,
+     MAP_OBJECT_TOWN,
      {32,
       33,
       34,
@@ -1742,7 +1744,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"town_03 ",
      TILESET_TOWN32,
-     1,
+     OVERLAY_KIND_TOWN,
      0,
      0x3def,
      0xfe,
@@ -1753,7 +1755,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0004,
-     40,
+     MAP_OBJECT_TOWN,
      {44,
       45,
       46,
@@ -1772,7 +1774,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"town_04 ",
      TILESET_TOWN32,
-     1,
+     OVERLAY_KIND_TOWN,
      0,
      0x3def,
      0xfe,
@@ -1783,7 +1785,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0004,
-     40,
+     MAP_OBJECT_TOWN,
      {56,
       57,
       58,
@@ -1802,7 +1804,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"town_05 ",
      TILESET_TOWN32,
-     1,
+     OVERLAY_KIND_TOWN,
      0,
      0x3def,
      0xfe,
@@ -1813,7 +1815,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0004,
-     40,
+     MAP_OBJECT_TOWN,
      {68,
       69,
       70,
@@ -1832,7 +1834,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"town_06 ",
      TILESET_TOWN32,
-     1,
+     OVERLAY_KIND_TOWN,
      0,
      0x3def,
      0xfe,
@@ -1843,7 +1845,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0004,
-     40,
+     MAP_OBJECT_TOWN,
      {80,
       81,
       82,
@@ -1862,7 +1864,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"town_07 ",
      TILESET_TOWN32,
-     1,
+     OVERLAY_KIND_TOWN,
      0,
      0x3def,
      0xfe,
@@ -1873,7 +1875,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0004,
-     40,
+     MAP_OBJECT_TOWN,
      {92,
       93,
       94,
@@ -1892,7 +1894,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"xcast   ",
      TILESET_TOWN32,
-     1,
+     OVERLAY_KIND_TOWN,
      0,
      0x3def,
      0xfe,
@@ -1903,7 +1905,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0004,
-     65,
+     MAP_FILE_OBJECT_RANDOM_CASTLE,
      {116,
       117,
       118,
@@ -1922,7 +1924,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"xtown   ",
      TILESET_TOWN32,
-     1,
+     OVERLAY_KIND_TOWN,
      0,
      0x3def,
      0xfe,
@@ -1933,7 +1935,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0004,
-     64,
+     MAP_FILE_OBJECT_RANDOM_TOWN,
      {104,
       105,
       106,
@@ -1952,7 +1954,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"alch-00 ",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0063,
      0x0e,
@@ -1963,7 +1965,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     1,
+     MAP_OBJECT_ALCHEMIST_LAB,
      {43,
       44,
       MAP_CELL_NO_FRAME,
@@ -1982,7 +1984,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"alch-01 ",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0063,
      0x50,
@@ -1993,7 +1995,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     1,
+     MAP_OBJECT_ALCHEMIST_LAB,
      {35,
       36,
       MAP_CELL_NO_FRAME,
@@ -2012,7 +2014,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"alch-02 ",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0063,
      0x20,
@@ -2023,7 +2025,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     1,
+     MAP_OBJECT_ALCHEMIST_LAB,
      {27,
       28,
       MAP_CELL_NO_FRAME,
@@ -2042,7 +2044,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"bigkeep ",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0xb9ce,
      0x6a,
@@ -2053,7 +2055,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0008,
-     22,
+     MAP_OBJECT_DRAGON_CITY,
      {MAP_CELL_NO_FRAME,
       58,
       59,
@@ -2072,7 +2074,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       51}},
     {"litehous",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0047,
      0x4a,
@@ -2083,7 +2085,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0004,
-     23,
+     MAP_OBJECT_LIGHTHOUSE,
      {68,
       69,
       70,
@@ -2102,7 +2104,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mine-00 ",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0063,
      0x02,
@@ -2113,7 +2115,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     25,
+     MAP_OBJECT_MINE,
      {17,
       18,
       MAP_CELL_NO_FRAME,
@@ -2132,7 +2134,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mine-01 ",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0063,
      0x04,
@@ -2143,7 +2145,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     25,
+     MAP_OBJECT_MINE,
      {21,
       22,
       MAP_CELL_NO_FRAME,
@@ -2162,7 +2164,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mine-02 ",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0063,
      0x18,
@@ -2173,7 +2175,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     25,
+     MAP_OBJECT_MINE,
      {23,
       24,
       MAP_CELL_NO_FRAME,
@@ -2192,7 +2194,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mine-03 ",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0063,
      0x20,
@@ -2203,7 +2205,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     25,
+     MAP_OBJECT_MINE,
      {13,
       14,
       MAP_CELL_NO_FRAME,
@@ -2222,7 +2224,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mine-04 ",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0063,
      0x40,
@@ -2233,7 +2235,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     25,
+     MAP_OBJECT_MINE,
      {11,
       12,
       MAP_CELL_NO_FRAME,
@@ -2252,7 +2254,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"nmine0d0",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0063,
      0x02,
@@ -2261,9 +2263,9 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0x0000,
      0x0002,
      0,
-     2,
+     OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     25,
+     MAP_OBJECT_MINE,
      {17,
       18,
       MAP_CELL_NO_FRAME,
@@ -2282,7 +2284,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"nmine0d1",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0063,
      0x02,
@@ -2291,9 +2293,9 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0x0000,
      0x0002,
      1,
-     2,
+     OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     25,
+     MAP_OBJECT_MINE,
      {17,
       18,
       MAP_CELL_NO_FRAME,
@@ -2312,7 +2314,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"nmine0d2",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0063,
      0x02,
@@ -2321,9 +2323,9 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0x0000,
      0x0002,
      2,
-     2,
+     OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     25,
+     MAP_OBJECT_MINE,
      {17,
       18,
       MAP_CELL_NO_FRAME,
@@ -2342,7 +2344,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"nmine0d3",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0063,
      0x02,
@@ -2351,9 +2353,9 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0x0000,
      0x0002,
      3,
-     2,
+     OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     25,
+     MAP_OBJECT_MINE,
      {17,
       18,
       MAP_CELL_NO_FRAME,
@@ -2372,7 +2374,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"nmine0d4",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0063,
      0x02,
@@ -2381,9 +2383,9 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0x0000,
      0x0002,
      4,
-     2,
+     OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     25,
+     MAP_OBJECT_MINE,
      {17,
       18,
       MAP_CELL_NO_FRAME,
@@ -2402,7 +2404,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"nmine1d0",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0063,
      0x04,
@@ -2411,9 +2413,9 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0x0000,
      0x0002,
      0,
-     2,
+     OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     25,
+     MAP_OBJECT_MINE,
      {21,
       22,
       MAP_CELL_NO_FRAME,
@@ -2432,7 +2434,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"nmine1d1",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0063,
      0x04,
@@ -2441,9 +2443,9 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0x0000,
      0x0002,
      1,
-     2,
+     OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     25,
+     MAP_OBJECT_MINE,
      {21,
       22,
       MAP_CELL_NO_FRAME,
@@ -2462,7 +2464,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"nmine1d2",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0063,
      0x04,
@@ -2471,9 +2473,9 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0x0000,
      0x0002,
      2,
-     2,
+     OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     25,
+     MAP_OBJECT_MINE,
      {21,
       22,
       MAP_CELL_NO_FRAME,
@@ -2492,7 +2494,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"nmine1d3",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0063,
      0x04,
@@ -2501,9 +2503,9 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0x0000,
      0x0002,
      3,
-     2,
+     OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     25,
+     MAP_OBJECT_MINE,
      {21,
       22,
       MAP_CELL_NO_FRAME,
@@ -2522,7 +2524,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"nmine1d4",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0063,
      0x04,
@@ -2531,9 +2533,9 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0x0000,
      0x0002,
      4,
-     2,
+     OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     25,
+     MAP_OBJECT_MINE,
      {21,
       22,
       MAP_CELL_NO_FRAME,
@@ -2552,7 +2554,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"nmine2d0",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0063,
      0x18,
@@ -2561,9 +2563,9 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0x0000,
      0x0002,
      0,
-     2,
+     OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     25,
+     MAP_OBJECT_MINE,
      {23,
       24,
       MAP_CELL_NO_FRAME,
@@ -2582,7 +2584,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"nmine2d1",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0063,
      0x18,
@@ -2591,9 +2593,9 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0x0000,
      0x0002,
      1,
-     2,
+     OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     25,
+     MAP_OBJECT_MINE,
      {23,
       24,
       MAP_CELL_NO_FRAME,
@@ -2612,7 +2614,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"nmine2d2",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0063,
      0x18,
@@ -2621,9 +2623,9 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0x0000,
      0x0002,
      2,
-     2,
+     OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     25,
+     MAP_OBJECT_MINE,
      {23,
       24,
       MAP_CELL_NO_FRAME,
@@ -2642,7 +2644,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"nmine2d3",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0063,
      0x18,
@@ -2651,9 +2653,9 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0x0000,
      0x0002,
      3,
-     2,
+     OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     25,
+     MAP_OBJECT_MINE,
      {23,
       24,
       MAP_CELL_NO_FRAME,
@@ -2672,7 +2674,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"nmine2d4",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0063,
      0x18,
@@ -2681,9 +2683,9 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0x0000,
      0x0002,
      4,
-     2,
+     OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     25,
+     MAP_OBJECT_MINE,
      {23,
       24,
       MAP_CELL_NO_FRAME,
@@ -2702,7 +2704,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"nmine3d0",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0063,
      0x20,
@@ -2711,9 +2713,9 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0x0000,
      0x0002,
      0,
-     2,
+     OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     25,
+     MAP_OBJECT_MINE,
      {13,
       14,
       MAP_CELL_NO_FRAME,
@@ -2732,7 +2734,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"nmine3d1",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0063,
      0x20,
@@ -2741,9 +2743,9 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0x0000,
      0x0002,
      1,
-     2,
+     OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     25,
+     MAP_OBJECT_MINE,
      {13,
       14,
       MAP_CELL_NO_FRAME,
@@ -2762,7 +2764,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"nmine3d2",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0063,
      0x20,
@@ -2771,9 +2773,9 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0x0000,
      0x0002,
      2,
-     2,
+     OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     25,
+     MAP_OBJECT_MINE,
      {13,
       14,
       MAP_CELL_NO_FRAME,
@@ -2792,7 +2794,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"nmine3d3",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0063,
      0x20,
@@ -2801,9 +2803,9 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0x0000,
      0x0002,
      3,
-     2,
+     OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     25,
+     MAP_OBJECT_MINE,
      {13,
       14,
       MAP_CELL_NO_FRAME,
@@ -2822,7 +2824,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"nmine3d4",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0063,
      0x20,
@@ -2831,9 +2833,9 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0x0000,
      0x0002,
      4,
-     2,
+     OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     25,
+     MAP_OBJECT_MINE,
      {13,
       14,
       MAP_CELL_NO_FRAME,
@@ -2852,7 +2854,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"nmine4d0",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0063,
      0x40,
@@ -2861,9 +2863,9 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0x0000,
      0x0002,
      0,
-     2,
+     OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     25,
+     MAP_OBJECT_MINE,
      {11,
       12,
       MAP_CELL_NO_FRAME,
@@ -2882,7 +2884,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"nmine4d1",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0063,
      0x40,
@@ -2891,9 +2893,9 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0x0000,
      0x0002,
      1,
-     2,
+     OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     25,
+     MAP_OBJECT_MINE,
      {11,
       12,
       MAP_CELL_NO_FRAME,
@@ -2912,7 +2914,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"nmine4d2",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0063,
      0x40,
@@ -2921,9 +2923,9 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0x0000,
      0x0002,
      2,
-     2,
+     OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     25,
+     MAP_OBJECT_MINE,
      {11,
       12,
       MAP_CELL_NO_FRAME,
@@ -2942,7 +2944,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"nmine4d3",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0063,
      0x40,
@@ -2951,9 +2953,9 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0x0000,
      0x0002,
      3,
-     2,
+     OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     25,
+     MAP_OBJECT_MINE,
      {11,
       12,
       MAP_CELL_NO_FRAME,
@@ -2972,7 +2974,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"nmine4d4",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0063,
      0x40,
@@ -2981,9 +2983,9 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0x0000,
      0x0002,
      4,
-     2,
+     OVERLAY_TYPE_SHOWS_RESOURCE,
      0x0001,
-     25,
+     MAP_OBJECT_MINE,
      {11,
       12,
       MAP_CELL_NO_FRAME,
@@ -3002,7 +3004,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"rovr-02 ",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0001,
      0x7e,
@@ -3011,9 +3013,9 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0x0000,
      0x0000,
      0,
-     1,
+     OVERLAY_TYPE_RESOURCE_MARKER,
      0x0001,
-     51,
+     MAP_OBJECT_RESOURCE_SHADOW,
      {0,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3032,7 +3034,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"rovr-03 ",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0001,
      0x7e,
@@ -3041,9 +3043,9 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0x0000,
      0x0000,
      0,
-     1,
+     OVERLAY_TYPE_RESOURCE_MARKER,
      0x0001,
-     51,
+     MAP_OBJECT_RESOURCE_SHADOW,
      {1,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3062,7 +3064,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"rovr-04 ",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0001,
      0x7e,
@@ -3071,9 +3073,9 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0x0000,
      0x0000,
      0,
-     1,
+     OVERLAY_TYPE_RESOURCE_MARKER,
      0x0001,
-     51,
+     MAP_OBJECT_RESOURCE_SHADOW,
      {2,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3092,7 +3094,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"rovr-05 ",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0001,
      0x7e,
@@ -3101,9 +3103,9 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0x0000,
      0x0000,
      0,
-     1,
+     OVERLAY_TYPE_RESOURCE_MARKER,
      0x0001,
-     51,
+     MAP_OBJECT_RESOURCE_SHADOW,
      {3,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3122,7 +3124,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"rovr-06 ",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0001,
      0x7e,
@@ -3131,9 +3133,9 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0x0000,
      0x0000,
      0,
-     1,
+     OVERLAY_TYPE_RESOURCE_MARKER,
      0x0001,
-     51,
+     MAP_OBJECT_RESOURCE_SHADOW,
      {4,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3152,7 +3154,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"rsrc-00 ",
      TILESET_RSRC32,
-     4,
+     OVERLAY_KIND_TREASURE,
      0,
      0x0001,
      0x7e,
@@ -3163,7 +3165,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     29,
+     MAP_OBJECT_RESOURCE,
      {61,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3182,7 +3184,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"rsrc-01 ",
      TILESET_RSRC32,
-     4,
+     OVERLAY_KIND_TREASURE,
      0,
      0x0001,
      0x7e,
@@ -3193,7 +3195,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     29,
+     MAP_OBJECT_RESOURCE,
      {62,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3212,7 +3214,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"rsrc-02 ",
      TILESET_RSRC32,
-     4,
+     OVERLAY_KIND_TREASURE,
      0,
      0x0001,
      0x7e,
@@ -3223,7 +3225,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     29,
+     MAP_OBJECT_RESOURCE,
      {63,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3242,7 +3244,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"rsrc-03 ",
      TILESET_RSRC32,
-     4,
+     OVERLAY_KIND_TREASURE,
      0,
      0x0001,
      0x7e,
@@ -3253,7 +3255,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     29,
+     MAP_OBJECT_RESOURCE,
      {64,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3272,7 +3274,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"rsrc-04 ",
      TILESET_RSRC32,
-     4,
+     OVERLAY_KIND_TREASURE,
      0,
      0x0001,
      0x7e,
@@ -3283,7 +3285,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     29,
+     MAP_OBJECT_RESOURCE,
      {65,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3302,7 +3304,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"rsrc-05 ",
      TILESET_RSRC32,
-     4,
+     OVERLAY_KIND_TREASURE,
      0,
      0x0001,
      0x7e,
@@ -3313,7 +3315,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     29,
+     MAP_OBJECT_RESOURCE,
      {66,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3332,7 +3334,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"rsrc-06 ",
      TILESET_RSRC32,
-     4,
+     OVERLAY_KIND_TREASURE,
      0,
      0x0001,
      0x7e,
@@ -3343,7 +3345,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     29,
+     MAP_OBJECT_RESOURCE,
      {67,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3362,7 +3364,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"sawmill ",
      TILESET_RSRC32,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0063,
      0x7e,
@@ -3373,7 +3375,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     32,
+     MAP_OBJECT_SAWMILL,
      {7,
       8,
       MAP_CELL_NO_FRAME,
@@ -3392,7 +3394,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"xrsrc   ",
      TILESET_RSRC32,
-     4,
+     OVERLAY_KIND_TREASURE,
      0,
      0x0001,
      0x7e,
@@ -3403,7 +3405,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     62,
+     MAP_FILE_OBJECT_RANDOM_RESOURCE,
      {84,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3422,7 +3424,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mon-00  ",
      TILESET_MONS32,
-     2,
+     OVERLAY_KIND_MONSTER,
      0,
      0x0001,
      0x7e,
@@ -3433,7 +3435,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     26,
+     MAP_OBJECT_MONSTER,
      {0,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3452,7 +3454,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mon-01  ",
      TILESET_MONS32,
-     2,
+     OVERLAY_KIND_MONSTER,
      0,
      0x0001,
      0x7e,
@@ -3463,7 +3465,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     26,
+     MAP_OBJECT_MONSTER,
      {1,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3482,7 +3484,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mon-02  ",
      TILESET_MONS32,
-     2,
+     OVERLAY_KIND_MONSTER,
      0,
      0x0001,
      0x7e,
@@ -3493,7 +3495,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     26,
+     MAP_OBJECT_MONSTER,
      {2,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3512,7 +3514,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mon-03  ",
      TILESET_MONS32,
-     2,
+     OVERLAY_KIND_MONSTER,
      0,
      0x0001,
      0x7e,
@@ -3523,7 +3525,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     26,
+     MAP_OBJECT_MONSTER,
      {3,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3542,7 +3544,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mon-04  ",
      TILESET_MONS32,
-     2,
+     OVERLAY_KIND_MONSTER,
      0,
      0x0001,
      0x7e,
@@ -3553,7 +3555,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     26,
+     MAP_OBJECT_MONSTER,
      {4,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3572,7 +3574,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mon-05  ",
      TILESET_MONS32,
-     2,
+     OVERLAY_KIND_MONSTER,
      0,
      0x0001,
      0x7e,
@@ -3583,7 +3585,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     26,
+     MAP_OBJECT_MONSTER,
      {5,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3602,7 +3604,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mon-06  ",
      TILESET_MONS32,
-     2,
+     OVERLAY_KIND_MONSTER,
      0,
      0x0001,
      0x7e,
@@ -3613,7 +3615,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     26,
+     MAP_OBJECT_MONSTER,
      {6,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3632,7 +3634,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mon-07  ",
      TILESET_MONS32,
-     2,
+     OVERLAY_KIND_MONSTER,
      0,
      0x0001,
      0x7e,
@@ -3643,7 +3645,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     26,
+     MAP_OBJECT_MONSTER,
      {7,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3662,7 +3664,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mon-08  ",
      TILESET_MONS32,
-     2,
+     OVERLAY_KIND_MONSTER,
      0,
      0x0001,
      0x7e,
@@ -3673,7 +3675,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     26,
+     MAP_OBJECT_MONSTER,
      {8,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3692,7 +3694,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mon-09  ",
      TILESET_MONS32,
-     2,
+     OVERLAY_KIND_MONSTER,
      0,
      0x0001,
      0x7e,
@@ -3703,7 +3705,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     26,
+     MAP_OBJECT_MONSTER,
      {9,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3722,7 +3724,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mon-10  ",
      TILESET_MONS32,
-     2,
+     OVERLAY_KIND_MONSTER,
      0,
      0x0001,
      0x7e,
@@ -3733,7 +3735,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     26,
+     MAP_OBJECT_MONSTER,
      {10,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3752,7 +3754,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mon-11  ",
      TILESET_MONS32,
-     2,
+     OVERLAY_KIND_MONSTER,
      0,
      0x0001,
      0x7e,
@@ -3763,7 +3765,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     26,
+     MAP_OBJECT_MONSTER,
      {11,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3782,7 +3784,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mon-12  ",
      TILESET_MONS32,
-     2,
+     OVERLAY_KIND_MONSTER,
      0,
      0x0001,
      0x7e,
@@ -3793,7 +3795,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     26,
+     MAP_OBJECT_MONSTER,
      {12,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3812,7 +3814,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mon-13  ",
      TILESET_MONS32,
-     2,
+     OVERLAY_KIND_MONSTER,
      0,
      0x0001,
      0x7e,
@@ -3823,7 +3825,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     26,
+     MAP_OBJECT_MONSTER,
      {13,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3842,7 +3844,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mon-14  ",
      TILESET_MONS32,
-     2,
+     OVERLAY_KIND_MONSTER,
      0,
      0x0001,
      0x7e,
@@ -3853,7 +3855,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     26,
+     MAP_OBJECT_MONSTER,
      {14,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3872,7 +3874,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mon-15  ",
      TILESET_MONS32,
-     2,
+     OVERLAY_KIND_MONSTER,
      0,
      0x0001,
      0x7e,
@@ -3883,7 +3885,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     26,
+     MAP_OBJECT_MONSTER,
      {15,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3902,7 +3904,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mon-16  ",
      TILESET_MONS32,
-     2,
+     OVERLAY_KIND_MONSTER,
      0,
      0x0001,
      0x7e,
@@ -3913,7 +3915,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     26,
+     MAP_OBJECT_MONSTER,
      {16,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3932,7 +3934,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mon-17  ",
      TILESET_MONS32,
-     2,
+     OVERLAY_KIND_MONSTER,
      0,
      0x0001,
      0x7e,
@@ -3943,7 +3945,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     26,
+     MAP_OBJECT_MONSTER,
      {17,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3962,7 +3964,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mon-18  ",
      TILESET_MONS32,
-     2,
+     OVERLAY_KIND_MONSTER,
      0,
      0x0001,
      0x7e,
@@ -3973,7 +3975,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     26,
+     MAP_OBJECT_MONSTER,
      {18,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -3992,7 +3994,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mon-19  ",
      TILESET_MONS32,
-     2,
+     OVERLAY_KIND_MONSTER,
      0,
      0x0001,
      0x7e,
@@ -4003,7 +4005,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     26,
+     MAP_OBJECT_MONSTER,
      {19,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4022,7 +4024,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mon-20  ",
      TILESET_MONS32,
-     2,
+     OVERLAY_KIND_MONSTER,
      0,
      0x0001,
      0x7e,
@@ -4033,7 +4035,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     26,
+     MAP_OBJECT_MONSTER,
      {20,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4052,7 +4054,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mon-21  ",
      TILESET_MONS32,
-     2,
+     OVERLAY_KIND_MONSTER,
      0,
      0x0001,
      0x7e,
@@ -4063,7 +4065,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     26,
+     MAP_OBJECT_MONSTER,
      {21,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4082,7 +4084,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mon-22  ",
      TILESET_MONS32,
-     2,
+     OVERLAY_KIND_MONSTER,
      0,
      0x0001,
      0x7e,
@@ -4093,7 +4095,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     26,
+     MAP_OBJECT_MONSTER,
      {22,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4112,7 +4114,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mon-23  ",
      TILESET_MONS32,
-     2,
+     OVERLAY_KIND_MONSTER,
      0,
      0x0001,
      0x7e,
@@ -4123,7 +4125,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     26,
+     MAP_OBJECT_MONSTER,
      {23,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4142,7 +4144,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mon-24  ",
      TILESET_MONS32,
-     2,
+     OVERLAY_KIND_MONSTER,
      0,
      0x0001,
      0x7e,
@@ -4153,7 +4155,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     26,
+     MAP_OBJECT_MONSTER,
      {24,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4172,7 +4174,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mon-25  ",
      TILESET_MONS32,
-     2,
+     OVERLAY_KIND_MONSTER,
      0,
      0x0001,
      0x7e,
@@ -4183,7 +4185,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     26,
+     MAP_OBJECT_MONSTER,
      {25,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4202,7 +4204,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mon-26  ",
      TILESET_MONS32,
-     2,
+     OVERLAY_KIND_MONSTER,
      0,
      0x0001,
      0x7e,
@@ -4213,7 +4215,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     26,
+     MAP_OBJECT_MONSTER,
      {26,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4232,7 +4234,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mon-27  ",
      TILESET_MONS32,
-     2,
+     OVERLAY_KIND_MONSTER,
      0,
      0x0001,
      0x7e,
@@ -4243,7 +4245,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     26,
+     MAP_OBJECT_MONSTER,
      {27,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4262,7 +4264,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mon-28  ",
      TILESET_MONS32,
-     2,
+     OVERLAY_KIND_MONSTER,
      0,
      0x0001,
      0x7e,
@@ -4273,7 +4275,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     63,
+     MAP_FILE_OBJECT_RANDOM_MONSTER,
      {28,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4292,7 +4294,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mon-29  ",
      TILESET_MONS32,
-     2,
+     OVERLAY_KIND_MONSTER,
      0,
      0x0001,
      0x7e,
@@ -4303,7 +4305,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     67,
+     MAP_FILE_OBJECT_RANDOM_MONSTER_WEAK,
      {29,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4322,7 +4324,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mon-30  ",
      TILESET_MONS32,
-     2,
+     OVERLAY_KIND_MONSTER,
      0,
      0x0001,
      0x7e,
@@ -4333,7 +4335,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     68,
+     MAP_FILE_OBJECT_RANDOM_MONSTER_MEDIUM,
      {30,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4352,7 +4354,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mon-31  ",
      TILESET_MONS32,
-     2,
+     OVERLAY_KIND_MONSTER,
      0,
      0x0001,
      0x7e,
@@ -4363,7 +4365,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     69,
+     MAP_FILE_OBJECT_RANDOM_MONSTER_STRONG,
      {31,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4382,7 +4384,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mon-32  ",
      TILESET_MONS32,
-     2,
+     OVERLAY_KIND_MONSTER,
      0,
      0x0001,
      0x7e,
@@ -4393,7 +4395,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     70,
+     MAP_FILE_OBJECT_RANDOM_MONSTER_VERY_STRONG,
      {32,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4412,7 +4414,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mon-33  ",
      TILESET_MONS32,
-     2,
+     OVERLAY_KIND_MONSTER,
      0,
      0x0001,
      0x7e,
@@ -4423,7 +4425,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     71,
+     MAP_FILE_OBJECT_HERO,
      {33,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4442,7 +4444,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"art-04  ",
      TILESET_ART32,
-     3,
+     OVERLAY_KIND_ARTIFACT,
      0,
      0x0001,
      0x7e,
@@ -4453,7 +4455,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     48,
+     MAP_OBJECT_ARTIFACT,
      {4,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4472,7 +4474,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"art-05  ",
      TILESET_ART32,
-     3,
+     OVERLAY_KIND_ARTIFACT,
      0,
      0x0001,
      0x7e,
@@ -4483,7 +4485,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     48,
+     MAP_OBJECT_ARTIFACT,
      {5,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4502,7 +4504,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"art-06  ",
      TILESET_ART32,
-     3,
+     OVERLAY_KIND_ARTIFACT,
      0,
      0x0001,
      0x7e,
@@ -4513,7 +4515,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     48,
+     MAP_OBJECT_ARTIFACT,
      {6,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4532,7 +4534,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"art-07  ",
      TILESET_ART32,
-     3,
+     OVERLAY_KIND_ARTIFACT,
      0,
      0x0001,
      0x7e,
@@ -4543,7 +4545,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     48,
+     MAP_OBJECT_ARTIFACT,
      {7,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4562,7 +4564,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"art-08  ",
      TILESET_ART32,
-     3,
+     OVERLAY_KIND_ARTIFACT,
      0,
      0x0001,
      0x7e,
@@ -4573,7 +4575,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     48,
+     MAP_OBJECT_ARTIFACT,
      {8,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4592,7 +4594,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"art-09  ",
      TILESET_ART32,
-     3,
+     OVERLAY_KIND_ARTIFACT,
      0,
      0x0001,
      0x7e,
@@ -4603,7 +4605,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     48,
+     MAP_OBJECT_ARTIFACT,
      {9,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4622,7 +4624,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"art-10  ",
      TILESET_ART32,
-     3,
+     OVERLAY_KIND_ARTIFACT,
      0,
      0x0001,
      0x7e,
@@ -4633,7 +4635,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     48,
+     MAP_OBJECT_ARTIFACT,
      {10,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4652,7 +4654,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"art-11  ",
      TILESET_ART32,
-     3,
+     OVERLAY_KIND_ARTIFACT,
      0,
      0x0001,
      0x7e,
@@ -4663,7 +4665,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     48,
+     MAP_OBJECT_ARTIFACT,
      {11,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4682,7 +4684,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"art-12  ",
      TILESET_ART32,
-     3,
+     OVERLAY_KIND_ARTIFACT,
      0,
      0x0001,
      0x7e,
@@ -4693,7 +4695,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     48,
+     MAP_OBJECT_ARTIFACT,
      {12,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4712,7 +4714,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"art-13  ",
      TILESET_ART32,
-     3,
+     OVERLAY_KIND_ARTIFACT,
      0,
      0x0001,
      0x7e,
@@ -4723,7 +4725,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     48,
+     MAP_OBJECT_ARTIFACT,
      {13,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4742,7 +4744,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"art-14  ",
      TILESET_ART32,
-     3,
+     OVERLAY_KIND_ARTIFACT,
      0,
      0x0001,
      0x7e,
@@ -4753,7 +4755,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     48,
+     MAP_OBJECT_ARTIFACT,
      {14,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4772,7 +4774,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"art-15  ",
      TILESET_ART32,
-     3,
+     OVERLAY_KIND_ARTIFACT,
      0,
      0x0001,
      0x7e,
@@ -4783,7 +4785,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     48,
+     MAP_OBJECT_ARTIFACT,
      {15,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4802,7 +4804,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"art-16  ",
      TILESET_ART32,
-     3,
+     OVERLAY_KIND_ARTIFACT,
      0,
      0x0001,
      0x7e,
@@ -4813,7 +4815,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     48,
+     MAP_OBJECT_ARTIFACT,
      {16,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4832,7 +4834,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"art-17  ",
      TILESET_ART32,
-     3,
+     OVERLAY_KIND_ARTIFACT,
      0,
      0x0001,
      0x7e,
@@ -4843,7 +4845,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     48,
+     MAP_OBJECT_ARTIFACT,
      {17,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4862,7 +4864,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"art-18  ",
      TILESET_ART32,
-     3,
+     OVERLAY_KIND_ARTIFACT,
      0,
      0x0001,
      0x7e,
@@ -4873,7 +4875,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     48,
+     MAP_OBJECT_ARTIFACT,
      {18,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4892,7 +4894,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"art-19  ",
      TILESET_ART32,
-     3,
+     OVERLAY_KIND_ARTIFACT,
      0,
      0x0001,
      0x7e,
@@ -4903,7 +4905,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     48,
+     MAP_OBJECT_ARTIFACT,
      {19,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4922,7 +4924,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"art-20  ",
      TILESET_ART32,
-     3,
+     OVERLAY_KIND_ARTIFACT,
      0,
      0x0001,
      0x7e,
@@ -4933,7 +4935,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     48,
+     MAP_OBJECT_ARTIFACT,
      {20,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4952,7 +4954,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"art-21  ",
      TILESET_ART32,
-     3,
+     OVERLAY_KIND_ARTIFACT,
      0,
      0x0001,
      0x7e,
@@ -4963,7 +4965,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     48,
+     MAP_OBJECT_ARTIFACT,
      {21,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -4982,7 +4984,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"art-22  ",
      TILESET_ART32,
-     3,
+     OVERLAY_KIND_ARTIFACT,
      0,
      0x0001,
      0x7e,
@@ -4993,7 +4995,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     48,
+     MAP_OBJECT_ARTIFACT,
      {22,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5012,7 +5014,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"art-23  ",
      TILESET_ART32,
-     3,
+     OVERLAY_KIND_ARTIFACT,
      0,
      0x0001,
      0x7e,
@@ -5023,7 +5025,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     48,
+     MAP_OBJECT_ARTIFACT,
      {23,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5042,7 +5044,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"art-24  ",
      TILESET_ART32,
-     3,
+     OVERLAY_KIND_ARTIFACT,
      0,
      0x0001,
      0x7e,
@@ -5053,7 +5055,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     48,
+     MAP_OBJECT_ARTIFACT,
      {24,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5072,7 +5074,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"art-25  ",
      TILESET_ART32,
-     3,
+     OVERLAY_KIND_ARTIFACT,
      0,
      0x0001,
      0x7e,
@@ -5083,7 +5085,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     48,
+     MAP_OBJECT_ARTIFACT,
      {25,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5102,7 +5104,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"art-26  ",
      TILESET_ART32,
-     3,
+     OVERLAY_KIND_ARTIFACT,
      0,
      0x0001,
      0x7e,
@@ -5113,7 +5115,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     48,
+     MAP_OBJECT_ARTIFACT,
      {26,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5132,7 +5134,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"art-27  ",
      TILESET_ART32,
-     3,
+     OVERLAY_KIND_ARTIFACT,
      0,
      0x0001,
      0x7e,
@@ -5143,7 +5145,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     48,
+     MAP_OBJECT_ARTIFACT,
      {27,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5162,7 +5164,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"art-28  ",
      TILESET_ART32,
-     3,
+     OVERLAY_KIND_ARTIFACT,
      0,
      0x0001,
      0x7e,
@@ -5173,7 +5175,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     48,
+     MAP_OBJECT_ARTIFACT,
      {28,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5192,7 +5194,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"art-29  ",
      TILESET_ART32,
-     3,
+     OVERLAY_KIND_ARTIFACT,
      0,
      0x0001,
      0x7e,
@@ -5203,7 +5205,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     48,
+     MAP_OBJECT_ARTIFACT,
      {29,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5222,7 +5224,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"art-30  ",
      TILESET_ART32,
-     3,
+     OVERLAY_KIND_ARTIFACT,
      0,
      0x0001,
      0x7e,
@@ -5233,7 +5235,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     48,
+     MAP_OBJECT_ARTIFACT,
      {30,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5252,7 +5254,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"art-31  ",
      TILESET_ART32,
-     3,
+     OVERLAY_KIND_ARTIFACT,
      0,
      0x0001,
      0x7e,
@@ -5263,7 +5265,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     48,
+     MAP_OBJECT_ARTIFACT,
      {31,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5282,7 +5284,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"art-32  ",
      TILESET_ART32,
-     3,
+     OVERLAY_KIND_ARTIFACT,
      0,
      0x0001,
      0x7e,
@@ -5293,7 +5295,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     48,
+     MAP_OBJECT_ARTIFACT,
      {32,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5312,7 +5314,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"art-33  ",
      TILESET_ART32,
-     3,
+     OVERLAY_KIND_ARTIFACT,
      0,
      0x0001,
      0x7e,
@@ -5323,7 +5325,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     48,
+     MAP_OBJECT_ARTIFACT,
      {33,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5342,7 +5344,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"art-34  ",
      TILESET_ART32,
-     3,
+     OVERLAY_KIND_ARTIFACT,
      0,
      0x0001,
      0x7e,
@@ -5353,7 +5355,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     48,
+     MAP_OBJECT_ARTIFACT,
      {34,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5372,7 +5374,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"art-35  ",
      TILESET_ART32,
-     3,
+     OVERLAY_KIND_ARTIFACT,
      0,
      0x0001,
      0x7e,
@@ -5383,7 +5385,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     48,
+     MAP_OBJECT_ARTIFACT,
      {35,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5402,7 +5404,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"art-36  ",
      TILESET_ART32,
-     3,
+     OVERLAY_KIND_ARTIFACT,
      0,
      0x0001,
      0x7e,
@@ -5413,7 +5415,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     48,
+     MAP_OBJECT_ARTIFACT,
      {36,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5432,7 +5434,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"xart    ",
      TILESET_ART32,
-     3,
+     OVERLAY_KIND_ARTIFACT,
      0,
      0x0001,
      0x7e,
@@ -5443,7 +5445,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     61,
+     MAP_FILE_OBJECT_RANDOM_ARTIFACT,
      {37,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5462,7 +5464,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"buoy    ",
      TILESET_OBJ32_00,
-     0,
+     OVERLAY_KIND_TERRAIN,
      8,
      0x0001,
      0x01,
@@ -5473,7 +5475,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     3,
+     MAP_OBJECT_BUOY,
      {7,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5492,7 +5494,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"rock-00 ",
      TILESET_OBJ32_00,
-     0,
+     OVERLAY_KIND_TERRAIN,
      15,
      0x00e7,
      0x01,
@@ -5503,7 +5505,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     49,
+     MAP_OBJECT_NOTHING_HERE,
      {2,
       3,
       72,
@@ -5522,7 +5524,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"rock-01 ",
      TILESET_OBJ32_00,
-     0,
+     OVERLAY_KIND_TERRAIN,
      50,
      0x0003,
      0x01,
@@ -5533,7 +5535,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     49,
+     MAP_OBJECT_NOTHING_HERE,
      {0,
       70,
       MAP_CELL_NO_FRAME,
@@ -5552,7 +5554,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"rock-02 ",
      TILESET_OBJ32_00,
-     0,
+     OVERLAY_KIND_TERRAIN,
      50,
      0x0003,
      0x01,
@@ -5563,7 +5565,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     49,
+     MAP_OBJECT_NOTHING_HERE,
      {1,
       71,
       MAP_CELL_NO_FRAME,
@@ -5582,7 +5584,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"shipwrek",
      TILESET_OBJ32_00,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0023,
      0x01,
@@ -5593,7 +5595,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0003,
-     35,
+     MAP_OBJECT_SHIPWRECK,
      {14,
       6,
       MAP_CELL_NO_FRAME,
@@ -5612,7 +5614,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"whrlpool",
      TILESET_OBJ32_00,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x00e7,
      0x01,
@@ -5623,7 +5625,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x00e0,
-     44,
+     MAP_OBJECT_WHIRLPOOL,
      {28,
       35,
       42,
@@ -5642,7 +5644,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"bsign   ",
      TILESET_OBJ32_01,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0001,
      0x02,
@@ -5653,7 +5655,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     2,
+     MAP_OBJECT_SIGNPOST,
      {10,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5672,7 +5674,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"crack-00",
      TILESET_OBJ32_01,
-     0,
+     OVERLAY_KIND_TERRAIN,
      30,
      0x0001,
      0x02,
@@ -5683,7 +5685,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {0,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5702,7 +5704,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"crack-01",
      TILESET_OBJ32_01,
-     0,
+     OVERLAY_KIND_TERRAIN,
      30,
      0x0001,
      0x02,
@@ -5713,7 +5715,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {1,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5732,7 +5734,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"faeriemd",
      TILESET_OBJ32_01,
-     0,
+     OVERLAY_KIND_TERRAIN,
      8,
      0x0003,
      0x02,
@@ -5743,7 +5745,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0003,
-     7,
+     MAP_OBJECT_FAERIE_RING,
      {122,
       123,
       MAP_CELL_NO_FRAME,
@@ -5762,7 +5764,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"flowr-00",
      TILESET_OBJ32_01,
-     0,
+     OVERLAY_KIND_TERRAIN,
      50,
      0x0001,
      0x02,
@@ -5773,7 +5775,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {2,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5792,7 +5794,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"flowr-01",
      TILESET_OBJ32_01,
-     0,
+     OVERLAY_KIND_TERRAIN,
      50,
      0x0001,
      0x02,
@@ -5803,7 +5805,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {3,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5822,7 +5824,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"gazebo  ",
      TILESET_OBJ32_01,
-     0,
+     OVERLAY_KIND_TERRAIN,
      4,
      0x0001,
      0x02,
@@ -5833,7 +5835,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     10,
+     MAP_OBJECT_GAZEBO,
      {11,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5852,7 +5854,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"house-00",
      TILESET_OBJ32_01,
-     0,
+     OVERLAY_KIND_TERRAIN,
      5,
      0x0001,
      0x02,
@@ -5863,7 +5865,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     13,
+     MAP_OBJECT_STRAW_HUT,
      {12,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5882,7 +5884,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"house-01",
      TILESET_OBJ32_01,
-     0,
+     OVERLAY_KIND_TERRAIN,
      5,
      0x0001,
      0x02,
@@ -5893,7 +5895,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     14,
+     MAP_OBJECT_HOUSE,
      {13,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5912,7 +5914,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"house-02",
      TILESET_OBJ32_01,
-     0,
+     OVERLAY_KIND_TERRAIN,
      5,
      0x0001,
      0x02,
@@ -5923,7 +5925,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     15,
+     MAP_OBJECT_CABIN,
      {14,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -5942,7 +5944,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"lake-00 ",
      TILESET_OBJ32_01,
-     0,
+     OVERLAY_KIND_TERRAIN,
      20,
      0x03ff,
      0x02,
@@ -5953,7 +5955,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     49,
+     MAP_OBJECT_NOTHING_HERE,
      {52,
       59,
       66,
@@ -5972,7 +5974,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"lake-01 ",
      TILESET_OBJ32_01,
-     0,
+     OVERLAY_KIND_TERRAIN,
      20,
      0x000f,
      0x02,
@@ -5983,7 +5985,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     49,
+     MAP_OBJECT_NOTHING_HERE,
      {30,
       31,
       38,
@@ -6002,7 +6004,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"lgshrine",
      TILESET_OBJ32_01,
-     0,
+     OVERLAY_KIND_TERRAIN,
      2,
      0x00e7,
      0x02,
@@ -6013,7 +6015,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0002,
-     33,
+     MAP_OBJECT_RANKING_SHRINE,
      {21,
       23,
       22,
@@ -6032,7 +6034,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mound-00",
      TILESET_OBJ32_01,
-     0,
+     OVERLAY_KIND_TERRAIN,
      50,
      0x0001,
      0x02,
@@ -6043,7 +6045,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {4,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6062,7 +6064,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mound-01",
      TILESET_OBJ32_01,
-     0,
+     OVERLAY_KIND_TERRAIN,
      50,
      0x0001,
      0x02,
@@ -6073,7 +6075,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {5,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6092,7 +6094,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"obelisk1",
      TILESET_OBJ32_01,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0001,
      0x02,
@@ -6103,7 +6105,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     27,
+     MAP_OBJECT_OBELISK,
      {15,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6122,7 +6124,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"outcrop ",
      TILESET_OBJ32_01,
-     0,
+     OVERLAY_KIND_TERRAIN,
      50,
      0x0001,
      0x02,
@@ -6133,7 +6135,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {6,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6152,7 +6154,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"rocks-00",
      TILESET_OBJ32_01,
-     0,
+     OVERLAY_KIND_TERRAIN,
      50,
      0x0001,
      0x02,
@@ -6163,7 +6165,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {7,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6182,7 +6184,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"rocks-01",
      TILESET_OBJ32_01,
-     0,
+     OVERLAY_KIND_TERRAIN,
      50,
      0x0001,
      0x02,
@@ -6193,7 +6195,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {8,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6212,7 +6214,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"rocks-02",
      TILESET_OBJ32_01,
-     0,
+     OVERLAY_KIND_TERRAIN,
      50,
      0x0001,
      0x02,
@@ -6223,7 +6225,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {9,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6242,7 +6244,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"rosebush",
      TILESET_OBJ32_01,
-     0,
+     OVERLAY_KIND_TERRAIN,
      20,
      0x0001,
      0x02,
@@ -6253,7 +6255,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     30,
+     MAP_OBJECT_ROSEBUSH,
      {16,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6272,7 +6274,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"smshrine",
      TILESET_OBJ32_01,
-     0,
+     OVERLAY_KIND_TERRAIN,
      4,
      0x0001,
      0x02,
@@ -6283,7 +6285,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     34,
+     MAP_OBJECT_SPELL_SHRINE,
      {17,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6302,7 +6304,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"bsign   ",
      TILESET_OBJ32_02,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0001,
      0x04,
@@ -6313,7 +6315,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     2,
+     MAP_OBJECT_SIGNPOST,
      {3,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6332,7 +6334,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"fire    ",
      TILESET_OBJ32_02,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0001,
      0x04,
@@ -6343,7 +6345,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     8,
+     MAP_OBJECT_CAMPFIRE,
      {15,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6362,7 +6364,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"house-00",
      TILESET_OBJ32_02,
-     0,
+     OVERLAY_KIND_TERRAIN,
      8,
      0x0001,
      0x04,
@@ -6373,7 +6375,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     16,
+     MAP_OBJECT_DWARF_LOG_CABIN,
      {5,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6392,7 +6394,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"house-01",
      TILESET_OBJ32_02,
-     0,
+     OVERLAY_KIND_TERRAIN,
      8,
      0x0021,
      0x04,
@@ -6403,7 +6405,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     17,
+     MAP_OBJECT_PEASANT_LOG_CABIN,
      {22,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6422,7 +6424,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"lake-00 ",
      TILESET_OBJ32_02,
-     0,
+     OVERLAY_KIND_TERRAIN,
      20,
      0x0003,
      0x04,
@@ -6433,7 +6435,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     49,
+     MAP_OBJECT_NOTHING_HERE,
      {8,
       9,
       MAP_CELL_NO_FRAME,
@@ -6452,7 +6454,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"lake-01 ",
      TILESET_OBJ32_02,
-     0,
+     OVERLAY_KIND_TERRAIN,
      20,
      0x0003,
      0x04,
@@ -6463,7 +6465,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     49,
+     MAP_OBJECT_NOTHING_HERE,
      {10,
       11,
       MAP_CELL_NO_FRAME,
@@ -6482,7 +6484,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"lake-02 ",
      TILESET_OBJ32_02,
-     0,
+     OVERLAY_KIND_TERRAIN,
      20,
      0x000f,
      0x04,
@@ -6493,7 +6495,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     49,
+     MAP_OBJECT_NOTHING_HERE,
      {12,
       13,
       14,
@@ -6512,7 +6514,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"obelisk2",
      TILESET_OBJ32_02,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0001,
      0x04,
@@ -6523,7 +6525,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     27,
+     MAP_OBJECT_OBELISK,
      {6,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6542,7 +6544,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"outcrop ",
      TILESET_OBJ32_02,
-     0,
+     OVERLAY_KIND_TERRAIN,
      50,
      0x0001,
      0x04,
@@ -6553,7 +6555,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {0,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6572,7 +6574,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"rocks-00",
      TILESET_OBJ32_02,
-     0,
+     OVERLAY_KIND_TERRAIN,
      50,
      0x0001,
      0x04,
@@ -6583,7 +6585,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {1,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6602,7 +6604,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"rocks-01",
      TILESET_OBJ32_02,
-     0,
+     OVERLAY_KIND_TERRAIN,
      50,
      0x0001,
      0x04,
@@ -6613,7 +6615,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {2,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6632,7 +6634,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"stgate  ",
      TILESET_OBJ32_02,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0001,
      0x04,
@@ -6643,7 +6645,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     41,
+     MAP_OBJECT_STONE_LITHS,
      {7,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6662,7 +6664,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"bramble ",
      TILESET_OBJ32_03,
-     0,
+     OVERLAY_KIND_TERRAIN,
      50,
      0x0001,
      0x08,
@@ -6673,7 +6675,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {0,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6692,7 +6694,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"cavehead",
      TILESET_OBJ32_03,
-     0,
+     OVERLAY_KIND_TERRAIN,
      4,
      0x0063,
      0x08,
@@ -6703,7 +6705,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     5,
+     MAP_OBJECT_DAEMON_CAVE,
      {9,
       10,
       MAP_CELL_NO_FRAME,
@@ -6722,7 +6724,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"faeriemd",
      TILESET_OBJ32_03,
-     0,
+     OVERLAY_KIND_TERRAIN,
      8,
      0x0003,
      0x08,
@@ -6733,7 +6735,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0003,
-     7,
+     MAP_OBJECT_FAERIE_RING,
      {13,
       14,
       MAP_CELL_NO_FRAME,
@@ -6752,7 +6754,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"grasclmp",
      TILESET_OBJ32_03,
-     0,
+     OVERLAY_KIND_TERRAIN,
      50,
      0x0001,
      0x08,
@@ -6763,7 +6765,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     49,
+     MAP_OBJECT_NOTHING_HERE,
      {4,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6782,7 +6784,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"grndplnt",
      TILESET_OBJ32_03,
-     0,
+     OVERLAY_KIND_TERRAIN,
      50,
      0x0001,
      0x08,
@@ -6793,7 +6795,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {1,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6812,7 +6814,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"lake-00 ",
      TILESET_OBJ32_03,
-     0,
+     OVERLAY_KIND_TERRAIN,
      20,
      0x3fff,
      0x08,
@@ -6823,7 +6825,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {15,
       16,
       17,
@@ -6842,7 +6844,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"lake-01 ",
      TILESET_OBJ32_03,
-     0,
+     OVERLAY_KIND_TERRAIN,
      20,
      0x00e7,
      0x08,
@@ -6853,7 +6855,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {29,
       30,
       31,
@@ -6872,7 +6874,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"lake-02 ",
      TILESET_OBJ32_03,
-     0,
+     OVERLAY_KIND_TERRAIN,
      20,
      0x0001,
      0x08,
@@ -6883,7 +6885,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {5,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6902,7 +6904,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"obelisk3",
      TILESET_OBJ32_03,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0001,
      0x08,
@@ -6913,7 +6915,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     27,
+     MAP_OBJECT_OBELISK,
      {7,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6932,7 +6934,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"smshrine",
      TILESET_OBJ32_03,
-     0,
+     OVERLAY_KIND_TERRAIN,
      8,
      0x0001,
      0x08,
@@ -6943,7 +6945,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     34,
+     MAP_OBJECT_SPELL_SHRINE,
      {8,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -6962,7 +6964,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"swmpgras",
      TILESET_OBJ32_03,
-     0,
+     OVERLAY_KIND_TERRAIN,
      50,
      0x0003,
      0x08,
@@ -6973,7 +6975,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {2,
       3,
       MAP_CELL_NO_FRAME,
@@ -6992,7 +6994,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"cavehead",
      TILESET_OBJ32_04,
-     0,
+     OVERLAY_KIND_TERRAIN,
      4,
      0x0063,
      0x10,
@@ -7003,7 +7005,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     5,
+     MAP_OBJECT_DAEMON_CAVE,
      {13,
       14,
       MAP_CELL_NO_FRAME,
@@ -7022,7 +7024,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"crack-00",
      TILESET_OBJ32_04,
-     0,
+     OVERLAY_KIND_TERRAIN,
      50,
      0x0001,
      0x10,
@@ -7033,7 +7035,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {0,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -7052,7 +7054,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"fissure1",
      TILESET_OBJ32_04,
-     0,
+     OVERLAY_KIND_TERRAIN,
      50,
      0x00e7,
      0x10,
@@ -7063,7 +7065,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {1,
       2,
       3,
@@ -7082,7 +7084,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"fissure2",
      TILESET_OBJ32_04,
-     0,
+     OVERLAY_KIND_TERRAIN,
      50,
      0x0063,
      0x10,
@@ -7093,7 +7095,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {7,
       8,
       MAP_CELL_NO_FRAME,
@@ -7112,7 +7114,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"lake-00 ",
      TILESET_OBJ32_04,
-     0,
+     OVERLAY_KIND_TERRAIN,
      30,
      0x00e7,
      0x10,
@@ -7123,7 +7125,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     49,
+     MAP_OBJECT_NOTHING_HERE,
      {17,
       18,
       19,
@@ -7142,7 +7144,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"lake-01 ",
      TILESET_OBJ32_04,
-     0,
+     OVERLAY_KIND_TERRAIN,
      30,
      0x0003,
      0x10,
@@ -7153,7 +7155,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     49,
+     MAP_OBJECT_NOTHING_HERE,
      {23,
       24,
       MAP_CELL_NO_FRAME,
@@ -7172,7 +7174,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"lake-02 ",
      TILESET_OBJ32_04,
-     0,
+     OVERLAY_KIND_TERRAIN,
      30,
      0x0001,
      0x10,
@@ -7183,7 +7185,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     49,
+     MAP_OBJECT_NOTHING_HERE,
      {11,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -7202,7 +7204,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"obelisk4",
      TILESET_OBJ32_04,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0001,
      0x10,
@@ -7213,7 +7215,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     27,
+     MAP_OBJECT_OBELISK,
      {12,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -7232,7 +7234,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"vent    ",
      TILESET_OBJ32_04,
-     0,
+     OVERLAY_KIND_TERRAIN,
      30,
      0x0021,
      0x10,
@@ -7243,7 +7245,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     49,
+     MAP_OBJECT_NOTHING_HERE,
      {39,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -7262,7 +7264,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"vflow   ",
      TILESET_OBJ32_04,
-     0,
+     OVERLAY_KIND_TERRAIN,
      30,
      0x00e7,
      0x10,
@@ -7273,7 +7275,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     49,
+     MAP_OBJECT_NOTHING_HERE,
      {27,
       53,
       67,
@@ -7292,7 +7294,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"vglow   ",
      TILESET_OBJ32_04,
-     0,
+     OVERLAY_KIND_TERRAIN,
      40,
      0x0ce6,
      0x10,
@@ -7303,7 +7305,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     49,
+     MAP_OBJECT_NOTHING_HERE,
      {MAP_CELL_NO_FRAME,
       30,
       31,
@@ -7322,7 +7324,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"vsmoke  ",
      TILESET_OBJ32_04,
-     0,
+     OVERLAY_KIND_TERRAIN,
      40,
      0x00e6,
      0x10,
@@ -7333,7 +7335,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     49,
+     MAP_OBJECT_NOTHING_HERE,
      {MAP_CELL_NO_FRAME,
       36,
       81,
@@ -7352,7 +7354,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"bsign   ",
      TILESET_OBJ32_05,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0001,
      0x20,
@@ -7363,7 +7365,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     2,
+     MAP_OBJECT_SIGNPOST,
      {3,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -7382,7 +7384,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"cavehead",
      TILESET_OBJ32_05,
-     0,
+     OVERLAY_KIND_TERRAIN,
      4,
      0x0063,
      0x20,
@@ -7393,7 +7395,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     5,
+     MAP_OBJECT_DAEMON_CAVE,
      {8,
       9,
       MAP_CELL_NO_FRAME,
@@ -7412,7 +7414,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"deadguy ",
      TILESET_OBJ32_05,
-     0,
+     OVERLAY_KIND_TERRAIN,
      8,
      0x0003,
      0x20,
@@ -7423,7 +7425,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0002,
-     4,
+     MAP_OBJECT_SKELETON,
      {5,
       30,
       MAP_CELL_NO_FRAME,
@@ -7442,7 +7444,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"dune-00 ",
      TILESET_OBJ32_05,
-     0,
+     OVERLAY_KIND_TERRAIN,
      50,
      0x0003,
      0x20,
@@ -7453,7 +7455,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     49,
+     MAP_OBJECT_NOTHING_HERE,
      {0,
       1,
       MAP_CELL_NO_FRAME,
@@ -7472,7 +7474,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"dune-01 ",
      TILESET_OBJ32_05,
-     0,
+     OVERLAY_KIND_TERRAIN,
      50,
      0x0001,
      0x20,
@@ -7483,7 +7485,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {2,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -7502,7 +7504,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"oasis   ",
      TILESET_OBJ32_05,
-     0,
+     OVERLAY_KIND_TERRAIN,
      10,
      0x00cf,
      0x20,
@@ -7513,7 +7515,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0006,
-     28,
+     MAP_OBJECT_OASIS,
      {12,
       13,
       14,
@@ -7532,7 +7534,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"obelisk5",
      TILESET_OBJ32_05,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0001,
      0x20,
@@ -7543,7 +7545,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     27,
+     MAP_OBJECT_OBELISK,
      {6,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -7562,7 +7564,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"sandpit ",
      TILESET_OBJ32_05,
-     0,
+     OVERLAY_KIND_TERRAIN,
      50,
      0x0007,
      0x20,
@@ -7573,7 +7575,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0002,
-     31,
+     MAP_OBJECT_COAST,
      {16,
       17,
       33,
@@ -7592,7 +7594,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"tent    ",
      TILESET_OBJ32_05,
-     0,
+     OVERLAY_KIND_TERRAIN,
      8,
      0x00e7,
      0x20,
@@ -7603,7 +7605,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0002,
-     39,
+     MAP_OBJECT_DESERT_TENT,
      {18,
       19,
       20,
@@ -7622,7 +7624,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"dtgate  ",
      TILESET_OBJ32_05,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0001,
      0x20,
@@ -7633,7 +7635,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     41,
+     MAP_OBJECT_STONE_LITHS,
      {7,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -7652,7 +7654,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"crack-00",
      TILESET_OBJ32_06,
-     0,
+     OVERLAY_KIND_TERRAIN,
      50,
      0x0001,
      0x40,
@@ -7663,7 +7665,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {0,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -7682,7 +7684,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"crack-01",
      TILESET_OBJ32_06,
-     0,
+     OVERLAY_KIND_TERRAIN,
      50,
      0x0001,
      0x40,
@@ -7693,7 +7695,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {1,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -7712,7 +7714,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"faeriemd",
      TILESET_OBJ32_06,
-     0,
+     OVERLAY_KIND_TERRAIN,
      4,
      0x0003,
      0x40,
@@ -7723,7 +7725,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0003,
-     7,
+     MAP_OBJECT_FAERIE_RING,
      {15,
       16,
       MAP_CELL_NO_FRAME,
@@ -7742,7 +7744,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"flowr-00",
      TILESET_OBJ32_06,
-     0,
+     OVERLAY_KIND_TERRAIN,
      50,
      0x0001,
      0x40,
@@ -7753,7 +7755,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {2,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -7772,7 +7774,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"flowr-01",
      TILESET_OBJ32_06,
-     0,
+     OVERLAY_KIND_TERRAIN,
      50,
      0x0001,
      0x40,
@@ -7783,7 +7785,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {3,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -7802,7 +7804,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"flowr-02",
      TILESET_OBJ32_06,
-     0,
+     OVERLAY_KIND_TERRAIN,
      50,
      0x0001,
      0x40,
@@ -7813,7 +7815,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {4,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -7832,7 +7834,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"gazebo  ",
      TILESET_OBJ32_06,
-     0,
+     OVERLAY_KIND_TERRAIN,
      4,
      0x0001,
      0x40,
@@ -7843,7 +7845,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     10,
+     MAP_OBJECT_GAZEBO,
      {11,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -7862,7 +7864,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"lake-00 ",
      TILESET_OBJ32_06,
-     0,
+     OVERLAY_KIND_TERRAIN,
      20,
      0x03ff,
      0x40,
@@ -7873,7 +7875,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     49,
+     MAP_OBJECT_NOTHING_HERE,
      {19,
       20,
       21,
@@ -7892,7 +7894,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"lake-01 ",
      TILESET_OBJ32_06,
-     0,
+     OVERLAY_KIND_TERRAIN,
      20,
      0x0003,
      0x40,
@@ -7903,7 +7905,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     49,
+     MAP_OBJECT_NOTHING_HERE,
      {17,
       18,
       MAP_CELL_NO_FRAME,
@@ -7922,7 +7924,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"lgshrine",
      TILESET_OBJ32_06,
-     0,
+     OVERLAY_KIND_TERRAIN,
      4,
      0x00e7,
      0x40,
@@ -7933,7 +7935,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0002,
-     33,
+     MAP_OBJECT_RANKING_SHRINE,
      {32,
       34,
       33,
@@ -7952,7 +7954,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mound-00",
      TILESET_OBJ32_06,
-     0,
+     OVERLAY_KIND_TERRAIN,
      50,
      0x0001,
      0x40,
@@ -7963,7 +7965,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {5,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -7982,7 +7984,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mound-01",
      TILESET_OBJ32_06,
-     0,
+     OVERLAY_KIND_TERRAIN,
      50,
      0x0001,
      0x40,
@@ -7993,7 +7995,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {6,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8012,7 +8014,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"obelisk6",
      TILESET_OBJ32_06,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0001,
      0x40,
@@ -8023,7 +8025,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     27,
+     MAP_OBJECT_OBELISK,
      {12,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8042,7 +8044,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"outcrop ",
      TILESET_OBJ32_06,
-     0,
+     OVERLAY_KIND_TERRAIN,
      50,
      0x0001,
      0x40,
@@ -8053,7 +8055,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {7,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8072,7 +8074,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"rocks-00",
      TILESET_OBJ32_06,
-     0,
+     OVERLAY_KIND_TERRAIN,
      50,
      0x0001,
      0x40,
@@ -8083,7 +8085,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {8,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8102,7 +8104,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"rocks-01",
      TILESET_OBJ32_06,
-     0,
+     OVERLAY_KIND_TERRAIN,
      50,
      0x0001,
      0x40,
@@ -8113,7 +8115,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {9,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8132,7 +8134,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"rocks-02",
      TILESET_OBJ32_06,
-     0,
+     OVERLAY_KIND_TERRAIN,
      50,
      0x0001,
      0x40,
@@ -8143,7 +8145,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {10,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8162,7 +8164,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"rosebush",
      TILESET_OBJ32_06,
-     0,
+     OVERLAY_KIND_TERRAIN,
      50,
      0x0001,
      0x40,
@@ -8173,7 +8175,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     30,
+     MAP_OBJECT_ROSEBUSH,
      {13,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8192,7 +8194,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"smshrine",
      TILESET_OBJ32_06,
-     0,
+     OVERLAY_KIND_TERRAIN,
      4,
      0x0001,
      0x40,
@@ -8203,7 +8205,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     34,
+     MAP_OBJECT_SPELL_SHRINE,
      {14,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8222,7 +8224,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"bigoak  ",
      TILESET_OBJ32_07,
-     0,
+     OVERLAY_KIND_TERRAIN,
      15,
      0x0063,
      0x0a,
@@ -8233,7 +8235,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     46,
+     MAP_OBJECT_OAK_TREE,
      {8,
       9,
       MAP_CELL_NO_FRAME,
@@ -8252,7 +8254,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"bsign   ",
      TILESET_OBJ32_07,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0001,
      0x48,
@@ -8263,7 +8265,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     2,
+     MAP_OBJECT_SIGNPOST,
      {0,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8282,7 +8284,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"chest   ",
      TILESET_OBJ32_07,
-     4,
+     OVERLAY_KIND_TREASURE,
      0,
      0x0001,
      0x7e,
@@ -8293,7 +8295,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     6,
+     MAP_OBJECT_TREASURE_CHEST,
      {3,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8312,7 +8314,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"firemult",
      TILESET_OBJ32_07,
-     4,
+     OVERLAY_KIND_TREASURE,
      0,
      0x0001,
      0x7e,
@@ -8323,7 +8325,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     8,
+     MAP_OBJECT_CAMPFIRE,
      {42,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8342,7 +8344,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"fountain",
      TILESET_OBJ32_07,
-     0,
+     OVERLAY_KIND_TERRAIN,
      8,
      0x0001,
      0x4e,
@@ -8353,7 +8355,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     9,
+     MAP_OBJECT_FOUNTAIN,
      {49,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8372,7 +8374,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"grave   ",
      TILESET_OBJ32_07,
-     0,
+     OVERLAY_KIND_TERRAIN,
      8,
      0x0007,
      0x4a,
@@ -8383,7 +8385,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0002,
-     12,
+     MAP_OBJECT_GRAVEYARD,
      {12,
       13,
       14,
@@ -8402,7 +8404,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"hole    ",
      TILESET_OBJ32_07,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0001,
      0x4a,
@@ -8413,7 +8415,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     49,
+     MAP_OBJECT_NOTHING_HERE,
      {1,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8432,7 +8434,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"lamp    ",
      TILESET_OBJ32_07,
-     4,
+     OVERLAY_KIND_TREASURE,
      0,
      0x0001,
      0x7e,
@@ -8443,7 +8445,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     11,
+     MAP_OBJECT_ANCIENT_LAMP,
      {4,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8462,7 +8464,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"mill    ",
      TILESET_OBJ32_07,
-     0,
+     OVERLAY_KIND_TERRAIN,
      1,
      0x18e7,
      0x42,
@@ -8473,7 +8475,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0080,
-     24,
+     MAP_OBJECT_WATERWHEEL,
      {63,
       70,
       33,
@@ -8492,7 +8494,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"statue  ",
      TILESET_OBJ32_07,
-     0,
+     OVERLAY_KIND_TERRAIN,
      2,
      0x0021,
      0x4a,
@@ -8503,7 +8505,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     36,
+     MAP_OBJECT_STATUE,
      {31,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8522,7 +8524,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"stream-0",
      TILESET_OBJ32_07,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0001,
      0x7e,
@@ -8533,7 +8535,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {147,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8552,7 +8554,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"stream-1",
      TILESET_OBJ32_07,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0001,
      0x7e,
@@ -8563,7 +8565,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {148,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8582,7 +8584,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"stream-2",
      TILESET_OBJ32_07,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0001,
      0x7e,
@@ -8593,7 +8595,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {149,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8612,7 +8614,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"stream-3",
      TILESET_OBJ32_07,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0001,
      0x7e,
@@ -8623,7 +8625,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {150,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8642,7 +8644,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"stream-4",
      TILESET_OBJ32_07,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0001,
      0x7e,
@@ -8653,7 +8655,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {151,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8672,7 +8674,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"stream-5",
      TILESET_OBJ32_07,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0001,
      0x7e,
@@ -8683,7 +8685,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {152,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8702,7 +8704,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"stream-6",
      TILESET_OBJ32_07,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0001,
      0x7e,
@@ -8713,7 +8715,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {153,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8732,7 +8734,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"stream-7",
      TILESET_OBJ32_07,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x1ce2,
      0x7f,
@@ -8743,7 +8745,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {MAP_CELL_NO_FRAME,
       154,
       MAP_CELL_NO_FRAME,
@@ -8762,7 +8764,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"stream-8",
      TILESET_OBJ32_07,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x08e7,
      0x7f,
@@ -8773,7 +8775,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     50,
+     MAP_OBJECT_SHADOW,
      {161,
       162,
       163,
@@ -8792,7 +8794,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"stump   ",
      TILESET_OBJ32_07,
-     0,
+     OVERLAY_KIND_TERRAIN,
      20,
      0x0001,
      0x4a,
@@ -8803,7 +8805,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0000,
-     37,
+     MAP_OBJECT_TREE_STUMP,
      {5,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8822,7 +8824,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"xtgate  ",
      TILESET_OBJ32_07,
-     0,
+     OVERLAY_KIND_TERRAIN,
      0,
      0x0001,
      0x5a,
@@ -8833,7 +8835,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0001,
-     41,
+     MAP_OBJECT_STONE_LITHS,
      {6,
       MAP_CELL_NO_FRAME,
       MAP_CELL_NO_FRAME,
@@ -8852,7 +8854,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"wagon   ",
      TILESET_OBJ32_07,
-     0,
+     OVERLAY_KIND_TERRAIN,
      2,
      0x00e7,
      0x7e,
@@ -8863,7 +8865,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0007,
-     42,
+     MAP_OBJECT_WAGON_CAMP,
      {37,
       56,
       38,
@@ -8882,7 +8884,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
       MAP_CELL_NO_FRAME}},
     {"windmill",
      TILESET_OBJ32_07,
-     0,
+     OVERLAY_KIND_TERRAIN,
      1,
      0x0063,
      0x42,
@@ -8893,7 +8895,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      0,
      0,
      0x0002,
-     45,
+     MAP_OBJECT_WINDMILL,
      {91,
       98,
       MAP_CELL_NO_FRAME,
@@ -8932,7 +8934,7 @@ editManager::editManager(void) {
     m_viewY = 0;
     m_cursorX = 0;
     m_cursorY = 0;
-    m_lastCommandId = -1;
+    m_lastHoverId = WIDGET_ID_NONE;
     m_dispatchMask = EDIT_MANAGER_DISPATCH_MASK;
     gNextObjectId = 1;
     m_zoomedOut = EDIT_ZOOM_OUT;
@@ -8943,7 +8945,7 @@ editManager::editManager(void) {
     m_tool = EDIT_MANAGER_NO_TOOL;
     m_toolManager = NULL;
     m_mapChanged = 0;
-    m_placedX = m_placedY = -1;
+    m_placedX = m_placedY = EDIT_NO_CELL;
     m_extraCount = MAP_EXTRA_FIRST_RECORD;
     m_placedState = -1;
 }
@@ -8971,8 +8973,8 @@ i16 editManager::Open(i16 priority) {
         416,
         16,
         "escroll.icn",
-        0,
-        0,
+        EDIT_SCROLL_HORIZONTAL_TRACK,
+        ICON_DRAW_NORMAL,
         EDIT_CONTROL_HORIZONTAL_TRACK,
         ICON_WIDGET_DRAW,
         1
@@ -8983,8 +8985,8 @@ i16 editManager::Open(i16 priority) {
         16,
         416,
         "escroll.icn",
-        1,
-        0,
+        EDIT_SCROLL_VERTICAL_TRACK,
+        ICON_DRAW_NORMAL,
         EDIT_CONTROL_VERTICAL_TRACK,
         ICON_WIDGET_DRAW,
         1
@@ -8995,8 +8997,8 @@ i16 editManager::Open(i16 priority) {
         17,
         8,
         "escroll.icn",
-        2,
-        0,
+        EDIT_SCROLL_HORIZONTAL_KNOB,
+        ICON_DRAW_NORMAL,
         EDIT_CONTROL_HORIZONTAL_KNOB,
         ICON_WIDGET_DRAW,
         1
@@ -9007,17 +9009,17 @@ i16 editManager::Open(i16 priority) {
         8,
         17,
         "escroll.icn",
-        3,
-        0,
+        EDIT_SCROLL_VERTICAL_KNOB,
+        ICON_DRAW_NORMAL,
         EDIT_CONTROL_VERTICAL_KNOB,
         ICON_WIDGET_DRAW,
         1
     );
-    m_window->AddWidget(m_horizontalTrack, -1);
-    m_window->AddWidget(m_verticalTrack, -1);
-    m_window->AddWidget(m_horizontalKnob, -1);
-    m_window->AddWidget(m_verticalKnob, -1);
-    gWindowManager->AddWindow(m_window, -1, 1);
+    m_window->AddWidget(m_horizontalTrack, WINDOW_Z_ORDER_APPEND);
+    m_window->AddWidget(m_verticalTrack, WINDOW_Z_ORDER_APPEND);
+    m_window->AddWidget(m_horizontalKnob, WINDOW_Z_ORDER_APPEND);
+    m_window->AddWidget(m_verticalKnob, WINDOW_Z_ORDER_APPEND);
+    gWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, 1);
     m_groundTiles[EDIT_ZOOM_NORMAL] = gResourceManager->GetTileset("ground32.til");
     m_groundTiles[EDIT_ZOOM_OUT] = gResourceManager->GetTileset("ground16.til");
     m_cloudTiles[EDIT_ZOOM_NORMAL] = gResourceManager->GetTileset("clof32.til");
@@ -9043,7 +9045,7 @@ i16 editManager::Open(i16 priority) {
     DrawRadar(1);
     DrawView(m_viewX, m_viewY);
     UpdateMapView();
-    gMouseManager->SetPointer("editor.mse", 0);
+    gMouseManager->SetPointer("editor.mse", EDIT_POINTER_DEFAULT);
     gMouseManager->WarpPointer(LOGICAL_SCREEN_WIDTH / 2, 200);
     gMouseManager->ReallyShowPointer();
     gMouseManager->NewUpdate(1);
@@ -9074,7 +9076,7 @@ void editManager::Close(void) {
     }
     gResourceManager->Dispose(m_buttons);
     gResourceManager->Dispose(m_statusFont);
-    gMouseManager->SetPointer(-1);
+    gMouseManager->SetPointer(MOUSE_INVALID_CURSOR_FRAME);
     m_active = 0;
 }
 
@@ -9092,7 +9094,7 @@ i16 editManager::Main(tag_message& message) {
         }
         return MESSAGE_DISPATCH_CONTINUE;
     }
-    helpIndex = -1;
+    helpIndex = EDIT_BUTTON_HELP_NONE;
     switch (message.type) {
         case MESSAGE_WIDGET:
             switch (message.command) {
@@ -9117,7 +9119,7 @@ i16 editManager::Main(tag_message& message) {
                                 break;
                             if (!LoadMap(m_mapFileName)) {
                                 m_mapChanged = 0;
-                                m_placedX = m_placedY = -1;
+                                m_placedX = m_placedY = EDIT_NO_CELL;
                             }
                             m_viewX = m_viewY = 0;
                             m_window->DrawWindow(0);
@@ -9134,7 +9136,7 @@ i16 editManager::Main(tag_message& message) {
                                 );
                                 NormalDialog(gText, NORMAL_DIALOG_TYPE_OK);
                                 m_mapChanged = 0;
-                                m_placedX = m_placedY = -1;
+                                m_placedX = m_placedY = EDIT_NO_CELL;
                             }
                             break;
                         case EDIT_CONTROL_ZOOM:
@@ -9200,52 +9202,52 @@ i16 editManager::Main(tag_message& message) {
                 case WIDGET_NOTIFY_RIGHT_CLICK:
                     switch (message.id) {
                         case EDIT_CONTROL_SCROLL_UP:
-                            helpIndex = 1;
+                            helpIndex = EDIT_BUTTON_HELP_SCROLL;
                             break;
                         case EDIT_CONTROL_SCROLL_DOWN:
-                            helpIndex = 1;
+                            helpIndex = EDIT_BUTTON_HELP_SCROLL;
                             break;
                         case EDIT_CONTROL_SCROLL_RIGHT:
-                            helpIndex = 1;
+                            helpIndex = EDIT_BUTTON_HELP_SCROLL;
                             break;
                         case EDIT_CONTROL_SCROLL_LEFT:
-                            helpIndex = 1;
+                            helpIndex = EDIT_BUTTON_HELP_SCROLL;
                             break;
                         case EDIT_CONTROL_SCROLL_UP_LEFT:
-                            helpIndex = 1;
+                            helpIndex = EDIT_BUTTON_HELP_SCROLL;
                             break;
                         case EDIT_CONTROL_SCROLL_UP_RIGHT:
-                            helpIndex = 1;
+                            helpIndex = EDIT_BUTTON_HELP_SCROLL;
                             break;
                         case EDIT_CONTROL_SCROLL_DOWN_LEFT:
-                            helpIndex = 1;
+                            helpIndex = EDIT_BUTTON_HELP_SCROLL;
                             break;
                         case EDIT_CONTROL_SCROLL_DOWN_RIGHT:
-                            helpIndex = 1;
+                            helpIndex = EDIT_BUTTON_HELP_SCROLL;
                             break;
                         case EDIT_CONTROL_ZOOM:
-                            helpIndex = 2;
+                            helpIndex = EDIT_BUTTON_HELP_ZOOM;
                             break;
                         case EDIT_CONTROL_UNDO:
-                            helpIndex = 3;
+                            helpIndex = EDIT_BUTTON_HELP_UNDO;
                             break;
                         case EDIT_CONTROL_MAP_INFO:
-                            helpIndex = 4;
+                            helpIndex = EDIT_BUTTON_HELP_MAP_INFO;
                             break;
                         case EDIT_CONTROL_NEW:
-                            helpIndex = 5;
+                            helpIndex = EDIT_BUTTON_HELP_NEW;
                             break;
                         case EDIT_CONTROL_LOAD:
-                            helpIndex = 6;
+                            helpIndex = EDIT_BUTTON_HELP_LOAD;
                             break;
                         case EDIT_CONTROL_SAVE:
-                            helpIndex = 7;
+                            helpIndex = EDIT_BUTTON_HELP_SAVE;
                             break;
                         case EDIT_CONTROL_QUIT:
-                            helpIndex = 8;
+                            helpIndex = EDIT_BUTTON_HELP_QUIT;
                             break;
                         case EDIT_CONTROL_RANDOM_MAP:
-                            helpIndex = 9;
+                            helpIndex = EDIT_BUTTON_HELP_RANDOM_MAP;
                             break;
                     }
                     if (helpIndex >= 0)
@@ -9255,34 +9257,34 @@ i16 editManager::Main(tag_message& message) {
                     if (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
                         switch (message.id) {
                             case EDIT_CONTROL_RADAR:
-                                helpIndex = 1;
+                                helpIndex = EDIT_AREA_HELP_RADAR;
                                 break;
                             case EDIT_CONTROL_HORIZONTAL_TRACK:
-                                helpIndex = 2;
+                                helpIndex = EDIT_AREA_HELP_SCROLLING;
                                 break;
                             case EDIT_CONTROL_HORIZONTAL_KNOB:
-                                helpIndex = 2;
+                                helpIndex = EDIT_AREA_HELP_SCROLLING;
                                 break;
                             case EDIT_CONTROL_VERTICAL_TRACK:
-                                helpIndex = 2;
+                                helpIndex = EDIT_AREA_HELP_SCROLLING;
                                 break;
                             case EDIT_CONTROL_VERTICAL_KNOB:
-                                helpIndex = 2;
+                                helpIndex = EDIT_AREA_HELP_SCROLLING;
                                 break;
                             case EDIT_CONTROL_TERRAIN:
-                                helpIndex = 3;
+                                helpIndex = EDIT_AREA_HELP_TERRAIN;
                                 break;
                             case EDIT_CONTROL_OBJECTS:
-                                helpIndex = 4;
+                                helpIndex = EDIT_AREA_HELP_OBJECTS;
                                 break;
                             case EDIT_CONTROL_DETAILS:
-                                helpIndex = 5;
+                                helpIndex = EDIT_AREA_HELP_DETAILS;
                                 break;
                             case EDIT_CONTROL_ERASER:
-                                helpIndex = 6;
+                                helpIndex = EDIT_AREA_HELP_ERASER;
                                 break;
                             case EDIT_CONTROL_MAP:
-                                helpIndex = 7;
+                                helpIndex = EDIT_AREA_HELP_MAP;
                                 break;
                         }
                         if (helpIndex >= 0)
@@ -9357,34 +9359,68 @@ void editManager::DrawRulers(i16 viewX, i16 viewY, i16 cursorX, i16 cursorY) {
     gMouseManager->MouseCoords(mouseX, mouseY);
     if (mouseX < EDIT_VIEW_LEFT || mouseX >= EDIT_VIEW_LEFT + EDIT_VIEW_PIXELS
         || mouseY < EDIT_VIEW_TOP || mouseY > EDIT_VIEW_TOP + EDIT_VIEW_PIXELS) {
-        cursorX = -1;
-        cursorY = -1;
+        cursorX = EDIT_NO_CELL;
+        cursorY = EDIT_NO_CELL;
     }
     for (i = 0; i < EDIT_RULER_SLOTS; i++) {
         if (!m_zoomedOut && (i & 1))
             continue;
         if (!m_zoomedOut)
-            m_buttons->DrawToBuffer(i * EDIT_RULER_SLOT_PIXELS + EDIT_VIEW_LEFT, 0, 24, 0, 0);
+            m_buttons->DrawToBuffer(
+                i * EDIT_RULER_SLOT_PIXELS + EDIT_VIEW_LEFT,
+                0,
+                EDIT_FRAME_TOP_RULER_CELL,
+                ICON_DRAW_NORMAL,
+                ICON_DRAW_OFFSET_FULL
+            );
         else
-            m_buttons->DrawToBuffer(i * EDIT_RULER_SLOT_PIXELS + EDIT_VIEW_LEFT, 0, 18, 0, 0);
-        sprintf(text, "%02d", viewX + i / (m_zoomedOut ? 1 : 2));
-        if (i / (m_zoomedOut ? 1 : 2) == cursorX)
-            color = 1;
+            m_buttons->DrawToBuffer(
+                i * EDIT_RULER_SLOT_PIXELS + EDIT_VIEW_LEFT,
+                0,
+                EDIT_FRAME_ZOOMED_RULER_CELL,
+                ICON_DRAW_NORMAL,
+                ICON_DRAW_OFFSET_FULL
+            );
+        sprintf(text, "%02d", viewX + i / (m_zoomedOut ? 1 : EDIT_RULER_SLOTS_PER_CELL));
+        if (i / (m_zoomedOut ? 1 : EDIT_RULER_SLOTS_PER_CELL) == cursorX)
+            color = EDIT_RULER_CURSOR_COLOR;
         else
-            color = 192;
-        m_statusFont
-            ->DrawString(text, i * EDIT_RULER_SLOT_PIXELS + (m_zoomedOut ? 0 : 8) + 19, 2, color);
+            color = EDIT_RULER_TEXT_COLOR;
+        m_statusFont->DrawString(
+            text,
+            i * EDIT_RULER_SLOT_PIXELS + (m_zoomedOut ? 0 : EDIT_RULER_CELL_TEXT_OFFSET)
+                + EDIT_TOP_RULER_TEXT_X,
+            EDIT_TOP_RULER_TEXT_Y,
+            color
+        );
         if (!m_zoomedOut)
-            m_buttons->DrawToBuffer(0, i * EDIT_RULER_SLOT_PIXELS + EDIT_VIEW_TOP, 25, 0, 0);
+            m_buttons->DrawToBuffer(
+                0,
+                i * EDIT_RULER_SLOT_PIXELS + EDIT_VIEW_TOP,
+                EDIT_FRAME_LEFT_RULER_CELL,
+                ICON_DRAW_NORMAL,
+                ICON_DRAW_OFFSET_FULL
+            );
         else
-            m_buttons->DrawToBuffer(0, i * EDIT_RULER_SLOT_PIXELS + EDIT_VIEW_TOP, 18, 0, 0);
-        sprintf(text, "%02d", viewY + i / (m_zoomedOut ? 1 : 2));
-        if (i / (m_zoomedOut ? 1 : 2) == cursorY)
-            color = 1;
+            m_buttons->DrawToBuffer(
+                0,
+                i * EDIT_RULER_SLOT_PIXELS + EDIT_VIEW_TOP,
+                EDIT_FRAME_ZOOMED_RULER_CELL,
+                ICON_DRAW_NORMAL,
+                ICON_DRAW_OFFSET_FULL
+            );
+        sprintf(text, "%02d", viewY + i / (m_zoomedOut ? 1 : EDIT_RULER_SLOTS_PER_CELL));
+        if (i / (m_zoomedOut ? 1 : EDIT_RULER_SLOTS_PER_CELL) == cursorY)
+            color = EDIT_RULER_CURSOR_COLOR;
         else
-            color = 192;
-        m_statusFont
-            ->DrawString(text, 3, i * EDIT_RULER_SLOT_PIXELS + (m_zoomedOut ? 0 : 8) + 18, color);
+            color = EDIT_RULER_TEXT_COLOR;
+        m_statusFont->DrawString(
+            text,
+            EDIT_LEFT_RULER_TEXT_X,
+            i * EDIT_RULER_SLOT_PIXELS + (m_zoomedOut ? 0 : EDIT_RULER_CELL_TEXT_OFFSET)
+                + EDIT_LEFT_RULER_TEXT_Y,
+            color
+        );
     }
     gWindowManager->UpdateScreenRegion(EDIT_VIEW_LEFT, 0, EDIT_VIEW_PIXELS, EDIT_VIEW_TOP);
     gWindowManager->UpdateScreenRegion(0, EDIT_VIEW_TOP, EDIT_VIEW_LEFT, EDIT_VIEW_PIXELS);
@@ -9446,11 +9482,11 @@ void editManager::DrawView(i16 viewX, i16 viewY) {
         for (cx = 0; cx < numCells; cx++)
             DrawCell(viewX + cx, viewY + cy, cx, cy, EDIT_DRAW_ALL);
     m_animationFrame++;
-    m_animationFrame %= 6;
+    m_animationFrame %= UPDATE_FRAME_CYCLE;
     cellPixels = m_zoomedOut ? EDIT_VIEW_ZOOMED_CELL_PIXELS : EDIT_VIEW_CELL_PIXELS;
-    lineWidth = m_zoomedOut ? 1 : 2;
+    lineWidth = m_zoomedOut ? 1 : EDIT_SELECTION_LINE_WIDTH;
     if (gSelectionX >= 0) {
-        gSelectionColor = gMonoColorMap[190];
+        gSelectionColor = gMonoColorMap[EDIT_SELECTION_COLOR];
         FillBitmapArea(
             gWindowManager->m_screen,
             (gSelectionX - viewX) * cellPixels + EDIT_VIEW_LEFT,
@@ -9487,14 +9523,15 @@ void editManager::DrawView(i16 viewX, i16 viewY) {
     m_zoomedOut = savedZoom;
 }
 
+#define buttonsIcon buttonIcn // frame-slot spelling
 VA(0x00402f2e, 0x255)
 void editManager::DrawRadar(i32) {
     u8 color;
     i16 x;
     i16 y;
-    icon* buttonIcn;
+    icon* buttonsIcon;
 
-    buttonIcn = gResourceManager->GetIcon("buttons.icn");
+    buttonsIcon = gResourceManager->GetIcon("buttons.icn");
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             if (m_map.cells[x][y].m_objectIndex != MAP_CELL_NO_FRAME) {
@@ -9503,13 +9540,13 @@ void editManager::DrawRadar(i32) {
                     case TILESET_TREE32:
                         color = gRadarTerrainColor
                                     [m_map.cells[x][y].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN]
-                                + 3;
+                                + RADAR_TERRAIN_SHADE;
                         break;
                     case TILESET_TOWN32:
-                        color = 4;
+                        color = EDIT_RADAR_TOWN_COLOR;
                         break;
                     case TILESET_RSRC32:
-                        color = 10;
+                        color = EDIT_RADAR_RESOURCE_COLOR;
                         break;
                     default:
                         color = gRadarTerrainColor
@@ -9521,54 +9558,70 @@ void editManager::DrawRadar(i32) {
                     gRadarTerrainColor[m_map.cells[x][y].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN];
             }
             if (gGeneratingMaps)
-                color = 0;
-            buttonIcn->FillToBuffer(
-                x * EDIT_RADAR_CELL_PIXELS + EDIT_RADAR_LEFT,
-                y * EDIT_RADAR_CELL_PIXELS + EDIT_RADAR_TOP,
-                21,
+                color = EDIT_RADAR_UNSEEN_COLOR;
+            buttonsIcon->FillToBuffer(
+                x * RADAR_CELL_PIXELS + RADAR_LEFT,
+                y * RADAR_CELL_PIXELS + RADAR_TOP,
+                EDIT_FRAME_RADAR_CELL,
                 color,
-                0,
-                0
+                ICON_DRAW_NORMAL,
+                ICON_DRAW_OFFSET_FULL
             );
         }
     }
-    buttonIcn->FillToBuffer(
-        m_viewX * EDIT_RADAR_CELL_PIXELS + EDIT_RADAR_LEFT,
-        m_viewY * EDIT_RADAR_CELL_PIXELS + EDIT_RADAR_TOP,
-        m_zoomedOut ? 23 : 22,
-        190,
-        0,
-        0
+    buttonsIcon->FillToBuffer(
+        m_viewX * RADAR_CELL_PIXELS + RADAR_LEFT,
+        m_viewY * RADAR_CELL_PIXELS + RADAR_TOP,
+        m_zoomedOut ? EDIT_FRAME_RADAR_ZOOMED_VIEW : EDIT_FRAME_RADAR_VIEW,
+        RADAR_VIEWPORT_COLOR,
+        ICON_DRAW_NORMAL,
+        ICON_DRAW_OFFSET_FULL
     );
-    gResourceManager->Dispose(buttonIcn);
-    gWindowManager
-        ->UpdateScreenRegion(EDIT_RADAR_TOP, EDIT_RADAR_LEFT, EDIT_RADAR_PIXELS, EDIT_RADAR_PIXELS);
+    gResourceManager->Dispose(buttonsIcon);
+    // Retail passes the radar's top as x and its left as y.
+    gWindowManager->UpdateScreenRegion(RADAR_TOP, RADAR_LEFT, RADAR_SIZE, RADAR_SIZE);
     UpdateKnobs(1);
     UpdateCursor();
 }
+#undef buttonsIcon
 
+#define screenX sx // frame-slot spelling
+#define screenY sy // frame-slot spelling
 VA(0x00403183, 0x34b)
 void editManager::DrawCell(i16 x, i16 y, i16 column, i16 row, u8 layers) {
     u8 tileset;
     u16 groundFrame;
-    i16 sx;
-    i16 sy;
+    i16 screenX;
+    i16 screenY;
     mapCell* cell;
 
     cell = &m_map.cells[x][y];
-    sx = column * (m_zoomedOut ? EDIT_VIEW_ZOOMED_CELL_PIXELS : EDIT_VIEW_CELL_PIXELS)
-         + EDIT_VIEW_LEFT;
-    sy = row * (m_zoomedOut ? EDIT_VIEW_ZOOMED_CELL_PIXELS : EDIT_VIEW_CELL_PIXELS) + EDIT_VIEW_TOP;
+    screenX = column * (m_zoomedOut ? EDIT_VIEW_ZOOMED_CELL_PIXELS : EDIT_VIEW_CELL_PIXELS)
+              + EDIT_VIEW_LEFT;
+    screenY =
+        row * (m_zoomedOut ? EDIT_VIEW_ZOOMED_CELL_PIXELS : EDIT_VIEW_CELL_PIXELS) + EDIT_VIEW_TOP;
     if (gGeneratingMaps) {
         if (layers & EDIT_DRAW_OVERLAY)
-            TileToBitmap(m_cloudTiles[m_zoomedOut], (x + y) & 3, gWindowManager->m_screen, sx, sy);
+            TileToBitmap(
+                m_cloudTiles[m_zoomedOut],
+                (x + y) & EDIT_CLOUD_TILE_MASK,
+                gWindowManager->m_screen,
+                screenX,
+                screenY
+            );
         return;
     }
     if (layers & EDIT_DRAW_GROUND) {
         groundFrame = cell->m_flags;
         groundFrame <<= MAP_CELL_GROUND_FLIP_SHIFT;
         groundFrame |= cell->m_tileIndex & 0xff;
-        TileToBitmap(m_groundTiles[m_zoomedOut], groundFrame, gWindowManager->m_screen, sx, sy);
+        TileToBitmap(
+            m_groundTiles[m_zoomedOut],
+            groundFrame,
+            gWindowManager->m_screen,
+            screenX,
+            screenY
+        );
     }
     if (layers & EDIT_DRAW_OBJECT) {
         if (cell->m_objectIndex != MAP_CELL_NO_FRAME) {
@@ -9576,8 +9629,8 @@ void editManager::DrawCell(i16 x, i16 y, i16 column, i16 row, u8 layers) {
             IconToBitmap(
                 m_objectIcons[tileset][m_zoomedOut],
                 gWindowManager->m_screen,
-                sx,
-                sy,
+                screenX,
+                screenY,
                 cell->m_objectIndex,
                 ICON_DRAW_OFFSET_FULL
             );
@@ -9585,8 +9638,8 @@ void editManager::DrawCell(i16 x, i16 y, i16 column, i16 row, u8 layers) {
                 IconToBitmap(
                     m_objectIcons[tileset][m_zoomedOut],
                     gWindowManager->m_screen,
-                    sx,
-                    sy,
+                    screenX,
+                    screenY,
                     cell->m_objectIndex + m_animationFrame + 1,
                     ICON_DRAW_OFFSET_FULL
                 );
@@ -9595,8 +9648,8 @@ void editManager::DrawCell(i16 x, i16 y, i16 column, i16 row, u8 layers) {
             IconToBitmap(
                 m_objectIcons[TILESET_RSRC32][m_zoomedOut],
                 gWindowManager->m_screen,
-                sx,
-                sy,
+                screenX,
+                screenY,
                 cell->m_extraFrame,
                 ICON_DRAW_OFFSET_FULL
             );
@@ -9607,8 +9660,8 @@ void editManager::DrawCell(i16 x, i16 y, i16 column, i16 row, u8 layers) {
             IconToBitmap(
                 m_objectIcons[tileset][m_zoomedOut],
                 gWindowManager->m_screen,
-                sx,
-                sy,
+                screenX,
+                screenY,
                 cell->m_overlayIndex,
                 ICON_DRAW_OFFSET_FULL
             );
@@ -9616,14 +9669,16 @@ void editManager::DrawCell(i16 x, i16 y, i16 column, i16 row, u8 layers) {
                 IconToBitmap(
                     m_objectIcons[tileset][m_zoomedOut],
                     gWindowManager->m_screen,
-                    sx,
-                    sy,
+                    screenX,
+                    screenY,
                     cell->m_overlayIndex + m_animationFrame + 1,
                     ICON_DRAW_OFFSET_FULL
                 );
         }
     }
 }
+#undef screenX
+#undef screenY
 
 // Zooming keeps the view centred: out moves the origin back by ten cells,
 // in moves it forward by ten.
@@ -9641,7 +9696,7 @@ void editManager::ToggleZoom(void) {
     UpdateMapView();
 }
 
-// The tool buttons show their frame pair from EDIT_TOOL_BUTTON_FRAME, the
+// The tool buttons show their frame pair from EDIT_FRAME_TOOL_BUTTONS, the
 // second frame for the selected tool.
 VA(0x00403546, 0x29c)
 void editManager::SelectTool(i16 tool) {
@@ -9659,7 +9714,7 @@ void editManager::SelectTool(i16 tool) {
         msg.type = MESSAGE_WIDGET;
         msg.id = i + EDIT_CONTROL_TERRAIN;
         msg.command = WIDGET_COMMAND_SET_FRAME;
-        msg.value = (i == tool) + i * 2 + EDIT_TOOL_BUTTON_FRAME;
+        msg.value = (i == tool) + i * EDIT_FRAMES_PER_TOOL_BUTTON + EDIT_FRAME_TOOL_BUTTONS;
         m_window->BroadcastMessage(msg);
     }
     switch (tool) {
@@ -9713,8 +9768,8 @@ void editManager::UpdateKnobs(i16 update) {
     i16 xPos;
     i16 yPos;
 
-    scaleX = 402.0 / (m_zoomedOut ? 45 : 59);
-    scaleY = 402.0 / (m_zoomedOut ? 45 : 59);
+    scaleX = 402.0 / (m_zoomedOut ? EDIT_VIEW_ZOOMED_ORIGINS : EDIT_VIEW_ORIGINS);
+    scaleY = 402.0 / (m_zoomedOut ? EDIT_VIEW_ZOOMED_ORIGINS : EDIT_VIEW_ORIGINS);
     xPos = m_viewX * scaleX;
     yPos = m_viewY * scaleY;
     m_horizontalKnob->m_x = xPos + EDIT_KNOB_FIRST;
@@ -9724,13 +9779,14 @@ void editManager::UpdateKnobs(i16 update) {
 
 // Paints the view cells' ground with the terrain's first tile (the cells are
 // redrawn at the brush's origin).
+#define cellPixels spacing // frame-slot spelling
 VA(0x004039f0, 0x1e0)
 void editManager::PaintGround(i16 column, i16 row, i16 width, i16 height, i16 terrain) {
     i16 startY;
     i16 startX;
     i32 redrawHeight;
     i32 j;
-    i32 spacing;
+    i32 cellPixels;
     i32 redrawTop;
     i32 i;
     i32 redrawLeft;
@@ -9738,7 +9794,8 @@ void editManager::PaintGround(i16 column, i16 row, i16 width, i16 height, i16 te
 
     startX = m_viewX + column;
     startY = m_viewY + row;
-    spacing = m_zoomedOut == EDIT_ZOOM_OUT ? EDIT_VIEW_ZOOMED_CELL_PIXELS : EDIT_VIEW_CELL_PIXELS;
+    cellPixels =
+        m_zoomedOut == EDIT_ZOOM_OUT ? EDIT_VIEW_ZOOMED_CELL_PIXELS : EDIT_VIEW_CELL_PIXELS;
     gEditManager->ClearArea(startX, startY, width, height, EDIT_CLEAR_ALL, 0);
     for (i = 0; i < width; i++) {
         for (j = 0; j < height; j++) {
@@ -9750,17 +9807,18 @@ void editManager::PaintGround(i16 column, i16 row, i16 width, i16 height, i16 te
                 DrawCell(startX, startY, column + i, row + j, EDIT_DRAW_ALL);
         }
     }
-    redrawLeft = column * spacing + EDIT_VIEW_LEFT;
-    redrawWidth = width * spacing;
+    redrawLeft = column * cellPixels + EDIT_VIEW_LEFT;
+    redrawWidth = width * cellPixels;
     if (redrawLeft + redrawWidth > LOGICAL_SCREEN_WIDTH - 1)
         redrawWidth = LOGICAL_SCREEN_WIDTH - 1 - redrawLeft;
-    redrawTop = row * spacing + EDIT_VIEW_TOP;
-    redrawHeight = height * spacing;
+    redrawTop = row * cellPixels + EDIT_VIEW_TOP;
+    redrawHeight = height * cellPixels;
     if (redrawTop + redrawHeight > LOGICAL_SCREEN_HEIGHT - 1)
         redrawHeight = LOGICAL_SCREEN_HEIGHT - 1 - redrawTop;
     gWindowManager->UpdateScreenRegion(redrawLeft, redrawTop, redrawWidth, redrawHeight);
     DrawRadar(1);
 }
+#undef cellPixels
 
 VA(0x00403bd0, 0xf7)
 void editManager::FillGround(i16 x, i16 y, i16 width, i16 height, i16 terrain) {
@@ -9780,12 +9838,13 @@ void editManager::FillGround(i16 x, i16 y, i16 width, i16 height, i16 terrain) {
 // tile on (or gVaryTiles is set); an object's cell keeps a tile of another
 // terrain.
 VA(0x00403cc7, 0x71)
-void SetTileVariant(mapCell* cell, i32 tile) {
+void SetTileVariant(mapCell* cell, i32 firstTile) {
     if (cell->m_objectTileset
-        && cell->m_tileIndex / MAP_CELL_TILES_PER_TERRAIN != tile / MAP_CELL_TILES_PER_TERRAIN)
+        && cell->m_tileIndex / MAP_CELL_TILES_PER_TERRAIN != firstTile / MAP_CELL_TILES_PER_TERRAIN)
         return;
-    if (cell->m_tileIndex < tile || cell->m_tileIndex >= tile + 4 || gVaryTiles)
-        cell->m_tileIndex = tile + Random(0, 3);
+    if (cell->m_tileIndex < firstTile || cell->m_tileIndex >= firstTile + TERRAIN_TILE_VARIANT_COUNT
+        || gVaryTiles)
+        cell->m_tileIndex = firstTile + Random(0, 3);
 }
 
 // Removes single cells of terrain (cells whose neighbours of the terrain do
@@ -9808,66 +9867,61 @@ void editManager::BlendTerrain(i16 terrain, u8, u8 fromUndo, u8 skipBorders, u8 
     mapCell* cell;
     i32 thisTerrain;
 
-    surrounding = 0;
+    surrounding = TERRAIN_WATER;
     if (skipFill)
         goto borders;
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             if (m_map.cells[x][y].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN == terrain) {
                 north = south = east = west = nw = ne = sw = se = 0;
-                if (y == 0 || gGroundToTerrain[m_map.cells[x][y - 1].m_tileIndex] == terrain)
+                if (y == 0 || CELL_TERRAIN(&m_map.cells[x][y - 1]) == terrain)
                     north = 1;
                 else
-                    surrounding = gGroundToTerrain[m_map.cells[x][y - 1].m_tileIndex];
-                if (y == MAP_CELL_GRID_SIZE
-                    || gGroundToTerrain[m_map.cells[x][y + 1].m_tileIndex] == terrain)
+                    surrounding = CELL_TERRAIN(&m_map.cells[x][y - 1]);
+                if (y == MAP_CELL_GRID_SIZE || CELL_TERRAIN(&m_map.cells[x][y + 1]) == terrain)
                     south = 1;
                 else
-                    surrounding = gGroundToTerrain[m_map.cells[x][y + 1].m_tileIndex];
-                if (x == MAP_CELL_GRID_SIZE
-                    || gGroundToTerrain[m_map.cells[x + 1][y].m_tileIndex] == terrain)
+                    surrounding = CELL_TERRAIN(&m_map.cells[x][y + 1]);
+                if (x == MAP_CELL_GRID_SIZE || CELL_TERRAIN(&m_map.cells[x + 1][y]) == terrain)
                     east = 1;
                 else
-                    surrounding = gGroundToTerrain[m_map.cells[x + 1][y].m_tileIndex];
-                if (x == 0 || gGroundToTerrain[m_map.cells[x - 1][y].m_tileIndex] == terrain)
+                    surrounding = CELL_TERRAIN(&m_map.cells[x + 1][y]);
+                if (x == 0 || CELL_TERRAIN(&m_map.cells[x - 1][y]) == terrain)
                     west = 1;
                 else
-                    surrounding = gGroundToTerrain[m_map.cells[x - 1][y].m_tileIndex];
+                    surrounding = CELL_TERRAIN(&m_map.cells[x - 1][y]);
                 if (!((north && west) || (north && east) || (south && west) || (south && east))) {
                     if (fromUndo)
                         m_map.cells[x][y].m_tileIndex =
-                            gGroundToTerrain[m_undoMap.cells[x][y].m_tileIndex]
-                            * MAP_CELL_TILES_PER_TERRAIN;
+                            CELL_TERRAIN(&m_undoMap.cells[x][y]) * MAP_CELL_TILES_PER_TERRAIN;
                     else
                         m_map.cells[x][y].m_tileIndex = surrounding * MAP_CELL_TILES_PER_TERRAIN;
                 }
-                if (x == 0 || y == 0
-                    || gGroundToTerrain[m_map.cells[x - 1][y - 1].m_tileIndex] == terrain)
+                if (x == 0 || y == 0 || CELL_TERRAIN(&m_map.cells[x - 1][y - 1]) == terrain)
                     nw = 1;
                 else
-                    surrounding = gGroundToTerrain[m_map.cells[x - 1][y - 1].m_tileIndex];
+                    surrounding = CELL_TERRAIN(&m_map.cells[x - 1][y - 1]);
                 if (x == 0 || y == MAP_CELL_GRID_SIZE
-                    || gGroundToTerrain[m_map.cells[x - 1][y + 1].m_tileIndex] == terrain)
+                    || CELL_TERRAIN(&m_map.cells[x - 1][y + 1]) == terrain)
                     sw = 1;
                 else
-                    surrounding = gGroundToTerrain[m_map.cells[x - 1][y + 1].m_tileIndex];
+                    surrounding = CELL_TERRAIN(&m_map.cells[x - 1][y + 1]);
                 if (x == MAP_CELL_GRID_SIZE || y == MAP_CELL_GRID_SIZE
-                    || gGroundToTerrain[m_map.cells[x + 1][y + 1].m_tileIndex] == terrain)
+                    || CELL_TERRAIN(&m_map.cells[x + 1][y + 1]) == terrain)
                     se = 1;
                 else
-                    surrounding = gGroundToTerrain[m_map.cells[x + 1][y + 1].m_tileIndex];
+                    surrounding = CELL_TERRAIN(&m_map.cells[x + 1][y + 1]);
                 if (x == MAP_CELL_GRID_SIZE || y == 0
-                    || gGroundToTerrain[m_map.cells[x + 1][y - 1].m_tileIndex] == terrain)
+                    || CELL_TERRAIN(&m_map.cells[x + 1][y - 1]) == terrain)
                     ne = 1;
                 else
-                    surrounding = gGroundToTerrain[m_map.cells[x + 1][y + 1].m_tileIndex];
+                    surrounding = CELL_TERRAIN(&m_map.cells[x + 1][y + 1]);
                 if (!((north && ne && east) || (north && nw && west) || (south && se && east)
                       || (south && sw && west))
                     && !m_map.cells[x][y].m_objectTileset) {
                     if (fromUndo)
                         m_map.cells[x][y].m_tileIndex =
-                            gGroundToTerrain[m_undoMap.cells[x][y].m_tileIndex]
-                            * MAP_CELL_TILES_PER_TERRAIN;
+                            CELL_TERRAIN(&m_undoMap.cells[x][y]) * MAP_CELL_TILES_PER_TERRAIN;
                     else
                         m_map.cells[x][y].m_tileIndex = surrounding * MAP_CELL_TILES_PER_TERRAIN;
                 }
@@ -9884,71 +9938,110 @@ borders:
             terrainBase = thisTerrain * MAP_CELL_TILES_PER_TERRAIN;
             north = south = east = west = 0;
             if (thisTerrain != TERRAIN_DIRT) {
-                if (y > 0 && gGroundToTerrain[m_map.cells[x][y - 1].m_tileIndex] != thisTerrain)
+                if (y > 0 && CELL_TERRAIN(&m_map.cells[x][y - 1]) != thisTerrain)
                     north = 1;
                 if (y < MAP_CELL_GRID_SIZE - 1
-                    && gGroundToTerrain[m_map.cells[x][y + 1].m_tileIndex] != thisTerrain)
+                    && CELL_TERRAIN(&m_map.cells[x][y + 1]) != thisTerrain)
                     south = 1;
                 if (x < MAP_CELL_GRID_SIZE - 1
-                    && gGroundToTerrain[m_map.cells[x + 1][y].m_tileIndex] != thisTerrain)
+                    && CELL_TERRAIN(&m_map.cells[x + 1][y]) != thisTerrain)
                     east = 1;
-                if (x > 0 && gGroundToTerrain[m_map.cells[x - 1][y].m_tileIndex] != thisTerrain)
+                if (x > 0 && CELL_TERRAIN(&m_map.cells[x - 1][y]) != thisTerrain)
                     west = 1;
                 cell->m_flags &= ~(MAP_CELL_GROUND_FLIP_VERTICAL | MAP_CELL_GROUND_FLIP_HORIZONTAL);
                 if (north) {
                     if (west) {
-                        SetTileVariant(cell, terrainBase + 8);
+                        SetTileVariant(
+                            cell,
+                            terrainBase + EDIT_TILE_NORTH_EAST_CORNER * TERRAIN_TILE_VARIANT_COUNT
+                        );
                         cell->m_flags |= MAP_CELL_GROUND_FLIP_HORIZONTAL;
                     } else if (east) {
-                        SetTileVariant(cell, terrainBase + 8);
+                        SetTileVariant(
+                            cell,
+                            terrainBase + EDIT_TILE_NORTH_EAST_CORNER * TERRAIN_TILE_VARIANT_COUNT
+                        );
                     } else {
-                        SetTileVariant(cell, terrainBase + 4);
+                        SetTileVariant(
+                            cell,
+                            terrainBase + EDIT_TILE_NORTH_EDGE * TERRAIN_TILE_VARIANT_COUNT
+                        );
                     }
                 } else if (south) {
                     if (west) {
-                        SetTileVariant(cell, terrainBase + 8);
+                        SetTileVariant(
+                            cell,
+                            terrainBase + EDIT_TILE_NORTH_EAST_CORNER * TERRAIN_TILE_VARIANT_COUNT
+                        );
                         cell->m_flags |=
                             MAP_CELL_GROUND_FLIP_VERTICAL | MAP_CELL_GROUND_FLIP_HORIZONTAL;
                     } else if (east) {
-                        SetTileVariant(cell, terrainBase + 8);
+                        SetTileVariant(
+                            cell,
+                            terrainBase + EDIT_TILE_NORTH_EAST_CORNER * TERRAIN_TILE_VARIANT_COUNT
+                        );
                         cell->m_flags |= MAP_CELL_GROUND_FLIP_VERTICAL;
                     } else {
-                        SetTileVariant(cell, terrainBase + 4);
+                        SetTileVariant(
+                            cell,
+                            terrainBase + EDIT_TILE_NORTH_EDGE * TERRAIN_TILE_VARIANT_COUNT
+                        );
                         cell->m_flags |= MAP_CELL_GROUND_FLIP_VERTICAL;
                     }
                 } else if (west) {
-                    SetTileVariant(cell, terrainBase + 12);
+                    SetTileVariant(
+                        cell,
+                        terrainBase + EDIT_TILE_EAST_EDGE * TERRAIN_TILE_VARIANT_COUNT
+                    );
                     cell->m_flags |= MAP_CELL_GROUND_FLIP_HORIZONTAL;
                 } else if (east) {
-                    SetTileVariant(cell, terrainBase + 12);
+                    SetTileVariant(
+                        cell,
+                        terrainBase + EDIT_TILE_EAST_EDGE * TERRAIN_TILE_VARIANT_COUNT
+                    );
                 }
                 if (!(north | south | east | west)) {
-                    if (x > 0 && y > 0
-                        && gGroundToTerrain[m_map.cells[x - 1][y - 1].m_tileIndex] != thisTerrain)
+                    if (x > 0 && y > 0 && CELL_TERRAIN(&m_map.cells[x - 1][y - 1]) != thisTerrain)
                         north = 1;
                     if (x < MAP_CELL_GRID_SIZE - 1 && y < MAP_CELL_GRID_SIZE - 1
-                        && gGroundToTerrain[m_map.cells[x + 1][y + 1].m_tileIndex] != thisTerrain)
+                        && CELL_TERRAIN(&m_map.cells[x + 1][y + 1]) != thisTerrain)
                         south = 1;
                     if (x < MAP_CELL_GRID_SIZE - 1 && y > 0
-                        && gGroundToTerrain[m_map.cells[x + 1][y - 1].m_tileIndex] != thisTerrain)
+                        && CELL_TERRAIN(&m_map.cells[x + 1][y - 1]) != thisTerrain)
                         east = 1;
                     if (x > 0 && y < MAP_CELL_GRID_SIZE - 1
-                        && gGroundToTerrain[m_map.cells[x - 1][y + 1].m_tileIndex] != thisTerrain)
+                        && CELL_TERRAIN(&m_map.cells[x - 1][y + 1]) != thisTerrain)
                         west = 1;
                     if (north) {
-                        SetTileVariant(cell, terrainBase + 16);
+                        SetTileVariant(
+                            cell,
+                            terrainBase
+                                + EDIT_TILE_NORTH_EAST_INNER_CORNER * TERRAIN_TILE_VARIANT_COUNT
+                        );
                         cell->m_flags |= MAP_CELL_GROUND_FLIP_HORIZONTAL;
                     } else if (south) {
-                        SetTileVariant(cell, terrainBase + 16);
+                        SetTileVariant(
+                            cell,
+                            terrainBase
+                                + EDIT_TILE_NORTH_EAST_INNER_CORNER * TERRAIN_TILE_VARIANT_COUNT
+                        );
                         cell->m_flags |= MAP_CELL_GROUND_FLIP_VERTICAL;
                     } else if (east) {
-                        SetTileVariant(cell, terrainBase + 16);
+                        SetTileVariant(
+                            cell,
+                            terrainBase
+                                + EDIT_TILE_NORTH_EAST_INNER_CORNER * TERRAIN_TILE_VARIANT_COUNT
+                        );
                     } else if (west) {
-                        SetTileVariant(cell, terrainBase + 16);
+                        SetTileVariant(
+                            cell,
+                            terrainBase
+                                + EDIT_TILE_NORTH_EAST_INNER_CORNER * TERRAIN_TILE_VARIANT_COUNT
+                        );
                         cell->m_flags |=
                             MAP_CELL_GROUND_FLIP_VERTICAL | MAP_CELL_GROUND_FLIP_HORIZONTAL;
                     } else {
-                        SetTileVariant(cell, terrainBase);
+                        SetTileVariant(cell, terrainBase + EDIT_TILE_PLAIN);
                     }
                 }
             }
@@ -9966,25 +10059,25 @@ void editManager::DoRadar(void) {
     i16 y;
 
     gMouseManager->MouseCoords(x, y);
-    if (x < EDIT_RADAR_LEFT || x > EDIT_RADAR_LEFT + EDIT_RADAR_PIXELS || y < EDIT_RADAR_TOP
-        || y > EDIT_RADAR_TOP + EDIT_RADAR_PIXELS)
+    if (x < RADAR_LEFT || x > RADAR_LEFT + RADAR_SIZE || y < RADAR_TOP
+        || y > RADAR_TOP + RADAR_SIZE)
         return;
-    x = (x - EDIT_RADAR_LEFT) / EDIT_RADAR_CELL_PIXELS;
-    y = (y - EDIT_RADAR_TOP) / EDIT_RADAR_CELL_PIXELS;
+    x = (x - RADAR_LEFT) / RADAR_CELL_PIXELS;
+    y = (y - RADAR_TOP) / RADAR_CELL_PIXELS;
     switch (m_zoomedOut) {
         case EDIT_ZOOM_OUT:
-            m_viewX = x - EDIT_VIEW_ZOOMED_CELLS / 2;
+            m_viewX = x - EDIT_VIEW_ZOOMED_CENTER;
             if (m_viewX + EDIT_VIEW_ZOOMED_CELLS > MAP_CELL_GRID_SIZE)
                 m_viewX = MAP_CELL_GRID_SIZE - EDIT_VIEW_ZOOMED_CELLS;
-            m_viewY = y - EDIT_VIEW_ZOOMED_CELLS / 2;
+            m_viewY = y - EDIT_VIEW_ZOOMED_CENTER;
             if (m_viewY + EDIT_VIEW_ZOOMED_CELLS > MAP_CELL_GRID_SIZE)
                 m_viewY = MAP_CELL_GRID_SIZE - EDIT_VIEW_ZOOMED_CELLS;
             break;
         case EDIT_ZOOM_NORMAL:
-            m_viewX = x - EDIT_VIEW_CELLS / 2;
+            m_viewX = x - EDIT_VIEW_CENTER;
             if (m_viewX + EDIT_VIEW_CELLS > MAP_CELL_GRID_SIZE)
                 m_viewX = MAP_CELL_GRID_SIZE - EDIT_VIEW_CELLS;
-            m_viewY = y - EDIT_VIEW_CELLS / 2;
+            m_viewY = y - EDIT_VIEW_CENTER;
             if (m_viewY + EDIT_VIEW_CELLS > MAP_CELL_GRID_SIZE)
                 m_viewY = MAP_CELL_GRID_SIZE - EDIT_VIEW_CELLS;
             break;
@@ -10005,22 +10098,22 @@ void editManager::DoRadar(void) {
                 input = gInputManager->GetEvent();
             }
             gMouseManager->Main(mouseMove);
-            x = (mouseMove.x - EDIT_RADAR_LEFT) / EDIT_RADAR_CELL_PIXELS;
-            y = (mouseMove.y - EDIT_RADAR_TOP) / EDIT_RADAR_CELL_PIXELS;
+            x = (mouseMove.x - RADAR_LEFT) / RADAR_CELL_PIXELS;
+            y = (mouseMove.y - RADAR_TOP) / RADAR_CELL_PIXELS;
             switch (m_zoomedOut) {
                 case EDIT_ZOOM_OUT:
-                    m_viewX = x - EDIT_VIEW_ZOOMED_CELLS / 2;
+                    m_viewX = x - EDIT_VIEW_ZOOMED_CENTER;
                     if (m_viewX + EDIT_VIEW_ZOOMED_CELLS > MAP_CELL_GRID_SIZE)
                         m_viewX = MAP_CELL_GRID_SIZE - EDIT_VIEW_ZOOMED_CELLS;
-                    m_viewY = y - EDIT_VIEW_ZOOMED_CELLS / 2;
+                    m_viewY = y - EDIT_VIEW_ZOOMED_CENTER;
                     if (m_viewY + EDIT_VIEW_ZOOMED_CELLS > MAP_CELL_GRID_SIZE)
                         m_viewY = MAP_CELL_GRID_SIZE - EDIT_VIEW_ZOOMED_CELLS;
                     break;
                 case EDIT_ZOOM_NORMAL:
-                    m_viewX = x - EDIT_VIEW_CELLS / 2;
+                    m_viewX = x - EDIT_VIEW_CENTER;
                     if (m_viewX + EDIT_VIEW_CELLS > MAP_CELL_GRID_SIZE)
                         m_viewX = MAP_CELL_GRID_SIZE - EDIT_VIEW_CELLS;
-                    m_viewY = y - EDIT_VIEW_CELLS / 2;
+                    m_viewY = y - EDIT_VIEW_CENTER;
                     if (m_viewY + EDIT_VIEW_CELLS > MAP_CELL_GRID_SIZE)
                         m_viewY = MAP_CELL_GRID_SIZE - EDIT_VIEW_CELLS;
                     break;
@@ -10047,8 +10140,8 @@ void editManager::DoHorizontalKnob(void) {
     i16 y;
     i16 newX;
 
-    gMouseManager->SetCursorShape(2);
-    scale = 402.0 / (m_zoomedOut ? 45 : 59);
+    gMouseManager->SetCursorShape(EDIT_CURSOR_HORIZONTAL_DRAG);
+    scale = 402.0 / (m_zoomedOut ? EDIT_VIEW_ZOOMED_ORIGINS : EDIT_VIEW_ORIGINS);
     gMouseManager->MouseCoords(x, y);
     gInputManager->Flush();
     message.type = MESSAGE_MOUSE_MOVE;
@@ -10087,7 +10180,7 @@ void editManager::DoHorizontalKnob(void) {
             message = gInputManager->GetEvent();
         }
     }
-    gMouseManager->SetCursorShape(6);
+    gMouseManager->SetCursorShape(EDIT_CURSOR_NORMAL);
     m_horizontalKnob->m_flags &= ~WIDGET_FLAG_SELECTED;
     m_horizontalTrack->m_flags &= ~WIDGET_FLAG_SELECTED;
 }
@@ -10101,8 +10194,8 @@ void editManager::DoVerticalKnob(void) {
     i16 y;
     i16 newY;
 
-    gMouseManager->SetCursorShape(4);
-    scale = 402.0 / (m_zoomedOut ? 45 : 59);
+    gMouseManager->SetCursorShape(EDIT_CURSOR_VERTICAL_DRAG);
+    scale = 402.0 / (m_zoomedOut ? EDIT_VIEW_ZOOMED_ORIGINS : EDIT_VIEW_ORIGINS);
     gMouseManager->MouseCoords(x, y);
     gInputManager->Flush();
     message.type = MESSAGE_MOUSE_MOVE;
@@ -10142,7 +10235,7 @@ void editManager::DoVerticalKnob(void) {
             message = gInputManager->GetEvent();
         }
     }
-    gMouseManager->SetCursorShape(6);
+    gMouseManager->SetCursorShape(EDIT_CURSOR_NORMAL);
     m_verticalKnob->m_flags &= ~WIDGET_FLAG_SELECTED;
     m_verticalTrack->m_flags &= ~WIDGET_FLAG_SELECTED;
 }
@@ -10155,7 +10248,8 @@ void editManager::SetCellSound(i16 x, i16 y) {
 
     cell = &m_map.cells[x][y];
     m_mapSounds[x][y] = MAP_SOUND_NONE;
-    if (cell->m_tileIndex < MAP_CELL_TILES_PER_TERRAIN && cell->m_tileIndex > 3)
+    if (cell->m_tileIndex < MAP_CELL_TILES_PER_TERRAIN
+        && cell->m_tileIndex > TERRAIN_TILE_VARIANT_COUNT - 1)
         m_mapSounds[x][y] = MAP_SOUND_COAST;
     switch (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
         case MAP_OBJECT_BUOY:
@@ -10217,21 +10311,26 @@ void editManager::SetCellSound(i16 x, i16 y) {
                     if (cell->m_objectIndex == EDIT_SOUND_LAVA_LOOP_5_FRAME)
                         m_mapSounds[x][y] = MAP_SOUND_LOOP_5;
                     else if (cell->m_objectIndex == EDIT_SOUND_LAVA_LOOP_7_FRAME
-                             || (cell->m_objectIndex >= 23 && cell->m_objectIndex <= 26))
+                             || (cell->m_objectIndex >= EDIT_SOUND_LAVA_LOOP_7_FIRST
+                                 && cell->m_objectIndex <= EDIT_SOUND_LAVA_LOOP_7_LAST))
                         m_mapSounds[x][y] = MAP_SOUND_LOOP_7;
-                    else if (cell->m_objectIndex >= 17 && cell->m_objectIndex <= 22)
+                    else if (cell->m_objectIndex >= EDIT_SOUND_LAVA_LOOP_6_FIRST
+                             && cell->m_objectIndex <= EDIT_SOUND_LAVA_LOOP_6_LAST)
                         m_mapSounds[x][y] = MAP_SOUND_LOOP_6;
                     break;
                 case TILESET_OBJ32_01:
-                    if (cell->m_objectIndex >= 30 && cell->m_objectIndex <= 121)
+                    if (cell->m_objectIndex >= EDIT_SOUND_GRASS_LOOP_13_FIRST
+                        && cell->m_objectIndex <= EDIT_SOUND_GRASS_LOOP_13_LAST)
                         m_mapSounds[x][y] = MAP_SOUND_LOOP_13;
                     break;
                 case TILESET_OBJ32_07:
-                    if (cell->m_objectIndex >= 147 && cell->m_objectIndex <= 167)
+                    if (cell->m_objectIndex >= EDIT_SOUND_LOOP_14_FIRST
+                        && cell->m_objectIndex <= EDIT_SOUND_LOOP_14_LAST)
                         m_mapSounds[x][y] = MAP_SOUND_LOOP_14;
                     break;
                 case TILESET_OBJ32_00:
-                    if ((cell->m_objectIndex >= 2 && cell->m_objectIndex <= 5)
+                    if ((cell->m_objectIndex >= EDIT_SOUND_WATER_LOOP_19_FIRST
+                         && cell->m_objectIndex <= EDIT_SOUND_WATER_LOOP_19_LAST)
                         || cell->m_objectIndex == EDIT_SOUND_WATER_LOOP_19_FRAME_A
                         || cell->m_objectIndex == EDIT_SOUND_WATER_LOOP_19_FRAME_B)
                         m_mapSounds[x][y] = MAP_SOUND_LOOP_19;
@@ -10250,10 +10349,10 @@ void editManager::SetCoast(i16 x, i16 y) {
     cell = &m_map.cells[x][y];
     if (cell->m_tileIndex > MAP_CELL_TILES_PER_TERRAIN - 1)
         return;
-    switch (cell->m_tileIndex / EDIT_COAST_TILE_VARIANTS) {
-        case EDIT_COAST_OPEN:
+    switch (cell->m_tileIndex / TERRAIN_TILE_VARIANT_COUNT) {
+        case EDIT_TILE_PLAIN:
             return;
-        case EDIT_COAST_EDGE:
+        case EDIT_TILE_NORTH_EDGE:
             if (cell->m_flags & MAP_CELL_GROUND_FLIP_VERTICAL) {
                 if (y < MAP_CELL_GRID_SIZE - 1 && !m_map.cells[x][y + 1].m_triggerType)
                     m_map.cells[x][y + 1].m_triggerType = MAP_OBJECT_COAST;
@@ -10262,7 +10361,7 @@ void editManager::SetCoast(i16 x, i16 y) {
                     m_map.cells[x][y - 1].m_triggerType = MAP_OBJECT_COAST;
             }
             break;
-        case EDIT_COAST_OUTER_CORNER:
+        case EDIT_TILE_NORTH_EAST_CORNER:
             if ((cell->m_flags & (MAP_CELL_GROUND_FLIP_VERTICAL | MAP_CELL_GROUND_FLIP_HORIZONTAL))
                 == (MAP_CELL_GROUND_FLIP_VERTICAL | MAP_CELL_GROUND_FLIP_HORIZONTAL)) {
                 if (y < MAP_CELL_GRID_SIZE - 1 && !m_map.cells[x][y + 1].m_triggerType)
@@ -10295,7 +10394,7 @@ void editManager::SetCoast(i16 x, i16 y) {
                     m_map.cells[x + 1][y - 1].m_triggerType = MAP_OBJECT_COAST;
             }
             break;
-        case EDIT_COAST_SIDE:
+        case EDIT_TILE_EAST_EDGE:
             if (cell->m_flags & MAP_CELL_GROUND_FLIP_HORIZONTAL) {
                 if (x > 0 && !m_map.cells[x - 1][y].m_triggerType)
                     m_map.cells[x - 1][y].m_triggerType = MAP_OBJECT_COAST;
@@ -10304,7 +10403,7 @@ void editManager::SetCoast(i16 x, i16 y) {
                     m_map.cells[x + 1][y].m_triggerType = MAP_OBJECT_COAST;
             }
             break;
-        case EDIT_COAST_INNER_CORNER:
+        case EDIT_TILE_NORTH_EAST_INNER_CORNER:
             if ((cell->m_flags & (MAP_CELL_GROUND_FLIP_VERTICAL | MAP_CELL_GROUND_FLIP_HORIZONTAL))
                 == (MAP_CELL_GROUND_FLIP_VERTICAL | MAP_CELL_GROUND_FLIP_HORIZONTAL)) {
                 if (y < MAP_CELL_GRID_SIZE - 1 && x > 0 && !m_map.cells[x - 1][y + 1].m_triggerType)
@@ -10324,8 +10423,9 @@ void editManager::SetCoast(i16 x, i16 y) {
     }
 }
 
-// Save checks: stone liths and whirlpools come in pairs; a random town keeps
-// its approach clear; every placed hero gets a distinct hero id.
+// Save checks: stone liths and whirlpools come in pairs; the top row of a
+// random town's footprint is cleared; every placed hero gets a distinct hero
+// id.
 VA(0x00405ebf, 0x28b)
 void editManager::CheckObjects(void) {
     i32 whirlpools;
@@ -10343,9 +10443,12 @@ void editManager::CheckObjects(void) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             if ((m_map.cells[x][y].m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_STONE_LITHS)
                 lithsSeen++;
-            if (x < MAP_CELL_GRID_SIZE - 2 && y < MAP_CELL_GRID_SIZE - 1
+            if (x < MAP_CELL_GRID_SIZE - EDIT_WHIRLPOOL_SECOND_CELL_X
+                && y < MAP_CELL_GRID_SIZE - EDIT_WHIRLPOOL_SECOND_CELL_Y
                 && (m_map.cells[x][y].m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_WHIRLPOOL
-                && (m_map.cells[x + 2][y + 1].m_triggerType & MAP_TRIGGER_TYPE_MASK)
+                && (m_map.cells[x + EDIT_WHIRLPOOL_SECOND_CELL_X][y + EDIT_WHIRLPOOL_SECOND_CELL_Y]
+                        .m_triggerType
+                    & MAP_TRIGGER_TYPE_MASK)
                        == MAP_OBJECT_WHIRLPOOL)
                 whirlpools++;
         }
@@ -10362,8 +10465,15 @@ void editManager::CheckObjects(void) {
                      == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_TOWN)
                  || m_map.cells[x][y].m_triggerType
                         == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_CASTLE))
-                && x > 1 && y > 1)
-                ClearArea(x - 2, y - 2, 4, 1, EDIT_CLEAR_ALL, 0);
+                && x > TOWN_FOOTPRINT_LEFT - 1 && y > TOWN_FOOTPRINT_TOP - 1)
+                ClearArea(
+                    x - TOWN_FOOTPRINT_LEFT,
+                    y - TOWN_FOOTPRINT_TOP,
+                    TOWN_FOOTPRINT_WIDTH,
+                    1,
+                    EDIT_CLEAR_ALL,
+                    0
+                );
             if ((m_map.cells[x][y].m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_FILE_OBJECT_HERO) {
                 heroRecord =
                     static_cast<mapHeroExtra*>(m_extras[m_map.cells[x][y].m_objectMetadata]);
@@ -10500,6 +10610,7 @@ i32 editManager::CountMines(void) {
 
 // The map file's town table: castles first, then towns, three bytes each
 // (x, y, faction; castles set bit 7), padded with empty records.
+#define cell spot // frame-slot spelling
 VA(0x0040660f, 0x37e)
 void editManager::WriteTowns(i32 file) {
     i16 count;
@@ -10507,38 +10618,36 @@ void editManager::WriteTowns(i32 file) {
     i32 type;
     i32 setCastles;
     i32 x;
-    mapCell* spot;
+    mapCell* cell;
     i32 y;
     i32 notUsed;
-    char* townExtra;
-    u8 empty[3];
+    editTownExtra* townExtra;
+    editMapRecord empty;
     i16 castleCount;
 
     count = 0;
     castleCount = 0;
     setCastles = 0;
     setTowns = 0;
-    spot = NULL;
+    cell = NULL;
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
-            spot = &m_map.cells[x][y];
-            if (spot->m_triggerType == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_CASTLE)
-                || (spot->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)
-                    && (spot->m_objectIndex == EDIT_CASTLE_ENTRANCE_FRAME
-                        || spot->m_objectIndex
-                               == EDIT_CASTLE_ENTRANCE_FRAME + TOWN_RACE_FRAME_STRIDE
-                        || spot->m_objectIndex
-                               == EDIT_CASTLE_ENTRANCE_FRAME + 2 * TOWN_RACE_FRAME_STRIDE
-                        || spot->m_objectIndex
-                               == EDIT_CASTLE_ENTRANCE_FRAME + 3 * TOWN_RACE_FRAME_STRIDE))) {
+            cell = &m_map.cells[x][y];
+            if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_CASTLE)
+                || (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)
+                    && (cell->m_objectIndex == EDIT_CASTLE_FRAME(TOWN_TYPE_KNIGHT)
+                        || cell->m_objectIndex == EDIT_CASTLE_FRAME(TOWN_TYPE_SORCERESS)
+                        || cell->m_objectIndex == EDIT_CASTLE_FRAME(TOWN_TYPE_BARBARIAN)
+                        || cell->m_objectIndex == EDIT_CASTLE_FRAME(TOWN_TYPE_WARLOCK)))) {
                 write(file, &x, 1);
                 write(file, &y, 1);
-                type = spot->m_objectIndex / TOWN_RACE_FRAME_STRIDE | MAP_TOWN_CASTLE_FLAG;
+                type = cell->m_objectIndex / TOWN_RACE_FRAME_STRIDE | MAP_TOWN_CASTLE_FLAG;
                 write(file, &type, 1);
                 count++;
-                if (spot->m_objectMetadata) {
-                    townExtra = static_cast<char*>(gEditManager->m_extras[spot->m_objectMetadata]);
-                    if (*townExtra)
+                if (cell->m_objectMetadata) {
+                    townExtra =
+                        static_cast<editTownExtra*>(gEditManager->m_extras[cell->m_objectMetadata]);
+                    if (townExtra->record.customized)
                         setCastles++;
                 }
             }
@@ -10547,76 +10656,79 @@ void editManager::WriteTowns(i32 file) {
     castleCount = count;
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
-            spot = &m_map.cells[x][y];
-            if (spot->m_triggerType == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_TOWN)
-                || (spot->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)
-                    && (spot->m_objectIndex == EDIT_CASTLE_ENTRANCE_FRAME - TOWN_CASTLE_FRAME_OFFSET
-                        || spot->m_objectIndex
-                               == EDIT_CASTLE_ENTRANCE_FRAME - TOWN_CASTLE_FRAME_OFFSET
-                                      + TOWN_RACE_FRAME_STRIDE
-                        || spot->m_objectIndex
-                               == EDIT_CASTLE_ENTRANCE_FRAME - TOWN_CASTLE_FRAME_OFFSET
-                                      + 2 * TOWN_RACE_FRAME_STRIDE
-                        || spot->m_objectIndex
-                               == EDIT_CASTLE_ENTRANCE_FRAME - TOWN_CASTLE_FRAME_OFFSET
-                                      + 3 * TOWN_RACE_FRAME_STRIDE))) {
+            cell = &m_map.cells[x][y];
+            if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_TOWN)
+                || (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)
+                    && (cell->m_objectIndex == EDIT_TOWN_FRAME(TOWN_TYPE_KNIGHT)
+                        || cell->m_objectIndex == EDIT_TOWN_FRAME(TOWN_TYPE_SORCERESS)
+                        || cell->m_objectIndex == EDIT_TOWN_FRAME(TOWN_TYPE_BARBARIAN)
+                        || cell->m_objectIndex == EDIT_TOWN_FRAME(TOWN_TYPE_WARLOCK)))) {
                 write(file, &x, 1);
                 write(file, &y, 1);
-                type = spot->m_objectIndex / TOWN_RACE_FRAME_STRIDE;
+                type = cell->m_objectIndex / TOWN_RACE_FRAME_STRIDE;
                 write(file, &type, 1);
                 sprintf(gText, "Town %02d: (%02d,%02d) type: %02d\n", count, x, y, type);
                 count++;
-                if (spot->m_objectMetadata) {
-                    townExtra = static_cast<char*>(gEditManager->m_extras[spot->m_objectMetadata]);
-                    if (*townExtra)
+                if (cell->m_objectMetadata) {
+                    townExtra =
+                        static_cast<editTownExtra*>(gEditManager->m_extras[cell->m_objectMetadata]);
+                    if (townExtra->record.customized)
                         setTowns++;
                 }
             }
         }
     }
-    if (castleCount < 4)
+    if (castleCount < EDIT_MAP_MIN_CASTLES)
         AddError(localization::Tr("editor.check.castles.few"));
     else if (setCastles >= 1 && setCastles < castleCount)
         AddError(localization::Tr("editor.check.castles.unset"));
     else if (setTowns > 0 && setCastles < castleCount)
         AddError(localization::Tr("editor.check.castles.mixed"));
-    empty[0] = 0xff;
-    empty[1] = 0xff;
-    empty[2] = 0;
+    empty.x = EDIT_MAP_NO_RECORD;
+    empty.y = EDIT_MAP_NO_RECORD;
+    empty.type = 0;
     for (x = 0; x < GAME_TOWN_COUNT - count; x++)
-        write(file, empty, 3);
+        write(file, &empty, sizeof(empty));
 }
+#undef cell
 
 // The map file's mine table: the dragon city and the lighthouse take the
 // first two records, then every mine, sawmill and alchemist lab.
+#define cell spot                   // frame-slot spelling
+#define lighthouseX beaconX         // frame-slot spelling
+#define lighthouseY beaconY         // frame-slot spelling
+#define lighthouseCount beaconCount // frame-slot spelling
+#define cityCount numCities         // frame-slot spelling
+#define markerCell neighbour        // frame-slot spelling
+#define mineSlot mineNumber         // frame-slot spelling
 VA(0x0040698d, 0x41f)
 void editManager::WriteMines(i32 file) {
     u8 type;
-    i32 beaconCount;
+    i32 lighthouseCount;
     u8 cityX;
     u8 cityY;
     u8 x;
-    mapCell* spot;
+    mapCell* cell;
     u8 y;
-    u8 empty[3];
-    u8 beaconX;
-    i16 mineNumber;
-    u8 beaconY;
-    i32 numCities;
-    mapCell* neighbour;
+    editMapRecord empty;
+    u8 lighthouseX;
+    i16 mineSlot;
+    u8 lighthouseY;
+    i32 cityCount;
+    mapCell* markerCell;
 
-    cityX = 0xff;
-    cityY = 0xff;
-    beaconX = 0xff;
-    beaconY = 0xff;
-    beaconCount = 0;
-    numCities = 0;
-    spot = NULL;
+    cityX = EDIT_MAP_NO_RECORD;
+    cityY = EDIT_MAP_NO_RECORD;
+    lighthouseX = EDIT_MAP_NO_RECORD;
+    lighthouseY = EDIT_MAP_NO_RECORD;
+    lighthouseCount = 0;
+    cityCount = 0;
+    cell = NULL;
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
-            spot = &m_map.cells[x][y];
-            if (spot->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_DRAGON_CITY)) {
-                numCities++;
+            cell = &m_map.cells[x][y];
+            if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_DRAGON_CITY)) {
+                cityCount++;
                 cityX = x;
                 cityY = y;
             }
@@ -10624,67 +10736,74 @@ void editManager::WriteMines(i32 file) {
     }
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
-            spot = &m_map.cells[x][y];
-            if (spot->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_LIGHTHOUSE)) {
-                beaconCount++;
-                beaconX = x;
-                beaconY = y;
+            cell = &m_map.cells[x][y];
+            if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_LIGHTHOUSE)) {
+                lighthouseCount++;
+                lighthouseX = x;
+                lighthouseY = y;
             }
         }
     }
-    empty[0] = 0xff;
-    empty[1] = 0xff;
-    empty[2] = 0xff;
+    empty.x = EDIT_MAP_NO_RECORD;
+    empty.y = EDIT_MAP_NO_RECORD;
+    empty.type = EDIT_MAP_NO_RECORD;
     if (cityX != -1) {
         type = MAP_OBJECT_DRAGON_CITY;
         write(file, &cityX, 1);
         write(file, &cityY, 1);
         write(file, &type, 1);
     } else {
-        write(file, empty, 3);
+        write(file, &empty, sizeof(empty));
     }
-    if (beaconX != -1) {
+    if (lighthouseX != -1) {
         type = MAP_OBJECT_LIGHTHOUSE;
-        write(file, &beaconX, 1);
-        write(file, &beaconY, 1);
+        write(file, &lighthouseX, 1);
+        write(file, &lighthouseY, 1);
         write(file, &type, 1);
     } else {
-        write(file, empty, 3);
+        write(file, &empty, sizeof(empty));
     }
-    if (beaconCount > 1)
+    if (lighthouseCount > 1)
         AddError(localization::Tr("editor.check.lighthouse.multiple"));
-    if (numCities > 1)
+    if (cityCount > 1)
         AddError(localization::Tr("editor.check.dragon_city.multiple"));
-    mineNumber = 2;
+    mineSlot = MINE_SLOT_STANDARD_FIRST;
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
-            spot = &m_map.cells[x][y];
-            if (spot->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_MINE)
-                || spot->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SAWMILL)
-                || spot->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_ALCHEMIST_LAB)
-                || spot->m_triggerType == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_MINE)) {
-                if (spot->m_triggerType == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_MINE)) {
-                    type = 0xff;
+            cell = &m_map.cells[x][y];
+            if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_MINE)
+                || cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SAWMILL)
+                || cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_ALCHEMIST_LAB)
+                || cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_MINE)) {
+                if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_MINE)) {
+                    type = EDIT_MAP_RANDOM_MINE_TYPE;
                 } else {
-                    neighbour = &m_map.cells[x + 1][y];
-                    if (neighbour->m_flags & MAP_CELL_OBJECT_EXTRA)
-                        type = neighbour->m_extraFrame + 2;
-                    else if (spot->m_objectIndex == EDIT_SAWMILL_FRAME)
-                        type = 0;
+                    markerCell = &m_map.cells[x + 1][y];
+                    if (markerCell->m_flags & MAP_CELL_OBJECT_EXTRA)
+                        type = markerCell->m_extraFrame + RESOURCE_ORE;
+                    else if (cell->m_objectIndex == EDIT_SAWMILL_FRAME)
+                        type = RESOURCE_WOOD;
                     else
-                        type = 1;
+                        type = RESOURCE_MERCURY;
                 }
                 write(file, &x, 1);
                 write(file, &y, 1);
                 write(file, &type, 1);
-                sprintf(gText, "Mine %02d: (%02d,%02d) type: %02d\n", mineNumber, x, y, type);
-                mineNumber++;
+                sprintf(gText, "Mine %02d: (%02d,%02d) type: %02d\n", mineSlot, x, y, type);
+                mineSlot++;
             }
         }
     }
-    for (x = 0; x < GAME_MINE_COUNT - mineNumber; x++)
-        write(file, empty, 3);
+    for (x = 0; x < GAME_MINE_COUNT - mineSlot; x++)
+        write(file, &empty, sizeof(empty));
 }
+#undef cell
+#undef lighthouseX
+#undef lighthouseY
+#undef lighthouseCount
+#undef cityCount
+#undef markerCell
+#undef mineSlot
 
 // The random-artifact table: each artifact on the map is marked placed.
 VA(0x00406dac, 0xba)
@@ -10745,7 +10864,7 @@ i16 editManager::SaveMap(char* name) {
     i16 formatWord;
 
     ClearErrors();
-    gMouseManager->SetPointer(1);
+    gMouseManager->SetPointer(EDIT_POINTER_WAIT);
     CheckObjects();
     UpdateTriggers();
     sprintf(fileName, ".\\maps\\%s", name);
@@ -10755,11 +10874,15 @@ i16 editManager::SaveMap(char* name) {
     data = MAP_HEADER_ID;
     write(handle, &data, sizeof(data));
     if (gNewMapFormat) {
-        write(handle, &gEditMapHeader.difficulty, sizeof(gEditMapHeader) - 2 * sizeof(i16));
+        write(
+            handle,
+            &gEditMapHeader.difficulty,
+            offsetof(SMapHeader, format) - offsetof(SMapHeader, difficulty)
+        );
         formatWord = MAP_HEADER_ID;
         write(handle, &formatWord, sizeof(formatWord));
     } else {
-        write(handle, &gEditMapHeader, sizeof(gEditMapHeader) - sizeof(i16));
+        write(handle, &gEditMapHeader, offsetof(SMapHeader, format));
     }
     data = EDIT_MAP_VERSION;
     write(handle, &data, sizeof(data));
@@ -10783,7 +10906,7 @@ i16 editManager::SaveMap(char* name) {
         write(handle, &gNextObjectId, sizeof(gNextObjectId));
     }
     close(handle);
-    gMouseManager->SetPointer(0);
+    gMouseManager->SetPointer(EDIT_POINTER_DEFAULT);
     ShowErrors();
     return BASE_MANAGER_SUCCESS;
 }
@@ -10812,22 +10935,26 @@ i16 editManager::LoadMap(char* name) {
     read(handle, &headerId, sizeof(headerId));
     if (headerId == MAP_HEADER_ID) {
         gEditMapHeader.id = headerId;
-        read(handle, &gEditMapHeader.difficulty, sizeof(gEditMapHeader) - sizeof(i16));
+        read(
+            handle,
+            &gEditMapHeader.difficulty,
+            sizeof(gEditMapHeader) - offsetof(SMapHeader, difficulty)
+        );
         read(handle, &headerId, sizeof(headerId));
     } else {
         NewMap(0);
     }
     mapFormat = gEditMapHeader.format;
-    if (mapFormat >= MAP_HEADER_ID && mapFormat <= MAP_HEADER_ID + 10)
+    if (mapFormat >= MAP_HEADER_ID && mapFormat <= MAP_HEADER_ID + EDIT_MAP_FORMAT_RANGE)
         gNewMapFormat = 1;
     else
         gNewMapFormat = 0;
-    gMouseManager->SetPointer(1);
+    gMouseManager->SetPointer(EDIT_POINTER_WAIT);
     read(handle, &width, sizeof(width));
     read(handle, &height, sizeof(height));
     read(handle, m_map.cells, sizeof(m_map.cells));
-    read(handle, ignored, GAME_TOWN_COUNT * 3);
-    read(handle, ignored, GAME_MINE_COUNT * 3);
+    read(handle, ignored, GAME_TOWN_COUNT * sizeof(editMapRecord));
+    read(handle, ignored, GAME_MINE_COUNT * sizeof(editMapRecord));
     read(handle, ignored, EDIT_MAP_ARTIFACT_SLOTS);
     read(handle, ignored, 1);
     read(handle, ignored, sizeof(m_mapSounds));
@@ -10846,7 +10973,7 @@ i16 editManager::LoadMap(char* name) {
         read(handle, &gNextObjectId, sizeof(gNextObjectId));
     }
     close(handle);
-    gMouseManager->SetPointer(0);
+    gMouseManager->SetPointer(EDIT_POINTER_DEFAULT);
     gEditManager->SaveUndo();
     if (!gNewMapFormat)
         NormalDialog(localization::Tr("editor.map.old_format"), NORMAL_DIALOG_TYPE_OK);
@@ -10938,16 +11065,19 @@ i32 editManager::IsCleared(i32 tileset, i32 index, i32 mask, i32 x, i32 y) {
     return 0;
 }
 
+#define clearedId tag      // frame-slot spelling
+#define cellIds ownerRec   // frame-slot spelling
+#define otherCell thatCell // frame-slot spelling
 VA(0x004078e5, 0x504)
 void editManager::ClearArea(i32 x, i32 y, i32 width, i32 height, u16 mask, i32 secondLayer) {
     i32 i;
-    editMapCellPair* ownerRec;
-    u16 tag;
+    editMapCellPair* cellIds;
+    u16 clearedId;
     i32 j;
     i32 ox;
     i32 pass;
     i32 oy;
-    mapCell* thatCell;
+    mapCell* otherCell;
     i32 blankSlot;
 
 #line 2619 EDITMGR_CPP_PATH
@@ -10957,10 +11087,10 @@ void editManager::ClearArea(i32 x, i32 y, i32 width, i32 height, u16 mask, i32 s
     );
     for (i = x; i < x + width; i++) {
         for (j = y; j < y + height; j++) {
-            for (pass = 0; pass < 2; pass++) {
-                if (pass == 1 && !secondLayer)
+            for (pass = EDIT_CLEAR_OBJECT_LAYER; pass < EDIT_CLEAR_LAYER_COUNT; pass++) {
+                if (pass == EDIT_CLEAR_OVERLAY_LAYER && !secondLayer)
                     continue;
-                if ((pass == 0
+                if ((pass == EDIT_CLEAR_OBJECT_LAYER
                      && IsCleared(
                          m_map.cells[i][j].m_objectTileset & MAP_CELL_TILESET_MASK,
                          m_map.cells[i][j].m_objectIndex,
@@ -10968,7 +11098,7 @@ void editManager::ClearArea(i32 x, i32 y, i32 width, i32 height, u16 mask, i32 s
                          i,
                          j
                      ))
-                    || (pass == 1
+                    || (pass == EDIT_CLEAR_OVERLAY_LAYER
                         && IsCleared(
                             m_map.cells[i][j].m_overlayTileset & MAP_CELL_TILESET_MASK,
                             m_map.cells[i][j].m_overlayIndex,
@@ -10977,42 +11107,43 @@ void editManager::ClearArea(i32 x, i32 y, i32 width, i32 height, u16 mask, i32 s
                             j
                         ))) {
                     if (gNewMapFormat) {
-                        if ((pass == 0 && m_map.cellPairs[i][j].objectId)
-                            || (pass == 1 && m_map.cellPairs[i][j].overlayId)) {
-                            if (pass == 0)
-                                tag = m_map.cellPairs[i][j].objectId;
+                        if ((pass == EDIT_CLEAR_OBJECT_LAYER && m_map.cellPairs[i][j].objectId)
+                            || (pass == EDIT_CLEAR_OVERLAY_LAYER
+                                && m_map.cellPairs[i][j].overlayId)) {
+                            if (pass == EDIT_CLEAR_OBJECT_LAYER)
+                                clearedId = m_map.cellPairs[i][j].objectId;
                             else
-                                tag = m_map.cellPairs[i][j].overlayId;
+                                clearedId = m_map.cellPairs[i][j].overlayId;
                             for (ox = 0; ox < MAP_CELL_GRID_SIZE; ox++) {
                                 for (oy = 0; oy < MAP_CELL_GRID_SIZE; oy++) {
-                                    thatCell = &m_map.cells[ox][oy];
-                                    ownerRec = &m_map.cellPairs[ox][oy];
-                                    if (ownerRec->objectId == tag) {
-                                        ownerRec->objectId = 0;
-                                        thatCell->m_objectTileset = 0;
-                                        thatCell->m_objectIndex = MAP_CELL_NO_FRAME;
-                                        thatCell->m_triggerType = MAP_OBJECT_NONE;
-                                        thatCell->m_flags &=
+                                    otherCell = &m_map.cells[ox][oy];
+                                    cellIds = &m_map.cellPairs[ox][oy];
+                                    if (cellIds->objectId == clearedId) {
+                                        cellIds->objectId = 0;
+                                        otherCell->m_objectTileset = 0;
+                                        otherCell->m_objectIndex = MAP_CELL_NO_FRAME;
+                                        otherCell->m_triggerType = MAP_OBJECT_NONE;
+                                        otherCell->m_flags &=
                                             ~(MAP_CELL_OBJECT_ANIMATED | MAP_CELL_OBJECT_EXTRA
                                               | MAP_CELL_OBJECT_SHADOW_ONLY);
-                                        if (thatCell->m_secondaryTrigger
+                                        if (otherCell->m_secondaryTrigger
                                             & MAP_CELL_SECONDARY_BLOCKED)
-                                            thatCell->m_secondaryTrigger -=
+                                            otherCell->m_secondaryTrigger -=
                                                 MAP_CELL_SECONDARY_BLOCKED;
-                                        thatCell->m_triggerType = thatCell->m_secondaryTrigger;
-                                        thatCell->m_secondaryTrigger = 0;
-                                        thatCell->m_objectMetadata = 0;
-                                        thatCell->m_extraFrame = 0;
+                                        otherCell->m_triggerType = otherCell->m_secondaryTrigger;
+                                        otherCell->m_secondaryTrigger = 0;
+                                        otherCell->m_objectMetadata = 0;
+                                        otherCell->m_extraFrame = 0;
                                     }
-                                    if (ownerRec->overlayId == tag) {
-                                        ownerRec->overlayId = 0;
-                                        thatCell->m_overlayTileset = 0;
-                                        thatCell->m_overlayIndex = MAP_CELL_NO_FRAME;
-                                        thatCell->m_flags &=
+                                    if (cellIds->overlayId == clearedId) {
+                                        cellIds->overlayId = 0;
+                                        otherCell->m_overlayTileset = 0;
+                                        otherCell->m_overlayIndex = MAP_CELL_NO_FRAME;
+                                        otherCell->m_flags &=
                                             ~(MAP_CELL_OVERLAY_ANIMATED | MAP_CELL_OVERLAY_EXTRA);
-                                        thatCell->m_secondaryTrigger &= MAP_CELL_SECONDARY_BLOCKED;
-                                        if (thatCell->m_objectIndex == MAP_CELL_NO_FRAME)
-                                            thatCell->m_triggerType = MAP_OBJECT_NONE;
+                                        otherCell->m_secondaryTrigger &= MAP_CELL_SECONDARY_BLOCKED;
+                                        if (otherCell->m_objectIndex == MAP_CELL_NO_FRAME)
+                                            otherCell->m_triggerType = MAP_OBJECT_NONE;
                                     }
                                 }
                             }
@@ -11035,6 +11166,9 @@ void editManager::ClearArea(i32 x, i32 y, i32 width, i32 height, u16 mask, i32 s
         }
     }
 }
+#undef clearedId
+#undef cellIds
+#undef otherCell
 
 VA(0x00407de9, 0x1e6)
 void editManager::ResetArea(i32 x, i32 y, i32 width, i32 height) {
@@ -11065,20 +11199,20 @@ void editManager::ResetArea(i32 x, i32 y, i32 width, i32 height) {
 VA(0x00407fcf, 0xdb)
 char* MakeMapCode(i32 serial) {
     DATA(0x00451210)
-    static char code[5];
+    static char code[EDIT_MAP_CODE_LENGTH + 1];
     i32 unused;
 
     memset(code, 0, sizeof(code));
-    code[3] = gMapCodeLetters[serial % 26];
-    serial -= serial % 26;
-    serial /= 26;
-    code[2] = gMapCodeLetters[serial % 26];
-    serial -= serial % 26;
-    serial /= 26;
-    code[1] = gMapCodeLetters[serial % 26];
-    serial -= serial % 26;
-    serial /= 26;
-    code[0] = serial % 5 + 'V';
+    code[3] = gMapCodeLetters[serial % EDIT_MAP_CODE_LETTER_COUNT];
+    serial -= serial % EDIT_MAP_CODE_LETTER_COUNT;
+    serial /= EDIT_MAP_CODE_LETTER_COUNT;
+    code[2] = gMapCodeLetters[serial % EDIT_MAP_CODE_LETTER_COUNT];
+    serial -= serial % EDIT_MAP_CODE_LETTER_COUNT;
+    serial /= EDIT_MAP_CODE_LETTER_COUNT;
+    code[1] = gMapCodeLetters[serial % EDIT_MAP_CODE_LETTER_COUNT];
+    serial -= serial % EDIT_MAP_CODE_LETTER_COUNT;
+    serial /= EDIT_MAP_CODE_LETTER_COUNT;
+    code[0] = serial % EDIT_MAP_CODE_FIRST_LETTERS + 'V';
     return code;
 }
 
@@ -11101,20 +11235,20 @@ void editManager::NewMap(i32 random) {
     gMapHeader->difficulty = MAP_DIFFICULTY_NORMAL;
     gNewMapFormat = 1;
     gConfig.currentMapOffset++;
-    if (gConfig.firstMapOffset + gConfig.currentMapOffset > 65000)
+    if (gConfig.firstMapOffset + gConfig.currentMapOffset > EDIT_MAP_SERIAL_LIMIT)
         gConfig.currentMapOffset = 0;
     for (i = 0; i < MAP_HEADER_LANGUAGE_COUNT; i++) {
         if (random)
             sprintf(
                 gMapHeader->name[i],
                 localization::Tr("editor.map.random.name"),
-                gConfig.currentMapOffset % 1000
+                gConfig.currentMapOffset % EDIT_MAP_NAME_SERIAL_MODULUS
             );
         else
             sprintf(
                 gMapHeader->name[i],
                 localization::Tr("editor.map.unnamed"),
-                gConfig.currentMapOffset % 1000
+                gConfig.currentMapOffset % EDIT_MAP_NAME_SERIAL_MODULUS
             );
         sprintf(gMapHeader->description[i], localization::Tr("editor.map.no_description"));
     }
@@ -11131,14 +11265,14 @@ void editManager::NewMap(i32 random) {
 VA(0x0040822b, 0x28)
 void ShowStatusWarning(char* text) {
     ShowStatusText(text);
-    MessageBeep(0);
-    gStatusTextClearTime = KBTickCount() + 1500;
+    MessageBeep(MB_OK);
+    gStatusTextClearTime = KBTickCount() + EDITOR_STATUS_WARNING_MILLISECONDS;
 }
 
 // Scatters small terrain details over 3% of the empty plain ground cells.
 VA(0x00408253, 0x209)
 void ScatterDetails(void) {
-    editMapCellPair* cellOwner;
+    editMapCellPair* cellIds;
     i32 x;
     i32 y;
     mapCell* cell;
@@ -11147,12 +11281,13 @@ void ScatterDetails(void) {
     for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
         for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
             cell = &gEditManager->m_map.cells[x][y];
-            cellOwner = &gEditManager->m_map.cellPairs[x][y];
+            cellIds = &gEditManager->m_map.cellPairs[x][y];
             if (cell->m_objectIndex == MAP_CELL_NO_FRAME
                 && cell->m_overlayIndex == MAP_CELL_NO_FRAME
-                && cell->m_tileIndex % MAP_CELL_TILES_PER_TERRAIN < 4 && Random(1, 100) <= 3) {
+                && cell->m_tileIndex % MAP_CELL_TILES_PER_TERRAIN < TERRAIN_TILE_VARIANT_COUNT
+                && Random(1, 100) <= EDIT_DETAIL_PERCENT) {
                 gNextObjectId++;
-                cellOwner->objectId = gNextObjectId;
+                cellIds->objectId = gNextObjectId;
                 switch (cell->m_tileIndex / MAP_CELL_TILES_PER_TERRAIN) {
                     case TERRAIN_GRASS:
                         cell->m_objectTileset = TILESET_OBJ32_01;
@@ -11171,12 +11306,12 @@ void ScatterDetails(void) {
                         break;
                     case TERRAIN_LAVA:
                         cell->m_objectTileset = TILESET_OBJ32_04;
-                        cell->m_objectIndex = 0;
+                        cell->m_objectIndex = EDIT_LAVA_DETAIL_FRAME;
                         cell->m_triggerType = MAP_OBJECT_SHADOW;
                         break;
                     case TERRAIN_DESERT:
                         cell->m_objectTileset = TILESET_OBJ32_05;
-                        cell->m_objectIndex = 2;
+                        cell->m_objectIndex = EDIT_DESERT_DETAIL_FRAME;
                         cell->m_triggerType = MAP_OBJECT_SHADOW;
                         break;
                     case TERRAIN_DIRT:

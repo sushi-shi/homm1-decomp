@@ -6,7 +6,7 @@
 # (tab-separated; every field is an fnmatch glob, `*` matches anything; the
 # first matching row wins): file owner spelling group detail reason.
 # group/detail are the census' review_group/review_context columns.
-#floor	1926
+#floor	2254
 *	*	0	trivial-function-literal	0 for-init	a for loop's counter starts at zero
 *	*	0	trivial-function-literal	0 initializer*	an accumulator or counter declared at zero
 *	*	1	trivial-function-literal	1 arithmetic*	a one-step offset: the next index, element or count
@@ -1266,3 +1266,123 @@ src/SOURCE/ADVMGR.cpp	advManager::UpdateRadar	4	array-index	array subscript gRad
 src/SOURCE/PHILAI.cpp	philAI::QuickCombat	-1	call-argument	ProbableOutcomeOfBattle(*	no defending player in the m_owner ternary: retail's int literal (an enumerator narrows VC4's ?: result to char)
 src/SOURCE/PHILAI.cpp	philAI::ChooseEvaluateBattle	-1	call-argument	ProbableOutcomeOfBattle(*	no defending player in the m_owner ternary: retail's int literal (an enumerator narrows VC4's ?: result to char)
 src/SOURCE/EVENTS.cpp	*	-1	trivial-function-literal	-1 conditional	retail's int-literal arm of `owner ? m_owner : -1`; an enumerator arm narrows the conditional to signed char (VC4)
+src/EDITOR/*	*	*	call-argument	ClearArea(* argument [1-4]	the erased rectangle's map x and y and its width and height in cells
+src/EDITOR/*	*	*	call-argument	ResetArea(* argument [1-4]	the reset rectangle's map x and y and its width and height in cells
+src/EDITOR/*	*	*	call-argument	PaintGround(* argument [1-4]	the painted view rectangle's x and y and its width and height in cells
+src/EDITOR/EDITOR.cpp	InterpretCommandLine	[12]	arithmetic	operator + i	the command line's option offsets: a switch's letter follows the '/', its digit the letter
+src/EDITOR/EDITOR.cpp	InterpretCommandLine	1	call-argument	toupper(int) argument 1	the switch letter after the '/'
+src/EDITOR/EDITOR.cpp	*	*	store	initializer of *	a local text buffer's extent
+src/EDITOR/EDITOR.cpp	NormalDialog	*	arithmetic	*	the dialog layout arithmetic (the frame margin, centring halves)
+src/EDITOR/EDITOR.cpp	NormalDialog	1	trivial-function-literal	1 store rows	a dialog with buttons keeps at least one text row
+src/EDITOR/EDITOR.cpp	IsCDDrive	0	trivial-function-literal	0 array-index gText	the drive letter of the "A:\" root path
+src/EDITOR/EDITOR.cpp	HandleAppSpecificMenuCommands	0	call-argument	PostMessageA(* argument [34]	WM_CLOSE carries no wParam or lParam
+src/EDITOR/EDITOR.cpp	oldmain	0	trivial-function-literal	0 store gMap[XY]	the adventure map origin reset to the map's corner
+src/EDITOR/CLEARMGR.cpp	clearManager::Open	0	call-argument	button(* argument 8	a plain button's select mode (only BUTTON_SELECT_DIALOG_RESULT ends a dialog)
+src/EDITOR/EDITMGR.cpp	editManager::[CR]*Area	0	trivial-function-literal	0 store *	a cleared cell's tilesets, flags, triggers, extra frame, metadata and object ids reset to zero
+src/EDITOR/*	*	0	trivial-function-literal	0 store *[XY]	a coordinate reset to the map's or the view's first cell
+src/EDITOR/*	*	0	trivial-function-literal	0 equality [xy]	the map's first column or row
+src/EDITOR/EDITMGR.cpp	editManager::Main	*	call-argument	Scroll(i16, i16) argument [12]	a scroll step in cells (-1, 0 or 1 per axis)
+src/EDITOR/EDITMGR.cpp	editManager::ToggleZoom	*	call-argument	Scroll(i16, i16) argument [12]	zooming moves the view origin by ten cells each way
+src/EDITOR/EDITMGR.cpp	editManager::Main	1	call-argument	SelectTool(i16) argument 1	the next tool (Tab cycles the tools)
+src/EDITOR/EDITMGR.cpp	*	*	store	initializer of *	a local text, file name or skipped-table buffer's extent
+src/EDITOR/EDITMGR.cpp	editManager::DrawRulers	1	trivial-function-literal	1 bitwise	the odd ruler slots, skipped when a cell spans two
+src/EDITOR/EDITMGR.cpp	editManager::DrawRulers	1	trivial-function-literal	1 conditional	one ruler slot per cell when zoomed out
+src/EDITOR/EDITMGR.cpp	editManager::DrawRulers	0	call-argument	DrawString(* argument [23]	no half-slot offset when zoomed out
+src/EDITOR/EDITMGR.cpp	editManager::DrawView	1	trivial-function-literal	1 conditional	the selection outline's one-pixel width when zoomed out
+src/EDITOR/EDITMGR.cpp	editManager::DrawCell	0xff	bitwise-or-packing	operator & m_tileIndex	the tile index's byte below TileToBitmap's flip bits (as advManager::DrawCell)
+src/EDITOR/EDITMGR.cpp	editManager::CheckObjects	1	trivial-function-literal	1 equality *	exactly one object of a pair (an unpaired set of stone liths or whirlpool)
+src/EDITOR/EDITMGR.cpp	editManager::Write*	0	trivial-function-literal	0 store *	a counter reset to zero, or an unused town record's type byte
+src/EDITOR/EDITMGR.cpp	editManager::Write*	1	trivial-function-literal	1 bound *	at least one castle with properties, or more than one unique site
+src/EDITOR/EDITMGR.cpp	editManager::WriteMines	-1	trivial-function-literal	-1 equality *	retail compares the u8 site coordinate with -1, which never matches, so both unique records are always written
+src/EDITOR/EDITMGR.cpp	*	-1	trivial-function-literal	-1 equality handle	the -1 failure result of the CRT open
+src/EDITOR/EDITMGR.cpp	editManager::PickMap	*	call-argument	fileRequester(* argument [12]	the requester window's x and y in pixels
+src/EDITOR/EDITMGR.cpp	editManager::ClearErrors	1	call-argument	free(void *) argument 1	the last message (count - 1)
+src/EDITOR/EDITMGR.cpp	editManager::IsCleared	1	trivial-function-literal	1 bitwise	the clear mask's bit of the terrain under the cell
+src/EDITOR/EDITMGR.cpp	MakeMapCode	*	*	array subscript code	the code's letters, filled from the last
+src/EDITOR/EDITMGR.cpp	MakeMapCode	[01]	trivial-function-literal	[01] array-index code	the code's letters, filled from the last
+src/EDITOR/EDITMGR.cpp	editManager::NewMap	0	trivial-function-literal	0 store currentMapOffset	the map serial restarts past EDIT_MAP_SERIAL_LIMIT
+src/EDITOR/EDITMGR.cpp	editManager::editManager	1	trivial-function-literal	1 store gNextObjectId	the object id counter's start (PlaceOverlay increments it before numbering an object)
+src/EDITOR/EDITMGR.cpp	editManager::editManager	-1	trivial-function-literal	-1 store m_placedState	m_placedState's start (the object tool stores 0; nothing reads it)
+src/EDITOR/EDITMGR.cpp	editManager::editManager	0	trivial-function-literal	0 store m_animationFrame	the object animation's first frame
+src/EDITOR/EDITMGR.cpp	editManager::C*	0	trivial-function-literal	0 store *	a counter reset to zero
+src/EDITOR/OVERLAY.cpp	overlayManager::Open	0	call-argument	border(* argument 7	the transparent preview border's fill colour, which it never paints
+src/EDITOR/OVERLAY.cpp	overlayManager::Open	0	call-argument	button(* argument 8	the category arrows' select mode 0: they notify Main instead of ending a dialog (BUTTON_SELECT_DIALOG_RESULT is 1)
+src/EDITOR/OVERLAY.cpp	*	5	call-argument	strnicmp(* argument 3	the length of the object-name prefix compared ("nmine", "mine-", "rovr-")
+src/EDITOR/OVERLAY.cpp	PlaceOverlay	[0-3]	*	array subscript artifacts	the placed hero record's four artifact slots, emptied one by one
+src/EDITOR/OVERLAY.cpp	PlaceOverlay	[0-3]	trivial-function-literal	[0-3] array-index artifacts	the placed hero record's four artifact slots, emptied one by one
+src/EDITOR/OVERLAY.cpp	PlaceMineResource	1	trivial-function-literal	1 bound x	the mine's entrance cell lies one column west of its marker cell
+src/EDITOR/OVERLAY.cpp	overlayManager::PickOverlay	0	call-argument	heroWindow(i16, i16, i16, i16, i16) argument [12]	the full-screen picker window's origin
+src/EDITOR/OVERLAY.cpp	overlayManager::MeasureOverlay	[1-5]	*	*	the footprint's extent in cells: its highest occupied row or rightmost column, plus one
+src/EDITOR/OVERLAY.cpp	overlayManager::DrawCategoryName	1	call-argument	DrawString(* argument 4	the category name's font colour index
+src/EDITOR/EVENTMGR.cpp	eventsManager::*	[25]0	store	initializer of text	a local text buffer's extent: a field's number or a creature or hero name formatted for its text widget
+src/EDITOR/EVENTMGR.cpp	CellWindowHandler	[2-7]	arithmetic	operator + CELL_WINDOW_FIRST_FLAG	cellwin.bin's toggle of m_flags bit n (one toggle per bit, in bit order)
+src/EDITOR/EVENTMGR.cpp	*Window*	1	trivial-function-literal	1 bitwise	the single bit (1 << n) of a toggle: an m_flags, building or gClearFlags bit
+src/EDITOR/EVENTMGR.cpp	eventsManager::EditTown	0	trivial-function-literal	0 equality m_objectMetadata	a town cell without a map-extra record (record 0 is never allocated): a town the old editor placed
+src/EDITOR/EVENTMGR.cpp	eventsManager::Update*Window	0	trivial-function-literal	0 array-index text	the first character of the troop's creature name, which the window capitalizes
+src/EDITOR/EVENTMGR.cpp	eventsManager::Update*Window	0	call-argument	CyrillicToUpper(char) argument 1	the first character of the troop's creature name, which the window capitalizes
+src/EDITOR/EVENTMGR.cpp	eventsManager::UpdateTownWindow	0	trivial-function-literal	0 store toggleIndex	the first building toggle
+src/EDITOR/EVENTMGR.cpp	*WindowHandler	[2-4]	arithmetic	operator + EXTRA_WINDOW_FIRST_[CT]*	the garrison field of army slot n (one per ARMY_GROUP_SLOT_COUNT slot)
+src/EDITOR/EVENTMGR.cpp	*WindowHandler	[23]	arithmetic	operator + EXTRA_WINDOW_FIRST_PLAYER	the owner radio button of player n
+src/EDITOR/EVENTMGR.cpp	TownWindowHandler	*	arithmetic	operator + TOWN_WINDOW_FIRST_BUILDING	the n-th building toggle (building slots without the tent and castle)
+src/EDITOR/EVENTMGR.cpp	HeroWindowHandler	[23]	arithmetic	operator + HERO_WINDOW_FIRST_ARTIFACT	the field of the hero's n-th starting artifact (MAP_HERO_EXTRA_ARTIFACT_COUNT)
+src/EDITOR/EVENTMGR.cpp	*WindowHandler	0	trivial-function-literal	0 store amount	a field's lower bound: a negative entry is clamped to zero
+src/EDITOR/EVENTMGR.cpp	MonsterWindowHandler	0	trivial-function-literal	0 store value	a field's lower bound: a negative entry is clamped to zero
+src/EDITOR/EVENTMGR.cpp	UpdateMapDetailsWindow	0	trivial-function-literal	0 array-index *	the first language's name and description: the window edits language 0 and its handler copies the text to every language
+src/EDITOR/EVENTMGR.cpp	BalanceTerrainPercents	*.*	store	*	a generator percentage: a total's reset and the one percent floor of the water or grass share
+src/EDITOR/EVENTMGR.cpp	NewMapWindowHandler	*.*	store	*	a generator percentage: a slider row's 0..100 range
+src/EDITOR/EVENTMGR.cpp	DragNewMapSlider	100	arithmetic	operator *	the knob's position along its travel as a percentage
+src/EDITOR/TERRMGR.cpp	terrainManager::Main	1	trivial-function-literal	1 conditional	a single cell at the map's last column or row
+src/EDITOR/MAPOBJ.cpp	editManager::Place*	*	comparison-or-bound	operator <* Random()	the percent chance of a generator decision against a Random(0, 100) or Random(1, 100) roll
+src/EDITOR/MAPOBJ.cpp	editManager::Place*	*	call-argument	PlaceOverlay(* argument 1	the percent chance, against a Random(0, 100) roll, that picks a guard's strength
+src/EDITOR/MAPOBJ.cpp	editManager::Place*	[12]	call-argument	PlaceOverlay(* argument [23]	the map cell beside a treasure or mine where its guard stands
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceTreasures	*	comparison-or-bound	operator < kindRoll	the treasure kind's percent roll thresholds (chest or artifact when guarded; lamp, chest, campfire or resource)
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceTreasures	*	comparison-or-bound	operator < k	a wandering monster's strength roll thresholds (weak, medium, strong)
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceTreasures	*	*	*guardsDone	at most one guarded treasure for every six, and 31 in all
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	*	*	*belongs	the castle slots of the four castles (castleRegion)
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	*	*	*rank	the regions by rank; rank[1] is the largest region
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	*	*	*array* extraRoads	the castle slots of the four castles
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	*	*	*array* cutOff	the castle slots of the four castles
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	*	arithmetic	compound assignment to rating	a castle site's score: the coastal-entrance and own-region bonuses and the penalty near another castle
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	*	arithmetic	operator * continents	a castle site's coastal-entrance bonus per land region
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	*	arithmetic	operator +	a castle site's coastal-entrance bonus
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	*	arithmetic	operator - dist	a castle site's penalty per cell closer than 40 to another castle
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	*	arithmetic	operator [*]	a castle site's penalty per cell closer than 40 to another castle
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	*	comparison-or-bound	operator < dist	a distance in cells to another castle or stone liths within which a site is penalised or refused
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	*	arithmetic	operator [-+] tile[XY]	an offset from the castle's anchor to its entrance approach or to a road end beside its site
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	*	arithmetic	operator - x	a road end beside the peer castle's site (retail reads the peer's x for both ends)
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	*	*	* tile[XY]	the castle search's margins from the map edges
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	*	arithmetic	operator - MAP_CELL_GRID_SIZE	the castle search's margins from the map edges
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	*	store	store to steps	the approach steps cut towards water, and the stone liths search's try budget
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	*	comparison-or-bound	operator [<>] steps	the stone liths search: the first half of its tries prefers far cells and keeps away from other liths
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	*	store	store to regionsUsed	the castles split over the two largest land regions
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	*	store	store to shareValue[]	a region's land share starts at zero
+src/EDITOR/MAPOBJ.cpp	editManager::Place*	*	arithmetic	operator / gLandCellCount	land cells per placed object (towns, mines, obelisks, treasure, wandering monsters)
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceRandomObjects	*	arithmetic	operator - mineTries	the mine quota per resource: (target - 13) / 7, plus 5 for wood and ore and 2 for the others
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceRandomObjects	*	arithmetic	operator /	the mine quota per resource: (target - 13) / 7, plus 5 for wood and ore and 2 for the others
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceRandomObjects	*	arithmetic	operator +	the mine quota per resource: (target - 13) / 7, plus 5 for wood and ore and 2 for the others
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceRandomObjects	*	*	* towns	the town count's clamp (1..12)
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceRandomObjects	*	*	* mineTries	the mine count's lower clamp
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceRandomObjects	*	*	* obeliskTurns	the obelisk count's clamp (8..24)
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceRandomObjects	*	*	* appeal	a mine site's appeal: a base, the open-quota bonus and the sawmill and ore mine bonus
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceRandomObjects	*	*	* spacing	the spacing in cells below which a town is refused or a mine site loses appeal
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceRandomObjects	*	arithmetic	operator [*]	a mine site's appeal penalty per cell near a mine of its resource
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceRandomObjects	*	comparison-or-bound	operator < attempts	the site resource rolls per mine site
+src/EDITOR/MAPOBJ.cpp	editManager::Place*	*	call-argument	strnicmp(* argument 3	the length of the compared object name prefix
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceObstacleChains	*	arithmetic	operator / landCells	the chain budget: a chain per 40 land cells
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceObstacleChains	*	arithmetic	operator * ridges	the chain budget: 13 cells per chain
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceObstacleChains	*	arithmetic	compound assignment to placed	the chain budget spent per placed link
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceObstacleChains	*	arithmetic	operator / MAP_CELL_GRID_SIZE	the map's upper half (pine trees on dirt and grass)
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceObstacleChains	*	arithmetic	compound assignment to rootX	a tree chain's gap of two cells
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceObstacleChains	*	store	store to chance	the percent chance that a chain turns
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceObstacleChains	*	arithmetic	operator * Random()	a steep direction: every second ChainDirection
+src/EDITOR/MAPOBJ.cpp	editManager::PaintRandomTerrain	*	arithmetic	operator / Random()	the number of seeds a terrain grows from
+src/EDITOR/MAPOBJ.cpp	editManager::PaintRandomTerrain	*	*	* lowerCap	the walk weights' lower bound out of ten
+src/EDITOR/MAPOBJ.cpp	editManager::PaintRandomTerrain	*	arithmetic	operator +	the walk weights' upper bound out of ten
+src/EDITOR/MAPOBJ.cpp	editManager::PaintRandomTerrain	*	arithmetic	operator /	a seed's mean of three or four rolls, drawn to the map's middle
+src/EDITOR/MAPOBJ.cpp	editManager::PaintRandomTerrain	*	arithmetic	operator + Random()	snow seeds near the top or, 48 rows lower, the bottom of the map
+src/EDITOR/MAPOBJ.cpp	ScaleByDensity	*	arithmetic	operator + base	the count's size bonus (base * (base + 50) / 100)
+src/EDITOR/MAPOBJ.cpp	editManager::GenerateRandomMap	*	store	store to unusedPercent	an unread percent total
+src/EDITOR/MAPOBJ.cpp	editManager::ScatterDecorations	*	initializer-payload	initializer list	each terrain's chance in 1000 of a decoration on a bare cell
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceResourceSite	*	store	initializer of name	the object name buffer's extent
+src/EDITOR/MAPOBJ.cpp	editManager::Place*	1	trivial-function-literal	1 bitwise	a terrain's bit in overlayType::terrainMask (1 << TerrainType)
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	1	trivial-function-literal	1 for-init	land regions and region ranks count from 1 (0 marks water)

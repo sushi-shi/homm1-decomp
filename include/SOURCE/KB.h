@@ -154,7 +154,6 @@ extern char* gCombatFxNames[];
 #define gCurLoadedSpellIcon gLoadedEffectIcn // spelling fixes .bss order
 extern class icon* gCurLoadedSpellIcon;
 
-// HoMM1 KB name table accessor (retail 0x004516bf).
 char* GetMonsterSingularName(i32 monster);
 char* GetMonsterName(i32 monster);
 class sample* LoadPlaySample(char* name);
@@ -784,7 +783,7 @@ H1_ENUM_BEGIN(LuckInfoText)
     LUCK_INFO_NONE = 10
 H1_ENUM_END(LuckInfoText)
 
-// HoMM1 score-to-monster tables pair a threshold word with a monster word.
+// Score-to-monster tables pair a threshold word with a monster word.
 H1_ENUM_CONST_BEGIN(ScoreMonsterConstant)
     SCORE_MONSTER_COUNT = 28,
     SCORE_MONSTER_THRESHOLD = 0,

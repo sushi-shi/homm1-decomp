@@ -865,7 +865,7 @@ i8 combatManager::IsWinner(i8 side) {
     return isWinner;
 }
 
-// HoMM1 catapult: a boulder arcs (or, for the top row, flies straight) at
+// Catapult: a boulder arcs (or, for the top row, flies straight) at
 // a random standing wall piece; a breach roll knocks it down, otherwise
 // the piece is damaged.
 #define catapultSound sampleInfo // frame-slot spelling
@@ -1146,7 +1146,7 @@ void combatManager::RegenerateField(void) {
     DrawFrame(1);
 }
 
-// HoMM1 castle keep: shoots the attacker's most dangerous stack (shooters,
+// Castle keep: shoots the attacker's most dangerous stack (shooters,
 // then flyers, then fight value) with dice from the town's buildings.
 VA(0x0041bbd1, 0xae3)
 void combatManager::KeepAttack(void) {
@@ -1369,13 +1369,13 @@ void combatManager::ResetHitByCreature(void) {
     }
 }
 
-// HoMM1's combat grid is nine columns by five rows.
+// The combat grid is nine columns by five rows.
 VA(0x0041c7ff, 0x27)
 i32 ValidHex(i32 hex) {
     return hex >= 0 && hex <= COMBAT_HEX_COUNT - 1;
 }
 
-// HoMM1 SaveCombatBorder: keep the twenty screen rows under the field.
+// Keeps the twenty screen rows under the field.
 VA(0x0041c826, 0x57)
 void combatManager::SaveCombatBorder(void) {
     if (!m_savedBorder)
@@ -1389,7 +1389,7 @@ void combatManager::SaveCombatBorder(void) {
     );
 }
 
-// HoMM1 DrawCombatBorder: put the saved rows back.
+// Puts the saved border rows back.
 VA(0x0041c87d, 0x42)
 void combatManager::DrawCombatBorder(void) {
     if (!m_savedBorder)

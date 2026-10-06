@@ -180,7 +180,7 @@ void FadeOut(i32 increment) throw() {
 // own file name (retail 0x004a0838).
 // ---------------------------------------------------------------------------
 
-// HoMM1 OLDASM.CPP helpers; the assert literal names the retail source file.
+// OLDASM.CPP helpers; the assert literal names that source file.
 
 #include <BASE/bitmap.h>
 #include <BASE/icon.h>
@@ -227,7 +227,7 @@ void PostprocessBitmap(u8* pixels, i32 width, i32 height) {}
 VA(0x0046fe5d, 0x5)
 void PostprocessIcon(icon* loadedIcon) {}
 
-// HoMM1's C++ mono clipping path.
+// The C++ mono clipping path.
 
 #include <BASE/bitmap.h>
 #include <BASE/icon.h>

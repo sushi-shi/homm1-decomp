@@ -1,4 +1,4 @@
-// HoMM1 font loading.
+// Font loading and text drawing.
 
 #include <match.h>
 

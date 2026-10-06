@@ -13,6 +13,7 @@
 #include <SOURCE/game.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/mapCell.h>
+#include <SOURCE/town.h>
 
 class font;
 class heroWindow;
@@ -23,9 +24,16 @@ struct tag_message;
 
 H1_ENUM_CONST_BEGIN(EditManagerConstant)
     EDIT_MANAGER_NO_TOOL = -1,
-    // Main tests message.type against this mask (key, mouse and widget
-    // messages).
+    // Every editor manager's Main (this one and the four tool managers)
+    // tests message.type against this mask (key, mouse and widget messages).
     EDIT_MANAGER_DISPATCH_MASK = 0x32f,
+    // A map or view cell coordinate when there is none: m_placedX/m_placedY,
+    // gSelectionX/gSelectionY without a selection, the tool managers' last
+    // drag cell and DrawRulers' cursor off the view.
+    EDIT_NO_CELL = -1,
+    // A loop index stored past every extent to end a scan after its first
+    // match (the object table and map scans).
+    EDIT_END_SCAN = 999,
     // m_objectIcons: the adventure tileset slots (MapTileset), each loaded at
     // both zoom levels.
     EDIT_MANAGER_TILESET_COUNT = 21,
@@ -38,6 +46,27 @@ H1_ENUM_CONST_BEGIN(EditManagerConstant)
     EDIT_MAP_ARTIFACT_SLOTS = 37,
     // The save check allows at most this many obelisks.
     EDIT_MAP_OBELISK_LIMIT = 48,
+    // A map needs at least this many castles (or random castles): the save
+    // check warns below it and the generator retries.
+    EDIT_MAP_MIN_CASTLES = 4,
+    // An unused town or mine record (editMapRecord) has x and y 0xff:
+    // game::LoadMap skips records with a negative x. A random mine's type is
+    // 0xff until game::RandomizeMine picks it.
+    EDIT_MAP_NO_RECORD = 0xff,
+    EDIT_MAP_RANDOM_MINE_TYPE = 0xff,
+    // Format words MAP_HEADER_ID .. MAP_HEADER_ID + 10 mark a map saved in the
+    // editor's own format (object ids follow the map extras).
+    EDIT_MAP_FORMAT_RANGE = 10,
+    // gConfig's map serial wraps past this; a new map's file name codes the
+    // serial in EDIT_MAP_CODE_LENGTH letters: the first one of the last
+    // EDIT_MAP_CODE_FIRST_LETTERS ("V".."Z"), then three of
+    // EDIT_MAP_CODE_LETTER_COUNT, and its name numbers it modulo
+    // EDIT_MAP_NAME_SERIAL_MODULUS.
+    EDIT_MAP_SERIAL_LIMIT = 65000,
+    EDIT_MAP_CODE_LENGTH = 4,
+    EDIT_MAP_CODE_LETTER_COUNT = 26,
+    EDIT_MAP_CODE_FIRST_LETTERS = 5,
+    EDIT_MAP_NAME_SERIAL_MODULUS = 1000,
     // The version word the editor writes after the header (hexadecimal 1112;
     // the game reads map extras from version MAP_EXTRA_VERSION on).
     EDIT_MAP_VERSION = 0x1112
@@ -59,17 +88,109 @@ H1_ENUM_CONST_BEGIN(EditViewGeometry)
     EDIT_VIEW_ZOOMED_CELL_PIXELS = 16,
     EDIT_VIEW_CELLS = 14,
     EDIT_VIEW_ZOOMED_CELLS = 28,
-    // A ruler numbers every view cell, every second one when zoomed out.
+    // The view's centre cell (the radar centres the view on the clicked
+    // cell) and the view origins a scroll knob spans.
+    EDIT_VIEW_CENTER = EDIT_VIEW_CELLS / 2,
+    EDIT_VIEW_ZOOMED_CENTER = EDIT_VIEW_ZOOMED_CELLS / 2,
+    EDIT_VIEW_ORIGINS = MAP_CELL_GRID_SIZE - EDIT_VIEW_CELLS + 1,
+    EDIT_VIEW_ZOOMED_ORIGINS = MAP_CELL_GRID_SIZE - EDIT_VIEW_ZOOMED_CELLS + 1,
+    // The drag selection's outline width (one pixel zoomed out).
+    EDIT_SELECTION_LINE_WIDTH = 2,
+    // A ruler numbers every view cell, every second one when zoomed out:
+    // a 32-pixel cell spans two 16-pixel slots, its number centred half a
+    // slot in. The numbers sit inset in the top ruler and the left ruler.
     EDIT_RULER_SLOTS = 28,
     EDIT_RULER_SLOT_PIXELS = 16,
-    EDIT_RADAR_LEFT = 480,
-    EDIT_RADAR_TOP = 16,
-    EDIT_RADAR_PIXELS = 144,
-    EDIT_RADAR_CELL_PIXELS = 2,
+    EDIT_RULER_SLOTS_PER_CELL = 2,
+    EDIT_RULER_CELL_TEXT_OFFSET = 8,
+    EDIT_TOP_RULER_TEXT_X = EDIT_VIEW_LEFT + 3,
+    EDIT_TOP_RULER_TEXT_Y = 2,
+    EDIT_LEFT_RULER_TEXT_X = 3,
+    EDIT_LEFT_RULER_TEXT_Y = EDIT_VIEW_TOP + 2,
     // The scroll knobs travel 35..428 along their tracks.
     EDIT_KNOB_FIRST = 35,
-    EDIT_KNOB_LAST = 428
+    EDIT_KNOB_LAST = 428,
+    // The selected tool's panel below the radar (each tool manager's
+    // backdrop and controls).
+    EDIT_TOOL_PANEL_X = 480,
+    EDIT_TOOL_PANEL_Y = 197,
+    EDIT_TOOL_PANEL_WIDTH = 144,
+    EDIT_TOOL_PANEL_HEIGHT = 139
 H1_ENUM_CONST_END(EditViewGeometry)
+
+// buttons.icn frames: the ruler cells (one square cell for both rulers when
+// zoomed out), the radar's colour cell and view boxes, the tool buttons'
+// frame pairs (normal, selected; EDIT_TOOL_COUNT of them) and the tool
+// panels' backdrops.
+H1_ENUM_CONST_BEGIN(EditButtonsFrame)
+    EDIT_FRAME_ZOOMED_RULER_CELL = 18,
+    EDIT_FRAME_TOOL_PANEL = 20,
+    EDIT_FRAME_RADAR_CELL = 21,
+    EDIT_FRAME_RADAR_VIEW = 22,
+    EDIT_FRAME_RADAR_ZOOMED_VIEW = 23,
+    EDIT_FRAME_TOP_RULER_CELL = 24,
+    EDIT_FRAME_LEFT_RULER_CELL = 25,
+    EDIT_FRAME_TOOL_BUTTONS = 26,
+    EDIT_FRAMES_PER_TOOL_BUTTON = 2,
+    EDIT_FRAME_CLEAR_OPTIONS = 34,
+    EDIT_FRAME_CLEAR_OPTIONS_PRESSED = 35,
+    EDIT_FRAME_CLEAR_PANEL = 36,
+    EDIT_FRAME_EVENTS_PANEL = 37
+H1_ENUM_CONST_END(EditButtonsFrame)
+
+// escroll.icn frames: the map view's scroll tracks and knobs (the generator's
+// sliders reuse the horizontal knob), the arrow buttons (normal, pressed) and
+// the generator's short track.
+H1_ENUM_CONST_BEGIN(EditScrollFrame)
+    EDIT_SCROLL_HORIZONTAL_TRACK = 0,
+    EDIT_SCROLL_VERTICAL_TRACK = 1,
+    EDIT_SCROLL_HORIZONTAL_KNOB = 2,
+    EDIT_SCROLL_VERTICAL_KNOB = 3,
+    EDIT_SCROLL_LEFT_ARROW = 8,
+    EDIT_SCROLL_LEFT_ARROW_PRESSED = 9,
+    EDIT_SCROLL_RIGHT_ARROW = 10,
+    EDIT_SCROLL_RIGHT_ARROW_PRESSED = 11,
+    EDIT_SCROLL_SHORT_TRACK = 20
+H1_ENUM_CONST_END(EditScrollFrame)
+
+// editor.mse pointer frames (mouseManager::SetPointer).
+H1_ENUM_CONST_BEGIN(EditPointerFrame)
+    EDIT_POINTER_DEFAULT = 0,
+    // Shown while a map is saved or loaded.
+    EDIT_POINTER_WAIT = 1
+H1_ENUM_CONST_END(EditPointerFrame)
+
+// The cursor shapes the drag loops request (mouseManager::SetCursorShape,
+// which ignores them under Windows): horizontal and vertical slider drags,
+// then the normal arrow.
+H1_ENUM_CONST_BEGIN(EditCursorShape)
+    EDIT_CURSOR_HORIZONTAL_DRAG = 2,
+    EDIT_CURSOR_VERTICAL_DRAG = 4,
+    EDIT_CURSOR_NORMAL = 6
+H1_ENUM_CONST_END(EditCursorShape)
+
+// Palette colours the map view, rulers and radar draw: a ruler number in the
+// cursor's column or row and the others; the radar's town and resource cells
+// (a resource in the neutral owner's colour, gRadarOwnerColor's last entry),
+// and the radar while the generator works unseen; the drag selection's
+// outline (through gMonoColorMap); the clouds tile pattern's mask.
+H1_ENUM_CONST_BEGIN(EditViewColor)
+    EDIT_RULER_CURSOR_COLOR = 1,
+    EDIT_RULER_TEXT_COLOR = 192,
+    EDIT_RADAR_TOWN_COLOR = 4,
+    EDIT_RADAR_RESOURCE_COLOR = 10,
+    EDIT_RADAR_UNSEEN_COLOR = 0,
+    EDIT_SELECTION_COLOR = 190,
+    EDIT_CLOUD_TILE_MASK = 3
+H1_ENUM_CONST_END(EditViewColor)
+
+// ClearArea's passes over a cell: its object layer, then its overlay layer
+// (with secondLayer set).
+H1_ENUM_BEGIN(EditClearLayer)
+    EDIT_CLEAR_OBJECT_LAYER = 0,
+    EDIT_CLEAR_OVERLAY_LAYER = 1,
+    EDIT_CLEAR_LAYER_COUNT = 2
+H1_ENUM_END(EditClearLayer)
 
 // editwind.bin widget ids and the tool commands.
 H1_ENUM_BEGIN(EditWindowControlId)
@@ -113,20 +234,19 @@ H1_ENUM_BEGIN(EditTool)
     EDIT_TOOL_COUNT = 4
 H1_ENUM_END(EditTool)
 
-H1_ENUM_CONST_BEGIN(EditToolButtonConstant)
-// buttons.icn: the terrain tool button's frame pair; each tool's pair
-// follows (normal, selected).
-    EDIT_TOOL_BUTTON_FRAME = 26
-H1_ENUM_CONST_END(EditToolButtonConstant)
-
-// IsCleared's mask: a bit per terrain (TerrainType) for the objects standing
-// on it, then the object classes the eraser lists after the terrains.
+// IsCleared's mask: a bit per object-tool category (gOverlayCategoryNames):
+// one per terrain (TerrainType) for the terrain objects standing on it, then
+// towns, monsters, artifacts and treasure.
 H1_ENUM_BEGIN(EditClearMask)
     EDIT_CLEAR_TOWNS = 0x80,
     EDIT_CLEAR_MONSTERS = 0x100,
     EDIT_CLEAR_ARTIFACTS = 0x200,
     EDIT_CLEAR_TREASURE = 0x400,
-    EDIT_CLEAR_ALL = 0xffff
+    EDIT_CLEAR_ALL = 0xffff,
+    // What a generator road between castles erases: all but towns, monsters
+    // and artifacts.
+    EDIT_CLEAR_ROAD =
+        EDIT_CLEAR_ALL & ~(EDIT_CLEAR_TOWNS | EDIT_CLEAR_MONSTERS | EDIT_CLEAR_ARTIFACTS)
 H1_ENUM_END(EditClearMask)
 
 // The looped environment sounds SetCellSound gives a cell (the game's
@@ -159,9 +279,7 @@ H1_ENUM_END(EditMapSound)
 // Object frames the editor recognises (frame indices of the named ICN
 // tilesets).
 H1_ENUM_CONST_BEGIN(EditObjectFrame)
-    // town32.icn: the entrance of the first race's castle; each race adds
-    // TOWN_RACE_FRAME_STRIDE and a town without a castle has its entrance
-    // TOWN_CASTLE_FRAME_OFFSET frames before.
+    // town32.icn: the entrance of the first race's castle (EDIT_CASTLE_FRAME).
     EDIT_CASTLE_ENTRANCE_FRAME = 22,
     // The sawmill frame WriteMines records as a wood mine (other mills of the
     // sawmill and alchemist types are mercury).
@@ -173,6 +291,10 @@ H1_ENUM_CONST_BEGIN(EditObjectFrame)
     EDIT_TREASURE_OBJECT_FRAME_A = 3,
     EDIT_TREASURE_OBJECT_FRAME_B = 4,
     EDIT_TREASURE_OBJECT_FRAME_C = 42,
+    // ScatterDetails' lava (obj32-04.icn) and desert (obj32-05.icn) details;
+    // the other terrains roll theirs.
+    EDIT_LAVA_DETAIL_FRAME = 0,
+    EDIT_DESERT_DETAIL_FRAME = 2,
     // The frames whose objects loop an environment sound (SetCellSound).
     EDIT_SOUND_ALCHEMIST_FRAME_A = 28,
     EDIT_SOUND_ALCHEMIST_FRAME_B = 36,
@@ -196,17 +318,26 @@ H1_ENUM_CONST_BEGIN(EditObjectFrame)
     EDIT_SOUND_WATER_LOOP_19_FRAME_B = 73
 H1_ENUM_CONST_END(EditObjectFrame)
 
-// Water tiles come in five runs of four: open water, then the coast's
-// straight edge, outer corner, side and inner corner (SmoothTerrain's
-// border tiles and SetCoast).
-H1_ENUM_BEGIN(EditCoastTile)
-    EDIT_COAST_OPEN = 0,
-    EDIT_COAST_EDGE = 1,
-    EDIT_COAST_OUTER_CORNER = 2,
-    EDIT_COAST_SIDE = 3,
-    EDIT_COAST_INNER_CORNER = 4,
-    EDIT_COAST_TILE_VARIANTS = 4
-H1_ENUM_END(EditCoastTile)
+// town32.icn: the entrance frame of a race's castle (TownType: each race's
+// frames follow the previous race's by TOWN_RACE_FRAME_STRIDE) and of its
+// town without a castle, TOWN_CASTLE_FRAME_OFFSET frames before.
+#define EDIT_CASTLE_FRAME(type) (EDIT_CASTLE_ENTRANCE_FRAME + (type) * TOWN_RACE_FRAME_STRIDE)
+#define EDIT_TOWN_FRAME(type) (EDIT_CASTLE_FRAME(type) - TOWN_CASTLE_FRAME_OFFSET)
+
+// A terrain's MAP_CELL_TILES_PER_TERRAIN ground tiles are five runs of
+// TERRAIN_TILE_VARIANT_COUNT interchangeable variants: the plain ground, then
+// the border tiles BlendTerrain fits against another terrain. A border tile
+// is drawn for a differing neighbour to the north or east (or north-east);
+// the ground-flip bits mirror it to the south and west. SetCoast reads the
+// water's border runs.
+H1_ENUM_BEGIN(EditTileRun)
+    EDIT_TILE_PLAIN = 0,
+    EDIT_TILE_NORTH_EDGE = 1,
+    EDIT_TILE_NORTH_EAST_CORNER = 2,
+    EDIT_TILE_EAST_EDGE = 3,
+    // Only the diagonal neighbour differs.
+    EDIT_TILE_NORTH_EAST_INNER_CORNER = 4
+H1_ENUM_END(EditTileRun)
 
 // DrawCell's layers.
 H1_ENUM_BEGIN(EditDrawLayer)
@@ -217,6 +348,15 @@ H1_ENUM_BEGIN(EditDrawLayer)
 H1_ENUM_END(EditDrawLayer)
 
 #pragma pack(push, 1)
+// CheckObjects finds a whirlpool by its two event cells, the second this far
+// right and down from the first; ScatterDetails dresses this share (percent)
+// of the bare plain cells.
+H1_ENUM_CONST_BEGIN(EditCheckConstant)
+    EDIT_WHIRLPOOL_SECOND_CELL_X = 2,
+    EDIT_WHIRLPOOL_SECOND_CELL_Y = 1,
+    EDIT_DETAIL_PERCENT = 3
+H1_ENUM_CONST_END(EditCheckConstant)
+
 // The per-cell ids of the placed objects whose frames the cell shows on its
 // object and overlay layers: PlaceOverlay numbers each placed object from
 // gNextObjectId, and ClearArea erases every cell of the object it hits
@@ -233,24 +373,33 @@ struct editMap {
     editMapCellPair cellPairs[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 };
 
-// The editor's town and hero map-extra records end in a reserved block:
+// A town or mine record of the map file (WriteTowns, WriteMines): its
+// entrance cell and its type (game::LoadMap reads the three bytes).
+struct editMapRecord {
+    u8 x;
+    u8 y;
+    u8 type;
+};
+
+// The editor's town and hero map-extra records end in an unused block:
 // PlaceOverlay zero-fills the new record, the town and hero dialogs copy it
 // whole and SaveMap writes m_extraSizes bytes, but no code of either program
-// reads it (the game's readers stop at mapTownExtra/mapHeroExtra).
+// reads or writes its bytes (the game's readers stop at
+// mapTownExtra/mapHeroExtra).
 H1_ENUM_CONST_BEGIN(EditExtraConstant)
-    EDIT_EXTRA_RESERVED_SIZE = 50
+    EDIT_EXTRA_UNUSED_SIZE = 50
 H1_ENUM_CONST_END(EditExtraConstant)
 
 // A town's map-extra record as the editor keeps it.
 struct editTownExtra {
     mapTownExtra record;
-    u8 reserved[EDIT_EXTRA_RESERVED_SIZE];
+    u8 unused14[EDIT_EXTRA_UNUSED_SIZE];
 };
 
 // A placed hero's map-extra record as the editor keeps it.
 struct editHeroExtra {
     mapHeroExtra record;
-    u8 reserved[EDIT_EXTRA_RESERVED_SIZE];
+    u8 unused19[EDIT_EXTRA_UNUSED_SIZE];
 };
 
 class editManager : public baseManager {
@@ -277,8 +426,10 @@ public:
     i16 m_placedY;
     // The object tool clears it when it places an object (-1 at start).
     i16 m_placedState;
-    // The widget id of the last tool command (-1 none).
-    i16 m_lastCommandId;
+    // The widget the tool managers last handled a hover for (WIDGET_ID_NONE
+    // at start): a repeated hover over another widget than the map is
+    // ignored.
+    i16 m_lastHoverId;
     // The object animation frame DrawCell adds (0..5).
     i16 m_animationFrame;
     // The executive manager of the selected tool.
@@ -377,12 +528,13 @@ public:
     void RemoveSmallRegions(void);
     // Lays chains of the tileset's mountains or trees.
     void PlaceObstacleChains(i32 density, i32 tileset);
-    // Places one chain link at (*x, *y) facing `direction` and steps on.
-    i32 PlaceChainLink(i32* x, i32* y, i32 direction, i32 tileset, char kind);
+    // Places one chain link at (*x, *y) facing `direction` and steps on; a
+    // tree chain keeps to treeFamily (its objects' first letter, 0: any).
+    i32 PlaceChainLink(i32* x, i32* y, i32 direction, i32 tileset, char treeFamily);
     void PlaceTowns(void);
-    // Places a sawmill (kind 0), an alchemist's lab (1) or the mine of
-    // resource `kind` with its river at (x, y).
-    void PlaceResourceSite(i32 x, i32 y, i32 kind);
+    // Places the site producing `resource` at (x, y): a sawmill, an
+    // alchemist's lab, or a mine with the resource's marker to its right.
+    void PlaceResourceSite(i32 x, i32 y, i32 resource);
     // Places towns, mines and obelisks.
     void PlaceRandomObjects(i32 density, i32 strength);
     // Places treasure (guarded in map corners) and wandering monsters.

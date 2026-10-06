@@ -1,6 +1,4 @@
-// HoMM1 Buka combat AI: game functions occupy RVAs 0x11660..0x132ee.
-// VC6 locale startup follows at 0x132ee/0x13315; INT3 padding ends at 0x13330,
-// where army::army begins.
+// Combat AI for computer-controlled stacks.
 
 #include <match.h>
 

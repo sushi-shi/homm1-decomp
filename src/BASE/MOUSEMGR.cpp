@@ -94,7 +94,7 @@ i16 mouseManager::Main(tag_message& message) {
     return 0;
 }
 
-// HoMM1 selects the cursor family by name and forwards the requested frame.
+// Selects the cursor family by name and forwards the requested frame.
 VA(0x0046b84a, 0x68)
 void mouseManager::SetPointer(char* name, i16 frame) {
     if (*name == 'a' || *name == 'A')
