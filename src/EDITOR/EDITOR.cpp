@@ -1446,7 +1446,7 @@ i32 oldmain(void) {
     gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, editorPalette);
     gResourceManager->Dispose(editorPalette);
     ShutDown(NULL);
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 VA(0x004085b0, 0xe)
@@ -1506,7 +1506,7 @@ void ShutDown(char* message) {
     char buffer[300];
     if (message) {
         strcpy(buffer, message);
-        SetFullScreenStatus(0);
+        SetFullScreenStatus(FALSE);
         MessageBoxA(gAppWindow, buffer, localization::Tr("shutdown.unexpected.title"), MB_ICONHAND);
     }
     gClosingApp = true;
@@ -1522,7 +1522,7 @@ void ShutDown(char* message) {
 
 // The /D (debug level) and /B (mouse masks) command-line switches.
 VA(0x00408746, 0xd9)
-i32 InterpretCommandLine(void) {
+b32 InterpretCommandLine(void) {
     i32 size;
     i32 i;
 
@@ -1544,24 +1544,24 @@ i32 InterpretCommandLine(void) {
         }
     }
     gCommandLineInterpreted = true;
-    return 1;
+    return true;
 }
 
 VA(0x0040881f, 0x164)
-i32 EarlySetup(void) {
+b32 EarlySetup(void) {
     DATA(0x004528f5)
-    static i8 gEarlySetupDone = 0;
+    static b8 gEarlySetupDone = false;
     i32 i;
 
     if (gEarlySetupDone)
-        return 0;
+        return false;
     sprintf(gAggPathName, "%s%s", gDataPath, "heroes.agg");
     gDefaultAggregateName = gAggPathName;
     InitMainClasses();
     GetGraphicsInfo();
     ReadPrefs();
     if (!InterpretCommandLine())
-        return 1;
+        return true;
     switch (SetupCDDrive()) {
         case CD_SETUP_NO_DRIVE:
             MessageBoxA(
@@ -1603,7 +1603,7 @@ i32 EarlySetup(void) {
     gDefaultMenu = LoadMenuA(gAppInstance, "mnuDflt");
     for (i = 0; i < MAP_CELL_GROUND_TILE_COUNT; i++)
         gGroundToTerrain[i] = H1_ENUM_DECODE(TerrainType, i / MAP_CELL_TILES_PER_TERRAIN);
-    return 1;
+    return true;
 }
 
 VA(0x00408983, 0x12)

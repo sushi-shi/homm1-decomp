@@ -274,7 +274,7 @@ extern i32 gNumHumanPlayers;
 extern i32 gHumanPlayer[];
 void InitMainClasses(void);
 void InitVars(void);
-i32 InterpretCommandLine(void);
+b32 InterpretCommandLine(void);
 void ClearMapExtra(void);
 H1_ENUM_RETURN(CreatureType, i16) GetMonType(i32 score, H1_ENUM_PARAM(HighScoreType, i32) highScoreType);
 i32 MemSize(i32);
@@ -546,7 +546,7 @@ extern char* gStatNames[];
 #define gHeroScreenWindow heroWin // spelling fixes .bss order
 extern class heroWindow* gHeroScreenWindow;
 extern i8 gHighScoreRank;
-i32 EarlySetup(void);
+b32 EarlySetup(void);
 b32 GameUnsaved(void);
 extern b8 gFirstTimeThrough;
 extern char gAnimPath[];

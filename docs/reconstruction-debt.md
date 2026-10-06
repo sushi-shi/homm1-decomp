@@ -288,9 +288,12 @@ TERRMGR, EVENTMGR, OVERLAY, MAPOBJ, and `include/EDITOR`) were read in full
 with the same passes as the game. Every editor function stays exact.
 
 - Constants: `homm1 verify constants` reads these units with the editor's
-  compile commands, so the one floor covers both programs. Their 1,270 open
-  literals are down to 328, nearly all 0/1 flag stores, arguments and returns
-  left for the boolean types. Duplicates moved into shared domains: the five
+  compile commands, so the one floor covers both programs. None of their
+  1,270 starting literals is open: 32-bit flags are `b32` (8-bit `b8`), and
+  `config/constants.tsv` keeps the flags only `i16` or `u8` storage carries
+  (`b8` is signed, so a `u8` flag would widen differently), counters, unit
+  steps, unread frame locals and AppCommand's window-procedure result.
+  Duplicates moved into shared domains: the five
   managers' dispatch masks, the four tool-panel rectangles and sentinels, the
   terrain counts (`EDITOR_TERRAIN_COUNT`), the radar geometry, shade and
   viewport colour (the adventure screen's `AdventureRadarConstant`), the

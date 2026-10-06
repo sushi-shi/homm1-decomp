@@ -233,17 +233,17 @@ DATA(0x004a9951)
 b8 gInPollSound = false;
 
 VA(0x0043cfcb, 0xf9)
-i32 EarlySetup(void) {
+b32 EarlySetup(void) {
     DATA(0x004a9952)
     static b8 gEarlySetupDone = false;
 
     if (gEarlySetupDone)
-        return 0;
+        return false;
     InitMainClasses();
     GetGraphicsInfo();
     ReadPrefs();
     if (!InterpretCommandLine())
-        return 1;
+        return true;
     switch (SetupCDDrive()) {
         case CD_SETUP_NO_DRIVE:
             MessageBoxA(
@@ -283,7 +283,7 @@ i32 EarlySetup(void) {
             break;
     }
     InitVars();
-    return 1;
+    return true;
 }
 
 // oldmain: two intro videos, the stpmain.bin menu (new, load, campaign, high
@@ -660,7 +660,7 @@ char toupper(char character) {
 
 // The /I, /C, /S and /B command-line switches.
 VA(0x0043de12, 0x24c)
-i32 InterpretCommandLine(void) {
+b32 InterpretCommandLine(void) {
     i32 size;
     i32 i;
     b32 helpRequested = false;
@@ -710,7 +710,7 @@ i32 InterpretCommandLine(void) {
     if (gNumHumanPlayers == 1)
         gBlackoutPlayer = false;
     helpRequested = false;
-    return 1;
+    return true;
 }
 
 // Right-click help and button release; the main menu draws its own hover
