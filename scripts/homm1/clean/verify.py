@@ -327,7 +327,6 @@ def _build_unit(localized: Path, work: Path, record: dict, flags: list[str],
     defined by a forced-include header (homm1.graph.localization.prepare), so
     every line and column stays where the authored source has it."""
     import tempfile
-    from homm1.graph.cc import stabilise
     from homm1.graph.fixed_asm import unit as fixed_asm_unit
     from homm1.tool import ToolError, ml
     from homm1.tool.wine import era_tool, run, winepath
@@ -362,7 +361,6 @@ def _build_unit(localized: Path, work: Path, record: dict, flags: list[str],
     if not obj.exists():
         tail = "\n".join(output.strip().splitlines()[-12:])
         raise ToolError(f"{unit}: cl produced no object (rc={rc}):\n{tail}")
-    obj.write_bytes(stabilise(obj.read_bytes()))
     return unit, obj, obj
 
 

@@ -1,4 +1,4 @@
-"""homm1.graph.cc - the `cl` edge driver: compile, stabilise, write-if-changed.
+"""homm1.graph.cc - the `cl` edge driver: compile, write-if-changed.
 
     python3 -m homm1.graph.cc --out <obj> --src <src> [--unit U] -- <cl flags>
 
@@ -17,13 +17,14 @@ EDGE incremental, which needs two more things cl 5.0 does not give:
 
 So: compile into `<base-dir>/.tmp/`, compare against the installed object
 with the TimeDateStamp field masked out, and install only on a real
-difference - zeroing the stamp on the way in, so objects converge to
-byte-reproducible content. With `restat = 1` on the `cl` rule that makes an
-unchanged recompile a genuine no-op for labels / normalize / report.
+difference. The installed object is cl's output byte for byte: the mask is a
+comparison, never an edit of a build input. With `restat = 1` on the `cl`
+rule that makes an unchanged recompile a genuine no-op for labels /
+normalize / report.
 
-Zeroing is matching-NEUTRAL: TimeDateStamp is COFF header metadata, lives in
-no section, is named by no relocation, and neither objdiff, the delinker nor
-link.exe reads it. The temp directory is a dotted subdirectory of the object
+The mask is matching-NEUTRAL: TimeDateStamp is COFF header metadata, lives
+in no section, is named by no relocation, and neither objdiff, the delinker
+nor link.exe reads it. The temp directory is a dotted subdirectory of the object
 tree on purpose - the model's `build/objdiff/base` readers glob `*.obj`, and
 a sibling temp file would enrol into the data manifest as a phantom unit.
 
@@ -69,7 +70,8 @@ _SYMBOL_SIZE = 18
 
 
 def stabilise(data: bytes) -> bytes:
-    """`data` with the COFF TimeDateStamp zeroed; non-COFF input unchanged."""
+    """A comparison key: `data` with the COFF TimeDateStamp zeroed (non-COFF
+    input unchanged). Never written back to an object."""
     if len(data) < 20 or struct.unpack_from("<H", data, 0)[0] != _MACHINE_I386:
         return data
     buf = bytearray(data)
@@ -114,19 +116,19 @@ def coff_defect(data: bytes) -> str | None:
 
 
 def install(new: bytes, out: Path) -> bool:
-    """Write `new` to `out` if its stable form differs; True when it changed.
+    """Write `new`, unmodified, to `out` if its stable form differs; True when
+    it changed.
 
     Raises ToolError rather than installing an incomplete object.
     """
     defect = coff_defect(new)
     if defect is not None:
         raise ToolError(f"refusing to install {out.name}: {defect}")
-    stable = stabilise(new)
-    if out.exists() and stabilise(out.read_bytes()) == stable:
+    if out.exists() and stabilise(out.read_bytes()) == stabilise(new):
         return False
     tmp = out.with_name(f"{out.name}.{os.getpid()}.install")
     try:
-        tmp.write_bytes(stable)
+        tmp.write_bytes(new)
         tmp.replace(out)
     except OSError:
         tmp.unlink(missing_ok=True)
