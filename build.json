@@ -1,0 +1,1627 @@
+{
+  "compiler": "vc6",
+  "locale": "ru",
+  "default_target": "game",
+  "targets": {
+    "game": {
+      "executable": "HEROES.EXE",
+      "resources": "src/SOURCE/Heroes.rc",
+      "defines": [],
+      "units": [
+        {
+          "unit": "BASE/BITS",
+          "source": "src/BASE/BITS.asm",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G6"
+          ]
+        },
+        {
+          "unit": "BASE/BMAP2",
+          "source": "src/BASE/BMAP2.asm",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G6"
+          ]
+        },
+        {
+          "unit": "BASE/BASEMGR",
+          "source": "src/BASE/BASEMGR.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G6"
+          ]
+        },
+        {
+          "unit": "BASE/BITMAP",
+          "source": "src/BASE/BITMAP.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "BASE/Icon2b",
+          "source": "src/BASE/Icon2b.asm",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G6"
+          ]
+        },
+        {
+          "unit": "BASE/LZHUF",
+          "source": "vendor/lzhuf/encoder.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "BASE/MAKEFILEID",
+          "source": "src/BASE/MAKEFILEID.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "BASE/LZHUFDEC",
+          "source": "vendor/lzhuf/decoder/Decoder.asm",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G6"
+          ]
+        },
+        {
+          "unit": "BASE/BACKDROP",
+          "source": "src/BASE/BACKDROP.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "BASE/BORDER",
+          "source": "src/BASE/BORDER.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "BASE/BUTTON",
+          "source": "src/BASE/BUTTON.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "BASE/DIMMER",
+          "source": "src/BASE/DIMMER.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "BASE/ICONWDGT",
+          "source": "src/BASE/ICONWDGT.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "BASE/EXEC",
+          "source": "src/BASE/EXEC.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "BASE/INPUTMGR",
+          "source": "src/BASE/INPUTMGR.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "BASE/MOUSEMGR",
+          "source": "src/BASE/MOUSEMGR.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "BASE/RESMGR",
+          "source": "src/BASE/RESMGR.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "BASE/RESOURCE",
+          "source": "src/BASE/RESOURCE.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G6"
+          ]
+        },
+        {
+          "unit": "BASE/PALETTE",
+          "source": "src/BASE/PALETTE.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "BASE/TILESET",
+          "source": "src/BASE/TILESET.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "BASE/TEXTWDGT",
+          "source": "src/BASE/TEXTWDGT.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "BASE/TEXTNTRY",
+          "source": "src/BASE/TEXTNTRY.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "BASE/FONT",
+          "source": "src/BASE/FONT.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "BASE/ICON",
+          "source": "src/BASE/ICON.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "BASE/WINDOW",
+          "source": "src/BASE/WINDOW.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "BASE/WIDGET",
+          "source": "src/BASE/WIDGET.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "BASE/WINMGR",
+          "source": "src/BASE/WINMGR.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "BASE/Audio",
+          "source": "src/BASE/Audio.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G6"
+          ]
+        },
+        {
+          "unit": "BASE/TILE",
+          "source": "src/BASE/TILE.asm",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G6"
+          ]
+        },
+        {
+          "unit": "SOURCE/ADVMGR",
+          "source": "src/SOURCE/ADVMGR.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "SOURCE/CMBTMGR",
+          "source": "src/SOURCE/CMBTMGR.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob2",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "SOURCE/COMMAND",
+          "source": "src/SOURCE/COMMAND.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "SOURCE/EVENTS",
+          "source": "src/SOURCE/EVENTS.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "SOURCE/GAME",
+          "source": "src/SOURCE/GAME.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "SOURCE/ARMYGRP",
+          "source": "src/SOURCE/ARMYGRP.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "SOURCE/HERO",
+          "source": "src/SOURCE/HERO.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "SOURCE/HISCORE",
+          "source": "src/SOURCE/HISCORE.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "SOURCE/KB",
+          "source": "src/SOURCE/KB.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "SOURCE/NOOPT",
+          "source": "src/SOURCE/NOOPT.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G6"
+          ]
+        },
+        {
+          "unit": "SOURCE/PATH",
+          "source": "src/SOURCE/PATH.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "SOURCE/FINDPATH",
+          "source": "src/SOURCE/FINDPATH.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/O2",
+            "/Ob2",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "SOURCE/PHILAI",
+          "source": "src/SOURCE/PHILAI.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "SOURCE/RECRUIT",
+          "source": "src/SOURCE/RECRUIT.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "SOURCE/SEARCH",
+          "source": "src/SOURCE/SEARCH.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/O2",
+            "/Ob2",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "SOURCE/REMOTE",
+          "source": "src/SOURCE/REMOTE.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "SOURCE/REQUEST",
+          "source": "src/SOURCE/REQUEST.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob2",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "SOURCE/SETUP",
+          "source": "src/SOURCE/SETUP.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G6"
+          ]
+        },
+        {
+          "unit": "SOURCE/SPELLS",
+          "source": "src/SOURCE/SPELLS.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "SOURCE/STRIP",
+          "source": "src/SOURCE/STRIP.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "SOURCE/SWAPMGR",
+          "source": "src/SOURCE/SWAPMGR.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "SOURCE/TOWN",
+          "source": "src/SOURCE/TOWN.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "SOURCE/TOWNMGR",
+          "source": "src/SOURCE/TOWNMGR.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "SOURCE/kbwin",
+          "source": "src/SOURCE/kbwin.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob2",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "SOURCE/netwin",
+          "source": "src/SOURCE/netwin.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "SOURCE/wingraph",
+          "source": "src/SOURCE/wingraph.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "BASE/miscwin",
+          "source": "src/BASE/miscwin.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G6"
+          ]
+        },
+        {
+          "unit": "BASE/SAMPLE",
+          "source": "src/BASE/SAMPLE.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "SOURCE/SMACKMGR",
+          "source": "src/SOURCE/SMACKMGR.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G6"
+          ]
+        },
+        {
+          "unit": "SOURCE/CURSOR",
+          "source": "src/SOURCE/CURSOR.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "SOURCE/comwin",
+          "source": "src/SOURCE/comwin.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "BASE/Icon2bc",
+          "source": "src/BASE/Icon2bc.asm",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G6"
+          ]
+        },
+        {
+          "unit": "SOURCE/AI",
+          "source": "src/SOURCE/AI.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "SOURCE/ARMY",
+          "source": "src/SOURCE/ARMY.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "SOURCE/HEXCELL",
+          "source": "src/SOURCE/HEXCELL.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "SOURCE/SPELLAI",
+          "source": "src/SOURCE/SPELLAI.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "SOURCE/DRAWING",
+          "source": "src/SOURCE/DRAWING.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "SOURCE/FLY",
+          "source": "src/SOURCE/FLY.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        },
+        {
+          "unit": "SOURCE/VIEW",
+          "source": "src/SOURCE/VIEW.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5"
+          ]
+        }
+      ],
+      "link": {
+        "objects": [
+          "SOURCE/ADVMGR",
+          "SOURCE/AI",
+          "SOURCE/ARMY",
+          "SOURCE/ARMYGRP",
+          "SOURCE/CMBTMGR",
+          "SOURCE/comwin",
+          "SOURCE/COMMAND",
+          "SOURCE/CURSOR",
+          "SOURCE/DRAWING",
+          "SOURCE/EVENTS",
+          "SOURCE/FINDPATH",
+          "SOURCE/FLY",
+          "SOURCE/GAME",
+          "SOURCE/HERO",
+          "SOURCE/HEXCELL",
+          "SOURCE/HISCORE",
+          "SOURCE/KB",
+          "SOURCE/kbwin",
+          "SOURCE/netwin",
+          "SOURCE/NOOPT",
+          "SOURCE/PATH",
+          "SOURCE/PHILAI",
+          "SOURCE/RECRUIT",
+          "SOURCE/REMOTE",
+          "SOURCE/REQUEST",
+          "SOURCE/SEARCH",
+          "SOURCE/SETUP",
+          "SOURCE/SMACKMGR",
+          "SOURCE/SPELLAI",
+          "SOURCE/SPELLS",
+          "SOURCE/STRIP",
+          "SOURCE/SWAPMGR",
+          "SOURCE/TOWN",
+          "SOURCE/TOWNMGR",
+          "SOURCE/VIEW",
+          "SOURCE/wingraph"
+        ],
+        "members": [
+          "BASE/BASEMGR",
+          "BASE/Audio",
+          "BASE/WINMGR",
+          "BASE/MOUSEMGR",
+          "BASE/RESMGR",
+          "BASE/BACKDROP",
+          "BASE/WINDOW",
+          "BASE/ICONWDGT",
+          "BASE/INPUTMGR",
+          "BASE/miscwin",
+          "BASE/Icon2b",
+          "BASE/Icon2bc",
+          "BASE/TILE",
+          "BASE/ICON",
+          "BASE/TEXTWDGT",
+          "BASE/FONT",
+          "BASE/BITS",
+          "BASE/BMAP2",
+          "BASE/EXEC",
+          "BASE/BITMAP",
+          "BASE/MAKEFILEID",
+          "BASE/LZHUF",
+          "BASE/PALETTE",
+          "BASE/BORDER",
+          "BASE/TILESET",
+          "BASE/SAMPLE",
+          "BASE/WIDGET",
+          "BASE/TEXTNTRY",
+          "BASE/DIMMER",
+          "BASE/BUTTON",
+          "BASE/RESOURCE",
+          "BASE/LZHUFDEC"
+        ],
+        "library": "base.lib",
+        "library_after": "audiere.lib",
+        "libraries": [
+          "oldnames.lib",
+          "winmm.lib",
+          "kernel32.lib",
+          "user32.lib",
+          "gdi32.lib",
+          "advapi32.lib",
+          "mss32.lib",
+          "wing32.lib",
+          "smackw32.lib",
+          "netapi32.lib",
+          "audiere.lib",
+          "msvcprt.lib",
+          "libcmt.lib"
+        ],
+        "flags": [
+          "/SUBSYSTEM:WINDOWS",
+          "/BASE:0x400000",
+          "/INCREMENTAL:NO",
+          "/OPT:NOREF",
+          "/NODEFAULTLIB:libc.lib",
+          "/STACK:0x10240,0x1000"
+        ]
+      }
+    },
+    "editor": {
+      "executable": "EDITOR.EXE",
+      "resources": "src/EDITOR/Editor.rc",
+      "defines": [
+        "HOMM1_EDITOR"
+      ],
+      "units": [
+        {
+          "unit": "BASE/BMAP2",
+          "source": "src/BASE/BMAP2.asm",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G6",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "BASE/BASEMGR",
+          "source": "src/BASE/BASEMGR.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G6",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "BASE/BITMAP",
+          "source": "src/BASE/BITMAP.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "BASE/Icon2b",
+          "source": "src/BASE/Icon2b.asm",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G6",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "BASE/MAKEFILEID",
+          "source": "src/BASE/MAKEFILEID.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "BASE/BACKDROP",
+          "source": "src/BASE/BACKDROP.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "BASE/BORDER",
+          "source": "src/BASE/BORDER.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "BASE/BUTTON",
+          "source": "src/BASE/BUTTON.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "BASE/DIMMER",
+          "source": "src/BASE/DIMMER.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "BASE/ICONWDGT",
+          "source": "src/BASE/ICONWDGT.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "BASE/EXEC",
+          "source": "src/BASE/EXEC.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "BASE/INPUTMGR",
+          "source": "src/BASE/INPUTMGR.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "BASE/MOUSEMGR",
+          "source": "src/BASE/MOUSEMGR.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "BASE/RESMGR",
+          "source": "src/BASE/RESMGR.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "BASE/RESOURCE",
+          "source": "src/BASE/RESOURCE.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G6",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "BASE/PALETTE",
+          "source": "src/BASE/PALETTE.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "BASE/TILESET",
+          "source": "src/BASE/TILESET.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "BASE/TEXTWDGT",
+          "source": "src/BASE/TEXTWDGT.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "BASE/TEXTNTRY",
+          "source": "src/BASE/TEXTNTRY.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "BASE/FONT",
+          "source": "src/BASE/FONT.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "BASE/ICON",
+          "source": "src/BASE/ICON.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "BASE/WINDOW",
+          "source": "src/BASE/WINDOW.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "BASE/WIDGET",
+          "source": "src/BASE/WIDGET.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "BASE/WINMGR",
+          "source": "src/BASE/WINMGR.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "BASE/Audio",
+          "source": "src/BASE/Audio.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G6",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "BASE/TILE",
+          "source": "src/BASE/TILE.asm",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G6",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "SOURCE/REQUEST",
+          "source": "src/SOURCE/REQUEST.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Oi",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "SOURCE/kbwin",
+          "source": "src/SOURCE/kbwin.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Oi",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "SOURCE/wingraph",
+          "source": "src/SOURCE/wingraph.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Oi",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "BASE/miscwin",
+          "source": "src/BASE/miscwin.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G6",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "BASE/SAMPLE",
+          "source": "src/BASE/SAMPLE.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "BASE/Icon2bc",
+          "source": "src/BASE/Icon2bc.asm",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G6",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "EDITOR/EDITMGR",
+          "source": "src/EDITOR/EDITMGR.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Oi",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "EDITOR/EDITOR",
+          "source": "src/EDITOR/EDITOR.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Oi",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "EDITOR/CLEARMGR",
+          "source": "src/EDITOR/CLEARMGR.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Oi",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "EDITOR/EVENTMGR",
+          "source": "src/EDITOR/EVENTMGR.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Oi",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "EDITOR/OVERLAY",
+          "source": "src/EDITOR/OVERLAY.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Oi",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "EDITOR/MAPOBJ",
+          "source": "src/EDITOR/MAPOBJ.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Oi",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5",
+            "/DHOMM1_EDITOR"
+          ]
+        },
+        {
+          "unit": "EDITOR/TERRMGR",
+          "source": "src/EDITOR/TERRMGR.cpp",
+          "flags": [
+            "/nologo",
+            "/c",
+            "/Od",
+            "/Oi",
+            "/Ob1",
+            "/GX",
+            "/MT",
+            "/G5",
+            "/DHOMM1_EDITOR"
+          ]
+        }
+      ],
+      "link": {
+        "objects": [
+          "EDITOR/CLEARMGR",
+          "EDITOR/EDITMGR",
+          "EDITOR/EDITOR",
+          "EDITOR/EVENTMGR",
+          "SOURCE/kbwin",
+          "EDITOR/OVERLAY",
+          "EDITOR/MAPOBJ",
+          "SOURCE/REQUEST",
+          "EDITOR/TERRMGR",
+          "SOURCE/wingraph"
+        ],
+        "members": [
+          "BASE/BASEMGR",
+          "BASE/WINDOW",
+          "BASE/BUTTON",
+          "BASE/ICONWDGT",
+          "BASE/INPUTMGR",
+          "BASE/MOUSEMGR",
+          "BASE/RESMGR",
+          "BASE/WINMGR",
+          "BASE/miscwin",
+          "BASE/FONT",
+          "BASE/ICON",
+          "BASE/BMAP2",
+          "BASE/Icon2b",
+          "BASE/TILE",
+          "BASE/EXEC",
+          "BASE/PALETTE",
+          "BASE/Audio",
+          "BASE/BORDER",
+          "BASE/BACKDROP",
+          "BASE/TEXTNTRY",
+          "BASE/TEXTWDGT",
+          "BASE/DIMMER",
+          "BASE/WIDGET",
+          "BASE/BITMAP",
+          "BASE/TILESET",
+          "BASE/SAMPLE",
+          "BASE/MAKEFILEID",
+          "BASE/RESOURCE",
+          "BASE/Icon2bc"
+        ],
+        "library": "base.lib",
+        "library_after": "audiere.lib",
+        "libraries": [
+          "oldnames.lib",
+          "kernel32.lib",
+          "user32.lib",
+          "gdi32.lib",
+          "advapi32.lib",
+          "wing32.lib",
+          "audiere.lib",
+          "msvcprt.lib",
+          "libcmt.lib"
+        ],
+        "flags": [
+          "/SUBSYSTEM:WINDOWS",
+          "/BASE:0x400000",
+          "/INCREMENTAL:NO",
+          "/OPT:NOREF",
+          "/NODEFAULTLIB:libc.lib"
+        ]
+      }
+    }
+  }
+}

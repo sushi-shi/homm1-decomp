@@ -1,0 +1,359 @@
+#include <H1/Ints.h>
+
+#include <BASE/display.h>
+#include <BASE/font.h>
+#include <BASE/heroWindow.h>
+#include <BASE/heroWindowManager.h>
+#include <BASE/icon.h>
+#include <BASE/inputManager.h>
+#include <BASE/Misc.h>
+#include <BASE/mouseManager.h>
+#include <BASE/resourceManager.h>
+#include <BASE/textEntryWidget.h>
+#include <SOURCE/KB.h>
+#include <SOURCE/kbwin.h>
+
+#include <stdlib.h>
+#include <string.h>
+
+textEntryWidget::textEntryWidget(void) : textWidget() {
+    m_cursorPosition = 0;
+    m_maxLength = 0;
+    m_icon = NULL;
+    m_iconFrame = 0;
+    m_displayOffset = 0;
+    m_kind = WIDGET_KIND_TEXT_ENTRY;
+}
+
+textEntryWidget::textEntryWidget(
+    i16 x,
+    i16 y,
+    i16 width,
+    i16 height,
+    i16 maxLength,
+    char* text,
+    char* fontName,
+    i16 color,
+    char* iconName,
+    i16 iconFrame,
+    i16 id,
+    i16 kind
+)
+    : textWidget(x, y, width, height, text, fontName, color, id, kind) {
+    m_cursorPosition = 0;
+    m_maxLength = maxLength;
+    m_icon = gResourceManager->GetIcon(iconName);
+    m_iconFrame = iconFrame;
+    m_displayOffset = 0;
+    m_kind = WIDGET_KIND_TEXT_ENTRY;
+}
+
+textEntryWidget::~textEntryWidget(void) {
+    gResourceManager->Dispose(m_icon);
+}
+
+void textEntryWidget::Read(i32 type) {
+    char name[RESOURCE_NAME_CAPACITY];
+    READ_WIDGET_GEOMETRY(this, gResourceManager);
+    m_maxLength = gResourceManager->ReadWord();
+    m_text = static_cast<char*>(malloc(m_maxLength + 5));
+    gResourceManager->ReadBlock(m_text, m_maxLength);
+    gResourceManager->Read13(name);
+    gResourceManager->SavePosition();
+    m_font = gResourceManager->GetFont(name);
+    gResourceManager->RestorePosition();
+    m_color = gResourceManager->ReadWord() & COLOR_INDEX_MASK;
+    m_alignment = (static_cast<char>(gResourceManager->ReadWord() & COLOR_INDEX_MASK));
+    gResourceManager->Read13(name);
+    gResourceManager->SavePosition();
+    m_icon = gResourceManager->GetIcon(name);
+    gResourceManager->RestorePosition();
+    m_entryType = type;
+    if (type == TEXT_ENTRY_READ_RECT) {
+        m_rectX = gResourceManager->ReadWord();
+        m_rectY = gResourceManager->ReadWord();
+        m_rectW = gResourceManager->ReadWord();
+        m_rectH = gResourceManager->ReadWord();
+        m_maxLines = gResourceManager->ReadWord();
+        m_preserveTextOnFocus = gResourceManager->ReadWord();
+    } else {
+        m_rectX = m_x;
+        m_rectY = m_y;
+        m_rectW = m_width;
+        m_rectH = m_height;
+        m_maxLines = 1;
+        if (type == TEXT_ENTRY_READ_SCROLLING)
+            m_preserveTextOnFocus = 1;
+        else
+            m_preserveTextOnFocus = 0;
+    }
+    m_iconFrame = gResourceManager->ReadWord();
+    m_id = gResourceManager->ReadWord();
+    m_kind = gResourceManager->ReadWord();
+    m_kind = WIDGET_KIND_TEXT_ENTRY;
+}
+
+i16 textEntryWidget::Main(tag_message& message) {
+    i16 done;
+    i16 x;
+    i16 y;
+    tag_message event;
+    if (!(m_flags & WIDGET_FLAG_ENABLED)) {
+        if (message.type == MESSAGE_WIDGET)
+            return widget::Main(message);
+        return MESSAGE_DISPATCH_CONTINUE;
+    }
+    switch (message.type) {
+        case MESSAGE_WIDGET:
+            switch (message.command) {
+                case WIDGET_COMMAND_SET_MAX_LENGTH:
+                    if (message.id == m_id) {
+                        m_maxLength = message.value;
+                        return MESSAGE_DISPATCH_CONSUME;
+                    }
+                    break;
+                case WIDGET_COMMAND_SET_TEXT:
+                    if (message.id == m_id) {
+                        SetText(message.text);
+                        return MESSAGE_DISPATCH_CONSUME;
+                    }
+                    break;
+                case WIDGET_COMMAND_GET_TEXT:
+                    if (message.id == m_id) {
+                        message.text = m_text;
+                        return MESSAGE_DISPATCH_CONSUME;
+                    }
+                    break;
+            }
+            break;
+        case MESSAGE_LEFT_BUTTON_DOWN:
+        case MESSAGE_RIGHT_BUTTON_DOWN: {
+            x = message.x - m_owner->m_posX;
+            y = message.y - m_owner->m_posY;
+            if (message.type == MESSAGE_RIGHT_BUTTON_DOWN) {
+                if (WIDGET_CONTAINS_LOCAL_POINT(*this, x, y)) {
+                    SET_WIDGET_MESSAGE(message, WIDGET_NOTIFY_RIGHT_CLICK, m_id);
+                    message.modifiers = MESSAGE_MODIFIER_RIGHT_BUTTON;
+                    return MESSAGE_DISPATCH_FORWARD;
+                }
+                return MESSAGE_DISPATCH_CONTINUE;
+            }
+            if (WIDGET_CONTAINS_LOCAL_POINT(*this, x, y)) {
+                char edit[TEXT_ENTRY_DISPLAY_CAPACITY];
+                char swap[TEXT_ENTRY_DISPLAY_CAPACITY];
+                char copy[TEXT_ENTRY_DISPLAY_CAPACITY];
+                char original[TEXT_ENTRY_DISPLAY_CAPACITY];
+
+                gMouseManager->ReallyHidePointer();
+                x = m_owner->m_posX + m_x;
+                y = m_owner->m_posY + m_y;
+                strcpy(original, m_text);
+                if (m_preserveTextOnFocus & TEXT_ENTRY_PRESERVE_TEXT) {
+                    m_cursorPosition = strlen(m_text);
+                } else {
+                    m_cursorPosition = 0;
+                    m_text[0] = '\0';
+                }
+                strcpy(edit, m_text);
+                SetupDisplayString(edit, m_cursorPosition);
+                Draw();
+                gWindowManager->UpdateScreenRegion(x, y, m_width, m_height);
+                done = 0;
+                while (done == 0) {
+                    Process1WindowsMessage();
+                    event = gInputManager->GetEvent();
+                    if (event.type == MESSAGE_KEY_DOWN) {
+                        switch (event.keyCode) {
+                            case INPUT_SCAN_ESCAPE:
+                                strcpy(edit, original);
+                                done++;
+                                break;
+                            case INPUT_SCAN_NUMPAD_DELETE:
+                                if (m_cursorPosition < strlen(edit)) {
+                                    strcpy(swap, edit + m_cursorPosition + 1);
+                                    strcpy(edit + m_cursorPosition, swap);
+                                }
+                                break;
+                            case INPUT_SCAN_NUMPAD_4:
+                                if (m_cursorPosition > 0) {
+                                    m_cursorPosition--;
+                                    if (m_cursorPosition < m_displayOffset)
+                                        m_displayOffset = m_cursorPosition;
+                                }
+                                break;
+                            case INPUT_SCAN_NUMPAD_6:
+                                if (m_cursorPosition < strlen(edit))
+                                    m_cursorPosition++;
+                                break;
+                            default:
+                                gInputManager->AsciiConvert(event);
+                                if (event.keyCode == TEXT_ENTRY_KEY_ACCEPT) {
+                                    done++;
+                                } else if (event.keyCode == INPUT_ASCII_DELETE) {
+                                    if (m_cursorPosition > 0) {
+                                        strcpy(swap, edit + m_cursorPosition);
+                                        strcpy(edit + m_cursorPosition - 1, swap);
+                                        m_cursorPosition--;
+                                        if (m_cursorPosition < m_displayOffset)
+                                            m_displayOffset = m_cursorPosition;
+                                    }
+                                } else if (strlen(edit) + 1 < m_maxLength
+                                           && event.keyCode != '\0') {
+                                    char typed;
+                                    strcpy(copy, edit);
+                                    typed = '\0';
+                                    if (event.keyCode >= TEXT_ENTRY_EXTENDED_KEY_BASE) {
+                                        i32 key =
+                                            (event.keyCode & EncodeScanCode(INPUT_SCAN_CODE_MASK))
+                                            >> INPUT_KEY_SCAN_SHIFT;
+                                        switch (key) {
+                                            case INPUT_SCAN_NUMPAD_0:
+                                                typed = '0';
+                                                break;
+                                            case INPUT_SCAN_NUMPAD_1:
+                                                typed = '1';
+                                                break;
+                                            case INPUT_SCAN_NUMPAD_2:
+                                                typed = '2';
+                                                break;
+                                            case INPUT_SCAN_NUMPAD_3:
+                                                typed = '3';
+                                                break;
+                                            case INPUT_SCAN_NUMPAD_4:
+                                                typed = '4';
+                                                break;
+                                            case INPUT_SCAN_NUMPAD_5:
+                                                typed = '5';
+                                                break;
+                                            case INPUT_SCAN_NUMPAD_6:
+                                                typed = '6';
+                                                break;
+                                            case INPUT_SCAN_NUMPAD_7:
+                                                typed = '7';
+                                                break;
+                                            case INPUT_SCAN_NUMPAD_8:
+                                                typed = '8';
+                                                break;
+                                            case INPUT_SCAN_NUMPAD_9:
+                                                typed = '9';
+                                                break;
+                                        }
+                                    } else {
+                                        typed = event.keyCode & INPUT_SCAN_CODE_MASK;
+                                    }
+                                    if (typed != '\0') {
+                                        strcpy(swap, m_text);
+                                        free(m_text);
+                                        m_text = static_cast<char*>(
+                                            malloc(strlen(edit) + 1 + TEXT_ENTRY_ALLOCATION_PADDING)
+                                        );
+                                        strcpy(swap, edit);
+                                        swap[m_cursorPosition] = typed;
+                                        swap[m_cursorPosition + 1] = '\0';
+                                        strcat(swap, edit + m_cursorPosition);
+                                        strcpy(edit, swap);
+                                        m_cursorPosition++;
+                                        SetupDisplayString(edit, m_cursorPosition);
+                                        if (m_entryType != TEXT_ENTRY_READ_SCROLLING) {
+                                            i32 lineCount = m_font->LineLength(m_text, m_width);
+                                            if (lineCount > m_maxLines) {
+                                                strcpy(edit, copy);
+                                                m_cursorPosition--;
+                                            }
+                                        }
+                                    }
+                                }
+                                break;
+                        }
+                        SetupDisplayString(edit, m_cursorPosition);
+                        Draw();
+                        gWindowManager->UpdateScreenRegion(x, y, m_width, m_height);
+                    }
+                }
+                strcpy(m_text, edit);
+                m_displayOffset = 0;
+                Draw();
+                gWindowManager->UpdateScreenRegion(x, y, m_width, m_height);
+                gMouseManager->ReallyShowPointer();
+                SET_WIDGET_MESSAGE(message, WIDGET_NOTIFY_SELECT, m_id);
+                return MESSAGE_DISPATCH_FORWARD;
+            }
+            return MESSAGE_DISPATCH_CONTINUE;
+        }
+    }
+    return widget::Main(message);
+}
+
+void textEntryWidget::Draw(void) {
+    if (m_entryType == TEXT_ENTRY_READ_SCROLLING) {
+        char display[TEXT_ENTRY_DISPLAY_CAPACITY];
+        strcpy(display, m_text + m_displayOffset);
+        u32 len = strlen(display);
+        while (m_font->LineWidth(display) > m_width)
+            display[--len] = '\0';
+        m_icon->DrawToBuffer(
+            m_owner->m_posX + m_rectX,
+            m_owner->m_posY + m_rectY,
+            m_iconFrame,
+            ICON_DRAW_NORMAL,
+            ICON_DRAW_OFFSET_FULL
+        );
+        m_font->DrawBoundedString(
+            display,
+            m_owner->m_posX + m_x,
+            m_owner->m_posY + m_y,
+            m_width,
+            m_height,
+            m_color,
+            m_alignment
+        );
+    } else {
+        m_icon->DrawToBuffer(
+            m_owner->m_posX + m_rectX,
+            m_owner->m_posY + m_rectY,
+            m_iconFrame,
+            ICON_DRAW_NORMAL,
+            ICON_DRAW_OFFSET_FULL
+        );
+        textWidget::Draw();
+    }
+}
+
+void textEntryWidget::SetupDisplayString(char* source, u16 cursor) {
+    b32 changed;
+    char display[TEXT_ENTRY_DISPLAY_CAPACITY];
+    if (cursor > 0)
+        strncpy(m_text, source, cursor);
+    m_text[cursor] = '_';
+    if (strlen(source) > cursor)
+        strcpy(m_text + cursor + 1, source + cursor);
+    else
+        m_text[cursor + 1] = '\0';
+    if (m_entryType == TEXT_ENTRY_READ_SCROLLING) {
+        changed = true;
+        while (changed) {
+            changed = false;
+            strcpy(display, m_text + m_displayOffset);
+            if (m_font->LineWidth(display) > m_width) {
+                display[cursor - m_displayOffset + 1] = '\0';
+                if (m_font->LineWidth(display) > m_width) {
+                    m_displayOffset++;
+                    changed = true;
+                }
+            }
+        }
+        if (m_displayOffset > 0) {
+            changed = true;
+            while (changed) {
+                changed = false;
+                strcpy(display, m_text + m_displayOffset - 1);
+                if (m_font->LineWidth(display) <= m_width)
+                    m_displayOffset--;
+                else
+                    changed = false;
+                if (m_displayOffset == 0)
+                    changed = false;
+            }
+        }
+    }
+}
