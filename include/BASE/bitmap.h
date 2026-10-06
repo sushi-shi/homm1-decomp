@@ -8,6 +8,11 @@ enum BitmapType {
     BITMAP_TYPE_MEMORY = 0x21
 };
 
+enum BitmapFileConstant {
+    // The type, width and height before a bitmap's pixels.
+    BITMAP_HEADER_SIZE = 6
+};
+
 #pragma pack(push, 1)
 class bitmap : public resource {
 public:

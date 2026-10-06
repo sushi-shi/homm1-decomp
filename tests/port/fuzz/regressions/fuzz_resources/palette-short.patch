@@ -1,0 +1,4 @@
+# A palette of 10 bytes: 768 were read from whatever followed.
+fill 10 3F
+bytes 03                    # kind: palette
+expect refused

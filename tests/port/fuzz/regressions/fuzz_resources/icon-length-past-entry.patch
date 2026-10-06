@@ -1,0 +1,6 @@
+# An icon whose data length (1000) is more than its archive entry holds: the
+# rest was read from whatever followed, or left uninitialised.
+bytes 01 00 E8 03 00 00     # 1 frame, 1000 bytes
+bytes 00 00 00 00 01 00 01 00 0C 00 00 00 01 07 00 80
+bytes 00                    # kind: icon
+expect refused

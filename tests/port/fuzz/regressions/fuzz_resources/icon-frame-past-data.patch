@@ -1,0 +1,5 @@
+# A frame whose commands start at offset 200 of 16 bytes of data.
+bytes 01 00 10 00 00 00
+bytes 00 00 00 00 04 00 02 00 C8 00 00 00 01 07 00 80
+bytes 00                    # kind
+expect refused

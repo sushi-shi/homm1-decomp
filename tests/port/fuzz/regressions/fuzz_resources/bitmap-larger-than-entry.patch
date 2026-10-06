@@ -1,0 +1,5 @@
+# A bitmap of 32767 x 32767 pixels in an entry of 10 bytes.
+bytes 21 00 FF 7F FF 7F
+bytes 01 02 03 04
+bytes 01                    # kind: bitmap
+expect refused

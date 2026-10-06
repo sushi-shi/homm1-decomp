@@ -1,0 +1,5 @@
+# An archive whose only entry lies past the end of the file.
+bytes 01 00                 # one entry
+bytes 34 12 00 10 00 00 10 00 00 00   # id 0x1234 at 4096, 16 bytes
+bytes 06                    # kind: the whole archive
+expect refused

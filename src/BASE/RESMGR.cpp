@@ -61,10 +61,16 @@ void resourceManager::GetBackdropAtLoc(
     i32 curRow;
     i16 imageHeight;
     i16 width;
-    PointToFile(MakeId(filename));
+    i16 fileId = MakeId(filename);
+    PointToFile(fileId);
     ReadWord();
     width = ReadWord();
     imageHeight = ReadWord();
+    // The image is read row by row into the destination at the given place.
+    if (width < 0 || imageHeight < 0 || destinationX < 0 || destinationY < 0
+        || destinationX + width > destination->m_width
+        || destinationY + imageHeight > destination->m_height)
+        InvalidResource(fileId);
     for (curRow = destinationY; curRow < destinationY + imageHeight; curRow++) {
         ReadBlock(destination->m_pixels + curRow * LOGICAL_SCREEN_WIDTH + destinationX, width);
     }
@@ -282,6 +288,14 @@ i16 resourceManager::LoadAggregateHeader(char* aggregateName) {
         }
     }
     return RESOURCE_MANAGER_LOAD_SUCCESS;
+}
+
+// A resource whose contents do not fit its archive entry, or the structure
+// the game reads it through, is reported as a damaged archive, as a
+// directory that does not fit the file is.
+void resourceManager::InvalidResource(i16 fileId) {
+    sprintf(gText, localization::Tr("file.aggregate.open_failed"), gDefaultAggregateName);
+    ShutDown(gText);
 }
 
 void resourceManager::PointToFile(i16 fileId) {

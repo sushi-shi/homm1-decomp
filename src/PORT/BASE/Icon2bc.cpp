@@ -12,9 +12,12 @@
 #include <string.h>
 
 using IconBlit::IconFrame;
+using IconBlit::IconSource;
+using IconBlit::IconTarget;
 using IconBlit::IsNegative;
 using IconBlit::LoadIconFrame;
 using IconBlit::Offset32;
+using IconBlit::TargetOf;
 
 // Clipping state, public in Icon2bc.asm. Columns are counted in icon space
 // from the frame's first column.
@@ -43,17 +46,16 @@ inline i32 Minus(i32 value, u32 amount) {
 
 // Drops the rest of a row by scanning raw bytes up to and including the next
 // 0 byte. Pixel bytes are scanned as well, so a literal 0 pixel also ends the
-// scan (asm behaviour).
-const u8* SkipToRowEnd(const u8* command) {
-    while (*command++ != 0) {
-    }
-    return command;
+// scan (asm behaviour). The scan stops at the end of the icon's data.
+ptrdiff_t SkipToRowEnd(const IconSource& source, ptrdiff_t command) {
+    return source.AfterRowEnd(command);
 }
 
 // Vertical clipping shared by both blitters. Rows above the top edge are
 // skipped with SkipToRowEnd; sets gClipRowsLeft. Returns false when nothing is
 // drawn.
-bool ClipRows(const u8*& command, i32& y, i32 yAdjust, u32 height, const bitmap* bmp) {
+bool ClipRows(const IconSource& source, ptrdiff_t& command, i32& y, i32 yAdjust, u32 height,
+              const bitmap* bmp) {
     u32 top = static_cast<u32>(yAdjust) + static_cast<u32>(y);
     if (IsNegative(top)) {
         u32 hiddenRows = 0u - top;
@@ -61,7 +63,7 @@ bool ClipRows(const u8*& command, i32& y, i32 yAdjust, u32 height, const bitmap*
             return false;
         height -= hiddenRows;
         do {
-            command = SkipToRowEnd(command);
+            command = SkipToRowEnd(source, command);
         } while (--hiddenRows != 0);
         top = 0;
     }
@@ -89,7 +91,8 @@ bool ClipRows(const u8*& command, i32& y, i32 yAdjust, u32 height, const bitmap*
 //    clip column.
 //  - When a pixel run reaches the right clip column, the rest of the row is
 //    dropped with SkipToRowEnd starting at the run's unread pixel bytes.
-void DrawClippedRuns(const u8* command, u8* pixels, ptrdiff_t rowStart, u32 stride, ptrdiff_t direction) {
+void DrawClippedRuns(const IconSource& source, ptrdiff_t command, const IconTarget& target,
+                     ptrdiff_t rowStart, u32 stride, ptrdiff_t direction) {
     ptrdiff_t to = rowStart;
 
     // Moves the destination `amount` pixels along the drawing direction.
@@ -102,12 +105,12 @@ void DrawClippedRuns(const u8* command, u8* pixels, ptrdiff_t rowStart, u32 stri
         if (IsNegative(count))
             return;
         if (direction > 0) {
-            memcpy(pixels + to, command, count);
+            target.Copy(to, source, command, count);
             to += count;
             command += count;
         } else {
             for (u32 i = 0; i < count; ++i)
-                pixels[to--] = *command++;
+                target.Put(to--, source.Pixel(command++));
         }
     };
     // End of row: returns false once gClipRowsLeft reaches 0.
@@ -122,7 +125,7 @@ void DrawClippedRuns(const u8* command, u8* pixels, ptrdiff_t rowStart, u32 stri
 
     gClipRowSkip = gClipLeftSkip;
     for (;;) {
-        u32 code = *command++;
+        u32 code = source.Command(command++);
 
         if (code & 0x80) {
             u32 run = code & 0x7F;
@@ -142,7 +145,7 @@ void DrawClippedRuns(const u8* command, u8* pixels, ptrdiff_t rowStart, u32 stri
             }
             if (gClipVisibleWidth != 0
                 && IsNegative(static_cast<u32>(gClipVisibleWidth) - static_cast<u32>(gClipColumn) - run)) {
-                command = SkipToRowEnd(command);
+                command = SkipToRowEnd(source, command);
                 if (!nextRow())
                     return;
                 continue;
@@ -176,7 +179,7 @@ void DrawClippedRuns(const u8* command, u8* pixels, ptrdiff_t rowStart, u32 stri
         if (gClipVisibleWidth != 0) {
             u32 room = static_cast<u32>(gClipVisibleWidth) - static_cast<u32>(gClipColumn);
             if (room == 0) {
-                command = SkipToRowEnd(command);
+                command = SkipToRowEnd(source, command);
                 if (!nextRow())
                     return;
                 continue;
@@ -184,7 +187,7 @@ void DrawClippedRuns(const u8* command, u8* pixels, ptrdiff_t rowStart, u32 stri
             if (IsNegative(room - run)) {
                 gClipColumn = Plus(gClipColumn, room);
                 draw(room);
-                command = SkipToRowEnd(command);
+                command = SkipToRowEnd(source, command);
                 if (!nextRow())
                     return;
                 continue;
@@ -202,7 +205,7 @@ void DrawClippedRuns(const u8* command, u8* pixels, ptrdiff_t rowStart, u32 stri
 void ClippedIconToBitmap(icon* ic, bitmap* bmp, i32 x, i32 y, i32 frame, i32 offsetMode) {
     IconFrame f = LoadIconFrame(ic, frame, offsetMode);
     u32 width = f.width;
-    const u8* command = f.commands;
+    ptrdiff_t command = f.commands;
 
     u32 left = static_cast<u32>(f.xAdjust) + static_cast<u32>(x);
     if (IsNegative(left)) {
@@ -215,7 +218,7 @@ void ClippedIconToBitmap(icon* ic, bitmap* bmp, i32 x, i32 y, i32 frame, i32 off
         x = static_cast<i32>(left);
     }
 
-    if (!ClipRows(command, y, f.yAdjust, f.height, bmp))
+    if (!ClipRows(f.source, command, y, f.yAdjust, f.height, bmp))
         return;
 
     u32 bitmapWidth = static_cast<u16>(bmp->m_width);
@@ -228,7 +231,7 @@ void ClippedIconToBitmap(icon* ic, bitmap* bmp, i32 x, i32 y, i32 frame, i32 off
         gClipVisibleWidth = static_cast<i32>(width - (right - bitmapWidth));
 
     ptrdiff_t rowStart = Offset32(static_cast<u32>(y), bitmapWidth, static_cast<u32>(x));
-    DrawClippedRuns(command, bmp->m_pixels, rowStart, bitmapWidth, 1);
+    DrawClippedRuns(f.source, command, TargetOf(bmp), rowStart, bitmapWidth, 1);
 }
 
 // Mirrored ClippedIconToBitmap: x minus the frame offset is the rightmost
@@ -243,7 +246,7 @@ void ClippedIconToBitmap(icon* ic, bitmap* bmp, i32 x, i32 y, i32 frame, i32 off
 void FlipClippedIconToBitmap(icon* ic, bitmap* bmp, i32 x, i32 y, i32 frame, i32 offsetMode) {
     IconFrame f = LoadIconFrame(ic, frame, offsetMode);
     u32 width = f.width;
-    const u8* command = f.commands;
+    ptrdiff_t command = f.commands;
 
     x = static_cast<i32>(static_cast<u32>(x) - static_cast<u32>(f.xAdjust));
     u32 bitmapWidth = static_cast<u16>(bmp->m_width);
@@ -261,7 +264,7 @@ void FlipClippedIconToBitmap(icon* ic, bitmap* bmp, i32 x, i32 y, i32 frame, i32
         x = static_cast<i32>(0u - lastColumnNegated);
     }
 
-    if (!ClipRows(command, y, f.yAdjust, f.height, bmp))
+    if (!ClipRows(f.source, command, y, f.yAdjust, f.height, bmp))
         return;
 
     if (x < 0)
@@ -273,5 +276,5 @@ void FlipClippedIconToBitmap(icon* ic, bitmap* bmp, i32 x, i32 y, i32 frame, i32
         gClipVisibleWidth = static_cast<i32>(leftmost + width);
 
     ptrdiff_t rowStart = Offset32(static_cast<u32>(y), bitmapWidth, static_cast<u32>(x));
-    DrawClippedRuns(command, bmp->m_pixels, rowStart, bitmapWidth, -1);
+    DrawClippedRuns(f.source, command, TargetOf(bmp), rowStart, bitmapWidth, -1);
 }

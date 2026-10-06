@@ -1,0 +1,7 @@
+# A frame whose last command claims 127 pixel bytes and has no end: every
+# blitter read past the icon's data and wrote past its 4x2 frame. They now
+# stop at the end of the data and of the destination.
+bytes 01 00 10 00 00 00
+bytes 00 00 00 00 04 00 02 00 0C 00 00 00 7F 01 02 03
+bytes 00                    # kind
+expect accepted

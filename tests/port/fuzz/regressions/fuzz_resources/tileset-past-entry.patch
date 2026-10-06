@@ -1,0 +1,5 @@
+# 1000 tiles of 32 x 32 in an entry of 16 bytes.
+bytes E8 03 20 00 20 00
+fill 10 00
+bytes 02                    # kind: tileset
+expect refused

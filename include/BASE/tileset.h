@@ -3,6 +3,11 @@
 
 #include <BASE/resource.h>
 
+enum TilesetFileConstant {
+    // The tile count, width and height before a tileset's tiles.
+    TILESET_HEADER_SIZE = 6
+};
+
 #pragma pack(push, 1)
 class tileset : public resource {
 public:

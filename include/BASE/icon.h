@@ -30,6 +30,11 @@ enum IconDrawOffsetConstant {
     ICON_DRAW_QUARTER_OFFSET_SHIFT = 2
 };
 
+enum IconFileConstant {
+    // The frame count and the data length before an icon's data.
+    ICON_HEADER_SIZE = 6
+};
+
 #pragma pack(push, 1)
 class icon : public resource {
 public:
@@ -43,6 +48,9 @@ public:
     i16 m_drawRight;
     i16 m_drawTop;
     i16 m_drawBottom;
+    // Bytes at m_data: the frame table and the frames' command streams. The
+    // drawing routines read nothing outside them.
+    u32 m_dataSize;
     icon(i16 id);
     virtual ~icon();
     void DrawToBuffer(

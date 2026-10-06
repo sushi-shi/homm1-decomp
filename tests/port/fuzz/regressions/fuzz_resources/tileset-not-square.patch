@@ -1,0 +1,6 @@
+# One 16 x 3 tile, drawn with each flip into a 16 x 3 image: the flips
+# assume square tiles and read and wrote 16 rows.
+bytes 01 00 10 00 03 00
+fill 48 05
+bytes 02                    # kind
+expect accepted

@@ -1,0 +1,6 @@
+# An icon with 10 frames in 12 bytes of data: the frame table was read past
+# the data.
+bytes 0A 00 0C 00 00 00
+bytes 00 00 00 00 01 00 01 00 0C 00 00 00
+bytes 00                    # kind
+expect refused

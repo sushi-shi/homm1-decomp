@@ -12,11 +12,23 @@
 #include <stdlib.h>
 
 icon::icon(i16 id) : resource(RESOURCE_CATEGORY_ICON, id, RESOURCE_REFERENCE_INITIAL, NULL) {
+    u32 entrySize = gResourceManager->GetFileSize(id);
     gResourceManager->PointToFile(id);
     m_frameCount = gResourceManager->ReadWord();
     u32 length = gResourceManager->ReadLong();
-    m_data = static_cast<u8*>(malloc(length));
+    // The frame table and the frames' command streams are read in place:
+    // the data must lie inside the archive entry, the table inside the data
+    // and every frame's commands start inside it.
+    if (entrySize < ICON_HEADER_SIZE || length > entrySize - ICON_HEADER_SIZE || m_frameCount < 0
+        || static_cast<u32>(m_frameCount) * sizeof(IconEntry) > length)
+        gResourceManager->InvalidResource(id);
+    m_data = static_cast<u8*>(malloc(length > 0 ? length : 1));
+    m_dataSize = length;
     gResourceManager->ReadBlock(m_data, length);
+    for (i16 frame = 0; frame < m_frameCount; frame++) {
+        if (m_frames[frame].srcOffset >= length)
+            gResourceManager->InvalidResource(id);
+    }
     PostprocessIcon(this);
 }
 
