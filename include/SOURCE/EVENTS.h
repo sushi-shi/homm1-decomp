@@ -195,7 +195,9 @@ enum CombatRemoteConstant {
     COMBAT_REMOTE_BUFFER_SIZE = 0xff
 };
 
-#pragma pack(push, 1)
+// The battle a network peer is to fight or has fought (fragment 0 of
+// REMOTE_COMMAND_HERO_TOWN_DATA); the heroes follow as fragments 1 and 2.
+// remoteRecords.h encodes it in the original's packed layout.
 struct combatRemoteData {
     i8 fragment;
     i8 x;
@@ -217,34 +219,5 @@ struct combatRemoteData {
     armyGroup secondArmy;
     town combatTown;
 };
-
-struct combatRemoteHeroFragment {
-    i8 fragment;
-    char data[sizeof(hero)];
-};
-
-struct combatRemoteMessage {
-    i8 sender;
-    i32 id;
-    i8 type;
-    i8 command;
-    i16 payloadSize;
-    combatRemoteData combat;
-};
-
-struct heroRemoteMessage {
-    i8 sender;
-    i32 id;
-    i8 type;
-    i8 command;
-    i16 payloadSize;
-    combatRemoteHeroFragment heroFragment;
-};
-#pragma pack(pop)
-
-#define EVENTS_REMOTE_MESSAGE(record)                                                              \
-    (reinterpret_cast<combatRemoteMessage*>(record))
-#define EVENTS_REMOTE_HERO(record)                                                                 \
-    (reinterpret_cast<heroRemoteMessage*>(record))
 
 #endif

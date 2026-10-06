@@ -10,11 +10,10 @@ only its toolchain and packages. The Visual C++ 6 build of `HEROES.EXE` and
 
 - [Build and run](#build-and-run): [Linux](#build-and-run),
   [Windows](#windows), [in a browser](#in-a-browser), [macOS](#macos),
-  [the help book](#help)
+  [the help book](#help), [multiplayer](#multiplayer)
 - [Architecture](#architecture)
 - [Status](#status)
 - [Keeping up with the source branch](#keeping-up-with-the-source-branch)
-- [Plans: network play](#plans)
 - [Porting lessons](lessons.md): the defect classes a port of this code runs
   into and the guard for each
 - [Differences from the original](divergences.md)
@@ -187,6 +186,66 @@ windows, macros (shown as text) and jumps into other help files.
 by `nix build .#native`). The converted text is the game's; neither the
 converter's tests nor the documentation contain any of it.
 
+### Multiplayer
+
+Network, modem and direct-connection games are played over TCP, through the
+game's own menus and protocol. One side hosts, the other joins:
+
+```sh
+build/port/heroes --data DIR --port 1995                      # the host
+build/port/heroes --data DIR --join host.example.org:1995     # the guest
+```
+
+`--port N` (default 1995; or `$HOMM1_NET_PORT`) is where a host listens, and
+`--join ADDRESS[:PORT]` (or `$HOMM1_NET_JOIN`) is whom a guest calls; IPv4,
+IPv6 (`[::1]:1995`) and host names work. The host's port must be reachable
+(open it in a firewall or forward it on a router); the guest needs nothing.
+Both then choose the game in the menus as in the original:
+
+- **Network** (*New Game*, *Multi-player*, *Network*): the host chooses
+  *Host*, the guest *Guest*; the host then picks the scenario and the game
+  starts on both. A guest without `--join` finds a host on the same local
+  network by the original's broadcast (UDP, the same port).
+- **Direct connection**: the host chooses *Host* and listens, the guest
+  *Guest* and connects, retrying every second until the host is there. The
+  COM port and speed asked for are kept in the settings but do not matter.
+- **Modem**: the port answers the game's modem commands as a Hayes modem
+  would. The answering side (*Guest*) listens and rings when called; the
+  dialling side (*Host*) types the address as the telephone number
+  (`192.168.1.20:1995`), or any number of digits to dial `--join`.
+
+Loading a saved multi-player game works the same way (*Load Game*,
+*Multi-player*, ...). Chat (F2) and everything else the original sent work
+as they did. Native programs on any system play each other; the Windows
+build and the retail `HEROES.EXE` play a native program over a serial line
+(see [the interoperability run](#interoperability)), not over NetBIOS.
+
+The browser build compiles the same transports on Emscripten's socket
+emulation, which carries TCP over a WebSocket and so needs a relay that
+turns it back into TCP (websockify or Emscripten's own proxy); this is not
+set up or tested.
+
+#### Interoperability
+
+`tools/port/serial_interop.py --heroes build/port/heroes [--retail]` plays a
+direct-connection game between the native program and the Visual C++ build
+(or the retail `HEROES.EXE`) under Wine: Wine's COM1 is a pseudo-terminal
+that socat joins to the native program's TCP line. The native side hosts,
+the Windows side joins, and both play a full turn cycle; every saved game
+sent must arrive with the same hash. Against the Visual C++ build all
+transfers agree byte for byte. Against the retail program they agree
+except where the retail program's own defects strike: it decodes a save
+with a window it did not reset (two padding bytes of the map name arrive as
+zeros) and sends its own saves without the compressed stream's last four
+bytes (the last bytes of the map visit flags arrive as whatever the
+receiver's buffer held); see [divergences.md](divergences.md).
+
+NetBIOS play between the native program and a Windows one is out of reach:
+Wine's NetBIOS (`netapi32`, version 11.8) implements neither `NCBLISTEN`,
+which the host waits with, nor the broadcast datagrams the guest finds the
+host by, and the TCP framing here is the port's own. A real NetBIOS over
+TCP/IP stack would also need the privileged ports 137 to 139.
+
 ### Sanitizers and tests
 
 ```sh
@@ -199,6 +258,9 @@ HOMM1_DATA=~/.local/share/homm1-buka/game ctest --test-dir build/port-asan --out
 and re-encodes every shipped map, campaign map, saved game, high score table
 and the archive directory. `file_test` covers the game path resolver,
 `blit_test` the drawing routines, `lzhuf_test` the network save compressor,
+`remote_records_test` the network message codecs (sizes, round trips,
+refusal of short input, golden packets with their CRC and refusal of every
+single-byte corruption),
 `help_test` the help converter on a synthetic book and thousands of
 damaged copies of it, `help_game_test` (with `$HOMM1_HELP` or
 `HELP/HEROES.HLP` under `HOMM1_DATA`) on the real book,
@@ -212,6 +274,14 @@ format word, trigger bytes, the town, mine, artifact, obelisk and sound tables,
 the cells above random towns that the editor clears on saving, and the layout
 of older-format maps) is accounted for in its header comment; saving the saved
 map again must reproduce it.
+`net_game_test` (with `HOMM1_DATA` and `xvfb-run`) runs two instances on
+localhost with scripted input: a new network game through a full turn cycle;
+a network battle, from a copy of that game's first save with the guest's
+hero beside the host's, fought on auto combat, then a week of turns; and
+the start of a direct-connection and of a modem game. With
+`HOMM1_NET_TRACE=FILE` each instance writes a hash of every saved game it
+sends, receives and loads, and of every battle's outcome (result, armies as
+fought, heroes); the hashes must agree at every hand-off.
 The `*_replay` tests replay the fuzz harnesses' regression inputs (see
 [Fuzzing the file parsers](#fuzzing-the-file-parsers)).
 `nix flake check` builds the native and sanitizer builds and runs their tests
@@ -295,15 +365,16 @@ src/EDITOR              the scenario editor (with BASE, SOURCE units built
 include/BASE, SOURCE    its headers; *Host.h are the Windows host's alone
 include/PLATFORM        File.h, Records.h: shared, plain C++98
                         Platform.h: the native platform interface
+                        Net.h: sockets for the network and serial transports
 src/PLATFORM            File.cpp, Records.cpp (both builds); Text.cpp,
-                        MsvcRuntime.cpp, Help.cpp (the WinHelp converter)
-                        (native)
+                        MsvcRuntime.cpp, Help.cpp (the WinHelp converter),
+                        Net.cpp (native)
 src/PLATFORM/SDL3       the SDL3 + FFmpeg backend
 src/PLATFORM/Web        the browser build's page and its file system setup
 src/PORT                native replacements of the Windows-bound units
 tools/port              localize.py (game text), units.py (each program's
                         units from build.json), menus.py (menus from the
-                        .rc scripts), sync.sh
+                        .rc scripts), sync.sh, serial_interop.py
 tools/help              homm1-hlp2html, the converter on the command line
 nix                     the Windows and browser builds, the minimal FFmpeg
 tests/port              ctest programs; web_smoke.py (the browser build)
@@ -326,7 +397,7 @@ stays in the shared units; the port units hold only translation.
 | `SOURCE/wingraph.cpp` | `PORT/SOURCE/wingraph.cpp` | 8-bit display with palette, cursors |
 | `BASE/Audio.cpp` | `PORT/BASE/Audio.cpp` | sound samples, Ogg music, movie sound |
 | SMACKW32.DLL | `PORT/SOURCE/Smacker.cpp` | Smacker decoding (FFmpeg) |
-| `SOURCE/netwin.cpp`, `comwin.cpp` | `PORT/SOURCE/netwin.cpp`, `comwin.cpp` | none yet: reported unavailable |
+| `SOURCE/netwin.cpp`, `comwin.cpp` | `PORT/SOURCE/netwin.cpp`, `comwin.cpp` | TCP sessions and streams (`PLATFORM/Net.h`) |
 | `BASE/*.asm`, LZHUF decoder | `PORT/BASE/*.cpp` | portable C++ of the same routines |
 
 Both programs are built from the units `build.json` lists for their Visual
@@ -354,8 +425,22 @@ draws the game's pointer over it; scaling and letterboxing are the renderer's.
 
 **Shared portable pieces.** `File.h` resolves the game's backslash, any-case
 paths under the game folder and lists folders; `Records.h` and `saveRecords.h`
-encode every file record field by field. Both compile under Visual C++ 6 too,
-so the two builds read and write the same files the same way.
+encode every file record field by field; `remoteRecords.h` (`REMOTEREC.cpp`)
+does the same for every network and serial message. They compile under
+Visual C++ 6 too, so the two builds read and write the same files and speak
+the same protocol, the original's, byte for byte.
+
+**Network play.** `REMOTE.cpp`, the game's protocol (packets with a CRC,
+confirmations and retries, heartbeats, the compressed save transfer at each
+change of turn, the battle hand-off and the battle's actions), is the same in
+both builds. Below it the Visual C++ build calls Windows' NetBIOS and serial
+ports; the native `netwin.cpp` keeps the NetBIOS session table, its status
+bits, queues and retries and carries each session over a TCP connection
+(`PLATFORM/Net.h`), and `comwin.cpp` carries the serial line's bytes over a
+TCP stream, with a small Hayes modem for modem play. Between turns the
+peers exchange the whole saved game; battles run on both sides in lockstep
+from one random seed, which is why every build draws random numbers with the
+Microsoft runtime's generator.
 
 **Game text.** As in the Visual C++ build, `localization::Tr("id")` is
 resolved at build time: `tools/port/localize.py` writes a copy of the sources
@@ -386,7 +471,7 @@ with strict warnings as errors; see [lessons.md](lessons.md).
 | Movies | Smacker through FFmpeg, with sound. |
 | Menu bars | Drawn for the game (default, adventure, combat, town) and the editor, with check marks, greyed items, submenus and a modal loop. |
 | Help file | Converted from `HELP\HEROES.HLP` to HTML on first use and shown in the browser (a new tab in the browser build); greyed without the file. |
-| Network, modem, direct cable | Not available; the game reports it. |
+| Network, modem, direct cable | Over TCP (see [multiplayer](#multiplayer)): new and loaded games, battles, chat; two instances agree at every hand-off (`net_game_test`). Plays the Visual C++ build and the retail program over a serial line under Wine. |
 | Scenario editor | Works: opens shipped maps, edits, saves; every shipped map round-trips through its reader and writer; maps it saves load in the native game and in the Visual C++ game and editor. |
 | Windows | Main menu, new game to the adventure map, intro movie, loading the shipped save and saving it again (byte for byte outside its name field), the editor, the help conversion: checked under Wine. |
 | Browser | Chromium and Firefox (headless): the page stores the player's files, the game reaches the main menu, a new game the adventure map, the intro movie plays, audio starts on the click, the shipped save loads and saves back to IndexedDB, the help opens in a new tab, the editor opens. |
@@ -433,14 +518,3 @@ host headers (`*Host.h`) were refreshed from the new headers' Windows part,
 the editor's own copies of the Windows calls got the same host functions, and
 the four shared portable units (`PLATFORM/File`, `PLATFORM/Records`,
 `SOURCE/SAVEREC`, `SOURCE/KBCOMMON`) joined both `build.json` targets.
-
-## Plans
-
-**Network play.** The transports sit behind `netwin.h` and `comwin.h`
-(`nb_init`, `nb_snd`, `nb_rcv`, `com_init`, ...), which the game's `REMOTE.cpp`
-drives with its own protocol. The plan is a TCP transport that implements the
-NetBIOS session calls (named sessions become host:port endpoints, datagrams
-become length-prefixed frames), keeping `REMOTE.cpp` unchanged. Before that,
-the network messages that copy structures whole (`combatRemoteData`,
-`heroRemoteMessage`, the save transfer) need record codecs like the save
-files, so that different builds can talk to each other.

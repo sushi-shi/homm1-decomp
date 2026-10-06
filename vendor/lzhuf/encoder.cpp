@@ -308,8 +308,9 @@ i32 DecodeData(char *destination, char *source)
     memcpy(son, initialSon, sizeof(son));
     memcpy(freq, initialFrequency, sizeof(freq));
     memcpy(prnt, initialParent, sizeof(prnt));
-    // The window starts as the encoder's does, all spaces: a match into it
-    // otherwise copied whatever the last encode or decode had left there.
+    // The window starts as the encoder's does, filled with spaces: the
+    // original left it as the last EncodeData had (or zero), so a stream that
+    // referred to the initial spaces decoded to other bytes.
     memset(text_buf, ' ', WINDOW_SIZE - LOOK_AHEAD);
     decodeLen = size;
     outputPos = destination;

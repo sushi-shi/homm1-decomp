@@ -7,7 +7,9 @@
 #include <windows.h>
 
 #include <BASE/Misc.h>
+#include <PLATFORM/Records.h>
 #include <SOURCE/kbwin.h>
+#include <SOURCE/remoteRecords.h>
 
 #include <nb30.h>
 #include <stdarg.h>
@@ -340,15 +342,13 @@ void nb_thr_ctl(void)
 
 void nb_add_name(void) {
     if (gNbCtlNcb.ncb_cmd_cplt != NRC_PENDING) {
-        strcpy(
-            reinterpret_cast<char*>(gNbSessBuf),
-            gNbGroupName
-        );
-        memcpy(gNbSessBuf + strlen(gNbGroupName), gNbNameBuf[gNbMaxSess].bytes, NCBNAMSZ);
+        RecordWriter announce;
+        WriteNetbiosAnnounce(announce, gNbNameBuf[gNbMaxSess].bytes);
+        memcpy(gNbSessBuf, announce.Data(), announce.Size());
         memset(&gNbCtlNcb, 0, sizeof(gNbCtlNcb));
         gNbCtlNcb.ncb_command = NCBDGSENDBC | ASYNCH;
         gNbCtlNcb.ncb_num = gNbLocalNum;
-        gNbCtlNcb.ncb_length = strlen(gNbGroupName) + NCBNAMSZ;
+        gNbCtlNcb.ncb_length = announce.Size();
         gNbCtlNcb.ncb_buffer = gNbSessBuf;
         gNbCtlNcb.ncb_lana_num = gNetbiosLana;
         Netbios(&gNbCtlNcb);
@@ -404,6 +404,7 @@ u16 nb_recv_any(i32 session) {
 
 void __stdcall nb_recv_any_done(NCB* ncb) {
     i32 i;
+    u8 hostName[NCBNAMSZ];
 
     for (i = 0; i < NETBIOS_SESSION_COUNT; i++) {
         if (ncb == &gNbSessNcb[i])
@@ -412,8 +413,9 @@ void __stdcall nb_recv_any_done(NCB* ncb) {
     if (i >= NETBIOS_SESSION_COUNT)
         return;
     if (gNbSessNcb[i].ncb_retcode == NRC_GOODRET) {
-        if (memcmp(gNbRcvData[i], gNbGroupName, strlen(gNbGroupName)) == 0) {
-            memcpy(gNbNameBuf[i].bytes, gNbRcvData[i] + strlen(gNbGroupName), NCBNAMSZ);
+        RecordReader announce(gNbRcvData[i], gNbSessNcb[i].ncb_length);
+        if (ReadNetbiosAnnounce(announce, hostName)) {
+            memcpy(gNbNameBuf[i].bytes, hostName, NCBNAMSZ);
             nb_call(i, gNbNameBuf[i].bytes);
         } else {
             Netbios(&gNbSessNcb[i]);

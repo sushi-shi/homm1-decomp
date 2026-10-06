@@ -293,6 +293,8 @@ public:
     i8 GetTownId(i8 x, i8 y);
     i8 GetMineId(i8 x, i8 y);
     i16 SaveGame(char* filename, b8 generateName);
+    // The saved game's record of the current state (what SaveGame writes).
+    void WriteSaveRecord(class RecordWriter& outFile);
     i16 LoadGame(char* filename, b32 origData, b32 remoteGame);
     void GiveTroopsToNeutralTowns(void);
     void NewMap(char* mapName);
@@ -496,7 +498,15 @@ enum RemoteSaveConstant {
     REMOTE_SAVE_INDEX_SIZE = 2,
     REMOTE_SAVE_BUFFER_EXTRA = 500,
     REMOTE_SAVE_DECODE_BUFFER_SIZE = 0x130b0,
-    REMOTE_SAVE_TRANSFER_SOUNDS = 8
+    REMOTE_SAVE_TRANSFER_SOUNDS = 8,
+    // The segments the transfer's acknowledgement tables hold.
+    REMOTE_SAVE_SEGMENT_LIMIT = 500,
+    // Where a saved game keeps the name of its file, which differs between
+    // the peers' copies of one state.
+    SAVE_NAME_FIELD_OFFSET = 207,
+    SAVE_NAME_FIELD_SIZE = 0x11,
+    // The compressed save's big-endian decoded size.
+    REMOTE_SAVE_DECODED_SIZE_BYTES = 4
 };
 
 enum GamePlayerCount {

@@ -161,6 +161,15 @@ int main() {
     // > 32768 symbols forces ReconstructDecoderTree (root frequency 0x8000).
     RoundTrip("random 100000", Random(100000));
     RoundTrip("structured 300000", Structured(300000));
+    // Runs of spaces early in a stream longer than the window: the encoder
+    // matches them against its window's initial spaces, which the decoder
+    // must start with too (it used to start with what the last encode left).
+    {
+        std::vector<u8> save = Repeat("Map name        ", 256);
+        std::vector<u8> rest = Random(10000);
+        save.insert(save.end(), rest.begin(), rest.end());
+        RoundTrip("spaces, then 10000", save);
+    }
     for (int i = 0; i < 20; ++i) {
         size_t size = 1 + Rand() % 9000;
         RoundTrip("mixed", i % 2 ? Random(size, i % 4 == 1 ? 0x0F : 0xFF) : Structured(size));

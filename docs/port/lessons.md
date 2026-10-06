@@ -53,8 +53,9 @@ aligned vector load; other CPUs fault.
 
 **Guard.** Runtime classes (managers, widgets, `game`, `hero`, `town`,
 `playerData`, `army`, `tag_message`, ...) are naturally aligned. Packing
-remains only on file and wire images (`IconEntry`, `aggEntry`, map extra
-records, high score entries, `mapCell`, network packets) and on the four
+remains only on file images (`IconEntry`, `aggEntry`, map extra records,
+high score entries, `mapCell`; the network messages are encoded field by
+field instead, section 17) and on the four
 resource classes whose layout the Windows build's assembly routines address
 by offset (`resource`, `bitmap`, `icon`, `tileset`). The codecs never bind a
 reference to a member of a packed structure: multi-byte fields are read by
@@ -236,13 +237,15 @@ continuous play.
   -Wsign-conversion -Wshadow -Wold-style-cast -Werror`; game code with the
   defect-class errors (`return-type`, `int-to-pointer-cast`,
   `mismatched-new-delete`) and visible format-security warnings.
-- `ctest` runs `records_test`, `file_test`, `blit_test` (the drawing
-  routines in exactly-sized buffers) and the LZHUF round trip. With
+- `ctest` runs `records_test`, `remote_records_test` (the network
+  messages), `file_test`, `blit_test` (the drawing routines in exactly-sized
+  buffers) and the LZHUF round trip. With
   `HOMM1_DATA` set it also checks every shipped data file, and
   `save_roundtrip` loads the shipped saved game in the real program under
   Xvfb and saves it again: the new file must equal the original byte for byte
   outside its name field, which also proves that no uninitialized memory
-  reaches a save.
+  reaches a save; `net_game_test` plays two instances against each other
+  (section 17).
 - `nix flake check` builds the native program and the sanitizer build and
   runs their tests.
 - The parsers of file data are fuzzed (`-DHOMM1_FUZZERS=ON`,
@@ -303,8 +306,12 @@ down where it is implemented:
   an open menu runs a modal loop, because the game polls the pointer and
   would otherwise scroll the map under an open menu, which Windows' modal
   menu loop prevented.
-- **Networking** (`src/PORT/SOURCE/netwin.cpp`, `comwin.cpp`): reports itself
-  unavailable through the original's own error path.
+- **Networking** (`src/PORT/SOURCE/netwin.cpp`, `comwin.cpp`): the NetBIOS
+  session table (names, sessions, status bits, MOVE, the receive and send
+  queues, 20 call retries 100 ms apart) and the serial port (its queues and
+  the order `comm_wrt_task` writes them in) are kept; only the carrier
+  becomes TCP, and a modem becomes a Hayes emulation that answers the
+  game's own commands. See section 17.
 
 ## 14. One program, two builds, two programs
 
@@ -360,3 +367,52 @@ desktop out of reach: `SDL_OpenURL` tries the D-Bus portal before `xdg-open`
 and opens the user's real browser, so such runs set
 `DBUS_SESSION_BUS_ADDRESS` to nothing and put a recording `xdg-open` first
 on the `PATH`.
+
+## 17. Network messages and peers that must agree
+
+**Mechanism.** A network game is two programs that must hold the same state.
+The original sent its messages as the bytes of its structures: the battle
+hand-off carried a `town`, two `armyGroup`s and two `hero`s as they lay in
+memory, the save transfer its indexes and sizes through a union. Natively
+those structures are laid out differently (section 2), so the bytes on the
+wire change and two builds no longer understand each other, without any
+error: the CRC protects the bytes, not their meaning. Beyond the layout, the
+peers must agree on everything both compute: a battle is fought on both
+machines from one random seed, so a different `rand` (glibc's instead of
+Microsoft's) splits it, and a saved game that arrives altered gives the
+receiver another game. And everything a peer sends is untrusted input: its
+sizes and indexes went straight into tables and buffers.
+
+The transfer of the saved game was in fact altered in the original: its
+sender left out the last four bytes of the compressed stream and its decoder
+started from a window other than the encoder's, so the receiver's copy
+differed in the map name's padding and the map visit flags. Nobody noticed
+because nothing compared the two sides.
+
+**Guard.**
+
+- Every message, payload and handshake is encoded and decoded field by
+  field in the original's layout (`include/SOURCE/remoteRecords.h`,
+  `src/SOURCE/REMOTEREC.cpp`), in both builds, with static assertions tying
+  each record's size to the original's packed structures and to the
+  protocol's limits (a message fits the packet's length byte, a payload the
+  message). `RemoteMessage` is a plain structure whose payload holds the
+  wire bytes, always terminated; game code reads payloads only through the
+  codecs. `remote_records_test` checks every codec's size, round trip and
+  refusal of short input, the packet layout against golden bytes whose CRC
+  is computed independently, and that every single-byte corruption is
+  refused.
+- Received sizes and indexes are bounds-checked before they index anything
+  (`game::ReceiveSaveGame`, `ReadRemoteMessage`, chat lines).
+- Every native build draws random numbers with the Microsoft runtime's
+  generator (`include/PLATFORM/MsvcRuntime.h`).
+- The peers are compared, not trusted: `HOMM1_NET_TRACE` makes each program
+  write a hash of every saved game it sends, receives and loads and of every
+  battle's outcome as both sides fought it, and `net_game_test` plays two
+  instances headless through a new game, a battle and a week of turns and
+  requires the hashes to agree at every hand-off. That comparison found the
+  two save transfer defects above.
+- `tools/port/serial_interop.py` plays the native program against the
+  Visual C++ build and the retail program under Wine over a serial line;
+  every save agrees with the Visual C++ build, and with the retail program
+  except where its own transfer defects strike.
