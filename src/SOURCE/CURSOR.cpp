@@ -616,44 +616,44 @@ adjacentDone:
 // Redraws through the three-argument CompleteDraw.
 VA(0x00422df4, 0x161)
 void advManager::CheckAdjacentMon(i8* adjacentMonster) {
-    i32 posX;
-    i32 posY;
+    i32 monsterX;
+    i32 monsterY;
     hero* curHero;
-    i8 dead;
+    i8 clearMonster;
     mapCell* heroCell;
-    mapCell* tile;
+    mapCell* monCell;
 
     curHero = gGame->GetHero(gCurPlayerData->m_currentHero);
-    dead = 0;
+    clearMonster = 0;
     if (FindAdjacentMonster(
             curHero->m_x,
             curHero->m_y,
-            &posX,
-            &posY,
+            &monsterX,
+            &monsterY,
             SEARCH_INVALID_COORDINATE,
             SEARCH_INVALID_COORDINATE
         )) {
         StopCursor(1);
         CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
         UpdateScreen(0, 0);
-        tile = GetCell(posX, posY);
+        monCell = GetCell(monsterX, monsterY);
         heroCell = GetCell(curHero->m_x, curHero->m_y);
         if (gThisNetHumanPlayer[gCurPlayer])
             PlayerMonsterInteract(
-                tile,
+                monCell,
                 heroCell,
                 curHero,
-                &dead,
+                &clearMonster,
                 curHero->m_x,
                 curHero->m_y,
                 1,
-                posX,
-                posY
+                monsterX,
+                monsterY
             );
         else
-            ComputerMonsterInteract(tile, curHero, &dead);
-        if (dead) {
-            EraseObj(tile, posX, posY);
+            ComputerMonsterInteract(monCell, curHero, &clearMonster);
+        if (clearMonster) {
+            EraseObj(monCell, monsterX, monsterY);
             if (gThisNetHumanPlayer[gCurPlayer])
                 FizzleCenter(EVENT_FIZZLE_HERO_LOSS);
         }

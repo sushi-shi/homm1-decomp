@@ -54,10 +54,10 @@ H1_ENUM_CONST_BEGIN(AdventureFrameTimerConstant)
     TIMER_DELAY = 120
 H1_ENUM_CONST_END(AdventureFrameTimerConstant)
 
-// m_combatMonsterX/Y: the map cell of the monster DoCombat turns to face the
-// attacker (DrawCell draws it facing); the constructor starts it at NONE
-// (-99, off every drawable cell) and DoCombat clears the x back to CLEARED
-// (-1) after the redraw.
+// m_combatMonsterX/Y: the map cell of the monster CombatMonsterEvent turns to
+// face the attacker (DrawCell draws it facing); the constructor starts it at
+// NONE (-99, off every drawable cell) and CombatMonsterEvent clears the x back
+// to CLEARED (-1) after the redraw.
 H1_ENUM_CONST_BEGIN(AdventureCombatMonsterCellConstant)
     COMBAT_MONSTER_CELL_NONE = -99,
     COMBAT_MONSTER_CELL_CLEARED = -1
@@ -449,7 +449,7 @@ public:
     i8 CombatMonsterEvent(
         class hero* eventHero,
         H1_ENUM_PARAM(CreatureType, i8) monsterType,
-        i16 count,
+        i16 monsterCount,
         class mapCell* cell,
         i32 x,
         i32 y,
@@ -471,14 +471,14 @@ public:
         class mapCell* cell,
         class mapCell* combatCell,
         class hero* eventHero,
-        i8* handled,
+        i8* removeMonsterObject,
         i32 x,
         i32 y,
         i8 unused,
         i32 combatX,
         i32 combatY
     );
-    void ComputerMonsterInteract(class mapCell* cell, class hero* eventHero, i8* handled);
+    void ComputerMonsterInteract(class mapCell* cell, class hero* eventHero, i8* removeMonsterObject);
     i32 DoNetCombat(char* packet);
     i32 DoCombat(
         i32 x,
