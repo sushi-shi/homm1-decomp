@@ -130,13 +130,10 @@ public:
     // --- constructors ---
     hero(void);
     // --- methods ---
-    void Read(i32 file, i8 expansion);
-    void Write(i32 file, i8 expansion);
     void GetArmyStrengths(u32* const);
     i8 HasArtifact(H1_ENUM_PARAM(ArtifactType, i8) artifact);
     i16 CalcMobility(void);
     i8 HasSpell(H1_ENUM_PARAM(SpellType, i8) spell);
-    i32 GetNthSpell(i32 type, i32 spellNumber);
     i16 GetNumSpells(H1_ENUM_PARAM(HeroSpellType, i8) type);
     void UseSpell(H1_ENUM_PARAM(SpellType, i8) spell);
     i32 AddSpell(H1_ENUM_PARAM(SpellType, i8) spell, i8 charges, i32 checkOnly);
@@ -154,17 +151,6 @@ public:
     void ApplyBattleLossTemps(void);
     void CheckLevel(void);
     i32 NumArtifacts(void);
-    void SetSS(i32 skill, i32 level);
-    i32 TakeSS(i32 skill, i32 levels);
-    i32 GiveSS(i32 skill, i32 levels);
-    i32 CreatureTypeCount(i32 creatureType);
-    void UpgradeCreatures(i32 oldCreatureType, i32 newCreatureType);
-    i32 GetNthSS(i32 ordinal);
-    class town* GetOccupiedTown(void);
-    i8 Stats(i32 stat);
-    i8 GetSSLevel(i32 skill);
-    void DoSSLevelDialog(i32 skill, i32 quickView);
-    void CheckAnduranPieces(i32 showDialog);
 };
 #pragma pack(pop)
 

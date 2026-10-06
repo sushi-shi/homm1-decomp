@@ -353,31 +353,20 @@ public:
         return &m_castleRecs[m_players[player].m_townIds[index]];
     }
     // --- methods ---
-    void SetupDynamicStuff(i32 redraw, i32 updateKnob, i32 forceUpdate);
-    void SetupNewOverviewType(i32 overviewType, i32 redrawFrom);
-    void SetupResources(void);
     void Overview(void);
-    void DoKnob(void);
-    i32 ProcessIconSelect(i32 widgetId, i32 quickView);
     i8 SetupCampaignGame(void);
     i8 SetupBaud(void);
     i8 SetupComPort(void);
     i8 SetupHotSeatGame(void);
     i8 SetupNetworkGame(void);
-    i32 SetupNetworkGame2(void);
     i8 SetupModemGame(void);
     i8 SetupMultiPlayerGame(void);
     i8 SetupGame(i8 newGame);
     i8 PickLoadGame(void);
-    i32 HandleCampaignWin(void);
-    void PlayPreScenarioSmacker(i32 side, i32 map);
     void ShowCampaignInfo(i32 scenario, i32 viewOnly, i32);
-    void CampaignInfoUpdate(i32 redraw);
     void InitEntireCampaign(i32 side);
     // Retail InitCampaignMap takes the scenario and an unused int (ret 8).
     void InitCampaignMap(i32 scenario, i32);
-    i32 MineTypesOwned(i32 owner, i32 mineType);
-    i32 SetupPuzzlePieces(i32 player, i32 justCount);
     i8 IsMobile(i8 heroId);
     class mapCell (*GetWorldMapData(void))[MAP_CELL_GRID_SIZE];
     // Inline world-map file I/O (LoadMap, SaveGame, LoadGame).
@@ -390,16 +379,11 @@ public:
     i8 GetTownId(i8 x, i8 y);
     i8 GetMineId(i8 x, i8 y);
     i16 SaveGame(char* filename, i8 generateName);
-    void SetupOrigData(void);
     // HoMM1 retail returns 1 in AX (ret 0xc).
     i16 LoadGame(char* filename, i32 origData, i32);
-    void GiveTroopsToNeutralTown(i32 townId);
     void GiveTroopsToNeutralTowns(void);
     void NewMap(char* mapName);
     void RandomizeEvents(void);
-    void InitializePasswords(void);
-    void RandomizeBarrier(class mapCell* cell);
-    void RandomizePassword(class mapCell* cell);
     // HoMM1 retail returns 0 in AX.
     i16 LoadMap(char* filename);
     void ClaimTown(i8 townId, i8 player);
@@ -438,36 +422,19 @@ public:
     i32 ComputeDailyGold(i32 player);
     void PerDay(void);
     void PerWeek(void);
-    void WeeklyRecruitSite(class mapCell* cell);
-    void WeeklyGenericSite(class mapCell* cell);
     void PerMonth(void);
-    void ConvertObject(
-        i32 left,
-        i32 top,
-        i32 right,
-        i32 bottom,
-        i32 oldTileset,
-        i32 oldFirstIndex,
-        i32 oldLastIndex,
-        i32 newTileset,
-        i32 newFirstIndex,
-        i32 oldTrigger,
-        i32 newTrigger
-    );
     // HoMM1 retail: byte x, y and castle flag (ret 0xc).
     void RandomizeTown(i8 x, i8 y, i8 isCastle);
     // HoMM1 retail: byte x and y (ret 8).
     void RandomizeMine(i8 x, i8 y);
     // HoMM1 retail 0x00442fb4 (ret 8): default dwellings and mage-guild spells.
     void SetupTown(i8 townId, i8 aiOwned);
-    void InitRandomArtifacts(void);
     i8 GetRandomArtifactId(void);
     void RandomizeHeroPool(void);
     void SetRandomHeroArmies(i16 heroId, i32 strongArmy);
     // HoMM1 retail: towns-only pass flag (ret 4).
     void ProcessRandomObjects(i32 castlesOnly);
     void SetVisibility(i16 x, i16 y, i16 player, i16 radius);
-    void MakeAllWaterVisible(i32 player);
     void GiveArmy(class armyGroup* group, i32 type, i32 count, i32 slot);
     i32 ExperienceValueOfStack(class armyGroup* group, class hero* heroPointer);
     // HoMM1 retail: hero and army only (ret 8).
@@ -481,10 +448,6 @@ public:
     void ShowComputerScreen(void);
     void ShowHeroesLogo(void);
     void WaitForPlayer(char* text, i32 player);
-    i32 HasLateOverlay(i32 column, i32 row);
-    void ConvertFlagToLateOverlay(i32 column, i32 row);
-    i32 HasObjectTilesetIndex(i32 column, i32 row, i32 tileset, i32 index);
-    void ConvertAllToLateOverlay(i32 column, i32 row);
     // HoMM1 retail 0x0043d4c3 (ret 8): once a cell's object frame is gone,
     // pulls its overlay frame down into the object layer.
     void SettleOverlay(i32 x, i32 y);
@@ -502,33 +465,16 @@ public:
     i32 GetNumThievesGuilds(i32 player);
     i32 CalcDifficultyRating(void);
     void RestoreCell(i32 x, i32 y, i32 objectType, i32 barrier, class mapCell* passedCell, i32);
-    void SetMapSize(i32 width, i32 height);
-    i32 HeroIDToHeroPos(class playerData* player, i32 heroId);
-    i32 TownIDToTownPos(class playerData* player, i32 townId);
-    void SetupNewRumour(void);
-    void CheckForTimeEvent(void);
-    i32 CountShrines(i32 player);
     void ShowMoraleInfo(class hero* heroPointer, i32 dialogType);
     void ShowLuckInfo(class hero* heroPointer, i32 dialogType);
     // Retail GetMap never reads ecx; its caller passes no this.
     static void GetMap(void);
-    void ProcessNewMap(struct SMapHeader* header);
-    void InitNewGame(struct SMapHeader* header);
-    void SetupNetPlayerNames(void);
     // Retail returns the started flag in AL.
     i8 NewGame(void);
-    void CleanUpNewGameWindow(void);
-    void InitNewGameWindow(void);
     void UpdateNewGameWindow(void);
-    i32 ProcessNGKeyPress(struct tag_message& message);
-    void NGKPSetupDisplayString(char* text, u16 cursor);
-    void DrawNGKPDisplayString(i32 updateScreen);
     void ShowScenInfo(void);
     // HoMM1: NewMap gives every opponent a distinct crest.
     void RandomizePlayerCrests(void);
-    void GetLossConditionText(char* text);
-    void GetVictoryConditionText(char* text);
-    i32 GetSideDesc(char* text, i32 firstPlayer, i32 lastPlayer);
     // DoEvent's obelisk branch (byte player, ret 4).
     void VisitObelisk(i8 player);
 };

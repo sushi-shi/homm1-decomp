@@ -114,8 +114,6 @@ public:
     // Seeds from a hero and builds the path to the nearest cell carrying the
     // trigger type (EVENTS finds a town with 0xa8).
     i16 FindNearestObject(i16 startX, i16 startY, i16 direction, i16 maximumCost, u8 triggerType);
-    void Init(void);
-    void Close(void);
     void Clear(void);
     i16 QuickDistance(i16 x1, i16 y1, i16 x2, i16 y2);
     void PushPoint(
@@ -140,7 +138,6 @@ public:
         i16 allowOccupied,
         i32 waterMode
     );
-    void SeedCombatPosition(class army* unit);
     // attackPath is an ArmyPathTarget (PATH.h).
     i16 FindCombatPath(i16 sourceHex, i16 targetHex, class army* unit, i8 attackPath);
     void PushCombatPoint(i16 hex, i16 direction, u16 distance, u16 speed);

@@ -37,7 +37,6 @@ public:
     virtual i16 Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
     void Reset(void);
-    i32 DrawSwapWin(void);
     void DrawSelector(void);
     void ViewMon(void);
     void SwapArtifacts(void);
