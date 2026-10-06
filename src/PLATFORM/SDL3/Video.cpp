@@ -20,6 +20,7 @@ constexpr int kCanvasHeight = kHeight + CHROME_BAR_MAX;
 constexpr u32 kPresentInterval = 8;
 
 SDL_Window* gWindow = nullptr;
+std::string gWindowTitle;
 SDL_Renderer* gRenderer = nullptr;
 SDL_Texture* gTexture = nullptr;
 bool gFullscreen = false;
@@ -161,7 +162,7 @@ bool OpenDisplay() {
     SDL_WindowFlags flags = SDL_WINDOW_RESIZABLE;
 #endif
     if (!SDL_CreateWindowAndRenderer(
-            defaults.title, kWidth * scale, (kHeight + gBar) * scale, flags, &gWindow, &gRenderer)) {
+            gWindowTitle.empty() ? defaults.title : gWindowTitle.c_str(), kWidth * scale, (kHeight + gBar) * scale, flags, &gWindow, &gRenderer)) {
         Log("cannot open a window: %s", SDL_GetError());
         return false;
     }
@@ -285,6 +286,12 @@ void SetWindowSize(int width, int height) {
         return;
     SDL_SetWindowSize(gWindow, width, height + gBar * height / kHeight);
     gDirty = true;
+}
+
+void SetWindowTitle(const std::string& title) {
+    gWindowTitle = title;
+    if (gWindow != nullptr)
+        SDL_SetWindowTitle(gWindow, gWindowTitle.c_str());
 }
 
 void DesktopSize(int& width, int& height) {

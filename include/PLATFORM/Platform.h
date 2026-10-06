@@ -120,6 +120,9 @@ bool Fullscreen();
 // Sizes the window so that the game image shows at width x height (plus the
 // chrome bar, scaled alike). Ignored at full screen.
 void SetWindowSize(int width, int height);
+// The window's title (UTF-8), for the open window and the one OpenDisplay
+// opens; without one it is StartupOptions' default.
+void SetWindowTitle(const std::string& title);
 // The usable desktop size.
 void DesktopSize(int& width, int& height);
 

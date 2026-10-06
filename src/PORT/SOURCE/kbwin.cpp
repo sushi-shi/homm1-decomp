@@ -286,6 +286,9 @@ bool KBStartHost(const char* dataRoot, const char* gameArguments, i32 fullScreen
         return false;
     }
     FileSetRoot(gameRoot.c_str());
+    // The window carries the program's title from the catalog, as the
+    // Windows build's window does.
+    platform::SetWindowTitle(platform::ToUtf8(gTitle));
     gCdRoot = platform::FindCdRoot(gameRoot);
     platform::Log("game data: %s", gameRoot.c_str());
 
