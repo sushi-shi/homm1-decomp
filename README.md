@@ -1,32 +1,10 @@
-# homm1-decomp-1.2
+# homm1-decomp
 
-Binary-matching reconstruction of **Heroes of Might and Magic** for Windows 95
-(New World Computing, 1997), using ordinary C++ and the pinned VC4.1 toolchain.
-The target is the August 1997 (Windows 95 1.2) `HEROESW.EXE`; hashes live in
-[config/retail/targets.json](config/retail/targets.json).
-Branched from 1.1 at `6e927679`. See [the 1.2 migration](docs/win95-1.2.md)
-for address evidence, behavior changes and validation limits.
-Supply your own game executable and assets; they are not included here.
-
-## Branches
-
-Win95 1.2 is maintained on [decomp-win95-1.2](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.2).
-See the [1.1 → 1.2 changes](https://github.com/sushi-shi/homm1-decomp/blob/decomp-win95-1.2/docs/win95-1.2.md)
-for behavior differences and port validation.
-
-```text
-decomp-win95-1.0 ---> decomp-win95-1.1 ---> decomp-win95-1.2
-        |
-        v
-source-win95-1.0
-```
-
-| Branch | Purpose |
-| --- | --- |
-| [decomp-win95-1.0](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.0) | Win95 1.0 `HEROES.EXE` (Feb 1996) |
-| [decomp-win95-1.1](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.1) | Win95 1.1 `HEROES.EXE` (May 1996) |
-| [decomp-win95-1.2](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.2) | Win95 1.2 `HEROESW.EXE` (Aug 1997), VC4.1 |
-| [source-win95-1.0](https://github.com/sushi-shi/homm1-decomp/tree/source-win95-1.0) | Clean source, Win95 1.0 |
+C++ reconstruction of **Heroes of Might and Magic** for Windows 95, release 1.2
+(`HEROESW.EXE`, New World Computing, August 1997), built with the pinned Visual
+C++ 4.1 toolchain under Wine. Retail bytes are authoritative; their hashes live
+in [config/retail/targets.json](config/retail/targets.json). Supply your own
+executable and game assets.
 
 <!-- match-score:start -->
 ## Match status
@@ -46,6 +24,39 @@ _Comparison mode: strict data references._
 _CUR / MAX / HIST: 643 / 643 / 643 exact &middot; 99.63% / 99.63% / 99.63% fuzzy (defined in AGENTS.md). Totals cover every in-`.text` reconstruction target; generated and library code is excluded._
 <!-- match-score:end -->
 
+## Branches
+
+```text
+decomp-win95-1.0 -------------------> decomp-win95-1.1
+    |                                    |
+    v                                    v
+source-win95-1.0                     decomp-win95-1.2 (you are here)
+                                         |
+                                         v
+                                     decomp-buka-2003
+                                         |
+                 +-----------------------+---------+
+                 |                                 |
+                 v                                 v
+         source-buka-2003                  classic-buka-2003
+                 |
+      +----------+------------+
+      |                       |
+      v                       v
+  source-te                  port ------------------> port-te
+```
+
+- [`decomp-win95-1.0`](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.0) — Win95 1.0 `HEROES.EXE` (Feb 1996)
+- [`decomp-win95-1.1`](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.1) — Win95 1.1 `HEROES.EXE` (May 1996)
+- [`decomp-win95-1.2`](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.2) — Win95 1.2 `HEROESW.EXE` (Aug 1997), VC4.1
+- [`source-win95-1.0`](https://github.com/sushi-shi/homm1-decomp/tree/source-win95-1.0) — Clean source, Win95 1.0
+- [`decomp-buka-2003`](https://github.com/sushi-shi/homm1-decomp/tree/decomp-buka-2003) — Buka 2003 game and editor, byte-identical
+- [`source-buka-2003`](https://github.com/sushi-shi/homm1-decomp/tree/source-buka-2003) — Clean source, Buka 2003 (ru/en)
+- [`classic-buka-2003`](https://github.com/sushi-shi/homm1-decomp/tree/classic-buka-2003) — Reading view, UTF-8 Russian
+- [`source-te`](https://github.com/sushi-shi/homm1-decomp/tree/source-te) — Tournament Edition on the source
+- [`port`](https://github.com/sushi-shi/homm1-decomp/tree/port) — Native port: Linux, Windows, browser
+- [`port-te`](https://github.com/sushi-shi/homm1-decomp/tree/port-te) — Tournament Edition on the port
+
 ## Quickstart
 
 With Nix flakes enabled, run from the repository root:
@@ -58,15 +69,26 @@ homm1 tool wine --init
 homm1 build
 homm1 match BASE/MOUSEMGR
 homm1 verify status
-homm1 play --data /path/to/HEROES   # optional: run the build
+homm1 play --data /path/to/HEROES   # optional: run the rebuilt game
 ```
 
-The optional editor is supplied with `init --editor-exe /path/to/EDITORW.EXE`.
-Retail inputs, tools, Wine state and generated reports stay in ignored `build/`.
+The editor is supplied with `init --editor-exe /path/to/EDITORW.EXE`. Retail
+inputs, the toolchain, Wine state and generated reports stay in ignored
+`build/`.
 
-See [the matching workflow](docs/tooling.md), [setup and editors](docs/workflow.md),
-and the [documentation index](docs/README.md).
-Contributor rules and verification commands are in [AGENTS.md](AGENTS.md).
+## Versions
+
+Branched from `decomp-win95-1.1` at `6e927679`. [The 1.2 migration](docs/win95-1.2.md)
+records address evidence, behavior changes and validation limits;
+[the 1.1 migration](docs/win95-1.1.md) covers the step before.
+
+## Documentation
+
+- [Matching tooling](docs/tooling.md), [command map](docs/tooling-map.md) and
+  [repository workflow](docs/workflow.md)
+- [Other builds](docs/builds.md) and [playing the build](docs/play.md)
+- [Documentation index](docs/README.md); contributor rules and verification
+  commands are in [AGENTS.md](AGENTS.md)
 
 ## License
 
