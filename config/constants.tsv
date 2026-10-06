@@ -6,7 +6,7 @@
 # (tab-separated; every field is an fnmatch glob, `*` matches anything; the
 # first matching row wins): file owner spelling group detail reason.
 # group/detail are the census' review_group/review_context columns.
-#floor	1443
+#floor	1370
 *	*	0	trivial-function-literal	0 for-init	a for loop's counter starts at zero
 *	*	0	trivial-function-literal	0 initializer*	an accumulator or counter declared at zero
 *	*	1	trivial-function-literal	1 arithmetic*	a one-step offset: the next index, element or count
@@ -518,7 +518,6 @@ src/SOURCE/TOWNMGR.cpp	*	0	trivial-function-literal	0 store m_active	a boolean f
 src/SOURCE/TOWNMGR.cpp	*	0	trivial-function-literal	0 store m_eventFlags	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/TOWNMGR.cpp	*	0	trivial-function-literal	0 store m_visible	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/TOWNMGR.cpp	*	0	trivial-function-literal	0 store sameType	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
-src/SOURCE/TOWNMGR.cpp	*	1	trivial-function-literal	1 equality advanceAnimation	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/TOWNMGR.cpp	*	1	trivial-function-literal	1 store lastArmy	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/TOWNMGR.cpp	*	1	trivial-function-literal	1 store m_active	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/TOWNMGR.cpp	*	1	trivial-function-literal	1 store m_visible	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
@@ -1175,3 +1174,14 @@ src/SOURCE/PATH.cpp	army::GetAttackMask	1	trivial-function-literal	1 store curDi
 src/SOURCE/RECRUIT.cpp	QuickViewRecruit	0	trivial-function-literal	0 store resourceCost	no second-resource cost (a gold-only creature)
 src/SOURCE/RECRUIT.cpp	*	0	call-argument	CyrillicToLower(char) argument 1	the name's first character, lower-cased
 src/SOURCE/SETUP.cpp	game::SetupComPort	40	store	initializer of initString	the modem init string buffer's extent
+src/SOURCE/TOWNMGR.cpp	*	0	trivial-function-literal	0 array-index *	the text's first character, re-cased after formatting
+src/SOURCE/TOWNMGR.cpp	*	0	call-argument	Cyrillic*(char) argument 1	the text's first character, re-cased after formatting
+src/SOURCE/TOWNMGR.cpp	townManager::Main	*	trivial-function-literal	[01] *	done counts the click handlers that close the town screen; exactly one ends it
+src/SOURCE/TOWNMGR.cpp	townManager::SplitArmy	[01]	trivial-function-literal	[01] store theMerge	the split's merge-into-existing-stack flag (an i16, no 16-bit flag type)
+src/SOURCE/TOWNMGR.cpp	townManager::BuyBuild	0	trivial-function-literal	0 store guildRank	the first mage-guild cost row (no guild yet, or not the guild)
+src/SOURCE/TOWNMGR.cpp	townManager::BuyBuild	-1	trivial-function-literal	-1 store dwelling	not a dwelling: no gDwellingCosts row (tested with dwelling >= 0)
+src/SOURCE/TOWNMGR.cpp	townManager::BuyBuild	*	*	* dialog*	dead retail locals, stored once and never read (they size BuyBuild's frame)
+src/SOURCE/TOWNMGR.cpp	townManager::BuyBuild	0	trivial-function-literal	0 store *	an empty cost row or the first cost widget slot
+src/SOURCE/TOWNMGR.cpp	townManager::BuyBuild	*	*	*	the build dialog's retail layout: one cost row up to four resources, else 2+3/3+3/3+4; 16-pixel text lines, panel extents and the buybuil3..7.bin sizes; gold's double-width icon
+src/SOURCE/TOWNMGR.cpp	townManager::SetupThievesGuild	*	trivial-function-literal	*	the ranking walk's first tied player and its count of one
+src/SOURCE/TOWNMGR.cpp	townManager::GetCategoryStats	0	trivial-function-literal	0 store *	a per-player counter reset to zero

@@ -209,7 +209,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) advManager::Open(i16 id) {
             MemError();
     }
     m_routeShown = false;
-    gWindowManager->AddWindow(m_adventureWindow, 0, 1);
+    gWindowManager->AddWindow(m_adventureWindow, WINDOW_Z_ORDER_BASE, 1);
     if (m_groundTiles == NULL)
         m_groundTiles = gResourceManager->GetTileset("ground32.til");
     if (m_cloudTiles == NULL)

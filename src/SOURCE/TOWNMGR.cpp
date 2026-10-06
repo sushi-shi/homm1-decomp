@@ -100,7 +100,7 @@ townObject::~townObject() {
 // Draws the base frame, then the castle's mage-guild levels and the
 // animation frame.
 VA(0x0045f0a9, 0x103)
-void townObject::Draw(i8 advanceAnimation) {
+void townObject::Draw(b8 advanceAnimation) {
     i16 level;
 
     if (!m_visible)
@@ -125,7 +125,7 @@ void townObject::Draw(i8 advanceAnimation) {
     }
     if (m_animationFrameCount) {
         m_icon->DrawToBuffer(0, 0, m_animationFrame + 1, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
-        if (advanceAnimation == 1) {
+        if (advanceAnimation == true) {
             m_animationFrame++;
             if (m_animationFrame == m_animationFrameCount)
                 m_animationFrame = 0;
@@ -202,7 +202,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) townManager::Open(i16 priority) {
         }
     }
     gTimers[TOWN_FRAME_TIMER_SLOT] = KBTickCount() + TOWN_REDRAW_INTERVAL;
-    gWindowManager->AddWindow(m_townWindow, 0, 1);
+    gWindowManager->AddWindow(m_townWindow, WINDOW_Z_ORDER_BASE, 1);
     crestFrame = H1_ENUM_ENCODE(PlayerColor, gCurPlayerData->m_color);
     if (m_town->m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE) {
         crestFrame *= HERO_CLASS_COUNT;
@@ -259,7 +259,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) townManager::Open(i16 priority) {
         MemError();
     m_selectedStrip = m_swapStrip = m_pendingStrip = NULL;
     m_selectedArmySlot = m_swapArmySlot = m_pendingArmySlot = STRIP_SLOT_NONE;
-    DrawTown(false, 0);
+    DrawTown(false, false);
     gWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
     gMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
     gMouseManager->ReallyShowPointer();
@@ -569,18 +569,18 @@ void townManager::ShowText(char*) {
 VA(0x004607db, 0x11da)
 H1_ENUM_RETURN(MessageDispatchResult, i16) townManager::Main(struct tag_message& message) {
     i32 done;
-    i8 rightButton;
+    b8 rightButton;
     class sample* res;
     recruitUnit* recruitMgr;
 
     res = NULL;
     done = 0;
     if (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
-        rightButton = 1;
+        rightButton = true;
     else
-        rightButton = 0;
+        rightButton = false;
     if (gTimers[TOWN_FRAME_TIMER_SLOT] < KBTickCount()) {
-        DrawTown(true, 1);
+        DrawTown(true, true);
         gTimers[TOWN_FRAME_TIMER_SLOT] = KBTickCount() + TOWN_REDRAW_INTERVAL;
     }
     if ((message.type & m_dispatchMask) == 0) {
@@ -612,7 +612,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) townManager::Main(struct tag_message&
                                 break;
                             }
                             gMouseManager->ReallyHidePointer();
-                            DrawTown(true, 1);
+                            DrawTown(true, true);
                             recruitMgr = new recruitUnit(
                                 m_town,
                                 H1_ENUM_DECODE(BuildingSlotType, message.id)
@@ -758,7 +758,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) townManager::Main(struct tag_message&
                                         width = i + 1;
                                 }
                                 width = width * 88 + 0x70;
-                                DrawTown(true, 1);
+                                DrawTown(true, true);
                                 gWindowManager->FizzleForward(
                                     0,
                                     0x100,
@@ -1074,7 +1074,7 @@ VA(0x00461fb6, 0x9d)
 void townManager::RedrawTownScreen(void) {
     tag_message message;
 
-    DrawTown(true, 1);
+    DrawTown(true, true);
     m_garrisonStrip->DrawIcons(1);
     m_heroStrip->DrawIcons(1);
     SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, TOWN_STATUS_TEXT_CONTROL);
@@ -1185,7 +1185,7 @@ void townManager::Toggle(H1_ENUM_PARAM(BuildingSlotType, i8) building) {
 // Draws a bitmap background and folds the mouse pointer into the screen
 // buffer around the viewport blit.
 VA(0x0046254d, 0xe3)
-void townManager::DrawTown(b8 updateScreen, i32 advanceAnimation) {
+void townManager::DrawTown(b8 updateScreen, b32 advanceAnimation) {
     i16 index;
     i16 x;
     i16 y;
@@ -1551,7 +1551,7 @@ void townManager::BuildObj(H1_ENUM_PARAM(BuildingSlotType, i16) building) {
     class sample* sample;
 
     gMouseManager->ReallyHidePointer();
-    DrawTown(true, 1);
+    DrawTown(true, true);
     if (building == BUILDING_SLOT_MAGE_GUILD) {
         if (m_town->m_buildings & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_MAGE_GUILD))
             m_town->m_buildState++;
@@ -1584,7 +1584,7 @@ void townManager::BuildObj(H1_ENUM_PARAM(BuildingSlotType, i16) building) {
         gTownBuildingExtents[m_town->m_type][building].width,
         gTownBuildingExtents[m_town->m_type][building].height
     );
-    DrawTown(false, 1);
+    DrawTown(false, true);
     sample = LoadPlaySample("buildtwn.82M");
     gWindowManager->FizzleForward(
         gTownBuildingExtents[m_town->m_type][building].x,

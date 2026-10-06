@@ -35,6 +35,8 @@ H1_ENUM_CONST_BEGIN(HeroWindowConstant)
     // AddWindow/AddWidget z-order meaning "one above the current top"; unlinked
     // windows and widgets keep it.
     WINDOW_Z_ORDER_APPEND = -1,
+    // The bottom layer: only the first window of an empty list takes it.
+    WINDOW_Z_ORDER_BASE = 0,
     WINDOW_ALL_WIDGETS_LOW = -65535,
     WINDOW_ALL_WIDGETS_HIGH = 65535
 H1_ENUM_CONST_END(HeroWindowConstant)

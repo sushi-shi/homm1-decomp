@@ -22,7 +22,7 @@ public:
     townObject(char* name);
     ~townObject();
     // --- methods ---
-    void Draw(i8 advanceAnimation);
+    void Draw(b8 advanceAnimation);
 };
 #pragma pack(pop)
 #endif // HOMM1_SOURCE_TOWNOBJECT_H
