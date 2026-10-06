@@ -1081,7 +1081,7 @@ old_rva	new_rva	name	note
 0x0006878c	0x00054459	?Open@fileRequester@@UAEFF@Z	
 0x000688c0	0x000688c0	??0baseManager@@QAE@XZ	
 0x000689a0	0x000689a0	?CleanupSamples@@YAXXZ	
-0x00068b02	0x00068b02	?FindSampleNode@@YAPAUAudiereSampleNode@@PAVsample@@@Z	
+0x00068b02	0x00068b02	?FindSampleNode@@YAPAU?$AudiereNode@Vsample@@@@PAVsample@@@Z	
 0x00068b37	0x00068b37	?PlaySample@@YAXPAVsample@@@Z	
 0x00068bbd	0x00054826	?SetOK@fileRequester@@QAEXC@Z	
 0x00068c47	0x0005488d	?Main@fileRequester@@UAEFAAUtag_message@@@Z	

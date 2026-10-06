@@ -248,7 +248,7 @@ rva	size	kind	name	unit	channel	game_rva	evidence
 0x00024518	0x11	func	?Data@palette@@QAEPACXZ	BASE/PALETTE	src	0x000748c8	masked game body 0x748c8 (17 bytes, 0 fields masked) unique at a census start
 0x00024570	0x2e	func	??_Gpalette@@UAEPAXI@Z	BASE/PALETTE	src_compgen	0x00074920	masked game body 0x74920 (46 bytes) at its unit's block offset, shared by 5 bodies (13 identical occurrence(s))
 0x000245a0	0x162	func	?CleanupSamples@@YAXXZ	BASE/Audio	src	0x000689a0	masked game body 0x689a0 (354 bytes, 17 fields masked) unique at a census start
-0x00024702	0x35	func	?FindSampleNode@@YAPAUAudiereSampleNode@@PAVsample@@@Z	BASE/Audio	src	0x00068b02	masked game body 0x68b02 (53 bytes, 1 fields masked) unique at a census start
+0x00024702	0x35	func	?FindSampleNode@@YAPAU?$AudiereNode@Vsample@@@@PAVsample@@@Z	BASE/Audio	src	0x00068b02	masked game body 0x68b02 (53 bytes, 1 fields masked) unique at a census start
 0x00024737	0x38d	func	?PlaySample@@YAXPAVsample@@@Z	BASE/Audio	src	0x00068b37	masked game body 0x68b37 (909 bytes, 41 fields masked) unique at a census start
 0x00024ac4	0x29	func	?LoadPlaySample@@YAPAVsample@@PAD@Z	BASE/Audio	src	0x00068ec4	masked game body 0x68ec4 (41 bytes, 3 fields masked) unique at a census start
 0x00024aed	0x71	func	?StopSample@@YAXPAVsample@@@Z	BASE/Audio	src	0x00068eed	masked game body 0x68eed (113 bytes, 3 fields masked) unique at a census start

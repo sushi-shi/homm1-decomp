@@ -185,7 +185,6 @@ bool SamplesSuspended() {
     return gSampleSuspensions > 0;
 }
 
-inline AudiereSampleNode::~AudiereSampleNode() {}
 
 DATA(0x004cddec)
 audiere::OutputStreamPtr AudiereMusic::stream;

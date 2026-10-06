@@ -771,7 +771,7 @@ rva	name
 0x000688c0	??0baseManager@@QAE@XZ
 0x000689a0	?CleanupSamples@@YAXXZ
 0x000689a0	CleanupSamples
-0x00068b02	?FindSampleNode@@YAPAUAudiereSampleNode@@PAVsample@@@Z
+0x00068b02	?FindSampleNode@@YAPAU?$AudiereNode@Vsample@@@@PAVsample@@@Z
 0x00068b02	FindSampleNode
 0x00068b37	?PlaySample@@YAXPAVsample@@@Z
 0x00068b37	PlaySample
@@ -837,7 +837,7 @@ rva	name
 0x00069dd5	SetVolumes
 0x00069e60	??4?$RefPtr@VOutputStream@audiere@@@audiere@@QAEAAV01@PAVOutputStream@1@@Z
 0x00069ef0	??4?$RefPtr@VSampleSource@audiere@@@audiere@@QAEAAV01@PAVSampleSource@1@@Z
-0x00069f80	??1AudiereSampleNode@@QAE@XZ
+0x00069f80	??1?$AudiereNode@Vsample@@@@QAE@XZ
 0x00069fb0	?CycleColors@@YAXXZ
 0x0006a14c	??0heroWindowManager@@QAE@XZ
 0x0006a1eb	?Open@heroWindowManager@@UAEFF@Z
