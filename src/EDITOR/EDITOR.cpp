@@ -1270,7 +1270,7 @@ char gText[768];
 DATA(0x00451e90)
 class font* gBigFont;
 DATA(0x00451e94)
-char* DEFAULT_AGGREGATE_NAME;
+char* gDefaultAggregateName;
 // The map header the eventsManager dialogs edit.
 DATA(0x00451e98)
 SMapHeader* gMapHeader;
