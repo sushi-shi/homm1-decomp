@@ -436,3 +436,9 @@ shows up in the measuring commands above.
   four spans after it, are named from their DOS readers; thirteen members
   with no reader in any build are `m_unused*`, as are the other spans no code
   reads.
+- Name bare constants (`homm1 verify constants`, floor 0): every numeric
+  literal in both programs is either a named constant or domain member, or
+  kept as a plain number with its reason in `config/constants.tsv` (1,513
+  rows, many covering a whole function or file). About 2,000 0/1 literals
+  became `true`/`false` on `b8`/`b32` storage; flags held in `i16` fields keep
+  their integers, since no 16-bit flag type exists.

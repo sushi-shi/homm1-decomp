@@ -37,14 +37,10 @@ _CUR / MAX / HIST: 1,057 / 1,057 / 1,057 exact &middot; 100.00% / 100.00% / 100.
 
 ## Reconstruction debt
 
-Open cleanup work; the [debt notes](docs/reconstruction-debt.md) hold the
-measuring commands and the record of resolved categories. Counts cover `src`
-and `include`. Preserve banked matches and the linked-image identity.
-
-- [ ] Name bare constants: **9** open literals (`homm1 verify constants`
-  floor, both programs); about 2,000 0/1 flag literals became `true`/`false`
-  on `b8`/`b32` storage, and compiler-proven NULL/bool/enum replacements are
-  at 0.
+None open. The [debt notes](docs/reconstruction-debt.md) record each
+resolved category, its final count and the commands that re-measure it; the
+`homm1 build verify` gates (constants floor 0, strict view 0, link-diff 0 for
+both programs) keep them closed.
 
 ## Branches
 

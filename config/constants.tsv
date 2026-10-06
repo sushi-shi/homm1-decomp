@@ -6,7 +6,7 @@
 # (tab-separated; every field is an fnmatch glob, `*` matches anything; the
 # first matching row wins): file owner spelling group detail reason.
 # group/detail are the census' review_group/review_context columns.
-#floor	9
+#floor	0
 *	*	0	trivial-function-literal	0 for-init	a for loop's counter starts at zero
 *	*	0	trivial-function-literal	0 initializer*	an accumulator or counter declared at zero
 *	*	1	trivial-function-literal	1 arithmetic*	a one-step offset: the next index, element or count
@@ -1420,6 +1420,12 @@ src/BASE/INPUTMGR.cpp	inputManager::GetEvent	0	trivial-function-literal	0 store 
 src/BASE/INPUTMGR.cpp	inputManager::Open	1	trivial-function-literal	1 initializer	SetPositiveOption's default value
 src/BASE/INPUTMGR.cpp	*	[01]	trivial-function-literal	[01] *m_mouseMessageActive	MouseMessageHandler's 16-bit re-entry guard (an i16 flag)
 src/BASE/INPUTMGR.cpp	ResetEventQueue	0	trivial-function-literal	0 store m_*Index	the event ring's read and write indices back at the start
+src/BASE/INPUTMGR.cpp	*	[01]	trivial-function-literal	[01] store m_keyPrefixPending	the keyboard handler's prefix flag (an i16 field; no 16-bit flag type)
+src/BASE/INPUTMGR.cpp	*	[01]	trivial-function-literal	[01] store m_keyboardHookInstalled	the keyboard-hook flag the constructor clears (an i16 field)
+src/BASE/INPUTMGR.cpp	*	[01]	trivial-function-literal	[01] store m_mouseDriverReady	the mouse-driver flag the constructor clears (an i16 field)
+src/BASE/INPUTMGR.cpp	*	[01]	trivial-function-literal	[01] store m_relativeMouse	relative mouse motion on or off (an i16 field)
+src/BASE/INPUTMGR.cpp	*	1	trivial-function-literal	1 store m_mouseSpeedDivisor	the unscaled mouse-speed divisor
+src/BASE/INPUTMGR.cpp	inputManager::inputManager	0	trivial-function-literal	0 store m_unused34f	a field nothing reads, cleared by the constructor
 src/BASE/miscwin.cpp	AutoInitSVGA	0	trivial-function-literal	0 return	the Windows build's SVGA set-up does nothing and reports zero
 src/BASE/miscwin.cpp	ClipIconToBitmap	0	trivial-function-literal	0 equality sClipRun	an empty icon RLE run
 src/BASE/miscwin.cpp	ClippedMonoIconToBitmap	0	trivial-function-literal	0 equality	a mono RLE skip of zero (the row's end command)
