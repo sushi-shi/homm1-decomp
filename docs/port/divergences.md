@@ -113,10 +113,11 @@ commit.
 Found while hunting the defects above. They give wrong results without
 memory errors, so the port keeps them, as the Visual C++ build does: plain
 `port` stays faithful to the original game. The Tournament Edition
-(`source-te`, and `port-te` on the native port) fixes every one of them:
-the rows marked TE as the edition itself does, the others as the `BUG-*`
-rows of its `docs/te/changes.tsv`, which record each fix and its
-reproduction. The last column names the fix.
+(`source-te`, and `port-te` on the native port) fixes them, the rows
+marked TE as the edition itself does, the others as the `BUG-*` rows of its
+`docs/te/changes.tsv`, which record each fix and its reproduction; rows it
+keeps as the original game has them say so. The last column names the
+fix.
 
 | Area | Bug | Reproduction | On the Tournament Edition |
 | --- | --- | --- | --- |
@@ -151,7 +152,7 @@ reproduction. The last column names the fix.
 | Puzzle | Off-map cells of the puzzle show cell (0,0). | An ultimate artifact near the map's edge. | Fixed (`BUG-ADV-4`). |
 | Stray hero and town cells | Some shipped maps (DNL3, AES3, PNM3, UHS6) have hero or town triggers with no record; clicking them shows hero or town 0, and selects it if owned. | PNM31234: defeat the monsters at (7,45) or (33,61) and click their cells. | Fixed (`BUG-ADV-5`). |
 | Campaign crests | The crest table should be read at `[i-1]`, so the enemy lords' crests are random. | Campaign scenarios 5-8: the enemy lord's crest. | Fixed (`BUG-CAM-1`). |
-| Thieves' Guild | Resources are grouped wrongly in the Thieves' Guild view (`TOWNMGR`). | Crystal is counted with wood and ore; 20 crystal and no wood or ore. | Fixed (`BUG-TWN-1`). |
+| Thieves' Guild | Crystal is counted with wood and ore in the Thieves' Guild view (`TOWNMGR`). | 20 crystal and no wood or ore. | Kept as retail: the grouping ("Wood, Crystal & Ore") was intended (`BUG-TWN-1` reverted). |
 | Recruiting a hero | `RecruitHero` sets the owner of both tavern heroes. | With the original tavern, the same hero offered in two taverns. | Fixed (`BUG-TWN-2`). |
 | Weekly monster growth | `PerWeek` adds 1 to 10 to a recruiting site's 8-bit stock (`m_objectMetadata +=`). | The stock grows only while below 100, so it stays at 109 or less: it cannot wrap. | Not a defect. |
 | Editor generator | A broken bubble sort ranks the regions; `minX--` for `minY--`; `direction % 1`; `castleRegion[c-1]`; road destinations take `.x` for `y`; the road trace stops on its destination; a missing `else` places stone liths twice on desert. | Random maps (MAPOBJ.cpp). | Fixed (`BUG-GEN-1–5`). |

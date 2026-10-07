@@ -456,24 +456,6 @@ void CampaignLordCrest() {
 }
 
 
-// The Thieves' Guild counted crystal with wood and ore.
-void ThievesGuildResourceGroups() {
-    i32 saved[GAME_PLAYER_COUNT][RESOURCE_COUNT];
-    i32 stats[GAME_PLAYER_COUNT];
-    i8 order[GAME_PLAYER_COUNT];
-    for (int i = 0; i < GAME_PLAYER_COUNT; i++) {
-        memcpy(saved[i], gGame->m_players[i].m_resources, sizeof(saved[i]));
-        memset(gGame->m_players[i].m_resources, 0, sizeof(saved[i]));
-    }
-    gGame->m_players[0].m_resources[RESOURCE_CRYSTAL] = 20;
-    gTownManager->GetCategoryStats(THIEVES_CATEGORY_WOOD_AND_ORE, stats, order);
-    i32 common = stats[0];
-    gTownManager->GetCategoryStats(THIEVES_CATEGORY_RARE_RESOURCES, stats, order);
-    Expect(common == 0 && stats[0] == 20, "crystal counts as a rare resource in the Thieves' Guild");
-    for (int i = 0; i < GAME_PLAYER_COUNT; i++)
-        memcpy(gGame->m_players[i].m_resources, saved[i], sizeof(saved[i]));
-}
-
 // ComputeUALoc tested player > 0: the first player never had the hint a
 // computer player digs at.
 void FirstPlayerUltimateHint() {
@@ -573,7 +555,6 @@ int main() {
     SummonBoatOnTheEdge();
     StrayTownsUnderMonsters();
     CampaignLordCrest();
-    ThievesGuildResourceGroups();
     FirstPlayerUltimateHint();
     TownFlagsForEveryTown();
     FullWidthCopy();

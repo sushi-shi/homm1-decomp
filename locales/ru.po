@@ -6765,11 +6765,11 @@ msgstr "Казна:"
 
 #: src/SOURCE/KB.cpp
 msgid "table.gWinSetupText.63"
-msgstr "Дерево и руда:"
+msgstr "Дерево, кристаллы и руда:"
 
 #: src/SOURCE/KB.cpp
 msgid "table.gWinSetupText.64"
-msgstr "Редкие ресурсы:"
+msgstr "Самоцветы, сера и ртуть:"
 
 #: src/SOURCE/KB.cpp
 msgid "table.gWinSetupText.65"

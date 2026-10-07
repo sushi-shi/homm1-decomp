@@ -14,8 +14,9 @@ source under `src/`. `changes.tsv` (next to this file) holds one row per
 change with the columns `id, component, kind, va_or_key, function, category,
 description, recommendation, risk, status, status_note`; `status` records how
 this branch implements the row (implemented, differs, deferred,
-skipped-out-of-scope, or build choice for a row that belongs to how the
-program is built rather than to its source).
+skipped-out-of-scope, build choice for a row that belongs to how the
+program is built rather than to its source, or reverted for a fix taken
+back, with the reason in `status_note`).
 
 ## 1. Summary
 
@@ -957,10 +958,11 @@ balance or the computer's weights were left as they are.
   without towns, the route map's release, the new turn's leaked text, the
   town list's knob, and three windows never deleted.
 - *Campaign (BUG-CAM-1):* the enemy lords' crests, read one entry late.
-- *Towns (BUG-TWN-1–4):* the Thieves' Guild's resource groups, the owner
-  the recruit window gave both tavern heroes, the "built today" flags of
-  towns 32-35, which lived in the first hero's id, and a second click on
-  the selected stack in the swap window.
+- *Towns (BUG-TWN-2–4):* the owner the recruit window gave both tavern
+  heroes, the "built today" flags of towns 32-35, which lived in the first
+  hero's id, and a second click on the selected stack in the swap window.
+  BUG-TWN-1 (crystal ranked with the rare resources in the Thieves' Guild)
+  is reverted: the retail grouping, "Wood, Crystal & Ore", was intended.
 - *Platform (BUG-PLT-1):* the full-screen flag left set when DirectDraw
   cannot start.
 - *Files and text (BUG-FIL-1–5):* the high score tables' reads and scenario

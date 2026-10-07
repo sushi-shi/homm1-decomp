@@ -6765,11 +6765,11 @@ msgstr "Gold in Treasury:"
 
 #: src/SOURCE/KB.cpp
 msgid "table.gWinSetupText.63"
-msgstr "Wood & Ore:"
+msgstr "Wood, Crystal & Ore:"
 
 #: src/SOURCE/KB.cpp
 msgid "table.gWinSetupText.64"
-msgstr "Rare Resources:"
+msgstr "Gems, Sulfur & Mercury:"
 
 #: src/SOURCE/KB.cpp
 msgid "table.gWinSetupText.65"

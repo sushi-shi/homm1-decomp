@@ -181,7 +181,9 @@ native counterparts carry the same effect:
 ### Retail gameplay bugs the port keeps and port-te fixes
 
 `docs/port/divergences.md` lists retail gameplay bugs the port keeps; plain
-`port` stays faithful to the original game, and port-te fixes all of them.
+`port` stays faithful to the original game, and port-te fixes them, except
+the Thieves' Guild grouping, kept as the original has it (BUG-TWN-1,
+reverted).
 The edition itself fixes ghost retaliation (X10), bad luck (X11),
 auto-resolved losses (X12), duplicate stacks (X13), the wandering monster
 count (X14), experience of grown stacks (X15), map-placed heroes' movement
