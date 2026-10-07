@@ -239,7 +239,7 @@ public:
     i32 m_campaignDay;
     i8 m_mapSize;
     i8 m_mapDifficulty;
-    char m_mapName[0x11];
+    char m_mapName[GAME_MAP_NAME_SIZE];
     char m_mapDescription[0x79];
     char m_saveName[0x15f];
     i8 m_difficulty;

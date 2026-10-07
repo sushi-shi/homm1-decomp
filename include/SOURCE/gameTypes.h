@@ -11,7 +11,9 @@ enum GameStorageConstant {
     // One bit per town; the original game kept four bytes, so towns 32-35
     // used the bits of the first hero's id.
     GAME_TOWN_FLAG_BYTES = (GAME_TOWN_COUNT + 7) / 8,
-    GAME_TOWN_FLAG_BYTES_ORIGINAL = 4
+    GAME_TOWN_FLAG_BYTES_ORIGINAL = 4,
+    // game::m_mapName, terminator included.
+    GAME_MAP_NAME_SIZE = 0x11
 };
 
 enum GamePlayerConstant {

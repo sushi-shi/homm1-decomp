@@ -2029,7 +2029,8 @@ i32 AddScoreToHighScore(
             entries[shiftRank + 1] = entries[shiftRank];
         GetDataEntry(localization::Tr("score.name.prompt"), enteredPlayerName, 16, NULL);
         strcpy(entries[entry].playerName, enteredPlayerName);
-        strcpy(entries[entry].scenarioName, scenarioName);
+        strncpy(entries[entry].scenarioName, scenarioName, sizeof(entries[entry].scenarioName) - 1);
+        entries[entry].scenarioName[sizeof(entries[entry].scenarioName) - 1] = 0;
         entries[entry].score = score;
         for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++)
             WriteHighScore(newScores, entries[entry]);

@@ -770,8 +770,11 @@ void fileRequester::ShowMapInfo(void) {
     if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE)
         msg.text = gMapDifficultyNames[m_mapInfo[m_selectedIndex].difficulty];
     gReqExtraWindow->BroadcastMessage(msg);
-    if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE)
-        strcpy(gFullMapName, m_mapNames[m_selectedIndex].text);
+    // A long file name is cut to the game's map name.
+    if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE) {
+        strncpy(gFullMapName, m_mapNames[m_selectedIndex].text, GAME_MAP_NAME_SIZE - 1);
+        gFullMapName[GAME_MAP_NAME_SIZE - 1] = 0;
+    }
     if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE)
         strcpy(gMapDescription, m_mapInfo[m_selectedIndex].description);
     SET_WIDGET_MESSAGE(msg, WIDGET_COMMAND_SET_TEXT, descriptionId);
