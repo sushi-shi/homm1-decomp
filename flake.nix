@@ -127,7 +127,9 @@
           (builtins.filter (pkgs.lib.hasSuffix ".json") (builtins.attrNames (builtins.readDir ./locales)));
       };
 
-      python = pkgs.python3.withPackages (ps: [ ps.capstone ps.libclang ]);
+      # PyGhidra boots Ghidra's JVM (GHIDRA_INSTALL_DIR, JAVA_HOME below) for
+      # `homm1 tool ghidra` and the viewer export.
+      python = pkgs.python3.withPackages (ps: [ ps.capstone ps.libclang ps.pyghidra ]);
       homm1-cli = pkgs.writeShellScriptBin "homm1" ''
         project_dir="''${HOMM1_DIR:-}"
         if [ -z "$project_dir" ]; then
@@ -138,13 +140,15 @@
       commonTools = with pkgs; [
         homm1-cli python git ninja binutils llvm llvmPackages.clang-unwrapped clang-tools
         ripgrep file jq p7zip cabextract vostok-delinker objdiff objdiff-cli
-        rust
+        rust ghidra jdk21
       ];
       commonHook = ''
         export HOMM1_DIR="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
         export PYTHONPATH="$HOMM1_DIR/scripts''${PYTHONPATH:+:$PYTHONPATH}"
         homm1_compiler=$(${python}/bin/python3 -c 'import os,pathlib,tomllib; print(tomllib.loads((pathlib.Path(os.environ["HOMM1_DIR"])/"config/units.toml").read_text())["build"]["compiler"])')
         export MSVC_DIR="$HOMM1_DIR/build/toolchains/$homm1_compiler"
+        export GHIDRA_INSTALL_DIR="${pkgs.ghidra}/lib/ghidra"
+        export JAVA_HOME="${pkgs.jdk21}/lib/openjdk"
         export PYTHONDONTWRITEBYTECODE=1
       '';
     in {
