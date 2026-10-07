@@ -1,10 +1,10 @@
 # Rust-like clang-format style for the reconstructed C++. Whitespace-only =>
-# matching-NEUTRAL. Applied by .githooks/pre-commit; rationale in docs/build-system.md.
+# matching-NEUTRAL. Applied by .githooks/pre-commit (see docs/workflow.md).
 ---
 Language: Cpp
 BasedOnStyle: LLVM
 # c++03 is clang-format's OLDEST standard; any pre-C++11 value keeps `> >` (not
-# `>>`), which the pre-C++98 MSVC 4.0 parser needs. Not a claim that we're c++03.
+# `>>`), which the VC6 parser needs. Not a claim that we're c++03.
 Standard: c++03
 
 # --- indentation -----------------------------------------------------------
@@ -64,12 +64,17 @@ AlignTrailingComments:
   OverEmptyLines: 0
 SortIncludes: Never
 
-# --- project macros (include/match.h) ----------------------------------------
+# --- project macros (include/match.h, include/Domains.h, include/H1/Macros.h) --
 StatementMacros:
   - VA
   - VA_DECL
   - DATA
-  - SIZE # Win32 type name; retained for existing formatter behavior, not an rva.h macro.
+  # A complete declaration with no trailing semicolon: it expands to the
+  # enum's step operators (or to nothing outside the strict view).
+  - H1_ENUM_STEPPED
+# OVERRIDE marks virtual overrides (`void Close(void) OVERRIDE;`).
+AttributeMacros:
+  - OVERRIDE
 # The mangled-symbol carrier is whitespace-sensitive ONLY (one canonical
 # spelling, gated by `homm1 verify label-style`): clang-format must never re-space
 # or wrap its args - it splits stdcall decorations (`_WinMain@16` ->

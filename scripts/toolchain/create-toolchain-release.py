@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Build the reproducible HoMM1 compiler bundle from preserved media.
 
-The archive combines the pinned VC4 files in ``config/toolchains.json`` with
-MASM 6.11's ML.EXE/ML.ERR. Microsoft shipped MASM separately; its first
+The archive combines the pinned compiler files in ``config/toolchains.json``
+(VC4.1 by default, VC6 SP5 with ``HOMM1_COMPILER=vc6``) with MASM 6.11's
+ML.EXE/ML.ERR. Microsoft shipped MASM separately; its first
 diskette is preserved by PCjs as a lossless CHS JSON image, and its two
 KWAJ-compressed members are expanded with libmspack.
 

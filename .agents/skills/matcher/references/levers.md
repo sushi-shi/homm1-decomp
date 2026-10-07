@@ -21,7 +21,7 @@ Compiler mechanisms live in
   them positively for family, topology, widths, names, and abstraction—not as
   negative proof when revisions differ.
 - Search paired Debug/Release objects for CodeView locals, scopes, types, and
-  source paths. Compile recovered facts in the real HoMM1 VC4 TU.
+  source paths. Compile recovered facts in the real HoMM1 VC6 TU.
 - For lost headroom, recover the old exact/high source hash before proposing a
   new one. Historical exact recoveries found spurious out-param initializers,
   a deleted frame local, and deliberate structural trades.
@@ -81,7 +81,7 @@ arithmetic was handwritten.
   referents and `llvm-nm` COMDAT evidence.
 - Treat per-caller inline budget as a population problem only after candidate
   helpers are independently proved. Missing repeated one-field helpers changed
-  constructor call/expansion populations and EH states. Re-prove inline behavior with VC4 controls; never retain cost padding or forcing devices.
+  constructor call/expansion populations and EH states. Re-prove inline behavior with VC6 controls; never retain cost padding or forcing devices.
 - A pure register-colour row may still be missing one inline IL tuple. This
   closed `MidiManager::GetMasterVolume` after in-body and TU probes were flat.
 

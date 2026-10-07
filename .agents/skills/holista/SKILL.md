@@ -3,7 +3,8 @@ name: holista
 description: Recover the inline helpers, accessors, and macros hidden inside HoMM1 functions. Read one function at a time, mark where its statements drop below the abstraction level of the code around them (raw member arrays, container internals, repeated expressions, scoped blocks), restore the helper the original developers called, and apply it across every site. Use for helper-recovery passes over random functions, for hard walls that may be an open-coded helper, and whenever a function mixes domain operations with the internals of another class.
 ---
 
-Use HoMM1's pinned VC4 profile and absolute `VA(...)` source annotations.
+Use HoMM1's pinned VC6 SP5 profiles (`config/units.toml`) and absolute
+`VA(...)` source annotations.
 The active score is strict (`data_matching=true`): data-reference identities
 and addends count. `AGENTS.md` and the user's instructions take precedence.
 

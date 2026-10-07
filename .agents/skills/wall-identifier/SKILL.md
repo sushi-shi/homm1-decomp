@@ -1,16 +1,17 @@
 ---
 name: wall-identifier
-description: Classify a HoMM1 matching WALL before spending effort on it. When a reconstruction plateaus below 100% and no spelling obviously closes it, name WHICH VC4 decision diverged - inline/call-set, control flow, register/schedule, or masked/referent - and route to the lever for that class. Start with `homm1 walls diagnose ADDRESS`. Use when a function is stuck, when triaging plateaus, when asked "why won't this match" or "what kind of wall is this". Complements `matcher` (reconstructs) and `permute` (breaks proven codegen residue); this one DIAGNOSES.
+description: Classify a HoMM1 matching WALL before spending effort on it. When a reconstruction plateaus below 100% and no spelling obviously closes it, name WHICH VC6 decision diverged - inline/call-set, control flow, register/schedule, or masked/referent - and route to the lever for that class. Start with `homm1 walls diagnose ADDRESS`. Use when a function is stuck, when triaging plateaus, when asked "why won't this match" or "what kind of wall is this". Complements `matcher` (reconstructs) and `permute` (breaks proven codegen residue); this one DIAGNOSES.
 ---
 
-Use HoMM1's pinned VC4 profile and absolute `VA(...)` source annotations.
+Use HoMM1's pinned VC6 SP5 profiles (`config/units.toml`) and absolute
+`VA(...)` source annotations.
 The active score is strict (`data_matching=true`): data-reference identities
 and addends count. `AGENTS.md` and the user's instructions take precedence.
 
 
 # wall-identifier — classify the wall before fighting it
 
-The pinned VC4 is deterministic: `bytes = f(preprocessed TU, flags)`.
+The pinned VC6 SP5 compiler is deterministic: `bytes = f(preprocessed TU, flags)`.
 A confirmed compiler profile permits controlled source comparisons; a
 persistent discrepancy may still require checking the profile itself. The unit of
 reproduction is the whole TU: some residue is front-end state no local body
@@ -43,7 +44,7 @@ Do not call a wall class N while class N-1 still diverges.
 
 Read the unit's flags from `config/units.toml`. Inline thresholds and template
 behavior observed with other compilers are hypotheses, not HoMM1 facts.
-Prove each missing expansion with the complete caller and a real VC4 control.
+Prove each missing expansion with the complete caller and a real VC6 control.
 
 - The class is **inline / call-set**, not "inline budget". A call-count delta
   can also be a duplicated or merged call-carrying exit tail, and an
@@ -55,7 +56,7 @@ Prove each missing expansion with the complete caller and a real VC4 control.
 - A missing expansion usually means the CALLER's body is incomplete — budget
   follows statement mass. Finish the caller before touching the callee.
 - `homm1 walls inline-model --gap <rva>` reports candidacy evidence;
-  VC5 budget measurement is not a supported VC4 prediction.
+  budget measurements from other compilers are not VC6 predictions.
   `llvm-nm build/objdiff/base/*.obj | grep <mangled>` screens which TUs emit a
   COMDAT.
 - Never land a forcing device (PMF ref, dllexport, artificial caller) to
@@ -100,9 +101,10 @@ does not prove those identities. Fix wrong code referents before permutation.
 
 ## What does NOT transfer from other compilers
 
-Do not transfer VC5 or VC6 allocator models, inline thresholds, `/Ob2`
-semantics, template quirks or IL capture switches without real VC4 controls.
-The pattern reference labels its unmeasured hypotheses explicitly.
+Do not transfer VC4 or MSVC 5.0 allocator models, inline thresholds, `/Ob2`
+semantics, template quirks or IL capture switches without real VC6 controls.
+The pattern reference states the compiler each note was measured on and labels
+its unmeasured hypotheses explicitly.
 
 A reproducibly bounded residue stays visible through the derived inventory,
 the MAX ledger, and a valid `@early-stop` marker; never a hand-kept wall

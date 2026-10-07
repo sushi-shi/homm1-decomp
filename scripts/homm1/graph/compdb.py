@@ -4,11 +4,12 @@
     python3 -m homm1.graph.compdb --check    # verify the existing file only
 
 The clangd compilation database is ADDITIVE tooling that runs alongside the
-matching build; it never touches it. The matching build compiles with MSVC
-4.0's CL.EXE under wine, which clang-based consumers cannot invoke, so this
-emits clang-cl driver entries that point clang at the VC4 headers and ask it
-to emulate cl 10.00 (`_MSC_VER=1000`). Parse-only - no
-wine, no CL.EXE.
+matching build; it never touches it. The matching build compiles with the
+pinned compiler's CL.EXE under wine (VC6 SP5 here), which clang-based
+consumers cannot invoke, so this emits clang-cl driver entries that point
+clang at that toolchain's headers and ask it to emulate its cl version
+(VC6: 12.00, `_MSC_VER=1200`; .clangd repeats it). Parse-only - no wine, no
+CL.EXE.
 
 Consumers: clangd (the .clangd file points CompileFlags.CompilationDatabase
 at build/clangd/), homm1.tool.clang (per-TU extraction flags - a unit with

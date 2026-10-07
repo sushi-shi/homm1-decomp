@@ -1,10 +1,10 @@
 # HoMM1 Buka 2003 reconstruction
 
-Byte-matching C++ reconstruction of the Buka 2003 Windows `HEROES.EXE`
-(`config/retail/targets.json`), built with the pinned Visual C++ 6.0 SP5
-toolchain. Retail bytes are the authority. Every annotated function matches;
-the remaining goals are a byte-identical linked executable and the scenario
-editor (`EDITOR.EXE`) as a second target.
+Byte-matching C++ reconstruction of the Buka 2003 Windows `HEROES.EXE` and
+its scenario editor `EDITOR.EXE` (`config/retail/targets.json`), built with
+the pinned Visual C++ 6.0 SP5 toolchain. Retail bytes are the authority. The
+reconstruction is complete: every function of both programs matches, and both
+link byte-identical to retail. Changes must keep it that way.
 
 ## Build and gates
 
@@ -39,8 +39,8 @@ editor (`EDITOR.EXE`) as a second target.
 
 | Path | Contents |
 | --- | --- |
-| `src/BASE`, `src/SOURCE`, `include/` | reconstructed source and headers |
-| `vendor/` | third-party code (Audiere, LZHUF) |
+| `src/BASE`, `src/SOURCE`, `src/EDITOR`, `include/` | reconstructed source and headers |
+| `vendor/` | third-party code (Audiere, Miles, LZHUF) |
 | `config/`, `config/retail/` | build contracts; retail facts |
 | `scripts/homm1/` | tooling; keep `homm1.core.usage.logged` on entry points (`homm1 audit usage`) |
 | `tools/` | Rust tools |

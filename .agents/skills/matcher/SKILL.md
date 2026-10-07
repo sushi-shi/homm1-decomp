@@ -1,9 +1,10 @@
 ---
 name: matcher
-description: Reconstruct and byte-match HoMM1 C++ functions, translation units, classes, globals, and referents against retail HEROES.EXE with VC4. Use for function matching, low historical-MAX work, TU reconstruction, class/type recovery, vtable or calling-convention recovery, relocation/referent correction, data modeling, and diagnosing a plateau before declaring it bounded or using the permuter.
+description: Reconstruct and byte-match HoMM1 C++ functions, translation units, classes, globals, and referents against the Buka 2003 retail HEROES.EXE and EDITOR.EXE with VC6 SP5. Use for function matching, low historical-MAX work, TU reconstruction, class/type recovery, vtable or calling-convention recovery, relocation/referent correction, data modeling, and diagnosing a plateau before declaring it bounded or using the permuter.
 ---
 
-Use HoMM1's pinned VC4 profile and absolute `VA(...)` source annotations.
+Use HoMM1's pinned VC6 SP5 profiles (`config/units.toml`) and absolute
+`VA(...)` source annotations.
 The active score is strict (`data_matching=true`): data-reference identities
 and addends count. `AGENTS.md` and the user's instructions take precedence.
 
@@ -104,7 +105,7 @@ Details and proven exceptions: the `wall-identifier` skill.
   casts disappear. Raw offsets, casts of `this`, and `.cpp`-local views are
   defects.
 - Recover vtables mechanically from `homm1 sema class`: `inherited` declares
-  nothing, `override` follows the existing VC4 header convention, `new` is plain `virtual`. Never add
+  nothing, `override` follows the existing `OVERRIDE` header convention, `new` is plain `virtual`. Never add
   dummy virtuals (placeholder slots once shipped a live crash by truncating a
   vtable); one class has one real `??_7`. Use the actual per-unit flags in `config/units.toml`; missing RTTI does
   not prove a class non-polymorphic.

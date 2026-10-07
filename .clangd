@@ -1,8 +1,8 @@
 # clangd over the GENERATED clang-cl compilation database. This is ADDITIVE
 # editor tooling (go-to-def / completion / hover / diagnostics) that runs
 # alongside the real matching build - it does NOT drive or verify it. The Wine
-# MSVC 4.0 build (homm1.tool.cl, driven by the ninja `cl` edge) is the sole
-# verdict on correctness; clang is only a READER of this MSVC4-dialect code.
+# VC6 SP5 build (homm1.tool.cl, driven by the ninja `cl` edge) is the sole
+# verdict on correctness; clang is only a READER of this VC6-dialect code.
 #
 # Generate the DB first:  python3 -m homm1.graph.compdb   (see docs/clangd.md)
 CompileFlags:
@@ -10,11 +10,12 @@ CompileFlags:
   # matching build writes a repo-root database, so this path is the whole story.
   CompilationDatabase: build/clangd
   Add:
-    # Emulate MSVC 4.0 (cl 10.00 == _MSC_VER 1000) so the era CRT / DirectX
-    # headers take their MSVC-version codepaths. Mirrors homm1/graph/compdb.py;
+    # Emulate VC6 (cl 12.00 == _MSC_VER 1200), as homm1/graph/compdb.py does,
+    # so the era CRT / DirectX headers take their MSVC-version codepaths. Add
+    # runs after the database's flags, so this value must agree with it; it
     # also applies when clangd opens a header with no direct compdb entry.
     - --target=i386-pc-windows-msvc
-    - -fms-compatibility-version=10.00
+    - -fms-compatibility-version=12.00
     - -fms-extensions
     - -fdelayed-template-parsing
     # The era CRT/SDK headers trip dialect errors clang's compat mode cannot be
@@ -23,17 +24,16 @@ CompileFlags:
     # the abort point. clangd's command mangler drops this flag when it comes
     # from the compdb, so it MUST live here.
     - -ferror-limit=0
-    # MSVC 4.0 predates the C++11 rule that bans `char *p = "literal";` (only
-    # *deprecated* in C++98/03). The real cl build accepts it, so clang's
-    # -Wwritable-strings ("ISO C++11 does not allow conversion from string
-    # literal to 'char *'") is a false positive against our target - silence it.
+    # VC6 accepts `char *p = "literal";` (only *deprecated* in C++98/03), so
+    # clang's -Wwritable-strings ("ISO C++11 does not allow conversion from
+    # string literal to 'char *'") is a false positive here - silence it.
     - -Wno-writable-strings
 
 Diagnostics:
   # The toolchain headers are reached via /imsvc (system includes), so clangd
   # already silences diagnostics that ORIGINATE inside CRT/DirectX headers.
   # The settings below tame the few clang-cl warnings that still leak through
-  # MSVC4-dialect code without hiding genuine problems in our own src/ sources.
+  # VC6-dialect code without hiding genuine problems in our own src/ sources.
   Suppress:
     # MSVC lets a non-virtual dtor be called through a base ptr etc.; the old
     # SDK headers lean on several such MSVC-isms that are not actionable here.
