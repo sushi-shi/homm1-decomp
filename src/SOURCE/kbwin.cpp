@@ -285,6 +285,7 @@ LRESULT CALLBACK AppWndProc(HWND window, UINT message, WPARAM messageParam, LPAR
             if (messageParam
                 == reinterpret_cast<u32>(window)) // API-forced: WPARAM carries the changing window.
                 break;
+            // fall through
         case WM_QUERYNEWPALETTE:
             return QueryNewPalette();
         case WM_PAINT:
@@ -302,9 +303,11 @@ LRESULT CALLBACK AppWndProc(HWND window, UINT message, WPARAM messageParam, LPAR
                     return 0;
                 }
             }
+            // fall through
         case WM_DESTROY:
             gClosingApp = true;
             PostQuitMessage(0);
+            // fall through
         case WM_QUIT:
             ShutDown(NULL);
             break;
@@ -1128,8 +1131,8 @@ i32 gUnusedWindowValue = -1;
 DATA(0x0049e720)
 static char* gCDTrackName = "Tracks\\02-AudioTrack 02.ogg";
 
-VA(0x00444702, 0x72)
 // Suppress the system's critical-error dialog while probing an empty drive.
+VA(0x00444702, 0x72)
 bool DriveSupportsFreeSpaceQuery(char driveLetter) {
     UINT oldMode;
     char path[CD_DRIVE_QUERY_PATH_SIZE];
@@ -1148,9 +1151,9 @@ bool DriveSupportsFreeSpaceQuery(char driveLetter) {
     }
 }
 
-VA(0x00444774, 0x36f)
 // The disc probe now checks an Ogg track; it no longer opens an MCI CD device.
 #define key activeKeyVal // frame-slot spelling
+VA(0x00444774, 0x36f)
 H1_ENUM_RETURN(CdSetupResult, i32) SetupCDDrive(void) {
     HKEY key;
     char keyPath[REGISTRY_TEXT_BUFFER_SIZE];

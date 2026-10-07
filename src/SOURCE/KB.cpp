@@ -1613,8 +1613,8 @@ DATA(0x0049053c)
 i16 gHorseFrameFlip[16] = {45, 46, 47, 48, 49, 50, 51, 52, 53, 179, 178, 177, 54, 175, 174, 55};
 DATA(0x0049055c)
 i16 gBoatFrameFlip[16] = {0, 0, 9, 9, 18, 18, 27, 27, 36, 36, 155, 155, 146, 146, 137, 137};
-DATA(0x0049057c)
 // Four player colors and the neutral-owner color; the following bytes are linker alignment.
+DATA(0x0049057c)
 i16 gRadarOwnerColor[5] = {79, 105, 200, 129, 10};
 DATA(0x00490588)
 H1_ENUM_ARRAY(i16, gRadarTerrainColor, TerrainType, 24) = {
@@ -1748,9 +1748,9 @@ void HandleRemoteSuddenExit(void) {
     );
 }
 
-VA(0x0043f956, 0x238)
 // The exiting player's position, whether it held the turn (unused here),
 // whether it was eliminated and whether it timed out.
+VA(0x0043f956, 0x238)
 void ReceiveRemotePlayerExit(i8 position, i8 hadControl, b8 eliminated, b8 timedOut) {
     if (position == gThisGamePos) {
         sprintf(gText, localization::Tr("network.player.eliminated"));

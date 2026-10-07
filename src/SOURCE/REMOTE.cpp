@@ -826,8 +826,8 @@ void WriteModemPacket(char* buffer, i32 length) {
         ForcePollSound();
 }
 
-VA(0x004532e8, 0x1e3)
 // The eighth flag maps a game position to its net position.
+VA(0x004532e8, 0x1e3)
 b32 TransmitRemoteData(
     void* data,
     i32 destination,

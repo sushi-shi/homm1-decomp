@@ -143,8 +143,8 @@ H1_C_LINKAGE i16 __cdecl nb_rcv(i32 port, u16 maxLength, void* buffer) {
     return 0;
 }
 
-VA(0x00445121, 0xee)
 // The leading port argument is unused.
+VA(0x00445121, 0xee)
 H1_C_LINKAGE i16 __cdecl nb_snd(i32 port, u16 session, u16 length, void* data, i32 priority) {
     tag_Node* node;
     if (session == gNbMaxSess && length == 0) {

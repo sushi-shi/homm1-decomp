@@ -6667,7 +6667,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) advManager::CheckHandleNetPlayerWait(
                     message.executiveCommand = EXECUTIVE_COMMAND_TERMINATE_LOOP;
                     return MESSAGE_DISPATCH_FORWARD;
                 }
-
+                // fall through
             default:
                 break;
         }

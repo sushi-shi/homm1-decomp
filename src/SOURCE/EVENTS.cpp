@@ -764,6 +764,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
             break;
         case MAP_OBJECT_WHIRLPOOL:
             DoWhirlpool(visitingHero);
+            // fall through
         case MAP_OBJECT_STONE_LITHS:
             portalCount = 0;
             for (teleY = 0; teleY < MAP_CELL_GRID_SIZE; teleY++) {
@@ -2303,6 +2304,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
             break;
         case MAP_OBJECT_WHIRLPOOL:
             DoWhirlpool(eventHero);
+            // fall through
         case MAP_OBJECT_STONE_LITHS:
             portalCount = 0;
             for (teleY = 0; teleY < MAP_CELL_GRID_SIZE; teleY++) {

@@ -290,6 +290,7 @@ void SmackMain() {
             case MESSAGE_KEY_DOWN:
                 if (message.keyCode == INPUT_SCAN_F4)
                     break;
+                // fall through
             case MESSAGE_LEFT_BUTTON_DOWN:
             case MESSAGE_RIGHT_BUTTON_DOWN:
                 active = false;

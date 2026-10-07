@@ -770,6 +770,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) NewGameHandler(tag_message& message) 
                                         H1_ENUM_ENCODE(ComputerPlayerType, PLAYER_TYPE_NONE);
                                 }
                             }
+                            // fall through
                         case NEW_GAME_CANCEL:
                             FINISH_DIALOG_MESSAGE(message);
                             return MESSAGE_DISPATCH_FORWARD;

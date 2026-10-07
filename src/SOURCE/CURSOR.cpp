@@ -411,6 +411,7 @@ mapCell* advManager::MoveHero(
                     else
                         goto movementDone;
                 }
+                // fall through
             case MAP_OBJECT_SIGNPOST:
             case MAP_OBJECT_SKELETON:
             case MAP_OBJECT_TREASURE_CHEST:
@@ -692,6 +693,7 @@ i16 advManager::ValidMoveWithEvent(hero* movingHero, H1_ENUM_PARAM(MapDirection,
                 else
                     return 0;
             }
+            // fall through
         case MAP_OBJECT_SIGNPOST:
         case MAP_OBJECT_SKELETON:
         case MAP_OBJECT_TREASURE_CHEST:

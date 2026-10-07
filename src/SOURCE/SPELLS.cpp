@@ -160,6 +160,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) HandleCastSpell(struct tag_message& m
         case MESSAGE_KEY_DOWN:
             if (message.keyCode != INPUT_SCAN_ESCAPE)
                 break;
+            // fall through
         case MESSAGE_RIGHT_BUTTON_DOWN:
             gCombatManager->m_selectedSpell = SPELL_NONE;
             gNextAction = ACTION_NONE;
@@ -250,6 +251,7 @@ void combatManager::SpellMessage(H1_ENUM_PARAM(SpellType, i8) spell, i8 hex) {
                 sprintf(gText, localization::Tr("combat.spell.teleport_here"));
                 break;
             }
+            // fall through
         default:
             sprintf(
                 gText,
