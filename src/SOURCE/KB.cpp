@@ -2002,7 +2002,7 @@ i32 AddScoreToHighScore(
         }
     } else {
         for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++)
-            read(file, &entries[entry], sizeof(entries));
+            read(file, &entries[entry], sizeof(entries[entry]));
         close(file);
     }
 
@@ -2024,7 +2024,8 @@ i32 AddScoreToHighScore(
             entries[shiftRank + 1] = entries[shiftRank];
         GetDataEntry(localization::Tr("score.name.prompt"), enteredPlayerName, 16, NULL);
         strcpy(entries[entry].playerName, enteredPlayerName);
-        strcpy(entries[entry].scenarioName, scenarioName);
+        strncpy(entries[entry].scenarioName, scenarioName, sizeof(entries[entry].scenarioName) - 1);
+        entries[entry].scenarioName[sizeof(entries[entry].scenarioName) - 1] = 0;
         entries[entry].score = score;
         file = open(scoreFile, _O_BINARY | _O_TRUNC | _O_CREAT | _O_WRONLY, _S_IWRITE);
         if (file == FILE_DESCRIPTOR_INVALID)

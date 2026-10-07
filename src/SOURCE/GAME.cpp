@@ -452,7 +452,7 @@ i16 game::SaveGame(char* filename, b8 generateName) {
             sprintf(genName, "%s.GM%d", filename, nHuman);
         }
     } else {
-        sprintf(genName, filename);
+        strcpy(genName, filename);
     }
     if (!stricmp(genName, "REMOTE.GAM")) {
         sprintf(savePath, "%s%s", gDataPath, genName);
@@ -595,6 +595,7 @@ void game::UpgradeOriginalSave(void) {
 
 i16 game::LoadGame(char* filename, b32 origData, b32) {
     i32 saveFormat;
+    i32 watchable;
     i32 junk2;
     i32 numHumans;
     i32 ix;
@@ -640,7 +641,7 @@ i16 game::LoadGame(char* filename, b32 origData, b32) {
     READ_FILE_VALUE(theLoadHandle, m_mapDifficulty);
     read(theLoadHandle, m_mapName, sizeof(m_mapName));
     read(theLoadHandle, m_saveName, 0x11);
-    sprintf(m_saveName, filename);
+    strcpy(m_saveName, filename);
     READ_FILE_VALUE(theLoadHandle, m_difficulty);
     READ_FILE_VALUE(theLoadHandle, m_playerCount);
     READ_FILE_VALUE(theLoadHandle, gSavedCurPlayer);
@@ -715,6 +716,19 @@ i16 game::LoadGame(char* filename, b32 origData, b32) {
             strcpy(gGame->m_saveName, filename);
     }
     close(theLoadHandle);
+    // A damaged save without a valid player count, current player or a
+    // player to watch here is refused.
+    if (!origData) {
+        watchable = 0;
+        if (m_playerCount >= 1 && m_playerCount <= GAME_PLAYER_COUNT) {
+            for (ix = 0; ix < m_playerCount; ix++) {
+                if (gThisNetHumanPlayer[ix])
+                    watchable++;
+            }
+        }
+        if (watchable == 0 || gCurPlayer < 0 || gCurPlayer >= m_playerCount)
+            FileError(pathName);
+    }
     if (!origData && saveFormat == SAVE_FORMAT_ORIGINAL)
         UpgradeOriginalSave();
     gAdvManager->m_heroContextLocked = false;

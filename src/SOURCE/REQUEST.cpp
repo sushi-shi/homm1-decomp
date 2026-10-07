@@ -27,6 +27,12 @@
 #include <string.h>
 
 i32 ShowThisMap(char* fileName) {
+    // Names are copied into fields sized for 8.3 names (gMapName, the
+    // extension); a longer name is not listed.
+    char* extension = FindLastToken(fileName, '.');
+    if (strlen(fileName) > FILE_REQUESTER_LISTED_NAME_LIMIT
+        || (extension && strlen(extension) >= FILE_REQUESTER_EXTENSION_SIZE))
+        return 0;
 #ifdef HOMM1_EDITOR
     if (strnicmp(fileName, "AES3", FILE_REQUESTER_SHIPPED_MAP_PREFIX_LENGTH)
         && strnicmp(fileName, "BEM2", FILE_REQUESTER_SHIPPED_MAP_PREFIX_LENGTH)
@@ -131,7 +137,8 @@ fileRequester::fileRequester(
     if (findHandle != INVALID_HANDLE_VALUE) {
         found = TRUE;
         while (found) {
-            if (ShowThisMap(findFileData.cFileName)) {
+            // Files that appeared since the count are left out.
+            if (insertCount < m_fileCount && ShowThisMap(findFileData.cFileName)) {
                 strcpy(nameBuffer, findFileData.cFileName);
                 extensionStart = FindLastToken(nameBuffer, '.');
                 if (extensionStart) {
@@ -171,8 +178,16 @@ fileRequester::fileRequester(
                 FileError(fullFileName);
             READ_FILE_VALUE(file, header);
             if (header.id == MAP_HEADER_ID) {
-                strcpy(m_mapNames[entryIndex].text, header.name[0]);
-                strcpy(m_mapInfo[entryIndex].description, header.description[0]);
+                // The header's fields need not end within themselves; a
+                // description is cut to the list's field.
+                strncpy(m_mapNames[entryIndex].text, header.name[0], MAP_HEADER_NAME_SIZE);
+                m_mapNames[entryIndex].text[MAP_HEADER_NAME_SIZE] = 0;
+                strncpy(
+                    m_mapInfo[entryIndex].description,
+                    header.description[0],
+                    FILE_REQUESTER_MAP_DESCRIPTION_SIZE - 1
+                );
+                m_mapInfo[entryIndex].description[FILE_REQUESTER_MAP_DESCRIPTION_SIZE - 1] = 0;
                 m_mapInfo[entryIndex].difficulty = header.difficulty;
                 m_mapInfo[entryIndex].size = header.size;
             } else {
@@ -742,13 +757,16 @@ void fileRequester::ShowMapInfo(void) {
     gReqExtraWindow->BroadcastMessage(msg);
     if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE)
         gMapDifficulty = m_mapInfo[m_selectedIndex].difficulty;
-    sprintf(gText, gCurMapName);
+    sprintf(gText, "%s", gCurMapName);
     SET_WIDGET_MESSAGE(msg, WIDGET_COMMAND_SET_TEXT, levelId);
     if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE)
         msg.text = gMapDifficultyNames[m_mapInfo[m_selectedIndex].difficulty];
     gReqExtraWindow->BroadcastMessage(msg);
-    if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE)
-        strcpy(gFullMapName, m_mapNames[m_selectedIndex].text);
+    // A long file name is cut to the game's map name.
+    if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE) {
+        strncpy(gFullMapName, m_mapNames[m_selectedIndex].text, GAME_MAP_NAME_SIZE - 1);
+        gFullMapName[GAME_MAP_NAME_SIZE - 1] = 0;
+    }
     if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE)
         strcpy(gMapDescription, m_mapInfo[m_selectedIndex].description);
     SET_WIDGET_MESSAGE(msg, WIDGET_COMMAND_SET_TEXT, descriptionId);

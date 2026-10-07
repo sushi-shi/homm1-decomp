@@ -206,13 +206,13 @@ void highScoreManager::Update(void) {
         hsMessage.text = gText;
         hsMessage.id = rank * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET;
         if (highScore.score != HIGH_SCORE_EMPTY)
-            sprintf(gText, highScore.playerName);
+            sprintf(gText, "%s", highScore.playerName);
         m_window->BroadcastMessage(hsMessage);
 
         hsMessage.id = rank * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET
                        + HIGH_SCORE_TEXT_SCENARIO_OFFSET;
         if (highScore.score != HIGH_SCORE_EMPTY)
-            sprintf(gText, highScore.scenarioName);
+            sprintf(gText, "%s", highScore.scenarioName);
         m_window->BroadcastMessage(hsMessage);
 
         hsMessage.id = rank * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET

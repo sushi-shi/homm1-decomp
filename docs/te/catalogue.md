@@ -958,7 +958,11 @@ section 1, each with the reproduction it was checked against.
   towns 32-35, which lived in the first hero's id, and a second click on
   the selected stack in the swap window.
 - *Platform (BUG-PLT-1):* the full-screen flag left set when DirectDraw
-  cannot start. The port's "weekly monster
+  cannot start.
+- *Files and text (BUG-FIL-1–4):* the high score tables' reads and scenario
+  names, names and event texts used as printf formats, the map list's
+  unbounded names and descriptions, and damaged saves without a player to
+  watch. The port's "weekly monster
   growth" row is not a defect: `game::PerWeek` grows a site's stock only
   below 100 and by at most 10, so the byte never exceeds 109.
 - *Random map generator (BUG-GEN-1–5):* region ranking, region bounds,

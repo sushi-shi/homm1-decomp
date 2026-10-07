@@ -11,6 +11,8 @@ class iconWidget;
 
 enum FileRequesterStorageConstant {
     FILE_REQUESTER_NAME_SIZE = 0x15f,
+    // The longest name listed: an 8.3 name.
+    FILE_REQUESTER_LISTED_NAME_LIMIT = 12,
     FILE_REQUESTER_EXTENSION_SIZE = 5,
     FILE_REQUESTER_LOCAL_NAME_SIZE = 352,
     FILE_REQUESTER_UNUSED_NAME_SIZE = 200,

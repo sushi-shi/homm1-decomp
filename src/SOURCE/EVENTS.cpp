@@ -1444,8 +1444,11 @@ void advManager::EventWindow(
     newUnused = 1;
     if (eventId >= EVENT_TEXT_FIRST && eventId < EVENT_TEXT_WINDOW_END)
         sprintf(eventText, gEventText[eventId]);
-    else if (eventId == EVENT_TEXT_CUSTOM)
-        sprintf(eventText, text);
+    else if (eventId == EVENT_TEXT_CUSTOM) {
+        // The text is shown as it is, cut to the window's buffer.
+        strncpy(eventText, text, sizeof(eventText) - 1);
+        eventText[sizeof(eventText) - 1] = 0;
+    }
     else
         sprintf(eventText, localization::Tr("event.unknown"), eventId);
     NormalDialog(eventText, buttons, 0x61, -1, type1, value1, type2, value2, showOrText);
