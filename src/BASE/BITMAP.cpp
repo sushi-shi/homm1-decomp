@@ -34,7 +34,7 @@ bitmap::bitmap(H1_ENUM_PARAM(BitmapType, i16) type, i16 width, i16 height)
     m_pixels = static_cast<u8*>(malloc(width * height));
 }
 
-// Retail's ID constructor reads the packed bitmap and postprocesses its pixels.
+// Reads the packed bitmap resource and postprocesses its pixels.
 VA(0x00473230, 0x106)
 bitmap::bitmap(i16 id) : resource(RESOURCE_CATEGORY_BITMAP, id, RESOURCE_REFERENCE_INITIAL, NULL) {
     gResourceManager->PointToFile(id);
@@ -83,7 +83,7 @@ void bitmap::GrabBitmap(bitmap* source, i16 x, i16 y) {
 }
 
 // Raw screenshot writer: combat palette followed by the pixel plane.
-// Buka returns immediately when the output file cannot be opened.
+// Returns immediately when the output file cannot be opened.
 VA(0x0047345e, 0xa3)
 void bitmap::Write(char* filename) {
     palette* combatPaletteData;

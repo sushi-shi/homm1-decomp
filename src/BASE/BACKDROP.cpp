@@ -1,4 +1,4 @@
-// Retail-backed backdrop widget resource reader.
+// Backdrop widget: copies the screen-buffer area it covers to the display.
 
 #include <match.h>
 

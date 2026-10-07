@@ -21,7 +21,8 @@ executive::executive(void) {
     m_result = 0;
 }
 
-// Retail opens sound unconditionally and returns AX.
+// Opens resources, input, sound, the mouse and the window manager; any failure
+// shuts the program down.
 VA(0x00472a25, 0xbd)
 H1_ENUM_RETURN(BaseManagerStatus, i16) executive::InitSystem(void) {
     if (gResourceManager->Open(BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
@@ -37,7 +38,9 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) executive::InitSystem(void) {
     return BASE_MANAGER_SUCCESS;
 }
 
-// Retail preserves next before removing a manager, then closes resources/input.
+// Stops audio, removes every manager but the window and mouse managers
+// (reading each next link first), then those two, and closes resources and
+// input.
 VA(0x00472ae2, 0xb6)
 void executive::ShutDownSystem(void) {
     EarlyShutDownSystem();
@@ -58,7 +61,9 @@ void executive::ShutDownSystem(void) {
     gInputManager->Close();
 }
 
-// Buka BASE/EXEC DoDialog; retail saves twenty manager links per array.
+// Runs manager modally in a nested executive with the mouse and window
+// managers, then restores the links of up to EXECUTIVE_DIALOG_MANAGER_CAPACITY
+// outer managers.
 #define nestedExecutive ex      // frame-slot spelling
 #define savedManagers saveMgr   // frame-slot spelling
 #define savedPrevLinks savePrev // frame-slot spelling
@@ -183,7 +188,6 @@ void executive::CallManager(baseManager* manager) {
     m_activeManager = saved;
 }
 
-// Retail 0x47a5a0 event loop; Buka BASE/EXEC MainLoop correspondence.
 VA(0x00472fb5, 0x16b)
 void executive::MainLoop(void) {
     i8 done = 0;

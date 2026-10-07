@@ -57,7 +57,8 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) mouseManager::Open(i16 priority) {
     return BASE_MANAGER_SUCCESS;
 }
 
-// Retail releases both monochrome/color masks and pauses around cursor teardown.
+// Releases every cursor's masks and bitmaps, pausing before and after the
+// teardown.
 VA(0x0046b6aa, 0x190)
 void mouseManager::Close(void) {
     i32 cursorIndex;
@@ -113,7 +114,7 @@ VA(0x0046b8b2, 0x6bd)
 #line 232 MOUSEMGR_CPP_PATH
 void mouseManager::SetPointer(i16 frame) {
     DATA(0x004cfb44)
-    static BOOL gInSetPointer = FALSE;
+    static b32 gInSetPointer = false;
     i32 cursorIndex;
     i32 x;
     i32 y;
@@ -132,7 +133,7 @@ void mouseManager::SetPointer(i16 frame) {
 
     if (gInSetPointer)
         return;
-    gInSetPointer = TRUE;
+    gInSetPointer = true;
 
     if (frame == MOUSE_KEEP_CURRENT_FRAME)
         frame = m_cursorFrame;
@@ -232,7 +233,7 @@ void mouseManager::SetPointer(i16 frame) {
     }
 
     SetCursor(gMouseCursors[cursorIndex]);
-    gInSetPointer = FALSE;
+    gInSetPointer = false;
 }
 
 // The Windows build leaves the software-pointer hooks empty.
@@ -322,8 +323,8 @@ void mouseManager::ShowSystemCursor(void) {
     ShowCursor(TRUE);
 }
 
-// Mouse-manager data, initialized from retail .data (0x004a0e70..) and
-// zero-filled cursor tables (0x004cac88..).
+// Mouse-manager data: the per-type cursor offsets, the hotspots, and the
+// Win32 objects and bits built for each cursor.
 DATA(0x004a0ff8)
 i32 gMouseOffset[3] = {0, 40, 55};
 DATA(0x004a1004)

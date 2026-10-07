@@ -7,6 +7,7 @@
 #include <BASE/heroWindow.h>
 #include <BASE/message.h>
 #include <BASE/resourceManager.h>
+#include <BASE/textEntryWidget.h>
 #include <BASE/textWidget.h>
 #include <SOURCE/KB.h>
 
@@ -104,7 +105,8 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) textWidget::Main(tag_message& message
             if (WIDGET_CONTAINS_LOCAL_POINT(*this, x, y)) {
                 m_flags |= WIDGET_FLAG_SELECTED;
                 SET_WIDGET_MESSAGE(message, WIDGET_NOTIFY_SELECT, m_id);
-                // Retail tests the type after SET_WIDGET_MESSAGE replaces it.
+                // SET_WIDGET_MESSAGE has already replaced the type, so the right-button
+                // modifier is never set here.
                 if (message.type == MESSAGE_RIGHT_BUTTON_DOWN)
                     message.modifiers = MESSAGE_MODIFIER_RIGHT_BUTTON;
                 return MESSAGE_DISPATCH_FORWARD;
@@ -116,7 +118,8 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) textWidget::Main(tag_message& message
             if (m_flags & WIDGET_FLAG_SELECTED) {
                 m_flags &= ~WIDGET_FLAG_SELECTED;
                 SET_WIDGET_MESSAGE(message, WIDGET_NOTIFY_DESELECT, m_id);
-                // Retail tests the type after SET_WIDGET_MESSAGE replaces it.
+                // SET_WIDGET_MESSAGE has already replaced the type, so the right-button
+                // modifier is never set here.
                 if (message.type == MESSAGE_RIGHT_BUTTON_UP)
                     message.modifiers = MESSAGE_MODIFIER_RIGHT_BUTTON;
                 return MESSAGE_DISPATCH_FORWARD;
@@ -150,7 +153,7 @@ void textWidget::SetText(char* text) {
         u16 newLength = strlen(text);
         if (newLength > strlen(m_text)) {
             free(m_text);
-            m_text = static_cast<char*>(malloc(newLength + 5));
+            m_text = static_cast<char*>(malloc(newLength + TEXT_ENTRY_ALLOCATION_PADDING));
         }
         strcpy(m_text, text);
     } else {

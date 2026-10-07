@@ -1,4 +1,4 @@
-// Retail screen blitting.
+// Screen blitting, palette fades and the clipped icon renderers.
 
 #define WIN32_LEAN_AND_MEAN
 
@@ -47,7 +47,7 @@ void BlitBitmapToScreen(
                 width
             );
     }
-    if (gEnlargeScreenBlit != false) {
+    if (gEnlargeScreenBlit) {
         if (gMainWinScreenWidth == LOGICAL_SCREEN_WIDTH
             && gMainWinScreenHeight == LOGICAL_SCREEN_HEIGHT) {
             if (width < LOGICAL_SCREEN_WIDTH)
@@ -104,7 +104,7 @@ void SetPalette(i8* paletteData, b32 updateDisplay) {
         paletteData + PALETTE_CYCLE_FIRST * PALETTE_GRAPHICS_CHANNELS,
         sizeof(gCyclePal)
     );
-    if (updateDisplay != false)
+    if (updateDisplay)
         UpdatePalette(gBufferPalette->m_data);
 }
 
@@ -134,7 +134,7 @@ void FadeIn(i32 increment) throw() {
             UpdatePalette(pal->m_data);
         }
     }
-    if (done == false) {
+    if (!done) {
         i = PALETTE_FADE_LEVEL_LAST;
         goto fadeStep;
     }
@@ -167,7 +167,7 @@ void FadeOut(i32 increment) throw() {
         }
         UpdatePalette(pal->m_data);
     }
-    if (done == false) {
+    if (!done) {
         i = PALETTE_FADE_LEVEL_LAST;
         goto fadeStep;
     }
@@ -256,14 +256,14 @@ void ClippedMonoIconToBitmap(
     u8* source = sourceIcon->m_data + entry->srcOffset;
     i32 curX = x + entry->x;
     i32 curY = y + entry->y;
-    BOOL decoding = TRUE;
+    b32 decoding = true;
     while (decoding) {
         if (static_cast<i8>(*source) < 0) {
             if ((*source & ICON_MONO_SKIP_MASK) != 0) {
                 curX += *source & ICON_MONO_SKIP_MASK;
                 source++;
             } else
-                decoding = FALSE;
+                decoding = false;
         } else if (*source != ICON_MONO_NEWLINE_COMMAND) {
             if (curY >= clipY && curY <= clipBottom && curX + *source >= clipX
                 && curX <= clipRight) {
@@ -341,7 +341,7 @@ DATA(0x004cfb6c)
 static u32 gClipRun;
 #define gClipInside sClipInside // spelling fixes .bss order
 DATA(0x004cfbb0)
-static BOOL gClipInside;
+static b32 gClipInside;
 // No retail code reads this; it holds its retail .bss place.
 #define gMiscScanTable sMiscScanTable // spelling fixes .bss order
 DATA(0x004cfb70)
@@ -374,9 +374,9 @@ void ClipIconToBitmap(
             clipW,
             clipH
         )) {
-        gClipInside = TRUE;
+        gClipInside = true;
     } else {
-        gClipInside = FALSE;
+        gClipInside = false;
         gClipLimitX = clipX + clipW - 1;
         gClipLimitY = clipY + clipH - 1;
     }

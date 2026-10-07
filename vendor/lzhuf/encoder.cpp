@@ -1,6 +1,6 @@
-// Okumura-style LZSS with adaptive Huffman coding, used for HoMM1's
-// multiplayer save transfer.  The tables and stream framing are taken from
-// the NWC executable; Buka retains the tables and stream framing.
+// Okumura-style LZSS with adaptive Huffman coding, used for the multiplayer
+// save transfer: the game-facing wrappers, the encoder, the shared globals and
+// the initial Huffman tables.
 
 #include <match.h>
 
@@ -8,9 +8,6 @@
 
 #include <BASE/LZHUF_internal.h>
 #include <BASE/Misc.h>
-void InitializeTree(void);
-void ReconstructEncoderTree(void);
-static void EncodeEnd(void);
 #include <SOURCE/KB.h>
 
 #include <stdio.h>

@@ -1,4 +1,4 @@
-// Retail-backed icon widget resource reader.
+// Icon widget: one icon frame, drawn or filled with a single colour.
 
 #include <match.h>
 
@@ -139,7 +139,8 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) iconWidget::Main(tag_message& message
             if (m_flags & WIDGET_FLAG_SELECTED) {
                 m_flags &= ~WIDGET_FLAG_SELECTED;
                 SET_WIDGET_MESSAGE(message, WIDGET_NOTIFY_DESELECT, m_id);
-                // Retail tests the type after SET_WIDGET_MESSAGE replaces it.
+                // SET_WIDGET_MESSAGE has already replaced the type, so the right-button
+                // modifier is never set here.
                 if (message.type == MESSAGE_RIGHT_BUTTON_UP)
                     message.modifiers = MESSAGE_MODIFIER_RIGHT_BUTTON;
                 return MESSAGE_DISPATCH_FORWARD;

@@ -53,19 +53,27 @@ heroWindow::heroWindow(i16 x, i16 y, i16 width, i16 height, i16 flags) {
     m_savedBackground = NULL;
 }
 
+#define dimmerItem pDimmer     // frame-slot spelling
+#define borderItem pBorder     // frame-slot spelling
+#define item pWidget           // frame-slot spelling
+#define textEntryItem pTextEnt // frame-slot spelling
+#define iconItem pIcon         // frame-slot spelling
+#define buttonItem pButton     // frame-slot spelling
+#define textItem pText         // frame-slot spelling
+#define backdropItem pBack     // frame-slot spelling
 VA(0x0046d150, 0x5a0)
 heroWindow::heroWindow(i16 x, i16 y, char* resourceName) {
     i16 finished;
     i16 resourceFile;
-    dimmerWidget* pDimmer;
-    border* pBorder;
-    widget* pWidget;
-    textEntryWidget* pTextEnt;
-    iconWidget* pIcon;
-    button* pButton;
-    textWidget* pText;
+    dimmerWidget* dimmerItem;
+    border* borderItem;
+    widget* item;
+    textEntryWidget* textEntryItem;
+    iconWidget* iconItem;
+    button* buttonItem;
+    textWidget* textItem;
     H1_ENUM_STORAGE(WindowWidgetRecordType, i16) recordKind;
-    backdropWidget* pBack;
+    backdropWidget* backdropItem;
 
     strcpy(m_name, resourceName);
     resourceFile = gResourceManager->MakeId(resourceName);
@@ -85,61 +93,69 @@ heroWindow::heroWindow(i16 x, i16 y, char* resourceName) {
     while (finished == 0) {
         PollSound();
         recordKind = H1_ENUM_CAST(WindowWidgetRecordType, i16, gResourceManager->ReadWord());
-        pWidget = NULL;
+        item = NULL;
         switch (recordKind) {
             case WIDGET_RECORD_END:
                 finished++;
                 break;
             case WIDGET_RECORD_BORDER:
-                pBorder = new border();
-                pBorder->Read();
-                pWidget = pBorder;
+                borderItem = new border();
+                borderItem->Read();
+                item = borderItem;
                 break;
             case WIDGET_RECORD_BUTTON:
-                pButton = new button();
-                pButton->Read();
-                pWidget = pButton;
+                buttonItem = new button();
+                buttonItem->Read();
+                item = buttonItem;
                 break;
             case WIDGET_RECORD_ICON:
-                pIcon = new iconWidget();
-                pIcon->Read();
-                pWidget = pIcon;
+                iconItem = new iconWidget();
+                iconItem->Read();
+                item = iconItem;
                 break;
             case WIDGET_RECORD_DIMMER:
-                pDimmer = new dimmerWidget();
-                pDimmer->Read();
-                pWidget = pDimmer;
+                dimmerItem = new dimmerWidget();
+                dimmerItem->Read();
+                item = dimmerItem;
                 break;
             case WIDGET_RECORD_BACKDROP:
-                pBack = new backdropWidget();
-                pBack->Read();
-                pWidget = pBack;
+                backdropItem = new backdropWidget();
+                backdropItem->Read();
+                item = backdropItem;
                 break;
             case WIDGET_RECORD_TEXT:
-                pText = new textWidget();
-                pText->Read();
-                pWidget = pText;
+                textItem = new textWidget();
+                textItem->Read();
+                item = textItem;
                 break;
             case WIDGET_RECORD_TEXT_ENTRY:
-                pTextEnt = new textEntryWidget();
-                pTextEnt->Read(TEXT_ENTRY_READ_DEFAULT);
-                pWidget = pTextEnt;
+                textEntryItem = new textEntryWidget();
+                textEntryItem->Read(TEXT_ENTRY_READ_DEFAULT);
+                item = textEntryItem;
                 break;
             case WIDGET_RECORD_TEXT_ENTRY_RECT:
-                pTextEnt = new textEntryWidget();
-                pTextEnt->Read(TEXT_ENTRY_READ_RECT);
-                pWidget = pTextEnt;
+                textEntryItem = new textEntryWidget();
+                textEntryItem->Read(TEXT_ENTRY_READ_RECT);
+                item = textEntryItem;
                 break;
             case WIDGET_RECORD_TEXT_ENTRY_SCROLLING:
-                pTextEnt = new textEntryWidget();
-                pTextEnt->Read(TEXT_ENTRY_READ_SCROLLING);
-                pWidget = pTextEnt;
+                textEntryItem = new textEntryWidget();
+                textEntryItem->Read(TEXT_ENTRY_READ_SCROLLING);
+                item = textEntryItem;
                 break;
         }
-        if (finished == 0 && pWidget != NULL)
-            AddWidget(pWidget, WINDOW_Z_ORDER_APPEND);
+        if (finished == 0 && item != NULL)
+            AddWidget(item, WINDOW_Z_ORDER_APPEND);
     }
 }
+#undef dimmerItem
+#undef borderItem
+#undef item
+#undef textEntryItem
+#undef iconItem
+#undef buttonItem
+#undef textItem
+#undef backdropItem
 
 VA(0x0046d6f0, 0x85)
 H1_ENUM_RETURN(WindowOpenStatus, i16) heroWindow::Open(i16 zOrder, i8 updateScreen) {

@@ -65,7 +65,7 @@ void textEntryWidget::Read(H1_ENUM_PARAM(TextEntryReadMode, i32) type) {
     char name[RESOURCE_NAME_CAPACITY];
     READ_WIDGET_GEOMETRY(this, gResourceManager);
     m_maxLength = gResourceManager->ReadWord();
-    m_text = static_cast<char*>(malloc(m_maxLength + 5));
+    m_text = static_cast<char*>(malloc(m_maxLength + TEXT_ENTRY_ALLOCATION_PADDING));
     gResourceManager->ReadBlock(m_text, m_maxLength);
     gResourceManager->Read13(name);
     gResourceManager->SavePosition();
@@ -95,7 +95,7 @@ void textEntryWidget::Read(H1_ENUM_PARAM(TextEntryReadMode, i32) type) {
         m_rectH = m_height;
         m_maxLines = 1;
         if (type == TEXT_ENTRY_READ_SCROLLING)
-            m_preserveTextOnFocus = 1;
+            m_preserveTextOnFocus = TEXT_ENTRY_PRESERVE_TEXT;
         else
             m_preserveTextOnFocus = 0;
     }

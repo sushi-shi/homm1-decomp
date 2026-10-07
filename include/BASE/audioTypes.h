@@ -15,8 +15,9 @@ H1_ENUM_CONST_BEGIN(AudioTrackTableConstant)
     AUDIO_TRACK_SLOT_LAST = AUDIO_TRACK_SLOT_COUNT - 1
 H1_ENUM_CONST_END(AudioTrackTableConstant)
 
-// Logical music tracks for PlayMusic (the Ogg backend maps them to file numbers). 0..6 are the TerrainType themes and the town themes
-// start at TOWN_THEME_MUSIC_BASE; the rest are named by the call sites that
+// Logical music tracks for PlayMusic (the Ogg backend maps them to file
+// numbers). 0..6 are the TerrainType themes and the town themes start at
+// MUSIC_TRACK_TOWN_FIRST; the rest are named by the call sites that
 // play them: advManager::EventSound's object cues, the battle list in
 // combatManager::Open, DoVictory's win/lose cues, and the menu, AI-turn,
 // level-up and congratulations screens.

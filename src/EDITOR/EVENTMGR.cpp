@@ -688,8 +688,8 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) MonsterWindowHandler(tag_message& mes
                             break;
                     }
                     break;
-                // The retail handler tests the key-down message type against
-                // the widget command here, so Escape never reaches this case.
+                // This tests the key-down message type against the widget
+                // command, so Escape never reaches this case.
                 case H1_ENUM_DECODE(
                     BaseWidgetCommand,
                     H1_ENUM_ENCODE(MessageType, MESSAGE_KEY_DOWN)

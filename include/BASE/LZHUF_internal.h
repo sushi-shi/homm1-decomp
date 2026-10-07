@@ -1,8 +1,8 @@
 #ifndef HOMM1_BASE_LZHUF_INTERNAL_H
 #define HOMM1_BASE_LZHUF_INTERNAL_H
 
-// Bridge between the VC4 wrapper/encoder and the linked legacy decoder
-// members.
+// Shared between the C++ wrappers and encoder (encoder.cpp) and the assembly
+// decoder (decoder/Decoder.asm).
 extern "C" {
     void Decode();
     extern u8 d_code[256];
@@ -12,11 +12,14 @@ extern "C" {
     extern i16 initialParent[941];
 }
 
+void InitializeTree(void);
+void ReconstructEncoderTree(void);
 void PutCode(i16 length, u16 code);
 void EncodeCharacter(u16 character);
 void EncodePosition(u16 position);
 static void UpdateEncoderTree(i16 character);
 static void InsertNode(i16 node);
 static void DeleteNode(i16 node);
+static void EncodeEnd(void);
 
 #endif // HOMM1_BASE_LZHUF_INTERNAL_H

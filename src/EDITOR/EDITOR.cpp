@@ -86,7 +86,7 @@ b32 gNewMapFormat = true;
 DATA(0x0043f39c)
 i32 gClearFlags = EDITOR_CLEAR_FLAGS_DEFAULT;
 DATA(0x0043f3a0)
-i32 gSelectionX = -1;
+i32 gSelectionX = EDIT_NO_CELL;
 // The random map generator's settings (EVENTMGR's editnew.bin and MAPOBJ).
 DATA(0x0043f3a8)
 double gTerrainPercent[EDITOR_TERRAIN_COUNT] = {30.0, 30.0, 20.0, 0.0, 0.0, 0.0, 20.0};

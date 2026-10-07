@@ -37,7 +37,7 @@ public:
     // Constructor and UpdateScreenRegion establish the packed tail.
     i8 m_pointerFlags;
     // CheckDoMain compares the pointer position less this offset with the
-    // last drawn position at +0x5b/+0x5d.
+    // last drawn position (m_drawnX, m_drawnY).
     i16 m_hotspotX;
     i16 m_hotspotY;
     i16 m_mouseX;
@@ -82,20 +82,20 @@ public:
     i32 IsVis(void) {
         return m_pointerFlags & MOUSE_POINTER_FLAG_VISIBLE;
     }
-    // Empty in the Windows build (retail 0x00476e20, `ret 8`).
+    // Empty in the Windows build.
     void MovePointer(i16 x, i16 y);
-    // Empty in the Windows build (retail 0x00473410, `ret 4`); the locator
-    // knob drag passes 4 on entry and 6 on release.
+    // Empty in the Windows build; the locator knob drag passes 4 on entry and
+    // 6 on release.
     void SetCursorShape(i32 shape);
-    // Empty in the Windows build (retail 0x00476e50, `ret 8`).
+    // Empty in the Windows build.
     void WarpPointer(i16 x, i16 y);
     void SetColorMice(b32 enabled);
     // Empty unreferenced Windows-build hooks; original names unavailable.
     void UnusedTwoArgumentHook1(i16, i16);
     void UnusedTwoArgumentHook2(i16, i16);
     void UnusedOneArgumentHook(i32);
-    // The quick views hide (retail 0x00476ee0, ShowCursor(0)) and restore
-    // (0x00476ef0, ShowCursor(1)) the Windows cursor around QuickViewWait.
+    // The quick views hide (ShowCursor(FALSE)) and restore (ShowCursor(TRUE))
+    // the Windows cursor around QuickViewWait.
     void HideSystemCursor(void);
     void ShowSystemCursor(void);
 };
@@ -150,7 +150,6 @@ extern HBITMAP gColorBitmaps[MOUSE_CURSOR_COUNT];
 #define gMouseIconInfo cursorIconInfo // spelling fixes .bss order
 extern ICONINFO gMouseIconInfo[MOUSE_CURSOR_COUNT];
 
-// Moved from MOUSEMGR.cpp.
 H1_ENUM_CONST_BEGIN(MouseManagerStateConstant)
     MOUSE_INITIAL_POINTER_FLAGS = 6,
     // The pointer starts at the centre of the logical screen.

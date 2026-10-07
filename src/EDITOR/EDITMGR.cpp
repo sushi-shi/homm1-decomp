@@ -14,6 +14,7 @@
 
 #include <BASE/bitmap.h>
 #include <BASE/bmap2.h>
+#include <BASE/display.h>
 #include <BASE/executive.h>
 #include <BASE/font.h>
 #include <BASE/heroWindow.h>
@@ -60,7 +61,7 @@
 
 // The monochrome remap, a copy of the game's (EDITMGR's .data opens with it).
 DATA(0x0043b0f8)
-u8 gMonoColorMap[256] = {
+u8 gMonoColorMap[PALETTE_COLOR_COUNT] = {
     10,  11,  12,  12,  13,  14,  14,  15,  16,  16,  17,  18,  18,  19,  20,  20,  21,  22,  22,
     23,  24,  24,  25,  26,  26,  27,  28,  28,  29,  30,  30,  31,  32,  33,  34,  34,  35,  36,
     36,  37,  38,  38,  39,  40,  40,  41,  42,  42,  43,  44,  44,  45,  46,  46,  47,  48,  48,
@@ -86,7 +87,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      OVERLAY_KIND_TERRAIN,
      0,
      0x18e3,
-     0xfe,
+     RANDOM_MAP_ANY_TERRAIN,
      0x1820,
      0x0040,
      0x0000,
@@ -116,7 +117,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      OVERLAY_KIND_TERRAIN,
      0,
      0x00c3,
-     0xfe,
+     RANDOM_MAP_ANY_TERRAIN,
      0x00c0,
      0x0000,
      0x0000,
@@ -146,7 +147,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      OVERLAY_KIND_TERRAIN,
      0,
      0x0ce6,
-     0xfe,
+     RANDOM_MAP_ANY_TERRAIN,
      0x0c80,
      0x0040,
      0x0000,
@@ -176,7 +177,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      OVERLAY_KIND_TERRAIN,
      0,
      0x0066,
-     0xfe,
+     RANDOM_MAP_ANY_TERRAIN,
      0x0060,
      0x0000,
      0x0000,
@@ -806,7 +807,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      OVERLAY_KIND_TERRAIN,
      0,
      0x18e3,
-     0xfe,
+     RANDOM_MAP_ANY_TERRAIN,
      0x1820,
      0x0040,
      0x0000,
@@ -836,7 +837,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      OVERLAY_KIND_TERRAIN,
      0,
      0x00c3,
-     0xfe,
+     RANDOM_MAP_ANY_TERRAIN,
      0x00c0,
      0x0000,
      0x0000,
@@ -866,7 +867,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      OVERLAY_KIND_TERRAIN,
      0,
      0x0ce6,
-     0xfe,
+     RANDOM_MAP_ANY_TERRAIN,
      0x0c80,
      0x0040,
      0x0000,
@@ -896,7 +897,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      OVERLAY_KIND_TERRAIN,
      0,
      0x0066,
-     0xfe,
+     RANDOM_MAP_ANY_TERRAIN,
      0x0060,
      0x0000,
      0x0000,
@@ -926,7 +927,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      OVERLAY_KIND_TERRAIN,
      0,
      0x0001,
-     0xfe,
+     RANDOM_MAP_ANY_TERRAIN,
      0x0000,
      0x0000,
      0x0000,
@@ -956,7 +957,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      OVERLAY_KIND_TERRAIN,
      0,
      0x0001,
-     0xfe,
+     RANDOM_MAP_ANY_TERRAIN,
      0x0000,
      0x0000,
      0x0000,
@@ -986,7 +987,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      OVERLAY_KIND_TERRAIN,
      0,
      0x18e3,
-     0xfe,
+     RANDOM_MAP_ANY_TERRAIN,
      0x1820,
      0x0040,
      0x0000,
@@ -1016,7 +1017,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      OVERLAY_KIND_TERRAIN,
      0,
      0x00c3,
-     0xfe,
+     RANDOM_MAP_ANY_TERRAIN,
      0x00c0,
      0x0000,
      0x0000,
@@ -1046,7 +1047,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      OVERLAY_KIND_TERRAIN,
      0,
      0x0ce6,
-     0xfe,
+     RANDOM_MAP_ANY_TERRAIN,
      0x0c80,
      0x0040,
      0x0000,
@@ -1076,7 +1077,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      OVERLAY_KIND_TERRAIN,
      0,
      0x0066,
-     0xfe,
+     RANDOM_MAP_ANY_TERRAIN,
      0x0060,
      0x0000,
      0x0000,
@@ -1106,7 +1107,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      OVERLAY_KIND_TERRAIN,
      0,
      0x0001,
-     0xfe,
+     RANDOM_MAP_ANY_TERRAIN,
      0x0000,
      0x0000,
      0x0000,
@@ -1136,7 +1137,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      OVERLAY_KIND_TERRAIN,
      0,
      0x0001,
-     0xfe,
+     RANDOM_MAP_ANY_TERRAIN,
      0x0000,
      0x0000,
      0x0000,
@@ -1496,7 +1497,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      OVERLAY_KIND_TERRAIN,
      0,
      0x18e3,
-     0xfe,
+     RANDOM_MAP_ANY_TERRAIN,
      0x1820,
      0x0040,
      0x0000,
@@ -1526,7 +1527,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      OVERLAY_KIND_TERRAIN,
      0,
      0x00c3,
-     0xfe,
+     RANDOM_MAP_ANY_TERRAIN,
      0x00c0,
      0x0000,
      0x0000,
@@ -1556,7 +1557,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      OVERLAY_KIND_TERRAIN,
      0,
      0x0ce6,
-     0xfe,
+     RANDOM_MAP_ANY_TERRAIN,
      0x0c80,
      0x0040,
      0x0000,
@@ -1586,7 +1587,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      OVERLAY_KIND_TERRAIN,
      0,
      0x0066,
-     0xfe,
+     RANDOM_MAP_ANY_TERRAIN,
      0x0060,
      0x0000,
      0x0000,
@@ -1616,7 +1617,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      OVERLAY_KIND_TERRAIN,
      0,
      0x0001,
-     0xfe,
+     RANDOM_MAP_ANY_TERRAIN,
      0x0000,
      0x0000,
      0x0000,
@@ -1646,7 +1647,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      OVERLAY_KIND_TERRAIN,
      0,
      0x0001,
-     0xfe,
+     RANDOM_MAP_ANY_TERRAIN,
      0x0000,
      0x0000,
      0x0000,
@@ -1676,7 +1677,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      OVERLAY_KIND_TOWN,
      0,
      0x3def,
-     0xfe,
+     RANDOM_MAP_ANY_TERRAIN,
      0x3c00,
      0x01e0,
      0x0000,
@@ -1706,7 +1707,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      OVERLAY_KIND_TOWN,
      0,
      0x3def,
-     0xfe,
+     RANDOM_MAP_ANY_TERRAIN,
      0x3c00,
      0x01e0,
      0x0000,
@@ -1736,7 +1737,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      OVERLAY_KIND_TOWN,
      0,
      0x3def,
-     0xfe,
+     RANDOM_MAP_ANY_TERRAIN,
      0x3c00,
      0x01e0,
      0x0000,
@@ -1766,7 +1767,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      OVERLAY_KIND_TOWN,
      0,
      0x3def,
-     0xfe,
+     RANDOM_MAP_ANY_TERRAIN,
      0x3c00,
      0x01e0,
      0x0000,
@@ -1796,7 +1797,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      OVERLAY_KIND_TOWN,
      0,
      0x3def,
-     0xfe,
+     RANDOM_MAP_ANY_TERRAIN,
      0x3c00,
      0x01e0,
      0x0000,
@@ -1826,7 +1827,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      OVERLAY_KIND_TOWN,
      0,
      0x3def,
-     0xfe,
+     RANDOM_MAP_ANY_TERRAIN,
      0x3c00,
      0x01e0,
      0x0000,
@@ -1856,7 +1857,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      OVERLAY_KIND_TOWN,
      0,
      0x3def,
-     0xfe,
+     RANDOM_MAP_ANY_TERRAIN,
      0x3c00,
      0x01e0,
      0x0000,
@@ -1886,7 +1887,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      OVERLAY_KIND_TOWN,
      0,
      0x3def,
-     0xfe,
+     RANDOM_MAP_ANY_TERRAIN,
      0x3c00,
      0x01e0,
      0x0000,
@@ -1916,7 +1917,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      OVERLAY_KIND_TOWN,
      0,
      0x3def,
-     0xfe,
+     RANDOM_MAP_ANY_TERRAIN,
      0x3c00,
      0x01e0,
      0x0000,
@@ -1946,7 +1947,7 @@ overlayType gOverlayTypes[OVERLAY_TYPE_COUNT] = {
      OVERLAY_KIND_TOWN,
      0,
      0x3def,
-     0xfe,
+     RANDOM_MAP_ANY_TERRAIN,
      0x3c00,
      0x01e0,
      0x0000,
@@ -9143,7 +9144,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) editManager::Main(tag_message& messag
                         case EDIT_CONTROL_LOAD:
                             if (!PickMap("", "map", FILE_REQUESTER_LOAD))
                                 break;
-                            if (!H1_ENUM_ENCODE(BaseManagerStatus, LoadMap(m_mapFileName))) {
+                            if (LoadMap(m_mapFileName) == BASE_MANAGER_SUCCESS) {
                                 m_mapChanged = 0;
                                 m_placedX = m_placedY = EDIT_NO_CELL;
                             }
@@ -9629,7 +9630,8 @@ void editManager::DrawRadar(b32) {
         ICON_DRAW_OFFSET_FULL
     );
     gResourceManager->Dispose(buttonsIcon);
-    // Retail passes the radar's top as x and its left as y.
+    // The radar's top is passed as x and its left as y, so this update misses
+    // the radar.
     gWindowManager->UpdateScreenRegion(RADAR_TOP, RADAR_LEFT, RADAR_SIZE, RADAR_SIZE);
     UpdateKnobs(1);
     UpdateCursor();
@@ -9899,7 +9901,8 @@ void editManager::FillGround(i16 x, i16 y, i16 width, i16 height, i16 terrain) {
     gEditManager->ClearArea(x, y, width, height, EDIT_CLEAR_ALL, false);
     for (i = x; i < x + width; i++) {
         for (j = y; j < y + height; j++) {
-            m_map.cells[i][j].m_tileIndex = terrain * MAP_CELL_TILES_PER_TERRAIN + Random(0, 3);
+            m_map.cells[i][j].m_tileIndex =
+                terrain * MAP_CELL_TILES_PER_TERRAIN + Random(0, TERRAIN_TILE_VARIANT_COUNT - 1);
             m_map.cells[i][j].m_flags &= ~(MAP_CELL_OVERLAY_EXTRA | MAP_CELL_HERO_CURSOR);
         }
     }
@@ -9915,7 +9918,7 @@ void SetTileVariant(mapCell* cell, i32 firstTile) {
         return;
     if (cell->m_tileIndex < firstTile || cell->m_tileIndex >= firstTile + TERRAIN_TILE_VARIANT_COUNT
         || gVaryTiles)
-        cell->m_tileIndex = firstTile + Random(0, 3);
+        cell->m_tileIndex = firstTile + Random(0, TERRAIN_TILE_VARIANT_COUNT - 1);
 }
 
 // Removes single cells of terrain (cells whose neighbours of the terrain do
@@ -10135,8 +10138,7 @@ void editManager::DoRadar(void) {
     i16 y;
 
     gMouseManager->MouseCoords(x, y);
-    if (x < RADAR_LEFT || x > RADAR_LEFT + RADAR_SIZE || y < RADAR_TOP
-        || y > RADAR_TOP + RADAR_SIZE)
+    if (x < RADAR_LEFT || x > RADAR_RIGHT || y < RADAR_TOP || y > RADAR_BOTTOM)
         return;
     x = (x - RADAR_LEFT) / RADAR_CELL_PIXELS;
     y = (y - RADAR_TOP) / RADAR_CELL_PIXELS;
@@ -10726,7 +10728,7 @@ void editManager::WriteTowns(i32 file) {
                         || cell->m_objectIndex == EDIT_CASTLE_FRAME(TOWN_TYPE_WARLOCK)))) {
                 write(file, &x, 1);
                 write(file, &y, 1);
-                type = cell->m_objectIndex / TOWN_RACE_FRAME_STRIDE | MAP_TOWN_CASTLE_FLAG;
+                type = (cell->m_objectIndex / TOWN_RACE_FRAME_STRIDE) | MAP_TOWN_CASTLE_FLAG;
                 write(file, &type, 1);
                 count++;
                 if (cell->m_objectMetadata) {
@@ -10899,7 +10901,7 @@ void editManager::WriteArtifacts(i32 file) {
     mapCell* cell;
     i8 artifactHolders[EDIT_MAP_ARTIFACT_SLOTS];
 
-    memset(artifactHolders, -1, sizeof(artifactHolders));
+    memset(artifactHolders, GAME_TABLE_FREE, sizeof(artifactHolders));
     cell = NULL;
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
@@ -11140,11 +11142,12 @@ i32 editManager::IsCleared(
             || (tileset == TILESET_RSRC32 && index == EDIT_RESOURCE_PILE_FRAME(RESOURCE_GEMS))
             || (tileset == TILESET_RSRC32 && index == EDIT_RESOURCE_PILE_FRAME(RESOURCE_GOLD))
             || (tileset == TILESET_RSRC32 && index == EDIT_TREASURE_CHEST_FRAME)
-            || (tileset == TILESET_OBJ32_07 && index == EDIT_TREASURE_OBJECT_FRAME_A)
-            || (tileset == TILESET_OBJ32_07 && index == EDIT_TREASURE_OBJECT_FRAME_C)
-            || (tileset == TILESET_OBJ32_07 && index == EDIT_TREASURE_OBJECT_FRAME_B))
+            || (tileset == TILESET_OBJ32_07 && index == EDIT_CHEST_OBJECT_FRAME)
+            || (tileset == TILESET_OBJ32_07 && index == EDIT_CAMPFIRE_OBJECT_FRAME)
+            || (tileset == TILESET_OBJ32_07 && index == EDIT_LAMP_OBJECT_FRAME))
             return mask & EDIT_CLEAR_TREASURE;
-        return mask & (1 << (m_map.cells[x][y].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN));
+        return mask
+               & OVERLAY_TERRAIN_BIT(m_map.cells[x][y].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN);
     }
     if (tileset == TILESET_TOWN32)
         return mask & EDIT_CLEAR_TOWNS;
@@ -11279,7 +11282,7 @@ void editManager::ResetArea(i32 x, i32 y, i32 width, i32 height) {
         for (j = y; j < y + height; j++) {
             m_map.cellPairs[i][j].objectId = 0;
             m_map.cellPairs[i][j].overlayId = 0;
-            m_map.cells[i][j].m_tileIndex = Random(0, 3);
+            m_map.cells[i][j].m_tileIndex = Random(0, TERRAIN_TILE_VARIANT_COUNT - 1);
             m_map.cells[i][j].m_objectTileset = 0;
             m_map.cells[i][j].m_objectIndex = MAP_CELL_NO_FRAME;
             m_map.cells[i][j].m_overlayTileset = 0;
@@ -11294,8 +11297,8 @@ void editManager::ResetArea(i32 x, i32 y, i32 width, i32 height) {
     }
 }
 
-// The new map's file name: a letter code of the map serial ("V" to "Z" and
-// three letters), then "1234.MAP".
+// The new map's file-name code: a letter code of the map serial ("V" to "Z"
+// and three letters); NewMap appends "1234.MAP".
 VA(0x00407fcf, 0xdb)
 char* MakeMapCode(i32 serial) {
     DATA(0x00451210)

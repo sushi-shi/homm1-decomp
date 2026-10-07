@@ -5,7 +5,6 @@
 #include <BASE/font.h>
 #include <BASE/icon.h>
 #include <BASE/MAKEFILEID.h>
-#include <BASE/MIDIWrap.h>
 #include <BASE/Misc.h>
 #include <BASE/miscwin.h>
 #include <BASE/palette.h>
@@ -99,7 +98,7 @@ bitmap* resourceManager::GetBitmap(char* name) {
     }
 }
 
-// Retail forwards the 16-bit name ID to the cache overload below.
+// Forwards the name's 16-bit ID to the ID overload below.
 VA(0x0046c3db, 0x2c)
 icon* resourceManager::GetIcon(char* name) {
     i16 fileId = MakeId(name);
@@ -173,7 +172,7 @@ class sample* resourceManager::GetSample(char* name) {
 
 VA(0x0046c705, 0x75)
 void resourceManager::Dispose(class resource* resourceToDispose) {
-    if (m_expunging != false)
+    if (m_expunging)
         return;
     if (resourceToDispose != NULL) {
         resourceToDispose->m_refCount--;

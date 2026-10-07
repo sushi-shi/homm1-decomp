@@ -1,7 +1,7 @@
 #include <match.h>
 
 #include <BASE/BITS.h>
-#include <BASE/BMAP2.h>
+#include <BASE/bmap2.h>
 #include <BASE/Misc.h>
 #include <BASE/baseManager.h>
 #include <BASE/executive.h>

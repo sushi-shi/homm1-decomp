@@ -1,4 +1,4 @@
-// Retail-backed border widget resource reader.
+// Border widget: a solid or bitmap background that reports clicks.
 
 #include <match.h>
 

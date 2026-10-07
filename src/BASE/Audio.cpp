@@ -1,7 +1,7 @@
 // Buka 2003 Audiere audio: resource-backed samples, Ogg music playback, and
 // the device and volume controls. Retail compiled these as one translation
 // unit (contiguous unaligned code, one <string> ctype pair, shared template
-// instances); see docs/buka-2003.md. English game text remains in the catalogs.
+// instances); see docs/versions/buka-2003.md. English game text remains in the catalogs.
 
 #include <match.h>
 
@@ -18,20 +18,20 @@
 // compile of this file, from another checkout, has no such object.
 #ifndef HOMM1_EDITOR
 DATA(0x004cdde4)
-static int gAudioOldStore;
+static i32 gAudioOldStore;
 #endif
 #define gSampleBuffer gSampleBufferly // spelling fixes .bss order
 DATA(0x004cdf58)
 static void* gSampleBuffer;
 #define gSampleFrames gSampleFrames0 // spelling fixes .bss order
 DATA(0x004cdf5c)
-static int gSampleFrames;
+static i32 gSampleFrames;
 #define gSampleChannels gSampleChannelsa58 // spelling fixes .bss order
 DATA(0x004cdf60)
-static int gSampleChannels;
+static i32 gSampleChannels;
 #define gSampleRate gSampleRate7 // spelling fixes .bss order
 DATA(0x004cdf64)
-static int gSampleRate;
+static i32 gSampleRate;
 #define gSampleFormat gSampleFormata98 // spelling fixes .bss order
 DATA(0x004cdf68)
 static audiere::SampleFormat gSampleFormat;
@@ -40,7 +40,7 @@ DATA(0x004ce104)
 static AudiereSampleNode* gSamples;
 #define gSampleSuspensions gSampleSuspensionsa6 // spelling fixes .bss order
 DATA(0x004ce108)
-static int gSampleSuspensions;
+static i32 gSampleSuspensions;
 
 #define nextNode head // frame-slot spelling
 VA(0x004689a0, 0x162)
@@ -205,13 +205,13 @@ audiere::OutputStreamPtr AudiereMusic::channel;
 DATA(0x004cdf6c)
 audiere::SampleSourcePtr AudiereMusic::origin;
 DATA(0x004cdde8)
-static int gMusicSuspensions;
+static i32 gMusicSuspensions;
 // The playing MusicTrack as the backend's integer: -1 for none, and the
 // gMusicPositions/gCDTrackMap index.
 DATA(0x004a0d70)
-static int gCurrentTrack = -1;
+static i32 gCurrentTrack = -1;
 DATA(0x004a0d74)
-static int gCDTrackMap[AUDIO_TRACK_SLOT_COUNT] = {
+static i32 gCDTrackMap[AUDIO_TRACK_SLOT_COUNT] = {
     2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
     22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, -1, -1, -1, -1, -1, -1, -1,
     35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, -1, -1, -1, -1, -1,
@@ -223,13 +223,13 @@ DATA(0x004cddf0)
 static char gMusicFilename[352];
 #define gMusicPositions gMusicPositionsaat // spelling fixes .bss order
 DATA(0x004cdf74)
-static int gMusicPositions[AUDIO_TRACK_SLOT_COUNT];
+static i32 gMusicPositions[AUDIO_TRACK_SLOT_COUNT];
 #define gMusicSource gMusicSourcejxy // spelling fixes .bss order
 DATA(0x004ce10c)
-static int gMusicSource;
+static i32 gMusicSource;
 
 VA(0x004692b6, 0x47)
-bool ShouldRepeatMusic(H1_ENUM_PARAM(MusicTrack, int) track) {
+bool ShouldRepeatMusic(H1_ENUM_PARAM(MusicTrack, i32) track) {
     if (track < MUSIC_TRACK_TERRAIN_END
         || (track >= MUSIC_TRACK_BATTLE_FIRST && track <= MUSIC_TRACK_BATTLE_LAST)
         || track == MUSIC_TRACK_BATTLE_4 || track == MUSIC_TRACK_CONGRATULATIONS
@@ -241,7 +241,7 @@ bool ShouldRepeatMusic(H1_ENUM_PARAM(MusicTrack, int) track) {
 }
 
 VA(0x004692fd, 0x43b)
-void PlayMusic(int track) {
+void PlayMusic(i32 track) {
     if (!GetAudioDevice())
         return;
     if (MusicSuspended())
@@ -260,7 +260,7 @@ void PlayMusic(int track) {
     if (gMusicSource == H1_ENUM_ENCODE(SoundMusicSource, SOUND_MUSIC_SOURCE_DIGITAL)) {
         sprintf(gMusicFilename, "%sHeroes%02d.ogg", gSoundPath, track);
     } else {
-        int discTrack = gCDTrackMap[track];
+        i32 discTrack = gCDTrackMap[track];
         sprintf(
             gMusicFilename,
             "%s%s%02d-AudioTrack %02d.ogg",
@@ -300,7 +300,7 @@ void PlayMusic(int track) {
 }
 
 VA(0x00469738, 0xa)
-H1_ENUM_RETURN(MusicTrack, int) GetCurrentTrack() {
+H1_ENUM_RETURN(MusicTrack, i32) GetCurrentTrack() {
     return H1_ENUM_DECODE(MusicTrack, gCurrentTrack);
 }
 
@@ -332,17 +332,17 @@ void UpdateMusicVolume() {
 }
 
 VA(0x004698fb, 0x128)
-void SetMusicSource(int source) {
+void SetMusicSource(i32 source) {
     if (AudiereMusic::channel) {
         AudiereMusic::channel->stop();
         AudiereMusic::channel = NULL;
     }
     AudiereMusic::origin = NULL;
-    for (int track = 0; track <= AUDIO_TRACK_SLOT_LAST; ++track)
+    for (i32 track = 0; track <= AUDIO_TRACK_SLOT_LAST; ++track)
         gMusicPositions[track] = 0;
     gMusicSource = source;
     if (gCurrentTrack >= 0) {
-        int oldTrack = gCurrentTrack;
+        i32 oldTrack = gCurrentTrack;
         gCurrentTrack = H1_ENUM_ENCODE(MusicTrack, MUSIC_TRACK_NONE);
         PlayMusic(oldTrack);
     }
@@ -373,7 +373,7 @@ bool MusicSuspended() {
 DATA(0x004cdf50)
 audiere::AudioDevicePtr AudiereDevice::driver;
 DATA(0x004cdf54)
-int AudiereDevice::dummy;
+i32 AudiereDevice::dummy;
 DATA(0x004a0f04)
 static float gEffectsVolume = 1.0f;
 DATA(0x004a0f08)
@@ -383,7 +383,7 @@ static float gVolumeLevels[11] =
     {0.0f, 1.0f, 0.8f, 0.65f, 0.5f, 0.4f, 0.3f, 0.2f, 0.15f, 0.1f, 0.05f};
 
 VA(0x00469b56, 0xf)
-float VolumeLevel(int level) {
+float VolumeLevel(i32 level) {
     return gVolumeLevels[level];
 }
 
@@ -401,7 +401,8 @@ bool InitAudio() {
         AudiereDevice::driver = audiere::OpenDevice("null", NULL);
         if (!AudiereDevice::driver)
             return false;
-        // Retail releases even a successful fallback device (RVA 0x69caf).
+        // Even a successfully opened null device is released: the game then
+        // runs without an audio device.
         AudiereDevice::driver = NULL;
         return true;
     }
@@ -420,7 +421,7 @@ float GetEffectsVolume() {
 }
 
 VA(0x00469d6e, 0x15)
-float ScaleSampleVolume(int volume) {
+float ScaleSampleVolume(i32 volume) {
     return GetEffectsVolume() * (static_cast<float>(volume)) / 127.0f;
 }
 
@@ -436,19 +437,19 @@ void StopAllAudio() {
 }
 
 VA(0x00469d9d, 0x1c)
-void SetEffectsVolume(int level) {
+void SetEffectsVolume(i32 level) {
     gEffectsVolume = VolumeLevel(level);
     UpdateAllSampleVolumes();
 }
 
 VA(0x00469db9, 0x1c)
-void SetMusicVolume(int level) {
+void SetMusicVolume(i32 level) {
     gMusicVolume = VolumeLevel(level);
     UpdateMusicVolume();
 }
 
 VA(0x00469dd5, 0x1d)
-void SetVolumes(int effects, int music) {
+void SetVolumes(i32 effects, i32 music) {
     SetEffectsVolume(effects);
     SetMusicVolume(music);
 }

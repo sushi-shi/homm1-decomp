@@ -49,7 +49,8 @@ H1_ENUM_CONST_END(TownSiteConstant)
 H1_ENUM_CONST_BEGIN(RandomMapConstant)
 // GenerateRandomMap retries a map without enough castles this often.
     RANDOM_MAP_ATTEMPTS = 5,
-    // overlayType::terrainMask of an object placeable on every terrain.
+    // overlayType::terrainMask of the terrain-neutral mountain and tree chain
+    // sets and the towns: every land terrain (water, bit 0, is clear).
     RANDOM_MAP_ANY_TERRAIN = 0xfe,
     // PaintRandomTerrain's percent that covers the whole map; densities and
     // land shares are percents.
@@ -149,5 +150,9 @@ H1_ENUM_BEGIN(ChainTreeFamily)
     CHAIN_TREE_PINE = 1,
     CHAIN_TREE_DECIDUOUS = 2
 H1_ENUM_END(ChainTreeFamily)
+
+// Scales a generator count by a 0..100 density setting (50: unchanged apart
+// from the size bonus).
+void ScaleByDensity(i32* count, i32 density);
 
 #endif // HOMM1_EDITOR_RANDOMMAP_H

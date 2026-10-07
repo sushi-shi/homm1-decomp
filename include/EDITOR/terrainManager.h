@@ -29,15 +29,20 @@ H1_ENUM_CONST_BEGIN(TerrainManagerLayout)
 H1_ENUM_CONST_END(TerrainManagerLayout)
 
 H1_ENUM_ID_BEGIN(TerrainManagerWidgetId)
-TERRAIN_HIGHLIGHT_WIDGET = 0x19,
-    TERRAIN_BUTTON_WATER = 0x33, TERRAIN_BUTTON_GRASS = 0x34, TERRAIN_BUTTON_SNOW = 0x35,
-    TERRAIN_BUTTON_SWAMP = 0x36, TERRAIN_BUTTON_LAVA = 0x37, TERRAIN_BUTTON_DESERT = 0x38,
-    TERRAIN_BUTTON_DIRT = 0x39 H1_ENUM_ID_END(TerrainManagerWidgetId)
+    TERRAIN_HIGHLIGHT_WIDGET = 0x19,
+    TERRAIN_BUTTON_WATER = 0x33,
+    TERRAIN_BUTTON_GRASS = 0x34,
+    TERRAIN_BUTTON_SNOW = 0x35,
+    TERRAIN_BUTTON_SWAMP = 0x36,
+    TERRAIN_BUTTON_LAVA = 0x37,
+    TERRAIN_BUTTON_DESERT = 0x38,
+    TERRAIN_BUTTON_DIRT = 0x39
+H1_ENUM_ID_END(TerrainManagerWidgetId)
 
-    // Main's drag modes: shift paints the cells the cursor crosses, control a
-    // brush of TERRAIN_BRUSH_SIZE cells square (fewer at the map's last row and
-    // column), a plain drag fills the spanned rectangle.
-    H1_ENUM_CONST_BEGIN(TerrainBrushConstant)
+// Main's drag modes: shift paints the cells the cursor crosses, control a
+// brush of TERRAIN_BRUSH_SIZE cells square (fewer at the map's last row and
+// column), a plain drag fills the spanned rectangle.
+H1_ENUM_CONST_BEGIN(TerrainBrushConstant)
     TERRAIN_BRUSH_SIZE = 2
 H1_ENUM_CONST_END(TerrainBrushConstant)
 

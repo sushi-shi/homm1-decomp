@@ -197,24 +197,40 @@ H1_ENUM_STEPPED(EditClearLayer)
 
 // editwind.bin widget ids and the tool commands.
 H1_ENUM_ID_BEGIN(EditWindowControlId)
-EDIT_CONTROL_MAP = 9,
-    EDIT_CONTROL_HORIZONTAL_TRACK = 10, EDIT_CONTROL_VERTICAL_TRACK = 11,
-    EDIT_CONTROL_HORIZONTAL_KNOB = 12, EDIT_CONTROL_VERTICAL_KNOB = 13, EDIT_CONTROL_SCROLL_UP = 14,
-    EDIT_CONTROL_SCROLL_DOWN = 15, EDIT_CONTROL_SCROLL_RIGHT = 16, EDIT_CONTROL_SCROLL_LEFT = 17,
-    EDIT_CONTROL_SCROLL_UP_LEFT = 18, EDIT_CONTROL_SCROLL_UP_RIGHT = 19,
-    EDIT_CONTROL_SCROLL_DOWN_LEFT = 20, EDIT_CONTROL_SCROLL_DOWN_RIGHT = 21,
-    EDIT_CONTROL_RADAR = 39, EDIT_CONTROL_UNDO = 101, EDIT_CONTROL_ZOOM = 102,
-    EDIT_CONTROL_TERRAIN = 103, EDIT_CONTROL_OBJECTS = 104, EDIT_CONTROL_DETAILS = 105,
-    EDIT_CONTROL_ERASER = 106, EDIT_CONTROL_LOAD = 107, EDIT_CONTROL_SAVE = 108,
-    EDIT_CONTROL_QUIT = 109, EDIT_CONTROL_MAP_INFO = 110, EDIT_CONTROL_NEW = 111,
+    EDIT_CONTROL_MAP = 9,
+    EDIT_CONTROL_HORIZONTAL_TRACK = 10,
+    EDIT_CONTROL_VERTICAL_TRACK = 11,
+    EDIT_CONTROL_HORIZONTAL_KNOB = 12,
+    EDIT_CONTROL_VERTICAL_KNOB = 13,
+    EDIT_CONTROL_SCROLL_UP = 14,
+    EDIT_CONTROL_SCROLL_DOWN = 15,
+    EDIT_CONTROL_SCROLL_RIGHT = 16,
+    EDIT_CONTROL_SCROLL_LEFT = 17,
+    EDIT_CONTROL_SCROLL_UP_LEFT = 18,
+    EDIT_CONTROL_SCROLL_UP_RIGHT = 19,
+    EDIT_CONTROL_SCROLL_DOWN_LEFT = 20,
+    EDIT_CONTROL_SCROLL_DOWN_RIGHT = 21,
+    EDIT_CONTROL_RADAR = 39,
+    EDIT_CONTROL_UNDO = 101,
+    EDIT_CONTROL_ZOOM = 102,
+    EDIT_CONTROL_TERRAIN = 103,
+    EDIT_CONTROL_OBJECTS = 104,
+    EDIT_CONTROL_DETAILS = 105,
+    EDIT_CONTROL_ERASER = 106,
+    EDIT_CONTROL_LOAD = 107,
+    EDIT_CONTROL_SAVE = 108,
+    EDIT_CONTROL_QUIT = 109,
+    EDIT_CONTROL_MAP_INFO = 110,
+    EDIT_CONTROL_NEW = 111,
     // A tool panel's options button (the tool managers handle it).
     EDIT_CONTROL_TOOL_OPTIONS = 112,
-    EDIT_CONTROL_RANDOM_MAP = 113 H1_ENUM_ID_END(EditWindowControlId)
+    EDIT_CONTROL_RANDOM_MAP = 113
+H1_ENUM_ID_END(EditWindowControlId)
 
-    // SelectTool's tools; their buttons follow EDIT_CONTROL_TERRAIN in this
-    // order.
-    H1_ENUM_BEGIN(EditTool)
-    // No tool selected (m_tool before Open and after Close).
+// SelectTool's tools; their buttons follow EDIT_CONTROL_TERRAIN in this
+// order.
+H1_ENUM_BEGIN(EditTool)
+// No tool selected (m_tool before Open and after Close).
     EDIT_TOOL_NONE = -1,
     EDIT_TOOL_TERRAIN = 0,
     EDIT_TOOL_OBJECTS = 1,
@@ -281,10 +297,11 @@ H1_ENUM_CONST_BEGIN(EditObjectFrame)
     // rsrc32.icn: the treasure chest; the resource piles start at
     // RESOURCE_PILE_OBJECT_BASE.
     EDIT_TREASURE_CHEST_FRAME = 84,
-    // obj32-07.icn frames the eraser counts as treasure.
-    EDIT_TREASURE_OBJECT_FRAME_A = 3,
-    EDIT_TREASURE_OBJECT_FRAME_B = 4,
-    EDIT_TREASURE_OBJECT_FRAME_C = 42,
+    // obj32-07.icn frames the eraser counts as treasure: the chest, the lamp
+    // and the campfire.
+    EDIT_CHEST_OBJECT_FRAME = 3,
+    EDIT_LAMP_OBJECT_FRAME = 4,
+    EDIT_CAMPFIRE_OBJECT_FRAME = 42,
     // ScatterDetails' lava (obj32-04.icn) and desert (obj32-05.icn) details;
     // the other terrains roll theirs.
     EDIT_LAVA_DETAIL_FRAME = 0,
@@ -482,8 +499,8 @@ public:
     void DrawMap(void);
     void DrawView(i16 viewX, i16 viewY);
     // Redraws the radar map, the scroll knobs and the rulers. Every caller
-    // asks for the screen update (true); the radar is always copied to the
-    // screen, so the flag is not read.
+    // asks for the screen update (true), but the flag is not read: the radar's
+    // screen update always runs, with its x and y swapped.
     void DrawRadar(b32 updateScreen);
     void DrawCell(i16 x, i16 y, i16 column, i16 row, u8 layers);
     void ToggleZoom(void);
@@ -536,7 +553,7 @@ public:
     void NewMap(b32 random);
     // The random map generator (src/EDITOR/MAPOBJ.cpp).
     void GenerateRandomMap(void);
-    // At least four castles stand on the map.
+    // At least EDIT_MAP_MIN_CASTLES castles stand on the map.
     b32 HasEnoughCastles(void);
     // Grows `percent` of the map's cells of terrain from random seeds over
     // cells of baseTerrain (100: the whole map).
@@ -591,13 +608,10 @@ extern i32 gEditErrorCount;
 // re-rolls every border tile's variant.
 extern b32 gVaryTiles;
 
-void SetTileVariant(mapCell* cell, i32 tile);
+void SetTileVariant(mapCell* cell, i32 firstTile);
 char* MakeMapCode(i32 serial);
 // Shows text in the status bar with a beep and clears it after 1.5 seconds.
 void ShowStatusWarning(char* text);
-// Scales a generator count by a 0..100 density setting (50: unchanged apart
-// from the size bonus).
-void ScaleByDensity(i32* count, i32 density);
 void ScatterDetails(void);
 
 #endif // HOMM1_EDITOR_EDITMANAGER_H

@@ -17,6 +17,8 @@ class heroWindow;
 class icon;
 class iconWidget;
 struct tag_message;
+struct editTownExtra;
+struct editHeroExtra;
 
 // SetWinText rows of the editor's dialogs: the editor's own rows of the
 // window-text table, so each call converts the row to the WindowTextId that
@@ -34,11 +36,12 @@ H1_ENUM_CONST_END(EventsWindowText)
 // cancel keeps the edited record or settings as they were. Widget ids, as
 // DialogButtonId's reserved slots they alias.
 H1_ENUM_ID_BEGIN(EventsDialogButton)
-EVENTS_DIALOG_CANCEL = DIALOG_BUTTON_1, EVENTS_DIALOG_OK =
-                                            DIALOG_BUTTON_2 H1_ENUM_ID_END(EventsDialogButton)
+    EVENTS_DIALOG_CANCEL = DIALOG_BUTTON_1,
+    EVENTS_DIALOG_OK = DIALOG_BUTTON_2
+H1_ENUM_ID_END(EventsDialogButton)
 
-                                        H1_ENUM_CONST_BEGIN(EventsManagerLayout)
-                                        // Every dialog opens at (16, 16).
+H1_ENUM_CONST_BEGIN(EventsManagerLayout)
+// Every dialog opens at (16, 16).
     EVENTS_DIALOG_X = 16,
     EVENTS_DIALOG_Y = 16,
     // Main outlines the hovered cell (overlay.icn) in this palette colour.
