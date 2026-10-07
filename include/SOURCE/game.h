@@ -155,7 +155,10 @@ enum SaveFormatVersion {
     // hero::m_fledState, live hero::m_cowardice, tavern heroes reserved
     // with HERO_AVAILABILITY_IN_TAVERN.
     SAVE_FORMAT_FLED_STATE = 1,
-    SAVE_FORMAT_CURRENT = SAVE_FORMAT_FLED_STATE
+    // game::m_townBuiltToday holds a bit for every town (GAME_TOWN_FLAG_BYTES
+    // instead of GAME_TOWN_FLAG_BYTES_ORIGINAL).
+    SAVE_FORMAT_TOWN_FLAGS = 2,
+    SAVE_FORMAT_CURRENT = SAVE_FORMAT_TOWN_FLAGS
 };
 
 struct SaveFormatTag {
@@ -254,7 +257,7 @@ public:
     i8 m_obeliskCount;
     class town m_castleRecs[GAME_TOWN_COUNT];
     i8 m_townOwners[GAME_TOWN_COUNT];
-    u8 m_townBuiltToday[4];
+    u8 m_townBuiltToday[GAME_TOWN_FLAG_BYTES];
     class hero m_heroRecs[GAME_HERO_COUNT];
     i8 m_availableHeroes[GAME_HERO_COUNT];
     mineRecord m_mines[GAME_MINE_COUNT];

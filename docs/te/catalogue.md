@@ -892,7 +892,11 @@ does not fit source, this branch implements the intended behaviour:
 - **Save format.** The reserved header block of a save starts with
   `SaveFormatTag` {"H1TE", version}. Version 1 (`SAVE_FORMAT_FLED_STATE`)
   adds the heroes' fled state, live cowardice and reserved tavern heroes;
-  version 0 (original game) loads and has its tavern heroes reserved.
+  version 2 (`SAVE_FORMAT_TOWN_FLAGS`) stores a "built today" bit for each of
+  the 36 towns (BUG-TWN-3) in five bytes instead of four. Older versions
+  load: version 0 (original game) has its tavern heroes reserved, and
+  versions 0 and 1 read the four flag bytes and restore the first hero's id,
+  which towns 32-35 flagged.
 - **Multiplayer.** `REMOTE_PROTOCOL_VERSION` 1 changes the serial handshake tag
   (`TE`), the NetBIOS group (`Empire TE1 `) and the packet checksum seed, so
   the edition never pairs with the original game.
@@ -933,17 +937,20 @@ original game. They are not part of the edition's patch, so they are listed
 in `changes.tsv` as `BUG-*` rows (component `source`), outside the counts of
 section 1, each with the reproduction it was checked against.
 
-- *Computer player (BUG-AI-1–6):* the replaced stack's value, the affordable
+- *Computer player (BUG-AI-1–7):* the replaced stack's value, the affordable
   creature count, sites visited by other players, stale route nodes, hero
-  distances, and artifacts taken without a free slot.
+  distances, artifacts taken without a free slot, and the first player's
+  ultimate artifact hint.
 - *Combat (BUG-CMB-1–2):* berserk stacks that loop or act without an
   action, and commander skills that wrap the stack's attack and defense.
-- *Adventure map (BUG-ADV-1–5):* the skeleton's unpaid gold, Summon Boat at
-  the map's edge, the campfire's sound, the puzzle's off-map cells, and
-  heroes and towns without records under other objects.
+- *Adventure map (BUG-ADV-1–6):* the skeleton's unpaid gold, Summon Boat at
+  the map's edge, the campfire's sound, the puzzle's off-map cells, heroes
+  and towns without records under other objects, and Town Gate without a
+  town.
 - *Campaign (BUG-CAM-1):* the enemy lords' crests, read one entry late.
-- *Towns (BUG-TWN-1–2):* the Thieves' Guild's resource groups, and the owner
-  the recruit window gave both tavern heroes. The port's "weekly monster
+- *Towns (BUG-TWN-1–3):* the Thieves' Guild's resource groups, the owner
+  the recruit window gave both tavern heroes, and the "built today" flags of
+  towns 32-35, which lived in the first hero's id. The port's "weekly monster
   growth" row is not a defect: `game::PerWeek` grows a site's stock only
   below 100 and by at most 10, so the byte never exceeds 109.
 - *Random map generator (BUG-GEN-1–5):* region ranking, region bounds,
@@ -951,3 +958,13 @@ section 1, each with the reproduction it was checked against.
 - *Editor (BUG-EDT-1–4):* the mine records' empty test, the vertical scroll
   knob, ground painting's redraw, and the extra records of erased towns and
   heroes.
+
+The computer's auto-resolved defeat as attacker (the winner's effects on the
+attacker, the defender's own experience) is the edition's TE-FIX-4, and bad
+luck at luck -1 its X11 (`SRandom(1, 12) <= -luck`).
+
+Kept as designed:
+
+- *Morale chances.* Good morale gives an extra action with chance
+  morale/24 (`SRandom(1, 24)`), bad morale loses one with chance -morale/12
+  (`SRandom(1, 12)`, `combatManager`): the asymmetry stays.

@@ -6119,8 +6119,10 @@ void advManager::TownGate(void) {
             selectedTown = i;
         }
     }
-    if (selectedTown == TOWN_GATE_NO_TOWN)
+    if (selectedTown == TOWN_GATE_NO_TOWN) {
         NormalDialog(localization::Tr("adventure.town_gate.no_town"), NORMAL_DIALOG_TYPE_OK);
+        return;
+    }
     if (gGame->m_castleRecs[gCurPlayerData->m_townIds[selectedTown]].m_occupyingHeroId
         != TOWN_OCCUPYING_HERO_NONE) {
         NormalDialog(localization::Tr("adventure.town_gate.occupied"), NORMAL_DIALOG_TYPE_OK, 0x61);
