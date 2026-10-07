@@ -932,10 +932,14 @@ which the editor never reads.
 
 Besides the edition's own fixes, this branch fixes the retail gameplay bugs
 that the native port documents and keeps (`docs/port/divergences.md` on
-`port`, "Retail gameplay bugs (kept)"); plain `port` stays faithful to the
-original game. They are not part of the edition's patch, so they are listed
-in `changes.tsv` as `BUG-*` rows (component `source`), outside the counts of
-section 1, each with the reproduction it was checked against.
+`port`, "Retail gameplay bugs (kept)"), the defects the native port corrects
+in its shared units, and the defects a review of the game, the engine and
+the editor found (2026-10-07); plain `port` stays faithful to the original
+game. They are not part of the edition's patch, so they are listed in
+`changes.tsv` as `BUG-*` rows (component `source`), outside the counts of
+section 1, each with the reproduction or test it was checked against, or
+how it was found. Candidates of that review that would change rules, odds,
+balance or the computer's weights were left as they are.
 
 - *Computer player (BUG-AI-1–8):* the replaced stack's value, the affordable
   creature count, sites visited by other players, stale route nodes, hero
