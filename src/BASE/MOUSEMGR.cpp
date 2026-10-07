@@ -114,7 +114,7 @@ VA(0x0046b8b2, 0x6bd)
 #line 232 MOUSEMGR_CPP_PATH
 void mouseManager::SetPointer(i16 frame) {
     DATA(0x004cfb44)
-    static BOOL gInSetPointer = FALSE;
+    static b32 gInSetPointer = false;
     i32 cursorIndex;
     i32 x;
     i32 y;
@@ -133,7 +133,7 @@ void mouseManager::SetPointer(i16 frame) {
 
     if (gInSetPointer)
         return;
-    gInSetPointer = TRUE;
+    gInSetPointer = true;
 
     if (frame == MOUSE_KEEP_CURRENT_FRAME)
         frame = m_cursorFrame;
@@ -233,7 +233,7 @@ void mouseManager::SetPointer(i16 frame) {
     }
 
     SetCursor(gMouseCursors[cursorIndex]);
-    gInSetPointer = FALSE;
+    gInSetPointer = false;
 }
 
 // The Windows build leaves the software-pointer hooks empty.

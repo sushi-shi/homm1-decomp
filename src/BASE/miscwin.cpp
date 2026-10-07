@@ -256,14 +256,14 @@ void ClippedMonoIconToBitmap(
     u8* source = sourceIcon->m_data + entry->srcOffset;
     i32 curX = x + entry->x;
     i32 curY = y + entry->y;
-    BOOL decoding = TRUE;
+    b32 decoding = true;
     while (decoding) {
         if (static_cast<i8>(*source) < 0) {
             if ((*source & ICON_MONO_SKIP_MASK) != 0) {
                 curX += *source & ICON_MONO_SKIP_MASK;
                 source++;
             } else
-                decoding = FALSE;
+                decoding = false;
         } else if (*source != ICON_MONO_NEWLINE_COMMAND) {
             if (curY >= clipY && curY <= clipBottom && curX + *source >= clipX
                 && curX <= clipRight) {
@@ -341,7 +341,7 @@ DATA(0x004cfb6c)
 static u32 gClipRun;
 #define gClipInside sClipInside // spelling fixes .bss order
 DATA(0x004cfbb0)
-static BOOL gClipInside;
+static b32 gClipInside;
 // No retail code reads this; it holds its retail .bss place.
 #define gMiscScanTable sMiscScanTable // spelling fixes .bss order
 DATA(0x004cfb70)
@@ -374,9 +374,9 @@ void ClipIconToBitmap(
             clipW,
             clipH
         )) {
-        gClipInside = TRUE;
+        gClipInside = true;
     } else {
-        gClipInside = FALSE;
+        gClipInside = false;
         gClipLimitX = clipX + clipW - 1;
         gClipLimitY = clipY + clipH - 1;
     }

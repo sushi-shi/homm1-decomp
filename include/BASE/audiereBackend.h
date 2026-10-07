@@ -37,7 +37,7 @@ struct AudiereMusic {
 // The 4 bytes after the device pointer, which no retail code reads, are it.
 struct AudiereDevice {
     static audiere::AudioDevicePtr driver;
-    static int dummy;
+    static i32 dummy;
 };
 
 #endif
