@@ -937,16 +937,19 @@ original game. They are not part of the edition's patch, so they are listed
 in `changes.tsv` as `BUG-*` rows (component `source`), outside the counts of
 section 1, each with the reproduction it was checked against.
 
-- *Computer player (BUG-AI-1–7):* the replaced stack's value, the affordable
+- *Computer player (BUG-AI-1–8):* the replaced stack's value, the affordable
   creature count, sites visited by other players, stale route nodes, hero
-  distances, artifacts taken without a free slot, and the first player's
-  ultimate artifact hint.
-- *Combat (BUG-CMB-1–2):* berserk stacks that loop or act without an
-  action, and commander skills that wrap the stack's attack and defense.
-- *Adventure map (BUG-ADV-1–6):* the skeleton's unpaid gold, Summon Boat at
+  distances, artifacts taken without a free slot, the first player's
+  ultimate artifact hint, and the obelisks' value without an artifact or
+  obelisks.
+- *Combat (BUG-CMB-1–3):* berserk stacks that loop or act without an
+  action, commander skills that wrap the stack's attack and defense, and
+  the computer's adjacent attack test off the battlefield.
+- *Adventure map (BUG-ADV-1–9):* the skeleton's unpaid gold, Summon Boat at
   the map's edge, the campfire's sound, the puzzle's off-map cells, heroes
-  and towns without records under other objects, and Town Gate without a
-  town.
+  and towns without records under other objects, Town Gate without a town,
+  the path search and mine flags beyond the map's edges, and the ultimate
+  artifact's placement for a human player without a hero.
 - *Campaign (BUG-CAM-1):* the enemy lords' crests, read one entry late.
 - *Towns (BUG-TWN-1–3):* the Thieves' Guild's resource groups, the owner
   the recruit window gave both tavern heroes, and the "built today" flags of

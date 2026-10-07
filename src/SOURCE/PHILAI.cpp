@@ -2079,8 +2079,9 @@ float philAI::TurnValueOfObelisk(i32 player) {
     i32 each;
     aiData = &gGame->m_players[player].m_aiData;
     // The original read the base value before testing for no artifact; the
-    // value of index -1 was never used.
-    if (gGame->m_ultimateArtifactId == ARTIFACT_NONE)
+    // value of index -1 was never used. Without obelisks (a map header may
+    // count none) there is nothing to value, and nothing to divide by.
+    if (gGame->m_ultimateArtifactId == ARTIFACT_NONE || gGame->m_obeliskCount <= 0)
         return 0.0f;
     each = gArtifactBaseRV[gGame->m_ultimateArtifactId] / 110;
     aiData->m_obeliskValue = each * 48 / gGame->m_obeliskCount;

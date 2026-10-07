@@ -94,6 +94,14 @@ void ObeliskValueWithoutUltimate() {
     gGame->m_ultimateArtifactId = ARTIFACT_NONE;
     Expect(gPhilAI->TurnValueOfObelisk(1) == 0.0f, "no obelisk value once the artifact is gone");
     gGame->m_ultimateArtifactId = saved;
+    // A map whose header counts no obelisks divided the value by zero.
+    i8 savedCount = gGame->m_obeliskCount;
+    gGame->m_obeliskCount = 0;
+    if (gGame->m_ultimateArtifactId == ARTIFACT_NONE)
+        gGame->m_ultimateArtifactId = ARTIFACT_ULTIMATE_BOOK;
+    Expect(gPhilAI->TurnValueOfObelisk(1) == 0.0f, "no obelisk value without obelisks");
+    gGame->m_obeliskCount = savedCount;
+    gGame->m_ultimateArtifactId = saved;
 }
 
 // A site on the top rows put its owner's flag outside the grid.
