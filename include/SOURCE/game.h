@@ -565,6 +565,22 @@ H1_ENUM_ID_BEGIN(NewGameControl)
     NEW_GAME_OPPONENT_LABEL_BASE = 4
 H1_ENUM_ID_END(NewGameControl)
 
+// sceninfo.bin widget ids ShowScenInfo fills: the map's size, difficulty
+// level and description (the roles reqextra.bin's FILE_REQUESTER_MAP_* ids
+// hold in the file requester), the human's crest, the map name, the game
+// difficulty, the opponents list, King of the Hill and the difficulty rating.
+H1_ENUM_ID_BEGIN(ScenarioInfoControl)
+    SCENARIO_INFO_MAP_SIZE = 100,
+    SCENARIO_INFO_MAP_LEVEL = 101,
+    SCENARIO_INFO_MAP_DESCRIPTION = 102,
+    SCENARIO_INFO_CREST = 103,
+    SCENARIO_INFO_MAP_NAME = 104,
+    SCENARIO_INFO_DIFFICULTY = 105,
+    SCENARIO_INFO_OPPONENTS = 106,
+    SCENARIO_INFO_KING_OF_THE_HILL = 107,
+    SCENARIO_INFO_RATING = 108
+H1_ENUM_ID_END(ScenarioInfoControl)
+
 // newgame.icn frames UpdateNewGameWindow selects: the human-opponent face,
 // the computer-type faces (type + base), the crests (two per color) and
 // the King of the Hill toggle (flag + base).

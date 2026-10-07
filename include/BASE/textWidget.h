@@ -10,6 +10,13 @@
 class font;
 struct tag_message;
 
+// textWidget::m_color (a WIDGET_COMMAND_SET_COLOR value): the plain text
+// colour a textWidget starts with and a list restores to a row it no longer
+// highlights (the file requester's and the high-score window's rows).
+H1_ENUM_CONST_BEGIN(TextWidgetColor)
+    TEXT_WIDGET_PLAIN_COLOR = 1
+H1_ENUM_CONST_END(TextWidgetColor)
+
 #pragma pack(push, 1)
 class textWidget : public widget {
 public:

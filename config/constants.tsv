@@ -489,7 +489,6 @@ src/SOURCE/SWAPMGR.cpp	*	1	trivial-function-literal	1 store found	a boolean flag
 src/SOURCE/SWAPMGR.cpp	*	1	trivial-function-literal	1 store m_active	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/TOWNMGR.cpp	*	0	trivial-function-literal	0 store lastArmy	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/TOWNMGR.cpp	*	0	trivial-function-literal	0 store m_active	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
-src/SOURCE/TOWNMGR.cpp	*	0	trivial-function-literal	0 store m_eventFlags	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/TOWNMGR.cpp	*	0	trivial-function-literal	0 store m_visible	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/TOWNMGR.cpp	*	0	trivial-function-literal	0 store sameType	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/TOWNMGR.cpp	*	1	trivial-function-literal	1 store lastArmy	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
@@ -539,7 +538,6 @@ src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 store m_heroCount	a count, da
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 store m_playerCount	a count, day/week or index of one (the first or a single item)
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 store m_week	a count, day/week or index of one (the first or a single item)
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 store removeCount	a count, day/week or index of one (the first or a single item)
-src/SOURCE/REQUEST.cpp	*	1	trivial-function-literal	1 initializer	a count, day/week or index of one (the first or a single item)
 src/SOURCE/SWAPMGR.cpp	*	1	trivial-function-literal	1 equality GetNumArmies()	a count, day/week or index of one (the first or a single item)
 src/SOURCE/TOWNMGR.cpp	*	1	trivial-function-literal	1 equality GetNumArmies()	a count, day/week or index of one (the first or a single item)
 src/SOURCE/TOWNMGR.cpp	*	1	trivial-function-literal	1 for-init	a count, day/week or index of one (the first or a single item)
@@ -753,7 +751,6 @@ src/SOURCE/RECRUIT.cpp	*	*	call-argument	ViewArmy(* argument *	a flag, mode or s
 src/SOURCE/REQUEST.cpp	fileRequester::fileRequester	*	store	initializer of *	a local buffer extent or a named local id/geometry constant
 src/SOURCE/REQUEST.cpp	*	*	call-argument	strcpy(char *, const char *) argument *	a geometry, offset, length, text-row or table index argument (pixels, cell offsets, string slots, byte counts)
 src/SOURCE/REQUEST.cpp	*	*	call-argument	SetCursorShape(i32) argument *	a flag, mode or selector argument of a HoMM1 routine without a named domain (draw/update/redraw/give-take flags, transfer options, no-exclusion -1)
-src/SOURCE/REQUEST.cpp	fileRequester::Update	*	store	initializer of *	a local buffer extent or a named local id/geometry constant
 src/SOURCE/STRIP.cpp	*	*	call-argument	border(i16, i16, i16, i16, i16, i16, i16, char *) argument *	a geometry, offset, length, text-row or table index argument (pixels, cell offsets, string slots, byte counts)
 src/SOURCE/STRIP.cpp	*	*	call-argument	AddWidget(class widget *, i16) argument *	a geometry, offset, length, text-row or table index argument (pixels, cell offsets, string slots, byte counts)
 src/SOURCE/STRIP.cpp	*	*	call-argument	DrawIcons(i8) argument *	a flag, mode or selector argument of a HoMM1 routine without a named domain (draw/update/redraw/give-take flags, transfer options, no-exclusion -1)
@@ -1426,7 +1423,6 @@ src/BASE/TEXTNTRY.cpp	textEntryWidget::Read	1	trivial-function-literal	1 store m
 src/BASE/TEXTNTRY.cpp	*	0	trivial-function-literal	0 * done	the 16-bit loop flag that key handling increments (an i16)
 src/BASE/TEXTNTRY.cpp	textEntryWidget::Main	0	trivial-function-literal	0 array-index m_text	the text's first character (NUL there empties it)
 src/BASE/TEXTNTRY.cpp	textEntryWidget::SetupDisplayString	0	trivial-function-literal	0 equality m_displayOffset	the display scrolled to the start of the text
-src/BASE/TEXTWDGT.cpp	textWidget::textWidget	1	trivial-function-literal	1 store m_color	font colour 1, the default text colour
 src/BASE/WIDGET.cpp	widget::widget	0	trivial-function-literal	0 store m_id	a default-constructed widget's id 0 (the owning window assigns ids)
 src/BASE/WINDOW.cpp	heroWindow::DrawWindow	0	trivial-function-literal	0 equality updateScreen	DrawWindow's 16-bit update flag (an i16 parameter)
 src/BASE/WINDOW.cpp	heroWindow::heroWindow	0	trivial-function-literal	0 * finished	the widget-record loop's 16-bit end flag (an i16)

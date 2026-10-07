@@ -2175,7 +2175,7 @@ b8 townManager::RecruitHero(b8 quickView) {
         townY = m_town->m_y;
         m_recruitHeroes[m_recruitState]->m_x = townX;
         m_recruitHeroes[m_recruitState]->m_y = townY;
-        m_recruitHeroes[m_recruitState]->m_eventFlags = 0;
+        m_recruitHeroes[m_recruitState]->m_eventFlags = HERO_EVENT_NONE;
         m_recruitHeroes[m_recruitState]->m_direction = MAP_DIRECTION_EAST;
         m_recruitHeroes[m_recruitState]->m_remainingMobility =
             m_recruitHeroes[m_recruitState]->CalcMobility();

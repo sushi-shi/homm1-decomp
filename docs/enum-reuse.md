@@ -148,3 +148,43 @@ Per-window control ids, help-text rows and screen geometry that only share
 numbers through the `tag_message::id` transport or by coincidence are
 retained with that reason.
 
+
+## Constants and macros
+
+The census keys object-like `#define`s and `const` integers beside enum
+members. HoMM1 has two macro groups: `Domains.h`'s `H1_STRICT_DOMAINS` view
+switch and `hero.h`'s `HERO_EVENT_*` bits of `hero::m_eventFlags`; both are
+retained. Every const is function-local: 54 keys in 14 functions of
+`HERO.cpp`, `GAME.cpp`, `KB.cpp`, `REQUEST.cpp`, `SWAPMGR.cpp` and the
+editor's `EVENTMGR.cpp`. Such a local holds a stack slot of the retail frame,
+so it stays a local and its bytes do not change; when its value is a quantity
+a domain names, the local is initialized from that name
+(`const i16 frameColor = PALETTE_SELECTION_COLOR;`), and its group is
+`retain` with the name in the reason.
+
+The first review of these groups added four names:
+
+- `game.h` `ScenarioInfoControl`: `sceninfo.bin`'s widget ids 100..108, which
+  `game::ShowScenInfo` spelled as bare literals. Ids 100..102 carry the map
+  size, level and description like `reqextra.bin`'s `FILE_REQUESTER_MAP_*`,
+  but in another window, so the names stay with their window.
+- `palette.h` `PALETTE_SELECTION_COLOR`: palette entry 232, inside the
+  colour-cycle range, that the file requester's selected row and the swap
+  screen's selected-slot frame are filled with.
+- `textWidget.h` `TEXT_WIDGET_PLAIN_COLOR`: the plain text colour 1 a
+  `textWidget` starts with and a list restores to an unhighlighted row (the
+  file requester's rows, and the high-score rows, whose
+  `HIGH_SCORE_NORMAL_COLOR` moved here).
+- `HERO_EVENT_NONE` now also spells `townManager::RecruitHero`'s reset of
+  `m_eventFlags`, a shared literal context the collision report listed.
+
+The mobility values of `hero::CalcMobility` (sea base 60, lighthouse 20,
+astrolabe 40, compass 20, nomad boots 24, traveler's boots 12) equal only
+unrelated keys and no other code computes them; they stay local. The
+remaining groups already initialize their locals from the window's control
+ids (`FileRequesterControlId`, `CELL_WINDOW_*`, `CLEAR_WINDOW_*`,
+`RECRUIT_HERO_*`).
+
+With the extension the census holds 3,592 keys (3,528 enum members, 10
+macros, 54 consts) over 442 values; 203 values are held by two or more keys
+and 195 by two or more domains. The ledger has 508 reviewed rows.

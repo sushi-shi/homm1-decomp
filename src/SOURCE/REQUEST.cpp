@@ -9,6 +9,8 @@
 #include <BASE/inputManager.h>
 #include <BASE/message.h>
 #include <BASE/Misc.h>
+#include <BASE/palette.h>
+#include <BASE/textWidget.h>
 #include <BASE/widget.h>
 #include <SOURCE/fileRequester.h>
 #include <SOURCE/game.h>
@@ -646,10 +648,10 @@ void fileRequester::Update(b8 drawWindow) {
     const i16 firstRowId = FILE_REQUESTER_LIST_FIRST;
     const i16 filenameEntryId = FILE_REQUESTER_FILENAME_ENTRY;
     i32 length;
-    const i16 selectedColor = 0xe8;
+    const i16 selectedColor = PALETTE_SELECTION_COLOR;
     i32 savedPlayerCount;
     b32 hasPlayerSuffix;
-    const i16 plainColor = 1;
+    const i16 plainColor = TEXT_WIDGET_PLAIN_COLOR;
     tag_message message;
     char playersString[FILE_REQUESTER_UPDATE_STORAGE_SIZE];
     i32 theSuffixWidth;

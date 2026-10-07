@@ -4867,15 +4867,15 @@ done:
 VA(0x00438934, 0x410)
 void game::ShowScenInfo(void) {
     i16 jj;
-    const i8 sizeIdNo = 100;
-    const i8 selLevelId = 101;
-    const i8 selDescId = 102;
-    const i8 crestId = 103;
-    const i8 nameIdIndex = 104;
-    const i8 levelIdIdx = 105;
-    const i8 playersIdPos = 106;
-    const i8 kingOfHillId = 107;
-    const i8 ratingId = 108;
+    const i8 sizeIdNo = SCENARIO_INFO_MAP_SIZE;
+    const i8 selLevelId = SCENARIO_INFO_MAP_LEVEL;
+    const i8 selDescId = SCENARIO_INFO_MAP_DESCRIPTION;
+    const i8 crestId = SCENARIO_INFO_CREST;
+    const i8 nameIdIndex = SCENARIO_INFO_MAP_NAME;
+    const i8 levelIdIdx = SCENARIO_INFO_DIFFICULTY;
+    const i8 playersIdPos = SCENARIO_INFO_OPPONENTS;
+    const i8 kingOfHillId = SCENARIO_INFO_KING_OF_THE_HILL;
+    const i8 ratingId = SCENARIO_INFO_RATING;
     char line1Buf[20];
     // The game's difficulty, or a human seat's handicap less one.
     H1_ENUM_LOCAL(GameDifficulty, i32) baseDifficulty;

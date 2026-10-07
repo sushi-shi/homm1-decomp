@@ -18,7 +18,7 @@ VA(0x00471770, 0x58)
 textWidget::textWidget(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
     m_font = NULL;
     m_text = NULL;
-    m_color = 1;
+    m_color = TEXT_WIDGET_PLAIN_COLOR;
     m_alignment = FONT_ALIGN_CENTER;
     m_kind = WIDGET_KIND_TEXT;
 }

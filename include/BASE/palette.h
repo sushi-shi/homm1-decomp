@@ -39,4 +39,11 @@ H1_ENUM_CONST_BEGIN(PaletteChannel)
     PALETTE_CHANNEL_BLUE = 2
 H1_ENUM_CONST_END(PaletteChannel)
 
+// The colour-cycling entry (in the range from PALETTE_CYCLE_FIRST) that marks
+// the current selection: the file requester fills its selected row's text and
+// the swap screen its selected slot's frame with it.
+H1_ENUM_CONST_BEGIN(PaletteSelectionColor)
+    PALETTE_SELECTION_COLOR = 232
+H1_ENUM_CONST_END(PaletteSelectionColor)
+
 #endif // HOMM1_BASE_PALETTE_H

@@ -68,10 +68,10 @@ H1_ENUM_CONST_BEGIN(HighScoreLayoutConstant)
     HIGH_SCORE_UPDATE_HEIGHT = 400
 H1_ENUM_CONST_END(HighScoreLayoutConstant)
 
-// Text fill colours of the newest entry's row.
+// Text fill colour of the newest entry's row (the other rows keep
+// TEXT_WIDGET_PLAIN_COLOR).
 H1_ENUM_CONST_BEGIN(HighScoreColor)
-    HIGH_SCORE_HIGHLIGHT_COLOR = -65,
-    HIGH_SCORE_NORMAL_COLOR = 1
+    HIGH_SCORE_HIGHLIGHT_COLOR = -65
 H1_ENUM_CONST_END(HighScoreColor)
 
 #pragma pack(push, 1)

@@ -7,6 +7,7 @@
 #include <BASE/inputManager.h>
 #include <BASE/message.h>
 #include <BASE/mouseManager.h>
+#include <BASE/palette.h>
 #include <BASE/resourceManager.h>
 #include <BASE/widget.h>
 #include <SOURCE/advManager.h>
@@ -116,7 +117,7 @@ void swapManager::Close(void) {
 
 VA(0x0045d373, 0x1a2)
 void swapManager::DrawSelector(void) {
-    const i16 frameColor = 232;
+    const i16 frameColor = PALETTE_SELECTION_COLOR;
     const i16 leftArmyLeft = 24;
     const i16 rightArmyLeft = 252;
     const i16 armyRow = 148;
