@@ -1958,13 +1958,11 @@ void townManager::GetCategoryStats(
                     break;
                 case THIEVES_CATEGORY_WOOD_AND_ORE:
                     stats[player] = gGame->m_players[player].m_resources[RESOURCE_WOOD]
+                                    + gGame->m_players[player].m_resources[RESOURCE_CRYSTAL]
                                     + gGame->m_players[player].m_resources[RESOURCE_ORE];
                     break;
                 case THIEVES_CATEGORY_RARE_RESOURCES:
-                    // Crystal is as rare as the others: its mines yield one
-                    // a day, like theirs.
-                    stats[player] = gGame->m_players[player].m_resources[RESOURCE_CRYSTAL]
-                                    + gGame->m_players[player].m_resources[RESOURCE_GEMS]
+                    stats[player] = gGame->m_players[player].m_resources[RESOURCE_GEMS]
                                     + gGame->m_players[player].m_resources[RESOURCE_SULFUR]
                                     + gGame->m_players[player].m_resources[RESOURCE_MERCURY];
                     break;
