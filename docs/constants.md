@@ -4,7 +4,7 @@
 literal in `src/` and `include/` (enumerator values excluded). The editor-only
 units (`src/EDITOR`) are parsed with the editor image's compile commands, so
 one census and one floor cover both programs; `homm1 verify enum-reuse` reads
-the same set of units. A literal is
+every unit of each image (a shared unit once per image). A literal is
 open until it is spelled as a name (an enumerator, a named macro, `NULL`,
 `TRUE`/`FALSE`) or a row in `config/constants.tsv` keeps it numeric with a
 reason. The committed `#floor` is the open count and only goes down.

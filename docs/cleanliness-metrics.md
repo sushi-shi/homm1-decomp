@@ -27,7 +27,7 @@ homm1 verify casts               # reinterpret_cast ledger + self-recursion
 homm1 verify casts --nested      # libclang nested static_cast scan
 homm1 verify dead-code           # @dead-code markers vs retail reachability
 homm1 verify enum-domains        # range tests and enum-domain defects
-homm1 verify enum-reuse          # enum members vs the reuse review ledger
+homm1 verify enum-reuse          # named constants vs the reuse review ledger
 homm1 verify constants           # bare numeric spellings work list
 homm1 verify label-style | line-directives | include-order | localization | unique-names | source-encoding | review-claims | bans
 ```

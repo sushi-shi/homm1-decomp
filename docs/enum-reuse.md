@@ -1,41 +1,88 @@
-# Enum reuse review
+# Enum and constant reuse review
 
-`homm1 verify enum-reuse` evaluates every project enum member and groups
-declarations by integer value. Equal numbers are review leads, not evidence
-that two domains are one type.
+`homm1 verify enum-reuse` evaluates every named integer constant of both
+programs (`HEROES.EXE` and `EDITOR.EXE`) and groups them by value. Equal
+numbers are review leads, not evidence that two domains are one type.
 
-The command combines a lexical inventory of `include/` and `src/` (every
-`H1_ENUM_*` form from `include/Domains.h` and raw `enum` blocks; Domains.h's
-own macro machinery is skipped) with libclang evaluation of every translation
-unit in `build/clangd/compile_commands.json`. A source member that is not
-evaluated, or an evaluated member that is not inventoried, is fatal. It writes
-derived reports to ignored `build/gen/`:
+## What it reads
 
-- `enum_reuse.tsv`: evaluated members and their source contexts.
-- `enum_value_collisions.tsv`: declarations grouped by value, joined with bare
-  function literals of the same value from `homm1 verify constants`.
-- `enum_domain_pairs.tsv`: pairs with overlapping value sets.
-- `enum_role_pairs.tsv`: pairs where at least two equal values also have equal
-  member-name suffixes after each enum's common prefix. A search aid only.
+A key is one named constant:
 
-Every evaluated member also records its use contexts: the declaration
-identity (field, parameter, comparison operand, switch subject, array, return)
-that receives each reference to it. `enum_value_collisions.tsv` lists contexts
-shared by two declarations of one value (`shared_named_contexts`) or by a
-declaration and a bare literal of that value (`shared_literal_contexts`, read
-from `build/gen/bare_constants.tsv`, so run `homm1 verify constants` first);
+- an enum member: every `H1_ENUM_*` block (`BEGIN`, `BEGIN_SPLIT`,
+  `FLAGS_BEGIN`, `CONST_BEGIN`, `ID_BEGIN`) and every raw `enum` block under
+  `include/` and `src/` (the macro machinery in `include/Domains.h` is
+  skipped);
+- an object-like `#define` whose body is an integer constant expression; and
+- a `const` or `static const` integer (or enum-typed) variable with a constant
+  initializer, at namespace, class or function scope. Function-local consts
+  that hold a retail stack slot are keys like any other.
+
+A lexical inventory finds every enum block and `#define` without
+preprocessing. libclang then parses every unit of every image with that
+image's compile database (`build/clangd` for the game, `build/editor/clangd`
+for the editor): an editor-only unit is read as the editor, and a unit both
+programs link is read once as the game and once as the editor (with
+`HOMM1_EDITOR`), so `#ifdef HOMM1_EDITOR` code is evaluated. Enum members and
+`const` values are evaluated by Clang; each macro is evaluated by an
+enumerator appended after the unit's last line (`enum : __int64 { probe =
+(NAME) }`), and a macro the unit `#undef`s before its end by its definition's
+body. Probes that do not compile (string, type or storage-alias macros such as
+the `#define gName storageName` spellings) are not constants.
+
+The two views must cover each other. An enum member or a numeric `#define`
+(a body with an integer literal) that no unit evaluates is fatal, as is an
+evaluated enum member or macro the inventory does not know. Two exceptions
+are not holes: a block under `#if H1_STRICT_DOMAINS` exists only for the
+strict view the retail compiler never sees (reported as "strict-view only"),
+and one macro name of one file is one key, so `H1_STRICT_DOMAINS 1` is
+covered by its evaluated `0` alternative.
+
+## Reports
+
+The command writes derived reports to ignored `build/gen/`:
+
+- `constant_values.tsv` and `constant_values.json`: the value map, every
+  evaluated value with every key that has it. Each key carries its qualified
+  name, category (`enum`, `macro`, `const`), domain (the enum, or the file's
+  `<macros>`/`<const>` group, or a class's or function's `<const>`), file and
+  line, the images that compile it, and its use contexts. Values held by two
+  or more keys come first, ordered by how many distinct domains share them.
+- `enum_reuse.tsv`: every key with its block kind, storage, expression, the
+  images and the units that evaluated it.
+- `enum_value_collisions.tsv`: keys grouped by value across domains, joined
+  with bare function literals of the same value from `homm1 verify
+  constants`.
+- `enum_domain_pairs.tsv`: enum pairs with overlapping value sets.
+- `enum_role_pairs.tsv`: enum pairs where at least two equal values also have
+  equal member-name suffixes after each enum's common prefix. A search aid
+  only.
+
+```sh
+homm1 verify enum-reuse                  # reports, then the ledger check
+homm1 verify enum-reuse --by-value       # print the value map
+homm1 verify enum-reuse --value 232      # one value (repeatable)
+homm1 verify enum-reuse --duplicates     # values two or more domains declare
+homm1 verify enum-reuse --json           # the selection as JSON
+homm1 verify enum-reuse --extend-ledger  # append new domains as pending
+```
+
+Every key records its use contexts: the declaration identity (field,
+parameter, comparison operand, switch subject, array, return) that receives
+each reference to it (`scripts/homm1/verify/constant_context.py`). A macro's
+uses are its expansion sites. `enum_value_collisions.tsv` lists contexts
+shared by two domains of one value (`shared_named_contexts`) or by a key and
+a bare literal of that value (`shared_literal_contexts`, read from
+`build/gen/bare_constants.tsv`, so run `homm1 verify constants` first);
 `enum_domain_pairs.tsv` ranks pairs by shared direct contexts before numeric
 overlap. A shared destination is a lead for one domain; a transport that
 carries several domains (the `tag_message::id` widget id, each window's own
 controls) is not.
 
-Use `--value N`, `--duplicates`, `--json` and `--no-report` to inspect.
-`--extend-ledger` appends wholly new domains as `pending` rows.
-
 ## Decisions
 
-`config/reviews/enum-reuse.tsv` snapshots each starting enum block with its
-evaluated `name=value` members and one decision:
+`config/reviews/enum-reuse.tsv` snapshots each starting domain (each enum
+block, and each file's macro and const groups) with its evaluated
+`name=value` members and one decision:
 
 - `retain`: the enum keeps its domain; its values select a distinct quantity,
   table, operation, representation or state machine.

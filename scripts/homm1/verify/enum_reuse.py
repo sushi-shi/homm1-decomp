@@ -1,29 +1,39 @@
 """homm1.verify.enum_reuse - evaluated enum and constant-reuse census.
 
 Equal integer values are review leads, never proof that two domains are the
-same.  This audit combines two views:
+same.  The census covers every named integer constant of both programs (the
+game HEROES.EXE and the scenario editor EDITOR.EXE) in src/ and include/:
 
-* a lexical inventory of every enum block and member under ``src/`` and
-  ``include/``, including H1_ENUM_* declarations and inactive/unreferenced
-  source; and
-* a libclang pass over every project translation unit, which evaluates aliases,
-  shifts, negative values, character constants, and implicit increments with
-  the target ABI.
+* enum members: every H1_ENUM_* block (BEGIN, BEGIN_SPLIT, FLAGS_BEGIN,
+  CONST_BEGIN, ID_BEGIN) and raw ``enum`` block, inventoried lexically,
+  including editor-only and unreferenced source;
+* object-like ``#define`` constants: every macro whose body evaluates to an
+  integer constant expression; and
+* ``const``/``static const`` integer variables, at namespace, class and
+  function scope.
 
-The two views must cover one another.  A declaration missing from the evaluated
-view is a fatal coverage hole rather than a silently incomplete report.
+A libclang pass evaluates every translation unit of every image with that
+image's compile database (build/clangd and build/editor/clangd): a shared
+unit is read once as the game and once as the editor (with HOMM1_EDITOR), so
+``#ifdef HOMM1_EDITOR`` code is evaluated too.  It evaluates aliases, shifts,
+negative values, character constants and implicit increments with the target
+ABI.  The lexical inventory and the evaluated view must cover one another: an
+enum member or a numeric macro that no unit evaluates is a fatal coverage hole
+rather than a silently incomplete report.
 
-    homm1 verify enum-reuse                  # write the four derived TSV reports
-    homm1 verify enum-reuse --duplicates     # print values declared twice+
-    homm1 verify enum-reuse --value 10       # inspect one value
-    homm1 verify enum-reuse --json           # machine-readable full census
+    homm1 verify enum-reuse                  # write the derived reports, check the ledger
+    homm1 verify enum-reuse --by-value       # every value and every key that has it
+    homm1 verify enum-reuse --value 10       # one value (repeatable)
+    homm1 verify enum-reuse --duplicates     # values declared in two or more domains
+    homm1 verify enum-reuse --json           # the selected values as JSON
     homm1 verify enum-reuse --init-ledger    # snapshot the review worklist
     homm1 verify enum-reuse --extend-ledger  # append new domains as pending
 
-Each evaluated member also records its semantic use contexts (the declaration
-identity of the field, parameter, comparison operand, switch subject, array or
-return that receives it), so the collision and
-pair reports rank domains that share producers/consumers above numeric overlap.
+Each key also records its semantic use contexts (the declaration identity of
+the field, parameter, comparison operand, switch subject, array or return that
+receives each reference to it; homm1.verify.constant_context), so the
+collision and pair reports rank domains that share producers/consumers above
+numeric overlap.
 """
 
 from __future__ import annotations
@@ -32,6 +42,7 @@ from homm1.core.usage import logged
 
 import argparse
 import csv
+import ctypes
 import json
 import multiprocessing
 import re
@@ -42,19 +53,22 @@ from dataclasses import asdict, dataclass, field, replace
 from itertools import combinations
 from pathlib import Path
 
-from homm1.core.paths import BUILD, IMAGE_BUILD, REPO
-from homm1.verify.constant_context import semantic_context
-from homm1.verify.constants import _flags, _require_cl_mode, _source_path
+from homm1.core.paths import BUILD, REPO, image_build, images
 from homm1.verify.srcscan import blank_comments
 
 
-CDB = IMAGE_BUILD / "clangd/compile_commands.json"
-REPORT = IMAGE_BUILD / "gen/enum_reuse.tsv"
-COLLISION_REPORT = IMAGE_BUILD / "gen/enum_value_collisions.tsv"
-PAIR_REPORT = IMAGE_BUILD / "gen/enum_domain_pairs.tsv"
-ROLE_PAIR_REPORT = IMAGE_BUILD / "gen/enum_role_pairs.tsv"
-BARE_CONSTANTS = IMAGE_BUILD / "gen/bare_constants.tsv"
+GEN = BUILD / "gen"
+REPORT = GEN / "enum_reuse.tsv"
+VALUE_REPORT = GEN / "constant_values.tsv"
+VALUE_JSON = GEN / "constant_values.json"
+COLLISION_REPORT = GEN / "enum_value_collisions.tsv"
+PAIR_REPORT = GEN / "enum_domain_pairs.tsv"
+ROLE_PAIR_REPORT = GEN / "enum_role_pairs.tsv"
+#: `homm1 verify constants` output: the function-body literals.
+BARE_CONSTANTS = GEN / "bare_constants.tsv"
 LEDGER = REPO / "config/reviews/enum-reuse.tsv"
+#: config/retail/targets.json keys: the game, then the editor.
+IMAGES = tuple(images())
 
 LEDGER_FIELDS = (
     "source_enum", "members", "decision", "current_enums", "member_reuse",
@@ -65,18 +79,31 @@ LEDGER_DECISIONS = frozenset(("pending", "retain", "canonical", "reuse"))
 #: check requires the identifier to be absent from every project file.
 RETIRED = "-"
 _IDENTIFIER = re.compile(r"[A-Za-z_]\w*")
+_SOURCE_SUFFIXES = (".h", ".hpp", ".inl", ".c", ".cpp")
 
+#: Domains.h holds the H1_ENUM_* machinery; its macro parameters are not
+#: domains, so no enum block is read from it (its #defines are).
+_ENUM_MACHINERY = "include/Domains.h"
+_STRICT_SWITCH = "H1_STRICT_DOMAINS"
 _MACRO_BLOCK = re.compile(
-    r"\bH1_ENUM_(BEGIN|BEGIN_SPLIT|FLAGS_BEGIN|CONST_BEGIN|ID_BEGIN)"
+    r"\bH1_ENUM_(BEGIN_SPLIT|BEGIN|FLAGS_BEGIN|CONST_BEGIN|ID_BEGIN)"
     r"\(\s*(\w+)\s*(?:,\s*(\w+)\s*)?\)(?P<body>.*?)"
-    r"\bH1_ENUM_(?:END|END_SPLIT|FLAGS_END|CONST_END|ID_END)\(",
+    r"\bH1_ENUM_(?:END_SPLIT|END|FLAGS_END|CONST_END|ID_END)\(",
     re.S,
 )
 _RAW_ENUM = re.compile(
     r"\b(?:typedef\s+)?enum\s+(?:(?:class|struct)\s+)?"
-    r"(?P<name>[A-Za-z_]\w*)?\s*\{"
+    r"(?P<name>[A-Za-z_]\w*)?\s*(?::\s*[A-Za-z_][\w \t]*?)?\s*\{"
 )
 _MEMBER_NAME = re.compile(r"[A-Za-z_]\w*")
+_DEFINE = re.compile(
+    r"^[ \t]*#[ \t]*define[ \t]+(?P<name>[A-Za-z_]\w*)(?P<function>\()?"
+    r"(?P<body>(?:[^\n\\]|\\.)*)", re.M | re.S)
+_INTEGER_TOKEN = re.compile(
+    r"(?<![\w.])(?:0[xX][0-9A-Fa-f]+|[0-9]+)[uUlL]*(?![\w.])")
+_FLOAT_TOKEN = re.compile(r"(?<![\w.])(?:[0-9]+\.[0-9]*|\.[0-9]+|[0-9]+[eE][-+]?[0-9]+)")
+#: Probe identifiers appended after a unit's last line to evaluate macros.
+_PROBE = "__h1_enum_reuse_probe_"
 
 
 @dataclass(frozen=True)
@@ -99,10 +126,25 @@ class Block:
     offset: int
     end_offset: int
     members: tuple[Member, ...]
+    #: Declared only for the strict-domain view (see _strict_only_lines).
+    strict_only: bool = False
+
+
+@dataclass(frozen=True)
+class Macro:
+    """An object-like #define; ``numeric`` when its body spells an integer."""
+    name: str
+    file: str
+    line: int
+    column: int
+    offset: int
+    body: str
+    numeric: bool
 
 
 @dataclass(frozen=True)
 class RawConstant:
+    category: str
     value: int
     name: str
     file: str
@@ -110,9 +152,9 @@ class RawConstant:
     column: int
     offset: int
     parent_name: str
-    parent_file: str
-    parent_offset: int
+    scope: str
     context: str
+    image: str
     use_contexts: tuple[str, ...] = ()
 
 
@@ -120,6 +162,8 @@ class RawConstant:
 class Constant:
     value: int
     name: str
+    qualified_name: str
+    category: str
     file: str
     line: int
     column: int
@@ -130,17 +174,25 @@ class Constant:
     storage: str
     expression: str
     contexts: tuple[str, ...]
+    images: tuple[str, ...]
     use_contexts: tuple[str, ...] = field(default=())
 
 
+# --- lexical inventory -----------------------------------------------------
+
+
 def _project_files(repo: Path):
-    for root_name in ("include", "src"):
-        root = repo / root_name
+    for root in (repo / "include", repo / "src"):
         if not root.is_dir():
             continue
         for path in sorted(root.rglob("*")):
-            if path.is_file() and path.suffix in (".h", ".hpp", ".inl", ".c", ".cpp"):
+            if path.is_file() and path.suffix in _SOURCE_SUFFIXES:
                 yield path
+
+
+def _read(path: Path) -> str:
+    """Source text with one character per byte, so offsets are Clang's."""
+    return path.read_bytes().decode("latin-1")
 
 
 def _line_column(text: str, offset: int) -> tuple[int, int]:
@@ -197,7 +249,7 @@ def _members(text: str, body_start: int, body_end: int) -> tuple[Member, ...]:
             continue
         offset = start + match.start()
         line, column = _line_column(text, offset)
-        source = text[offset:end].strip()
+        source = " ".join(text[offset:end].split())
         expression = source.split("=", 1)[1].strip() if "=" in source else ""
         result.append(Member(match.group(), line, column, offset, expression))
     return tuple(result)
@@ -210,217 +262,548 @@ def _source_enum(rel: str, domain: str, line: int, members, seen: Counter) -> st
     return base if seen[base] == 1 else f"{base}#{seen[base]}"
 
 
+_DIRECTIVE = re.compile(r"^[ \t]*#[ \t]*(\w*)[ \t]*(.*)$")
+
+
+def _blank_directives(text: str) -> str:
+    """`text` with preprocessor lines (and their continuations) blanked, so a
+    conditional inside an enum body never reads as a member."""
+    out = list(text)
+    offset = 0
+    continuing = False
+    for line in text.split("\n"):
+        if continuing or line.lstrip().startswith("#"):
+            for index in range(offset, offset + len(line)):
+                out[index] = " "
+            continuing = line.endswith("\\")
+        offset += len(line) + 1
+    return "".join(out)
+
+
+def _strict_only_lines(text: str) -> set[int]:
+    """Lines only the strict-domain view compiles (`#if H1_STRICT_DOMAINS`, or
+    the `#else` of `#if !H1_STRICT_DOMAINS`): the retail compiler never sees
+    them."""
+    lines = set()
+    stack: list[tuple[bool, bool]] = []  # (strict conditional, strict branch)
+    for number, line in enumerate(text.split("\n"), 1):
+        match = _DIRECTIVE.match(line)
+        if match:
+            directive, argument = match.group(1), " ".join(match.group(2).split())
+            if directive == "if" and argument in (_STRICT_SWITCH, f"!{_STRICT_SWITCH}"):
+                stack.append((True, argument == _STRICT_SWITCH))
+            elif directive in ("if", "ifdef", "ifndef"):
+                stack.append((False, False))
+            elif directive in ("else", "elif") and stack and stack[-1][0]:
+                stack[-1] = (True, not stack[-1][1])
+            elif directive == "endif" and stack:
+                stack.pop()
+            continue
+        if any(conditional and branch for conditional, branch in stack):
+            lines.add(number)
+    return lines
+
+
 def scan_blocks(*, repo: Path = REPO, paths=None) -> list[Block]:
     """Inventory source enum blocks without preprocessing."""
     blocks = []
     seen: Counter = Counter()
     for path in list(paths) if paths is not None else _project_files(repo):
-        # Domains.h's macro machinery names formal parameters, not domains.
-        if path.resolve() == (repo / "include/Domains.h").resolve():
-            continue
-        original = path.read_text(errors="replace")
-        text = blank_comments(original)
-        rel = str(path.resolve().relative_to(repo.resolve()))
+        original = blank_comments(_read(path))
+        text = _blank_directives(original)
+        strict_only = _strict_only_lines(original)
+        rel = path.resolve().relative_to(repo.resolve()).as_posix()
         occupied = []
+        if rel == _ENUM_MACHINERY:
+            continue
         for match in _MACRO_BLOCK.finditer(text):
             kind, domain, storage = match.group(1), match.group(2), match.group(3) or ""
-            body_start, body_end = match.start("body"), match.end("body")
             line, _ = _line_column(text, match.start())
-            members = _members(text, body_start, body_end)
+            members = _members(text, match.start("body"), match.end("body"))
             blocks.append(Block(
                 _source_enum(rel, domain, line, members, seen), domain,
-                kind.lower(), storage,
-                rel, line, match.start(), match.end(), members,
+                kind.lower(), storage, rel, line, match.start(), match.end(), members,
+                line in strict_only,
             ))
             occupied.append((match.start(), match.end()))
 
         for match in _RAW_ENUM.finditer(text):
             if any(start <= match.start() < end for start, end in occupied):
                 continue
-            line_start = text.rfind("\n", 0, match.start()) + 1
-            if text[line_start:match.start()].lstrip().startswith("#"):
-                continue
-            opening = text.find("{", match.start(), match.end())
+            opening = match.end() - 1
             closing = _matching_brace(text, opening)
             domain = match.group("name") or ""
             line, _ = _line_column(text, match.start())
             members = _members(text, opening + 1, closing)
             blocks.append(Block(
                 _source_enum(rel, domain, line, members, seen), domain, "raw", "", rel,
-                line, match.start(), closing + 1, members,
+                line, match.start(), closing + 1, members, line in strict_only,
             ))
     return sorted(blocks, key=lambda block: (block.file, block.offset))
 
 
+def _probe_body(body: str) -> bool:
+    """Whether a macro body can stand alone as a parenthesized expression."""
+    if not body or any(token in body for token in ("{", "}", ";", "#", '"')):
+        return False
+    depth = 0
+    for char in body:
+        if char == "(":
+            depth += 1
+        elif char == ")":
+            depth -= 1
+            if depth < 0:
+                return False
+        elif char == "," and depth == 0:
+            return False
+    return depth == 0
+
+
+def scan_macros(*, repo: Path = REPO, paths=None) -> list[Macro]:
+    """Inventory object-like #define directives without preprocessing."""
+    macros = []
+    for path in list(paths) if paths is not None else _project_files(repo):
+        text = blank_comments(_read(path))
+        rel = path.resolve().relative_to(repo.resolve()).as_posix()
+        for match in _DEFINE.finditer(text):
+            if match.group("function"):
+                continue
+            body = " ".join(match.group("body").replace("\\\n", " ").split())
+            if not body:
+                continue
+            numeric = (_probe_body(body) and bool(_INTEGER_TOKEN.search(body))
+                       and not _FLOAT_TOKEN.search(body) and "'" not in body)
+            offset = match.start("name")
+            line, column = _line_column(text, offset)
+            macros.append(Macro(match.group("name"), rel, line, column, offset, body, numeric))
+    return macros
+
+
+# --- libclang evaluation ---------------------------------------------------
+
+
+def _evaluator(cidx):
+    """clang_Cursor_Evaluate, which the Python bindings do not wrap."""
+    lib = cidx.conf.lib
+    if not getattr(lib, "_h1_evaluate", False):
+        lib.clang_Cursor_Evaluate.argtypes = [cidx.Cursor]
+        lib.clang_Cursor_Evaluate.restype = ctypes.c_void_p
+        lib.clang_EvalResult_getKind.argtypes = [ctypes.c_void_p]
+        lib.clang_EvalResult_getKind.restype = ctypes.c_int
+        lib.clang_EvalResult_isUnsignedInt.argtypes = [ctypes.c_void_p]
+        lib.clang_EvalResult_isUnsignedInt.restype = ctypes.c_uint
+        lib.clang_EvalResult_getAsUnsigned.argtypes = [ctypes.c_void_p]
+        lib.clang_EvalResult_getAsUnsigned.restype = ctypes.c_ulonglong
+        lib.clang_EvalResult_getAsLongLong.argtypes = [ctypes.c_void_p]
+        lib.clang_EvalResult_getAsLongLong.restype = ctypes.c_longlong
+        lib.clang_EvalResult_dispose.argtypes = [ctypes.c_void_p]
+        lib._h1_evaluate = True
+
+    def evaluate(cursor):
+        result = lib.clang_Cursor_Evaluate(cursor)
+        if not result:
+            return None
+        try:
+            if lib.clang_EvalResult_getKind(result) != 1:  # CXEval_Int
+                return None
+            if lib.clang_EvalResult_isUnsignedInt(result):
+                return int(lib.clang_EvalResult_getAsUnsigned(result))
+            return int(lib.clang_EvalResult_getAsLongLong(result))
+        finally:
+            lib.clang_EvalResult_dispose(result)
+    return evaluate
+
+
+_FUNCTION_KINDS = ("FUNCTION_DECL", "CXX_METHOD", "CONSTRUCTOR", "DESTRUCTOR",
+                   "CONVERSION_FUNCTION", "FUNCTION_TEMPLATE")
+_INTEGER_TYPES = ("CHAR_U", "UCHAR", "CHAR16", "CHAR32", "USHORT", "UINT", "ULONG",
+                  "ULONGLONG", "UINT128", "CHAR_S", "SCHAR", "WCHAR", "SHORT", "INT",
+                  "LONG", "LONGLONG", "INT128", "ENUM")
+
+
+def _scope_name(cursor) -> str:
+    parts = []
+    while cursor is not None and cursor.kind.name != "TRANSLATION_UNIT":
+        if cursor.spelling:
+            parts.append(cursor.spelling)
+        cursor = cursor.semantic_parent
+    return "::".join(reversed(parts))
+
+
+def _const_scope(cidx, node) -> str:
+    """The ledger group of a const: the file, a class, or a function."""
+    parent = node.semantic_parent
+    if parent is None or parent.kind == cidx.CursorKind.TRANSLATION_UNIT:
+        return "<const>"
+    if parent.kind.name in _FUNCTION_KINDS:
+        return f"{_scope_name(parent)}()::<const>"
+    if parent.kind == cidx.CursorKind.NAMESPACE:
+        return f"{_scope_name(parent)}::<const>"
+    return f"{_scope_name(parent)}::<const>"
+
+
+def _function_like(definition) -> bool:
+    tokens = definition.get_tokens()
+    name = next(tokens, None)
+    parameters = next(tokens, None)
+    return (name is not None and parameters is not None and parameters.spelling == "("
+            and parameters.extent.start.offset == name.extent.end.offset)
+
+
+def _overlay_source(args: list[str], path: Path) -> bytes | None:
+    """The offset-preserving rendered copy the localization overlay maps an
+    authored file with Tr("id") text to, if the unit's overlay names it."""
+    for index, arg in enumerate(args):
+        if arg != "-ivfsoverlay":
+            continue
+        rest = [item for item in args[index + 1:index + 3] if item != "-Xclang"]
+        if not rest:
+            continue
+        overlay = json.loads(Path(rest[0]).read_text())
+        for root in overlay.get("roots", ()):
+            if Path(root["name"]).resolve() == path:
+                return Path(root["external-contents"]).read_bytes()
+    return None
+
+
 def _scan_entry(payload):
-    entry, repo_text = payload
+    source_text, args, image, repo_text, probe_names = payload
     repo = Path(repo_text)
     import clang.cindex as cidx
+    from homm1.verify.constant_context import semantic_context
+    from homm1.verify.constants import _require_cl_mode
 
-    path = _source_path(entry, repo)
-    args = _flags(entry)
+    path = Path(source_text)
+    context = path.relative_to(repo).as_posix()
     try:
         _require_cl_mode(args)
     except RuntimeError as exc:
-        return [], f"{path}: {exc}"
+        return None, f"{context} [{image}]: {exc}"
+    evaluate = _evaluator(cidx)
+    original = path.read_bytes()
+    original_lines = original.count(b"\n") + 1
+    # The probes extend the rendered copy of a localized unit.
+    compiled = _overlay_source(args, path) or original
+    # A name probe evaluates the macro visible at the end of the unit; a body
+    # probe evaluates the definition text of a macro #undef'd before it.
+    probes = []
+    for index, (kind, text, _definition) in enumerate(probe_names):
+        guard = f"#ifdef {text}\n" if kind == "name" else ""
+        probes.append(f"{guard}enum {_PROBE}{index} : __int64 "
+                      f"{{ {_PROBE}value_{index} = ({text}) }};\n{'#endif' if guard else ''}\n")
+    probe_start = original_lines + 1
+    contents = compiled.decode("latin-1") + "\n" + "".join(probes)
+    # Every failed probe is one error; none may stop the unit's diagnostics.
+    args = [*args, "-Xclang", "-ferror-limit", "-Xclang", "0"]
     try:
         tu = cidx.Index.create().parse(
-            str(path), args=args,
+            str(path), args=args, unsaved_files=[(str(path), contents)],
             options=cidx.TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD)
     except cidx.TranslationUnitLoadError as exc:
-        return [], f"{path}: libclang could not load TU: {exc}"
-    errors = [diag for diag in tu.diagnostics if diag.severity >= cidx.Diagnostic.Error]
-    if errors:
-        return [], f"{path}: parse error: {errors[0]}"
+        return None, f"{context} [{image}]: libclang could not load TU: {exc}"
 
-    context = str(path.relative_to(repo))
-    constants = []
-    for node in tu.cursor.walk_preorder():
-        if node.kind != cidx.CursorKind.ENUM_CONSTANT_DECL or node.location.file is None:
-            continue
-        source = Path(node.location.file.name).resolve()
-        try:
-            rel = str(source.relative_to(repo))
-        except ValueError:
-            continue
-        if not rel.startswith(("src/", "include/")):
-            continue
-        parent = node.semantic_parent
-        parent_file = ""
-        parent_offset = -1
-        parent_name = ""
-        if parent is not None:
-            parent_name = parent.spelling
-            if parent.location.file is not None:
-                parent_path = Path(parent.location.file.name).resolve()
-                try:
-                    parent_file = str(parent_path.relative_to(repo))
-                except ValueError:
-                    parent_file = ""
-                parent_offset = parent.location.offset
-        constants.append(RawConstant(
-            node.enum_value, node.spelling, rel, node.location.line,
-            node.location.column, node.location.offset, parent_name,
-            parent_file, parent_offset, context,
-        ))
-    uses = _named_uses(cidx, tu, repo, {(row.file, row.offset) for row in constants})
-    constants = [replace(row, use_contexts=tuple(sorted(uses.get((row.file, row.offset), ()))))
-                 for row in constants]
-    return constants, None
+    relative_paths: dict[str, str | None] = {}
 
-
-def _named_uses(cidx, tu, repo, definitions):
-    """Destination identities of every reference to a project enumerator."""
-    uses = defaultdict(set)
-    relative_paths = {}
-
-    def location(node):
-        if node.location.file is None:
-            return None
-        name = node.location.file.name
+    def project(name):
         if name not in relative_paths:
             try:
-                rel = str(Path(name).resolve().relative_to(repo))
-                relative_paths[name] = rel if rel.startswith(("src/", "include/")) else None
+                rel = Path(name).resolve().relative_to(repo).as_posix()
             except ValueError:
-                relative_paths[name] = None
-        rel = relative_paths[name]
-        return None if rel is None else (rel, node.location.offset)
+                rel = None
+            relative_paths[name] = rel if rel and rel.split("/", 1)[0] in ("src", "include") else None
+        return relative_paths[name]
+
+    failed_probe_lines = set()
+    errors = []
+    for diagnostic in tu.diagnostics:
+        if diagnostic.severity < cidx.Diagnostic.Error:
+            continue
+        location = diagnostic.location
+        rel = project(location.file.name) if location.file else None
+        if rel == context and location.line >= probe_start:
+            failed_probe_lines.add(location.line)
+            continue
+        errors.append(str(diagnostic))
+    if errors:
+        return None, f"{context} [{image}]: parse error: {errors[0]}"
+
+    def in_source(node):
+        """(project path, offset) of a node in the unit's own text."""
+        location = node.location
+        if location.file is None:
+            return None
+        rel = project(location.file.name)
+        if rel is None or (rel == context and location.line >= probe_start):
+            return None
+        return rel, location.offset
+
+    # Macro definitions and expansions sit at the top level of the record.
+    definitions_by_name: dict[str, tuple] = {}
+    expansions: dict[tuple[str, int], tuple[tuple[str, int], int]] = {}
+    macro_cursors = {}
+    for node in tu.cursor.get_children():
+        if node.kind == cidx.CursorKind.MACRO_DEFINITION:
+            where = in_source(node)
+            if where is not None and not _function_like(node):
+                definitions_by_name[node.spelling] = where
+                macro_cursors[where] = node
+        elif node.kind == cidx.CursorKind.MACRO_INSTANTIATION:
+            where = in_source(node)
+            ref = node.referenced
+            if where is None or ref is None:
+                continue
+            definition = in_source(ref)
+            if definition is not None and definition in macro_cursors:
+                expansions[where] = (definition, node.extent.end.offset)
+
+    constants: dict[tuple, RawConstant] = {}
+    uses: dict[tuple, set[str]] = defaultdict(set)
+    macro_values: dict[tuple[str, int], int] = {}
+    consumed: set[tuple[str, int]] = set()
+
+    def add(category, value, node, where, parent_name="", scope=""):
+        key = (category, where[0], where[1], value)
+        if key not in constants:
+            constants[key] = RawConstant(
+                category, value, node.spelling, where[0], node.location.line,
+                node.location.column, where[1], parent_name, scope, context, image)
+
+    # Probe enumerators: each evaluated macro visible at the end of the unit,
+    # then the bodies of the unit's macros that are no longer defined there.
+    body_values = {}
+    for node in tu.cursor.get_children():
+        if node.kind != cidx.CursorKind.ENUM_DECL or not node.spelling.startswith(_PROBE):
+            continue
+        if node.location.line in failed_probe_lines:
+            continue
+        kind, text, body_definition = probe_names[int(node.spelling[len(_PROBE):])]
+        definition = definitions_by_name.get(text) if kind == "name" else body_definition
+        for member in node.get_children():
+            if member.kind == cidx.CursorKind.ENUM_CONSTANT_DECL and definition:
+                (macro_values if kind == "name" else body_values)[definition] = \
+                    member.enum_value
+    for definition, value in body_values.items():
+        if definition in macro_cursors and definition not in macro_values:
+            macro_values[definition] = value
 
     def walk(node, stack):
-        if node.kind == cidx.CursorKind.DECL_REF_EXPR and node.referenced is not None:
+        kind = node.kind
+        where = in_source(node)
+        if kind == cidx.CursorKind.ENUM_CONSTANT_DECL and where is not None:
+            parent = node.semantic_parent
+            if not (parent is not None and parent.spelling.startswith(_PROBE)):
+                add("enum", node.enum_value, node, where,
+                    parent.spelling if parent is not None else "")
+        elif kind == cidx.CursorKind.VAR_DECL and where is not None:
+            ty = node.type
+            canonical = ty.get_canonical()
+            if (ty.is_const_qualified() or canonical.is_const_qualified()) \
+                    and canonical.kind.name in _INTEGER_TYPES \
+                    and any(child.kind.is_expression() for child in node.get_children()):
+                value = evaluate(node)
+                if value is not None:
+                    add("const", value, node, where, scope=_const_scope(cidx, node))
+        elif kind == cidx.CursorKind.DECL_REF_EXPR and where is not None:
             ref = node.referenced
-            if ref.kind == cidx.CursorKind.ENUM_CONSTANT_DECL and location(node):
-                definition = location(ref)
-                if definition in definitions:
+            # Only const variables can be keys; other variables hold no uses.
+            if ref is not None and (ref.kind == cidx.CursorKind.ENUM_CONSTANT_DECL or (
+                    ref.kind == cidx.CursorKind.VAR_DECL
+                    and ref.type.get_canonical().is_const_qualified())):
+                definition = in_source(ref)
+                if definition is not None:
                     key, _label = semantic_context(cidx, node, stack)
                     if key:
                         uses[definition].add(key)
+        if where is not None and kind.is_expression() and where in expansions \
+                and where not in consumed:
+            definition, end = expansions[where]
+            if node.extent.end.offset == end:
+                consumed.add(where)
+                key, _label = semantic_context(cidx, node, stack)
+                if key:
+                    uses[definition].add(key)
+        if kind in (cidx.CursorKind.MACRO_DEFINITION, cidx.CursorKind.MACRO_INSTANTIATION,
+                    cidx.CursorKind.INCLUSION_DIRECTIVE):
+            return
+        child_stack = (*stack, node)
         for child in node.get_children():
-            walk(child, (*stack, node))
+            walk(child, child_stack)
 
-    walk(tu.cursor, ())
-    return uses
+    for node in tu.cursor.get_children():
+        location = node.location
+        # Declarations from system and vendor headers hold no project value.
+        if location.file is not None and project(location.file.name) is None:
+            continue
+        walk(node, (tu.cursor,))
+
+    for definition, value in macro_values.items():
+        node = macro_cursors.get(definition)
+        if node is not None:
+            add("macro", value, node, definition)
+    result = []
+    for (category, file, offset, value), row in constants.items():
+        result.append(replace(row, use_contexts=tuple(sorted(uses.get((file, offset), ())))))
+    return result, None
 
 
-def scan_entries(entries: list[dict], *, repo: Path = REPO, jobs: int = 1):
-    payloads = [(entry, str(repo.resolve())) for entry in entries]
-    rows: dict[tuple[str, int, int], RawConstant] = {}
-    contexts: dict[tuple[str, int, int], set[str]] = defaultdict(set)
+def compile_entries(*, repo: Path = REPO) -> list[tuple[Path, list[str], str]]:
+    """(source, clang arguments, image) for every C/C++ unit of every image.
+
+    A shared unit is read once per image, with that image's compile database
+    (the editor's adds HOMM1_EDITOR)."""
+    from homm1.verify.constants import _flags, _source_path
+    entries = []
+    for image in IMAGES:
+        cdb = image_build(image) / "clangd/compile_commands.json"
+        if not cdb.is_file():
+            raise FileNotFoundError(
+                f"{cdb.relative_to(repo)}: no compile database; run homm1 configure")
+        for entry in json.loads(cdb.read_text()):
+            if not (Path(entry["file"]).suffix in (".c", ".cpp")
+                    and str(entry["file"]).replace("\\", "/").startswith("src/")):
+                continue
+            entries.append((_source_path(entry, repo), _flags(entry), image))
+    return entries
+
+
+def scan_entries(entries, probe_names, *, repo: Path = REPO, jobs: int = 1):
+    payloads = [(str(source), args, image, str(repo.resolve()), probe_names)
+                for source, args, image in entries]
+    rows: dict[tuple, RawConstant] = {}
+    contexts: dict[tuple, set[str]] = defaultdict(set)
+    images: dict[tuple, set[str]] = defaultdict(set)
     errors = []
-    if jobs <= 1:
-        results = map(_scan_entry, payloads)
-        pool = None
-    else:
-        pool = ProcessPoolExecutor(max_workers=jobs)
-        results = pool.map(_scan_entry, payloads)
+    # Workers receive the importable module's function: run as __main__ (or
+    # this module's own names do not pickle.
+    from homm1.verify.enum_reuse import _scan_entry as worker
+    pool = ProcessPoolExecutor(max_workers=jobs) if jobs > 1 else None
+    results = pool.map(worker, payloads) if pool else map(worker, payloads)
     try:
-        for constants, error in results:
+        for done, (result, error) in enumerate(results, 1):
             if error:
                 errors.append(error)
                 continue
-            for constant in constants:
-                key = (constant.file, constant.offset, constant.value)
+            for constant in result:
+                key = (constant.category, constant.file, constant.offset, constant.value)
                 old = rows.get(key)
                 rows[key] = replace(old or constant, use_contexts=tuple(sorted(
                     set(constant.use_contexts) | set(old.use_contexts if old else ()))))
                 contexts[key].add(constant.context)
+                images[key].add(constant.image)
+            if done % 20 == 0:
+                print(f"[enum-reuse] {done}/{len(payloads)} unit views", file=sys.stderr)
     finally:
         if pool is not None:
             pool.shutdown()
-    return rows, contexts, errors
+    return rows, contexts, images, errors
 
 
-def _join(raw, contexts, blocks):
+def _qualified(category: str, domain: str, name: str) -> str:
+    if category == "macro":
+        return name
+    if category == "const":
+        scope = domain.removesuffix("<const>").removesuffix("::")
+        return f"{scope}::{name}" if scope else name
+    return f"{domain}::{name}" if domain else name
+
+
+def _join(raw, contexts, images, blocks, macros):
     by_member = {}
     by_name = defaultdict(list)
     for block in blocks:
         for member in block.members:
             by_member[(block.file, member.offset)] = (block, member)
             by_name[(block.file, member.name)].append((block, member))
+    macro_at = {(macro.file, macro.offset): macro for macro in macros}
 
     constants = []
     uncovered_ast = []
     covered_members = set()
+    covered_macros = set()
     for key, constant in raw.items():
-        match = by_member.get((constant.file, constant.offset))
-        if match is None:
-            candidates = by_name.get((constant.file, constant.name), [])
-            if len(candidates) == 1:
-                match = candidates[0]
-        if match is None:
-            uncovered_ast.append(constant)
-            continue
-        block, member = match
-        covered_members.add((block.file, member.offset))
+        tus = tuple(sorted(contexts[key]))
+        image_set = tuple(image for image in IMAGES if image in images[key])
+        if constant.category == "enum":
+            match = by_member.get((constant.file, constant.offset))
+            if match is None:
+                candidates = by_name.get((constant.file, constant.name), [])
+                if len(candidates) == 1:
+                    match = candidates[0]
+            if match is None:
+                uncovered_ast.append(constant)
+                continue
+            block, member = match
+            covered_members.add((block.file, member.offset))
+            source_enum, domain, kind, storage = (block.source_enum, block.domain,
+                                                  block.kind, block.storage)
+            expression = member.expression
+        elif constant.category == "macro":
+            macro = macro_at.get((constant.file, constant.offset))
+            if macro is None:
+                uncovered_ast.append(constant)
+                continue
+            covered_macros.add((macro.file, macro.offset))
+            domain = "<macros>"
+            source_enum, kind, storage = f"{constant.file}:{domain}", "define", ""
+            expression = macro.body
+        else:
+            domain = constant.scope
+            source_enum, kind, storage, expression = f"{constant.file}:{domain}", "const", "", ""
         constants.append(Constant(
-            constant.value, constant.name, constant.file, constant.line,
-            constant.column, constant.offset, block.source_enum, block.domain,
-            block.kind, block.storage, member.expression,
-            tuple(sorted(contexts[key])), constant.use_contexts,
+            constant.value, constant.name, _qualified(constant.category, domain, constant.name),
+            constant.category, constant.file, constant.line, constant.column, constant.offset,
+            source_enum, domain, kind, storage, expression, tus, image_set,
+            constant.use_contexts,
         ))
 
     uncovered_source = [
-        (block, member)
+        (block.file, member.line, f"{block.domain}::{member.name}")
         for block in blocks
+        if not block.strict_only
         for member in block.members
         if (block.file, member.offset) not in covered_members
+    ]
+    # One macro name of one file is one key: a definition in a branch this
+    # compiler never takes (H1_STRICT_DOMAINS 1) is covered by its evaluated
+    # alternative.
+    evaluated_names = {(file, macro_at[(file, offset)].name) for file, offset in covered_macros}
+    uncovered_source += [
+        (macro.file, macro.line, f"#define {macro.name} {macro.body}")
+        for macro in macros
+        if macro.numeric and (macro.file, macro.name) not in evaluated_names
     ]
     constants.sort(key=lambda row: (row.value, row.file, row.offset))
     return constants, uncovered_source, uncovered_ast
 
 
-def collect(*, cdb: Path = CDB, repo: Path = REPO, jobs: int = 1):
-    if not cdb.is_file():
-        raise FileNotFoundError(f"{cdb}: no compile database; run homm1 configure")
-    from homm1.verify.srcscan import project_compile_entries
-    entries = project_compile_entries(json.loads(cdb.read_text()))
-    if not entries:
-        raise RuntimeError(f"{cdb}: no project C++ translation units")
+def probe_list(macros: list[Macro]) -> list[tuple[str, str, tuple[str, int] | None]]:
+    """Probes appended to every unit: each macro name once, and the body of
+    each numeric definition whose file #undefs that name."""
+    probes = [("name", name, None)
+              for name in sorted({macro.name for macro in macros if _probe_body(macro.body)})]
+    undefined = defaultdict(set)
+    for macro in macros:
+        if macro.numeric and macro.file not in undefined:
+            text = blank_comments(_read(REPO / macro.file))
+            undefined[macro.file] = set(re.findall(r"^[ \t]*#[ \t]*undef[ \t]+(\w+)", text, re.M))
+    probes += [("body", macro.body, (macro.file, macro.offset)) for macro in macros
+               if macro.numeric and macro.name in undefined[macro.file]]
+    return probes
+
+
+def collect(*, repo: Path = REPO, jobs: int = 1):
     blocks = scan_blocks(repo=repo)
-    raw, contexts, errors = scan_entries(entries, repo=repo, jobs=jobs)
-    constants, uncovered_source, uncovered_ast = _join(raw, contexts, blocks)
-    return constants, blocks, uncovered_source, uncovered_ast, errors
+    macros = scan_macros(repo=repo)
+    probe_names = probe_list(macros)
+    entries = compile_entries(repo=repo)
+    if not entries:
+        raise RuntimeError("compile databases: no project C/C++ translation units")
+    raw, contexts, images, errors = scan_entries(entries, probe_names, repo=repo, jobs=jobs)
+    constants, uncovered_source, uncovered_ast = _join(raw, contexts, images, blocks, macros)
+    return constants, blocks, uncovered_source, uncovered_ast, errors, len(entries)
+
+
+# --- reports ---------------------------------------------------------------
 
 
 def _write_tsv(path: Path, fieldnames: tuple[str, ...], rows) -> None:
@@ -434,52 +817,102 @@ def _write_tsv(path: Path, fieldnames: tuple[str, ...], rows) -> None:
 
 def write_report(path: Path, constants: list[Constant]) -> None:
     fields = (
-        "value", "hex", "name", "file", "line", "column", "offset",
-        "source_enum", "domain", "kind", "storage", "expression", "contexts",
-        "use_contexts",
+        "value", "hex", "category", "name", "qualified_name", "file", "line", "column",
+        "offset", "source_enum", "domain", "kind", "storage", "expression", "images",
+        "contexts", "use_contexts",
     )
     rows = []
     for constant in constants:
         row = asdict(constant)
         row["hex"] = hex(constant.value)
+        row["images"] = ";".join(constant.images)
         row["contexts"] = ";".join(constant.contexts)
         row["use_contexts"] = json.dumps(list(constant.use_contexts))
         rows.append({name: row[name] for name in fields})
     _write_tsv(path, fields, rows)
 
 
-def _literal_counts(path: Path) -> dict[int, Counter]:
-    result: dict[int, Counter] = defaultdict(Counter)
+def by_value(constants: list[Constant]) -> list[tuple[int, list[Constant]]]:
+    """Map<value, keys>: values held by two or more keys first, ordered by the
+    number of distinct domains that share them, then by key count."""
+    groups: dict[int, list[Constant]] = defaultdict(list)
+    for constant in constants:
+        groups[constant.value].append(constant)
+    ordered = []
+    for value, keys in groups.items():
+        keys.sort(key=lambda row: (row.file, row.line, row.name))
+        ordered.append((value, keys))
+    ordered.sort(key=lambda item: (
+        len(item[1]) < 2,
+        -len({row.source_enum for row in item[1]}),
+        -len(item[1]),
+        item[0],
+    ))
+    return ordered
+
+
+_VALUE_FIELDS = (
+    "value", "hex", "value_keys", "value_domains", "category", "qualified_name",
+    "domain", "file", "line", "images", "use_contexts",
+)
+
+
+def _value_rows(groups):
+    for value, keys in groups:
+        domains = len({row.source_enum for row in keys})
+        for row in keys:
+            yield {
+                "value": value, "hex": hex(value), "value_keys": len(keys),
+                "value_domains": domains, "category": row.category,
+                "qualified_name": row.qualified_name, "domain": row.source_enum,
+                "file": row.file, "line": row.line, "images": ";".join(row.images),
+                "use_contexts": json.dumps(list(row.use_contexts)),
+            }
+
+
+def _value_json(groups) -> dict:
+    return {str(value): [{
+        "qualified_name": row.qualified_name, "category": row.category,
+        "domain": row.source_enum, "location": f"{row.file}:{row.line}",
+        "images": list(row.images), "use_contexts": list(row.use_contexts),
+    } for row in keys] for value, keys in groups}
+
+
+def write_value_report(path: Path, json_path: Path, constants: list[Constant]) -> None:
+    groups = by_value(constants)
+    _write_tsv(path, _VALUE_FIELDS, _value_rows(groups))
+    json_path.write_text(json.dumps({"schema": 1, "values": _value_json(groups)},
+                                    indent=1) + "\n")
+
+
+def _literal_rows(path: Path):
+    """Function-body literals from `homm1 verify constants`."""
     if not path.is_file():
-        return result
+        return
     with path.open(newline="") as stream:
         for row in csv.DictReader(stream, dialect="excel-tab"):
-            if row["scope"] != "function-body" or row["value"] == "":
-                continue
-            value = int(row["value"])
-            result[value][row["review_group"]] += 1
-    return result
+            if row.get("scope") == "function-body" and row.get("value"):
+                yield row
 
 
 def write_collision_report(path: Path, constants: list[Constant], literals_path: Path) -> None:
-    by_value = defaultdict(list)
+    groups = defaultdict(list)
     for constant in constants:
-        by_value[constant.value].append(constant)
-    literals = _literal_counts(literals_path)
+        groups[constant.value].append(constant)
+    literals: dict[int, Counter] = defaultdict(Counter)
     literal_contexts = defaultdict(set)
-    if literals_path.is_file():
-        with literals_path.open(newline="") as stream:
-            for row in csv.DictReader(stream, dialect="excel-tab"):
-                if (row.get("scope") == "function-body" and row.get("value")
-                        and row.get("context_key")):
-                    literal_contexts[int(row["value"])].add(row["context_key"])
+    for row in _literal_rows(literals_path):
+        value = int(row["value"])
+        literals[value][row["review_group"]] += 1
+        if row.get("context_key"):
+            literal_contexts[value].add(row["context_key"])
     fields = (
         "value", "hex", "declarations", "domains", "members",
         "function_literal_sites", "literal_groups", "shared_named_contexts",
         "shared_literal_contexts",
     )
     rows = []
-    for value, declarations in sorted(by_value.items()):
+    for value, declarations in sorted(groups.items()):
         domains = sorted({row.source_enum for row in declarations})
         literal_groups = literals.get(value, Counter())
         if len(domains) < 2 and not literal_groups:
@@ -493,7 +926,7 @@ def write_collision_report(path: Path, constants: list[Constant], literals_path:
             "hex": hex(value),
             "declarations": len(declarations),
             "domains": ";".join(domains),
-            "members": ";".join(f"{row.name}@{row.file}:{row.line}"
+            "members": ";".join(f"{row.qualified_name}@{row.file}:{row.line}"
                                 for row in declarations),
             "function_literal_sites": sum(literal_groups.values()),
             "literal_groups": ";".join(f"{name}={count}"
@@ -509,11 +942,18 @@ def write_collision_report(path: Path, constants: list[Constant], literals_path:
     _write_tsv(path, fields, rows)
 
 
+def _enum_members(constants: list[Constant]) -> list[Constant]:
+    return [row for row in constants if row.category == "enum"]
+
+
 def write_pair_report(path: Path, constants: list[Constant]) -> None:
     """Rank enum pairs by shared evaluated values without asserting identity."""
     by_domain = defaultdict(list)
-    for constant in constants:
+    for constant in _enum_members(constants):
         by_domain[constant.source_enum].append(constant)
+    values = {name: {row.value for row in rows} for name, rows in by_domain.items()}
+    contexts = {name: {(row.value, key) for row in rows for key in row.use_contexts}
+                for name, rows in by_domain.items()}
     fields = (
         "left", "right", "left_members", "right_members", "shared_values",
         "shared_count", "min_coverage_pct", "exact_value_set",
@@ -521,21 +961,15 @@ def write_pair_report(path: Path, constants: list[Constant]) -> None:
     )
     rows = []
     for left_name, right_name in combinations(sorted(by_domain), 2):
-        left = by_domain[left_name]
-        right = by_domain[right_name]
-        left_values = {row.value for row in left}
-        right_values = {row.value for row in right}
-        shared = sorted(left_values & right_values)
+        left_values, right_values = values[left_name], values[right_name]
+        shared = left_values & right_values
         exact_set = left_values == right_values
-        shared_contexts = set()
-        for value in shared:
-            left_contexts = {key for row in left if row.value == value
-                             for key in row.use_contexts}
-            right_contexts = {key for row in right if row.value == value
-                              for key in row.use_contexts}
-            shared_contexts.update(left_contexts & right_contexts)
+        if not shared and not exact_set:
+            continue
+        shared_contexts = {key for value, key in contexts[left_name] & contexts[right_name]}
         if len(shared) < 2 and not exact_set and not shared_contexts:
             continue
+        left, right = by_domain[left_name], by_domain[right_name]
         direct = sorted(key for key in shared_contexts if "/via:" not in key)
         coverage = 100.0 * len(shared) / min(len(left_values), len(right_values))
         rows.append({
@@ -543,7 +977,7 @@ def write_pair_report(path: Path, constants: list[Constant]) -> None:
             "right": right_name,
             "left_members": ";".join(f"{row.name}={row.value}" for row in left),
             "right_members": ";".join(f"{row.name}={row.value}" for row in right),
-            "shared_values": ";".join(str(value) for value in shared),
+            "shared_values": ";".join(str(value) for value in sorted(shared)),
             "shared_count": len(shared),
             "min_coverage_pct": f"{coverage:.2f}",
             "exact_value_set": "yes" if exact_set else "no",
@@ -585,7 +1019,7 @@ def _member_roles(members: list[Constant]) -> dict[tuple[int, tuple[str, ...]], 
 
 def write_role_pair_report(path: Path, constants: list[Constant]) -> None:
     """Shortlist equal values with equal member roles; still only review leads."""
-    by_domain = _members_by_enum(constants)
+    by_domain = _members_by_enum(_enum_members(constants))
     roles = {name: _member_roles(members) for name, members in by_domain.items()}
     fields = ("left", "right", "matching_roles", "left_count", "right_count", "role_coverage_pct")
     rows = []
@@ -617,27 +1051,43 @@ def _members_by_enum(constants: list[Constant]) -> dict[str, list[Constant]]:
     for constant in constants:
         result[constant.source_enum].append(constant)
     for members in result.values():
-        members.sort(key=lambda row: row.offset)
+        members.sort(key=lambda row: (row.offset, row.value))
     return result
 
 
-def init_ledger(path: Path, constants: list[Constant], blocks: list[Block]) -> None:
+# --- review ledger ---------------------------------------------------------
+
+
+def _ledger_domains(constants: list[Constant], blocks: list[Block]) -> list[str]:
+    """Every enum block in source order, then each file's macro and const groups."""
+    names = [block.source_enum for block in blocks if not block.strict_only]
+    seen = set(names)
+    for constant in sorted(constants, key=lambda row: (row.file, row.source_enum)):
+        if constant.source_enum not in seen:
+            seen.add(constant.source_enum)
+            names.append(constant.source_enum)
+    return names
+
+
+def _snapshot(members: list[Constant]) -> str:
+    return ";".join(f"{row.name}={row.value}" for row in members)
+
+
+def init_ledger(path: Path, constants: list[Constant], blocks: list[Block]) -> int:
     """Snapshot the complete starting worklist; never overwrite review work."""
     if path.exists():
         raise FileExistsError(f"{path}: review ledger already exists")
     by_enum = _members_by_enum(constants)
-    rows = []
-    for block in blocks:
-        members = by_enum.get(block.source_enum, ())
-        rows.append({
-            "source_enum": block.source_enum,
-            "members": ";".join(f"{row.name}={row.value}" for row in members),
-            "decision": "pending",
-            "current_enums": block.source_enum,
-            "member_reuse": "",
-            "reason": "",
-        })
+    rows = [{
+        "source_enum": name,
+        "members": _snapshot(by_enum.get(name, [])),
+        "decision": "pending",
+        "current_enums": name,
+        "member_reuse": "",
+        "reason": "",
+    } for name in _ledger_domains(constants, blocks)]
     _write_tsv(path, LEDGER_FIELDS, rows)
+    return len(rows)
 
 
 def extend_ledger(path: Path, constants: list[Constant]) -> int:
@@ -662,8 +1112,7 @@ def extend_ledger(path: Path, constants: list[Constant]) -> int:
             # An existing row keeps its starting snapshot and decision;
             # check_ledger still reports the unclaimed additions.
             continue
-        rows.append({"source_enum": domain,
-                     "members": ";".join(f"{row.name}={row.value}" for row in unclaimed),
+        rows.append({"source_enum": domain, "members": _snapshot(unclaimed),
                      "decision": "pending", "current_enums": domain,
                      "member_reuse": "", "reason": ""})
         added += 1
@@ -671,8 +1120,10 @@ def extend_ledger(path: Path, constants: list[Constant]) -> int:
     return added
 
 
-def _parse_members(text: str, *, source_enum: str) -> tuple[dict[str, int], list[str]]:
-    members = {}
+def _parse_members(text: str, *, source_enum: str) -> tuple[dict[str, list[int]], list[str]]:
+    """``NAME=value`` items; one name may carry two values when an image or
+    conditional evaluates its declaration differently."""
+    members: dict[str, list[int]] = {}
     findings = []
     for item in filter(None, text.split(";")):
         if "=" not in item:
@@ -684,9 +1135,10 @@ def _parse_members(text: str, *, source_enum: str) -> tuple[dict[str, int], list
         except ValueError:
             findings.append(f"{source_enum}: invalid value in snapshot {item!r}")
             continue
-        if name in members:
-            findings.append(f"{source_enum}: duplicate snapshot member {name}")
-        members[name] = value
+        values = members.setdefault(name, [])
+        if value in values:
+            findings.append(f"{source_enum}: duplicate snapshot member {item}")
+        values.append(value)
     return members, findings
 
 
@@ -699,12 +1151,7 @@ def _parse_reuse(text: str, *, source_enum: str) -> tuple[dict[str, str], list[s
             findings.append(f"{source_enum}: malformed member_reuse {item!r}")
             continue
         old, target = item.split("=", 1)
-        if target == RETIRED:
-            if old in reuse:
-                findings.append(f"{source_enum}: duplicate member_reuse for {old}")
-            reuse[old] = target
-            continue
-        if "::" not in target:
+        if target != RETIRED and "::" not in target:
             findings.append(
                 f"{source_enum}: member_reuse target needs source-enum::member: {item!r}")
             continue
@@ -717,7 +1164,7 @@ def _parse_reuse(text: str, *, source_enum: str) -> tuple[dict[str, str], list[s
 def _project_identifiers(repo: Path) -> set[str]:
     names: set[str] = set()
     for path in _project_files(repo):
-        names.update(_IDENTIFIER.findall(blank_comments(path.read_text(errors="replace"))))
+        names.update(_IDENTIFIER.findall(blank_comments(_read(path))))
     return names
 
 
@@ -725,11 +1172,10 @@ def check_ledger(path: Path, constants: list[Constant], *, repo: Path = REPO) ->
     """Prove that every starting member has a reviewed, value-preserving home."""
     identifiers = None
     if not path.is_file():
-        return [f"{path}: missing review ledger (run --init-ledger once)"]
-    current = {
-        f"{row.source_enum}::{row.name}": row.value
-        for row in constants
-    }
+        return [f"{path.relative_to(repo)}: missing review ledger (run --init-ledger once)"]
+    current: dict[str, set[int]] = defaultdict(set)
+    for row in constants:
+        current[f"{row.source_enum}::{row.name}"].add(row.value)
     claimed = set()
     findings = []
     seen = set()
@@ -740,25 +1186,22 @@ def check_ledger(path: Path, constants: list[Constant], *, repo: Path = REPO) ->
         for line, row in enumerate(reader, 2):
             source_enum = row["source_enum"]
             if not source_enum:
-                findings.append(f"{path}:{line}: empty source_enum")
+                findings.append(f"{path.name}:{line}: empty source_enum")
                 continue
             if source_enum in seen:
-                findings.append(f"{path}:{line}: duplicate source_enum {source_enum}")
+                findings.append(f"{path.name}:{line}: duplicate source_enum {source_enum}")
                 continue
             seen.add(source_enum)
             decision = row["decision"]
             if decision not in LEDGER_DECISIONS:
-                findings.append(
-                    f"{source_enum}: invalid decision {decision!r}")
+                findings.append(f"{source_enum}: invalid decision {decision!r}")
             if decision == "pending":
                 findings.append(f"{source_enum}: review is pending")
             if decision != "pending" and not row["reason"].strip():
                 findings.append(f"{source_enum}: reviewed row needs an evidence reason")
-            members, row_findings = _parse_members(
-                row["members"], source_enum=source_enum)
+            members, row_findings = _parse_members(row["members"], source_enum=source_enum)
             findings.extend(row_findings)
-            reuse, row_findings = _parse_reuse(
-                row["member_reuse"], source_enum=source_enum)
+            reuse, row_findings = _parse_reuse(row["member_reuse"], source_enum=source_enum)
             findings.extend(row_findings)
             unknown = sorted(set(reuse) - set(members))
             if unknown:
@@ -768,11 +1211,10 @@ def check_ledger(path: Path, constants: list[Constant], *, repo: Path = REPO) ->
             if decision == "reuse" and not reuse:
                 findings.append(f"{source_enum}: reuse decision has no member mapping")
             if decision in ("retain", "canonical") and reuse:
-                findings.append(
-                    f"{source_enum}: {decision} decision cannot redirect members")
+                findings.append(f"{source_enum}: {decision} decision cannot redirect members")
 
             target_enums = set()
-            for name, value in members.items():
+            for name, values in members.items():
                 target = reuse.get(name, f"{source_enum}::{name}")
                 if target == RETIRED:
                     if identifiers is None:
@@ -783,20 +1225,20 @@ def check_ledger(path: Path, constants: list[Constant], *, repo: Path = REPO) ->
                     continue
                 target_enum, separator, target_name = target.rpartition("::")
                 if not separator or not target_enum or not target_name:
-                    findings.append(
-                        f"{source_enum}: invalid target for {name}: {target!r}")
+                    findings.append(f"{source_enum}: invalid target for {name}: {target!r}")
                     continue
                 target_enums.add(target_enum)
                 if target not in current:
-                    findings.append(
-                        f"{source_enum}: {name} has no current target {target}")
-                elif current[target] != value:
-                    findings.append(
-                        f"{source_enum}: {name}={value} maps to {target}="
-                        f"{current[target]}")
+                    findings.append(f"{source_enum}: {name} has no current target {target}")
+                else:
+                    for value in values:
+                        if value not in current[target]:
+                            findings.append(
+                                f"{source_enum}: {name}={value} maps to {target}="
+                                f"{'/'.join(map(str, sorted(current[target])))}")
                 claimed.add(target)
             declared_enums = set(filter(None, row["current_enums"].split(";")))
-            if target_enums != declared_enums:
+            if target_enums != declared_enums and (target_enums or members):
                 findings.append(
                     f"{source_enum}: current_enums is {sorted(declared_enums)}, "
                     f"member targets use {sorted(target_enums)}")
@@ -811,12 +1253,11 @@ def check_ledger(path: Path, constants: list[Constant], *, repo: Path = REPO) ->
     return findings
 
 
-def _print_tsv(constants: list[Constant]) -> None:
-    writer = csv.writer(sys.stdout, delimiter="\t", lineterminator="\n")
-    writer.writerow(("value", "hex", "name", "file", "line", "domain", "kind"))
-    for row in constants:
-        writer.writerow((row.value, hex(row.value), row.name, row.file, row.line,
-                         row.domain, row.kind))
+def _print_values(groups, stream=sys.stdout) -> None:
+    writer = csv.DictWriter(stream, fieldnames=_VALUE_FIELDS, dialect="excel-tab",
+                            lineterminator="\n")
+    writer.writeheader()
+    writer.writerows(_value_rows(groups))
 
 
 @logged
@@ -825,14 +1266,16 @@ def main(argv=None) -> int:
         prog="homm1 verify enum-reuse", description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
+    parser.add_argument("--by-value", action="store_true",
+                        help="print every value with every key that has it")
     parser.add_argument("--value", action="append", type=lambda text: int(text, 0),
-                        default=[], help="evaluated integer (repeatable)")
+                        default=[], help="print one evaluated integer (repeatable)")
     parser.add_argument("--duplicates", action="store_true",
                         help="print only values declared in two or more domains")
     parser.add_argument("--json", action="store_true",
-                        help="print the selected constants as JSON")
+                        help="print the selected values as JSON")
     parser.add_argument("--no-report", action="store_true",
-                        help="do not write build/gen derived reports")
+                        help="do not write the build/gen derived reports")
     parser.add_argument("--init-ledger", action="store_true",
                         help="create the complete pending review ledger; refuse overwrite")
     parser.add_argument("--extend-ledger", action="store_true",
@@ -842,53 +1285,50 @@ def main(argv=None) -> int:
                         help="parallel libclang translation-unit workers")
     args = parser.parse_args(argv)
     try:
-        constants, blocks, uncovered_source, uncovered_ast, errors = collect(
-            jobs=max(1, args.jobs))
+        (constants, blocks, uncovered_source, uncovered_ast, errors,
+         views) = collect(jobs=max(1, args.jobs))
     except (FileNotFoundError, RuntimeError, ValueError) as exc:
         print(f"[enum-reuse] FATAL: {exc}")
         return 2
     if errors or uncovered_source or uncovered_ast:
         for error in errors[:10]:
             print(f"   {error}")
-        for block, member in uncovered_source[:10]:
-            print(f"   {block.file}:{member.line}: source member not evaluated: "
-                  f"{block.domain}::{member.name}")
-        for row in uncovered_ast[:10]:
-            print(f"   {row.file}:{row.line}: evaluated member not inventoried: "
+        for file, line, text in uncovered_source[:20]:
+            print(f"   {file}:{line}: source declaration not evaluated: {text}")
+        for row in uncovered_ast[:20]:
+            print(f"   {row.file}:{row.line}: evaluated {row.category} not inventoried: "
                   f"{row.parent_name}::{row.name}")
         total = len(errors) + len(uncovered_source) + len(uncovered_ast)
         print(f"[enum-reuse] FATAL: {total} coverage/parsing finding(s)")
         return 2
 
-    by_value = Counter(row.value for row in constants)
-    domains_by_value = defaultdict(set)
-    for row in constants:
-        domains_by_value[row.value].add(row.source_enum)
+    groups = by_value(constants)
     selected = [
-        row for row in constants
-        if (not args.value or row.value in args.value)
-        and (not args.duplicates or len(domains_by_value[row.value]) > 1)
+        (value, keys) for value, keys in groups
+        if (not args.value or value in args.value)
+        and (not args.duplicates or len({row.source_enum for row in keys}) > 1)
     ]
+    if args.value:
+        order = {value: index for index, value in enumerate(args.value)}
+        selected.sort(key=lambda item: order[item[0]])
     if args.json:
-        print(json.dumps({
-            "blocks": len(blocks),
-            "constants": [asdict(row) for row in selected],
-        }, indent=2))
-    elif args.value or args.duplicates:
-        _print_tsv(selected)
+        print(json.dumps({"schema": 1, "values": _value_json(selected)}, indent=2))
+    elif args.by_value or args.value or args.duplicates:
+        _print_values(selected)
     if not args.no_report:
         write_report(REPORT, constants)
+        write_value_report(VALUE_REPORT, VALUE_JSON, constants)
         write_collision_report(COLLISION_REPORT, constants, BARE_CONSTANTS)
         write_pair_report(PAIR_REPORT, constants)
         write_role_pair_report(ROLE_PAIR_REPORT, constants)
     if args.init_ledger:
         try:
-            init_ledger(LEDGER, constants, blocks)
+            rows = init_ledger(LEDGER, constants, blocks)
         except FileExistsError as exc:
             print(f"[enum-reuse] FATAL: {exc}")
             return 2
         print(f"[enum-reuse] initialized {LEDGER.relative_to(REPO)} with "
-              f"{len(blocks)} pending row(s)", file=sys.stderr)
+              f"{rows} pending row(s)", file=sys.stderr)
     if args.extend_ledger:
         try:
             added = extend_ledger(LEDGER, constants)
@@ -898,26 +1338,36 @@ def main(argv=None) -> int:
         print(f"[enum-reuse] appended {added} pending row(s) to "
               f"{LEDGER.relative_to(REPO)}", file=sys.stderr)
     findings = check_ledger(LEDGER, constants)
-    for finding in findings[:20]:
+    pending = sum(finding.endswith(": review is pending") for finding in findings)
+    other = [finding for finding in findings if not finding.endswith(": review is pending")]
+    for finding in other[:20]:
         print(f"   {finding}", file=sys.stderr)
-    if len(findings) > 20:
-        print(f"   ... {len(findings) - 20} more", file=sys.stderr)
-    duplicate_values = sum(len(domains) > 1 for domains in domains_by_value.values())
-    print(f"[enum-reuse] {len(blocks)} block(s), {len(constants)} member(s), "
-          f"{len(by_value)} value(s), {duplicate_values} cross-domain collision value(s)",
+    if len(other) > 20:
+        print(f"   ... {len(other) - 20} more", file=sys.stderr)
+    categories = Counter(row.category for row in constants)
+    domains_by_value = {value: {row.source_enum for row in keys} for value, keys in groups}
+    shared = sum(len(keys) > 1 for _value, keys in groups)
+    collisions = sum(len(domains) > 1 for domains in domains_by_value.values())
+    strict_only = sum(block.strict_only for block in blocks)
+    print(f"[enum-reuse] {views} unit view(s); {len(blocks) - strict_only} enum block(s) "
+          f"(+{strict_only} strict-view only); "
+          f"{len(constants)} key(s) (enum {categories['enum']}, macro "
+          f"{categories['macro']}, const {categories['const']}); {len(groups)} value(s), "
+          f"{shared} held by two or more keys, {collisions} by two or more domains",
           file=sys.stderr)
     if not args.no_report:
-        print(f"[enum-reuse] reports: {REPORT.relative_to(REPO)}, "
-              f"{COLLISION_REPORT.relative_to(REPO)}, "
-              f"{PAIR_REPORT.relative_to(REPO)}, "
-              f"{ROLE_PAIR_REPORT.relative_to(REPO)}", file=sys.stderr)
+        print(f"[enum-reuse] reports: {VALUE_REPORT.relative_to(REPO)} (+ .json), "
+              f"{REPORT.relative_to(REPO)}, {COLLISION_REPORT.relative_to(REPO)}, "
+              f"{PAIR_REPORT.relative_to(REPO)}, {ROLE_PAIR_REPORT.relative_to(REPO)}",
+              file=sys.stderr)
     if findings:
-        print(f"[enum-reuse] FAIL: {len(findings)} ledger finding(s)", file=sys.stderr)
+        print(f"[enum-reuse] FAIL: {pending} pending row(s), {len(other)} other ledger "
+              f"finding(s)", file=sys.stderr)
         return 1
     with LEDGER.open(newline="") as stream:
         reviewed = sum(1 for _row in csv.DictReader(stream, dialect="excel-tab"))
-    print(f"[enum-reuse] OK: all {reviewed} starting block(s) reviewed and "
-          "all current members accounted for", file=sys.stderr)
+    print(f"[enum-reuse] OK: all {reviewed} starting domain(s) reviewed and "
+          "all current keys accounted for", file=sys.stderr)
     return 0
 
 
