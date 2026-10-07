@@ -5065,6 +5065,7 @@ void game::ShowScenInfo(void) {
         scenWindow->BroadcastMessage(packet);
     }
     gWindowManager->DoDialog(scenWindow, EventWindowHandler, false);
+    delete scenWindow;
 }
 
 void game::RandomizePlayerCrests(void) {

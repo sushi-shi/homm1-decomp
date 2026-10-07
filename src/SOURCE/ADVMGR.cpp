@@ -3268,9 +3268,10 @@ b8 advManager::UpdBottomViewNewTurn(void) {
         WINDOW_Z_ORDER_APPEND
     );
 
+    // The day has a slot of its own, so the week's text is removed with it.
     day = static_cast<char*>(malloc(BOTTOM_VIEW_TEXT_BUFFER_SIZE));
     sprintf(day, "%s: %d", localization::Tr("calendar.day.label"), gGame->m_day);
-    m_bottomViewSecondaryWidgets[ADVMGR_BOTTOM_VIEW_TEXT] = new textWidget(
+    m_bottomViewSecondaryWidgets[ADVMGR_BOTTOM_VIEW_COUNT_TEXT] = new textWidget(
         NEW_TURN_DATE_TEXT_X,
         NEW_TURN_DAY_TEXT_Y,
         NEW_TURN_DATE_TEXT_WIDTH,
@@ -3281,10 +3282,10 @@ b8 advManager::UpdBottomViewNewTurn(void) {
         BOTTOM_VIEW_TEXT_ID,
         WIDGET_KIND_TEXT
     );
-    if (!m_bottomViewSecondaryWidgets[ADVMGR_BOTTOM_VIEW_TEXT])
+    if (!m_bottomViewSecondaryWidgets[ADVMGR_BOTTOM_VIEW_COUNT_TEXT])
         MemError();
     m_adventureWindow->AddWidget(
-        m_bottomViewSecondaryWidgets[ADVMGR_BOTTOM_VIEW_TEXT],
+        m_bottomViewSecondaryWidgets[ADVMGR_BOTTOM_VIEW_COUNT_TEXT],
         WINDOW_Z_ORDER_APPEND
     );
     return true;
@@ -4478,7 +4479,7 @@ void advManager::DoTownKnob(void) {
     gMouseManager->SetCursorShape(4);
     prevPage = gCurPlayerData->m_townLocatorPage;
     count = gCurPlayerData->m_townCount;
-    scale = 73.0 / (count - LOCATOR_PAGE_DENOMINATOR_OFFSET);
+    scale = 74.0 / (count - LOCATOR_PAGE_DENOMINATOR_OFFSET);
     gMouseManager->MouseCoords(x, y);
     offset = y - m_scrollRightButton->m_y;
     gInputManager->Flush();
@@ -4487,8 +4488,8 @@ void advManager::DoTownKnob(void) {
         if (message.type == MESSAGE_MOUSE_MOVE) {
             if (message.y < offset + LOCATOR_SCROLL_BASE_Y)
                 message.y = offset + LOCATOR_SCROLL_BASE_Y;
-            if (message.y > offset + LOCATOR_SCROLL_BASE_Y + LOCATOR_HERO_SCROLL_SPAN)
-                message.y = offset + LOCATOR_SCROLL_BASE_Y + LOCATOR_HERO_SCROLL_SPAN;
+            if (message.y > offset + LOCATOR_SCROLL_BASE_Y + LOCATOR_TOWN_SCROLL_SPAN)
+                message.y = offset + LOCATOR_SCROLL_BASE_Y + LOCATOR_TOWN_SCROLL_SPAN;
             gMouseManager->Main(message);
             m_scrollRightButton->m_y = message.y - offset;
             m_adventureWindow->DrawWindow();

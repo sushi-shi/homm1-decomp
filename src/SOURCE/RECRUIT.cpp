@@ -386,5 +386,6 @@ void QuickViewRecruit(town* townData, i8 dwelling) {
     gWindowManager->AddWindow(recruitWindow, WINDOW_Z_ORDER_APPEND, 1);
     QuickViewWait();
     gWindowManager->RemoveWindow(recruitWindow);
+    delete recruitWindow;
     gMouseManager->ReallyShowPointer();
 }
