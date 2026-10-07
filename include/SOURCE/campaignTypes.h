@@ -13,7 +13,7 @@ enum CampaignChoice {
 
 enum CampaignScenarioTableConstant {
     CAMPAIGN_SCENARIO_COUNT = 9,
-    // Crests of the players after the first.
+    // Entries of a scenario's crest table, read by player number.
     CAMPAIGN_CREST_COUNT = 3
 };
 

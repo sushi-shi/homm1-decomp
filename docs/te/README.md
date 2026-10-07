@@ -183,7 +183,8 @@ native counterparts carry the same effect:
 `docs/port/divergences.md` lists retail gameplay bugs the port keeps; plain
 `port` stays faithful to the original game, and port-te fixes them, except
 the Thieves' Guild grouping, kept as the original has it (BUG-TWN-1,
-reverted).
+reverted), and the campaign's crest order (BUG-CAM-1 guards only the read
+past the table, as the port already did).
 The edition itself fixes ghost retaliation (X10), bad luck (X11),
 auto-resolved losses (X12), duplicate stacks (X13), the wandering monster
 count (X14), experience of grown stacks (X15), map-placed heroes' movement
@@ -194,7 +195,7 @@ maximum (TE-FIX-7), the town footprint (TE-MAP-1) and the computer's Bless
 and Curse evaluation (TE-UNR-1). The others are fixed on source-te as the
 `BUG-*` rows of `changes.tsv` (catalogue section 9) and replayed here like
 the edition's commits: the computer player (BUG-AI-*), combat (BUG-CMB-*),
-the adventure map (BUG-ADV-*), the campaign's crests (BUG-CAM-1), towns
+the adventure map (BUG-ADV-*), the campaign's crest table (BUG-CAM-1), towns
 (BUG-TWN-*), the random map generator (BUG-GEN-*) and the editor
 (BUG-EDT-*). The "weekly monster growth" row is not a defect: a site's stock
 grows only while below 100, by at most 10. `game_regressions_test` and

@@ -448,8 +448,9 @@ void StrayTownsUnderMonsters() {
 }
 
 
-// The campaign's crests were read one entry late: the enemy lord of
-// scenarios 5-8 never got the crest the scenario names.
+// The campaign's crests are read by player number, as the original reads
+// them; only the fourth player's entry, past the three-entry table, is not
+// read (its crest is random, as the value found there always made it).
 void CampaignLordCrest() {
     i32 savedType = gGame->m_campaignType;
     i32 savedScenario = gGame->m_campaignScenario;
@@ -457,17 +458,23 @@ void CampaignLordCrest() {
     i16 savedColors[GAME_PLAYER_COUNT];
     for (int i = 0; i < GAME_PLAYER_COUNT; i++)
         savedColors[i] = gGame->m_players[i].m_color;
-    bool named = true;
+    bool retail = true;
+    bool distinct = true;
     for (int scenario = CAMPAIGN_SCENARIO_5; scenario <= CAMPAIGN_SCENARIO_8; scenario++) {
         gGame->m_campaignType = CAMPAIGN_IRONFIST;
         gGame->m_campaignScenario = scenario;
         gGame->m_playerCount = GAME_PLAYER_COUNT;
-        i16 lord = gCampaignScenarios[scenario].playerCrests[0];
-        gGame->m_players[0].m_color = lord == PLAYER_COLOR_BLUE ? PLAYER_COLOR_GREEN : PLAYER_COLOR_BLUE;
+        i16 crest = gCampaignScenarios[scenario].playerCrests[1];
+        gGame->m_players[0].m_color = crest == PLAYER_COLOR_BLUE ? PLAYER_COLOR_GREEN : PLAYER_COLOR_BLUE;
         gGame->RandomizePlayerCrests();
-        named = named && gGame->m_players[1].m_color == lord;
+        if (crest >= PLAYER_COLOR_BLUE && crest < PLAYER_COLOR_COUNT)
+            retail = retail && gGame->m_players[1].m_color == crest;
+        for (int a = 0; a < GAME_PLAYER_COUNT; a++)
+            for (int b = a + 1; b < GAME_PLAYER_COUNT; b++)
+                distinct = distinct && gGame->m_players[a].m_color != gGame->m_players[b].m_color;
     }
-    Expect(named, "the enemy lord of campaign scenarios 5-8 has the scenario's crest");
+    Expect(retail, "campaign scenarios 5-8 give player 1 the crest of entry 1, as the original");
+    Expect(distinct, "the fourth player's crest is drawn among the free ones");
     gGame->m_campaignType = savedType;
     gGame->m_campaignScenario = savedScenario;
     gGame->m_playerCount = savedCount;
