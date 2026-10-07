@@ -470,6 +470,7 @@ char* combatManager::GetBackgroundName(void) {
     };
     if (MAP_TRIGGER_OBJECT(m_battlefieldCell->m_triggerType) == MAP_OBJECT_GRAVEYARD
         || (MAP_TRIGGER_OBJECT(m_battlefieldCell->m_triggerType) == MAP_OBJECT_HERO
+            && gGame->CellHasRecord(m_battlefieldCell)
             && MAP_TRIGGER_OBJECT(
                    gGame->GetHero(m_battlefieldCell->m_objectMetadata)->m_locationType
                ) == MAP_OBJECT_GRAVEYARD)) {

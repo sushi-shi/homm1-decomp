@@ -1110,6 +1110,7 @@ i32 advManager::ProcessSelect(struct tag_message* message, class mapCell** event
     tag_message inputMessage;
     b8 mobileResult;
     hero* currentHero;
+    b32 hasRecord;
 
     visible = true;
     switch (message->id) {
@@ -1223,6 +1224,9 @@ i32 advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                   & gCurPlayerBit))
                 visible = false;
             theCell = GetCell(m_mapOriginX + m_hoverCellX, m_mapOriginY + m_hoverCellY);
+            // A hero or town cell without the record it names (see
+            // game::CellHasRecord) is neither shown nor selected.
+            hasRecord = gGame->CellHasRecord(m_mapOriginX + m_hoverCellX, m_mapOriginY + m_hoverCellY);
             if (message->modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
                 if (!visible) {
                     QuickInfo(m_hoverCellX, m_hoverCellY);
@@ -1231,12 +1235,15 @@ i32 advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                         && gCurPlayerData->CurrentHero() != HERO_ID_NONE && m_heroContextLocked) {
                         objectTypeState = MAP_OBJECT_TRIGGER(MAP_OBJECT_HERO);
                         objectIdIndex = gCurPlayerData->CurrentHero();
+                        hasRecord = true;
                     } else {
                         objectTypeState = theCell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
                         objectIdIndex = theCell->m_objectMetadata;
                     }
                     switch (MAP_PASSIVE_OBJECT(objectTypeState)) {
                         case MAP_OBJECT_HERO:
+                            if (!hasRecord)
+                                break;
                             mouseX = m_hoverCellX * CELL_PIXELS - HERO_QUICK_VIEW_X_OFFSET;
                             if (mouseX < BORDER_EDGE_SIZE)
                                 mouseX = BORDER_EDGE_SIZE;
@@ -1250,6 +1257,8 @@ i32 advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                             HeroQuickView(objectIdIndex, QUICK_VIEW_NO_LOCATOR, mouseX, mouseY);
                             break;
                         case MAP_OBJECT_TOWN:
+                            if (!hasRecord)
+                                break;
                             mouseX = m_hoverCellX * CELL_PIXELS - TOWN_QUICK_VIEW_X_OFFSET;
                             if (mouseX < BORDER_EDGE_SIZE)
                                 mouseX = BORDER_EDGE_SIZE;
@@ -1298,7 +1307,7 @@ i32 advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                 } else {
                     objectTypeState = theCell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
                     objectIdIndex = theCell->m_objectMetadata;
-                    if (MAP_PASSIVE_OBJECT(objectTypeState) == MAP_OBJECT_HERO) {
+                    if (MAP_PASSIVE_OBJECT(objectTypeState) == MAP_OBJECT_HERO && hasRecord) {
                         if (objectIdIndex == gCurPlayerData->CurrentHero()) {
                             m_pendingCommand = ADVMGR_COMMAND_HERO_VIEW;
                             DoAdvCommand();
@@ -1306,7 +1315,7 @@ i32 advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                             SetHeroContext(objectIdIndex, false);
                         }
                     }
-                    if (MAP_PASSIVE_OBJECT(objectTypeState) == MAP_OBJECT_TOWN) {
+                    if (MAP_PASSIVE_OBJECT(objectTypeState) == MAP_OBJECT_TOWN && hasRecord) {
                         if (objectIdIndex == gCurPlayerData->CurrentTown()) {
                             m_pendingCommand = ADVMGR_COMMAND_TOWN_VIEW;
                             *eventCell = DoAdvCommand();
@@ -1555,6 +1564,7 @@ i32 advManager::ProcessHover(struct tag_message* message) {
     i16 xPos;
     i16 heroPosY;
     i16 heroPosX;
+    b32 hasRecord;
 
     switch (message->id) {
         case ADVENTURE_CONTROL_MAP_VIEW:
@@ -1587,13 +1597,17 @@ i32 advManager::ProcessHover(struct tag_message* message) {
                     return MESSAGE_DISPATCH_CONSUME;
                 }
                 hoverCell = GetCell(m_commandTargetX, m_commandTargetY);
+                // A hero or town cell without the record it names (see
+                // game::CellHasRecord) is hovered as ground.
+                hasRecord = gGame->CellHasRecord(m_commandTargetX, m_commandTargetY);
                 if (gCurPlayerData->m_currentHero == HERO_ID_NONE) {
-                    if (MAP_TRIGGER_OBJECT(hoverCell->m_triggerType) == MAP_OBJECT_TOWN
+                    if (MAP_TRIGGER_OBJECT(hoverCell->m_triggerType) == MAP_OBJECT_TOWN && hasRecord
                         && gGame->GetTown(hoverCell->m_objectMetadata)->m_owner == gCurPlayer) {
                         gMouseManager->SetPointer(ADVENTURE_POINTER_TOWN);
                         m_pendingCommand = ADVMGR_COMMAND_TOWN_VIEW;
                         return MESSAGE_DISPATCH_CONSUME;
                     } else if (MAP_TRIGGER_OBJECT(hoverCell->m_triggerType) == MAP_OBJECT_HERO
+                               && hasRecord
                                && gGame->GetHero(hoverCell->m_objectMetadata)->m_owner
                                       == gCurPlayer) {
                         gMouseManager->SetPointer(ADVENTURE_POINTER_HERO);
@@ -1613,7 +1627,8 @@ i32 advManager::ProcessHover(struct tag_message* message) {
                         return MESSAGE_DISPATCH_CONSUME;
                     }
                     if (hoverCell->m_secondaryTrigger & MAP_CELL_SECONDARY_BLOCKED) {
-                        if (MAP_TRIGGER_OBJECT(hoverCell->m_triggerType) == MAP_OBJECT_TOWN) {
+                        if (MAP_TRIGGER_OBJECT(hoverCell->m_triggerType) == MAP_OBJECT_TOWN
+                            && hasRecord) {
                             pTown = gGame->GetTown(hoverCell->m_objectMetadata);
                             if (pTown->m_owner == gCurPlayer && m_commandTargetY >= 1
                                 && m_commandTargetY < MAP_CELL_GRID_SIZE - 1
@@ -1696,6 +1711,8 @@ i32 advManager::ProcessHover(struct tag_message* message) {
                                 m_pendingCommand = ADVMGR_COMMAND_MOVE_TO;
                                 break;
                             case MAP_OBJECT_HERO:
+                                if (!hasRecord)
+                                    goto defaultHover;
                                 if (gGame->GetHero(hoverCell->m_objectMetadata)->m_owner
                                     != gCurPlayer) {
                                     gMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_ATTACK);
@@ -1708,6 +1725,8 @@ i32 advManager::ProcessHover(struct tag_message* message) {
                                 }
                                 break;
                             case MAP_OBJECT_TOWN:
+                                if (!hasRecord)
+                                    goto defaultHover;
                                 pTown = gGame->GetTown(hoverCell->m_objectMetadata);
                                 if ((hoverCell->m_triggerType & MAP_TRIGGER_EVENT)
                                     && pTown->m_owner != gCurPlayer && pTown->HasGarrison()) {
@@ -2517,7 +2536,9 @@ void advManager::UpdateRadar(b8 updateScreen, b32 partial) {
                 continue;
             }
             cellPtrItem = &m_mapData[x][y];
-            if (MAP_TRIGGER_OBJECT(cellPtrItem->m_triggerType) == MAP_OBJECT_HERO) {
+            // A hero cell without its hero is drawn as what lies there.
+            if (MAP_TRIGGER_OBJECT(cellPtrItem->m_triggerType) == MAP_OBJECT_HERO
+                && gGame->CellHasRecord(x, y)) {
                 theOwner = gGame->m_availableHeroes[cellPtrItem->m_objectMetadata];
                 if (theOwner == gCurPlayer)
                     color = gRadarOwnerColor
