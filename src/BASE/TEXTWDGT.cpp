@@ -7,6 +7,7 @@
 #include <BASE/heroWindow.h>
 #include <BASE/message.h>
 #include <BASE/resourceManager.h>
+#include <BASE/textEntryWidget.h>
 #include <BASE/textWidget.h>
 #include <SOURCE/KB.h>
 
@@ -152,7 +153,7 @@ void textWidget::SetText(char* text) {
         u16 newLength = strlen(text);
         if (newLength > strlen(m_text)) {
             free(m_text);
-            m_text = static_cast<char*>(malloc(newLength + 5));
+            m_text = static_cast<char*>(malloc(newLength + TEXT_ENTRY_ALLOCATION_PADDING));
         }
         strcpy(m_text, text);
     } else {

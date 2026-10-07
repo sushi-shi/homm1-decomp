@@ -49,7 +49,8 @@ H1_ENUM_CONST_END(TownSiteConstant)
 H1_ENUM_CONST_BEGIN(RandomMapConstant)
 // GenerateRandomMap retries a map without enough castles this often.
     RANDOM_MAP_ATTEMPTS = 5,
-    // overlayType::terrainMask of an object placeable on every terrain.
+    // overlayType::terrainMask of the terrain-neutral mountain and tree chain
+    // sets and the towns: every land terrain (water, bit 0, is clear).
     RANDOM_MAP_ANY_TERRAIN = 0xfe,
     // PaintRandomTerrain's percent that covers the whole map; densities and
     // land shares are percents.
