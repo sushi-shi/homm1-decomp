@@ -73,11 +73,11 @@ extern u8* gNbListenName;
 
 extern u8 gNbMaxSess;
 extern u8 gNbShutdown;
-extern u8 gNetStatus[7];
+extern u8 gNetStatus[NETBIOS_SESSION_COUNT];
 #define gNbSessLsn gSessNums // spelling fixes .bss order
-extern u8 gNbSessLsn[7];
+extern u8 gNbSessLsn[NETBIOS_SESSION_COUNT];
 #define gNbSessNcb gNetPeerNcb // spelling fixes .bss order
-extern NCB gNbSessNcb[7];
+extern NCB gNbSessNcb[NETBIOS_SESSION_COUNT];
 #define gNbCtlNcb gNetAdminNcb // spelling fixes .bss order
 extern NCB gNbCtlNcb;
 #define gNbSessBuf gNbSessionBuffer // spelling fixes .bss order
@@ -85,9 +85,9 @@ extern u8 gNbSessBuf[];
 extern u8 gNbLocalNum;
 extern char* gNbGroupName;
 extern u8 gNbCallRetries;
-extern u8 gNbRcvData[7][0x1000];
+extern u8 gNbRcvData[NETBIOS_SESSION_COUNT][NETBIOS_PAYLOAD_SIZE];
 #define gNbNameBuf gNetPeerNameTable // spelling fixes .bss order
-extern NetbiosName gNbNameBuf[7];
+extern NetbiosName gNbNameBuf[NETBIOS_SESSION_COUNT];
 #define gNbRcvLock gNetbiosRcvCrit // spelling fixes .bss order
 extern CRITICAL_SECTION gNbRcvLock;
 #define gNbSndLock gNetSendCs // spelling fixes .bss order
@@ -99,7 +99,7 @@ extern tag_Anchor gNbSndQueue;
 // priority queue.
 #define gNbPriorityQueue gNbFreeQueue // spelling fixes .bss order
 extern tag_Anchor gNbPriorityQueue;
-extern HANDLE gNbEvents[9];
+extern HANDLE gNbEvents[NETBIOS_THREAD_EVENT_COUNT];
 // NetBIOS driver entry points REMOTE calls (C linkage, cdecl).
 H1_C_LINKAGE u16 __cdecl nb_init(u16 maxSessions);
 H1_C_LINKAGE void __cdecl nb_term(i32 port);

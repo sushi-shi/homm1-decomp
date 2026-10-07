@@ -727,7 +727,7 @@ void fileRequester::Update(b8 drawWindow) {
         m_window->BroadcastMessage(message);
     }
     if (m_fileCount <= FILE_REQUESTER_VISIBLE_ROWS) {
-        m_scrollKnob->m_y = 134;
+        m_scrollKnob->m_y = (FILE_REQUESTER_GUTTER_TOP + FILE_REQUESTER_GUTTER_BOTTOM) / 2;
     } else {
         gutterFactor = 156.0 / (m_fileCount - FILE_REQUESTER_VISIBLE_ROWS);
         m_scrollKnob->m_y = m_topIndex * gutterFactor + 56.0;

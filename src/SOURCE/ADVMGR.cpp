@@ -3408,9 +3408,9 @@ b8 advManager::UpdBottomViewHero(void) {
         WINDOW_Z_ORDER_APPEND
     );
 
-    heroNameCopy = static_cast<char*>(malloc(9));
+    heroNameCopy = static_cast<char*>(malloc(sizeof(curHero->m_shortName)));
     strcpy(heroNameCopy, curHero->m_shortName);
-    heroNameCopy[8] = 0;
+    heroNameCopy[sizeof(curHero->m_shortName) - 1] = 0;
     m_bottomViewSecondaryWidgets[ADVMGR_BOTTOM_VIEW_TEXT] = new textWidget(
         475,
         418,
@@ -6079,7 +6079,11 @@ void advManager::TownGate(void) {
         NormalDialog(localization::Tr("adventure.town_gate.no_town"), NORMAL_DIALOG_TYPE_OK);
     if (gGame->m_castleRecs[gCurPlayerData->m_townIds[selectedTown]].m_occupyingHeroId
         != TOWN_OCCUPYING_HERO_NONE) {
-        NormalDialog(localization::Tr("adventure.town_gate.occupied"), NORMAL_DIALOG_TYPE_OK, 0x61);
+        NormalDialog(
+            localization::Tr("adventure.town_gate.occupied"),
+            NORMAL_DIALOG_TYPE_OK,
+            NORMAL_DIALOG_ADVENTURE_X
+        );
         return;
     }
     PlayMusic(MUSIC_TRACK_TELEPORT);
@@ -6190,7 +6194,12 @@ void advManager::SummonBoat(void) {
             boatRec->savedEventData = destinationCell->m_objectMetadata;
             destinationCell->m_triggerType = MAP_EVENT_TRIGGER(MAP_OBJECT_SHIP);
             destinationCell->m_objectMetadata = slotIndex;
-            gWindowManager->SaveFizzleSource(176, 192, 128, 96);
+            gWindowManager->SaveFizzleSource(
+                SUMMON_TARGET_X,
+                SUMMON_TARGET_Y,
+                SUMMON_TARGET_WIDTH,
+                SUMMON_TARGET_HEIGHT
+            );
             CompleteDraw(m_mapOriginX, m_mapOriginY, false);
             gWindowManager->FizzleForward(
                 SUMMON_TARGET_X,
@@ -6305,7 +6314,7 @@ void advManager::HideRoute(b32 redraw, b32 clearDestination, b32 updateButton) {
         gWindowManager->BroadcastMessage(
             MESSAGE_WIDGET,
             WIDGET_COMMAND_SET_FLAGS,
-            PANEL_CONTINUE_ROUTE,
+            ADVENTURE_CONTROL_CONTINUE_ROUTE,
             WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED
         );
 
@@ -6346,7 +6355,7 @@ void advManager::CheckDimNextHeroBut(void) {
     gWindowManager->BroadcastMessage(
         MESSAGE_WIDGET,
         flagCommand,
-        BUTTON_BROADCAST_ARG,
+        ADVENTURE_CONTROL_NEXT_HERO,
         WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED
     );
 }

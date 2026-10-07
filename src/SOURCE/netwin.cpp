@@ -619,7 +619,7 @@ u8 gNbShutdown = 0;
 DATA(0x0049eda4)
 u8 gNbMaxSess = 255;
 DATA(0x004b2164)
-u8 gNetStatus[7] = {0, 0, 0, 0, 0, 0, 0};
+u8 gNetStatus[NETBIOS_SESSION_COUNT] = {0, 0, 0, 0, 0, 0, 0};
 DATA(0x0049eda8)
 char* gNbGroupName = "Empire Too ";
 DATA(0x0049edac)
@@ -628,18 +628,18 @@ u8* gNbListenName =
 DATA(0x004a9e70)
 tag_Anchor gNbPriorityQueue;
 DATA(0x004a9eb0)
-u8 gNbSessLsn[7];
+u8 gNbSessLsn[NETBIOS_SESSION_COUNT];
 DATA(0x004a9ec0)
-u8 gNbRcvData[7][0x1000];
+u8 gNbRcvData[NETBIOS_SESSION_COUNT][NETBIOS_PAYLOAD_SIZE];
 DATA(0x004b20d8)
-NetbiosName gNbNameBuf[7];
+NetbiosName gNbNameBuf[NETBIOS_SESSION_COUNT];
 DATA(0x004b0ed8)
 u8 gNbSessBuf[0xfd0];
 // No retail code reads this; it holds its retail .bss place.
 DATA(0x004b1ea8)
 u8 gNetwinDeadName[48];
 DATA(0x004b1ed8)
-NCB gNbSessNcb[7];
+NCB gNbSessNcb[NETBIOS_SESSION_COUNT];
 DATA(0x004b2098)
 NCB gNbCtlNcb;
 DATA(0x004a9e78)
@@ -651,7 +651,7 @@ tag_Anchor gNbSndQueue;
 DATA(0x004b0ec0)
 CRITICAL_SECTION gNbRcvLock;
 DATA(0x004a9e7c)
-HANDLE gNbEvents[9];
+HANDLE gNbEvents[NETBIOS_THREAD_EVENT_COUNT];
 DATA(0x004b2148)
 CRITICAL_SECTION gNbSndLock;
 DATA(0x004a9ea0)

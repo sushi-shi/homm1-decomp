@@ -625,7 +625,7 @@ void hero::ApplyBattleWinTemps(void) {
         m_eventFlags -= HERO_EVENT_OASIS;
     }
     if (m_eventFlags & HERO_EVENT_STATUE) {
-        m_morale -= 2;
+        m_morale -= STATUE_MORALE_BONUS;
         m_eventFlags -= HERO_EVENT_STATUE;
     }
     if (m_eventFlags & HERO_EVENT_FAERIE_RING) {

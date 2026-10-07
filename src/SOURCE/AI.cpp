@@ -180,7 +180,7 @@ void combatManager::DoCompAI(H1_ENUM_PARAM(CombatSide, i8) side) {
             if (castleCopy->m_buildings & (1 << newDir))
                 curNumArchers += COMBAT_AI_CASTLE_ARCHERS_PER_DWELLING;
         for (newDir = H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_MAGE_GUILD);
-             newDir <= H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_RACE_FIRST - 1);
+             newDir <= H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_GENERIC_LAST);
              newDir++)
             if (castleCopy->m_buildings & (1 << newDir))
                 curNumArchers++;

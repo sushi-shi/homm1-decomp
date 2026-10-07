@@ -1282,7 +1282,7 @@ void game::NewMap(char* mapName) {
         if (m_campaignType > 0)
             k = gCrestHeroClass[m_players[i].m_color];
         else
-            k = Random(0, 3);
+            k = Random(0, HERO_CLASS_COUNT - 1);
         m_players[i].m_availableHeroIds[0] = GetNewHeroId(k);
         m_availableHeroes[m_players[i].m_availableHeroIds[0]] = HERO_AVAILABILITY_RETREATED;
         k = (k + Random(1, 3)) % HERO_CLASS_COUNT;
@@ -2088,8 +2088,8 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) ViewSpellsHandler(tag_message& messag
                             NormalDialog(
                                 gSpellDesc[spell],
                                 NORMAL_DIALOG_TYPE_QUICK_VIEW,
-                                -1,
-                                -1,
+                                NORMAL_DIALOG_AUTO_POSITION,
+                                NORMAL_DIALOG_AUTO_POSITION,
                                 NORMAL_DIALOG_SPELL,
                                 H1_ENUM_ENCODE(SpellType, spell)
                             );
@@ -2132,8 +2132,8 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) ViewSpellsHandler(tag_message& messag
                                 NormalDialog(
                                     gSpellDesc[spell],
                                     NORMAL_DIALOG_TYPE_OK,
-                                    -1,
-                                    -1,
+                                    NORMAL_DIALOG_AUTO_POSITION,
+                                    NORMAL_DIALOG_AUTO_POSITION,
                                     NORMAL_DIALOG_SPELL,
                                     H1_ENUM_ENCODE(SpellType, spell)
                                 );
@@ -3142,7 +3142,7 @@ void game::PerWeek(void) {
 VA(0x0043435e, 0x2c0)
 void game::PerMonth(void) {
     DATA(0x0048fcbc)
-    static H1_ENUM_STORAGE(CreatureType, i8) gMonType[12] = {
+    static H1_ENUM_STORAGE(CreatureType, i8) gMonType[CALENDAR_MONTH_CREATURE_COUNT] = {
         CREATURE_PEASANT,
         CREATURE_GOBLIN,
         CREATURE_DWARF,
@@ -3366,7 +3366,7 @@ void game::SetupTown(i8 townId, b8 aiOwned) {
             dwellingCount--;
         }
     }
-    memset(nextUsed, 0, 29);
+    memset(nextUsed, 0, sizeof(nextUsed));
     for (n = 0; n < TOWN_MAGE_GUILD_SPELL_COUNT; n++) {
         if (n <= MAGE_GUILD_LEVEL_1_LAST_SLOT)
             spellLevel = MAGE_GUILD_STATE_LEVEL_1;
@@ -3697,7 +3697,8 @@ void game::ProcessRandomObjects(b32 castlesOnly) {
                         goto pickMonster;
                     pickMonster:
                         cellPtrItem->m_triggerType = MAP_EVENT_TRIGGER(MAP_OBJECT_MONSTER);
-                        cellPtrItem->m_objectIndex = Random(0, 27);
+                        cellPtrItem->m_objectIndex =
+                            Random(0, H1_ENUM_ENCODE(CreatureType, CREATURE_LAST));
                         while (gMonsterDatabase
                                        [H1_ENUM_DECODE(CreatureType, cellPtrItem->m_objectIndex)]
                                            .fightValue
@@ -3706,7 +3707,8 @@ void game::ProcessRandomObjects(b32 castlesOnly) {
                                           [H1_ENUM_DECODE(CreatureType, cellPtrItem->m_objectIndex)]
                                               .fightValue
                                       >= highFVNum)
-                            cellPtrItem->m_objectIndex = Random(0, 27);
+                            cellPtrItem->m_objectIndex =
+                                Random(0, H1_ENUM_ENCODE(CreatureType, CREATURE_LAST));
                         break;
                     case MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_RESOURCE):
                         cellPtrItem->m_triggerType = MAP_EVENT_TRIGGER(MAP_OBJECT_RESOURCE);
@@ -4061,8 +4063,8 @@ void game::WaitForPlayer(char* text, i32 player) {
         NormalDialog(
             text,
             NORMAL_DIALOG_TYPE_OK,
-            0x61,
-            -1,
+            NORMAL_DIALOG_ADVENTURE_X,
+            NORMAL_DIALOG_AUTO_POSITION,
             NORMAL_DIALOG_CREST,
             H1_ENUM_ENCODE(PlayerColor, gGame->m_players[player].m_color)
         );
@@ -4622,8 +4624,8 @@ void game::DoNewTurn(void) {
         NormalDialog(
             gText,
             NORMAL_DIALOG_TYPE_OK,
-            0x61,
-            -1,
+            NORMAL_DIALOG_ADVENTURE_X,
+            NORMAL_DIALOG_AUTO_POSITION,
             NORMAL_DIALOG_CREST,
             H1_ENUM_ENCODE(PlayerColor, gGame->m_players[gCurPlayer].Color())
         );
@@ -4684,7 +4686,7 @@ void game::DoNewTurn(void) {
             }
             PlayMusic(track);
             gMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
-            NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, 0x61);
+            NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, NORMAL_DIALOG_ADVENTURE_X);
             PlayMusic(TERRAIN_MUSIC_TRACK(gAdvManager->m_currentTerrain));
         }
     }
@@ -5020,10 +5022,10 @@ b8 gDismissArmy;
 DATA(0x004a6be4)
 heroWindow* gReqExtraWindow;
 DATA(0x004a6bd0)
-i8 gSavedDifficulties[4];
+i8 gSavedDifficulties[GAME_PLAYER_COUNT];
 DATA(0x004a6bf4)
 H1_ENUM_ARRAY(i16, gMineTypeCount, ResourceType, RESOURCE_COUNT);
 DATA(0x004a6c0e)
 i8 gSavedKingOfTheHill;
 DATA(0x004a6be0)
-H1_ENUM_STORAGE(TownType, i8) gRandomTownTypes[4];
+H1_ENUM_STORAGE(TownType, i8) gRandomTownTypes[GAME_PLAYER_COUNT];

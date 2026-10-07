@@ -274,7 +274,13 @@ public:
     H1_ENUM_ARRAY(i8, m_sideRetreated, CombatSide, COMBAT_SIDE_COUNT);
     // Per stack draw state: ResetLimitCreature clears it (-1 for the dead)
     // and army::SpellEffect marks the stack it animates.
-    H1_ENUM_ARRAY_ROWS(i32, m_limitCreatureCount, CombatSide, COMBAT_SIDE_COUNT, 5);
+    H1_ENUM_ARRAY_ROWS(
+        i32,
+        m_limitCreatureCount,
+        CombatSide,
+        COMBAT_SIDE_COUNT,
+        ARMY_GROUP_SLOT_COUNT
+    );
     // DrawFrame's extent modes: the first limits the redraw to the boxes of
     // stacks in m_limitCreatureCount, the second restores only the current
     // extent from the background buffer.

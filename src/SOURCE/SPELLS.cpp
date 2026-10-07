@@ -960,15 +960,15 @@ void combatManager::Armageddon(void) {
     effectPalette = new palette;
     if (!effectPalette)
         MemError();
-    memcpy(effectPalette->Data(), gamePal->Data(), 0x300);
+    memcpy(effectPalette->Data(), gamePal->Data(), PALETTE_DATA_SIZE);
     gTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
     paletteBytes = effectPalette->Data();
     for (fadeStep = 0; fadeStep < 32; fadeStep++) {
         for (color = 0; color < PALETTE_COLOR_COUNT; color++) {
-            if (paletteBytes[color * 3 + 1])
-                paletteBytes[color * 3 + 1]--;
-            if (paletteBytes[color * 3 + 2])
-                paletteBytes[color * 3 + 2]--;
+            if (paletteBytes[color * PALETTE_GRAPHICS_CHANNELS + PALETTE_CHANNEL_GREEN])
+                paletteBytes[color * PALETTE_GRAPHICS_CHANNELS + PALETTE_CHANNEL_GREEN]--;
+            if (paletteBytes[color * PALETTE_GRAPHICS_CHANNELS + PALETTE_CHANNEL_BLUE])
+                paletteBytes[color * PALETTE_GRAPHICS_CHANNELS + PALETTE_CHANNEL_BLUE]--;
         }
         DelayTil(&gTimers[COMBAT_FRAME_TIMER_SLOT]);
         SetPalette(paletteBytes, true);

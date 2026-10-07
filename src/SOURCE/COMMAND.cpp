@@ -596,7 +596,7 @@ void combatManager::ResetRound(void) {
     m_keepAttacksRemaining[COMBAT_ATTACKER_SIDE] = 1;
     m_keepAttacksRemaining[COMBAT_DEFENDER_SIDE] = 1;
     m_heroCastSpell[COMBAT_ATTACKER_SIDE] = m_heroCastSpell[COMBAT_DEFENDER_SIDE] = 0;
-    for (side = COMBAT_DEFENDER_SIDE; side < COMBAT_SIDE_COUNT; side++) {
+    for (side = COMBAT_SIDE_FIRST; side < COMBAT_SIDE_COUNT; side++) {
         for (armyIndex = 0; armyIndex < ARMY_GROUP_SLOT_COUNT; armyIndex++) {
             currentArmy = &m_armies[side][armyIndex];
             if (currentArmy->m_quantity > 0) {

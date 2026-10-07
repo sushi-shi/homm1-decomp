@@ -374,7 +374,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                 );
             } else {
                 visitingHero->m_eventFlags |= HERO_EVENT_STATUE;
-                visitingHero->m_morale += TEMPLE_MORALE_BONUS;
+                visitingHero->m_morale += STATUE_MORALE_BONUS;
                 EventWindow(
                     EVENT_TEXT_STATUE_REWARD,
                     NORMAL_DIALOG_TYPE_OK,
@@ -1406,7 +1406,17 @@ void advManager::EventWindow(
         sprintf(eventText, text);
     else
         sprintf(eventText, "Event ID %d", eventId);
-    NormalDialog(eventText, buttons, 0x61, -1, type1, value1, type2, value2, showOrText);
+    NormalDialog(
+        eventText,
+        buttons,
+        NORMAL_DIALOG_ADVENTURE_X,
+        NORMAL_DIALOG_AUTO_POSITION,
+        type1,
+        value1,
+        type2,
+        value2,
+        showOrText
+    );
 }
 
 VA(0x00426e86, 0x90)
@@ -2143,7 +2153,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
         case MAP_OBJECT_STATUE:
             if (!(eventHero->m_eventFlags & HERO_EVENT_STATUE)) {
                 eventHero->m_eventFlags |= HERO_EVENT_STATUE;
-                eventHero->m_morale += TEMPLE_MORALE_BONUS;
+                eventHero->m_morale += STATUE_MORALE_BONUS;
             }
             break;
         case MAP_OBJECT_SKELETON:

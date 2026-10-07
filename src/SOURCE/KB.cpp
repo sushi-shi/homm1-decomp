@@ -501,7 +501,7 @@ i32 oldmain(void) {
                     sendResult = TransmitRemoteData(
                         gText,
                         gamePlayer,
-                        4,
+                        GAME_PLAYER_COUNT,
                         BOX_REMOTE_SETUP,
                         true,
                         true,
@@ -1587,7 +1587,12 @@ H1_ENUM_STORAGE(SpellType, i8) gMageGuildSpellPool[4][8] = {
      SPELL_VIEW_ALL, SPELL_TOWN_GATE, SPELL_DIMENSION_DOOR},
 };
 DATA(0x0049042c)
-H1_ENUM_ARRAY(i8, gCombatAdjacency[45], CombatHexDirection, COMBAT_DIRECTION_ADJACENT_COUNT) = {
+H1_ENUM_ARRAY(
+    i8,
+    gCombatAdjacency[COMBAT_HEX_COUNT],
+    CombatHexDirection,
+    COMBAT_DIRECTION_ADJACENT_COUNT
+) = {
     {-1, -1, -1, -1, -1, -1}, {-1, 2, 10, -1, -1, -1},  {-1, 3, 11, 10, 1, -1},
     {-1, 4, 12, 11, 2, -1},   {-1, 5, 13, 12, 3, -1},   {-1, 6, 14, 13, 4, -1},
     {-1, 7, 15, 14, 5, -1},   {-1, -1, 16, 15, 6, -1},  {-1, -1, -1, -1, -1, -1},
@@ -1627,7 +1632,7 @@ H1_ENUM_ARRAY_ROWS(
     gDwellingType,
     TownType,
     TOWN_TYPE_COUNT,
-    6
+    BUILDING_SLOT_DWELLING_COUNT
 ) = {
     {CREATURE_PEASANT,
      CREATURE_ARCHER,
@@ -1767,7 +1772,7 @@ void ReceiveRemotePlayerExit(i8 position, i8 hadControl, b8 eliminated, b8 timed
             NormalDialog(
                 gText,
                 NORMAL_DIALOG_TYPE_OK,
-                0x61,
+                NORMAL_DIALOG_ADVENTURE_X,
                 NORMAL_DIALOG_AUTO_POSITION,
                 NORMAL_DIALOG_CREST,
                 H1_ENUM_ENCODE(PlayerColor, gGame->m_players[position].Color())
@@ -1843,7 +1848,7 @@ void CheckEndGame(b32 forceWin) {
                 NormalDialog(
                     gText,
                     NORMAL_DIALOG_TYPE_OK,
-                    0x61,
+                    NORMAL_DIALOG_ADVENTURE_X,
                     NORMAL_DIALOG_AUTO_POSITION,
                     NORMAL_DIALOG_CREST,
                     H1_ENUM_ENCODE(
@@ -1893,7 +1898,7 @@ void CheckEndGame(b32 forceWin) {
                     NormalDialog(
                         gText,
                         NORMAL_DIALOG_TYPE_OK,
-                        0x61,
+                        NORMAL_DIALOG_ADVENTURE_X,
                         NORMAL_DIALOG_AUTO_POSITION,
                         NORMAL_DIALOG_CREST,
                         H1_ENUM_ENCODE(
@@ -1971,9 +1976,9 @@ void CheckEndGame(b32 forceWin) {
                 break;
             case CAMPAIGN_SCENARIO_DRAGON_CITY:
                 defaultWin = false;
-                if (!gGame->m_mineOwners[0])
+                if (!gGame->m_mineOwners[MINE_SLOT_DRAGON_CITY])
                     won = true;
-                if (gGame->m_mineOwners[0] > 0) {
+                if (gGame->m_mineOwners[MINE_SLOT_DRAGON_CITY] > 0) {
                     defeated = true;
                     strcpy(message, localization::Tr("endgame.enemy.captured_dragon_city"));
                 }
@@ -2508,7 +2513,7 @@ void ShutDown(char* message) {
     buffer[0] = '\0';
     if (message) {
         strcpy(buffer, message);
-        SetFullScreenStatus(FALSE);
+        SetFullScreenStatus(false);
         MessageBoxA(gAppWindow, buffer, localization::Tr("shutdown.unexpected.title"), MB_ICONHAND);
     }
     CloseSmackers();
@@ -3316,7 +3321,7 @@ u8 gUnusedByteTable1[16] = {0, 0, 2, 9, 4, 17, 10, 13, 6, 8, 16, 12, 11, 15, 14,
 DATA(0x0049191c)
 u8 gUnusedByteTable2[16] = {4, 2, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1};
 DATA(0x0049192c)
-i16 gMinExpForLevel[4][12] = {
+i16 gMinExpForLevel[HERO_CLASS_COUNT][HERO_EXPERIENCE_LEVEL_TABLE_COUNT] = {
     {0, 1000, 2000, 3200, 4500, 6000, 7700, 9000, 11000, 13200, 15500, 18500},
     {0, 1000, 2000, 3200, 4500, 6000, 7700, 9000, 11000, 13200, 15500, 18500},
     {0, 1000, 2000, 3200, 4500, 6000, 7700, 9000, 11000, 13200, 15500, 18500},
@@ -3489,7 +3494,12 @@ H1_ENUM_ARRAY(H1_ENUM_STORAGE(TownType, i16), gCrestTownTypes, PlayerColor, PLAY
 DATA(0x00491ff0)
 H1_ENUM_ARRAY(i16, gCrestHeroClass, PlayerColor, PLAYER_COLOR_COUNT) = {3, 1, 0, 2};
 DATA(0x00491ff8)
-H1_ENUM_ARRAY(i8, gHeroSkillBonus[4][9], HeroPrimaryStat, HERO_PRIMARY_STAT_COUNT) = {
+H1_ENUM_ARRAY(
+    i8,
+    gHeroSkillBonus[HERO_CLASS_COUNT][HERO_SKILL_BONUS_ROW_LAST + 1],
+    HeroPrimaryStat,
+    HERO_PRIMARY_STAT_COUNT
+) = {
     {{20, 60, 10, 10},
      {60, 20, 10, 10},
      {20, 60, 10, 10},
@@ -3553,7 +3563,7 @@ b32 gEnlargeScreenBlit = true;
 DATA(0x00492198)
 i32 gMenuCommand = APP_MENU_NONE;
 DATA(0x004921a0)
-SMenuEnableStatus gMenuEnableStatus[70] = {
+SMenuEnableStatus gMenuEnableStatus[KBWIN_MENU_ENTRY_COUNT] = {
     {0, 0, 0, 0},     {40005, 1, 1, 0}, {40006, 1, 1, 0}, {40007, 1, 1, 0}, {40008, 1, 1, 0},
     {40009, 1, 1, 0}, {40012, 0, 0, 0}, {40013, 0, 0, 0}, {40014, 0, 0, 0}, {40015, 0, 0, 0},
     {40016, 1, 0, 0}, {40017, 1, 0, 0}, {40018, 1, 0, 0}, {40019, 1, 0, 0}, {40020, 1, 0, 0},
@@ -3671,7 +3681,7 @@ char* gStatDesc[5] = {
     localization::Tr("table.gStatDesc.4"),
 };
 DATA(0x0049257c)
-char* gClassNames[4] = {
+char* gClassNames[HERO_CLASS_COUNT] = {
     localization::Tr("table.gClassNames.0"),
     localization::Tr("table.gClassNames.1"),
     localization::Tr("table.gClassNames.2"),
@@ -3859,7 +3869,7 @@ char* gObjectNames[63] = {
     localization::Tr("table.gObjectNames.62")
 };
 DATA(0x0049291c)
-char* gTownNames[36] = {
+char* gTownNames[GAME_TOWN_COUNT] = {
     localization::Tr("table.gTownNames.0"),  localization::Tr("table.gTownNames.1"),
     localization::Tr("table.gTownNames.2"),  localization::Tr("table.gTownNames.3"),
     localization::Tr("table.gTownNames.4"),  localization::Tr("table.gTownNames.5"),
@@ -4022,7 +4032,7 @@ H1_ENUM_ARRAY(char*, gSpellDesc, SpellType, SPELL_COUNT) = {
     localization::Tr("table.gSpellDesc.28"),
 };
 DATA(0x00492c30)
-char* gMonthNames[10] = {
+char* gMonthNames[CALENDAR_MONTH_NAME_COUNT] = {
     localization::Tr("table.gMonthNames.0"),
     localization::Tr("table.gMonthNames.1"),
     localization::Tr("table.gMonthNames.2"),
@@ -4035,7 +4045,7 @@ char* gMonthNames[10] = {
     localization::Tr("table.gMonthNames.9"),
 };
 DATA(0x00492c58)
-char* gWeekNames[15] = {
+char* gWeekNames[CALENDAR_WEEK_NAME_COUNT] = {
     localization::Tr("table.gWeekNames.0"),
     localization::Tr("table.gWeekNames.1"),
     localization::Tr("table.gWeekNames.2"),
@@ -4598,7 +4608,7 @@ i32 gHighMemBuffer = 4000;
 #include <SOURCE/EVENTS.h>
 
 DATA(0x004a9414)
-b32 gHumanPlayer[4];
+b32 gHumanPlayer[GAME_PLAYER_COUNT];
 // No retail code reads this; it holds its retail .bss place.
 DATA(0x004a9424)
 i32 gOldKBMark;
@@ -4738,7 +4748,7 @@ class heroWindow* gHeroScreenWindow;
 DATA(0x004a9400)
 class icon* gCurLoadedSpellIcon;
 DATA(0x004a7bb8)
-void* gMapExtraBlocks[255];
+void* gMapExtraBlocks[MAP_EXTRA_RECORD_CAPACITY];
 DATA(0x004a989c)
 H1_ENUM_STORAGE(CombatSide, i32) gCurGeneral;
 DATA(0x004a7b70)
@@ -4748,7 +4758,7 @@ i32 gNumHumanPlayers;
 DATA(0x004a955c)
 b8 gIconClipOn;
 DATA(0x004a6cc8)
-i32 gMapExtraSizes[255];
+i32 gMapExtraSizes[MAP_EXTRA_RECORD_CAPACITY];
 DATA(0x004a95cc)
 i32 gDataEntryMaxLen;
 DATA(0x004a7828)
@@ -4758,7 +4768,7 @@ i16 gSpellEffectFrame;
 DATA(0x004a95c8)
 executive* gExec;
 DATA(0x004a7638)
-H1_ENUM_STORAGE(TerrainType, i8) gGroundToTerrain[140];
+H1_ENUM_STORAGE(TerrainType, i8) gGroundToTerrain[MAP_CELL_GROUND_TILE_COUNT];
 DATA(0x004a9734)
 i32 gCurWindowsStyleFlags;
 DATA(0x004a746c)
@@ -4770,7 +4780,7 @@ char gMapDescription[124];
 DATA(0x004a7498)
 char* gDefaultAggregateName;
 DATA(0x004a7b94)
-b8 gThisNetHumanPlayer[4];
+b8 gThisNetHumanPlayer[GAME_PLAYER_COUNT];
 DATA(0x004a78b0)
 char gAggPathName[352];
 DATA(0x004a7634)
@@ -4814,4 +4824,4 @@ b8 gScreenScroll;
 DATA(0x004a7480)
 advManager* gAdvManager;
 DATA(0x004a7bb4)
-i8 gGamePosToNetPos[4];
+i8 gGamePosToNetPos[GAME_PLAYER_COUNT];

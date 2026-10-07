@@ -376,7 +376,8 @@ void combatManager::DrawFrame(b8 updateScreen) {
             if (row == 0 && m_castleSide[COMBAT_DEFENDER_SIDE])
                 m_combatIcons[COMBAT_ICON_KEEP]
                     ->DrawToBuffer(0x22d, 0, 0, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
-            for (col = 1; col <= COMBAT_GRID_LAST_COLUMN - 1; col++) {
+            for (col = COMBAT_GRID_FIRST_INNER_COLUMN; col <= COMBAT_GRID_LAST_INNER_COLUMN;
+                 col++) {
                 if (gLimitToExtent
                     && m_armies[m_currentSide][m_currentArmyIndex].m_hex
                            == row * COMBAT_GRID_COLUMNS + col)

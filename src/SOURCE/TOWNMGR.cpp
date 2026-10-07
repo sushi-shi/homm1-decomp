@@ -636,7 +636,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) townManager::Main(struct tag_message&
                             );
                             m_coverWindow = new heroWindow(
                                 0,
-                                0x100,
+                                TOWN_VIEWPORT_HEIGHT,
                                 LOGICAL_SCREEN_WIDTH,
                                 6,
                                 WINDOW_FLAG_SAVE_BACKGROUND
@@ -647,7 +647,8 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) townManager::Main(struct tag_message&
                             m_heroWindow0 = NULL;
                             switch (H1_ENUM_DECODE(BuildingSlotType, message.id)) {
                                 case BUILDING_SLOT_CASTLE:
-                                    gWindowManager->SaveFizzleSource(0, 0x100, 0x228, 0xcc);
+                                    gWindowManager
+                                        ->SaveFizzleSource(0, TOWN_VIEWPORT_HEIGHT, 0x228, 0xcc);
                                     m_heroWindow0 = new heroWindow(0, 0, "caslwind.bin");
                                     if (m_heroWindow0 == NULL)
                                         MemError();
@@ -760,7 +761,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) townManager::Main(struct tag_message&
                                 DrawTown(true, true);
                                 gWindowManager->FizzleForward(
                                     0,
-                                    0x100,
+                                    TOWN_VIEWPORT_HEIGHT,
                                     width,
                                     0xcc,
                                     FIZZLE_USE_DEFAULT_DELAY
@@ -869,13 +870,13 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) townManager::Main(struct tag_message&
 
                                 isArmySlot = false;
                                 if (message.id >= TOWN_GARRISON_SLOT_FIRST
-                                    && message.id <= TOWN_GARRISON_SLOT_FIRST + 4) {
+                                    && message.id <= TOWN_GARRISON_SLOT_LAST) {
                                     m_selectedStrip = m_garrisonStrip;
                                     m_selectedArmySlot = message.id - TOWN_GARRISON_SLOT_FIRST;
                                     isArmySlot = true;
                                 }
                                 if (message.id >= TOWN_HERO_SLOT_FIRST
-                                    && message.id <= TOWN_HERO_SLOT_FIRST + 4) {
+                                    && message.id <= TOWN_HERO_SLOT_LAST) {
                                     m_selectedStrip = m_heroStrip;
                                     m_selectedArmySlot = message.id - TOWN_HERO_SLOT_FIRST;
                                     isArmySlot = true;
@@ -1080,7 +1081,8 @@ void townManager::RedrawTownScreen(void) {
     message.text = m_statusText;
     m_townWindow->BroadcastMessage(message);
     m_townWindow->DrawWindow(0);
-    gWindowManager->UpdateScreenRegion(0, 0x100, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
+    gWindowManager
+        ->UpdateScreenRegion(0, TOWN_VIEWPORT_HEIGHT, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
     m_bankBox->Update();
 }
 

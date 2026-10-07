@@ -77,7 +77,7 @@ struct WingPalette {
 // WinG's DIB record: BITMAPINFOHEADER, 256 palette entries, then image bits.
 struct WingImage {
     BITMAPINFOHEADER header;
-    RGBQUAD colors[256];
+    RGBQUAD colors[PALETTE_COLOR_COUNT];
     void* bits;
 };
 

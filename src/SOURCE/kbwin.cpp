@@ -514,9 +514,9 @@ void SetMenuStatus(i32 showMenu) {
     WritePrefs();
     windowStyle = GetWindowLongA(gAppWindow, GWL_STYLE);
     if (CURRENT_GRAPHICS_CONFIG.showMenu)
-        gCurWindowsStyleFlags = WS_VISIBLE | WS_CLIPSIBLINGS | WS_OVERLAPPEDWINDOW;
+        gCurWindowsStyleFlags = KBWIN_WINDOWED_STYLE;
     else
-        gCurWindowsStyleFlags = WS_VISIBLE | WS_CLIPSIBLINGS;
+        gCurWindowsStyleFlags = KBWIN_FULLSCREEN_STYLE;
     replacedStyle = SetWindowLongA(gAppWindow, GWL_STYLE, gCurWindowsStyleFlags);
     ShowWindow(gAppWindow, SW_SHOWNA);
     ResizeWindow(

@@ -511,7 +511,7 @@ extern H1_ENUM_ARRAY(char*, gSpellHelp, SpellHelpText, SPELL_HELP_COUNT);
 // CheckHandleNet hands combat packets back while a battle is running.
 extern b8 gInCombat;
 // Neighbour hex per combat hex and direction, -1 off grid.
-extern H1_ENUM_ARRAY(i8, gCombatAdjacency[45], CombatHexDirection, COMBAT_DIRECTION_ADJACENT_COUNT);
+extern H1_ENUM_ARRAY(i8, gCombatAdjacency[], CombatHexDirection, COMBAT_DIRECTION_ADJACENT_COUNT);
 // The loaded combat effect icon's file id.
 #define gCurLoadedSpellFileId gEffectFileId // spelling fixes .bss order
 extern i16 gCurLoadedSpellFileId;
@@ -575,7 +575,7 @@ extern H1_ENUM_ARRAY_ROWS(
     gDwellingType,
     TownType,
     TOWN_TYPE_COUNT,
-    6
+    BUILDING_SLOT_DWELLING_COUNT
 );
 extern float gSpellCastNumMod[];
 // FightValueOfStack's primary-stat power curve, per-spell AI flags and
@@ -708,7 +708,12 @@ extern char* gHandicapNames[];
 // Default hero names (name, short name) restored with the original data, and
 // a per-cell scratch map cleared on every load.
 extern char* gHeroNames[][2];
-extern H1_ENUM_ARRAY(i8, gHeroSkillBonus[4][9], HeroPrimaryStat, HERO_PRIMARY_STAT_COUNT);
+extern H1_ENUM_ARRAY(
+    i8,
+    gHeroSkillBonus[HERO_CLASS_COUNT][HERO_SKILL_BONUS_ROW_LAST + 1],
+    HeroPrimaryStat,
+    HERO_PRIMARY_STAT_COUNT
+);
 extern char* gHumanPlayerTypeNames[];
 // Campaign: the lord picked on stpcmpgn.bin (1-4; PickLoadGame filters *.CGM
 // on it), scenario titles and briefings, two crest bytes per side (the first

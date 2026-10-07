@@ -2957,7 +2957,8 @@ void philAI::BuildHero(town* townPointer, i16 availableHeroIndex) {
     gGame->m_availableHeroes[newHero->m_id] = townPointer->m_owner;
     townPointer->m_occupyingHeroId = newHero->m_id;
     townPointer->GiveSpells();
-    gCurPlayerData->m_availableHeroIds[availableHeroIndex] = gGame->GetNewHeroId(Random(0, 3));
+    gCurPlayerData->m_availableHeroIds[availableHeroIndex] =
+        gGame->GetNewHeroId(Random(0, HERO_CLASS_COUNT - 1));
     gGame->m_availableHeroes[gCurPlayerData->m_availableHeroIds[availableHeroIndex]] =
         HERO_AVAILABILITY_RETREATED;
     gHeroBuiltThisTurn = true;
@@ -3226,7 +3227,7 @@ void philAI::TownEvent(mapCell* cell, hero* heroPointer, i32 x, i32 y) {
                     &targetCastle->m_army,
                     x,
                     y,
-                    -1,
+                    COMBAT_RANDOM_SEED_NEW,
                     true
                 );
                 if (combatResult == COMBAT_RESULT_ATTACKER) {
@@ -3325,7 +3326,8 @@ i32 philAI::ValueOfEventAtPosition(hero* aiHero, i16 x, i16 y, i32 immediate, i3
                 gArtifactBaseRV[H1_ENUM_DECODE(ArtifactType, gEventLocation->m_objectIndex)];
             for (gEventSlot = 0; gEventSlot < ARMY_GROUP_SLOT_COUNT; gEventSlot++) {
                 gMonGroup->m_creatureTypes[gEventSlot] = CREATURE_ROGUE;
-                gMonGroup->m_creatureCounts[gEventSlot] = 10;
+                gMonGroup->m_creatureCounts[gEventSlot] =
+                    ARTIFACT_EVENT_GUARD_ROGUE_COUNT / ARMY_GROUP_SLOT_COUNT;
             }
             ProbableOutcomeOfBattle(
                 &aiHero->m_army,
@@ -3529,7 +3531,7 @@ i32 philAI::ValueOfEventAtPosition(hero* aiHero, i16 x, i16 y, i32 immediate, i3
                     gHeroLiveChance[gEventLocation->m_objectMetadata] = gWinChance * 113.0f;
                 else
                     gHeroLiveChance[gEventLocation->m_objectMetadata] = gWinChance * 100.0f;
-                if (gHeroLiveChance[gEventLocation->m_objectMetadata] > 100)
+                if (gHeroLiveChance[gEventLocation->m_objectMetadata] > AI_CHANCE_CERTAIN)
                     gHeroLiveChance[gEventLocation->m_objectMetadata] = AI_CHANCE_CERTAIN;
                 if (!immediate && gWinChance < 0.4)
                     gVisitResult = gVisitResult * (3.0f - gWinChance * 2.0f);
@@ -3661,18 +3663,26 @@ i32 philAI::ValueOfEventAtPosition(hero* aiHero, i16 x, i16 y, i32 immediate, i3
             if (aiHero->m_primaryStats[HERO_PRIMARY_KNOWLEDGE] > 0
                 && aiHero->HasArtifact(ARTIFACT_MAGIC_BOOK)) {
                 gEventSlot = aiHero->AddSpell(
-                    H1_ENUM_DECODE(SpellType, gEventLocation->m_objectMetadata - 1),
+                    H1_ENUM_DECODE(
+                        SpellType,
+                        gEventLocation->m_objectMetadata - MAP_EVENT_SPELL_OFFSET
+                    ),
                     aiHero->m_primaryStats[HERO_PRIMARY_KNOWLEDGE],
                     true
                 );
-                gVisitResult =
-                    gSpellAIValue[H1_ENUM_DECODE(SpellType, gEventLocation->m_objectMetadata - 1)];
+                gVisitResult = gSpellAIValue[H1_ENUM_DECODE(
+                    SpellType,
+                    gEventLocation->m_objectMetadata - MAP_EVENT_SPELL_OFFSET
+                )];
                 gVisitResult = gVisitResult
                                * StatChangeValue(
                                    aiHero->m_primaryStats[HERO_PRIMARY_KNOWLEDGE] - gEventSlot,
                                    aiHero->m_primaryStats[HERO_PRIMARY_KNOWLEDGE]
                                );
-                if (gSpellAIFlags[H1_ENUM_DECODE(SpellType, gEventLocation->m_objectMetadata - 1)]
+                if (gSpellAIFlags[H1_ENUM_DECODE(
+                        SpellType,
+                        gEventLocation->m_objectMetadata - MAP_EVENT_SPELL_OFFSET
+                    )]
                     & SPELL_AI_FLAG_SCALES_WITH_POWER)
                     gVisitResult =
                         gVisitResult
@@ -3925,8 +3935,8 @@ i32 philAI::ValueOfEventAtPosition(hero* aiHero, i16 x, i16 y, i32 immediate, i3
                     if (MANHATTAN_LENGTH(twinX - x, twinY - y)
                             > (MAP_TRIGGER_OBJECT(gEventLocation->m_triggerType)
                                        == MAP_OBJECT_STONE_LITHS
-                                   ? 1
-                                   : 3)
+                                   ? STONE_LITHS_MIN_DISTANCE
+                                   : WHIRLPOOL_MIN_DISTANCE)
                         && candidateCell->m_triggerType == gEventLocation->m_triggerType) {
                         gateStrategicValue =
                             StrategicValueOfPosition(aiHero, twinX, twinY, false, &unusedChance);

@@ -627,11 +627,6 @@ struct SMapChange {
 extern char gArmySizeName[];
 extern i32 gCurHourGlassPhase;
 
-H1_ENUM_CONST_BEGIN(AdventureButtonConstant)
-    BUTTON_BROADCAST_ARG = 1,
-    PANEL_CONTINUE_ROUTE = 2
-H1_ENUM_CONST_END(AdventureButtonConstant)
-
 H1_ENUM_CONST_BEGIN(AdventureScreenConstant)
     SCROLL_BORDER = 16
 H1_ENUM_CONST_END(AdventureScreenConstant)

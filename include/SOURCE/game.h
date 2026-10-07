@@ -517,7 +517,7 @@ extern i8 gSavedKingOfTheHill;
 
 #define gSavedCrest gKeptColor // spelling fixes .bss order
 extern H1_ENUM_STORAGE(PlayerColor, i8) gSavedCrest;
-extern H1_ENUM_STORAGE(TownType, i8) gRandomTownTypes[4];
+extern H1_ENUM_STORAGE(TownType, i8) gRandomTownTypes[GAME_PLAYER_COUNT];
 #define gMineTypeCount gMineTypeNums // spelling fixes .bss order
 extern H1_ENUM_ARRAY(i16, gMineTypeCount, ResourceType, RESOURCE_COUNT);
 extern i32 gLastSeed;

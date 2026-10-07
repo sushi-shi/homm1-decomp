@@ -106,7 +106,12 @@ i8 game::SetupComPort(void) {
     if (!gDirectConnect) {
         strcpy(gConfig.modemInitString, "ATZ");
         sprintf(gText, "%s", gConfig.modemInitString);
-        GetDataEntry(localization::Tr("setup.modem.initialization_prompt"), initString, 40, gText);
+        GetDataEntry(
+            localization::Tr("setup.modem.initialization_prompt"),
+            initString,
+            sizeof(initString),
+            gText
+        );
         strcpy(gConfig.modemInitString, initString);
     }
     WritePrefs();
