@@ -33,7 +33,7 @@ TileToBitmap PROC C
     mov esi, DWORD PTR [ebp+8]
     movzx ecx, WORD PTR [esi+00eh]
     sub ecx, DWORD PTR [ebp+12]
-    js epi
+    jle epi
     movzx ecx, WORD PTR [esi+010h]
     sub ebx, ecx
     mov eax, ecx

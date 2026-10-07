@@ -266,7 +266,7 @@ void resourceManager::PointToFile(i16 fileId) {
     entry = 0;
     while (entry < m_aggregateEntryCount && m_aggregateDir[entry].id != fileId)
         entry++;
-    if (m_aggregateDir[entry].id != fileId) {
+    if (entry >= m_aggregateEntryCount) {
         sprintf(
             gText,
             "ResMgr::PointToFile failure!  ThisFileId:%d  LastFileId:%d  LastFileName:%s",
@@ -285,7 +285,7 @@ u32 resourceManager::GetFileSize(i16 fileId) {
     i16 entry = 0;
     while (entry < m_aggregateEntryCount && m_aggregateDir[entry].id != fileId)
         entry++;
-    if (m_aggregateDir[entry].id != fileId) {
+    if (entry >= m_aggregateEntryCount) {
         sprintf(
             gText,
             "ResMgr::PointToFile(GetFileSize) failure!  ThisFileId:%d  LastFileId:%d  "

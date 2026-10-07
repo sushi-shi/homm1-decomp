@@ -347,10 +347,13 @@ void textEntryWidget::SetupDisplayString(char* source, u16 cursor) {
             while (changed) {
                 changed = false;
                 strcpy(display, m_text + m_displayOffset - 1);
-                if (m_font->LineWidth(display) <= m_width)
+                // Scroll back while the text before the field still fits.
+                if (m_font->LineWidth(display) <= m_width) {
                     m_displayOffset--;
-                else
+                    changed = true;
+                } else {
                     changed = false;
+                }
                 if (m_displayOffset == 0)
                     changed = false;
             }

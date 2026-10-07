@@ -103,8 +103,8 @@ void bitmap::CopyTo(
         }
     } else {
         memcpy(
-            destination->m_pixels + destinationX + destinationY,
-            m_pixels + sourceX + sourceY,
+            destination->m_pixels + destinationX + destinationY * LOGICAL_SCREEN_WIDTH,
+            m_pixels + sourceX + sourceY * LOGICAL_SCREEN_WIDTH,
             width * height
         );
     }

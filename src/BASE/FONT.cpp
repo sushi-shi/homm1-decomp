@@ -75,6 +75,16 @@ i32 font::GlyphFrame(i32 character) {
     return character - ' ';
 }
 
+// Whether a line that overflows at `position` has a space to break at,
+// searching back from it to the line's start.
+static i32 BreakAtSpace(const char* text, i16 lineStart, i16 position) {
+    for (; position >= lineStart && position >= 0; position--) {
+        if (text[position] == ' ')
+            return 1;
+    }
+    return 0;
+}
+
 void font::DrawString(char* text, i16 x, i16 y, i16 color) {
     i16* entries = m_glyphIcon->m_frameWords;
     i32 glyph = 0;
@@ -119,6 +129,7 @@ void font::DrawBoundedString(
     i16 lineTop;
     char* textCopy;
     char breakChar;
+    i16 nextStart;
 
     textLen = strlen(text);
     frameDirectory = m_glyphIcon->m_frameWords;
@@ -139,16 +150,32 @@ void font::DrawBoundedString(
                          + FONT_GLYPH_ADVANCE_SPACING;
             position++;
         }
+        nextStart = -1;
         if (widthUsed > width) {
             position--;
-            while (textCopy[position] != ' ' && position >= lineStart) {
+            if (!BreakAtSpace(textCopy, lineStart, position)) {
+                // No space on the line: the word is broken before the glyph
+                // that overflows, or after its first glyph, so the search
+                // never leaves the line and each line makes progress.
+                if (position > lineStart) {
+                    // The overflowing glyph goes to the next line: the
+                    // alignment is that of the glyphs before it.
+                    baseGlyph = GlyphFrame(static_cast<u8>(textCopy[position]));
+                    widthUsed -=
+                        frameDirectory[baseGlyph * FONT_GLYPH_ENTRY_WORDS + FONT_GLYPH_WIDTH_WORD]
+                        + FONT_GLYPH_ADVANCE_SPACING;
+                }
+                position = position > lineStart ? position : lineStart + 1;
+                nextStart = position;
+            }
+            while (nextStart < 0 && textCopy[position] != ' ' && position >= lineStart) {
                 baseGlyph = GlyphFrame(static_cast<u8>(textCopy[position]));
                 widthUsed -=
                     frameDirectory[baseGlyph * FONT_GLYPH_ENTRY_WORDS + FONT_GLYPH_WIDTH_WORD]
                     + FONT_GLYPH_ADVANCE_SPACING;
                 position--;
             }
-            if (textCopy[position] == ' ')
+            if (nextStart < 0 && textCopy[position] == ' ')
                 widthUsed -= frameDirectory[FONT_GLYPH_WIDTH_WORD] + FONT_GLYPH_ADVANCE_SPACING;
         }
         lineEnd = position;
@@ -168,7 +195,7 @@ void font::DrawBoundedString(
         DrawString(textCopy + lineStart, alignIndent + x, lineTop + y, drawColor);
         textCopy[lineEnd] = breakChar;
         lineTop += m_height;
-        lineStart = lineEnd + 1;
+        lineStart = nextStart >= 0 ? nextStart : lineEnd + 1;
         position = lineStart;
         widthUsed = 0;
     }
@@ -188,6 +215,7 @@ i32 font::LineLength(char* text, i16 maxWidth) {
     i16 lineStart;
     char* chars;
     char breakChar;
+    i16 nextStart;
 
     lineStart = 0;
     lineEnd = 0;
@@ -201,20 +229,26 @@ i32 font::LineLength(char* text, i16 maxWidth) {
                          + FONT_GLYPH_ADVANCE_SPACING;
             position++;
         }
+        nextStart = -1;
         if (widthUsed > maxWidth) {
             position--;
-            while (chars[position] != ' ' && position >= lineStart) {
+            if (!BreakAtSpace(chars, lineStart, position)) {
+                // As in DrawBoundedString.
+                position = position > lineStart ? position : lineStart + 1;
+                nextStart = position;
+            }
+            while (nextStart < 0 && chars[position] != ' ' && position >= lineStart) {
                 baseGlyph = GlyphFrame(static_cast<u8>(chars[position]));
                 widthUsed -= widths[baseGlyph * FONT_GLYPH_ENTRY_WORDS + FONT_GLYPH_WIDTH_WORD]
                              + FONT_GLYPH_ADVANCE_SPACING;
                 position--;
             }
-            if (chars[position] == ' ')
+            if (nextStart < 0 && chars[position] == ' ')
                 widthUsed -= widths[FONT_GLYPH_WIDTH_WORD] + FONT_GLYPH_ADVANCE_SPACING;
         }
         lineEnd = position;
         lines++;
-        lineStart = lineEnd + 1;
+        lineStart = nextStart >= 0 ? nextStart : lineEnd + 1;
         position = lineStart;
         widthUsed = 0;
     }
@@ -246,6 +280,10 @@ i32 font::LineWidth(char* text) {
                          + FONT_GLYPH_ADVANCE_SPACING;
             position++;
         }
+        // A line break ends the inner scan; the widths of all lines are
+        // summed.
+        if (chars[position] == '\n')
+            position++;
     }
     return widthUsed;
 }
