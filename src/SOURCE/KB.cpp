@@ -1331,7 +1331,7 @@ void NormalDialog(
             12,
             labelTexts[index],
             "smalfont.fnt",
-            1,
+            TEXT_WIDGET_PLAIN_COLOR,
             nextId++,
             WIDGET_KIND_TEXT
         );
@@ -1354,7 +1354,7 @@ void NormalDialog(
             12,
             orWord,
             "smalfont.fnt",
-            1,
+            TEXT_WIDGET_PLAIN_COLOR,
             nextId++,
             WIDGET_KIND_TEXT
         );

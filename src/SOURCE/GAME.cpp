@@ -1798,9 +1798,10 @@ void game::RandomizeEvents(void) {
 // .MAP files: an optional old header, the world map, town and mine
 // records, artifacts, obelisks, sounds and (from version 1112) the map
 // extras.
+#define headerBuffer msg // frame-slot spelling
 VA(0x00430344, 0x3c6)
 i16 game::LoadMap(char* filename) {
-    void* msg;
+    void* headerBuffer;
     i16 width;
     i8 y;
     i16 height;
@@ -1817,10 +1818,10 @@ i16 game::LoadMap(char* filename) {
         FileError(gText);
     READ_FILE_VALUE(handle, theVersion);
     if (theVersion == MAP_HEADER_ID) {
-        msg = malloc(sizeof(SMapHeader));
-        read(handle, msg, sizeof(SMapHeader) - sizeof(theVersion));
+        headerBuffer = malloc(sizeof(SMapHeader));
+        read(handle, headerBuffer, sizeof(SMapHeader) - sizeof(theVersion));
         READ_FILE_VALUE(handle, theVersion);
-        free(msg);
+        free(headerBuffer);
     }
     READ_FILE_VALUE(handle, width);
     READ_FILE_VALUE(handle, height);
@@ -1867,6 +1868,7 @@ i16 game::LoadMap(char* filename) {
     close(handle);
     return 0;
 }
+#undef headerBuffer
 
 VA(0x0043070a, 0x29b)
 void game::ClaimTown(i8 townId, i8 player) {
@@ -3227,7 +3229,7 @@ VA(0x0043461e, 0x569)
 void game::RandomizeTown(i8 x, i8 y, b8 isCastle) {
     i8 j;
     b8 curUnique;
-    town* town;
+    town* randomTown;
     i8 i;
     u8 activeFrameShift;
     i8 townNum;
@@ -3254,10 +3256,10 @@ void game::RandomizeTown(i8 x, i8 y, b8 isCastle) {
         }
     }
     m_map[x][y].m_triggerType |= MAP_TRIGGER_EVENT;
-    town = GetTown(townNum);
-    town->m_turnsOwned = TOWN_RANDOM_AGE;
+    randomTown = GetTown(townNum);
+    randomTown->m_turnsOwned = TOWN_RANDOM_AGE;
     if (m_campaignType > 0 && m_campaignScenario >= CAMPAIGN_SCENARIO_LORD_FIRST
-        && m_campaignScenario <= CAMPAIGN_SCENARIO_LORD_LAST && town->m_owner == 0) {
+        && m_campaignScenario <= CAMPAIGN_SCENARIO_LORD_LAST && randomTown->m_owner == 0) {
         race = gCrestTownTypes[m_players[0].m_color];
     } else if (townNum < GAME_PLAYER_COUNT) {
         curUnique = false;
@@ -3295,8 +3297,8 @@ void game::RandomizeTown(i8 x, i8 y, b8 isCastle) {
     }
     m_castleRecs[townNum].m_type = race;
     plain = true;
-    if (town->m_extraIndex >= 1
-        && static_cast<mapTownExtra*>(gMapExtraBlocks[town->m_extraIndex])->customized)
+    if (randomTown->m_extraIndex >= 1
+        && static_cast<mapTownExtra*>(gMapExtraBlocks[randomTown->m_extraIndex])->customized)
         plain = false;
     if (plain) {
         m_castleRecs[townNum].m_buildings =
@@ -3968,11 +3970,12 @@ foundAdjacentMonster:
     return 1;
 }
 
+#define notAdjacentMask oldMask // frame-slot spelling
 VA(0x00436320, 0xbc)
 void game::SetupAdjacentMons(void) {
     i32 x;
     i32 y;
-    i32 oldMask = 0x7f;
+    i32 notAdjacentMask = 0x7f;
     i32 monY;
     i32 monX;
 
@@ -3981,10 +3984,11 @@ void game::SetupAdjacentMons(void) {
             if (gAdvManager->FindAdjacentMonster(x, y, &monX, &monY, -1, -1))
                 gMapExtra[x][y] |= MAP_EXTRA_MONSTER_ADJACENT;
             else
-                gMapExtra[x][y] &= oldMask;
+                gMapExtra[x][y] &= notAdjacentMask;
         }
     }
 }
+#undef notAdjacentMask
 
 VA(0x004363dc, 0x55)
 void game::CancelComputerScreen(void) {
@@ -4121,22 +4125,23 @@ void game::ProcessMapExtra(void) {
 
 // Owners, garrisons and buildings; a map whose towns all lack owners
 // leaves the MAP_TOWN_OWNER_UNSET placeholder.
+#define curTown town // frame-slot spelling
 VA(0x0043689d, 0x1cf)
 i8 game::SetupTowns(void) {
     mapTownExtra* newExtra;
     i32 curOwn;
     b8 isUnowned;
-    town* town;
+    class town* curTown;
     i32 j;
     i32 i;
     i32 mask;
     isUnowned = true;
     mask = MAP_TOWN_EXTRA_BUILDING_MASK;
     for (i = 0; i < GAME_TOWN_COUNT; i++) {
-        town = GetTown(i);
-        town->m_customized = false;
-        if (town->m_extraIndex >= 1) {
-            newExtra = static_cast<mapTownExtra*>(gMapExtraBlocks[town->m_extraIndex]);
+        curTown = GetTown(i);
+        curTown->m_customized = false;
+        if (curTown->m_extraIndex >= 1) {
+            newExtra = static_cast<mapTownExtra*>(gMapExtraBlocks[curTown->m_extraIndex]);
             if (newExtra->customized && newExtra->owner != MAP_TOWN_OWNER_UNSET) {
                 if (newExtra->owner >= gGame->m_playerCount)
                     curOwn = gGame->m_playerCount - 1;
@@ -4147,29 +4152,30 @@ i8 game::SetupTowns(void) {
                     ClaimTown(i, curOwn);
             }
             if (newExtra->customized) {
-                town->m_customized = true;
+                curTown->m_customized = true;
                 for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
-                    town->m_army.m_creatureCounts[j] = newExtra->troopCounts[j];
-                    if (town->m_army.m_creatureCounts[j] > 0)
-                        town->m_army.m_creatureTypes[j] = newExtra->troopTypes[j];
+                    curTown->m_army.m_creatureCounts[j] = newExtra->troopCounts[j];
+                    if (curTown->m_army.m_creatureCounts[j] > 0)
+                        curTown->m_army.m_creatureTypes[j] = newExtra->troopTypes[j];
                     else
-                        town->m_army.m_creatureTypes[j] = CREATURE_NONE;
+                        curTown->m_army.m_creatureTypes[j] = CREATURE_NONE;
                 }
-                town->m_buildState = newExtra->buildState;
-                town->m_buildings =
-                    town->m_buildings - (town->m_buildings & mask) + (newExtra->buildings & mask);
+                curTown->m_buildState = newExtra->buildState;
+                curTown->m_buildings = curTown->m_buildings - (curTown->m_buildings & mask)
+                                       + (newExtra->buildings & mask);
             }
         }
     }
     if (!isUnowned) {
         for (i = 0; i < GAME_TOWN_COUNT; i++) {
-            town = GetTown(i);
-            if (town->m_owner == MAP_TOWN_OWNER_UNSET)
-                town->m_owner = GAME_PLAYER_NONE;
+            curTown = GetTown(i);
+            if (curTown->m_owner == MAP_TOWN_OWNER_UNSET)
+                curTown->m_owner = GAME_PLAYER_NONE;
         }
     }
     return isUnowned;
 }
+#undef curTown
 
 // Each placed hero takes its map-extra garrison, artifacts, experience and
 // owner; a hero standing at a town gate occupies the town.
@@ -4949,7 +4955,9 @@ void game::ShowScenInfo(void) {
     packet.command = WIDGET_COMMAND_SET_FRAME;
     if (m_players[gCurPlayer].m_color != PLAYER_COLOR_NONE) {
         packet.id = crestId;
-        packet.value = H1_ENUM_ENCODE(PlayerColor, m_players[gCurPlayer].m_color) * 2 + 11;
+        packet.value =
+            H1_ENUM_ENCODE(PlayerColor, m_players[gCurPlayer].m_color) * NEW_GAME_FRAME_CREST_STRIDE
+            + NEW_GAME_FRAME_CREST_BASE;
         scenWindow->BroadcastMessage(packet);
     }
     gWindowManager->DoDialog(scenWindow, EventWindowHandler, false);

@@ -1215,6 +1215,13 @@ void townManager::DrawTown(b8 updateScreen, b32 advanceAnimation) {
 // Reads the mage/neutral/dwelling cost tables with asserts, sizes resource
 // slots by the gold-icon width and draws the building through the castle
 // frame of buybuil%d.bin.
+#define unusedStore1 dialogResult // frame-slot spelling
+#define unusedStore2 dialogRight  // frame-slot spelling
+#define unusedStore3 dialogButton // frame-slot spelling
+#define unusedStore4 dialogLeft   // frame-slot spelling
+#define unusedStore5 dialogFlags  // frame-slot spelling
+#define unusedStore6 dialogTop    // frame-slot spelling
+#define unusedStore7 dialogWidth  // frame-slot spelling
 VA(0x00462630, 0xdd2)
 #line 1483 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\TOWNMGR.CPP"
 i16 townManager::BuyBuild(
@@ -1226,20 +1233,20 @@ i16 townManager::BuyBuild(
     // The cost list holds at most one entry per resource.
     i16 buildCosts[H1_ENUM_ENCODE(ResourceType, RESOURCE_COUNT)];
     textWidget* descriptionWidget;
-    i16 dialogRight;
+    i16 unusedStore2;
     i16 resourceX;
     i16 requiredCount;
     i32 dwelling;
     font* lineFont;
-    i16 dialogLeft;
+    i16 unusedStore4;
     i32 layoutSize;
     i32 guildRank;
     heroWindow* panel;
     i32 totalWidth;
-    i16 dialogTop;
+    i16 unusedStore6;
     i32 lineTotal;
     i32 panelExtent;
-    i16 dialogFlags;
+    i16 unusedStore5;
     i32 i;
     i32 space;
     i16 lowerResources;
@@ -1250,15 +1257,15 @@ i16 townManager::BuyBuild(
     i32 inRow;
     i32 widgetSlot;
     i16 startX;
-    i16 dialogButton;
-    i16 dialogWidth;
+    i16 unusedStore3;
+    i16 unusedStore7;
     i32 rowIndex;
     iconWidget* resWidgets[H1_ENUM_ENCODE(ResourceType, RESOURCE_COUNT)];
     H1_ENUM_STORAGE(ResourceType, i32) typeList[4];
     i16 topResources;
     tag_message msg;
     char* infoBuffer;
-    i16 dialogResult;
+    i16 unusedStore1;
     textWidget* amountWidgets[H1_ENUM_ENCODE(ResourceType, RESOURCE_COUNT)];
     char* amountText[H1_ENUM_ENCODE(ResourceType, RESOURCE_COUNT)];
 
@@ -1318,13 +1325,14 @@ i16 townManager::BuyBuild(
             }
         }
     }
-    dialogResult = 80;
-    dialogRight = 40;
-    dialogButton = 32;
-    dialogLeft = 286;
-    dialogFlags = 0;
-    dialogTop = 2;
-    dialogWidth = 3;
+    // Stored once and never read: slots of the retail frame.
+    unusedStore1 = 80;
+    unusedStore2 = 40;
+    unusedStore3 = 32;
+    unusedStore4 = 286;
+    unusedStore5 = 0;
+    unusedStore6 = 2;
+    unusedStore7 = 3;
     widgetSlot = 0;
     requiredCount = 0;
     topResources = 0;
@@ -1421,7 +1429,7 @@ i16 townManager::BuyBuild(
         (lineTotal << 4) + 6,
         infoBuffer,
         "bigfont.fnt",
-        1,
+        TEXT_WIDGET_PLAIN_COLOR,
         WIDGET_ID_NONE,
         8
     );
@@ -1460,7 +1468,7 @@ i16 townManager::BuyBuild(
                     12,
                     amountText[widgetSlot],
                     "smalfont.fnt",
-                    1,
+                    TEXT_WIDGET_PLAIN_COLOR,
                     WIDGET_ID_NONE,
                     8
                 );
@@ -1544,6 +1552,13 @@ i16 townManager::BuyBuild(
     else
         return gWindowManager->m_dialogResult == DIALOG_BUTTON_2;
 }
+#undef unusedStore7
+#undef unusedStore6
+#undef unusedStore5
+#undef unusedStore4
+#undef unusedStore3
+#undef unusedStore2
+#undef unusedStore1
 
 // Fizzles a fixed per-building rectangle.
 VA(0x00463402, 0x35f)

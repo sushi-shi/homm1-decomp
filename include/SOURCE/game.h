@@ -583,7 +583,9 @@ H1_ENUM_ID_END(ScenarioInfoControl)
 
 // newgame.icn frames UpdateNewGameWindow selects: the human-opponent face,
 // the computer-type faces (type + base), the crests (two per color) and
-// the King of the Hill toggle (flag + base).
+// the King of the Hill toggle (flag + base). sceninfo.bin's crest
+// (SCENARIO_INFO_CREST) is a newgame.icn widget too, so ShowScenInfo picks
+// the same crest frames.
 H1_ENUM_CONST_BEGIN(NewGameFrame)
     NEW_GAME_FRAME_COMPUTER_TYPE_BASE = 5,
     NEW_GAME_FRAME_CREST_BASE = 11,

@@ -74,7 +74,6 @@
 *	*	*	call-argument	MoveWindow(i16, i16) argument [12]	a window offset in pixels
 *	*	*	call-argument	FillBitmapArea(* argument [2-6]	the filled rectangle in pixels and its palette colour
 *	*	*	call-argument	DimToBuffer(* argument 3	an icon frame number in the .icn resource (frames have no names)
-*	*	*	call-argument	textWidget(* argument 7	the text widget's font colour index
 *	*	*	call-argument	iconWidget(* argument 10	the icon widget's fill colour index
 *	*	*	call-argument	DrawBoundedString(* argument 6	the text colour index
 *	*	*	call-argument	GrabScreenBitmap(* argument [23]	the screen origin in pixels
@@ -744,8 +743,6 @@ src/SOURCE/GAME.cpp	GetBaseScore	*	arithmetic	compound assignment to score	a ret
 src/SOURCE/GAME.cpp	GetBaseScore	*	arithmetic	operator - days	a retail tuning factor, odds, weight, frame or formula constant of this routine
 src/SOURCE/GAME.cpp	GetBaseScore	*	comparison-or-bound	operator < score	a retail tuning factor, odds, weight, frame or formula constant of this routine
 src/SOURCE/GAME.cpp	game::ShowScenInfo	*	store	initializer of *	a local buffer extent or a named local id/geometry constant
-src/SOURCE/GAME.cpp	game::ShowScenInfo	*	arithmetic	operator * m_color	retail window/screen layout in pixels or frames, or a text/row count of this routine
-src/SOURCE/GAME.cpp	game::ShowScenInfo	*	arithmetic	operator +	retail window/screen layout in pixels or frames, or a text/row count of this routine
 src/SOURCE/RECRUIT.cpp	recruitUnit::Update	*	store	initializer of *	a local buffer extent or a named local id/geometry constant
 src/SOURCE/RECRUIT.cpp	*	*	call-argument	ViewArmy(* argument *	a flag, mode or selector argument of a HoMM1 routine without a named domain (draw/update/redraw/give-take flags, transfer options, no-exclusion -1)
 src/SOURCE/REQUEST.cpp	fileRequester::fileRequester	*	store	initializer of *	a local buffer extent or a named local id/geometry constant
@@ -1445,7 +1442,7 @@ src/SOURCE/REMOTE.cpp	calc_crc	0	trivial-function-literal	0 equality	the data bi
 src/SOURCE/REQUEST.cpp	fileRequester::DoKnob	0	trivial-function-literal	0 store topRow	the knob clamps to the list's first row
 src/SOURCE/REQUEST.cpp	fileRequester::Main	0	trivial-function-literal	0 array-index nameBuffer	the typed name's first character
 src/SOURCE/REQUEST.cpp	fileRequester::Main	1	trivial-function-literal	1 * pageCount	the scroll gutter has at least one page
-src/SOURCE/REQUEST.cpp	fileRequester::Main	-1	trivial-function-literal	-1 store key	ends the trailing-space scan
+src/SOURCE/REQUEST.cpp	fileRequester::Main	-1	trivial-function-literal	-1 store number	ends the trailing-space scan
 src/SOURCE/REQUEST.cpp	fileRequester::Main	*	arithmetic	operator + firstItemId	the ten file-list row widgets after the first
 src/SOURCE/REQUEST.cpp	fileRequester::Update	1	trivial-function-literal	1 equality savedPlayerCount	a one-player save shows no player count
 src/SOURCE/SMACKMGR.cpp	InitSmackSound	0	call-argument	AIL_waveOutOpen(* argument 3	the first wave-out device

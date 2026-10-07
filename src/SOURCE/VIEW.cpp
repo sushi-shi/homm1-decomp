@@ -23,6 +23,7 @@
 
 // The combat hero window, with Cast Spell, Retreat and Surrender dimmed when
 // the side cannot use them.
+#define luck iLuck // frame-slot spelling
 VA(0x00465ef0, 0x4fe)
 i8 combatManager::ViewGeneral(
     H1_ENUM_PARAM(CombatSide, i32) side,
@@ -32,7 +33,7 @@ i8 combatManager::ViewGeneral(
     i16 pictureCtrlVal;
     i16 borderIdNum;
     i32 morale;
-    i32 iLuck;
+    i32 luck;
     i16 theBarId;
     i16 castSpellControl;
     tag_message packet;
@@ -93,7 +94,7 @@ i8 combatManager::ViewGeneral(
     packet.text = gText;
     wnd->BroadcastMessage(packet);
     morale = m_heroes[side]->m_army.GetMorale(m_heroes[side], NULL);
-    iLuck = gGame->GetLuck(m_heroes[side], NULL);
+    luck = gGame->GetLuck(m_heroes[side], NULL);
     sprintf(
         gText,
         "\n%s%d\n%s%d\n%s%d\n%s%d\n%s%s\n%s%s\n",
@@ -108,7 +109,7 @@ i8 combatManager::ViewGeneral(
         gViewGeneralLabels[4],
         gMoraleText[morale + 3],
         gViewGeneralLabels[5],
-        gLuckText[iLuck + 3]
+        gLuckText[luck + 3]
     );
     packet.command = WIDGET_COMMAND_SET_TEXT;
     packet.id = GENERAL_STATS_WIDGET;
@@ -160,6 +161,7 @@ i8 combatManager::ViewGeneral(
         DoCommand(H1_ENUM_DECODE(CombatMessageCommand, gWindowManager->m_dialogResult));
     return 0;
 }
+#undef luck
 
 // Cast Spell, Retreat, Surrender and Close end the dialog; hovering shows
 // their help line.

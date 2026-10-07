@@ -982,7 +982,7 @@ void combatManager::ShowWinLoseArtifact(
         0xc,
         artifactName,
         "smalfont.fnt",
-        1,
+        TEXT_WIDGET_PLAIN_COLOR,
         WIN_LOSE_ARTIFACT_NAME,
         WIDGET_KIND_TEXT
     );
@@ -1046,7 +1046,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
         0x14,
         buffer,
         "smalfont.fnt",
-        1,
+        TEXT_WIDGET_PLAIN_COLOR,
         WIN_LOSE_CASUALTY_HEADING,
         WIDGET_KIND_TEXT
     );
@@ -1072,7 +1072,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
                 0x14,
                 buffer,
                 "smalfont.fnt",
-                1,
+                TEXT_WIDGET_PLAIN_COLOR,
                 WIN_LOSE_CASUALTY_HEADING,
                 WIDGET_KIND_TEXT
             );
@@ -1095,7 +1095,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
                 0x14,
                 buffer,
                 "smalfont.fnt",
-                1,
+                TEXT_WIDGET_PLAIN_COLOR,
                 side * ARMY_GROUP_SLOT_COUNT + WIN_LOSE_CASUALTY_TEXT_FIRST,
                 WIDGET_KIND_TEXT
             );
@@ -1132,7 +1132,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
                 0xc,
                 buffer,
                 "smalfont.fnt",
-                1,
+                TEXT_WIDGET_PLAIN_COLOR,
                 side * ARMY_GROUP_SLOT_COUNT + armyIndex + WIN_LOSE_CASUALTY_TEXT_FIRST,
                 WIDGET_KIND_TEXT
             );
