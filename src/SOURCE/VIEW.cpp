@@ -115,7 +115,7 @@ i8 combatManager::ViewGeneral(
     packet.text = gText;
     wnd->BroadcastMessage(packet);
     if (m_heroes[side] == NULL || !allowActions || !m_heroes[side]->HasArtifact(ARTIFACT_MAGIC_BOOK)
-        || m_heroCastSpell[side] != 0 || gCurGeneral != m_currentSide) {
+        || m_heroCastSpell[side] || gCurGeneral != m_currentSide) {
         packet.command = WIDGET_COMMAND_CLEAR_FLAGS;
         packet.id = GENERAL_CAST_SPELL;
         packet.value = WIDGET_FLAG_ENABLED;
@@ -136,8 +136,7 @@ i8 combatManager::ViewGeneral(
     }
     if (!allowActions || gCurGeneral != m_currentSide
         || (gCurGeneral == COMBAT_DEFENDER_SIDE && m_combatTowns[COMBAT_DEFENDER_SIDE] != NULL)
-        || m_sideRetreated[COMBAT_DEFENDER_SIDE] != 0
-        || m_sideRetreated[COMBAT_ATTACKER_SIDE] != 0) {
+        || m_sideRetreated[COMBAT_DEFENDER_SIDE] || m_sideRetreated[COMBAT_ATTACKER_SIDE]) {
         packet.command = WIDGET_COMMAND_CLEAR_FLAGS;
         packet.id = GENERAL_RETREAT;
         packet.value = WIDGET_FLAG_ENABLED;

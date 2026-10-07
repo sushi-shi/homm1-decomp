@@ -43,9 +43,9 @@ H1_C_LINKAGE u16 __cdecl nb_init(u16 maxSessions) {
     NCB ncb;
     i32 jj;
     i32 returnCode;
-    if (is_netbios_avail() == 0)
+    if (!is_netbios_avail())
         return 1;
-    if (gNetbiosAvail != 0) {
+    if (gNetbiosAvail) {
         gNbMaxSess = maxSessions;
         for (jj = 0; jj < NETBIOS_SESSION_COUNT; jj++) {
             gNetStatus[jj] = 0;

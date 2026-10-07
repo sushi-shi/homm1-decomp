@@ -84,9 +84,9 @@ struct WingImage {
 extern H1_ENUM_STORAGE(WingraphGraphicsType, i32) gGraphicsType;
 extern i32 gMainVideoModeHeight;
 extern i32 gMainVideoModeWidth;
-extern BOOL gDDrawAttached;
-extern BOOL gWinGAttached;
-extern BOOL gWinGraphBusy;
+extern b32 gDDrawAttached;
+extern b32 gWinGAttached;
+extern b32 gWinGraphBusy;
 extern HPALETTE gAppPalette;
 extern HINSTANCE gDDrawLibrary;
 extern DirectDrawCreateProc gDirectDrawCreate;
@@ -95,7 +95,7 @@ extern IDirectDrawSurface* gDDSPrimary;
 extern IDirectDrawSurface* gDDSOne;
 extern IDirectDrawClipper* gClipper;
 extern IDirectDrawPalette* gDDPal;
-extern BOOL gInDDSD;
+extern b32 gInDDSD;
 extern RECT gDDClientRect;
 extern RECT gDDSourceRect;
 #define gDDDestinationRect gDDDestRect // spelling fixes .bss order

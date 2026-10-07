@@ -60,7 +60,7 @@ public:
         i8 stripType,
         i16 portraitIconId,
         i8 portraitFrame,
-        class armyGroup* army,
+        class armyGroup* troops,
         i16 firstBorderId,
         i32 drawWindow
     );

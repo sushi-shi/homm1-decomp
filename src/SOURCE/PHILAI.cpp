@@ -2423,7 +2423,7 @@ void philAI::EvaluateOneTimeCreaturePurchase(
     if (purchaseCount == 0)
         return;
     purchasedValue = purchaseCount * gMonsterDatabase[creature].fightValue;
-    if (aiHero->m_army.CanJoin(creature) == 0) {
+    if (!aiHero->m_army.CanJoin(creature)) {
         for (index = 0; index < ARMY_GROUP_SLOT_COUNT; index++) {
             if (aiHero->m_army.m_creatureTypes[index] == creature) {
                 replacementSlot = -1;

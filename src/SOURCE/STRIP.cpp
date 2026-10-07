@@ -24,7 +24,7 @@ strip::strip(
     i8 stripType,
     i16 portraitIconId,
     i8 portraitFrame,
-    class armyGroup* army,
+    class armyGroup* troops,
     i16 firstBorderId,
     i32 drawWindow
 ) {
@@ -36,7 +36,7 @@ strip::strip(
     m_stripType = stripType;
     m_portraitIcon = gResourceManager->GetIcon(portraitIconId);
     m_portraitFrame = portraitFrame;
-    m_army = army;
+    m_army = troops;
     m_stripIcon = gResourceManager->GetIcon("strip.icn");
     m_monsterIcon = gResourceManager->GetIcon("monsters.icn");
     m_font = gResourceManager->GetFont("smalfont.fnt");

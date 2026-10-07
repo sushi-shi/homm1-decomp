@@ -24,9 +24,9 @@
 #endif
 
 DATA(0x004a0190)
-BOOL gWinGAttached = TRUE;
+b32 gWinGAttached = true;
 DATA(0x004cdda0)
-BOOL gDDrawAttached = FALSE;
+b32 gDDrawAttached = false;
 DATA(0x004a0194)
 H1_ENUM_STORAGE(WingraphGraphicsType, i32) gGraphicsType = WINGRAPH_GRAPHICS_WING;
 DATA(0x004a0198)
@@ -48,7 +48,7 @@ i32 gUnusedPaintCount = 0;
 DATA(0x004cddac)
 i32 gTtlBlts = 0;
 DATA(0x004cddb0)
-BOOL gWinGraphBusy = FALSE;
+b32 gWinGraphBusy = false;
 DATA(0x004cddb4)
 DirectDrawCreateProc gDirectDrawCreate = NULL;
 DATA(0x004cddb8)
@@ -64,7 +64,7 @@ IDirectDrawPalette* gDDPal = NULL;
 DATA(0x004cddcc)
 i32 gBusyRetry = 0;
 DATA(0x004cddd0)
-BOOL gInDDSD = FALSE;
+b32 gInDDSD = false;
 DATA(0x004cddd4)
 HDC gImageDC = NULL;
 DATA(0x004cddd8)
@@ -208,7 +208,7 @@ BOOL DDAppPaint(HWND window, HDC paintDC) {
     if (gDD == NULL)
         return TRUE;
     {
-        gWinGraphBusy = TRUE;
+        gWinGraphBusy = true;
         paintDC = BeginPaint(window, &ps);
         GetClientRect(window, &gDDClientRect);
         if (ps.rcPaint.right == 0 || ps.rcPaint.bottom == 0)
@@ -255,7 +255,7 @@ BOOL DDAppPaint(HWND window, HDC paintDC) {
             gDDSourceRect.bottom = LOGICAL_SCREEN_HEIGHT;
 
         gDDPaintStart = KBTickCount();
-        while (TRUE) {
+        while (true) {
             gDDResult =
                 gDDSPrimary->Blt(&gDDDestinationRect, gDDSOne, &gDDSourceRect, DDBLT_WAIT, NULL);
             if (gDDResult == DDERR_SURFACELOST) {
@@ -305,7 +305,7 @@ BOOL DDAppPaint(HWND window, HDC paintDC) {
 #line 287
             DDSD(gDDResult, __FILE__, __LINE__);
         EndPaint(window, &ps);
-        gWinGraphBusy = FALSE;
+        gWinGraphBusy = false;
     }
     return TRUE;
 }
@@ -417,7 +417,7 @@ void DDSD(i32 error, char* file, i32 line) {
 
     if (gInDDSD)
         return;
-    gInDDSD = TRUE;
+    gInDDSD = true;
     restoreResult = gDD->RestoreDisplayMode();
     reportCode = DDSD_REPORT_NONE;
     switch (error) {
@@ -610,7 +610,7 @@ void DDSetFullScreenStatus(i32 fullScreen) {
         y = CURRENT_GRAPHICS_CONFIG.y;
         width = CURRENT_GRAPHICS_CONFIG.width;
         windowHeight = CURRENT_GRAPHICS_CONFIG.height;
-        gWinGraphBusy = TRUE;
+        gWinGraphBusy = true;
         CURRENT_GRAPHICS_CONFIG.fullScreen = fullScreen;
         if (CURRENT_GRAPHICS_CONFIG.fullScreen != 0)
             SetMenuStatus(0);
@@ -651,7 +651,7 @@ void DDSetFullScreenStatus(i32 fullScreen) {
 #line 626
             DDSD(hres, __FILE__, __LINE__);
         WritePrefs();
-        gWinGraphBusy = FALSE;
+        gWinGraphBusy = false;
         if (CURRENT_GRAPHICS_CONFIG.fullScreen == 0) {
             SetMenuStatus(1);
             ResizeWindow(x, y, width, windowHeight);
@@ -934,7 +934,7 @@ void ConnectToDLLs() {
             GetProcAddress(gDDrawLibrary, "DirectDrawCreate")
         );
         if (gDirectDrawCreate != NULL)
-            gDDrawAttached = TRUE;
+            gDDrawAttached = true;
         else
             ShutDown("Error loading DDRAW.DLL");
     }
