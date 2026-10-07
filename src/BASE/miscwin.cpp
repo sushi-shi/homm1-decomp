@@ -47,7 +47,7 @@ void BlitBitmapToScreen(
                 width
             );
     }
-    if (gEnlargeScreenBlit != false) {
+    if (gEnlargeScreenBlit) {
         if (gMainWinScreenWidth == LOGICAL_SCREEN_WIDTH
             && gMainWinScreenHeight == LOGICAL_SCREEN_HEIGHT) {
             if (width < LOGICAL_SCREEN_WIDTH)
@@ -104,7 +104,7 @@ void SetPalette(i8* paletteData, b32 updateDisplay) {
         paletteData + PALETTE_CYCLE_FIRST * PALETTE_GRAPHICS_CHANNELS,
         sizeof(gCyclePal)
     );
-    if (updateDisplay != false)
+    if (updateDisplay)
         UpdatePalette(gBufferPalette->m_data);
 }
 
@@ -134,7 +134,7 @@ void FadeIn(i32 increment) throw() {
             UpdatePalette(pal->m_data);
         }
     }
-    if (done == false) {
+    if (!done) {
         i = PALETTE_FADE_LEVEL_LAST;
         goto fadeStep;
     }
@@ -167,7 +167,7 @@ void FadeOut(i32 increment) throw() {
         }
         UpdatePalette(pal->m_data);
     }
-    if (done == false) {
+    if (!done) {
         i = PALETTE_FADE_LEVEL_LAST;
         goto fadeStep;
     }

@@ -172,7 +172,7 @@ class sample* resourceManager::GetSample(char* name) {
 
 VA(0x0046c705, 0x75)
 void resourceManager::Dispose(class resource* resourceToDispose) {
-    if (m_expunging != false)
+    if (m_expunging)
         return;
     if (resourceToDispose != NULL) {
         resourceToDispose->m_refCount--;

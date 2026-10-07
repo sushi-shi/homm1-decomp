@@ -295,7 +295,7 @@ i16 heroWindowManager::DoDialog(
     m_lastHoverId = WINDOW_MANAGER_NO_HOVER_WIDGET;
     if (window != NULL)
         AddWindow(window, WINDOW_Z_ORDER_APPEND, 1);
-    if (fade != false)
+    if (fade)
         gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, gPalette);
     gInputManager->Flush();
     m_dialogResult = WINDOW_MANAGER_NO_DIALOG_RESULT;
@@ -434,7 +434,7 @@ void heroWindowManager::Cleanup(void) {}
 
 VA(0x0046abe6, 0xf3)
 void heroWindowManager::SaveFizzleSource(i16 x, i16 y, i16 width, i16 height) {
-    if (gShowIt == false)
+    if (!gShowIt)
         return;
     if (m_fizzleSource != NULL)
         delete m_fizzleSource;
@@ -542,7 +542,7 @@ void heroWindowManager::FizzleForward(i16 x, i16 y, i16 width, i16 height, i32 d
     i32 sourceX;
     i8* cycleTable;
     i32 savedUpdateFlags;
-    if (gShowIt == false)
+    if (!gShowIt)
         return;
     gEnlargeScreenBlit = false;
     tickStart = 0;
