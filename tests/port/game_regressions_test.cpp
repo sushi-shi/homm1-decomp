@@ -539,6 +539,49 @@ void FullWidthCopy() {
     Expect(copied, "a full-width copy from row 3 writes rows 3 and 4");
 }
 
+// A crest the scenario's table gives that the first player already holds
+// was drawn again without end; it is drawn among the free crests. The
+// shipped scenarios name no crest at the entries the players read (entry 0
+// is never read), so the test gives scenario 5's entries 1 and 2 crests:
+// the first player's, and a free one, which the third player keeps unless
+// the second player drew it.
+void CampaignTakenCrest() {
+    i32 savedType = gGame->m_campaignType;
+    i32 savedScenario = gGame->m_campaignScenario;
+    i8 savedCount = gGame->m_playerCount;
+    i16 savedColors[GAME_PLAYER_COUNT];
+    for (int i = 0; i < GAME_PLAYER_COUNT; i++)
+        savedColors[i] = gGame->m_players[i].m_color;
+    campaignScenario& scenario = gCampaignScenarios[CAMPAIGN_SCENARIO_5];
+    i16 savedCrests[CAMPAIGN_CREST_COUNT];
+    for (int i = 0; i < CAMPAIGN_CREST_COUNT; i++)
+        savedCrests[i] = scenario.playerCrests[i];
+    scenario.playerCrests[1] = PLAYER_COLOR_RED;
+    scenario.playerCrests[2] = PLAYER_COLOR_YELLOW;
+    gGame->m_campaignType = CAMPAIGN_IRONFIST;
+    gGame->m_campaignScenario = CAMPAIGN_SCENARIO_5;
+    gGame->m_playerCount = GAME_PLAYER_COUNT;
+    gGame->m_players[0].m_color = PLAYER_COLOR_RED;
+    gGame->RandomizePlayerCrests();
+    bool distinct = true;
+    for (int a = 0; a < GAME_PLAYER_COUNT; a++)
+        for (int b = a + 1; b < GAME_PLAYER_COUNT; b++)
+            distinct = distinct && gGame->m_players[a].m_color != gGame->m_players[b].m_color;
+    // The second player's draw may take yellow first; then the third
+    // player's table crest is taken too and drawn as well.
+    Expect(distinct
+               && (gGame->m_players[2].m_color == PLAYER_COLOR_YELLOW
+                   || gGame->m_players[1].m_color == PLAYER_COLOR_YELLOW),
+           "a table crest the first player holds is drawn among the free ones");
+    for (int i = 0; i < CAMPAIGN_CREST_COUNT; i++)
+        scenario.playerCrests[i] = savedCrests[i];
+    gGame->m_campaignType = savedType;
+    gGame->m_campaignScenario = savedScenario;
+    gGame->m_playerCount = savedCount;
+    for (int i = 0; i < GAME_PLAYER_COUNT; i++)
+        gGame->m_players[i].m_color = savedColors[i];
+}
+
 }  // namespace
 
 int main() {
@@ -582,6 +625,7 @@ int main() {
     SummonBoatOnTheEdge();
     StrayTownsUnderMonsters();
     CampaignLordCrest();
+    CampaignTakenCrest();
     FirstPlayerUltimateHint();
     TownFlagsForEveryTown();
     FullWidthCopy();

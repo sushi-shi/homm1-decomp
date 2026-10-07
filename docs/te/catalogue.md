@@ -960,8 +960,9 @@ balance or the computer's weights were left as they are.
   without towns, the route map's release, the new turn's leaked text, the
   town list's knob, and three windows never deleted.
 - *Campaign (BUG-CAM-1):* the fourth player's crest, read past the
-  scenario's crest table. The retail lookup by player number stays, so the
-  enemy lords' crests are as in the original game.
+  scenario's crest table, and a table crest already taken, which was drawn
+  again without end (only an edited table names one at the entries read). The retail lookup by player number
+  stays, so the enemy lords' crests are otherwise as in the original game.
 - *Towns (BUG-TWN-2–4):* the owner the recruit window gave both tavern
   heroes, the "built today" flags of towns 32-35, which lived in the first
   hero's id, and a second click on the selected stack in the swap window.
