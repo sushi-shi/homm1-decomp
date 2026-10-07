@@ -89,3 +89,5 @@ Macros:
   - H1_ENUM_FLAGS_END(name)=};
   - H1_ENUM_CONST_BEGIN(name)=enum name {
   - H1_ENUM_CONST_END(name)=};
+  - H1_ENUM_ID_BEGIN(name)=enum name {
+  - H1_ENUM_ID_END(name)=};

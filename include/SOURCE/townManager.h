@@ -71,21 +71,25 @@ H1_ENUM_STEPPED(TownCommandText)
 extern H1_ENUM_ARRAY(char*, gTownCommand, TownCommandText, TOWN_TEXT_COUNT);
 
 H1_ENUM_ID_BEGIN(TownControl)
-TOWN_EMPTY_STATUS_CONTROL_FIRST = 0x1c,
-    TOWN_EMPTY_STATUS_CONTROL_LAST = 0x1d, TOWN_GARRISON_FIRST_CONTROL = 0x10,
+    TOWN_EMPTY_STATUS_CONTROL_FIRST = 0x1c,
+    TOWN_EMPTY_STATUS_CONTROL_LAST = 0x1d,
+    TOWN_GARRISON_FIRST_CONTROL = 0x10,
     TOWN_GARRISON_SLOT_FIRST = 0x11,
     // The five army slots of each strip run FIRST..LAST (Main's hover range).
-    TOWN_GARRISON_SLOT_LAST = 0x15, TOWN_HERO_FIRST_CONTROL = 0x16, TOWN_HERO_SLOT_FIRST = 0x17,
+    TOWN_GARRISON_SLOT_LAST = 0x15,
+    TOWN_HERO_FIRST_CONTROL = 0x16,
+    TOWN_HERO_SLOT_FIRST = 0x17,
     TOWN_HERO_SLOT_LAST = 0x1b,
-    TOWN_CLOSE_CONTROL = DIALOG_BUTTON_0 H1_ENUM_ID_END(TownControl)
+    TOWN_CLOSE_CONTROL = DIALOG_BUTTON_0
+H1_ENUM_ID_END(TownControl)
 
-    // Town objects: gTownObjectType's empty entry and a .tod without a border
-    // widget are NONE (m_selectedBuilding's empty value is BUILDING_SLOT_NONE).
-    // gTownObjectNames holds the neutral objects, the four town-type
-    // prefixes, then the faction-object suffixes (index type + TOWN_TYPE_COUNT).
-    // The mage guild's border grows 20 pixels a level above 0x61, bottom 0x99;
-    // its level frames come in pairs.
-    H1_ENUM_CONST_BEGIN(TownObjectConstant)
+// Town objects: gTownObjectType's empty entry and a .tod without a border
+// widget are NONE (m_selectedBuilding's empty value is BUILDING_SLOT_NONE).
+// gTownObjectNames holds the neutral objects, the four town-type
+// prefixes, then the faction-object suffixes (index type + TOWN_TYPE_COUNT).
+// The mage guild's border grows 20 pixels a level above 0x61, bottom 0x99;
+// its level frames come in pairs.
+H1_ENUM_CONST_BEGIN(TownObjectConstant)
     TOWN_OBJECT_NONE = -1,
     TOWN_MAGE_GUILD_LEVEL_HEIGHT = 20,
     TOWN_MAGE_GUILD_BASE_HEIGHT = 0x61,
@@ -189,11 +193,13 @@ H1_ENUM_CONST_END(TownRecruitHeroConstant)
 
 // buybuil%d.bin controls BuyBuild fills: the building's picture and name.
 H1_ENUM_ID_BEGIN(TownBuyBuildControl)
-BUY_BUILD_ICON_CONTROL = 2, BUY_BUILD_NAME_CONTROL = 3 H1_ENUM_ID_END(TownBuyBuildControl)
+    BUY_BUILD_ICON_CONTROL = 2,
+    BUY_BUILD_NAME_CONTROL = 3
+H1_ENUM_ID_END(TownBuyBuildControl)
 
-                            // castle.bin state frames over a building's icon.
-                            H1_ENUM_BEGIN(TownCastleFrame)
-                            // No state frame: SetupCastle clears the state widget.
+// castle.bin state frames over a building's icon.
+H1_ENUM_BEGIN(TownCastleFrame)
+    // No state frame: SetupCastle clears the state widget.
     TOWN_CASTLE_FRAME_NONE = -1,
     TOWN_CASTLE_FRAME_BUILT = 0xb,
     TOWN_CASTLE_FRAME_CANNOT_BUILD = 0xc,
@@ -266,13 +272,16 @@ H1_ENUM_CONST_END(TownScreenConstant)
 // rcrthero.bin widget ids: the two candidates' portraits, class labels and
 // select buttons (dimmed for the right-click quick view).
 H1_ENUM_ID_BEGIN(TownRecruitHeroControl)
-RECRUIT_HERO_PORTRAIT_FIRST = 2,
-    RECRUIT_HERO_PORTRAIT_SECOND = 3, RECRUIT_HERO_CLASS_FIRST = 6, RECRUIT_HERO_CLASS_SECOND = 7,
+    RECRUIT_HERO_PORTRAIT_FIRST = 2,
+    RECRUIT_HERO_PORTRAIT_SECOND = 3,
+    RECRUIT_HERO_CLASS_FIRST = 6,
+    RECRUIT_HERO_CLASS_SECOND = 7,
     RECRUIT_HERO_SELECT_FIRST = 8,
-    RECRUIT_HERO_SELECT_SECOND = 9 H1_ENUM_ID_END(TownRecruitHeroControl)
+    RECRUIT_HERO_SELECT_SECOND = 9
+H1_ENUM_ID_END(TownRecruitHeroControl)
 
 #pragma pack(push, 1)
-        class townManager : public baseManager {
+class townManager : public baseManager {
 public:
     town* m_town;
     bitmap* m_backgroundBitmap;

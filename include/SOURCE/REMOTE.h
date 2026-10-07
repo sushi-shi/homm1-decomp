@@ -14,22 +14,29 @@ H1_ENUM_BEGIN(RemoteMessageType)
 H1_ENUM_END(RemoteMessageType)
 
 H1_ENUM_ID_BEGIN(RemoteBoxCommand)
-BOX_REMOTE_SAVE = 1,
-    BOX_REMOTE_SETUP = 0x1f H1_ENUM_ID_END(RemoteBoxCommand)
+    BOX_REMOTE_SAVE = 1,
+    BOX_REMOTE_SETUP = 0x1f
+H1_ENUM_ID_END(RemoteBoxCommand)
 
-    // RemoteMessage::command values (TransmitRemoteData's command argument and
-    // the receivers' switches): the save-game transfer (TransmitSaveGame /
-    // ReceiveSaveGame), the hero/town exchange before a networked battle, chat
-    // text (PopNetBox), combat actions (ProcessNextAction) and the exit notice
-    // (HandleRemote*Exit). SAVE_INIT and SETUP are the RemoteBoxCommand values.
-    H1_ENUM_ID_BEGIN(RemoteCommand) REMOTE_COMMAND_SAVE_INIT_RESPONSE = 2,
-    REMOTE_COMMAND_SAVE_DATA = 3, REMOTE_COMMAND_SAVE_ACK_REQUEST = 4,
-    REMOTE_COMMAND_SAVE_ACK_RESPONSE = 5, REMOTE_COMMAND_SAVE_FINISH = 6, REMOTE_COMMAND_CHAT = 11,
-    REMOTE_COMMAND_HERO_TOWN_DATA = 0x15, REMOTE_COMMAND_HERO_TOWN_CONFIRM = 0x16,
+// RemoteMessage::command values (TransmitRemoteData's command argument and
+// the receivers' switches): the save-game transfer (TransmitSaveGame /
+// ReceiveSaveGame), the hero/town exchange before a networked battle, chat
+// text (PopNetBox), combat actions (ProcessNextAction) and the exit notice
+// (HandleRemote*Exit). SAVE_INIT and SETUP are the RemoteBoxCommand values.
+H1_ENUM_ID_BEGIN(RemoteCommand)
+    REMOTE_COMMAND_SAVE_INIT_RESPONSE = 2,
+    REMOTE_COMMAND_SAVE_DATA = 3,
+    REMOTE_COMMAND_SAVE_ACK_REQUEST = 4,
+    REMOTE_COMMAND_SAVE_ACK_RESPONSE = 5,
+    REMOTE_COMMAND_SAVE_FINISH = 6,
+    REMOTE_COMMAND_CHAT = 11,
+    REMOTE_COMMAND_HERO_TOWN_DATA = 0x15,
+    REMOTE_COMMAND_HERO_TOWN_CONFIRM = 0x16,
     REMOTE_COMMAND_COMBAT_ACTION = 0x17,
-    REMOTE_COMMAND_PLAYER_EXIT = 30 H1_ENUM_ID_END(RemoteCommand)
+    REMOTE_COMMAND_PLAYER_EXIT = 30
+H1_ENUM_ID_END(RemoteCommand)
 
-        H1_ENUM_CONST_BEGIN(RemoteConstant)
+H1_ENUM_CONST_BEGIN(RemoteConstant)
     REMOTE_BROADCAST_PLAYER = 0x7f,
     REMOTE_MESSAGE_HEADER_SIZE = 9,
     REMOTE_MESSAGE_SIZE = 0x100,

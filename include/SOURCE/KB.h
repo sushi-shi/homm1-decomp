@@ -34,11 +34,16 @@ H1_ENUM_CONST_END(SampleWaitConstant)
 // these values; MAIN_MENU_NO_COMMAND is the idle value. InitMenuHandler
 // accepts ids 1..MAIN_MENU_LAST.
 H1_ENUM_ID_BEGIN(MainMenuControl)
-MAIN_MENU_NO_COMMAND = -1, MAIN_MENU_NEW_GAME = 1, MAIN_MENU_LOAD_GAME = 2, MAIN_MENU_QUIT = 4,
-                           MAIN_MENU_HIGH_SCORES = 5, MAIN_MENU_CREDITS = 6,
-                           MAIN_MENU_LAST = MAIN_MENU_CREDITS H1_ENUM_ID_END(MainMenuControl)
+    MAIN_MENU_NO_COMMAND = -1,
+    MAIN_MENU_NEW_GAME = 1,
+    MAIN_MENU_LOAD_GAME = 2,
+    MAIN_MENU_QUIT = 4,
+    MAIN_MENU_HIGH_SCORES = 5,
+    MAIN_MENU_CREDITS = 6,
+    MAIN_MENU_LAST = MAIN_MENU_CREDITS
+H1_ENUM_ID_END(MainMenuControl)
 
-                               extern b8 gInPollSound;
+extern b8 gInPollSound;
 #define gNoSound gbNoSound // spelling fixes .bss order
 extern i8 gNoSound;
 extern b8 gShowHighScore;
@@ -903,12 +908,14 @@ H1_ENUM_CONST_END(NetBoxLineSlot)
 // netbox.bin text widgets: the two scrolled chat lines (gNetBoxLine) and the
 // line being typed.
 H1_ENUM_ID_BEGIN(NetBoxControl)
-NET_BOX_LINE_PREVIOUS = 1, NET_BOX_LINE_LATEST = 2,
-                           NET_BOX_INPUT = 3 H1_ENUM_ID_END(NetBoxControl)
+    NET_BOX_LINE_PREVIOUS = 1,
+    NET_BOX_LINE_LATEST = 2,
+    NET_BOX_INPUT = 3
+H1_ENUM_ID_END(NetBoxControl)
 
-                           // PopNetBox blinks the input cursor on NET_BOX_BLINK_TIMER_SLOT every
-                           // BLINK_DELAY ms.
-                           H1_ENUM_CONST_BEGIN(NetBoxConstant)
+// PopNetBox blinks the input cursor on NET_BOX_BLINK_TIMER_SLOT every
+// BLINK_DELAY ms.
+H1_ENUM_CONST_BEGIN(NetBoxConstant)
     NET_BOX_BLINK_DELAY = 360
 H1_ENUM_CONST_END(NetBoxConstant)
 
@@ -916,12 +923,16 @@ H1_ENUM_CONST_END(NetBoxConstant)
 // text), the five gScoreLabels captions, and the standard game's days, base
 // score, difficulty, final score and creature rating.
 H1_ENUM_ID_BEGIN(CongratsControl)
-CONGRATS_TITLE = 100, CONGRATS_SCORE_LABEL_FIRST = 101, CONGRATS_DAYS = 106,
-                      CONGRATS_BASE_SCORE = 107, CONGRATS_DIFFICULTY = 108,
-                      CONGRATS_FINAL_SCORE = 109,
-                      CONGRATS_RATING = 110 H1_ENUM_ID_END(CongratsControl)
+    CONGRATS_TITLE = 100,
+    CONGRATS_SCORE_LABEL_FIRST = 101,
+    CONGRATS_DAYS = 106,
+    CONGRATS_BASE_SCORE = 107,
+    CONGRATS_DIFFICULTY = 108,
+    CONGRATS_FINAL_SCORE = 109,
+    CONGRATS_RATING = 110
+H1_ENUM_ID_END(CongratsControl)
 
-                          H1_ENUM_CONST_BEGIN(CongratsConstant)
+H1_ENUM_CONST_BEGIN(CongratsConstant)
     CONGRATS_SCORE_LABEL_COUNT = 5
 H1_ENUM_CONST_END(CongratsConstant)
 
@@ -935,6 +946,8 @@ H1_ENUM_CONST_END(DataEntryStep)
 
 // dataentr.bin widgets: the prompt text and the edit field.
 H1_ENUM_ID_BEGIN(DataEntryControl)
-DATA_ENTRY_PROMPT = 1, DATA_ENTRY_TEXT = 10 H1_ENUM_ID_END(DataEntryControl)
+    DATA_ENTRY_PROMPT = 1,
+    DATA_ENTRY_TEXT = 10
+H1_ENUM_ID_END(DataEntryControl)
 
 #endif

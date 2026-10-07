@@ -57,17 +57,19 @@ H1_ENUM_END(CombatAction)
 // plain arrow (hotspot 1,1) and ATTACK_FIRST + CombatHexDirection the sword
 // pointing from that side.
 H1_ENUM_ID_BEGIN(CombatPointerCode)
-COMBAT_POINTER_VIEW = 5, COMBAT_POINTER_DEFAULT = 6,
-                         COMBAT_POINTER_ATTACK_FIRST = 7 H1_ENUM_ID_END(CombatPointerCode)
+    COMBAT_POINTER_VIEW = 5,
+    COMBAT_POINTER_DEFAULT = 6,
+    COMBAT_POINTER_ATTACK_FIRST = 7
+H1_ENUM_ID_END(CombatPointerCode)
 
-                         // Two sides (defender 0, attacker 1) index m_armies and m_numArmies.
-                         // The hex grid is nine columns by five rows (hex = row * 9 + column):
-                         // DrawBackground and DrawFrame walk it row by row, army/AI/FLY code splits
-                         // m_hex with % and / 9 and treats columns 0 and 8 as the side edges. In a
-                         // siege the town wall stands in column 5 (DrawBackground draws it there,
-                         // SpecialAttack tests shots across it, DoCompAI moves defenders to the
-                         // column inside it).
-                         H1_ENUM_CONST_BEGIN(CombatGridConstant)
+// Two sides (defender 0, attacker 1) index m_armies and m_numArmies.
+// The hex grid is nine columns by five rows (hex = row * 9 + column):
+// DrawBackground and DrawFrame walk it row by row, army/AI/FLY code splits
+// m_hex with % and / 9 and treats columns 0 and 8 as the side edges. In a
+// siege the town wall stands in column 5 (DrawBackground draws it there,
+// SpecialAttack tests shots across it, DoCompAI moves defenders to the
+// column inside it).
+H1_ENUM_CONST_BEGIN(CombatGridConstant)
     COMBAT_HEX_COUNT = 45,
     COMBAT_SIDE_ARMY_COUNT = 6,
     COMBAT_CASTLE_WALL_COLUMN = 5,
@@ -514,15 +516,20 @@ extern H1_ENUM_ARRAY(char*, gBattleResults, BattleResultText, BATTLE_RESULT_COUN
 // (casualties: icon/count ids are FIRST + side * ARMY_GROUP_SLOT_COUNT + slot,
 // with the count id doubling as the side's "None" line) fills in.
 H1_ENUM_ID_BEGIN(CombatWinLoseControl)
-WIN_LOSE_ANIMATION = 1, WIN_LOSE_RESULT_TEXT = 0x65, WIN_LOSE_CASUALTY_ICON_FIRST = 0x7d0,
-                        WIN_LOSE_ARTIFACT_BACKGROUND = 0x7d1, WIN_LOSE_ARTIFACT_ICON = 0x7d2,
-                        WIN_LOSE_CASUALTY_TEXT_FIRST = 0x834, WIN_LOSE_ARTIFACT_NAME = 0x835,
-                        WIN_LOSE_CASUALTY_HEADING = 0x83e H1_ENUM_ID_END(CombatWinLoseControl)
+    WIN_LOSE_ANIMATION = 1,
+    WIN_LOSE_RESULT_TEXT = 0x65,
+    WIN_LOSE_CASUALTY_ICON_FIRST = 0x7d0,
+    WIN_LOSE_ARTIFACT_BACKGROUND = 0x7d1,
+    WIN_LOSE_ARTIFACT_ICON = 0x7d2,
+    WIN_LOSE_CASUALTY_TEXT_FIRST = 0x834,
+    WIN_LOSE_ARTIFACT_NAME = 0x835,
+    WIN_LOSE_CASUALTY_HEADING = 0x83e
+H1_ENUM_ID_END(CombatWinLoseControl)
 
-                        // m_winLoseBottomTextWidgets slots: side * ARMY_GROUP_SLOT_COUNT + slot for
-                        // the casualty counts, then the two side headings and the casualty title.
-                        // DoVictory's experience line buffer.
-                        H1_ENUM_CONST_BEGIN(CombatVictoryConstant)
+// m_winLoseBottomTextWidgets slots: side * ARMY_GROUP_SLOT_COUNT + slot for
+// the casualty counts, then the two side headings and the casualty title.
+// DoVictory's experience line buffer.
+H1_ENUM_CONST_BEGIN(CombatVictoryConstant)
     COMBAT_VICTORY_EXPERIENCE_TEXT_SIZE = 152
 H1_ENUM_CONST_END(CombatVictoryConstant)
 
@@ -534,11 +541,13 @@ H1_ENUM_CONST_END(CombatWinLoseSlot)
 
 // surrendr.bin widget ids DoSurrender fills (the victor's portrait, the offer).
 H1_ENUM_ID_BEGIN(SurrenderControl)
-SURRENDER_PORTRAIT = 1, SURRENDER_TEXT = 2 H1_ENUM_ID_END(SurrenderControl)
+    SURRENDER_PORTRAIT = 1,
+    SURRENDER_TEXT = 2
+H1_ENUM_ID_END(SurrenderControl)
 
-                        // SetCombatDirections' rear hex for a one-hex stack: no rear hex to check
-                        // (ValidHexToStandOn accepts it; CheckSetMouseDirection's backHex default).
-                        H1_ENUM_CONST_BEGIN(CombatRearHexConstant)
+// SetCombatDirections' rear hex for a one-hex stack: no rear hex to check
+// (ValidHexToStandOn accepts it; CheckSetMouseDirection's backHex default).
+H1_ENUM_CONST_BEGIN(CombatRearHexConstant)
     COMBAT_REAR_HEX_UNUSED = -2
 H1_ENUM_CONST_END(CombatRearHexConstant)
 
@@ -547,9 +556,11 @@ H1_ENUM_CONST_END(CombatRearHexConstant)
 // that stops grid selection and hides the pointer, and the skip-turn button
 // that queues ACTION_SKIP_TURN.
 H1_ENUM_ID_BEGIN(CombatControlId)
-COMBAT_CONTROL_NONE = 0,
-    COMBAT_CONTROL_DISABLE_SELECTION = 2, COMBAT_CONTROL_SKIP_TURN = 8,
-    COMBAT_CONTROL_FIELD = 0x40 H1_ENUM_ID_END(CombatControlId)
+    COMBAT_CONTROL_NONE = 0,
+    COMBAT_CONTROL_DISABLE_SELECTION = 2,
+    COMBAT_CONTROL_SKIP_TURN = 8,
+    COMBAT_CONTROL_FIELD = 0x40
+H1_ENUM_ID_END(CombatControlId)
 
     // clang-format off
 // cmbtwin.bin's status line: CombatMessage sets the text widget (id 12),
