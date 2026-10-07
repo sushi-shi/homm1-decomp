@@ -4914,10 +4914,12 @@ void game::RandomizePlayerCrests(void) {
             // The table has crests for three players; the fourth player's
             // entry lies past it (the original read the first starting
             // resource, 30 in every scenario, which is no crest), so its
-            // crest is random.
+            // crest is random. A crest the table gives that is already taken
+            // is drawn at random too (the original drew it again and again).
             if (m_campaignType > 0 && i < CAMPAIGN_CREST_COUNT
                 && (gCampaignScenarios[m_campaignScenario].playerCrests[i]) < PLAYER_COLOR_COUNT
-                && gCampaignScenarios[m_campaignScenario].playerCrests[i] >= 0)
+                && gCampaignScenarios[m_campaignScenario].playerCrests[i] >= 0
+                && taken[gCampaignScenarios[m_campaignScenario].playerCrests[i]] != 1)
                 m_players[i].m_color = (gCampaignScenarios[m_campaignScenario].playerCrests[i]);
             else
                 m_players[i].m_color = (Random( PLAYER_COLOR_BLUE, PLAYER_COLOR_YELLOW ));
