@@ -475,7 +475,9 @@ i16 fileRequester::Main(tag_message& message) {
                             }
                             break;
                         case scrollBarId:
-                            pageCount = m_fileCount - FILE_REQUESTER_LAST_ROW_OFFSET;
+                            // The knob's track spans the first top row to the
+                            // last, as Update draws it.
+                            pageCount = m_fileCount - FILE_REQUESTER_VISIBLE_ROWS;
                             if (pageCount < 1)
                                 pageCount = 1;
                             stepSize = FILE_REQUESTER_GUTTER_STEPS / pageCount;
@@ -585,7 +587,10 @@ void fileRequester::DoKnob(void) {
 
     gMouseManager->SetCursorShape(4);
     lastTop = m_topIndex;
-    scale = 156.0 / (m_fileCount - FILE_REQUESTER_LAST_ROW_OFFSET);
+    // The track spans the first top row to the last, as Update draws it.
+    scale = 156.0
+            / (m_fileCount > FILE_REQUESTER_VISIBLE_ROWS ? m_fileCount - FILE_REQUESTER_VISIBLE_ROWS
+                                                          : 1);
     gMouseManager->MouseCoords(x, grabPointerY);
     grabOffset = grabPointerY - m_scrollKnob->m_y;
     gInputManager->Flush();
