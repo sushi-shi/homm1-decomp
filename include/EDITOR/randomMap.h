@@ -150,4 +150,8 @@ H1_ENUM_BEGIN(ChainTreeFamily)
     CHAIN_TREE_DECIDUOUS = 2
 H1_ENUM_END(ChainTreeFamily)
 
+// Scales a generator count by a 0..100 density setting (50: unchanged apart
+// from the size bonus).
+void ScaleByDensity(i32* count, i32 density);
+
 #endif // HOMM1_EDITOR_RANDOMMAP_H

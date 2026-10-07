@@ -112,8 +112,6 @@ extern i8 gCyclePal[PALETTE_CYCLE_BYTES];
 void CycleColors(void);
 extern i8 gFadeSavedUpdate;
 
-class palette;
-
 // FizzleForward's colour-cycle transition: eight CCYCLE tables of 64K
 // word-indexed lookups.
 H1_ENUM_CONST_BEGIN(WindowFizzleConstant)

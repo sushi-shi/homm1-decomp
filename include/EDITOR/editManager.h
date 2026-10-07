@@ -607,13 +607,10 @@ extern i32 gEditErrorCount;
 // re-rolls every border tile's variant.
 extern b32 gVaryTiles;
 
-void SetTileVariant(mapCell* cell, i32 tile);
+void SetTileVariant(mapCell* cell, i32 firstTile);
 char* MakeMapCode(i32 serial);
 // Shows text in the status bar with a beep and clears it after 1.5 seconds.
 void ShowStatusWarning(char* text);
-// Scales a generator count by a 0..100 density setting (50: unchanged apart
-// from the size bonus).
-void ScaleByDensity(i32* count, i32 density);
 void ScatterDetails(void);
 
 #endif // HOMM1_EDITOR_EDITMANAGER_H

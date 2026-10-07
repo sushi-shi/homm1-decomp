@@ -17,6 +17,8 @@ class heroWindow;
 class icon;
 class iconWidget;
 struct tag_message;
+struct editTownExtra;
+struct editHeroExtra;
 
 // SetWinText rows of the editor's dialogs: the editor's own rows of the
 // window-text table, so each call converts the row to the WindowTextId that

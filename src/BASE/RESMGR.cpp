@@ -5,7 +5,6 @@
 #include <BASE/font.h>
 #include <BASE/icon.h>
 #include <BASE/MAKEFILEID.h>
-#include <BASE/MIDIWrap.h>
 #include <BASE/Misc.h>
 #include <BASE/miscwin.h>
 #include <BASE/palette.h>
