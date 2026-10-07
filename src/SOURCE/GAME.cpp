@@ -1365,7 +1365,7 @@ void game::NewMap(char* mapName) {
     while (m_map[i][j].m_objectIndex != MAP_CELL_NO_FRAME
            || m_map[i][j].m_overlayIndex != MAP_CELL_NO_FRAME
            || m_map[i][j].m_tileIndex < MAP_CELL_TILES_PER_TERRAIN
-           || (gNumHumanPlayers == 1
+           || (gNumHumanPlayers == 1 && m_players[0].m_heroCount > 0
                && ultimateSpread >= MANHATTAN_LENGTH(
                       i - m_heroRecs[m_players[0].m_heroIds[0]].m_x,
                       j - m_heroRecs[m_players[0].m_heroIds[0]].m_y
@@ -1909,6 +1909,8 @@ void game::ClaimTown(i8 townId, i8 player) {
 void game::ClaimMine(i8 mineId, i8 player) {
     i16 frame;
     mapCell* cellPtr;
+    i32 flagX;
+    i32 flagY;
     m_mines[mineId].owner = player;
     m_mineOwners[mineId] = player;
     switch ((m_mines[mineId].type)) {
@@ -1928,20 +1930,28 @@ void game::ClaimMine(i8 mineId, i8 player) {
             frame = 8;
             break;
     }
+    flagX = m_mines[mineId].x;
+    flagY = m_mines[mineId].y;
     switch ((m_mines[mineId].type)) {
         case RESOURCE_MERCURY:
-            cellPtr = &m_map[m_mines[mineId].x][m_mines[mineId].y - 2];
+            flagY -= 2;
             break;
         case MAP_OBJECT_DRAGON_CITY:
-            cellPtr = &m_map[m_mines[mineId].x - 1][m_mines[mineId].y - 3];
+            flagX -= 1;
+            flagY -= 3;
             break;
         case MAP_OBJECT_LIGHTHOUSE:
-            cellPtr = &m_map[m_mines[mineId].x - 2][m_mines[mineId].y];
+            flagX -= 2;
             break;
         default:
-            cellPtr = &m_map[m_mines[mineId].x][m_mines[mineId].y - 1];
+            flagY -= 1;
             break;
     }
+    // The flag goes on a cell above or left of the site; a site on the map's
+    // top rows or left columns shows no flag.
+    if (flagX < 0 || flagY < 0)
+        return;
+    cellPtr = &m_map[flagX][flagY];
     if (player == GAME_PLAYER_NONE) {
         cellPtr->m_flags ^= MAP_CELL_OVERLAY_EXTRA;
     } else {

@@ -312,7 +312,7 @@ void searchArray::TestPossibleDirections(
          gSearchDirection++) {
         gSearchNextX = x + gNormalDirTable[gSearchDirection].x;
         gSearchNextY = y + gNormalDirTable[gSearchDirection].y;
-        if (gSearchNextX <= -7 || gSearchNextX >= MAP_CELL_GRID_SIZE || gSearchNextY <= -7
+        if (gSearchNextX < 0 || gSearchNextX >= MAP_CELL_GRID_SIZE || gSearchNextY < 0
             || gSearchNextY >= MAP_CELL_GRID_SIZE) {
             gSearchTerrain = TERRAIN_INVALID;
             goto storeDirection;

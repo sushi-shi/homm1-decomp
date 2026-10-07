@@ -488,10 +488,12 @@ i8 combatManager::AttemptAdjacentAttack(class army* currentArmy) {
     for (direction = COMBAT_DIRECTION_NORTHEAST; direction < COMBAT_DIRECTION_COUNT; direction++) {
         if (openMaskValue & oneBit) {
             hex = currentArmy->GetAdjacentCellIndex(currentArmy->m_hex, direction);
-            if (ValidHex(hex) && (currentArmy->m_stats.attributes & MONSTER_FLAGS_WIDE)
-                    && m_hexCells[hex].m_occupantSide != COMBAT_OPPOSING_SIDE(m_currentSide)
-                || m_hexCells[hex].m_occupantIndex == m_currentArmyIndex
-                       && m_hexCells[hex].m_occupantSide == m_currentSide) {
+            // A direction off the battlefield (hex -1) has nothing to attack.
+            if (ValidHex(hex)
+                && ((currentArmy->m_stats.attributes & MONSTER_FLAGS_WIDE)
+                        && m_hexCells[hex].m_occupantSide != COMBAT_OPPOSING_SIDE(m_currentSide)
+                    || m_hexCells[hex].m_occupantIndex == m_currentArmyIndex
+                           && m_hexCells[hex].m_occupantSide == m_currentSide)) {
                 if (currentArmy->m_facing == ARMY_FACING_RIGHT)
                     otherHex = currentArmy->m_hex + 1;
                 else
@@ -499,7 +501,8 @@ i8 combatManager::AttemptAdjacentAttack(class army* currentArmy) {
                 if (hex % COMBAT_GRID_COLUMNS != 0
                     && hex % COMBAT_GRID_COLUMNS != COMBAT_GRID_LAST_COLUMN)
                     hex = currentArmy->GetAdjacentCellIndex(otherHex, direction);
-                if (m_hexCells[hex].m_occupantSide != COMBAT_OPPOSING_SIDE(m_currentSide))
+                if (!ValidHex(hex)
+                    || m_hexCells[hex].m_occupantSide != COMBAT_OPPOSING_SIDE(m_currentSide))
                     hex = ARMY_HEX_INVALID;
             }
             if (hex >= 0)

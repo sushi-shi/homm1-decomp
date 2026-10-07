@@ -2072,9 +2072,11 @@ float philAI::TurnValueOfObelisk(i32 player) {
     playerAIData* aiData;
     i32 each;
     aiData = &gGame->m_players[player].m_aiData;
-    each = gArtifactBaseRV[gGame->m_ultimateArtifactId] / 110;
-    if (gGame->m_ultimateArtifactId == ARTIFACT_NONE)
+    // Obelisks are worth nothing once the artifact is dug up, or on a map
+    // without them.
+    if (gGame->m_ultimateArtifactId == ARTIFACT_NONE || gGame->m_obeliskCount <= 0)
         return 0.0f;
+    each = gArtifactBaseRV[gGame->m_ultimateArtifactId] / 110;
     aiData->m_obeliskValue = each * 48 / gGame->m_obeliskCount;
     aiData->m_obeliskValue =
         aiData->m_obeliskValue
