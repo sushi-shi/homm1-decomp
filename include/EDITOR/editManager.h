@@ -297,10 +297,11 @@ H1_ENUM_CONST_BEGIN(EditObjectFrame)
     // rsrc32.icn: the treasure chest; the resource piles start at
     // RESOURCE_PILE_OBJECT_BASE.
     EDIT_TREASURE_CHEST_FRAME = 84,
-    // obj32-07.icn frames the eraser counts as treasure.
-    EDIT_TREASURE_OBJECT_FRAME_A = 3,
-    EDIT_TREASURE_OBJECT_FRAME_B = 4,
-    EDIT_TREASURE_OBJECT_FRAME_C = 42,
+    // obj32-07.icn frames the eraser counts as treasure: the chest, the lamp
+    // and the campfire.
+    EDIT_CHEST_OBJECT_FRAME = 3,
+    EDIT_LAMP_OBJECT_FRAME = 4,
+    EDIT_CAMPFIRE_OBJECT_FRAME = 42,
     // ScatterDetails' lava (obj32-04.icn) and desert (obj32-05.icn) details;
     // the other terrains roll theirs.
     EDIT_LAVA_DETAIL_FRAME = 0,
@@ -498,8 +499,8 @@ public:
     void DrawMap(void);
     void DrawView(i16 viewX, i16 viewY);
     // Redraws the radar map, the scroll knobs and the rulers. Every caller
-    // asks for the screen update (true); the radar is always copied to the
-    // screen, so the flag is not read.
+    // asks for the screen update (true), but the flag is not read: the radar's
+    // screen update always runs, with its x and y swapped.
     void DrawRadar(b32 updateScreen);
     void DrawCell(i16 x, i16 y, i16 column, i16 row, u8 layers);
     void ToggleZoom(void);
@@ -552,7 +553,7 @@ public:
     void NewMap(b32 random);
     // The random map generator (src/EDITOR/MAPOBJ.cpp).
     void GenerateRandomMap(void);
-    // At least four castles stand on the map.
+    // At least EDIT_MAP_MIN_CASTLES castles stand on the map.
     b32 HasEnoughCastles(void);
     // Grows `percent` of the map's cells of terrain from random seeds over
     // cells of baseTerrain (100: the whole map).

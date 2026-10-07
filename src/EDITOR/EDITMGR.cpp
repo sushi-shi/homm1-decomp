@@ -9630,7 +9630,8 @@ void editManager::DrawRadar(b32) {
         ICON_DRAW_OFFSET_FULL
     );
     gResourceManager->Dispose(buttonsIcon);
-    // Retail passes the radar's top as x and its left as y.
+    // The radar's top is passed as x and its left as y, so this update misses
+    // the radar.
     gWindowManager->UpdateScreenRegion(RADAR_TOP, RADAR_LEFT, RADAR_SIZE, RADAR_SIZE);
     UpdateKnobs(1);
     UpdateCursor();
@@ -11141,9 +11142,9 @@ i32 editManager::IsCleared(
             || (tileset == TILESET_RSRC32 && index == EDIT_RESOURCE_PILE_FRAME(RESOURCE_GEMS))
             || (tileset == TILESET_RSRC32 && index == EDIT_RESOURCE_PILE_FRAME(RESOURCE_GOLD))
             || (tileset == TILESET_RSRC32 && index == EDIT_TREASURE_CHEST_FRAME)
-            || (tileset == TILESET_OBJ32_07 && index == EDIT_TREASURE_OBJECT_FRAME_A)
-            || (tileset == TILESET_OBJ32_07 && index == EDIT_TREASURE_OBJECT_FRAME_C)
-            || (tileset == TILESET_OBJ32_07 && index == EDIT_TREASURE_OBJECT_FRAME_B))
+            || (tileset == TILESET_OBJ32_07 && index == EDIT_CHEST_OBJECT_FRAME)
+            || (tileset == TILESET_OBJ32_07 && index == EDIT_CAMPFIRE_OBJECT_FRAME)
+            || (tileset == TILESET_OBJ32_07 && index == EDIT_LAMP_OBJECT_FRAME))
             return mask & EDIT_CLEAR_TREASURE;
         return mask
                & OVERLAY_TERRAIN_BIT(m_map.cells[x][y].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN);
@@ -11296,8 +11297,8 @@ void editManager::ResetArea(i32 x, i32 y, i32 width, i32 height) {
     }
 }
 
-// The new map's file name: a letter code of the map serial ("V" to "Z" and
-// three letters), then "1234.MAP".
+// The new map's file-name code: a letter code of the map serial ("V" to "Z"
+// and three letters); NewMap appends "1234.MAP".
 VA(0x00407fcf, 0xdb)
 char* MakeMapCode(i32 serial) {
     DATA(0x00451210)
