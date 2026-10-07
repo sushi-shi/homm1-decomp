@@ -1,4 +1,4 @@
-// Retail-backed button widget resource reader.
+// Button widget: an icon with normal and pressed frames and a hotkey.
 
 #include <match.h>
 

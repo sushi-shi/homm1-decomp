@@ -99,7 +99,7 @@ bitmap* resourceManager::GetBitmap(char* name) {
     }
 }
 
-// Retail forwards the 16-bit name ID to the cache overload below.
+// Forwards the name's 16-bit ID to the ID overload below.
 VA(0x0046c3db, 0x2c)
 icon* resourceManager::GetIcon(char* name) {
     i16 fileId = MakeId(name);

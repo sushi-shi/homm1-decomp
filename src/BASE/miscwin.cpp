@@ -1,4 +1,4 @@
-// Retail screen blitting.
+// Screen blitting, palette fades and the clipped icon renderers.
 
 #define WIN32_LEAN_AND_MEAN
 

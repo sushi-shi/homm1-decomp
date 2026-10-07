@@ -31,7 +31,6 @@ public:
 };
 #pragma pack(pop)
 
-// Moved from SAMPLE.cpp.
 H1_ENUM_CONST_BEGIN(SampleLoadConstant)
     SAMPLE_FILENAME_CAPACITY = 32,
     SAMPLE_FORMAT_SUFFIX_LENGTH = 3,

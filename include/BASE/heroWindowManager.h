@@ -16,7 +16,7 @@ class bitmap;
 struct tag_message;
 
 // FizzleForward's delay argument asking for the manager's default transition
-// delay (WINMGR.cpp FIZZLE_DEFAULT_DELAY).
+// delay (FIZZLE_DEFAULT_DELAY).
 H1_ENUM_CONST_BEGIN(FizzleDelayConstant)
     FIZZLE_USE_DEFAULT_DELAY = -1
 H1_ENUM_CONST_END(FizzleDelayConstant)
@@ -114,7 +114,6 @@ extern i8 gFadeSavedUpdate;
 
 class palette;
 
-// Moved from WINMGR.cpp.
 // FizzleForward's colour-cycle transition: eight CCYCLE tables of 64K
 // word-indexed lookups.
 H1_ENUM_CONST_BEGIN(WindowFizzleConstant)

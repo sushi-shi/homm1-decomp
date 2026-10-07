@@ -1,7 +1,7 @@
 // Buka 2003 Audiere audio: resource-backed samples, Ogg music playback, and
 // the device and volume controls. Retail compiled these as one translation
 // unit (contiguous unaligned code, one <string> ctype pair, shared template
-// instances); see docs/buka-2003.md. English game text remains in the catalogs.
+// instances); see docs/versions/buka-2003.md. English game text remains in the catalogs.
 
 #include <match.h>
 
@@ -401,7 +401,8 @@ bool InitAudio() {
         AudiereDevice::driver = audiere::OpenDevice("null", NULL);
         if (!AudiereDevice::driver)
             return false;
-        // Retail releases even a successful fallback device (RVA 0x69caf).
+        // Even a successfully opened null device is released: the game then
+        // runs without an audio device.
         AudiereDevice::driver = NULL;
         return true;
     }

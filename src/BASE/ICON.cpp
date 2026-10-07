@@ -1,4 +1,4 @@
-// Icon loading, with a retail post-read hook.
+// Icon loading and drawing.
 
 #include <match.h>
 

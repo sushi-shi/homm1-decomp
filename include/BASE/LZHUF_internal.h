@@ -1,8 +1,8 @@
 #ifndef HOMM1_BASE_LZHUF_INTERNAL_H
 #define HOMM1_BASE_LZHUF_INTERNAL_H
 
-// Bridge between the VC4 wrapper/encoder and the linked legacy decoder
-// members.
+// Shared between the C++ wrappers and encoder (encoder.cpp) and the assembly
+// decoder (decoder/Decoder.asm).
 extern "C" {
     void Decode();
     extern u8 d_code[256];

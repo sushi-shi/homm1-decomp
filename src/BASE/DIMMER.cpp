@@ -1,4 +1,4 @@
-// Retail-backed dimmer widget resource reader.
+// Dimmer widget: dims the screen area it covers.
 
 #include <match.h>
 

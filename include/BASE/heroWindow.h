@@ -78,7 +78,6 @@ public:
     void MoveWindow(i16 dx, i16 dy);
 };
 #pragma pack(pop)
-// Moved from WINDOW.cpp.
 H1_ENUM_BEGIN(WindowWidgetRecordType)
     WIDGET_RECORD_END = 0,
     WIDGET_RECORD_BORDER = 1,
