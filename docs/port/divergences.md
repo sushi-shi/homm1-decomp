@@ -150,7 +150,7 @@ fix.
 | Summon Boat on the edge | Next to the map's edge the boat is summoned beside (0,0) with a coordinate of -1 or 72. | Cast Summon Boat with the hero on the edge of SEL21234. | Fixed (`BUG-ADV-2`). |
 | Campfire | Clears the ambient sound at the view's centre instead of the campfire's cell. | A computer hero takes a campfire away from the view's centre. | Fixed (`BUG-ADV-3`). |
 | Puzzle | Off-map cells of the puzzle show cell (0,0). | An ultimate artifact near the map's edge. | Fixed (`BUG-ADV-4`). |
-| Stray hero and town cells | Some shipped maps (DNL3, AES3, PNM3, UHS6) have hero or town triggers with no record; clicking them shows hero or town 0, and selects it if owned. | PNM31234: defeat the monsters at (7,45) or (33,61) and click their cells. | Fixed (`BUG-ADV-5`). |
+| Stray hero and town cells | Some shipped maps (DNL3, AES3, PNM3, UHS6) have hero or town triggers with no record; clicking them shows hero or town 0, and selects it if owned. | PNM31234: defeat the monsters at (7,45) or (33,61) and click their cells. | Fixed (`BUG-ADV-5`): the triggers stay as the maps have them; a cell without its record is neither shown nor selected. |
 | Campaign crests | The crest table should be read at `[i-1]`, so the enemy lords' crests are random. | Campaign scenarios 5-8: the enemy lord's crest. | Fixed (`BUG-CAM-1`). |
 | Thieves' Guild | Crystal is counted with wood and ore in the Thieves' Guild view (`TOWNMGR`). | 20 crystal and no wood or ore. | Kept as retail: the grouping ("Wood, Crystal & Ore") was intended (`BUG-TWN-1` reverted). |
 | Recruiting a hero | `RecruitHero` sets the owner of both tavern heroes. | With the original tavern, the same hero offered in two taverns. | Fixed (`BUG-TWN-2`). |

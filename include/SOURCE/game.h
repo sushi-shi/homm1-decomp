@@ -384,8 +384,12 @@ public:
     void WaitForPlayer(char* text, i32 player);
     void SettleOverlay(i32 x, i32 y);
     void RandomizeTerrainTiles(void);
-    // Whether the cell is one of a town's 4 x 3 cells.
-    b32 OnTownFootprint(i32 x, i32 y);
+    // Whether a hero or town cell has the record it names behind it.
+    b32 CellHasRecord(i32 x, i32 y);
+    b32 CellHasRecord(mapCell* cell) {
+        i32 index = cell - &m_map[0][0];
+        return CellHasRecord(index / MAP_CELL_GRID_SIZE, index % MAP_CELL_GRID_SIZE);
+    }
     void ProcessMapExtra(void);
     i32 MapDataValid(void);
     i8 SetupTowns(void);

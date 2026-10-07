@@ -669,6 +669,9 @@ i16 advManager::ValidMoveWithEvent(hero* movingHero, i16 direction) {
                 return 0;
         case MAP_OBJECT_HERO:
             if (movingHero->IsEmbarked()) {
+                // A hero cell without its hero has no boat to meet.
+                if (!gGame->CellHasRecord(newX, newY))
+                    return 0;
                 if (gGame->GetHero(cellPtr->m_objectMetadata)->IsEmbarked())
                     return 1;
                 else

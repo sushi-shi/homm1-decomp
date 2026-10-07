@@ -413,17 +413,37 @@ void SummonBoatOnTheEdge() {
 }
 
 // PNM31234 keeps towns without records under two monsters; once a monster
-// was gone, its cell showed and selected town 0.
+// was gone, its cell showed and selected town 0. The triggers stay as the
+// map has them; such a cell has no record, and its lookups are left out.
 void StrayTownsUnderMonsters() {
     NewGame("PNM31234.MAP");
     const int cells[][2] = {{7, 45}, {33, 61}};
-    bool none = true;
+    bool kept = true;
+    bool recordless = true;
     for (const auto& c : cells) {
         mapCell* cell = &gGame->m_map[c[0]][c[1]];
         gAdvManager->EraseObj(cell, c[0], c[1]);
-        none = none && MAP_TRIGGER_OBJECT(cell->m_triggerType) != MAP_OBJECT_TOWN;
+        kept = kept && MAP_TRIGGER_OBJECT(cell->m_triggerType) == MAP_OBJECT_TOWN;
+        recordless = recordless && !gGame->CellHasRecord(c[0], c[1]);
     }
-    Expect(none, "a defeated monster on PNM31234 uncovers no town without a record");
+    Expect(kept, "a defeated monster on PNM31234 uncovers the town trigger the map keeps");
+    Expect(recordless, "the uncovered town cells have no town record");
+    bool towns = true;
+    for (int i = 0; i < GAME_TOWN_COUNT; i++) {
+        const town& t = gGame->m_castleRecs[i];
+        if (MAP_CELL_IN_BOUNDS(t.m_x, t.m_y)
+            && MAP_TRIGGER_OBJECT(gGame->m_map[t.m_x][t.m_y].m_triggerType) == MAP_OBJECT_TOWN)
+            towns = towns && gGame->CellHasRecord(t.m_x, t.m_y)
+                    && gGame->CellHasRecord(t.m_x - 1, t.m_y - 1);
+    }
+    bool heroes = true;
+    for (int i = 0; i < GAME_HERO_COUNT; i++) {
+        const hero& h = gGame->m_heroRecs[i];
+        if (h.m_owner >= 0 && MAP_CELL_IN_BOUNDS(h.m_x, h.m_y)
+            && MAP_TRIGGER_OBJECT(gGame->m_map[h.m_x][h.m_y].m_triggerType) == MAP_OBJECT_HERO)
+            heroes = heroes && gGame->CellHasRecord(h.m_x, h.m_y);
+    }
+    Expect(towns && heroes, "real town and hero cells keep their records");
     NewGame("AES31000.MAP");
 }
 

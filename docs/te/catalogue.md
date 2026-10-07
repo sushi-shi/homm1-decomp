@@ -951,8 +951,10 @@ balance or the computer's weights were left as they are.
   action, commander skills that wrap the stack's attack and defense, and
   the computer's adjacent attack test off the battlefield.
 - *Adventure map (BUG-ADV-1–14):* the skeleton's unpaid gold, Summon Boat at
-  the map's edge, the campfire's sound, the puzzle's off-map cells, heroes
-  and towns without records under other objects, Town Gate without a town,
+  the map's edge, the campfire's sound, the puzzle's off-map cells, hero
+  and town cells without records under other objects (the maps keep them;
+  only the lookups of the missing record are left out), Town Gate without
+  a town,
   the path search and mine flags beyond the map's edges, the ultimate
   artifact's placement for a human player without a hero, the T key
   without towns, the route map's release, the new turn's leaked text, the
