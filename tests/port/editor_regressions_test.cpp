@@ -8,6 +8,7 @@
 #include <H1/Ints.h>
 
 #include <BASE/executive.h>
+#include <BASE/iconWidget.h>
 #include <EDITOR/EDITOR.h>
 #include <EDITOR/editManager.h>
 #include <EDITOR/eventsManager.h>
@@ -164,6 +165,42 @@ void PlacementAtTheEdges() {
     Expect(placements > 0 && outsideUntouched, "objects at the map's edges stay inside it");
 }
 
+// LoadMap freed the open map's records before opening the file: a map
+// that could not be opened left the cells naming freed records.
+void FailedLoadKeepsRecords() {
+    Ground(2);
+    void* record = std::calloc(1, sizeof(editTownExtra));
+    gEditManager->m_extras[MAP_EXTRA_FIRST_RECORD] = record;
+    gEditManager->m_extraSizes[MAP_EXTRA_FIRST_RECORD] = sizeof(editTownExtra);
+    gEditManager->m_extraCount = MAP_EXTRA_FIRST_RECORD + 1;
+    mapCell* cell = &gEditManager->m_map.cells[10][10];
+    cell->m_triggerType = MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN);
+    cell->m_objectMetadata = MAP_EXTRA_FIRST_RECORD;
+    i16 result = gEditManager->LoadMap(const_cast<char*>("NOSUCHMP.MAP"));
+    Expect(result != 0 && gEditManager->m_extraCount == MAP_EXTRA_FIRST_RECORD + 1
+               && gEditManager->m_extras[MAP_EXTRA_FIRST_RECORD] == record,
+           "a map that cannot be opened leaves the open map's records");
+    gEditManager->FreeMapExtras();
+}
+
+// The knobs were scaled over 402 pixels and dragged over 393: the last view
+// origin put the knob past the end of its drag range.
+void KnobsSpanTheirTrack() {
+    i16 savedX = gEditManager->m_viewX;
+    u8 savedZoom = gEditManager->m_zoomedOut;
+    bool atEnd = true;
+    for (int zoomed = 0; zoomed < 2; zoomed++) {
+        gEditManager->m_zoomedOut = static_cast<u8>(zoomed);
+        gEditManager->m_viewX = static_cast<i16>((zoomed ? EDIT_VIEW_ZOOMED_ORIGINS : EDIT_VIEW_ORIGINS) - 1);
+        gEditManager->UpdateKnobs(0);
+        atEnd = atEnd && gEditManager->m_horizontalKnob->m_x == EDIT_KNOB_LAST;
+    }
+    Expect(atEnd, "the last view origin puts the knob at the end of its drag range");
+    gEditManager->m_viewX = savedX;
+    gEditManager->m_zoomedOut = savedZoom;
+    gEditManager->UpdateKnobs(0);
+}
+
 }  // namespace
 
 int main() {
@@ -192,6 +229,8 @@ int main() {
     ExtraRecordCapacity();
     EmptyMineRecords();
     PlacementAtTheEdges();
+    FailedLoadKeepsRecords();
+    KnobsSpanTheirTrack();
     std::string cleanup = "rm -r '" + config + "'";
     if (std::system(cleanup.c_str()) != 0)
         std::fprintf(stderr, "could not remove %s\n", config.c_str());

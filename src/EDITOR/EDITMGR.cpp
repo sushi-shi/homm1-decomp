@@ -9573,7 +9573,7 @@ void editManager::DrawRadar(b32) {
         ICON_DRAW_OFFSET_FULL
     );
     gResourceManager->Dispose(buttonsIcon);
-    gWindowManager->UpdateScreenRegion(RADAR_TOP, RADAR_LEFT, RADAR_SIZE, RADAR_SIZE);
+    gWindowManager->UpdateScreenRegion(RADAR_LEFT, RADAR_TOP, RADAR_SIZE, RADAR_SIZE);
     UpdateKnobs(1);
     UpdateCursor();
 }
@@ -9770,6 +9770,8 @@ void editManager::Scroll(i16 dx, i16 dy) {
     DrawRadar(true);
 }
 
+// The knobs' tracks span EDIT_KNOB_FIRST to EDIT_KNOB_LAST, the first view
+// origin to the last.
 void editManager::UpdateKnobs(i16 update) {
     double scaleX;
     double scaleY;
@@ -9777,11 +9779,11 @@ void editManager::UpdateKnobs(i16 update) {
     i16 yPos;
 
     scaleX =
-        402.0
-        / (m_zoomedOut ? EDIT_VIEW_ZOOMED_ORIGINS : EDIT_VIEW_ORIGINS);
+        static_cast<double>(EDIT_KNOB_LAST - EDIT_KNOB_FIRST)
+        / ((m_zoomedOut ? EDIT_VIEW_ZOOMED_ORIGINS : EDIT_VIEW_ORIGINS) - 1);
     scaleY =
-        402.0
-        / (m_zoomedOut ? EDIT_VIEW_ZOOMED_ORIGINS : EDIT_VIEW_ORIGINS);
+        static_cast<double>(EDIT_KNOB_LAST - EDIT_KNOB_FIRST)
+        / ((m_zoomedOut ? EDIT_VIEW_ZOOMED_ORIGINS : EDIT_VIEW_ORIGINS) - 1);
     xPos = m_viewX * scaleX;
     yPos = m_viewY * scaleY;
     m_horizontalKnob->m_x = xPos + EDIT_KNOB_FIRST;
@@ -10142,8 +10144,8 @@ void editManager::DoHorizontalKnob(void) {
 
     gMouseManager->SetCursorShape(EDIT_CURSOR_HORIZONTAL_DRAG);
     scale =
-        402.0
-        / (m_zoomedOut ? EDIT_VIEW_ZOOMED_ORIGINS : EDIT_VIEW_ORIGINS);
+        static_cast<double>(EDIT_KNOB_LAST - EDIT_KNOB_FIRST)
+        / ((m_zoomedOut ? EDIT_VIEW_ZOOMED_ORIGINS : EDIT_VIEW_ORIGINS) - 1);
     gMouseManager->MouseCoords(x, y);
     gInputManager->Flush();
     message.type = MESSAGE_MOUSE_MOVE;
@@ -10199,8 +10201,8 @@ void editManager::DoVerticalKnob(void) {
 
     gMouseManager->SetCursorShape(EDIT_CURSOR_VERTICAL_DRAG);
     scale =
-        402.0
-        / (m_zoomedOut ? EDIT_VIEW_ZOOMED_ORIGINS : EDIT_VIEW_ORIGINS);
+        static_cast<double>(EDIT_KNOB_LAST - EDIT_KNOB_FIRST)
+        / ((m_zoomedOut ? EDIT_VIEW_ZOOMED_ORIGINS : EDIT_VIEW_ORIGINS) - 1);
     gMouseManager->MouseCoords(x, y);
     gInputManager->Flush();
     message.type = MESSAGE_MOUSE_MOVE;
@@ -10760,8 +10762,10 @@ void editManager::WriteMines(RecordWriter& file) {
                 if (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_MINE)) {
                     type = EDIT_MAP_RANDOM_MINE_TYPE;
                 } else {
-                    markerCell = &m_map.cells[x + 1][y];
-                    if (markerCell->m_flags & MAP_CELL_OBJECT_EXTRA)
+                    // The resource marker is the cell east of the entrance;
+                    // a site in the last column has none.
+                    markerCell = x + 1 < MAP_CELL_GRID_SIZE ? &m_map.cells[x + 1][y] : NULL;
+                    if (markerCell && (markerCell->m_flags & MAP_CELL_OBJECT_EXTRA))
                         type =
                             markerCell->m_extraFrame + RESOURCE_ORE;
                     else if (cell->m_objectIndex == EDIT_SAWMILL_FRAME)
@@ -10834,8 +10838,10 @@ i16 editManager::SaveMap(char* name) {
     FreeUnusedExtras();
     sprintf(fileName, ".\\maps\\%s", name);
     WriteMapFile(file);
-    if (!file.SaveFile(fileName))
+    if (!file.SaveFile(fileName)) {
+        gMouseManager->SetPointer(EDIT_POINTER_DEFAULT);
         return BASE_MANAGER_ERROR;
+    }
     gMouseManager->SetPointer(EDIT_POINTER_DEFAULT);
     ShowErrors();
     return BASE_MANAGER_SUCCESS;
@@ -10895,10 +10901,11 @@ i16 editManager::LoadMap(char* name) {
     char fileName[40];
     RecordReader file;
 
-    FreeMapExtras();
     sprintf(fileName, ".\\maps\\%s", name);
     if (!file.LoadFile(fileName))
         return BASE_MANAGER_ERROR;
+    // The open map keeps its records until the new one is read.
+    FreeMapExtras();
     gMouseManager->SetPointer(EDIT_POINTER_WAIT);
     if (!ReadMapFile(file)) {
         gMouseManager->SetPointer(EDIT_POINTER_DEFAULT);

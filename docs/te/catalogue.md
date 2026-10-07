@@ -972,11 +972,15 @@ section 1, each with the reproduction it was checked against.
   full-width bitmap copies, and a tile index equal to the count. The port's "weekly monster
   growth" row is not a defect: `game::PerWeek` grows a site's stock only
   below 100 and by at most 10, so the byte never exceeds 109.
-- *Random map generator (BUG-GEN-1–5):* region ranking, region bounds,
-  diagonal chain lengths, roads between castles, and desert stone liths.
-- *Editor (BUG-EDT-1–4):* the mine records' empty test, the vertical scroll
-  knob, ground painting's redraw, and the extra records of erased towns and
-  heroes.
+- *Random map generator (BUG-GEN-1–6):* region ranking, region bounds,
+  diagonal chain lengths, roads between castles, desert stone liths, and a
+  castle without a site.
+- *Editor (BUG-EDT-1–12):* the mine records' empty test, the vertical scroll
+  knob, ground painting's redraw, the extra records of erased towns and
+  heroes, the radar's screen update, blending at the map's edges, a mine in
+  the last column, records freed before a map opens, the knobs' scale, the
+  wait pointer after a failed save, the random map dialog's terrain -1, and
+  heroes without a record.
 
 The computer's auto-resolved defeat as attacker (the winner's effects on the
 attacker, the defender's own experience) is the edition's TE-FIX-4, and bad

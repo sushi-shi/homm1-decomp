@@ -461,6 +461,10 @@ msgid "editor.events.cell.unavailable"
 msgstr "Information is available only for cells with heroes, monsters or town and castle gates."
 
 #: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.hero.old_editor"
+msgstr "A hero placed by the old editor cannot be edited"
+
+#: src/EDITOR/EVENTMGR.cpp
 msgid "editor.events.hero.troop_type.range"
 msgstr "Must be between 0 and 27"
 
