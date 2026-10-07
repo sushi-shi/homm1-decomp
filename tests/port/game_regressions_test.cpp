@@ -10,6 +10,7 @@
 #include <H1/Ints.h>
 
 #include <BASE/Misc.h>
+#include <BASE/bitmap.h>
 #include <BASE/executive.h>
 #include <BASE/font.h>
 #include <BASE/heroWindowManager.h>
@@ -509,6 +510,26 @@ void TownFlagsForEveryTown() {
     memcpy(gCurPlayerData->m_resources, resources, sizeof(resources));
 }
 
+// CopyTo's full-width branch added the rows without multiplying them by the
+// row length, copying the wrong rows onto themselves.
+void FullWidthCopy() {
+    const int rows = 8;
+    bitmap source(0, LOGICAL_SCREEN_WIDTH, rows);
+    bitmap destination(0, LOGICAL_SCREEN_WIDTH, rows);
+    for (int i = 0; i < LOGICAL_SCREEN_WIDTH * rows; i++) {
+        source.m_pixels[i] = static_cast<u8>(i / LOGICAL_SCREEN_WIDTH + 1);
+        destination.m_pixels[i] = 0xEE;
+    }
+    source.CopyTo(&destination, 0, 3, 0, 3, LOGICAL_SCREEN_WIDTH, 2);
+    bool copied = true;
+    for (int row = 0; row < rows; row++)
+        for (int x = 0; x < LOGICAL_SCREEN_WIDTH; x++)
+            copied = copied
+                     && destination.m_pixels[row * LOGICAL_SCREEN_WIDTH + x]
+                            == (row == 3 || row == 4 ? row + 1 : 0xEE);
+    Expect(copied, "a full-width copy from row 3 writes rows 3 and 4");
+}
+
 }  // namespace
 
 int main() {
@@ -555,6 +576,7 @@ int main() {
     ThievesGuildResourceGroups();
     FirstPlayerUltimateHint();
     TownFlagsForEveryTown();
+    FullWidthCopy();
     std::string cleanup = "rm -r '" + config + "'";
     if (std::system(cleanup.c_str()) != 0)
         std::fprintf(stderr, "could not remove %s\n", config.c_str());

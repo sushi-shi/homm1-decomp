@@ -966,7 +966,10 @@ section 1, each with the reproduction it was checked against.
 - *Network and modem (BUG-NET-1–6):* the first player's gold in a battle
   hand-off, the recent message ids of an earlier game, a send to a closed
   session, a duplicate identification, the modem string as a format, and
-  unchecked save segments. The port's "weekly monster
+  unchecked save segments.
+- *Engine (BUG-ENG-1–5):* text layout that hung on a line break or a word
+  wider than its line, a text field's scroll-back, an unknown resource id,
+  full-width bitmap copies, and a tile index equal to the count. The port's "weekly monster
   growth" row is not a defect: `game::PerWeek` grows a site's stock only
   below 100 and by at most 10, so the byte never exceeds 109.
 - *Random map generator (BUG-GEN-1–5):* region ranking, region bounds,
