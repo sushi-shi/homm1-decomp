@@ -24,7 +24,7 @@ _Comparison mode: strict data references._
 | `BASE`   |    30 | 280 / 280 (100.0%) | 100.0% |
 | `lzhuf`  |     2 |   17 / 17 (100.0%) | 100.0% |
 
-_CUR / MAX / HIST: 1,057 / 1,057 / 1,057 exact &middot; 100.00% / 100.00% / 100.00% fuzzy (defined in AGENTS.md). Totals cover every in-`.text` reconstruction target; generated and library code is excluded._
+_CUR / MAX / HIST: 1,057 / 1,057 / 1,057 exact &middot; 100.00% / 100.00% / 100.00% fuzzy (defined in [docs/match-status.md](docs/match-status.md)). Totals cover every in-`.text` reconstruction target; generated and library code is excluded._
 
 ### EDITOR.EXE
 

@@ -191,7 +191,8 @@ def render_block(cur: dict, ledger: dict, eng: dict) -> str:
         f"_CUR / MAX / HIST: {tot['cur']:,} / {tot['max']:,} / "
         f"{tot['hist']:,} exact &middot; {fuzzy(tot['cw']):.2f}% / "
         f"{fuzzy(tot['mw']):.2f}% / {fuzzy(tot['hw']):.2f}% fuzzy "
-        "(defined in AGENTS.md). Totals cover every in-`.text` "
+        "(defined in [docs/match-status.md](docs/match-status.md)). "
+        "Totals cover every in-`.text` "
         "reconstruction target; generated and library code is excluded._",
         *image_sections(),
         RM_END,
