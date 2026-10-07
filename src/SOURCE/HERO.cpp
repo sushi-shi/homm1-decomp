@@ -920,8 +920,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) HeroHandler(struct tag_message& messa
                     case HERO_SCREEN_MORALE_LAST:
                         gGame->ShowMoraleInfo(
                             gInfoViewedHero,
-                            quickViewVal == false ? NORMAL_DIALOG_TYPE_OK
-                                                  : NORMAL_DIALOG_TYPE_QUICK_VIEW
+                            !quickViewVal ? NORMAL_DIALOG_TYPE_OK : NORMAL_DIALOG_TYPE_QUICK_VIEW
                         );
                         break;
                     case HERO_SCREEN_LUCK_FIRST:
@@ -929,8 +928,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) HeroHandler(struct tag_message& messa
                     case HERO_SCREEN_LUCK_LAST:
                         gGame->ShowLuckInfo(
                             gInfoViewedHero,
-                            quickViewVal == false ? NORMAL_DIALOG_TYPE_OK
-                                                  : NORMAL_DIALOG_TYPE_QUICK_VIEW
+                            !quickViewVal ? NORMAL_DIALOG_TYPE_OK : NORMAL_DIALOG_TYPE_QUICK_VIEW
                         );
                         break;
                     case HERO_SCREEN_EXPERIENCE_ICON:
@@ -946,8 +944,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) HeroHandler(struct tag_message& messa
                         );
                         NormalDialog(
                             gText,
-                            quickViewVal == false ? NORMAL_DIALOG_TYPE_OK
-                                                  : NORMAL_DIALOG_TYPE_QUICK_VIEW
+                            !quickViewVal ? NORMAL_DIALOG_TYPE_OK : NORMAL_DIALOG_TYPE_QUICK_VIEW
                         );
                         break;
                     case HERO_SCREEN_ARMY_SLOT_FIRST:

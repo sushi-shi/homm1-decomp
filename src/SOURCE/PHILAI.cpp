@@ -199,16 +199,16 @@ void CheckDoMain(i32, b32 doMain) {
         Process1WindowsMessage();
         PollSound();
         if (gTimers[ADVENTURE_FRAME_TIMER_SLOT] < KBTickCount()) {
-            if (doMain == false) {
+            if (!doMain) {
                 b32 oldShowIt = gShowIt;
                 i32 oldX = gAdvManager->m_previousOriginX;
                 i32 oldY = gAdvManager->m_previousOriginY;
                 gDrawSavedCursor = true;
-                if (gConfig.blackoutComputer == 0 && gRemoteOn == false)
+                if (gConfig.blackoutComputer == 0 && !gRemoteOn)
                     gShowIt = true;
                 else
                     gShowIt = false;
-                if (gShowIt == false)
+                if (!gShowIt)
                     gSpecialHideCursor = true;
                 if (gAdvManager->ComboDraw(
                         gAdvManager->m_previousOriginX,
@@ -630,7 +630,7 @@ void philAI::DoAI(i32 player) {
         CheckReload(movingHero);
         CheckBerserk(movingHero);
         gShowComputerRoute = false;
-        if (gConfig.blackoutComputer == 0 && gRemoteOn == false
+        if (gConfig.blackoutComputer == 0 && !gRemoteOn
             && (gGame->m_mapExtra[movingHero->m_x][movingHero->m_y] & gCurWatchPlayerHighBit)) {
             gShowIt = true;
             gAdvManager->SetHeroContext(movingHero->m_id, false);
@@ -2418,7 +2418,7 @@ void philAI::EvaluateOneTimeCreaturePurchase(
     purchaseValue = 0;
     replacementSlot = -1;
     leastStackValue = 999999;
-    if (useAvailableCount != false)
+    if (useAvailableCount)
         purchaseCount = availableCount;
     else
         purchaseCount = MaxBuyableCreatures(creature);
@@ -2449,7 +2449,7 @@ void philAI::EvaluateOneTimeCreaturePurchase(
         purchasedValue -= leastStackValue;
     purchaseValue =
         purchasedValue * gGame->m_players[aiHero->m_owner].m_aiData.m_upgradeValueWeight;
-    if (useAvailableCount == false) {
+    if (!useAvailableCount) {
         GetMonsterCost(creature, gCreatureCost);
         purchaseValue -= purchaseCount * RVConversion(gCreatureCost);
     }
@@ -2517,14 +2517,14 @@ i32 philAI::QuickCombat(
         army = defender;
     }
     diff = roll > attackerChance ? roll - attackerChance : attackerChance - roll;
-    if (attackerWin != false && attackerChance > 0.6)
+    if (attackerWin && attackerChance > 0.6)
         diff *= attackerChance + 0.65;
     lostFraction = (1.0 - diff) * (1.0 - diff);
     if (victorChance > 0.8 && lostFraction > 0.2)
         lostFraction *= lostFraction;
     if (victorChance > 0.96 && lostFraction > (1.0f - victorChance) / 2.0f)
         lostFraction = (1.0f - victorChance) / 2.0f;
-    if (attackerWin != false) {
+    if (attackerWin) {
         if (attackerHero != NULL) {
             gAdvManager->GiveExperience(attackerHero, defExp, true);
             attackerHero->ApplyBattleWinTemps();
@@ -2549,7 +2549,7 @@ i32 philAI::QuickCombat(
         gAdvManager->TransferArtifacts(defenderHero, attackerHero);
     DamageGroup(attacker, attackerHero, defenderHero, attackerCasualtyFraction);
     DamageGroup(defender, defenderHero, attackerHero, defenderCasualtyFraction);
-    if (attackerWin != false && townBattle)
+    if (attackerWin && townBattle)
         gGame->ClaimTown(townId, gCurPlayer);
     return attackerWin;
 }
@@ -2997,7 +2997,7 @@ b32 philAI::CanBuyBHC(BHC& purchase) {
         case PURCHASE_HERO:
             if (gCurPlayerData->m_resources[RESOURCE_GOLD] >= gHeroGoldCost
                 && purchase.townPointer->m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE
-                && gHeroBuiltThisTurn == false)
+                && !gHeroBuiltThisTurn)
                 return true;
             break;
         case PURCHASE_CREATURE:
@@ -3173,8 +3173,7 @@ float philAI::StatChangeValue(i32 oldValue, i32 newValue) {
 VA(0x0044ecff, 0xcc)
 void philAI::IncrementHourGlass(void) {
     i32 heroCount = gCurPlayerData->m_heroCount;
-    if (heroCount < 4 && gCurPlayerData->m_resources[RESOURCE_GOLD] >= 2500
-        && gHeroBuiltThisTurn == false)
+    if (heroCount < 4 && gCurPlayerData->m_resources[RESOURCE_GOLD] >= 2500 && !gHeroBuiltThisTurn)
         heroCount++;
     gCurHourGlassPhase++;
     if (heroCount == AI_HOUR_GLASS_ONE_HERO) {
@@ -3206,7 +3205,7 @@ void philAI::TownEvent(mapCell* cell, hero* heroPointer, i32 x, i32 y) {
     gAdvManager->DemobilizeCurrHero();
     if (targetCastle->m_owner != gCurPlayer) {
         if (targetCastle->HasGarrison()) {
-            if (targetCastle->m_owner < 0 || gHumanPlayer[targetCastle->m_owner] == false) {
+            if (targetCastle->m_owner < 0 || !gHumanPlayer[targetCastle->m_owner]) {
                 heroVictory = QuickCombat(
                     &heroPointer->m_army,
                     heroPointer,

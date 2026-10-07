@@ -6763,7 +6763,7 @@ void advManager::DrawAdventureBorder(void) {
 
     if (m_adventureBorder == NULL)
         return;
-    if (gNoBorder != false)
+    if (gNoBorder)
         return;
 
     screen = gWindowManager->m_screen->m_pixels;

@@ -160,7 +160,7 @@ VA(0x004668b6, 0x139)
 void DDInitGraphics(void) {
     i32 result;
 
-    if (gWinGraphBusy != FALSE)
+    if (gWinGraphBusy)
         return;
     result = gDirectDrawCreate(NULL, &gDD, NULL);
     if (result != DD_OK)
@@ -203,7 +203,7 @@ BOOL DDAppPaint(HWND window, HDC paintDC) {
     PAINTSTRUCT ps;
     POINT pt;
 
-    if (gWinGraphBusy != FALSE)
+    if (gWinGraphBusy)
         return TRUE;
     if (gMinimized != 0)
         return TRUE;
@@ -318,7 +318,7 @@ void DDInitializePalette() {
     i32 status;
     HDC systemDeviceContext;
     i32 i;
-    if (gWinGraphBusy != FALSE)
+    if (gWinGraphBusy)
         return;
     {
         systemDeviceContext = GetDC(NULL);
@@ -357,7 +357,7 @@ VA(0x00466fe8, 0x82)
 #line 387 WINGRAPH_CPP_PATH
 BOOL DDSetPalette() {
     i32 result;
-    if (gWinGraphBusy != FALSE)
+    if (gWinGraphBusy)
         return TRUE;
     if (gForegroundApp == 0)
         return TRUE;
@@ -382,7 +382,7 @@ struct IDirectDrawSurface* DDCreateSurface(u32 width, u32 height, b32 primary) {
 
     memset(&ddsd, 0, sizeof(ddsd));
     ddsd.dwSize = sizeof(ddsd);
-    if (primary != false) {
+    if (primary) {
         // Retail stores no DDSD_CAPS bit for the primary surface.
         ddsd.dwFlags = 0;
         ddsd.ddsCaps.dwCaps = DDSCAPS_PRIMARYSURFACE;
@@ -397,7 +397,7 @@ struct IDirectDrawSurface* DDCreateSurface(u32 width, u32 height, b32 primary) {
     if (status != DD_OK)
 #line 427
         DDSD(status, __FILE__, __LINE__);
-    if (primary == false) {
+    if (!primary) {
         status = createdSurface->Lock(NULL, &ddsd, DDLOCK_WAIT, NULL);
         if (status != DD_OK)
 #line 435
@@ -417,7 +417,7 @@ void DDSD(i32 error, char* file, i32 line) {
     i32 restoreResult;
     H1_ENUM_STORAGE(DirectDrawReportCode, i32) reportCode;
 
-    if (gInDDSD != FALSE)
+    if (gInDDSD)
         return;
     gInDDSD = TRUE;
     restoreResult = gDD->RestoreDisplayMode();
@@ -526,7 +526,7 @@ void DDUpdatePalette(i8* paletteData) {
     i32 entry;
     i32 status;
 
-    if (gWinGraphBusy != FALSE)
+    if (gWinGraphBusy)
         return;
     if (gForegroundApp == 0)
         return;
@@ -603,7 +603,7 @@ void DDSetFullScreenStatus(i32 fullScreen) {
     i32 y;
     i32 hres;
 
-    if (gWinGraphBusy != FALSE)
+    if (gWinGraphBusy)
         return;
     if (CURRENT_GRAPHICS_CONFIG.fullScreen == fullScreen)
         return;
@@ -772,8 +772,8 @@ void WGUpdatePalette(i8* paletteData) {
         // The editor has no combat screen to redraw partially.
         {
 #else
-        if (gLimitedCombatUpdatePalette != false) {
-            if (gFullCombatScreenDrawn != false)
+        if (gLimitedCombatUpdatePalette) {
+            if (gFullCombatScreenDrawn)
                 BlitBitmapToScreen(
                     gWindowManager->m_screen,
                     0,
@@ -1032,17 +1032,17 @@ void CleanUpWinGraphics() {
 
 VA(0x0046833c, 0x84)
 void SetFullScreenStatus(i32 fullScreen) {
-    if (gInSmacker != false)
+    if (gInSmacker)
         return;
     if (fullScreen == CURRENT_GRAPHICS_CONFIG.fullScreen)
         return;
     if (gGraphicsType == WINGRAPH_GRAPHICS_WING) {
         CURRENT_GRAPHICS_CONFIG.fullScreen = 1;
-        if (SetGraphicsType(WINGRAPH_GRAPHICS_DIRECT_DRAW) != FALSE)
+        if (SetGraphicsType(WINGRAPH_GRAPHICS_DIRECT_DRAW))
             DDSetFullScreenStatus(fullScreen);
         return;
     } else if (fullScreen == 0) {
-        if (gWinGAttached != FALSE)
+        if (gWinGAttached)
             SetGraphicsType(WINGRAPH_GRAPHICS_WING);
     } else {
         DDSetFullScreenStatus(fullScreen);
@@ -1069,9 +1069,9 @@ BOOL SetGraphicsType(H1_ENUM_PARAM(WingraphGraphicsType, i32) graphicsType) {
 
     if (gGraphicsType == graphicsType)
         return TRUE;
-    if (graphicsType == WINGRAPH_GRAPHICS_WING && gWinGAttached == FALSE)
+    if (graphicsType == WINGRAPH_GRAPHICS_WING && !gWinGAttached)
         return FALSE;
-    if (graphicsType == WINGRAPH_GRAPHICS_DIRECT_DRAW && gDDrawAttached == FALSE)
+    if (graphicsType == WINGRAPH_GRAPHICS_DIRECT_DRAW && !gDDrawAttached)
         return FALSE;
 
     fullState = CURRENT_GRAPHICS_CONFIG.fullScreen;

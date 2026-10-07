@@ -67,7 +67,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) highScoreManager::Main(struct tag_mes
     tag_message windowMessage;
 
     result = false;
-    if (gShowHighScore != false)
+    if (gShowHighScore)
         gShowHighScore = false;
 
     if (gTimers[HIGH_SCORE_TIMER_SLOT] < KBTickCount()) {
