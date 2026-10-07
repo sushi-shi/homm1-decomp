@@ -3019,10 +3019,10 @@ void advManager::ReceiveHeroTownData(
     *retreatWin = combat.retreatWin;
     *combatSurrender = combat.combatSurrender;
     firstOwner = combat.firstOwner;
-    if (firstOwner > 0)
+    if (firstOwner >= 0 && firstOwner < GAME_PLAYER_COUNT)
         gGame->m_players[firstOwner].m_resources[RESOURCE_GOLD] = combat.firstGold;
     secondOwner = combat.secondOwner;
-    if (secondOwner > 0)
+    if (secondOwner >= 0 && secondOwner < GAME_PLAYER_COUNT)
         gGame->m_players[secondOwner].m_resources[RESOURCE_GOLD] = combat.secondGold;
 
     *firstArmy = static_cast<armyGroup*>(malloc(sizeof(armyGroup)));
