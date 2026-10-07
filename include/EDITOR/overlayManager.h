@@ -125,11 +125,12 @@ H1_ENUM_CONST_END(OverlayManagerConstant)
 
 // The tool panel: the object preview border and the category arrows.
 H1_ENUM_ID_BEGIN(OverlayControlId)
-OVERLAY_PREVIEW_BORDER = 0x26, OVERLAY_NEXT_CATEGORY_BUTTON = 0x28,
-                               OVERLAY_PREVIOUS_CATEGORY_BUTTON =
-                                   0x29 H1_ENUM_ID_END(OverlayControlId)
+    OVERLAY_PREVIEW_BORDER = 0x26,
+    OVERLAY_NEXT_CATEGORY_BUTTON = 0x28,
+    OVERLAY_PREVIOUS_CATEGORY_BUTTON = 0x29
+H1_ENUM_ID_END(OverlayControlId)
 
-                                       H1_ENUM_CONST_BEGIN(OverlayManagerLayout)
+H1_ENUM_CONST_BEGIN(OverlayManagerLayout)
     OVERLAY_PREVIEW_X = 509,
     OVERLAY_PREVIEW_Y = 227,
     OVERLAY_PREVIEW_WIDTH = 86,

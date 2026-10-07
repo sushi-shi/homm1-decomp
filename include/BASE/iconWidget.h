@@ -8,10 +8,12 @@
 
 // iconWidget kinds, carried in widget::m_kind.
 H1_ENUM_ID_BEGIN(IconWidgetKind)
-ICON_WIDGET_DRAW = 0x10, ICON_WIDGET_FILL = 0x80 H1_ENUM_ID_END(IconWidgetKind)
+    ICON_WIDGET_DRAW = 0x10,
+    ICON_WIDGET_FILL = 0x80
+H1_ENUM_ID_END(IconWidgetKind)
 
-                         // Read keeps the low byte of the resource's orientation word.
-                         H1_ENUM_CONST_BEGIN(IconWidgetConstant)
+// Read keeps the low byte of the resource's orientation word.
+H1_ENUM_CONST_BEGIN(IconWidgetConstant)
     ICON_WIDGET_ORIENTATION_MASK = 0xff
 H1_ENUM_CONST_END(IconWidgetConstant)
 

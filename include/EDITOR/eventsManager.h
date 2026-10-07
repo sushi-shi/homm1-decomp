@@ -34,11 +34,12 @@ H1_ENUM_CONST_END(EventsWindowText)
 // cancel keeps the edited record or settings as they were. Widget ids, as
 // DialogButtonId's reserved slots they alias.
 H1_ENUM_ID_BEGIN(EventsDialogButton)
-EVENTS_DIALOG_CANCEL = DIALOG_BUTTON_1, EVENTS_DIALOG_OK =
-                                            DIALOG_BUTTON_2 H1_ENUM_ID_END(EventsDialogButton)
+    EVENTS_DIALOG_CANCEL = DIALOG_BUTTON_1,
+    EVENTS_DIALOG_OK = DIALOG_BUTTON_2
+H1_ENUM_ID_END(EventsDialogButton)
 
-                                        H1_ENUM_CONST_BEGIN(EventsManagerLayout)
-                                        // Every dialog opens at (16, 16).
+H1_ENUM_CONST_BEGIN(EventsManagerLayout)
+// Every dialog opens at (16, 16).
     EVENTS_DIALOG_X = 16,
     EVENTS_DIALOG_Y = 16,
     // Main outlines the hovered cell (overlay.icn) in this palette colour.
