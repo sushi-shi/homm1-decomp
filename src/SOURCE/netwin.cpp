@@ -326,7 +326,9 @@ void nb_thr_ctl(void)
                         case NRC_SNUMOUT:
                         case NRC_SCLOSED:
                         case NRC_SABORT:
+                            // The session is gone: the packet is dropped.
                             gNetStatus[packet->sessionIndex] &= ~NETBIOS_SESSION_ACTIVE;
+                            sendComplete = true;
                             break;
                         default:
                             break;

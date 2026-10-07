@@ -4272,7 +4272,7 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
     i32 mainFile;
     i32 unusedOffset;
     RemoteMessage* incomingNow;
-    char ackedArray[500];
+    char ackedArray[REMOTE_SAVE_SEGMENT_LIMIT];
     i32 unusedY;
     b32 replyState;
     i32 unusedSeq;
@@ -4425,7 +4425,7 @@ b32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
     RemoteMessage* receivedPacketObj;
     i32 curRet;
     i32 lastPacketTimeNum;
-    char myGotIt[500];
+    char myGotIt[REMOTE_SAVE_SEGMENT_LIMIT];
     i32 packetStartValue;
     char* decodedData;
 
@@ -4473,6 +4473,13 @@ b32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
             switch (receivedPacketObj->command) {
                 case REMOTE_COMMAND_SAVE_DATA:
                     packetStartValue = receivedPacketObj->payload.segment.index;
+                    // A segment outside the save is ignored.
+                    if (packetStartValue < 0 || packetStartValue >= REMOTE_SAVE_SEGMENT_LIMIT
+                        || receivedPacketObj->payloadSize < REMOTE_SAVE_INDEX_SIZE
+                        || packetStartValue * REMOTE_SAVE_SEGMENT_SIZE
+                                   + receivedPacketObj->payloadSize - REMOTE_SAVE_INDEX_SIZE
+                               > dataSize + REMOTE_SAVE_BUFFER_EXTRA)
+                        break;
                     myGotIt[packetStartValue] = 1;
                     memcpy(
                         curInData + packetStartValue * REMOTE_SAVE_SEGMENT_SIZE,
@@ -4482,6 +4489,9 @@ b32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
                     break;
                 case REMOTE_COMMAND_SAVE_ACK_REQUEST:
                     packetStartValue = receivedPacketObj->payload.segment.index;
+                    if (packetStartValue < 0
+                        || packetStartValue + REMOTE_SAVE_BATCH_SIZE > REMOTE_SAVE_SEGMENT_LIMIT)
+                        break;
                     for (i = packetStartValue; i < packetStartValue + REMOTE_SAVE_BATCH_SIZE; i++)
                         *(sendPacket + i - packetStartValue) = myGotIt[i];
                     curRet = TransmitRemoteData(

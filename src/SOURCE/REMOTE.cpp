@@ -67,7 +67,8 @@ void RemoteMain(i32 gameMode) {
 
     gInNetSetup = true;
     memset(gReceiveQueue, 0, sizeof(gReceiveQueue));
-    memset(gLastIds, 0, 30);
+    memset(gLastIds, 0, sizeof(gLastIds));
+    gCurLastID = 0;
     gRemoteGameMode = gameMode;
     switch (gameMode) {
         case REMOTE_GAME_NETWORK_HOST:
@@ -465,7 +466,7 @@ void ModemSetup(void) {
     if (!gDirectConnect) {
         for (resetAttempt = 0; resetAttempt < 2; resetAttempt++) {
             if (gConfig.comPort[gDirectConnect] >= 1)
-                sprintf(command, gConfig.modemInitString);
+                strcpy(command, gConfig.modemInitString);
             else
                 sprintf(command, "ATZ");
             PollSound();
@@ -620,8 +621,8 @@ void Connect(void) {
                 continue;
             if (!strncmp(gPacket + 2, gModemIdString, 6)) {
                 sprintf(gText, localization::Tr("network.direct.duplicate_id"));
-                GOut(gText);
                 RemoteCleanup();
+                ShutDown(gText);
             }
             strncpy(gRemoteModemIdString, gPacket + 2, 6);
             gRemoteConnectStage = gPacket[9] - '0';
@@ -679,8 +680,8 @@ b32 WaitForDirectConnect(void) {
                     return false;
                 if (!strncmp(gPacket + 2, gModemIdString, 6)) {
                     sprintf(gText, localization::Tr("network.direct.duplicate_id"));
-                    GOut(gText);
                     RemoteCleanup();
+                    ShutDown(gText);
                 }
                 strncpy(gRemoteModemIdString, gPacket + 2, 6);
                 gRemoteConnectStage = gPacket[9] - '0';

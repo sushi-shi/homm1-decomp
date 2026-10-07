@@ -3014,11 +3014,11 @@ void advManager::ReceiveHeroTownData(
     *retreatWin = EVENTS_REMOTE_MESSAGE(packet)->combat.retreatWin;
     *combatSurrender = EVENTS_REMOTE_MESSAGE(packet)->combat.combatSurrender;
     firstOwner = EVENTS_REMOTE_MESSAGE(packet)->combat.firstOwner;
-    if (firstOwner > 0)
+    if (firstOwner >= 0 && firstOwner < GAME_PLAYER_COUNT)
         gGame->m_players[firstOwner].m_resources[RESOURCE_GOLD] =
             EVENTS_REMOTE_MESSAGE(packet)->combat.firstGold;
     secondOwner = EVENTS_REMOTE_MESSAGE(packet)->combat.secondOwner;
-    if (secondOwner > 0)
+    if (secondOwner >= 0 && secondOwner < GAME_PLAYER_COUNT)
         gGame->m_players[secondOwner].m_resources[RESOURCE_GOLD] =
             EVENTS_REMOTE_MESSAGE(packet)->combat.secondGold;
 

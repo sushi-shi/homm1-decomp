@@ -530,6 +530,8 @@ enum RemoteSaveConstant {
     REMOTE_SAVE_ACK_MAP_SIZE = 200,
     REMOTE_SAVE_INDEX_SIZE = 2,
     REMOTE_SAVE_BUFFER_EXTRA = 500,
+    // Segments a save transfer can have (the received map's size).
+    REMOTE_SAVE_SEGMENT_LIMIT = 500,
     REMOTE_SAVE_DECODE_BUFFER_SIZE = 0x130b0,
     REMOTE_SAVE_TRANSFER_SOUNDS = 8
 };
