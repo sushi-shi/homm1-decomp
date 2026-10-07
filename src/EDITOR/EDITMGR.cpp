@@ -9144,7 +9144,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) editManager::Main(tag_message& messag
                         case EDIT_CONTROL_LOAD:
                             if (!PickMap("", "map", FILE_REQUESTER_LOAD))
                                 break;
-                            if (!H1_ENUM_ENCODE(BaseManagerStatus, LoadMap(m_mapFileName))) {
+                            if (LoadMap(m_mapFileName) == BASE_MANAGER_SUCCESS) {
                                 m_mapChanged = 0;
                                 m_placedX = m_placedY = EDIT_NO_CELL;
                             }
@@ -10728,7 +10728,7 @@ void editManager::WriteTowns(i32 file) {
                         || cell->m_objectIndex == EDIT_CASTLE_FRAME(TOWN_TYPE_WARLOCK)))) {
                 write(file, &x, 1);
                 write(file, &y, 1);
-                type = cell->m_objectIndex / TOWN_RACE_FRAME_STRIDE | MAP_TOWN_CASTLE_FLAG;
+                type = (cell->m_objectIndex / TOWN_RACE_FRAME_STRIDE) | MAP_TOWN_CASTLE_FLAG;
                 write(file, &type, 1);
                 count++;
                 if (cell->m_objectMetadata) {
