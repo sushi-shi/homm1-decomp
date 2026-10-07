@@ -147,10 +147,11 @@ native counterparts carry the same effect:
 - The save header's reserved block goes through the port's record codecs:
   `WriteSaveHeaderReserved`/`ReadSaveHeaderReserved` (`saveRecords.h`)
   write the 44-byte block that starts with `SaveFormatTag` ("H1TE",
-  version 1), with static assertions on its layout. The fled-state byte
+  version 2), with static assertions on its layout. The fled-state byte
   (`hero::m_fledState`) is the hero record's former `m_unused38`; reserved
   tavern heroes are availability bytes `0x40`; neither changes a record's
-  size.
+  size. Version 2 stores the towns' "built today" flags in five bytes
+  (BUG-TWN-3); `LoadGame` reads four from older saves.
 - The protocol (`REMOTE_PROTOCOL_VERSION` 1) lives in the shared codecs
   (`REMOTEREC.cpp`): the packet checksum seed, the serial identification tag
   (`TE`) and the NetBIOS group name (`Empire TE1 `). The native TCP
@@ -159,7 +160,7 @@ native counterparts carry the same effect:
   a peer of another version, including a native program of the original
   game, whose frames lack it, and stops calling it.
 - Tests: `records_test` (the block's codec, the tag's bytes, every saved
-  game with the tag), `remote_records_test` (golden packets under the
+  game with the tag, the flag bytes by format), `remote_records_test` (golden packets under the
   edition's seed; the original game's packets, identification, host
   announcement and session frames refused), `net_session_test` (the
   handshake over localhost sockets, both directions), `save_roundtrip` (an
@@ -242,4 +243,4 @@ Checks: the native game and editor with GCC and Clang, `ctest` (with
 `nix build .#native .#sanitized .#windows .#wasm`, `python3 build.py
 --target all`, and a headless smoke run: the main menu with the edition's
 title, a new game to the adventure map, F5 (`GAMES/QUICKSAVE.GM1` begins its
-header block with `H1TE` and version 1), F9 back to the saved position.
+header block with `H1TE` and version 2), F9 back to the saved position.

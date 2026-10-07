@@ -10,10 +10,11 @@ GAMES\\________.GM1, opens the file options and saves over it. The new file
 must equal the shipped one byte for byte except the 17-byte save-name field
 (offset 207), which holds the name of the file the game saved to, and what
 the edition upgrades in an original game's save: its reserved header block
-(offset 23) now holds the format tag, "H1TE" and version 1, and the heroes
-on offer in taverns are reserved (their availability byte goes from -1 to
-0x40). Loading that save and saving it again must then reproduce it exactly
-outside the name field.
+(offset 23) now holds the format tag, "H1TE" and version 2, the heroes on
+offer in taverns are reserved (their availability byte goes from -1 to
+0x40), and the towns' "built today" flags take a fifth byte (zero: towns
+32-35 have none in an original save). Loading that save and saving it
+again must then reproduce it exactly outside the name field.
 """
 import os
 import shutil
@@ -27,7 +28,13 @@ NAME_SIZE = 0x11
 SAVE = "________.GM1"
 RESERVED_OFFSET = 23
 RESERVED_SIZE = 0x2c
-FORMAT_TAG = b"H1TE" + (1).to_bytes(4, "little")
+FORMAT_TAG = b"H1TE" + (2).to_bytes(4, "little")
+# The bytes after the towns' flags: mines, their owners, the random
+# artifacts, boats and their slots, obelisk visitors, the ultimate
+# artifact, and the three map grids.
+FLAGS_TAIL = 36 * 7 + 36 + 0x25 + 32 * 8 + 32 + 0x30 + 3 + 72 * 72 * 3
+ORIGINAL_FLAG_BYTES = 4
+FLAG_BYTES = 5
 TAVERN_LIMIT = 6 * 2
 
 REPLAY = """\
@@ -88,9 +95,17 @@ def main() -> int:
         if not run(binary, root, scratch):
             return 1
         again = (games / SAVE).read_bytes()
-    if len(saved) != len(original) or len(again) != len(saved):
-        print(f"sizes {len(saved)}, {len(again)} differ from the shipped {len(original)}")
+    grown = FLAG_BYTES - ORIGINAL_FLAG_BYTES
+    if len(saved) != len(original) + grown or len(again) != len(saved):
+        print(f"sizes {len(saved)}, {len(again)} are not the shipped {len(original)} "
+              f"and {grown} more flag byte")
         return 1
+    added = len(saved) - FLAGS_TAIL - grown
+    if saved[added:added + grown] != bytes(grown):
+        print(f"the added town flag byte is not zero: {saved[added:added + grown].hex()}")
+        return 1
+    tagged = saved
+    saved = saved[:added] + saved[added + grown:]
     block = saved[RESERVED_OFFSET:RESERVED_OFFSET + RESERVED_SIZE]
     if block != FORMAT_TAG + bytes(RESERVED_SIZE - len(FORMAT_TAG)):
         print(f"the header block is not the edition's tag: {block.hex()}")
@@ -103,13 +118,13 @@ def main() -> int:
         print(f"{len(other)} bytes differ besides the tag and {len(reserved)} tavern heroes, "
               f"first at offset {other[0] if other else '-'}")
         return 1
-    repeated = outside_name(again, saved)
+    repeated = outside_name(again, tagged)
     if repeated:
         print(f"saved again, {len(repeated)} bytes differ, first at offset {repeated[0]}")
         return 1
-    print(f"ok: {SAVE} saved again carries the edition's tag (H1TE, version 1), reserves "
-          f"{len(reserved)} tavern heroes and is otherwise identical outside its name field; "
-          f"saved once more it is unchanged ({len(saved)} bytes)")
+    print(f"ok: {SAVE} saved again carries the edition's tag (H1TE, version 2), reserves "
+          f"{len(reserved)} tavern heroes, adds a town flag byte and is otherwise identical "
+          f"outside its name field; saved once more it is unchanged ({len(tagged)} bytes)")
     return 0
 
 

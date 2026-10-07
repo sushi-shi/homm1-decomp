@@ -465,6 +465,42 @@ void ThievesGuildResourceGroups() {
         memcpy(gGame->m_players[i].m_resources, saved[i], sizeof(saved[i]));
 }
 
+// ComputeUALoc tested player > 0: the first player never had the hint a
+// computer player digs at.
+void FirstPlayerUltimateHint() {
+    playerData& first = gGame->m_players[0];
+    playerData saved = first;
+    i8 savedArtifact = gGame->m_ultimateArtifactId;
+    if (gGame->m_ultimateArtifactId == ARTIFACT_NONE)
+        gGame->m_ultimateArtifactId = ARTIFACT_ULTIMATE_BOOK;
+    memset(first.m_puzzlePiecesRemoved, 0xFF, sizeof(first.m_puzzlePiecesRemoved));
+    first.m_ultimateArtifactHintChance = 0;
+    ComputeUALoc(0);
+    Expect(first.m_ultimateArtifactHintChance > 0
+               && first.m_ultimateArtifactHintX != PLAYER_ULTIMATE_HINT_NONE,
+           "the first player gets the ultimate artifact hint");
+    first = saved;
+    gGame->m_ultimateArtifactId = savedArtifact;
+}
+
+// The "built today" flags held 32 towns: a build in towns 32-35 set bits
+// of the first hero's id, which were never cleared.
+void TownFlagsForEveryTown() {
+    town* last = &gGame->m_castleRecs[GAME_TOWN_COUNT - 1];
+    town saved = *last;
+    i32 resources[RESOURCE_COUNT];
+    memcpy(resources, gCurPlayerData->m_resources, sizeof(resources));
+    i8 heroId = gGame->m_heroRecs[0].m_id;
+    last->m_id = GAME_TOWN_COUNT - 1;
+    memset(gGame->m_townBuiltToday, 0, sizeof(gGame->m_townBuiltToday));
+    gPhilAI->BuildBuilding(last, BUILDING_SLOT_WELL);
+    Expect(gGame->m_heroRecs[0].m_id == heroId, "a build in town 35 leaves the first hero's id");
+    Expect(!CanBuild(last, BUILDING_SLOT_TAVERN), "town 35 has built today");
+    memset(gGame->m_townBuiltToday, 0, sizeof(gGame->m_townBuiltToday));
+    *last = saved;
+    memcpy(gCurPlayerData->m_resources, resources, sizeof(resources));
+}
+
 }  // namespace
 
 int main() {
@@ -509,6 +545,8 @@ int main() {
     StrayTownsUnderMonsters();
     CampaignLordCrest();
     ThievesGuildResourceGroups();
+    FirstPlayerUltimateHint();
+    TownFlagsForEveryTown();
     std::string cleanup = "rm -r '" + config + "'";
     if (std::system(cleanup.c_str()) != 0)
         std::fprintf(stderr, "could not remove %s\n", config.c_str());

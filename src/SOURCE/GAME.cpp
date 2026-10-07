@@ -133,7 +133,7 @@ void ComputeUALoc(i32 player) {
     i32 heading;
     i32 nRemovedPieces;
 
-    if (player > 0) {
+    if (player >= 0) {
         nRemovedPieces = gGame->m_players[player].CountPuzzlePiecesRemoved();
         if (nRemovedPieces < ULTIMATE_HINT_PIECE_MIN
             || gGame->m_ultimateArtifactId == ARTIFACT_NONE) {
@@ -659,7 +659,14 @@ i16 game::LoadGame(char* filename, b32 origData, b32) {
     for (ix = 0; ix < GAME_TOWN_COUNT; ix++)
         ReadTown(theLoadHandle, m_castleRecs[ix]);
     theLoadHandle.Get(m_townOwners, sizeof(m_townOwners));
-    theLoadHandle.Get(m_townBuiltToday, sizeof(m_townBuiltToday));
+    memset(m_townBuiltToday, 0, sizeof(m_townBuiltToday));
+    if (saveFormat < SAVE_FORMAT_TOWN_FLAGS) {
+        theLoadHandle.Get(m_townBuiltToday, GAME_TOWN_FLAG_BYTES_ORIGINAL);
+        // Towns 32-35 set their flags in the first hero's id.
+        m_heroRecs[0].m_id = 0;
+    } else {
+        theLoadHandle.Get(m_townBuiltToday, sizeof(m_townBuiltToday));
+    }
     for (ix = 0; ix < GAME_MINE_COUNT; ix++)
         ReadMine(theLoadHandle, m_mines[ix]);
     theLoadHandle.Get(m_mineOwners, sizeof(m_mineOwners));

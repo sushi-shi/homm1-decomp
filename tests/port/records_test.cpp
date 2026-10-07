@@ -199,7 +199,12 @@ void TranscodeSavedGame(RecordReader& in, RecordWriter& out, bool original) {
     t.Bytes(4);
     for (int i = 0; i < 4; i++)
         t.Value<i32>();
-    t.Records<SaveHeaderReserved>(1, ReadSaveHeaderReserved, WriteSaveHeaderReserved);
+    SaveHeaderReserved reserved;
+    ReadSaveHeaderReserved(in, reserved);
+    WriteSaveHeaderReserved(out, reserved);
+    // The edition's format 2 keeps a "built today" bit for every town.
+    bool townFlags = std::memcmp(reserved.format.signature, SAVE_FORMAT_SIGNATURE, 4) == 0
+                     && reserved.format.version >= SAVE_FORMAT_TOWN_FLAGS;
     t.Bytes(0x79);
     t.Bytes(2);
     t.Bytes(0x11);
@@ -216,7 +221,7 @@ void TranscodeSavedGame(RecordReader& in, RecordWriter& out, bool original) {
     t.Bytes(GAME_HERO_COUNT);
     t.Records<town>(GAME_TOWN_COUNT, ReadTown, WriteTown);
     t.Bytes(GAME_TOWN_COUNT);
-    t.Bytes(4);
+    t.Bytes(townFlags ? GAME_TOWN_FLAG_BYTES : GAME_TOWN_FLAG_BYTES_ORIGINAL);
     t.Records<mineRecord>(GAME_MINE_COUNT, ReadMine, WriteMine);
     t.Bytes(GAME_MINE_COUNT);
     t.Bytes(0x25);
@@ -242,9 +247,12 @@ void CheckSaveFormatTag() {
     RecordWriter out;
     WriteSaveHeaderReserved(out, tagged);
     std::vector<u8> expected(SAVE_HEADER_RESERVED_RECORD_SIZE, 0);
-    std::memcpy(expected.data(), "H1TE\x01", 5);
-    Expect(SAVE_FORMAT_CURRENT == SAVE_FORMAT_FLED_STATE && SAVE_FORMAT_FLED_STATE == 1,
-           "save format: the edition's version is 1");
+    std::memcpy(expected.data(), "H1TE\x02", 5);
+    Expect(SAVE_FORMAT_CURRENT == SAVE_FORMAT_TOWN_FLAGS && SAVE_FORMAT_TOWN_FLAGS == 2
+               && SAVE_FORMAT_FLED_STATE == 1,
+           "save format: the edition's version is 2");
+    Expect(GAME_TOWN_FLAG_BYTES * 8 >= GAME_TOWN_COUNT && GAME_TOWN_FLAG_BYTES == 5,
+           "save format: a built-today bit for every town");
     Expect(out.Size() == SAVE_HEADER_RESERVED_RECORD_SIZE
                && std::memcmp(out.Data(), expected.data(), expected.size()) == 0,
            "save format tag bytes");
@@ -254,7 +262,7 @@ void CheckSaveFormatTag() {
     ReadSaveHeaderReserved(in, decoded);
     Expect(in.Ok() && in.Remaining() == 0
                && std::memcmp(decoded.format.signature, SAVE_FORMAT_SIGNATURE, 4) == 0
-               && decoded.format.version == SAVE_FORMAT_FLED_STATE,
+               && decoded.format.version == SAVE_FORMAT_TOWN_FLAGS,
            "save format tag round trip");
     std::vector<u8> zeros(SAVE_HEADER_RESERVED_RECORD_SIZE, 0);
     RecordReader originalIn(zeros.data(), static_cast<i32>(zeros.size()));
@@ -309,8 +317,9 @@ void CheckTaggedSave(const std::string& gamePath) {
         zero = zero && block[i] == 0;
     Expect(zero || std::memcmp(block, SAVE_FORMAT_SIGNATURE, 4) == 0,
            gamePath + ": the header block is zero or tagged");
-    std::memset(bytes.data() + kSaveReservedOffset, 0, SAVE_HEADER_RESERVED_RECORD_SIZE);
-    std::memcpy(bytes.data() + kSaveReservedOffset, "H1TE\x01", 5);
+    // Version 1 keeps the original layout; an edition's save keeps its tag.
+    if (zero)
+        std::memcpy(bytes.data() + kSaveReservedOffset, "H1TE\x01", 5);
     RecordReader in(bytes.data(), static_cast<i32>(bytes.size()));
     RecordWriter out;
     TranscodeSavedGame(in, out, false);
