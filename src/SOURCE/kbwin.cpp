@@ -1176,7 +1176,7 @@ H1_ENUM_RETURN(CdSetupResult, i32) SetupCDDrive(void) {
     }
     close(probeFd);
     logicalDrives = GetLogicalDrives();
-    // Retail clears 26 bytes, although the drive slots are 32-bit integers.
+    // Clears only 26 bytes, although the drive slots are 32-bit integers.
     memset(cdDrives, 0, CD_DRIVE_LETTER_COUNT);
     for (eachCd = CD_FIRST_DRIVE_LETTER, index = 0; eachCd < CD_DRIVE_LETTER_COUNT; eachCd++) {
         if (logicalDrives & (1 << eachCd)) {

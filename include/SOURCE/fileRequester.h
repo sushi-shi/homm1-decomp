@@ -143,8 +143,7 @@ struct SMapHeader {
     i16 format;
 };
 
-// PickLoadGame allocates 0x1bc bytes; constructor, Open, Main and Update fix
-// the packed members after baseManager.
+// PickLoadGame allocates 0x1bc bytes.
 class fileRequester : public baseManager {
 public:
     heroWindow* m_window;

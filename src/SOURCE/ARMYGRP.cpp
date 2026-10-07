@@ -22,7 +22,7 @@ armyGroup::armyGroup(void) {
 VA(0x004184e1, 0xd)
 void armyGroup::View(i32) {}
 
-// Adds the town's building bit 4 and clamps to -3..3.
+// Adds one for the town's tavern and clamps to ARMY_GROUP_MORALE_MIN..MAX.
 VA(0x004184ee, 0x11b)
 i16 armyGroup::GetMorale(hero* armyHero, town* occupiedTown) {
     i32 morale;

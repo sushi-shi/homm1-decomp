@@ -297,8 +297,8 @@ finish:
     }
 }
 
-// Mask helpers: loop word indices over m_numArmies and build word masks
-// (dead flag 0x10, shooter 4, flyer 2).
+// Mask helpers: bit i is set for each live stack i of the side that
+// qualifies.
 VA(0x004125fa, 0xb7)
 i16 combatManager::GetShooterMask(H1_ENUM_PARAM(CombatSide, i8) side) {
     i16 armyIndex = 0;
@@ -446,7 +446,7 @@ u32 combatManager::GetStrength(H1_ENUM_PARAM(CombatSide, i8) side, i16 mask) {
     return totalStrength;
 }
 
-// Ghosts (26) pick the weakest stack; a missed two-hex target is retried
+// Ghosts pick the weakest stack; a missed two-hex target is retried
 // from its rear hex.
 VA(0x00412b0f, 0x183)
 i8 combatManager::AttemptAttack(

@@ -127,7 +127,6 @@ H1_ENUM_CONST_END(CombatFlowConstant)
 // Event-music flag used by the event/audio flow.
 extern b8 gEventMusicPlaying;
 
-// Moved from EVENTS.cpp.
 // advManager::EventWindow's eventId: the gEventText row it prints, or
 // EVENT_TEXT_CUSTOM for caller text. The five houses use
 // RECRUIT/RANKS_FULL/EMPTY of the first house plus three rows per house.

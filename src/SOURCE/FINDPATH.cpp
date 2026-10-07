@@ -436,7 +436,6 @@ void searchArray::TestPossibleDirections(
     }
 }
 
-// FINDPATH scratch occupies 0x004a6b9c-0x004a6bcf, including
-// the working mobility SEARCH seeds.
+// The working mobility SEARCH seeds.
 DATA(0x004a6bc0)
 i16 gCurTempMobility;

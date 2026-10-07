@@ -23,8 +23,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Capitalizes the plural name in place and sets the creature portrait by
-// frame.
+// Lower-cases the creature name's first letter for the title and sets the
+// creature portrait by frame.
 VA(0x00450d30, 0x1c9)
 void SetupRecruitWin(
     heroWindow* window,

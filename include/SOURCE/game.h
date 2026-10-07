@@ -303,7 +303,7 @@ public:
     char m_mapDescription[0x79];
     // SaveGame/LoadGame and the save requester's default name.
     char m_saveName[0x15f];
-    // InitEntireCampaign stores 3 here.
+    // InitEntireCampaign stores DIFFICULTY_EXPERT here.
     H1_ENUM_STORAGE(GameDifficulty, i8) m_difficulty;
     i8 m_playerCount;
     i8 m_unused200;

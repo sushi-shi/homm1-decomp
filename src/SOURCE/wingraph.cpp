@@ -23,8 +23,6 @@
 #define WINGRAPH_CPP_PATH "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\wingraph.cpp"
 #endif
 
-// wingraph owns retail .data 0x0049fe60-0x0048eb17 and .bss
-// 0x004a46a0-0x004a4b7f.
 DATA(0x004a0190)
 BOOL gWinGAttached = TRUE;
 DATA(0x004cdda0)
@@ -76,8 +74,8 @@ HPALETTE gAppPalette = NULL;
 DATA(0x004cdde0)
 HINSTANCE gDDrawLibrary = NULL;
 #ifdef HOMM1_EDITOR
-// EDITOR.EXE's compile has one more object at the end of wingraph's .bss
-// (0x00453444), which no code of the editor reads.
+// EDITOR.EXE's compile has one more object at the end of wingraph's .bss,
+// which no code of the editor reads.
 i32 gUnusedData453444 = 0;
 #endif
 DATA(0x004cdd78)
@@ -383,7 +381,7 @@ struct IDirectDrawSurface* DDCreateSurface(u32 width, u32 height, b32 primary) {
     memset(&ddsd, 0, sizeof(ddsd));
     ddsd.dwSize = sizeof(ddsd);
     if (primary) {
-        // Retail stores no DDSD_CAPS bit for the primary surface.
+        // The primary surface request sets no DDSD_CAPS bit.
         ddsd.dwFlags = 0;
         ddsd.ddsCaps.dwCaps = DDSCAPS_PRIMARYSURFACE;
     } else {
@@ -951,7 +949,7 @@ void DisconnectDLLs() {
 }
 
 // @dead-code
-// Zero-ref: pinned retail has no incoming direct call/jump or relocated reference.
+// Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x004681cb, 0x15)
 void RestoreDisplayMode() {
     if (gGraphicsType == WINGRAPH_GRAPHICS_WING)

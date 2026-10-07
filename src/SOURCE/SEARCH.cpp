@@ -10,12 +10,12 @@
 #include <SOURCE/playerData.h>
 #include <SOURCE/searchArray.h>
 
-// Floods from the hero until a cell carrying the trigger type turns
-// up, then walks the directions back into the path buffer.
 // No retail code reads this; it holds its retail .bss place.
 DATA(0x004cc878)
 static i32 gSearchDeadInt;
 
+// Floods from the hero until a cell carrying the trigger type turns
+// up, then walks the directions back into the path buffer.
 VA(0x00455e50, 0x22b)
 i16 searchArray::FindNearestObject(
     i16 startX,
@@ -98,7 +98,8 @@ i16 searchArray::FindNearestObject(
     return m_pathLength;
 }
 
-// BuildPath over the packed node word.
+// Walks the recorded directions back from the destination into the path
+// buffer, keeping the steps within maximumCost.
 VA(0x00456080, 0xc1)
 i32 searchArray::BuildPath(
     i16 startX,
@@ -479,7 +480,5 @@ void searchArray::SeedPosition(
     gFullySeeded = true;
 }
 
-// Buka SEARCH scratch occupies 0x004cc850-0x004cc8c9, including
-// this flag and SeedPosition's zero-initialized point counter.
 DATA(0x004cc8b0)
 b32 gFullySeeded;

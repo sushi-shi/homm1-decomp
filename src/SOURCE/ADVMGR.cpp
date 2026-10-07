@@ -2354,7 +2354,7 @@ void advManager::DrawCell(
     }
 }
 
-// Returns the map base for any off-grid heroIcon.
+// Returns the first map cell for any off-grid coordinate.
 VA(0x00406d26, 0x58)
 mapCell* advManager::GetCell(i16 x, i16 y) {
     if (x < 0 || y < 0 || x >= MAP_CELL_GRID_SIZE || y >= MAP_CELL_GRID_SIZE)
@@ -6817,7 +6817,6 @@ b8 gFreshSave;
 DATA(0x004a65a8)
 i32 gLastAnimFrame;
 // ADVMGR's ambient-sound volume by distance, on a 0..127 scale. Eight
-// slots, five initialized: the zero tail is 0x0048a380..0x0048a38b, before
-// advManager's vtable.
+// slots, five initialized.
 DATA(0x0048a36c)
 const i32 gEnvironmentVolume[8] = {127, 96, 63, 31, 21};

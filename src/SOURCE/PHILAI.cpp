@@ -165,8 +165,6 @@ void AbsAiPrint(char* text) {
     gDebugLevel = savedDebugLevel;
 }
 
-// philAI.h: the AI strategic-value maps philAI::DoAI resets through ResetHeroRVs.
-
 // No off-map guard; indexes [x][y].
 VA(0x00447951, 0x150)
 void ResetHeroRVs(b32 resetAll, i32 x, i32 y) {
@@ -239,7 +237,7 @@ VA(0x00447c6b, 0x5)
 void ShowStatus() {}
 
 // AI status line drawn with philAI's debug font across the bottom
-// twenty screen rows; retail gates it on the second debug level.
+// twenty screen rows; gated on the second debug level.
 VA(0x00447c70, 0x7e)
 void philAI::ShowDebugText(char* text) {
     if (gDebugLevel >= AI_DEBUG_LEVEL_STATUS_TEXT_MIN) {
@@ -544,8 +542,8 @@ void philAI::CheckBerserk(hero* aiHero) {
 }
 #undef enemyHero
 
-// DimensionDoorTo inlined for the given hero: teleports with three arguments
-// and returns a byte flag.
+// Casts Dimension Door toward the planned route's destination when that
+// skips enough steps.
 VA(0x004488e4, 0x18b)
 b8 philAI::DoDimensionDoor(hero* aiHero) {
     i32 cellX;
@@ -1307,7 +1305,7 @@ void philAI::ProbableOutcomeOfBattle(
 #undef artifactSlot
 
 // @dead-code
-// Zero-ref: pinned retail has no incoming direct call/jump or relocated reference.
+// Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0044abfa, 0x13)
 float philAI::GetOddsOfWinning(i32) {
     return 1.0f;
@@ -2005,8 +2003,6 @@ i32 philAI::RVOfPosition(
 DATA(0x004bb160)
 searchArray gStrategicSearchArray;
 RVA_DYNINIT(0x0004c208, 0xf, gStrategicSearchArray)
-// Its .CRT$XCU thunk (0x0048e008 -> 0x00427d90) opens this retail object:
-// int3 padding precedes it and LogTruncate follows without a gap.
 RVA_DYNINIT(0x0004c1fe, 0xa, gStrategicSearchArray)
 
 #define unusedValue nextExtra2 // frame-slot spelling
@@ -2433,8 +2429,8 @@ void philAI::EvaluateOneTimeCreaturePurchase(
                 replacementSlot = -1;
                 index = ARMY_GROUP_SLOT_COUNT;
             } else {
-                // Retail weighs the stack by the monster record of its slot
-                // number.
+                // Weighs the stack by the monster record of its slot number,
+                // not of its creature type.
                 replacementValue =
                     aiHero->m_army.m_creatureCounts[index]
                     * gMonsterDatabase[H1_ENUM_DECODE(CreatureType, index)].fightValue;

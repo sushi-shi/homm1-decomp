@@ -16,7 +16,7 @@ H1_ENUM_BEGIN(SmackVideo)
     SMACK_COUNT = 6
 H1_ENUM_END(SmackVideo)
 
-// Buka retail 0x0049f850: six packed rows, 0x1b bytes each.
+// gSmackOptions rows: movie file names and playback flags, 0x1b bytes each.
 #pragma pack(push, 1)
 struct SSmackOptions {
     char fileName[9];

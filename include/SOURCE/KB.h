@@ -118,12 +118,12 @@ extern i8 gDataEntryTime;
 extern H1_ENUM_STORAGE(DialogWaitType, i8) gWaitType;
 #define gFunctionComplete gbFunctionComplete // spelling fixes .bss order
 extern b8 gFunctionComplete;
-// Artifact names (0x00492e60).
+// Artifact names.
 extern H1_ENUM_ARRAY(char*, gArtifactNames, ArtifactType, ARTIFACT_COUNT);
 extern H1_ENUM_ARRAY(char*, gNeutralBuildingNames, BuildingSlotType, BUILDING_SLOT_NEUTRAL_COUNT);
 extern char* gDwellingNames[];
-// BuyBuild's building descriptions (0x00493c90, 0x00493720) and per-dwelling
-// prerequisite building masks (0x00491880); CanBuild reads six masks per
+// BuyBuild's building descriptions and per-dwelling
+// prerequisite building masks; CanBuild reads six masks per
 // faction.
 extern H1_ENUM_ARRAY(
     char*,
@@ -167,8 +167,8 @@ extern class font* gBigFont;
 extern class font* gSmallFont;
 extern i16 gScoreMon[][2];
 extern i16 gScoreCampaignMon[][2];
-// Combat effect icon files by effect (0x00490ef0) and the one loaded effect
-// icon (0x004c709c) army draws and PowEffect share.
+// Combat effect icon files by effect and the one loaded effect
+// icon army draws and PowEffect share.
 extern H1_ENUM_ARRAY(char*, gCombatFxNames, CombatEffectAnimation, COMBAT_EFFECT_COUNT);
 #define gCurLoadedSpellIcon gLoadedEffectIcn // spelling fixes .bss order
 extern class icon* gCurLoadedSpellIcon;
@@ -180,7 +180,7 @@ class sample* LoadPlaySample(char* name);
 // for or a loop compares against. Slots 2, 4 and 5 are global; slots 0 and
 // 1 are the clocks of whichever screen runs, so each owner's role name is an
 // alias of its slot.
-// The table ends at gScore (0x004c6a98), six slots.
+// The table has six slots.
 H1_ENUM_BEGIN(TimerSlot)
     ADVENTURE_FRAME_TIMER_SLOT = 0,
     COMBAT_FRAME_TIMER_SLOT = 0,
@@ -289,7 +289,7 @@ void GetDataEntry(char* prompt, char* destination, i32 maximumLength, char* init
 H1_ENUM_RETURN(MessageDispatchResult, i16) DataEntryWindowHandler(struct tag_message& message);
 H1_ENUM_RETURN(MessageDispatchResult, i16) EventWindowHandler(struct tag_message& message);
 H1_ENUM_RETURN(MessageDispatchResult, i16) TrueFalseDialogHandler(struct tag_message& message);
-// Town-name lookup by town id (retail 0x00455aaf); the inline game::GetTown
+// Town-name lookup by town id; the inline game::GetTown
 // narrows the id.
 char* GetTownName(i32 townIndex);
 void ReceiveRemotePlayerExit(i8 position, i8 hadControl, b8 eliminated, b8 timedOut);
@@ -495,24 +495,24 @@ extern i16 gRadarOwnerColor[];
 extern H1_ENUM_ARRAY(i16, gRadarTerrainColor, TerrainType, 24);
 // Route arrow frame by [next step][this step] path direction.
 extern i8 gRouteFrame[][8];
-// Damage multipliers for attack minus defense, -20..20 (0x00492288).
+// Damage multipliers for attack minus defense, -20..20.
 extern float gBattleStat[];
 #define gSpellEffectFrame gImpactOverlayFrame // spelling fixes .bss order
 extern i16 gSpellEffectFrame;
-// Pow (impact) effect icons by effect (0x00490eb0).
+// Pow (impact) effect icons by effect.
 extern char* gPowEffectNames[];
 extern char* gArmySizeNames[6][2];
 // New-game "King of the Hill" option; campaign scenarios preset it.
 #define gIAmGreatest gbIAmGreatest // spelling fixes .bss order
 extern i8 gIAmGreatest;
 extern struct campaignScenario gCampaignScenarios[];
-// Spell-book hover help lines (0x00493890).
+// Spell-book hover help lines.
 extern H1_ENUM_ARRAY(char*, gSpellHelp, SpellHelpText, SPELL_HELP_COUNT);
 // CheckHandleNet hands combat packets back while a battle is running.
 extern b8 gInCombat;
-// Neighbour hex per combat hex and direction (0x00490fd8), -1 off grid.
+// Neighbour hex per combat hex and direction, -1 off grid.
 extern H1_ENUM_ARRAY(i8, gCombatAdjacency[45], CombatHexDirection, COMBAT_DIRECTION_ADJACENT_COUNT);
-// The loaded combat effect icon's file id (0x004c6d64).
+// The loaded combat effect icon's file id.
 #define gCurLoadedSpellFileId gEffectFileId // spelling fixes .bss order
 extern i16 gCurLoadedSpellFileId;
 // ProcessCombatMsg records the hero casting from the combat screen.
@@ -611,8 +611,6 @@ extern i32 gUltArtifactAvgValue;
 extern u8 gMapExtra[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 #define gGamePosToNetPos gbGamePosToNetPos // spelling fixes .bss order
 extern i8 gGamePosToNetPos[];
-// WaitForOtherPlayer stores the game position of net position zero here
-// (0x004c6710).
 
 #define gHostGamePos giHostGamePos // spelling fixes .bss order
 extern i32 gHostGamePos;
@@ -643,7 +641,7 @@ extern H1_ENUM_ARRAY2(
     BuildingSlotType,
     BUILDING_SLOT_CAPACITY
 );
-// KB's tavern recruit dialog handler (retail 0x0045140e).
+// The tavern's recruit-hero dialog handler.
 H1_ENUM_RETURN(MessageDispatchResult, i16) RecruitHeroHandler(struct tag_message& message);
 extern H1_ENUM_ARRAY(i8, gTownTheme, TownType, TOWN_TYPE_COUNT);
 extern b32 gFullCombatScreenDrawn;
@@ -659,8 +657,7 @@ extern i32 gScore;
 // shares with the game screens.
 extern b8 gKBDone;
 extern i16 gBoatFrameFlip[];
-// Combat ground tiles (0x00490e70) and obstacle icons (0x00490e90) per
-// combat terrain.
+// Combat ground tiles and obstacle icons per combat terrain.
 extern H1_ENUM_ARRAY(char*, gCombatGroundNames, TerrainType, TERRAIN_COUNT);
 extern H1_ENUM_ARRAY(char*, gCombatObstacleNames, TerrainType, TERRAIN_COUNT);
 // Hero level names and the per-class primary-skill gain table.

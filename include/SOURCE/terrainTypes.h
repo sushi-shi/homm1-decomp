@@ -3,8 +3,8 @@
 
 #include <Domains.h>
 
-// gGroundToTerrain's values: the order of retail gTerrainNames
-// (0x00493240), which advManager::QuickInfo prints for a bare cell; the
+// gGroundToTerrain's values: the order of gTerrainNames,
+// which advManager::QuickInfo prints for a bare cell; the
 // water terrain prints as "Ocean". combatManager::LoadIcons picks its
 // ground and obstacle icons by this index. searchArray::TestPossibleDirections
 // fills a direction it cannot step to with TERRAIN_INVALID, which

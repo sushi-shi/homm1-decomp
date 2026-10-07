@@ -23,9 +23,6 @@
 #include <stdio.h>
 #include <string.h>
 
-// Each setup handler's help row (the gSetup*Help table texts name them); the
-// rows follow CHOICE_ONE.. and end with the cancel row.
-
 // The stpcmpgn.bin dialog driven by SetupCampaignGameHandler.
 VA(0x00456b10, 0x10d)
 i8 game::SetupCampaignGame(void) {
@@ -418,7 +415,7 @@ i8 game::PickLoadGame(void) {
     }
 }
 
-// SETUP help handlers: each help text shows as a type-4 dialog.
+// SETUP help handlers: each help text shows as a quick-view dialog.
 VA(0x00457a60, 0xd7)
 H1_ENUM_RETURN(MessageDispatchResult, i16) SetupCampaignGameHandler(tag_message& message) {
     H1_ENUM_LOCAL(SetupCampaignHelp, i32) helpIndex;
@@ -678,7 +675,5 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) BaseSetupHandler(tag_message& message
     return MESSAGE_DISPATCH_CONSUME;
 }
 
-// Retail's SETUP object ends at 0x00458513; RemoteCleanup starts the REMOTE
-// object at 0x00458520.
 DATA(0x004cc8cc)
 b32 gDoModemConfig = false;

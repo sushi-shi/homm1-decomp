@@ -165,7 +165,7 @@ H1_ENUM_BEGIN(CombatAIAttackPlan)
     COMBAT_AI_ATTACK_WALK = 3
 H1_ENUM_END(CombatAIAttackPlan)
 
-// Combat manager, 0x7d3 bytes (InitMainClasses; constructor 0x0044b440).
+// Combat manager, 0x7d3 bytes (InitMainClasses).
 // GameUnsaved reads the baseManager m_active word through gCombatManager.
 #pragma pack(push, 1)
 class combatManager : public baseManager {
@@ -194,7 +194,7 @@ public:
     class font* m_smallFont;
     // SaveCombatBorder's copy of the twenty screen rows below the field.
     char* m_savedBorder;
-    // Nine combat icons (retail loops 0..8 from +0x271): hexcell draws
+    // Nine combat icons: hexcell draws
     // ground (index), obstacles (2), towers (5) and walls (6); armies draw
     // the quantity box (1) and spell markers (8).
     H1_ENUM_ARRAY(class icon*, m_combatIcons, CombatIconSlot, COMBAT_ICON_COUNT);
@@ -259,8 +259,7 @@ public:
     i16 m_wallDamage;
     i8 m_unused6e8;
     // Per side: creatures the attacking ghosts (CREATURE_GHOST) killed; the
-    // ghost stack grows by it after the strike. army::DoAttack stores and
-    // reloads it with word moves indexed by side.
+    // ghost stack grows by it after the strike.
     H1_ENUM_ARRAY(i16, m_ghostKills, CombatSide, COMBAT_SIDE_COUNT);
     // LoadIcons loads the battlefield backdrop GetBackgroundName names;
     // DrawBackground draws it first.
@@ -428,20 +427,19 @@ i32 ValidHex(i32 hex);
 H1_ENUM_RETURN(MessageDispatchResult, i16) WinCombatHandler(struct tag_message& message);
 H1_ENUM_RETURN(MessageDispatchResult, i16) CombatSpecialHandler(struct tag_message& message);
 H1_ENUM_RETURN(MessageDispatchResult, i16) HandleCastSpell(struct tag_message& message);
-// HandleCastSpell: the hex under the spell pointer (0x004906b4) and the
-// teleport second-click state (0x00490690).
+// HandleCastSpell's teleport second-click state.
 extern b8 gInTeleportGetDest;
-// Frame of the mass-spell glow drawn by DrawFrame (0x004c78b4).
+// Frame of the mass-spell glow drawn by DrawFrame.
 extern i16 gCombatFxFrame;
 // Captured artifacts shown page by page on the victory window.
 #define gMaxTransferArtifacts iMaxTransferArtifacts // spelling fixes .bss order
 extern i8 gMaxTransferArtifacts;
 #define gCurTransferArtifact iCurTransferArtifact // spelling fixes .bss order
 extern i32 gCurTransferArtifact;
-// DoSurrender: gold the enemy hero asks for (0x004a4bac).
+// DoSurrender: gold the enemy hero asks for.
 #define gSurrenderCost giSurrenderCost // spelling fixes .bss order
 extern i32 gSurrenderCost;
-// The queued combat action and its grid/extra arguments (0x004a4bc0..).
+// The queued combat action and its grid/extra arguments.
 extern H1_ENUM_STORAGE(CombatAction, i32) gNextAction;
 #define gNextActionGridIndex giNextActionGridIndex // spelling fixes .bss order
 extern i32 gNextActionGridIndex;
@@ -469,11 +467,11 @@ H1_ENUM_BEGIN(CombatMessageText)
     COMBAT_TEXT_COUNT = 9
 H1_ENUM_END(CombatMessageText)
 extern H1_ENUM_ARRAY(char*, gCombatMessage, CombatMessageText, COMBAT_TEXT_COUNT);
-// Fallback net player for a combat action broadcast (0x004c6710).
+// Fallback net player for a combat action broadcast.
 extern i32 gRemoteDefaultPlayer;
 #define gTransferArtifacts iTransferArtifacts // spelling fixes .bss order
 extern H1_ENUM_STORAGE(ArtifactType, i8) gTransferArtifacts[];
-// Network combat: this machine controls the current side (0x004a4b98).
+// Network combat: this machine controls the current side.
 #define gThisNetHasControl gbThisNetHasControl // spelling fixes .bss order
 extern b8 gThisNetHasControl;
 // gCombatHelp rows ProcessCombatMsg shows when the pointer is off the grid:
@@ -502,7 +500,7 @@ H1_ENUM_BEGIN(BattleResultText)
     BATTLE_RESULT_EXPERIENCE_AND_LEVELS = 10,
     BATTLE_RESULT_COUNT = 11
 H1_ENUM_END(BattleResultText)
-// Victory/defeat window texts (0x00493c60).
+// Victory/defeat window texts.
 extern H1_ENUM_ARRAY(char*, gBattleResults, BattleResultText, BATTLE_RESULT_COUNT);
 
 // win/losecmbt.bin widget ids: the animation, the result text, and the

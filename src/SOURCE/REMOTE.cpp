@@ -1,9 +1,6 @@
-// Remote play: the network and modem transports and their packet layer.
-// Retail compiled these as one object: RemoteCleanup starts it at 0x00458520
-// after SETUP's int3 fill, Dial (0x00459627) and WriteModemPacket (0x0045a16b)
-// start at odd addresses directly after their predecessors, and the object's
-// .data (0x004a2c00-0x0049fdb7) and .bss (0x004c7e70-0x004ca487) interleave
-// the network, modem and packet-layer variables.
+// Remote play: the network and modem transports and their packet layer, one
+// object whose .data and .bss interleave the network, modem and packet-layer
+// variables.
 
 #include <match.h>
 
@@ -1080,7 +1077,7 @@ transmitComplete:
     return result;
 }
 
-// The object's .data and .bss, in retail address order.
+// The object's .data, then its .bss.
 DATA(0x0049f048)
 i32 gNetNameIndex = -1;
 // No retail code reads these two values.

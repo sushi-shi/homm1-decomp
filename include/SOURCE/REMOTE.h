@@ -218,8 +218,7 @@ extern char gReceiveIn[REMOTE_MESSAGE_SIZE];
 extern i32 gLastIds[REMOTE_RECENT_ID_COUNT];
 extern i32 gInOrderCtr;
 extern i32 gCurLastID;
-// The network setup's host/guest handshake states and broadcast clock
-// (retail places them inside REMOTE's data, 0x004a2d4c-0x004a2e68).
+// The network setup's host/guest handshake states.
 extern i8 gInitNetGuestStatus;
 extern i8 gWaitForHostStatus;
 void PollRemote();
@@ -273,8 +272,7 @@ struct inque_t {
 };
 #define gModemInQueue inque // spelling fixes .bss order
 extern inque_t gModemInQueue;
-// The transmit queue holds 2K (retail 0x004c9c80-0x004ca487); SETUP.cpp
-// completes its type.
+// The 2K transmit queue.
 #define gModemOutQueue outque // spelling fixes .bss order
 extern struct outque_t gModemOutQueue;
 extern i32 gBaudBits;
@@ -307,12 +305,11 @@ void Connect(void);
 i8 GUIModemResponse(char* message, char* response);
 i32 write_buffer(char* buffer, i32 length);
 i32 read_byte(void);
-// Modem.cpp's wait-loop steps that KB's WaitHandler drives.
+// The modem wait-loop steps that KB's WaitHandler drives.
 b8 GUIModemCommandExec(void);
 b8 GUIModemResponseExec(void);
 b32 WaitForDirectConnect(void);
 
-// Moved from REMOTE.cpp.
 // CRC-16/CCITT over the packet bytes, most significant bit first.
 H1_ENUM_CONST_BEGIN(RemoteCrcConstant)
     REMOTE_CRC_BYTE_TOP_BIT = 0x80,
@@ -320,7 +317,7 @@ H1_ENUM_CONST_BEGIN(RemoteCrcConstant)
     REMOTE_CRC_POLYNOMIAL = 0x1021
 H1_ENUM_CONST_END(RemoteCrcConstant)
 
-// Modem's 2K transmit queue (retail 0x004c9c80-0x004ca487), defined below.
+// The modem's 2K transmit queue.
 struct outque_t {
     i32 readPosition;
     i32 writePosition;

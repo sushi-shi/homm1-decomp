@@ -1,5 +1,4 @@
-// CURSOR object (0x00439ee0-0x00407d8f): advManager movement routines,
-// aligned apart from wingraph and TOWNMGR.
+// The adventure map's hero cursor: start, stop, draw, turn and move.
 
 #include <match.h>
 
@@ -230,7 +229,7 @@ i16 advManager::GetCursorBaseFrame(H1_ENUM_PARAM(MapDirection, i16) direction) {
     }
 }
 
-// Sixteen half-step frames and word-sized step delays.
+// Turns the hero cursor to the direction in sixteen half-step frames.
 VA(0x00421e15, 0x20e)
 void advManager::TurnTo(H1_ENUM_PARAM(MapDirection, i8) direction) {
     i16 inc = 1;
@@ -275,8 +274,8 @@ void advManager::TurnTo(H1_ENUM_PARAM(MapDirection, i8) direction) {
         UpdateScreen(false, false);
 }
 
-// Reads the current hero itself and tests the watch player's high bit
-// (0x004be7cc) directly in the map-extra grid.
+// Tests the watch player's bit in the map-extra grid at the hero's cell and
+// its destination.
 VA(0x00422023, 0x104)
 b32 advManager::GetMoveShowIt(H1_ENUM_PARAM(MapDirection, i8) direction) {
     i16 dy;
@@ -616,7 +615,6 @@ adjacentDone:
     return retCell;
 }
 
-// Redraws through the three-argument CompleteDraw.
 VA(0x00422df4, 0x161)
 void advManager::CheckAdjacentMon(b8* adjacentMonster) {
     i32 monsterX;
@@ -715,8 +713,7 @@ i16 advManager::ValidMoveWithEvent(hero* movingHero, H1_ENUM_PARAM(MapDirection,
     return ValidMove(direction);
 }
 
-// Indexes from the cursor's map position and tests the north/south object
-// masks directly.
+// Tests the cursor's step against the north/south object masks.
 VA(0x004230f8, 0x24c)
 i16 advManager::ValidMove(H1_ENUM_PARAM(MapDirection, i16) direction) {
     i16 deltaX;
@@ -762,7 +759,6 @@ i16 advManager::ValidMove(H1_ENUM_PARAM(MapDirection, i16) direction) {
     return 1;
 }
 
-// Indexes the map directly.
 VA(0x00423344, 0x2e8)
 void advManager::MoveOrigin(i16 directionX, i16 directionY) {
     i16 cellY;

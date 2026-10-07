@@ -991,8 +991,5 @@ void combatManager::Armageddon(void) {
 }
 #undef damage
 
-// SPELLS owns retail .data 0x00490690-0x0048f4d3. HandleCastSpell's
-// gSpellTargetHex (0x004906b4) is its local static: /Gi emits it at the head
-// of that function's literals.
 DATA(0x004cccb8)
 b8 gInTeleportGetDest = false;

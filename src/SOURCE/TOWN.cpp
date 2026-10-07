@@ -71,7 +71,6 @@ void town::XformToCastle(void) {
     }
 }
 
-// The callee returns with `ret` and always fades.
 VA(0x0045ec84, 0x8c)
 void town::View(void) {
     if (gHighMemBuffer > TOWN_VIEW_HIGH_MEMORY_LIMIT)

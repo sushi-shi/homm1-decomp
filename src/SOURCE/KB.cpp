@@ -59,10 +59,10 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-// Retail score-dialog owner byte (.bss).
+// Which high-score table the score dialog shows.
 DATA(0x004a7624)
 i8 gHighScoreType;
-// InitVars proves seven terrain rows, ordinary/diagonal cost columns.
+// Step costs per terrain (straight, diagonal); InitVars fills them.
 DATA(0x004a7484)
 i8 gTerrainCost[FINDPATH_TERRAIN_COUNT][FINDPATH_STEP_COST_COUNT];
 
@@ -2770,7 +2770,7 @@ void UnloadSystemwideIcons(void) {
     gResourceManager->Dispose(gSmallFont);
 }
 
-// Retail empty lifecycle hook.
+// Empty lifecycle hook.
 VA(0x00442331, 0x5)
 void EarlyShutDownSystem(void) {}
 
@@ -3114,10 +3114,6 @@ void EarlyResizeWindow(i32 x, i32 y, i32 width, i32 height) {
         return;
 }
 
-// KB owns retail .data 0x00490e70-0x0049ea9f: these initialized globals in
-// address order, followed by their initializer literals (0x00494184-0x0049ea97,
-// emitted in this order). Initializers are retail bytes. Unreferenced storage at
-// 0x00492570 (2 x 16 bytes), 0x0049303c and 0x00494178 is not yet named.
 DATA(0x00490a84)
 i16 gCastleAmounts[4] = {20, 20, 0, 0};
 DATA(0x00490a8c)
@@ -4597,10 +4593,6 @@ DATA(0x0049343c)
 i8 gHighScoreRank = -1;
 DATA(0x00493440)
 i32 gHighMemBuffer = 4000;
-// Retail places these zero-initialized flags among KB's function literals
-// (0x0049e8b0-0x0049f537), each next to the literals of its only user.
-// KB owns retail .bss 0x004c5138-0x004c7e6f (allocation order is the compiler's
-// symbol-hash walk, not definition order).
 #include <SOURCE/combatTypes.h>
 #include <SOURCE/mapCell.h>
 #include <SOURCE/EVENTS.h>

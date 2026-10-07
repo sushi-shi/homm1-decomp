@@ -63,7 +63,7 @@ public:
     void DamageGroup(float casualtyFraction);
 };
 #pragma pack(pop)
-// GetAlignmentModifier's distinct-race counts with their own modifier.
+// IsHomogeneous's distinct-race counts with their own modifier.
 H1_ENUM_CONST_BEGIN(ArmyGroupRaceCount)
     ARMY_GROUP_RACES_THREE = 3,
     ARMY_GROUP_RACES_FOUR = 4,

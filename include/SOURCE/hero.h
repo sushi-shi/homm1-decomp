@@ -64,8 +64,8 @@ H1_ENUM_BEGIN(HeroSpellType)
     SPELL_TYPE_ALL = SPELL_TYPE_CATEGORY_COUNT
 H1_ENUM_END(HeroSpellType)
 
-// m_primaryStats indices: the order of retail gPrimarySkillNames
-// (0x00493028) and their help texts; army::Init adds 0 and 1 to the
+// m_primaryStats indices: the order of gPrimarySkillNames
+// and their help texts; army::Init adds 0 and 1 to the
 // stack's attack and defense, and AddSpell receives 3 as the spell count.
 // advManager::GiveTakeArtifactStat also raises the fifth byte (index 4)
 // for the Ballista of Quickness, which no retail code reads (CMBTMGR tests
@@ -164,10 +164,9 @@ void UpdateHeroScreenStatusBar(i16 widgetId);
 // Stale alias of gHeroWindShowing (0x494128): unreferenced, kept so later symbol handles stay put.
 extern i8 gHeroScreenActive;
 H1_ENUM_RETURN(MessageDispatchResult, i16) HeroHandler(struct tag_message& message);
-// Moved from HERO.cpp.
 // clang-format off
 // herowind.bin widget ids. Names follow UpdateHeroScreenStatusBar's
-// gHeroScreen texts (0x004937b0) and what HeroView, UpdateArmies and
+// gHeroScreen texts and what HeroView, UpdateArmies and
 // HeroHandler send to or do with each id; artifact and army slots are
 // indexed from their first id, primary stats by HeroPrimaryStat.
 H1_ENUM_ID_BEGIN(HeroScreenControl)
@@ -199,7 +198,7 @@ H1_ENUM_ID_BEGIN(HeroScreenControl)
     HERO_SCREEN_DISMISS = DIALOG_BUTTON_3
 H1_ENUM_ID_END(HeroScreenControl)
 
-// gHeroScreen (0x004937b0) status-bar texts, as UpdateHeroScreenStatusBar
+// gHeroScreen status-bar texts, as UpdateHeroScreenStatusBar
 // picks them: "Kingdom Overview", "View %s Info", "Additional hero
 // characteristics", good/neutral/bad morale and luck, "View Experience
 // Info", "Select %s", "Empty", "Move %s", "Exchange %s with %s", "View

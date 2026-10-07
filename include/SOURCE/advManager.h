@@ -627,7 +627,6 @@ struct SMapChange {
 extern char gArmySizeName[];
 extern i32 gCurHourGlassPhase;
 
-// Moved from ADVMGR.cpp.
 H1_ENUM_CONST_BEGIN(AdventureButtonConstant)
     BUTTON_BROADCAST_ARG = 1,
     PANEL_CONTINUE_ROUTE = 2
@@ -1238,7 +1237,6 @@ H1_ENUM_CONST_BEGIN(AdventureTravelSpellConstant)
     TOWN_GATE_NO_TOWN = -1
 H1_ENUM_CONST_END(AdventureTravelSpellConstant)
 
-// Moved from CURSOR.cpp.
 // Hero-cursor drawing and movement constants.
 H1_ENUM_CONST_BEGIN(CursorConstant)
     CURSOR_DRAW_X = 0xe0,

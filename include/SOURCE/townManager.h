@@ -271,8 +271,6 @@ RECRUIT_HERO_PORTRAIT_FIRST = 2,
     RECRUIT_HERO_SELECT_FIRST = 8,
     RECRUIT_HERO_SELECT_SECOND = 9 H1_ENUM_ID_END(TownRecruitHeroControl)
 
-// The constructor, UnloadTown, ShowText, ResetStrips and recruitUnit::Close
-// fix these packed offsets.
 #pragma pack(push, 1)
         class townManager : public baseManager {
 public:
@@ -351,7 +349,7 @@ public:
 };
 #pragma pack(pop)
 
-// BuildObj's fizzle rectangle per town type and building (0x00491680).
+// BuildObj's fizzle rectangle per town type and building.
 struct TownBuildingExtent {
     i16 x;
     i16 y;
@@ -359,7 +357,7 @@ struct TownBuildingExtent {
     i16 height;
 };
 
-// Open's per-type town-object layout (0x0048d428).
+// Open's per-type town-object layout.
 extern const H1_ENUM_ARRAY_ROWS(
     i8,
     gTownObjectType,

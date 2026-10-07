@@ -27,7 +27,7 @@ H1_ENUM_CONST_END(MapTriggerEncoding)
 #define MAP_PASSIVE_OBJECT(trigger) (trigger)
 #endif
 
-// Adventure-map object types. Names follow retail gObjectNames (0x00493280),
+// Adventure-map object types. Names follow gObjectNames,
 // which advManager::QuickInfo prints for the masked type, and the
 // advManager::DoEvent arm each value runs. Equal retail strings are split by
 // their arm: houses 13..17 recruit HouseEvent's goblins, peasants, archers,

@@ -189,8 +189,8 @@ i32 playerData::NumOfGivenArtifact(H1_ENUM_PARAM(ArtifactType, i32) artifact) {
     return count;
 }
 
-// Needs eleven removed puzzle pieces (four percent each over ten) and skips player 0's
-// hint.
+// Needs at least eleven removed puzzle pieces; each further piece adds four
+// percent. Player 0 never gets a hint.
 VA(0x0042bab9, 0x321)
 void ComputeUALoc(i32 player) {
     i32 triesCount;
@@ -345,7 +345,7 @@ i8 game::RandomScan(i8* array, i8 start, i8 range, i32) {
     return GAME_TABLE_FREE;
 }
 
-// Nine heroes per class; a 0x40 entry is the fallback pick.
+// Nine heroes per class; a retreated hero is the fallback pick.
 VA(0x0042c17e, 0xe5)
 i8 game::GetNewHeroId(i8 heroClass) {
     i8 freeSlot = GAME_TABLE_FREE;
@@ -4089,7 +4089,8 @@ void game::RandomizeTerrainTiles(void) {
     }
 }
 
-// Town extras only; there are no late overlays.
+// Links each town to its map-extra record and notes whether the map places
+// heroes.
 VA(0x00436796, 0x107)
 void game::ProcessMapExtra(void) {
     i32 y;
@@ -4116,7 +4117,7 @@ void game::ProcessMapExtra(void) {
 }
 
 // Owners, garrisons and buildings; a map whose towns all lack owners
-// leaves the placeholder -2.
+// leaves the MAP_TOWN_OWNER_UNSET placeholder.
 VA(0x0043689d, 0x1cf)
 i8 game::SetupTowns(void) {
     mapTownExtra* newExtra;

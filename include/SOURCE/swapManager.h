@@ -29,8 +29,6 @@ H1_ENUM_BEGIN(SwapManagerItemType)
     SWAP_ITEM_ARTIFACT = 1
 H1_ENUM_END(SwapManagerItemType)
 
-// The constructors store the vtable over baseManager and fill this packed
-// tail; Reset chains the five selection bytes.
 #pragma pack(push, 1)
 class swapManager : public baseManager {
 public:

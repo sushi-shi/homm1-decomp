@@ -1,4 +1,4 @@
-// Combat screen drawing. The combat window keeps one text line in the combat window and
+// Combat screen drawing. The combat window keeps one text line and
 // redraws the battlefield from the grid row UpdateGrid records.
 
 #include <match.h>
@@ -50,7 +50,6 @@ void combatManager::UpdateGridForMove(
 // Sets the combat window's text line and redraws it outside the extent
 // bookkeeping.
 VA(0x00423707, 0xad)
-// clang-format on
 void combatManager::CombatMessage(char* text, b32 updateScreen) {
     b32 oldCompute;
     tag_message message;

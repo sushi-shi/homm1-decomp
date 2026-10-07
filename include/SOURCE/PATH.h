@@ -44,7 +44,6 @@ H1_ENUM_CONST_END(ArmyHexConstant)
 H1_ENUM_RETURN(CombatHexDirection, i16)
 OppositeDirection(H1_ENUM_PARAM(CombatHexDirection, i16) direction);
 
-// Moved from PATH.cpp.
 // CombatPathConstant: the blocked-mask bits for the two
 // wide-creature directions, the speed FindPath grants when speed is ignored,
 // and the second hex of a wide creature.

@@ -144,7 +144,7 @@ townManager::townManager(void) {
     m_dispatchMask = TOWN_MANAGER_DISPATCH_MASK;
 }
 
-// Retail vtable slot 0 (0x0048d468). Builds the town window, objects,
+// Builds the town window, objects,
 // strips and bank box.
 VA(0x0045f215, 0x728)
 H1_ENUM_RETURN(BaseManagerStatus, i16) townManager::Open(i16 priority) {
@@ -277,7 +277,6 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) townManager::Open(i16 priority) {
     return BASE_MANAGER_SUCCESS;
 }
 
-// Retail vtable slot 1.
 VA(0x0045f93d, 0x1db)
 void townManager::Close(void) {
     i16 index;
@@ -299,8 +298,7 @@ void townManager::Close(void) {
     m_active = 0;
 }
 
-// Matches the dragged creature against every slot of the target army and
-// keeps word-sized flags.
+// Matches the dragged creature against every slot of the target army.
 VA(0x0045fb18, 0x77c)
 void townManager::SetArmyCommand(H1_ENUM_PARAM(MessageModifier, i16) qualifier) {
     i16 lastArmy;
@@ -2300,7 +2298,8 @@ void townManager::DoTavern(void) {
     PlayMusic(gTownTheme[m_town->m_type] + MUSIC_TRACK_TOWN_FIRST);
 }
 
-// Hovers by widget id and recruits a single hero (control 0x30).
+// Hovers by widget id and recruits a single hero
+// (TOWN_CASTLE_HERO_CONTROL).
 VA(0x0046559a, 0x650)
 H1_ENUM_RETURN(MessageDispatchResult, i16) CastleHandler(struct tag_message& message) {
     i16 statusId = TOWN_CASTLE_STATUS_CONTROL;

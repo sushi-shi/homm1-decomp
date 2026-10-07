@@ -315,8 +315,8 @@ void combatManager::NextPos(i32* hex) {
         (*hex)++;
 }
 
-// The next hex at or after startHex holding a stack of the side (2: either
-// side).
+// The next hex at or after startHex holding a stack of the side
+// (COMBAT_SIDE_ANY: either side).
 VA(0x00459678, 0x66)
 b32 combatManager::FirstArmy(i32 startHex, H1_ENUM_PARAM(CombatSide, i32) side, i32* hex) {
     while (startHex <= COMBAT_SPELL_AI_HEX_LAST) {
@@ -332,7 +332,8 @@ b32 combatManager::FirstArmy(i32 startHex, H1_ENUM_PARAM(CombatSide, i32) side, 
     return true;
 }
 
-// The value of cancelling a side's (2: both sides') spell effects; stacks
+// The value of cancelling a side's (COMBAT_SIDE_ANY: both
+// sides') spell effects; stacks
 // carry a single effect.
 VA(0x004596de, 0x20c)
 void combatManager::EffectSpellCure(

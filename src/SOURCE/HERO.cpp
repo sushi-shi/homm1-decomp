@@ -1056,6 +1056,5 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) HeroHandler(struct tag_message& messa
     }
 }
 
-// HERO owns retail .data 0x004a12bc-0x004a0b2b.
 DATA(0x004a6c3c)
 class heroWindow* gHeroWin = NULL;

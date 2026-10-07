@@ -51,7 +51,6 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) highScoreManager::Open(i16 priority) {
     return H1_ENUM_CAST(BaseManagerStatus, i16, BASE_MANAGER_SUCCESS);
 }
 
-// The window owner is at +0x59, active at +0x2e.
 VA(0x0043bf37, 0x4e)
 void highScoreManager::Close(void) {
     gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, NULL);
@@ -133,7 +132,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) highScoreManager::Main(struct tag_mes
     return MESSAGE_DISPATCH_CONSUME;
 }
 
-// Update reads 0x57-byte records, names the rating creature directly and
+// Update reads 0x57-byte records, names the rating creature and
 // highlights the new entry by fill colour.
 VA(0x0043c17f, 0x5ec)
 void highScoreManager::Update(void) {

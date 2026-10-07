@@ -1,4 +1,4 @@
-// Retail delay helpers.
+// Delay helpers.
 
 #include <match.h>
 
@@ -9,7 +9,6 @@
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
 
-// No direct caller survives in retail.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x00446370, 0x2e)
@@ -43,6 +42,3 @@ void DelayTilMilli(i32 endTime) {
         PollSound();
     }
 }
-
-// NOOPT's retail .data 0x004a0d04-0x004a081f is DelayTil's /Gi line static (15)
-// and its NOOPT.CPP literal (docs/patterns/vc4-gi-line-var.md).

@@ -628,7 +628,7 @@ void army::Walk(H1_ENUM_PARAM(CombatHexDirection, i16) direction, b8 standAfter,
 
 // A ranged attack: turn toward the target, animate the missile hex by hex
 // over a saved screen patch, apply wall and luck modifiers, report the
-// damage; creature 14 shoots twice.
+// damage; elves shoot twice.
 #define launchY y1               // frame-slot spelling
 #define landPosY y2              // frame-slot spelling
 #define archerColumn srcCol      // frame-slot spelling
@@ -1072,9 +1072,10 @@ void army::DirDoAttack(H1_ENUM_PARAM(CombatHexDirection, i16) direction) {
     DoAttack(false);
 }
 
-// A melee strike in m_attackDirection: breath attackers (attribute 8) also
-// hit the hex behind, some creatures cast on the target, the target
-// retaliates once, and creatures 5 and 8 strike twice.
+// A melee strike in m_attackDirection: breath attackers
+// (MONSTER_FLAGS_BREATH_ATTACK) also hit the hex behind, some creatures cast
+// on the target, the target retaliates once, and paladins and wolves strike
+// twice.
 VA(0x00415c4d, 0x1092)
 void army::DoAttack(b32 retaliation) {
     i32 ignored;
@@ -1600,7 +1601,8 @@ void army::DamageEnemy(
 }
 #undef genieDamage
 
-// A stack whose spell (2) breaks on damage loses it.
+// A stack whose spell ends on damage (ARMY_CANCEL_SPELLS_AFTER_DAMAGE) loses
+// it.
 VA(0x00417391, 0x160)
 i32 army::Damage(i32 damage) {
     H1_ENUM_LOCAL(ArmyFacing, i8) oldFacing;
@@ -1799,8 +1801,8 @@ void army::SpellEffect(H1_ENUM_PARAM(CombatEffectAnimation, i16) effect, i32 fra
     m_effectAnimation = COMBAT_EFFECT_NONE;
 }
 
-// Slow (and the other speed spells) restore the base speed and flight;
-// effect 9 gave three defense.
+// Haste, slow, blind, bless and curse restore the base speed, flight and
+// random damage; protection takes back its defense bonus.
 VA(0x00417eaf, 0x9a)
 void army::CancelSpell(void) {
     switch (m_spellEffect) {

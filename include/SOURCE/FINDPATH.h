@@ -29,7 +29,7 @@ H1_ENUM_CONST_END(FindPathTerrainConstant)
 i32 CalcTerrainCost(i32 terrain, i32 diagonal, i32 mobility, i32 heroClass);
 // clang-format on
 i16 TerrainStepCost(H1_ENUM_PARAM(TerrainType, i8) terrain, i8 diagonal);
-// FindNearestObject seeds this word limit; PushPoint marks costlier nodes.
+// FindNearestObject seeds this mobility limit; PushPoint marks costlier nodes.
 extern i16 gCurTempMobility;
 
 #endif

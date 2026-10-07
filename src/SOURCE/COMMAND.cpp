@@ -114,7 +114,7 @@ i8 combatManager::ValidHexToStandOn(i32 hex) {
         return 0;
 }
 
-// Reads the global adjacency table and keeps the 24-sector map as bytes.
+// Reads the global adjacency table.
 VA(0x0041d783, 0x704)
 void combatManager::SetCombatDirections(i32 targetHex) {
     H1_ENUM_ARRAY(i32, directionHexes, CombatHexDirection, COMBAT_DIRECTION_COUNT);
@@ -432,8 +432,8 @@ void combatManager::CheckSetMouseDirection(i32 mouseX, i32 mouseY, i32 targetHex
 }
 #undef sector
 
-// The sole caller passes one command; command 13 maps to pointer 5 and all
-// others pass through.
+// The sole caller passes one command; the opposing-options command
+// maps to the view pointer and all others pass through.
 VA(0x0041e3eb, 0x1d)
 H1_ENUM_RETURN(CombatPointerCode, i32)
 combatManager::GetPointer(H1_ENUM_PARAM(CombatMessageCommand, i32) command) {
@@ -443,8 +443,8 @@ combatManager::GetPointer(H1_ENUM_PARAM(CombatMessageCommand, i32) command) {
         return H1_ENUM_CAST(CombatPointerCode, i32, command);
 }
 
-// Hovers the combat field as widget 0x40 and handles F1, space, H, T and C
-// keys.
+// Hovers the combat field (COMBAT_CONTROL_FIELD) and handles the F2, space,
+// H, T and C keys.
 VA(0x0041e408, 0x4f8)
 H1_ENUM_RETURN(MessageDispatchResult, i32) combatManager::ProcessCombatMsg(struct tag_message& message) {
     i16 mouseX = message.x;
@@ -614,8 +614,7 @@ void combatManager::ResetRound(void) {
     m_currentSpeed = CREATURE_SPEED_BLAZING;
 }
 
-// Returns the byte flag and names the winning side directly (-1 for a
-// draw).
+// Ends combat and records m_combatResult (COMBAT_RESULT_DRAW for a draw).
 VA(0x0041ea22, 0x123)
 i32 combatManager::CheckWin(struct tag_message* message) {
     i32 pos;
@@ -647,8 +646,8 @@ i32 combatManager::CheckWin(struct tag_message* message) {
     return combatEnded;
 }
 
-// Returns each command directly and clears the target through the current
-// stack.
+// Classifies the hovered hex as a command; clears the current stack's
+// target first.
 #define enemyIndex indexNum // frame-slot spelling
 VA(0x0041eb45, 0x269)
 H1_ENUM_RETURN(CombatMessageCommand, i8) combatManager::GetCommand(i16 hex) {
@@ -729,7 +728,8 @@ H1_ENUM_RETURN(CombatMessageCommand, i8) combatManager::GetCommand(i16 hex) {
 }
 #undef enemyIndex
 
-// The hero hexes are 26 and 9; the army view also takes the side.
+// The hero hexes are COMBAT_DEFENDER_HERO_HEX and COMBAT_ATTACKER_HERO_HEX;
+// the army view also takes the side.
 VA(0x0041edae, 0x171)
 i8 combatManager::RightClick(i8 hex) {
     i8 col = hex % COMBAT_GRID_COLUMNS;
@@ -777,7 +777,7 @@ i8 combatManager::RightClick(i8 hex) {
     return 0;
 }
 
-// Views the army at the selected hex on the current side.
+// Turns the hovered command into the next combat action or opens its view.
 VA(0x0041ef1f, 0x2ea)
 void combatManager::DoCommand(H1_ENUM_PARAM(CombatMessageCommand, i8) command) {
     i32 unusedValue1Value;

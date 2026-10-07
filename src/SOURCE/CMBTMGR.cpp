@@ -259,10 +259,6 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) combatManager::Open(i16 priority) {
     return BASE_MANAGER_SUCCESS;
 }
 
-// CMBTMGR owns retail .data 0x004a2878-0x00491057. The backdrop table is
-// GetBackgroundName's local static: /Gi emits it after Open's literals,
-// followed by its own.
-
 // A wandering-monster cell keeps the surviving count of the side that held
 // it.
 #define i ii // frame-slot spelling
@@ -531,7 +527,7 @@ char* combatManager::GetBackgroundName(void) {
     return gCombatBkgNames[COMBAT_BACKGROUND_GRASS_FOREST];
 }
 
-// MoreTreesNear: tree (9) against mountain (8) objects within two cells of
+// MoreTreesNear: tree (TILESET_TREE32) against mountain (TILESET_MTN32) objects within two cells of
 // the battle.
 #define radius pass // frame-slot spelling
 VA(0x0041a123, 0x1d5)
@@ -632,7 +628,8 @@ void combatManager::FreeIcons(void) {
     gResourceManager->Dispose(m_backgroundBitmap);
 }
 
-// LoadArmies places stacks itself after Init.
+// Builds each side's combat stacks from its army group and loads their
+// resources.
 VA(0x0041a528, 0x25f)
 void combatManager::LoadArmies(void) {
     H1_ENUM_LOCAL(CombatSide, i16) j;
@@ -1363,7 +1360,7 @@ void combatManager::KeepAttack(void) {
     gMouseManager->ReallyShowPointer();
 }
 
-// ExperienceValueOfStack: fight value of the side's losses, plus 500 for a
+// ExperienceValueOfStack: hit points of the side's losses, plus 500 for a
 // defeated hero.
 VA(0x0041c6b4, 0xec)
 i32 combatManager::ExperienceValueOfStack(H1_ENUM_PARAM(CombatSide, i8) side) {
