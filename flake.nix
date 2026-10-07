@@ -74,44 +74,30 @@
         # reports would be noise; the build sandbox also blocks LeakSanitizer.
         preCheck = "export ASAN_OPTIONS=detect_leaks=0";
       });
-      # The installable game: `heroes` and `heroes-editor` on the native
+      # The installable game: `heroes-te` and `heroes-te-editor` on the native
       # programs, with the player's game data laid out in the store when
       # `game` is given (nix/game.nix; README, "Install with a NixOS flake").
-      # On port-te the programs are the Tournament Edition; its saved games
-      # live in their own per-user folder (homm1-te) and its settings in their
-      # own files (heroes-te-LANG.cfg), apart from the plain game's.
+      # On port-te the programs are the Tournament Edition; its launchers,
+      # desktop entries and icons carry `-te`, its saved games live in their
+      # own per-user folder (homm1-te) and its settings in their own files
+      # (heroes-te-LANG.cfg), so it installs beside the port's game.
       game = pkgs.lib.makeOverridable (import ./nix/game.nix {
         inherit pkgs native;
         runner = ./play.py;
       }) { stateName = "homm1-te"; edition = "te"; };
-      # The game as a NixOS or home-manager option set. `edition` picks the
-      # programs: this branch (port-te) builds the Tournament Edition; the
-      # Buka edition's programs are the port branch's flake.
-      editions = system: {
-        te = self.packages.${system}.default;
-        buka = throw ''
-          programs.homm1.edition = "buka": this flake (port-te) builds the Tournament
-          Edition; take the Buka edition from the port branch's flake.'';
-      };
+      # The game as a NixOS or home-manager option set, programs.homm1-te: the
+      # port branch's flake declares programs.homm1 for the Buka edition, and
+      # one system can import both modules.
       module = target: { config, lib, pkgs, ... }:
         let
-          cfg = config.programs.homm1;
+          cfg = config.programs.homm1-te;
           package = cfg.package.override {
             inherit (cfg) game locale;
             editor = cfg.editor.enable;
           };
         in {
-          options.programs.homm1 = {
-            enable = lib.mkEnableOption "Heroes of Might and Magic (native port)";
-            edition = lib.mkOption {
-              type = lib.types.enum [ "buka" "te" ];
-              default = "te";
-              description = ''
-                The edition to install: te (the Tournament Edition, this branch's
-                game and editor) or buka (the Buka 2003 edition, from the port
-                branch's flake).
-              '';
-            };
+          options.programs.homm1-te = {
+            enable = lib.mkEnableOption "Heroes of Might and Magic, Tournament Edition (native port)";
             game = lib.mkOption {
               type = lib.types.nullOr lib.types.path;
               default = null;
@@ -132,12 +118,12 @@
             editor.enable = lib.mkOption {
               type = lib.types.bool;
               default = true;
-              description = "Whether to install the scenario editor (heroes-editor).";
+              description = "Whether to install the scenario editor (heroes-te-editor).";
             };
             package = lib.mkOption {
               type = lib.types.package;
-              default = (editions pkgs.stdenv.hostPlatform.system).${cfg.edition};
-              defaultText = lib.literalMD "the package of `edition`";
+              default = self.packages.${pkgs.stdenv.hostPlatform.system}.default;
+              defaultText = lib.literalMD "this flake's `packages.<system>.default`";
               description = "The game package; the options above are applied to it with `override`.";
             };
           };
@@ -163,16 +149,16 @@
     in {
       apps.${system} = {
         inherit play editor;
-        default = self.apps.${system}.heroes;
-        heroes = {
+        default = self.apps.${system}.heroes-te;
+        heroes-te = {
           type = "app";
-          program = "${game}/bin/heroes";
-          meta.description = "The native game; HOMM1_GAME=PATH (your Buka 2003 game) on first run";
+          program = "${game}/bin/heroes-te";
+          meta.description = "The native Tournament Edition; HOMM1_GAME=PATH (your Buka 2003 game) on first run";
         };
-        heroes-editor = {
+        heroes-te-editor = {
           type = "app";
-          program = "${game}/bin/heroes-editor";
-          meta.description = "The native scenario editor; HOMM1_GAME=PATH on first run";
+          program = "${game}/bin/heroes-te-editor";
+          meta.description = "The Tournament Edition's native scenario editor; HOMM1_GAME=PATH on first run";
         };
         native = {
           type = "app";

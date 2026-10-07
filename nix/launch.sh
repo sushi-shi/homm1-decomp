@@ -1,4 +1,5 @@
-# The `heroes` and `heroes-editor` launchers (nix/game.nix). Embedded by
+# The `heroes` and `heroes-editor` launchers (`heroes-te` and
+# `heroes-te-editor` for the Tournament Edition; nix/game.nix). Embedded by
 # writeShellApplication, which sets program (the native executable), title,
 # store_data (the game data laid out in the store at install time, or empty),
 # importer (nix/game-data.py) and state_name (the per-user folder's name).

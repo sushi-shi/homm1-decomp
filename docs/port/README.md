@@ -41,7 +41,7 @@ The presets (`CMakePresets.json`) are `linux`, `wasm` (configured with
 
 `nix run .#native` and `nix run .#native-editor` build and run them from the
 flake (pass `-- --data DIR`). To install them with your game data as
-`heroes` and `heroes-editor`, with a NixOS or home-manager module, see
+`heroes-te` and `heroes-te-editor`, with a NixOS or home-manager module, see
 [Install with a NixOS flake](../../README.md#install-with-a-nixos-flake);
 the launchers and the data import are `nix/game.nix`, `nix/launch.sh` and
 `nix/game-data.py`.
@@ -459,7 +459,7 @@ see the tick count wrap).
 ## Installing with Nix
 
 The installable package (`packages.x86_64-linux.default`, `nix/game.nix`)
-puts `heroes` and `heroes-editor` launchers (`nix/launch.sh`) on the native
+puts `heroes-te` and `heroes-te-editor` launchers (`nix/launch.sh`) on the native
 programs, with the menu entries and the icons of your copy's programs. Its
 `game` may be the CD image, the CD's files, an installed game folder or a
 `.zip`/`.7z`/`.rar` of one, or a folder holding only the image (`game =
@@ -468,17 +468,20 @@ SHA-256, the other files by name and size), unpacks the CD's installer when
 it is a CD and lays the game out in the store; nothing is fetched from a
 binary cache. Without `game` the programs are installed alone, and the first
 start imports your copy from `HOMM1_GAME` into
-`$XDG_DATA_HOME/homm1/data` (`~/.local/share/homm1/data`).
+`$XDG_DATA_HOME/homm1-te/data` (`~/.local/share/homm1-te/data`).
 
-The programs run on `$XDG_DATA_HOME/homm1/game`, where `ANIM`, `SOUND`,
+The programs run on `$XDG_DATA_HOME/homm1-te/game`, where `ANIM`, `SOUND`,
 `HELP` and the resource archive are links into the data, and the files the
 programs write (saved games in `GAMES`, maps in `MAPS`, high scores and the
 network save in `DATA`) are copied from it once and never overwritten or
 brought back after being deleted. `--data DIR` or `HOMM1_DATA` bypasses the
 launcher's folder and runs on `DIR` as it is. The package overrides as
 `.override { game = ...; locale = "en"; editor = false; }`; the module's
-options (`programs.homm1.game`, `.locale`, `.editor.enable`, `.package`) do
-the same.
+options (`programs.homm1-te.game`, `.locale`, `.editor.enable`, `.package`) do
+the same. The launchers, menu entries, icons, per-user folder and module
+options all carry `-te`, apart from the port branch's (`heroes`,
+`heroes-editor`, `homm1`, `programs.homm1`), so both editions install side by
+side.
 
 ## The Visual C++ 6 build
 

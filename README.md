@@ -45,7 +45,7 @@ On x86_64 Linux with Nix flakes enabled:
 
 ```sh
 HOMM1_GAME=/path/to/heroes.iso nix run github:sushi-shi/homm1-decomp/port-te
-nix run github:sushi-shi/homm1-decomp/port-te#heroes-editor     # the scenario editor
+nix run github:sushi-shi/homm1-decomp/port-te#heroes-te-editor  # the scenario editor
 ```
 
 Supply your own copy of the Buka 2003 edition: its CD image, the CD's files
@@ -79,7 +79,7 @@ Pass the game's options after `--`, for example
 | `--data DIR` | Run on an existing game folder as it is |
 
 `HOMM1_DATA` does what `--data` does, `HOMM1_CD` names a folder with the CD's
-music tracks and `HOMM1_CONFIG` another settings folder. `heroes --help`
+music tracks and `HOMM1_CONFIG` another settings folder. `heroes-te --help`
 lists the options.
 
 ## Install with a NixOS flake
@@ -88,7 +88,7 @@ Add the port and a local folder holding your copy of the game to your flake
 inputs:
 
 ```nix
-inputs.homm1.url = "github:sushi-shi/homm1-decomp/port-te";
+inputs.homm1-te.url = "github:sushi-shi/homm1-decomp/port-te";
 inputs.homm1-game = {
   url = "path:/path/to/folder-with-the-iso";
   flake = false;
@@ -98,15 +98,14 @@ inputs.homm1-game = {
 Import the module and name your copy:
 
 ```nix
-outputs = { nixpkgs, homm1, homm1-game, ... }: {
+outputs = { nixpkgs, homm1-te, homm1-game, ... }: {
   nixosConfigurations."<host>" = nixpkgs.lib.nixosSystem {
     modules = [
       ./configuration.nix
-      homm1.nixosModules.default
+      homm1-te.nixosModules.default
       {
-        programs.homm1 = {
+        programs.homm1-te = {
           enable = true;
-          edition = "te";                      # the default on this branch
           game = "${homm1-game}/heroes.iso";   # your image's file name
         };
       }
@@ -121,15 +120,16 @@ then launch:
 
 ```sh
 sudo nixos-rebuild switch --flake '.#<host>'
-heroes             # the game
-heroes-editor      # the scenario editor
+heroes-te          # the game
+heroes-te-editor   # the scenario editor
 ```
 
 
-`programs.homm1.edition` is `"te"` on this branch; `"buka"` is the port
-branch's flake, which builds the Buka edition. `programs.homm1.locale = "en"`
-builds the programs with English text and menus, and
-`programs.homm1.editor.enable = false` leaves the editor out;
+The module's options are `programs.homm1-te`, and its launchers, menu entries
+and icons carry `-te`, so the port branch's flake (`programs.homm1`, `heroes`
+and `heroes-editor`, the Buka edition) installs beside it.
+`programs.homm1-te.locale = "en"` builds the programs with English text and
+menus, and `programs.homm1-te.editor.enable = false` leaves the editor out;
 [more about the install](docs/te/README.md#installing-it-with-the-flake).
 
 ## Controls
