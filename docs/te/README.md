@@ -200,6 +200,17 @@ grows only while below 100, by at most 10. `game_regressions_test` and
 (not the recruit window, the generator, ground painting or the scroll
 knob, which need their screens).
 
+The `BUG-*` rows of the 2026-10-07 review (the computer's reads, the
+adventure screens, files and text, network and modem, the engine and the
+editor; catalogue section 9) are replayed the same way. Where the port
+already corrects a defect in its shared units (most of the out-of-bounds
+reads, the text layout, the high score and map list reads, the save and
+network decoders), source-te took the port's form and port-te keeps it.
+The tests add the first player's ultimate artifact hint, the "built
+today" flags of town 35, the obelisk value without obelisks and a
+full-width bitmap copy (`game_regressions_test`), and a map that cannot
+be opened and the knobs' drag range (`editor_regressions_test`).
+
 Where a port fix and one of these meet, the edition's form keeps the port's
 guard: `BuildPath` keeps its bounds check and emptied route, the skeleton
 pays through `GiveRandomArtifact` in place of the port's folded test (which
