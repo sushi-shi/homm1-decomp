@@ -529,6 +529,11 @@ void editManager::PlaceObstacleChains(i32 density, i32 tileset) {
         while (going) {
             if (PlaceChainLink(&rootX, &rootY, direction, tileset, treeFamily)) {
                 placed += 12;
+                // The original tested direction % 1, always 0, so every chain
+                // used the low stop chance. The two chances are taken to
+                // alternate between steep (even, *_STEEP) and shallow
+                // directions, as ChainDirection orders them; that reading is
+                // inferred from the order, not proven.
                 if (tileset == TILESET_TREE32) {
                     if (Random(1, 100) < (direction % 2 ? 30 : 10))
                         going = false;

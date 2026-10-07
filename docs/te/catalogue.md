@@ -967,6 +967,9 @@ balance or the computer's weights were left as they are.
   hero's id, and a second click on the selected stack in the swap window.
   BUG-TWN-1 (crystal ranked with the rare resources in the Thieves' Guild)
   is reverted: the retail grouping, "Wood, Crystal & Ore", was intended.
+  The port's "weekly monster growth" row is not a defect: `game::PerWeek`
+  grows a site's stock only below 100 and by at most 10, so the byte never
+  exceeds 109.
 - *Platform (BUG-PLT-1):* the full-screen flag left set when DirectDraw
   cannot start.
 - *Files and text (BUG-FIL-1–5):* the high score tables' reads and scenario
@@ -979,12 +982,17 @@ balance or the computer's weights were left as they are.
   unchecked save segments.
 - *Engine (BUG-ENG-1–5):* text layout that hung on a line break or a word
   wider than its line, a text field's scroll-back, an unknown resource id,
-  full-width bitmap copies, and a tile index equal to the count. The port's "weekly monster
-  growth" row is not a defect: `game::PerWeek` grows a site's stock only
-  below 100 and by at most 10, so the byte never exceeds 109.
+  full-width bitmap copies, and a tile index equal to the count.
 - *Random map generator (BUG-GEN-1–6):* region ranking, region bounds,
   diagonal chain lengths, roads between castles, desert stone liths, and a
-  castle without a site.
+  castle without a site. GEN-3's `direction % 2` assumes the two stop
+  chances alternate between steep and shallow directions, as the
+  `ChainDirection` order suggests; it is not proven.
+
+Reviewed and kept by the user, without a code change: BUG-AI-1, AI-2, AI-3,
+AI-5, AI-6, CMB-2, ADV-1, GEN-1, GEN-3 and GEN-4 (they change the computer's
+choices, a capped stat, the skeleton's payment or random maps, but are
+kept as fixes).
 - *Editor (BUG-EDT-1–12):* the mine records' empty test, the vertical scroll
   knob, ground painting's redraw, the extra records of erased towns and
   heroes, the radar's screen update, blending at the map's edges, a mine in
@@ -996,8 +1004,32 @@ The computer's auto-resolved defeat as attacker (the winner's effects on the
 attacker, the defender's own experience) is the edition's TE-FIX-4, and bad
 luck at luck -1 its X11 (`SRandom(1, 12) <= -luck`).
 
-Kept as designed:
+Kept as retail (possible design). These behave as in the original game;
+changing them would change rules, odds, the computer's weights or the maps:
 
 - *Morale chances.* Good morale gives an extra action with chance
   morale/24 (`SRandom(1, 24)`), bad morale loses one with chance -morale/12
   (`SRandom(1, 12)`, `combatManager`): the asymmetry stays.
+- *Dwarf magic resistance:* 1 in 5 against the Cyclops' paralysis and
+  single-target spells, 1 in 4 against the Unicorn's blinding and area
+  spells.
+- *Berserk fliers:* `Random(1, 43)` never draws the start hexes 0 and 44,
+  and a flier can draw its own hex and lose its turn.
+- *Experience beyond the level table:* at an exact threshold `GetLevel`
+  gives one level less (the display compensates, TE-QOL-7).
+- *The computer's creature purchase:* `ValueOfBuyingCreature` applies the
+  dragon-breath penalty twice.
+- *Battlefields of monster fights:* `DoCombat` ignores its setup
+  coordinates; obstacles and the seed come from the hero's cell.
+- *Artifacts of a defeated hero:* `TransferArtifacts` lets a destroyed
+  ultimate artifact use up a free slot, so the winner takes one fewer.
+- *Random heroes' armies:* the third stack row (pikemen, wolves, elves,
+  griffins) is never given out.
+- *Teleport animation:* `TeleportTo` computes a faster fizzle (128 ms, 64 ms
+  for the computer) but plays the default 150 ms.
+- *Right clicks on text and icon widgets* arrive as left clicks (a right
+  click in the file list selects the file).
+- *Editor:* the terrain blend's north-east test reads the south-east cell;
+  objects of tileset obj32-00 count as no object; the artifact limit uses
+  `>` (33) where towns and mines use `>=`; Escape keeps a dialog's edits;
+  right-drag water painting cannot run.
