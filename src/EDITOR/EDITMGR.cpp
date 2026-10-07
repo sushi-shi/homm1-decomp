@@ -9568,7 +9568,7 @@ void editManager::DrawRadar(b32) {
         ICON_DRAW_OFFSET_FULL
     );
     gResourceManager->Dispose(buttonsIcon);
-    gWindowManager->UpdateScreenRegion(RADAR_TOP, RADAR_LEFT, RADAR_SIZE, RADAR_SIZE);
+    gWindowManager->UpdateScreenRegion(RADAR_LEFT, RADAR_TOP, RADAR_SIZE, RADAR_SIZE);
     UpdateKnobs(1);
     UpdateCursor();
 }
@@ -9750,6 +9750,8 @@ void editManager::Scroll(i16 dx, i16 dy) {
     DrawRadar(true);
 }
 
+// The knobs' tracks span EDIT_KNOB_FIRST to EDIT_KNOB_LAST, the first view
+// origin to the last.
 void editManager::UpdateKnobs(i16 update) {
     double scaleX;
     double scaleY;
@@ -9757,11 +9759,11 @@ void editManager::UpdateKnobs(i16 update) {
     i16 yPos;
 
     scaleX =
-        402.0
-        / (m_zoomedOut ? EDIT_VIEW_ZOOMED_ORIGINS : EDIT_VIEW_ORIGINS);
+        static_cast<double>(EDIT_KNOB_LAST - EDIT_KNOB_FIRST)
+        / ((m_zoomedOut ? EDIT_VIEW_ZOOMED_ORIGINS : EDIT_VIEW_ORIGINS) - 1);
     scaleY =
-        402.0
-        / (m_zoomedOut ? EDIT_VIEW_ZOOMED_ORIGINS : EDIT_VIEW_ORIGINS);
+        static_cast<double>(EDIT_KNOB_LAST - EDIT_KNOB_FIRST)
+        / ((m_zoomedOut ? EDIT_VIEW_ZOOMED_ORIGINS : EDIT_VIEW_ORIGINS) - 1);
     xPos = m_viewX * scaleX;
     yPos = m_viewY * scaleY;
     m_horizontalKnob->m_x = xPos + EDIT_KNOB_FIRST;
@@ -9863,11 +9865,11 @@ void editManager::BlendTerrain(
                     north = 1;
                 else
                     surrounding = CELL_TERRAIN(&m_map.cells[x][y - 1]);
-                if (y == MAP_CELL_GRID_SIZE || CELL_TERRAIN(&m_map.cells[x][y + 1]) == terrain)
+                if (y == MAP_CELL_GRID_SIZE - 1 || CELL_TERRAIN(&m_map.cells[x][y + 1]) == terrain)
                     south = 1;
                 else
                     surrounding = CELL_TERRAIN(&m_map.cells[x][y + 1]);
-                if (x == MAP_CELL_GRID_SIZE || CELL_TERRAIN(&m_map.cells[x + 1][y]) == terrain)
+                if (x == MAP_CELL_GRID_SIZE - 1 || CELL_TERRAIN(&m_map.cells[x + 1][y]) == terrain)
                     east = 1;
                 else
                     surrounding = CELL_TERRAIN(&m_map.cells[x + 1][y]);
@@ -9888,20 +9890,22 @@ void editManager::BlendTerrain(
                     nw = 1;
                 else
                     surrounding = CELL_TERRAIN(&m_map.cells[x - 1][y - 1]);
-                if (x == 0 || y == MAP_CELL_GRID_SIZE
+                if (x == 0 || y == MAP_CELL_GRID_SIZE - 1
                     || CELL_TERRAIN(&m_map.cells[x - 1][y + 1]) == terrain)
                     sw = 1;
                 else
                     surrounding = CELL_TERRAIN(&m_map.cells[x - 1][y + 1]);
-                if (x == MAP_CELL_GRID_SIZE || y == MAP_CELL_GRID_SIZE
+                if (x == MAP_CELL_GRID_SIZE - 1 || y == MAP_CELL_GRID_SIZE - 1
                     || CELL_TERRAIN(&m_map.cells[x + 1][y + 1]) == terrain)
                     se = 1;
                 else
                     surrounding = CELL_TERRAIN(&m_map.cells[x + 1][y + 1]);
-                if (x == MAP_CELL_GRID_SIZE || y == 0
+                if (x == MAP_CELL_GRID_SIZE - 1 || y == 0
                     || CELL_TERRAIN(&m_map.cells[x + 1][y - 1]) == terrain)
                     ne = 1;
-                else
+                else if (y < MAP_CELL_GRID_SIZE - 1)
+                    // The north-east test takes the south-east cell's
+                    // terrain; on the bottom row there is none.
                     surrounding = CELL_TERRAIN(&m_map.cells[x + 1][y + 1]);
                 if (!((north && ne && east) || (north && nw && west) || (south && se && east)
                       || (south && sw && west))
@@ -10118,8 +10122,8 @@ void editManager::DoHorizontalKnob(void) {
 
     gMouseManager->SetCursorShape(EDIT_CURSOR_HORIZONTAL_DRAG);
     scale =
-        402.0
-        / (m_zoomedOut ? EDIT_VIEW_ZOOMED_ORIGINS : EDIT_VIEW_ORIGINS);
+        static_cast<double>(EDIT_KNOB_LAST - EDIT_KNOB_FIRST)
+        / ((m_zoomedOut ? EDIT_VIEW_ZOOMED_ORIGINS : EDIT_VIEW_ORIGINS) - 1);
     gMouseManager->MouseCoords(x, y);
     gInputManager->Flush();
     message.type = MESSAGE_MOUSE_MOVE;
@@ -10175,8 +10179,8 @@ void editManager::DoVerticalKnob(void) {
 
     gMouseManager->SetCursorShape(EDIT_CURSOR_VERTICAL_DRAG);
     scale =
-        402.0
-        / (m_zoomedOut ? EDIT_VIEW_ZOOMED_ORIGINS : EDIT_VIEW_ORIGINS);
+        static_cast<double>(EDIT_KNOB_LAST - EDIT_KNOB_FIRST)
+        / ((m_zoomedOut ? EDIT_VIEW_ZOOMED_ORIGINS : EDIT_VIEW_ORIGINS) - 1);
     gMouseManager->MouseCoords(x, y);
     gInputManager->Flush();
     message.type = MESSAGE_MOUSE_MOVE;
@@ -10730,8 +10734,10 @@ void editManager::WriteMines(i32 file) {
                 if (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_MINE)) {
                     type = EDIT_MAP_RANDOM_MINE_TYPE;
                 } else {
-                    markerCell = &m_map.cells[x + 1][y];
-                    if (markerCell->m_flags & MAP_CELL_OBJECT_EXTRA)
+                    // The resource marker is the cell east of the entrance;
+                    // a site in the last column has none.
+                    markerCell = x + 1 < MAP_CELL_GRID_SIZE ? &m_map.cells[x + 1][y] : NULL;
+                    if (markerCell && (markerCell->m_flags & MAP_CELL_OBJECT_EXTRA))
                         type =
                             markerCell->m_extraFrame + RESOURCE_ORE;
                     else if (cell->m_objectIndex == EDIT_SAWMILL_FRAME)
@@ -10809,8 +10815,10 @@ i16 editManager::SaveMap(char* name) {
     FreeUnusedExtras();
     sprintf(fileName, ".\\maps\\%s", name);
     handle = open(fileName, O_WRONLY | O_CREAT | O_TRUNC | O_BINARY, S_IWRITE);
-    if (handle == -1)
+    if (handle == -1) {
+        gMouseManager->SetPointer(EDIT_POINTER_DEFAULT);
         return BASE_MANAGER_ERROR;
+    }
     data = MAP_HEADER_ID;
     WRITE_FILE_VALUE(handle, data);
     if (gNewMapFormat) {
@@ -10863,11 +10871,12 @@ i16 editManager::LoadMap(char* name) {
     i16 headerId;
     i16 height;
 
-    FreeMapExtras();
     sprintf(fileName, ".\\maps\\%s", name);
     handle = open(fileName, O_BINARY);
     if (handle == -1)
         return BASE_MANAGER_ERROR;
+    // The open map keeps its records until the new one is read.
+    FreeMapExtras();
     READ_FILE_VALUE(handle, headerId);
     if (headerId == MAP_HEADER_ID) {
         EDIT_MAP_HEADER()->id = headerId;
@@ -10896,6 +10905,11 @@ i16 editManager::LoadMap(char* name) {
     read(handle, ignored, sizeof(m_mapSounds));
     if (headerId == EDIT_MAP_VERSION) {
         READ_FILE_VALUE(handle, m_extraCount);
+        if (m_extraCount < MAP_EXTRA_FIRST_RECORD || m_extraCount > MAP_EXTRA_RECORD_CAPACITY) {
+            m_extraCount = MAP_EXTRA_FIRST_RECORD;
+            close(handle);
+            FileError(fileName);
+        }
         for (i = MAP_EXTRA_FIRST_RECORD; i < m_extraCount; i++) {
             READ_FILE_VALUE(handle, m_extraSizes[i]);
             m_extras[i] = malloc(m_extraSizes[i]);

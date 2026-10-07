@@ -869,10 +869,13 @@ void editManager::PlaceTowns(void) {
                 }
             }
         }
+        // When every site in the region rates 0 or less (crowded by the
+        // castles already placed) there is no site: this attempt ends, and
+        // without all its castles the generator tries again.
+        if (top <= 0)
+            return;
         tileX = keeps[c].x;
         tileY = keeps[c].y;
-        if (top < 0)
-            ShutDown(localization::Tr("editor.random.castles.failed"));
         terrain = m_map.cells[tileX][tileY].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN;
         gEditManager->ClearArea(
             tileX - RANDOM_MAP_SITE_LEFT,

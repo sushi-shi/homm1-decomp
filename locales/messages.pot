@@ -462,6 +462,10 @@ msgid "editor.events.cell.unavailable"
 msgstr ""
 
 #: src/EDITOR/EVENTMGR.cpp
+msgid "editor.events.hero.old_editor"
+msgstr ""
+
+#: src/EDITOR/EVENTMGR.cpp
 msgid "editor.events.hero.troop_type.range"
 msgstr ""
 
@@ -596,10 +600,6 @@ msgstr ""
 
 #: src/EDITOR/EDITMGR.cpp
 msgid "editor.quit.confirm"
-msgstr ""
-
-#: src/EDITOR/MAPOBJ.cpp
-msgid "editor.random.castles.failed"
 msgstr ""
 
 #: src/EDITOR/MAPOBJ.cpp

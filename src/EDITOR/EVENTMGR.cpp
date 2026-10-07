@@ -670,6 +670,12 @@ void eventsManager::EditHero(i16 x, i16 y) {
     i32 unusedResult;
 
     gEditCell = &gEditManager->m_map.cells[x][y];
+    // A hero without a record (placed by the old editor, or uncovered from
+    // under another object) has nothing to edit.
+    if (gEditCell->m_objectMetadata == 0) {
+        NormalDialog(localization::Tr("editor.events.hero.old_editor"), NORMAL_DIALOG_TYPE_OK);
+        return;
+    }
     saved = *gEditCell;
     gHeroEdit = *static_cast<editHeroExtra*>(gEditManager->m_extras[gEditCell->m_objectMetadata]);
     gEditDialog = new heroWindow(EVENTS_DIALOG_X, EVENTS_DIALOG_Y, "heroedit.bin");
@@ -1179,7 +1185,9 @@ void BalanceTerrainPercents(i32 changedTerrain) {
     i32 i;
     double landTotal;
 
-    remaining = 100.0 - gTerrainPercent[changedTerrain];
+    // Called with TERRAIN_INVALID (-1) when the dialog closes: nothing has
+    // changed then.
+    remaining = 100.0 - (changedTerrain >= 0 ? gTerrainPercent[changedTerrain] : 0.0);
     othersTotal = 0.0;
     landTotal = 0.0;
     for (i = 0; i < EDITOR_TERRAIN_COUNT; i++)
