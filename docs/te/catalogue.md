@@ -959,10 +959,10 @@ section 1, each with the reproduction it was checked against.
   the selected stack in the swap window.
 - *Platform (BUG-PLT-1):* the full-screen flag left set when DirectDraw
   cannot start.
-- *Files and text (BUG-FIL-1–4):* the high score tables' reads and scenario
+- *Files and text (BUG-FIL-1–5):* the high score tables' reads and scenario
   names, names and event texts used as printf formats, the map list's
-  unbounded names and descriptions, and damaged saves without a player to
-  watch.
+  unbounded names and descriptions, damaged saves without a player to
+  watch, and the file list's knob.
 - *Network and modem (BUG-NET-1–6):* the first player's gold in a battle
   hand-off, the recent message ids of an earlier game, a send to a closed
   session, a duplicate identification, the modem string as a format, and
