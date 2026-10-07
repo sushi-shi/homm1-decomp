@@ -95,18 +95,7 @@ extern IDirectDrawSurface* gDDSPrimary;
 extern IDirectDrawSurface* gDDSOne;
 extern IDirectDrawClipper* gClipper;
 extern IDirectDrawPalette* gDDPal;
-extern i16 gDDRestoreLineBase;
-extern i16 gDDSetPaletteLineBase;
-extern i16 gDDInitializePaletteLineBase;
-extern i16 gDDUpdatePaletteLineBase;
-extern i16 gDDCleanUpLineBase;
-extern i16 gCreatePrimaryLineBase;
-extern i16 gSetupClipperLineBase;
-extern i16 gDDInitLineBase;
-extern i16 gDDCreateSurfaceLineBase;
 extern BOOL gInDDSD;
-extern i16 gDDSetFullScreenLineBase;
-extern i16 gDDPaintLineBase;
 extern RECT gDDClientRect;
 extern RECT gDDSourceRect;
 #define gDDDestinationRect gDDDestRect // spelling fixes .bss order

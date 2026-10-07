@@ -543,7 +543,7 @@ i16 game::SaveGame(char* filename, b8 generateName) {
 // origdata.bin restores the default hero names and blank visibility, and
 // the seats are re-dealt to this session's human players.
 VA(0x0042cc73, 0x87f)
-i16 game::LoadGame(char* filename, b32 origData, b32) {
+i16 game::LoadGame(char* filename, b32 origData, b32 remoteGame) {
     i32 junk2;
     i32 numHumans;
     i32 ix;

@@ -133,14 +133,13 @@ struct WindowTextEntry {
 
 extern HMENU gCurrentMenu;
 i32 AppCommand(HWND window, u32 message, u32 messageParam, i32 messageData);
-i32 AppIdle(void);
+BOOL AppIdle(void);
 void AppExit(void);
 void SetGameDefaults(void);
 void ReadPrefs(void);
 H1_ENUM_RETURN(CdSetupResult, i32) SetupCDDrive(void);
-i32 AppInit(HINSTANCE instance, HINSTANCE previousInstance, i32 showCommand, char* commandLine);
-// WNDPROC: LRESULT and LPARAM are the SDK's long.
-long __stdcall AppWndProc(HWND window, u32 message, u32 messageParam, long messageData);
+BOOL AppInit(HINSTANCE instance, HINSTANCE previousInstance, i32 showCommand, char* commandLine);
+LRESULT CALLBACK AppWndProc(HWND window, UINT message, WPARAM messageParam, LPARAM messageData);
 // The About dialog procedure has C linkage (_AppAbout@16).
 extern "C" BOOL __stdcall
 AppAbout(HWND dialog, UINT message, WPARAM messageParam, LPARAM messageData);
@@ -151,7 +150,6 @@ void SetMenuStatus(i32 showMenu);
 void SetWinText(class heroWindow* window, H1_ENUM_PARAM(WindowTextId, i16) id);
 void UpdateDfltMenu(HMENU menu);
 extern i32 gForegroundApp;
-extern i32 gNoDialogMenusOn;
 extern HMENU gAppMenu;
 // KB.cpp owns the per-screen menus and loads them in InitVars.
 extern HMENU gAdventureMenu;
@@ -159,8 +157,6 @@ extern HMENU gDefaultMenu;
 extern HMENU gCombatMenu;
 extern HMENU gTownMenu;
 extern b32 gClosingApp;
-extern i32 gLastGetMessage;
-extern i32 gLastAilServe;
 i32 KBTickCount();
 void Process1WindowsMessage();
 void SetNoDialogMenus(i32 menusEnabled);

@@ -548,7 +548,7 @@ void townManager::SetCommandAndText(struct tag_message& message) {
 }
 
 VA(0x00460770, 0x6b)
-void townManager::ShowText(char*) {
+void townManager::ShowText(char* text) {
     tag_message message;
 
     SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, TOWN_STATUS_TEXT_CONTROL);

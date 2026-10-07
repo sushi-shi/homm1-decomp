@@ -32,7 +32,6 @@ class tileset;
 class town;
 class widget;
 struct RemoteMessage;
-struct SMapChange;
 struct tag_message;
 
 H1_ENUM_CONST_BEGIN(AdventureManagerStorageConstant)
@@ -620,9 +619,6 @@ extern i16 gStepScrollStart[];
 #define gFrameStep giFrameStep // spelling fixes .bss order
 extern i32 gFrameStep;
 
-struct SMapChange {
-    char _pad[64];
-};
 #define gArmySizeName cArmySizeName // spelling fixes .bss order
 extern char gArmySizeName[];
 extern i32 gCurHourGlassPhase;

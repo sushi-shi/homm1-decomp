@@ -4603,9 +4603,6 @@ DATA(0x0049343c)
 i8 gHighScoreRank = -1;
 DATA(0x00493440)
 i32 gHighMemBuffer = 4000;
-#include <SOURCE/combatTypes.h>
-#include <SOURCE/mapCell.h>
-#include <SOURCE/EVENTS.h>
 
 DATA(0x004a9414)
 b32 gHumanPlayer[GAME_PLAYER_COUNT];

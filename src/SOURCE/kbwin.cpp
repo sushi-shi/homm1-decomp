@@ -75,7 +75,7 @@ WinMain(HINSTANCE instance, HINSTANCE previousInstance, char* commandLine, i32 s
     strncpy(gCommandLine, commandLine, KBWIN_COMMAND_LINE_LIMIT);
     if (!EarlySetup())
         return 0;
-    if (AppInit(instance, previousInstance, showCommand, commandLine) == 0)
+    if (!AppInit(instance, previousInstance, showCommand, commandLine))
         return 0;
 
     for (;;) {
@@ -85,7 +85,7 @@ WinMain(HINSTANCE instance, HINSTANCE previousInstance, char* commandLine, i32 s
             TranslateMessage(&message);
             DispatchMessageA(&message);
         } else {
-            if (AppIdle() != 0)
+            if (AppIdle())
                 WaitMessage();
         }
     }
@@ -132,8 +132,7 @@ BOOL AppInit(HINSTANCE instance, HINSTANCE previousInstance, i32 showCommand, ch
             reinterpret_cast<HBRUSH>(COLOR_WINDOW + 1); // Win32 system-color brush encoding.
         appClass.hInstance = instance;
         appClass.style = KBWIN_CLASS_STYLE;
-        appClass.lpfnWndProc =
-            reinterpret_cast<WNDPROC>(AppWndProc); // AppWndProc takes void* handles.
+        appClass.lpfnWndProc = AppWndProc;
         appClass.cbWndExtra = 0;
         appClass.cbClsExtra = 0;
         if (RegisterClassA(&appClass) == 0)
@@ -184,7 +183,7 @@ BOOL AppIdle(void) {
 
 VA(0x00443052, 0x6ad)
 VA_AT(editor, 0x0040cd4e, 0x6c2)
-long __stdcall AppWndProc(HWND window, u32 message, u32 messageParam, long messageData) {
+LRESULT CALLBACK AppWndProc(HWND window, UINT message, WPARAM messageParam, LPARAM messageData) {
     DATA(0x004a9e44)
     static i32 gLastGTimerTickCount = 0;
     DATA(0x004a9e48)

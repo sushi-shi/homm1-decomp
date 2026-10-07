@@ -321,7 +321,7 @@ public:
     }
     void SetArmyCommand(H1_ENUM_PARAM(MessageModifier, i16) qualifier);
     void SetCommandAndText(struct tag_message& message);
-    void ShowText(char*);
+    void ShowText(char* text);
     void DoCommand(H1_ENUM_PARAM(TownArmyCommand, i8) command);
     void RedrawTownScreen(void);
     void SplitArmy(void);
