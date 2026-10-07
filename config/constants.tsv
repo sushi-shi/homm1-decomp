@@ -63,7 +63,6 @@
 *	*	[01]	call-argument	SetNoDialogMenus(* argument 1	SetNoDialogMenus's menus-enabled flag
 *	*	[01]	call-argument	SetEnvironmentOrigin(* argument 3	advManager::SetEnvironmentOrigin's stop-sounds flag
 *	*	[01]	call-argument	FightValueOfStack(* argument [34]	philAI::FightValueOfStack's use-hero / use-town flags
-*	*	*	call-argument	DoCombat(* argument 10	the battle's random seed
 *	*	[01]	call-argument	AddWindow(* argument 3	the window's draw flag (heroWindow::Open forwards it to DrawWindow)
 *	*	[01]	call-argument	ViewArmy(* argument [23]	combatManager::ViewArmy's view flags
 *	*	[01]	call-argument	SetDrawRightToLeft(* argument 1	combatManager::SetDrawRightToLeft's right-to-left draw flag
@@ -128,7 +127,7 @@ src/BASE/WINMGR.cpp	*	*	call-argument	mem*(* argument [12]	a palette entry offse
 *	*	*	arithmetic	operator + KBTickCount()	a delay in milliseconds after the current time (KBTickCount returns GetTickCount)
 src/*	advManager::UpdBottomView*	*	store	store to [xy]	a screen position in pixels
 src/*	DataEntryWindowHandler	*	store	store to [xy]	a screen position in pixels
-src/*	fileRequester::Update	*	store	store to m_[xy]	a screen position in pixels
+src/SOURCE/REQUEST.cpp	fileRequester::Update	2	arithmetic	operator /	the knob's resting place for a short list: the middle of the gutter, half the sum of its ends
 *	*	*	store	store to resWidth	a dialog or bottom-panel column width in pixels
 src/SOURCE/ARMY.cpp	*	[01]	trivial-function-literal	[01] return	a zero/one int result: false/true (VC4 has no bool) or an empty path/count
 src/SOURCE/AI.cpp	*	[01]	trivial-function-literal	[01] return	a zero/one int result: false/true (VC4 has no bool) or an empty path/count
@@ -185,7 +184,6 @@ src/SOURCE/HERO.cpp	hero::CalcMobility	*	*	*	CalcMobility's named mobility amoun
 src/SOURCE/HERO.cpp	hero::GetExperience	*	*	*	the 1.2 growth of experience past the level table
 src/SOURCE/HERO.cpp	hero::GetLevel	*	*	*	the 1.2 growth of experience past the level table
 src/SOURCE/HERO.cpp	hero::CheckLevel	50	store	*	the level-up text buffer size
-src/SOURCE/HERO.cpp	hero::ApplyBattleWinTemps	2	arithmetic	*	the statue's two morale points
 src/SOURCE/AI.cpp	combatManager::AICheckRetreat	*	*	*	AICheckRetreat's float retreat weights and probabilities
 src/SOURCE/AI.cpp	combatManager::DoCompAI	43	comparison-or-bound	*	DoCompAI's nudge only targets hexes 1..43
 src/SOURCE/SEARCH.cpp	*	*	call-argument	PushPoint(* argument *	PushPoint's zero cost seed, occupancy/monster flags and zero value bytes
@@ -234,7 +232,6 @@ src/SOURCE/AI.cpp	*	1	trivial-function-literal	1 store oneBit	a bit mask's first
 src/SOURCE/AI.cpp	*	[12]	*	* frontDelta	a stack's front hex one (two for a wide stack) hexes ahead
 src/SOURCE/HERO.cpp	*	1	trivial-function-literal	1 equality levelCount	a single gained level
 src/SOURCE/HERO.cpp	*	1	trivial-function-literal	1 equality m_heroCount	the player's last hero
-src/SOURCE/DRAWING.cpp	*	1	trivial-function-literal	1 for-init	a loop starting at the first inner column/slot
 src/SOURCE/HERO.cpp	*	-1	trivial-function-literal	-1 store heroNum	no matching hero-list index found
 src/SOURCE/ARMY.cpp	army::DoAttack	1	trivial-function-literal	1 equality	the dwarves' magic-resistance roll outcome
 src/SOURCE/SPELLS.cpp	*	4	arithmetic	operator % SRandom()	the dwarves' magic-resistance roll (one in four)
@@ -394,8 +391,6 @@ src/SOURCE/SPELLS.cpp	*	1	trivial-function-literal	1 store gArmyEffected[[][]]	a
 src/SOURCE/SPELLS.cpp	*	0	trivial-function-literal	0 store m_updateFlags	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/SPELLS.cpp	*	1	trivial-function-literal	1 store m_updateFlags	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/VIEW.cpp	*	0	trivial-function-literal	0 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
-src/SOURCE/VIEW.cpp	*	0	trivial-function-literal	0 equality m_heroCastSpell[[][]]	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
-src/SOURCE/VIEW.cpp	*	0	trivial-function-literal	0 equality m_sideRetreated[[][]]	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
 src/SOURCE/VIEW.cpp	*	0	trivial-function-literal	0 store m_gridUpdateRow	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/comwin.cpp	*	-1	trivial-function-literal	-1 return	the -1 failure / no-result return
 src/SOURCE/comwin.cpp	*	0	trivial-function-literal	0 store ReadTotalTimeoutConstant	a flag, counter or index local/field set to 0 or 1
@@ -406,8 +401,6 @@ src/SOURCE/comwin.cpp	*	0	trivial-function-literal	0 store totalWritten	a flag, 
 src/SOURCE/netwin.cpp	*	1	trivial-function-literal	1 store gNetbiosAvail	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/netwin.cpp	*	1	trivial-function-literal	1 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
 src/SOURCE/netwin.cpp	*	0	trivial-function-literal	0 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
-src/SOURCE/netwin.cpp	*	0	trivial-function-literal	0 equality is_netbios_avail()	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
-src/SOURCE/netwin.cpp	*	0	trivial-function-literal	0 equality gNetbiosAvail	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
 src/SOURCE/netwin.cpp	*	0	trivial-function-literal	0 store gNetStatus[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/netwin.cpp	*	0	trivial-function-literal	0 store gNbShutdown	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/netwin.cpp	*	0	trivial-function-literal	0 equality length	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
@@ -503,8 +496,6 @@ src/SOURCE/TOWNMGR.cpp	*	1	trivial-function-literal	1 store lastArmy	a boolean f
 src/SOURCE/TOWNMGR.cpp	*	1	trivial-function-literal	1 store m_active	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/TOWNMGR.cpp	*	1	trivial-function-literal	1 store m_visible	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/TOWNMGR.cpp	*	1	trivial-function-literal	1 store sameType	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
-src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality AppIdle()	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
-src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality AppInit()	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality RegisterClassA()	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality condition	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality fullScreen	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
@@ -782,8 +773,6 @@ src/SOURCE/TOWNMGR.cpp	*	*	call-argument	heroWindow(i16, i16, i16, i16, i16) arg
 src/SOURCE/TOWNMGR.cpp	townManager::Main	*	arithmetic	operator * width	retail window/screen layout in pixels or frames, or a text/row count of this routine
 src/SOURCE/TOWNMGR.cpp	townManager::Main	*	arithmetic	operator +	retail window/screen layout in pixels or frames, or a text/row count of this routine
 src/SOURCE/TOWNMGR.cpp	*	*	call-argument	CreateBoat(i8, i8) argument *	a geometry, offset, length, text-row or table index argument (pixels, cell offsets, string slots, byte counts)
-src/SOURCE/TOWNMGR.cpp	townManager::Main	*	arithmetic	operator + TOWN_GARRISON_SLOT_FIRST	the n-th control of a widget-id run (FIRST + n) in a case label or range
-src/SOURCE/TOWNMGR.cpp	townManager::Main	*	arithmetic	operator + TOWN_HERO_SLOT_FIRST	the n-th control of a widget-id run (FIRST + n) in a case label or range
 src/SOURCE/TOWNMGR.cpp	*	*	call-argument	DrawIcons(i8) argument *	a flag, mode or selector argument of a HoMM1 routine without a named domain (draw/update/redraw/give-take flags, transfer options, no-exclusion -1)
 src/SOURCE/TOWNMGR.cpp	*	*	call-argument	SaveAndDraw(class bitmap *, i16, i16, i16) argument *	a flag, mode or selector argument of a HoMM1 routine without a named domain (draw/update/redraw/give-take flags, transfer options, no-exclusion -1)
 src/SOURCE/TOWNMGR.cpp	townManager::BuyBuild	*	store	initializer of *	a local buffer extent or a named local id/geometry constant
@@ -927,13 +916,10 @@ src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	*	store	store to statSum	an 
 src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	*	comparison-or-bound	operator <= m_remainingMobility	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::IncrementHourGlass	*	comparison-or-bound	operator < heroCount	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::IncrementHourGlass	*	comparison-or-bound	operator >= m_resources[[][]]	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	*	store	store to m_creatureCounts[[][]]	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	*	store	store to gVisitResult	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	*	arithmetic	operator - m_playerCount	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	*	comparison-or-bound	operator > gVisitResult	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	*	comparison-or-bound	operator > gaiHeroLiveChance[[][]]	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	*	store	store to gCombatWinningFraction	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	*	comparison-or-bound	operator >	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	*	arithmetic	operator -	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	*	comparison-or-bound	operator > m_ultimateArtifactHintChance	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	*	arithmetic	operator - m_ultimateArtifactHintChance	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
@@ -1057,7 +1043,6 @@ src/SOURCE/PHILAI.cpp	philAI::FightValueOfStack	-1	trivial-function-literal	-1 s
 src/SOURCE/PHILAI.cpp	philAI::EvaluateOneTimeCreaturePurchase	0	trivial-function-literal	0 store purchaseValue	a purchase worth nothing
 src/SOURCE/PHILAI.cpp	philAI::EvaluateOneTimeCreaturePurchase	-1	trivial-function-literal	-1 * replacementSlot	no army slot to replace
 src/SOURCE/PHILAI.cpp	philAI::EvaluateOneTimeCreaturePurchase	0	trivial-function-literal	0 equality purchaseCount	nothing to buy
-src/SOURCE/PHILAI.cpp	philAI::EvaluateOneTimeCreaturePurchase	0	trivial-function-literal	0 equality CanJoin()	armyGroup::CanJoin's i8 result: the creature has no slot to join
 src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	0	trivial-function-literal	0 store value	a sum, score or estimate reset to zero before it accumulates
 src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	0	trivial-function-literal	0 store statSum	a sum, score or estimate reset to zero before it accumulates
 src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	0	trivial-function-literal	0 store transferRating	a troop transfer worth nothing
@@ -1079,7 +1064,6 @@ src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	0	trivial-function-literal	
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	0	trivial-function-literal	0 store liveChance	no chance to survive the event
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	0	call-argument	ChooseEvaluateBattle(* argument 7	no artifact on top of the gold reward
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	1.0	call-argument	ChooseEvaluateBattle(* argument 7	a floating-point AI weight: the owner's artifact share plus one
-src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	1	trivial-function-literal	1 conditional	the least distance to another stone lith (whirlpools need more than three cells)
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	200	arithmetic	operator + stayWorth	an AI tuning threshold: the gain a travel gate must beat
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	-9999	store	store to bestExitValue	below every exit's value: the best one found so far
 src/SOURCE/ARMY.cpp	army::DoAttack	0	trivial-function-literal	0 store damageDone	a sum, score or estimate reset to zero before it accumulates
@@ -1131,7 +1115,6 @@ src/EDITOR/EDITOR.cpp	NormalDialog	1	trivial-function-literal	1 store rows	a dia
 src/EDITOR/EDITOR.cpp	IsCDDrive	0	trivial-function-literal	0 array-index gText	the drive letter of the "A:\" root path
 src/EDITOR/EDITOR.cpp	HandleAppSpecificMenuCommands	0	call-argument	PostMessageA(* argument [34]	WM_CLOSE carries no wParam or lParam
 src/EDITOR/EDITOR.cpp	oldmain	0	trivial-function-literal	0 store gMap[XY]	the adventure map origin reset to the map's corner
-src/EDITOR/CLEARMGR.cpp	clearManager::Open	0	call-argument	button(* argument 8	a plain button's select mode (only BUTTON_SELECT_DIALOG_RESULT ends a dialog)
 src/EDITOR/EDITMGR.cpp	editManager::[CR]*Area	0	trivial-function-literal	0 store *	a cleared cell's tilesets, flags, triggers, extra frame, metadata and object ids reset to zero
 src/EDITOR/*	*	0	trivial-function-literal	0 store *[XY]	a coordinate reset to the map's or the view's first cell
 src/EDITOR/*	*	0	trivial-function-literal	0 equality *[xyXY]	the map's first column or row
@@ -1150,7 +1133,6 @@ src/EDITOR/EDITMGR.cpp	editManager::WriteMines	-1	trivial-function-literal	-1 eq
 src/EDITOR/EDITMGR.cpp	*	-1	trivial-function-literal	-1 equality handle	the -1 failure result of the CRT open
 src/EDITOR/EDITMGR.cpp	editManager::PickMap	*	call-argument	fileRequester(* argument [12]	the requester window's x and y in pixels
 src/EDITOR/EDITMGR.cpp	editManager::ClearErrors	1	call-argument	free(void *) argument 1	the last message (count - 1)
-src/EDITOR/EDITMGR.cpp	editManager::IsCleared	1	trivial-function-literal	1 bitwise	the clear mask's bit of the terrain under the cell
 src/EDITOR/EDITMGR.cpp	MakeMapCode	*	*	array subscript code	the code's letters, filled from the last
 src/EDITOR/EDITMGR.cpp	MakeMapCode	[01]	trivial-function-literal	[01] array-index code	the code's letters, filled from the last
 src/EDITOR/EDITMGR.cpp	editManager::NewMap	0	trivial-function-literal	0 store currentMapOffset	the map serial restarts past EDIT_MAP_SERIAL_LIMIT
@@ -1159,7 +1141,6 @@ src/EDITOR/EDITMGR.cpp	editManager::editManager	-1	trivial-function-literal	-1 s
 src/EDITOR/EDITMGR.cpp	editManager::editManager	0	trivial-function-literal	0 store m_animationFrame	the object animation's first frame
 src/EDITOR/EDITMGR.cpp	editManager::C*	0	trivial-function-literal	0 store *	a counter reset to zero
 src/EDITOR/OVERLAY.cpp	overlayManager::Open	0	call-argument	border(* argument 7	the transparent preview border's fill colour, which it never paints
-src/EDITOR/OVERLAY.cpp	overlayManager::Open	0	call-argument	button(* argument 8	the category arrows' select mode 0: they notify Main instead of ending a dialog (BUTTON_SELECT_DIALOG_RESULT is 1)
 src/EDITOR/OVERLAY.cpp	*	5	call-argument	strnicmp(* argument 3	the length of the object-name prefix compared ("nmine", "mine-", "rovr-")
 src/EDITOR/OVERLAY.cpp	PlaceOverlay	[0-3]	*	array subscript artifacts	the placed hero record's four artifact slots, emptied one by one
 src/EDITOR/OVERLAY.cpp	PlaceOverlay	[0-3]	trivial-function-literal	[0-3] array-index artifacts	the placed hero record's four artifact slots, emptied one by one
@@ -1290,7 +1271,6 @@ src/SOURCE/GAME.cpp	game::Overview	*	store	store to *	retail window/screen layou
 src/SOURCE/GAME.cpp	game::Overview	0	trivial-function-literal	0 store *	a scan from the first hero class, town type or resource, a counter reset, or frame 0
 src/SOURCE/GAME.cpp	game::ComputeDailyGold	0	trivial-function-literal	0 store dailyGold	a running total reset to zero
 src/SOURCE/GAME.cpp	game::PerDay	0	trivial-function-literal	0 store theProduction	a running total reset to zero
-src/SOURCE/GAME.cpp	game::PerMonth	12	store	initializer of gMonType	the month-of-the-creature table's extent (twelve creatures)
 src/SOURCE/GAME.cpp	game::SetupTown	*	*	* rollList*	the starting dwelling-count roll by decile: seven 1s, two 2s and one 3
 src/SOURCE/GAME.cpp	game::RandomizeMine	*	store	store to mineFrame	a mine object frame in the .icn resource (frames have no names)
 src/SOURCE/GAME.cpp	advManager::FindAdjacentMonster	0	trivial-function-literal	0 store *	the neighbourhood clamped to the map's first row or column
@@ -1443,7 +1423,6 @@ src/BASE/RESOURCE.cpp	resource::resource	0	trivial-function-literal	0 store m_id
 src/BASE/SAMPLE.cpp	sample::sample	0x80	arithmetic	compound assignment to data[[][]]	the bias that turns each signed sample byte into Audiere's unsigned 8-bit form
 src/BASE/TEXTNTRY.cpp	*	0	trivial-function-literal	0 store m_*	the cursor, display offset, length or frame reset to the start
 src/BASE/TEXTNTRY.cpp	textEntryWidget::Read	1	trivial-function-literal	1 store m_maxLines	a single-line entry
-src/BASE/TEXTNTRY.cpp	textEntryWidget::Read	1	trivial-function-literal	1 store m_preserveTextOnFocus	the 16-bit keep-text flag the resource also supplies as a word (an i16 flag)
 src/BASE/TEXTNTRY.cpp	*	0	trivial-function-literal	0 * done	the 16-bit loop flag that key handling increments (an i16)
 src/BASE/TEXTNTRY.cpp	textEntryWidget::Main	0	trivial-function-literal	0 array-index m_text	the text's first character (NUL there empties it)
 src/BASE/TEXTNTRY.cpp	textEntryWidget::SetupDisplayString	0	trivial-function-literal	0 equality m_displayOffset	the display scrolled to the start of the text
