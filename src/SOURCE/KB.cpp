@@ -2253,6 +2253,7 @@ void PopNetBox(char* notice) {
     }
     gInputManager->SetKeyCodeType(INPUT_KEY_CODE_SCAN);
     gWindowManager->RemoveWindow(netBox);
+    delete netBox;
     gShowIt = savedShowIt;
     if (pointerWasVisible)
         gMouseManager->ReallyShowPointer();

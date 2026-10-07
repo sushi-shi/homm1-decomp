@@ -389,6 +389,7 @@ i16 swapManager::Main(struct tag_message& message) {
                                     && m_selectedSlot == m_targetSlot) {
                                     ViewMon();
                                     Reset();
+                                    break;
                                 }
                                 if ((message.modifiers & MESSAGE_MODIFIER_SHIFT_KEYS)
                                     && m_selectedSide != m_targetSide
@@ -454,6 +455,7 @@ i16 swapManager::Main(struct tag_message& message) {
                                     && m_selectedSlot == m_targetSlot) {
                                     ViewMon();
                                     Reset();
+                                    break;
                                 }
                                 if ((message.modifiers & MESSAGE_MODIFIER_SHIFT_KEYS)
                                     && m_selectedSide != m_targetSide

@@ -945,15 +945,20 @@ section 1, each with the reproduction it was checked against.
 - *Combat (BUG-CMB-1–3):* berserk stacks that loop or act without an
   action, commander skills that wrap the stack's attack and defense, and
   the computer's adjacent attack test off the battlefield.
-- *Adventure map (BUG-ADV-1–9):* the skeleton's unpaid gold, Summon Boat at
+- *Adventure map (BUG-ADV-1–14):* the skeleton's unpaid gold, Summon Boat at
   the map's edge, the campfire's sound, the puzzle's off-map cells, heroes
   and towns without records under other objects, Town Gate without a town,
-  the path search and mine flags beyond the map's edges, and the ultimate
-  artifact's placement for a human player without a hero.
+  the path search and mine flags beyond the map's edges, the ultimate
+  artifact's placement for a human player without a hero, the T key
+  without towns, the route map's release, the new turn's leaked text, the
+  town list's knob, and three windows never deleted.
 - *Campaign (BUG-CAM-1):* the enemy lords' crests, read one entry late.
-- *Towns (BUG-TWN-1–3):* the Thieves' Guild's resource groups, the owner
-  the recruit window gave both tavern heroes, and the "built today" flags of
-  towns 32-35, which lived in the first hero's id. The port's "weekly monster
+- *Towns (BUG-TWN-1–4):* the Thieves' Guild's resource groups, the owner
+  the recruit window gave both tavern heroes, the "built today" flags of
+  towns 32-35, which lived in the first hero's id, and a second click on
+  the selected stack in the swap window.
+- *Platform (BUG-PLT-1):* the full-screen flag left set when DirectDraw
+  cannot start. The port's "weekly monster
   growth" row is not a defect: `game::PerWeek` grows a site's stock only
   below 100 and by at most 10, so the byte never exceeds 109.
 - *Random map generator (BUG-GEN-1–5):* region ranking, region bounds,

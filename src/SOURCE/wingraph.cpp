@@ -912,6 +912,8 @@ void SetFullScreenStatus(i32 fullScreen) {
         CURRENT_GRAPHICS_CONFIG.fullScreen = 1;
         if (SetGraphicsType(WINGRAPH_GRAPHICS_DIRECT_DRAW) != FALSE)
             DDSetFullScreenStatus(fullScreen);
+        else
+            CURRENT_GRAPHICS_CONFIG.fullScreen = 0;
         return;
     } else if (fullScreen == 0) {
         if (gWinGAttached != FALSE)
