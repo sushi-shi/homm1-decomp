@@ -151,36 +151,36 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) advManager::Open(i16 id) {
         m_adventureWindow = new heroWindow(0, 0, "adv_wind.bin");
         if (m_adventureWindow == NULL)
             MemError();
-        m_scrollLeftButton = new iconWidget(
-            SCROLL_LEFT_X,
-            SCROLL_Y,
-            SCROLL_WIDTH,
-            SCROLL_HEIGHT,
+        m_heroScrollKnob = new iconWidget(
+            HERO_LOCATOR_KNOB_X,
+            LOCATOR_KNOB_Y,
+            LOCATOR_KNOB_WIDTH,
+            LOCATOR_KNOB_HEIGHT,
             "scroll.icn",
-            SCROLL_ICON_FRAME,
+            LOCATOR_KNOB_FRAME,
             ICON_DRAW_NORMAL,
             ADVENTURE_CONTROL_HERO_KNOB,
             ICON_WIDGET_DRAW,
             1
         );
-        if (m_scrollLeftButton == NULL)
+        if (m_heroScrollKnob == NULL)
             MemError();
-        m_adventureWindow->AddWidget(m_scrollLeftButton, WINDOW_Z_ORDER_APPEND);
-        m_scrollRightButton = new iconWidget(
-            SCROLL_RIGHT_X,
-            SCROLL_Y,
-            SCROLL_WIDTH,
-            SCROLL_HEIGHT,
+        m_adventureWindow->AddWidget(m_heroScrollKnob, WINDOW_Z_ORDER_APPEND);
+        m_townScrollKnob = new iconWidget(
+            TOWN_LOCATOR_KNOB_X,
+            LOCATOR_KNOB_Y,
+            LOCATOR_KNOB_WIDTH,
+            LOCATOR_KNOB_HEIGHT,
             "scroll.icn",
-            SCROLL_ICON_FRAME,
+            LOCATOR_KNOB_FRAME,
             ICON_DRAW_NORMAL,
             ADVENTURE_CONTROL_TOWN_KNOB,
             ICON_WIDGET_DRAW,
             1
         );
-        if (m_scrollRightButton == NULL)
+        if (m_townScrollKnob == NULL)
             MemError();
-        m_adventureWindow->AddWidget(m_scrollRightButton, WINDOW_Z_ORDER_APPEND);
+        m_adventureWindow->AddWidget(m_townScrollKnob, WINDOW_Z_ORDER_APPEND);
         m_panelBackdrops[0] = new backdropWidget(480, 176, 56, 128, WIDGET_ID_NONE, 32);
         if (m_panelBackdrops[0] == NULL)
             MemError();
@@ -511,7 +511,7 @@ class mapCell* advManager::DoAdvCommand(void) {
         case ADVMGR_COMMAND_OCCUPIED_TOWN_VIEW:
             DemobilizeCurrHero();
             gMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
-            viewTown = gGame->GetTown(selectedHero->m_occupiedTown);
+            viewTown = gGame->GetTown(selectedHero->m_locationMetadata);
             viewTown->View();
             cellPtr = NULL;
             break;
@@ -2435,7 +2435,7 @@ void advManager::UpdateRadar(b8 updateScreen, b32 partial) {
             }
             cellPtrItem = &m_mapData[x][y];
             if (MAP_TRIGGER_OBJECT(cellPtrItem->m_triggerType) == MAP_OBJECT_HERO) {
-                theOwner = gGame->m_availableHeroes[cellPtrItem->m_objectMetadata];
+                theOwner = gGame->m_heroOwners[cellPtrItem->m_objectMetadata];
                 if (theOwner == gCurPlayer)
                     color = gRadarOwnerColor
                         [theOwner < 0
@@ -2737,10 +2737,10 @@ void advManager::UpdateHeroLocators(b8 drawWindow, i8 updateScreen) {
         UpdateHeroLocator(locatorSlot, false, false);
 
     if (gCurPlayerData->m_heroCount < LOCATOR_PAGE_THRESHOLD) {
-        m_scrollLeftButton->m_y = LOCATOR_SCROLL_NO_PAGES_Y;
+        m_heroScrollKnob->m_y = LOCATOR_SCROLL_NO_PAGES_Y;
     } else {
         scrollStep = 73.0 / (gCurPlayerData->m_heroCount - LOCATOR_PAGE_DENOMINATOR_OFFSET);
-        m_scrollLeftButton->m_y = gCurPlayerData->m_heroLocatorPage * scrollStep + 195.0;
+        m_heroScrollKnob->m_y = gCurPlayerData->m_heroLocatorPage * scrollStep + 195.0;
     }
     if (drawWindow)
         m_adventureWindow->DrawWindow(updateScreen);
@@ -2787,10 +2787,10 @@ void advManager::UpdateTownLocators(b8 drawWindow, i8 updateScreen) {
         }
     }
     if (gCurPlayerData->m_townCount < LOCATOR_PAGE_THRESHOLD) {
-        m_scrollRightButton->m_y = LOCATOR_SCROLL_NO_PAGES_Y;
+        m_townScrollKnob->m_y = LOCATOR_SCROLL_NO_PAGES_Y;
     } else {
         step = 74.0 / (gCurPlayerData->m_townCount - LOCATOR_PAGE_DENOMINATOR_OFFSET);
-        m_scrollRightButton->m_y = gCurPlayerData->m_townLocatorPage * step + 195.0;
+        m_townScrollKnob->m_y = gCurPlayerData->m_townLocatorPage * step + 195.0;
     }
     if (drawWindow)
         m_adventureWindow->DrawWindow(updateScreen);
@@ -4134,7 +4134,7 @@ void advManager::DemobilizeCurrHero(void) {
     heroPointer->m_y = m_mapOriginY + m_cursorMapY;
     mapCell* cell = GetCell(heroPointer->m_x, heroPointer->m_y);
     heroPointer->m_locationType = cell->m_triggerType;
-    heroPointer->m_occupiedTown = cell->m_objectMetadata;
+    heroPointer->m_locationMetadata = cell->m_objectMetadata;
     heroPointer->m_direction = m_cursorDirection;
     if (m_cursorType == ADVMGR_HERO_ICON_BOAT)
         heroPointer->m_eventFlags |= HERO_EVENT_EMBARKED;
@@ -4223,7 +4223,7 @@ void advManager::SetHeroContext(i8 heroId, b8 update) {
         heroPtr->m_x,
         heroPtr->m_y,
         heroPtr->m_locationType,
-        heroPtr->m_occupiedTown,
+        heroPtr->m_locationMetadata,
         NULL,
         4
     );
@@ -4278,7 +4278,7 @@ void advManager::DoHeroKnob(void) {
     count = gCurPlayerData->m_heroCount;
     scale = 73.0 / (count - LOCATOR_PAGE_DENOMINATOR_OFFSET);
     gMouseManager->MouseCoords(x, y);
-    offset = y - m_scrollLeftButton->m_y;
+    offset = y - m_heroScrollKnob->m_y;
     gInputManager->Flush();
     message = gInputManager->GetEvent();
     while (!IS_BUTTON_RELEASE_MESSAGE(message.type)) {
@@ -4288,16 +4288,16 @@ void advManager::DoHeroKnob(void) {
             if (message.y > offset + LOCATOR_SCROLL_BASE_Y + LOCATOR_HERO_SCROLL_SPAN)
                 message.y = offset + LOCATOR_SCROLL_BASE_Y + LOCATOR_HERO_SCROLL_SPAN;
             gMouseManager->Main(message);
-            m_scrollLeftButton->m_y = message.y - offset;
+            m_heroScrollKnob->m_y = message.y - offset;
             m_adventureWindow->DrawWindow();
             if (count > LOCATOR_VISIBLE_COUNT) {
-                pageIndex = (m_scrollLeftButton->m_y - LOCATOR_SCROLL_BASE_Y) / scale;
+                pageIndex = (m_heroScrollKnob->m_y - LOCATOR_SCROLL_BASE_Y) / scale;
                 if (pageIndex != prevPage) {
                     gCurPlayerData->m_heroLocatorPage = pageIndex;
                     if (pageIndex > count - (LOCATOR_VISIBLE_COUNT - 1))
                         pageIndex = count - (LOCATOR_VISIBLE_COUNT - 1);
                     UpdateHeroLocators(false, 1);
-                    m_scrollLeftButton->m_y = message.y - offset;
+                    m_heroScrollKnob->m_y = message.y - offset;
                     m_adventureWindow->DrawWindow();
                     prevPage = pageIndex;
                 }
@@ -4307,7 +4307,7 @@ void advManager::DoHeroKnob(void) {
         message = gInputManager->GetEvent();
     }
     gMouseManager->SetCursorShape(6);
-    m_scrollLeftButton->m_flags &= ~WIDGET_FLAG_SELECTED;
+    m_heroScrollKnob->m_flags &= ~WIDGET_FLAG_SELECTED;
     UpdateHeroLocators(true, 1);
 }
 
@@ -4327,7 +4327,7 @@ void advManager::DoTownKnob(void) {
     count = gCurPlayerData->m_townCount;
     scale = 73.0 / (count - LOCATOR_PAGE_DENOMINATOR_OFFSET);
     gMouseManager->MouseCoords(x, y);
-    offset = y - m_scrollRightButton->m_y;
+    offset = y - m_townScrollKnob->m_y;
     gInputManager->Flush();
     message = gInputManager->GetEvent();
     while (!IS_BUTTON_RELEASE_MESSAGE(message.type)) {
@@ -4337,16 +4337,16 @@ void advManager::DoTownKnob(void) {
             if (message.y > offset + LOCATOR_SCROLL_BASE_Y + LOCATOR_HERO_SCROLL_SPAN)
                 message.y = offset + LOCATOR_SCROLL_BASE_Y + LOCATOR_HERO_SCROLL_SPAN;
             gMouseManager->Main(message);
-            m_scrollRightButton->m_y = message.y - offset;
+            m_townScrollKnob->m_y = message.y - offset;
             m_adventureWindow->DrawWindow();
             if (count > LOCATOR_VISIBLE_COUNT) {
-                pageIndex = (m_scrollRightButton->m_y - LOCATOR_SCROLL_BASE_Y) / scale;
+                pageIndex = (m_townScrollKnob->m_y - LOCATOR_SCROLL_BASE_Y) / scale;
                 if (pageIndex != prevPage) {
                     gCurPlayerData->m_townLocatorPage = pageIndex;
                     if (pageIndex > count - (LOCATOR_VISIBLE_COUNT - 1))
                         pageIndex = count - (LOCATOR_VISIBLE_COUNT - 1);
                     UpdateTownLocators(false, 1);
-                    m_scrollRightButton->m_y = message.y - offset;
+                    m_townScrollKnob->m_y = message.y - offset;
                     m_adventureWindow->DrawWindow();
                     prevPage = pageIndex;
                 }
@@ -4356,7 +4356,7 @@ void advManager::DoTownKnob(void) {
         message = gInputManager->GetEvent();
     }
     gMouseManager->SetCursorShape(6);
-    m_scrollRightButton->m_flags &= ~WIDGET_FLAG_SELECTED;
+    m_townScrollKnob->m_flags &= ~WIDGET_FLAG_SELECTED;
     UpdateTownLocators(true, 1);
 }
 
@@ -4702,7 +4702,7 @@ void advManager::ViewWorld(
                                    && gGame->m_heroRecs[cell->m_objectMetadata].m_locationType
                                           == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN)) {
                             owner = gGame->m_townOwners[gGame->m_heroRecs[cell->m_objectMetadata]
-                                                            .m_occupiedTown];
+                                                            .m_locationMetadata];
                             if (owner >= 0) {
                                 index =
                                     H1_ENUM_ENCODE(PlayerColor, gGame->m_players[owner].m_color);
@@ -4760,7 +4760,7 @@ void advManager::ViewWorld(
                                     case MAP_OBJECT_SAWMILL:
                                         owner = gGame->m_mineOwners
                                                     [gGame->m_heroRecs[cell->m_objectMetadata]
-                                                         .m_occupiedTown];
+                                                         .m_locationMetadata];
                                         index =
                                             owner < 0
                                                 ? H1_ENUM_ENCODE(PlayerColor, PLAYER_COLOR_NEUTRAL)
@@ -4791,7 +4791,7 @@ void advManager::ViewWorld(
                                 }
                         }
                         if (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_HERO)) {
-                            owner = gGame->m_availableHeroes[cell->m_objectMetadata];
+                            owner = gGame->m_heroOwners[cell->m_objectMetadata];
                             if (owner >= 0) {
                                 index =
                                     H1_ENUM_ENCODE(PlayerColor, gGame->m_players[owner].m_color);
@@ -4844,7 +4844,7 @@ void advManager::ViewWorld(
                                     case MAP_OBJECT_SAWMILL:
                                         owner = gGame->m_mineOwners
                                                     [gGame->m_heroRecs[cell->m_objectMetadata]
-                                                         .m_occupiedTown];
+                                                         .m_locationMetadata];
                                         index =
                                             owner < 0
                                                 ? H1_ENUM_ENCODE(PlayerColor, PLAYER_COLOR_NEUTRAL)
@@ -4931,7 +4931,7 @@ void advManager::ViewWorld(
                                    && gGame->m_heroRecs[cell->m_objectMetadata].m_locationType
                                           == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN)) {
                             owner = gGame->m_townOwners[gGame->m_heroRecs[cell->m_objectMetadata]
-                                                            .m_occupiedTown];
+                                                            .m_locationMetadata];
                             if (owner >= 0) {
                                 index =
                                     H1_ENUM_ENCODE(PlayerColor, gGame->m_players[owner].m_color);
@@ -4954,7 +4954,7 @@ void advManager::ViewWorld(
                         break;
                     case SPELL_VIEW_HEROES:
                         if (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_HERO)) {
-                            owner = gGame->m_availableHeroes[cell->m_objectMetadata];
+                            owner = gGame->m_heroOwners[cell->m_objectMetadata];
                             if (owner >= 0) {
                                 index =
                                     H1_ENUM_ENCODE(PlayerColor, gGame->m_players[owner].m_color);
@@ -5958,7 +5958,7 @@ void advManager::TeleportTo(i32 x, i32 y, i32) {
     location = GetCell(x, y);
     savedOldCell = GetCell(m_mapOriginX + ADVMGR_VIEW_CENTER, m_mapOriginY + ADVMGR_VIEW_CENTER);
     if (mapHero->m_locationType == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN)) {
-        occupiedTown = gGame->GetTown(mapHero->m_occupiedTown);
+        occupiedTown = gGame->GetTown(mapHero->m_locationMetadata);
         occupiedTown->m_occupyingHeroId = TOWN_OCCUPYING_HERO_NONE;
     }
     if (savedOldCell->m_flags & MAP_CELL_HERO_CURSOR)
@@ -6116,7 +6116,7 @@ void advManager::TownGate(void) {
         targetHero->m_id;
     gGame->m_castleRecs[gCurPlayerData->m_townIds[selectedTown]].GiveSpells();
     targetHero->m_locationType = MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN);
-    targetHero->m_occupiedTown = gCurPlayerData->m_townIds[selectedTown];
+    targetHero->m_locationMetadata = gCurPlayerData->m_townIds[selectedTown];
     PlayMusic(TERRAIN_MUSIC_TRACK(m_currentTerrain));
 }
 
@@ -6160,7 +6160,7 @@ void advManager::SummonBoat(void) {
         heroSlot = gCurPlayerData->CurrentHero();
         for (slotIndex = 0; slotIndex < GAME_BOAT_COUNT; slotIndex++) {
             if (gGame->m_boatSlots[slotIndex] != GAME_TABLE_FREE
-                && gGame->m_boats[slotIndex].heroId == (heroSlot | BOAT_OCCUPIED_FLAG)) {
+                && gGame->m_boats[slotIndex].heroId == (heroSlot | BOAT_VACATED_FLAG)) {
                 foundBoat = true;
                 break;
             }
@@ -6168,7 +6168,7 @@ void advManager::SummonBoat(void) {
         if (!foundBoat) {
             for (slotIndex = 0; slotIndex < GAME_BOAT_COUNT; slotIndex++) {
                 if (gGame->m_boatSlots[slotIndex] != GAME_TABLE_FREE
-                    && (gGame->m_boats[slotIndex].heroId & BOAT_OCCUPIED_FLAG)
+                    && (gGame->m_boats[slotIndex].heroId & BOAT_VACATED_FLAG)
                     && gGame->m_boats[slotIndex].owner == gCurPlayer) {
                     foundBoat = true;
                     break;

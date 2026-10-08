@@ -352,16 +352,16 @@ i8 game::GetNewHeroId(i8 heroClass) {
     i8 idx = HERO_ID_NONE;
     i16 first = heroClass * HERO_PER_CLASS_COUNT;
     i32 ix;
-    freeSlot = Scan(m_availableHeroes, first, HERO_PER_CLASS_COUNT);
+    freeSlot = Scan(m_heroOwners, first, HERO_PER_CLASS_COUNT);
     if (freeSlot != GAME_TABLE_FREE) {
-        idx = RandomScan(m_availableHeroes, first, HERO_PER_CLASS_COUNT, HERO_PER_CLASS_COUNT);
+        idx = RandomScan(m_heroOwners, first, HERO_PER_CLASS_COUNT, HERO_PER_CLASS_COUNT);
     } else {
-        freeSlot = Scan(m_availableHeroes, 0, GAME_HERO_COUNT);
+        freeSlot = Scan(m_heroOwners, 0, GAME_HERO_COUNT);
         if (freeSlot != GAME_TABLE_FREE) {
-            idx = RandomScan(m_availableHeroes, 0, GAME_HERO_COUNT, GAME_HERO_COUNT);
+            idx = RandomScan(m_heroOwners, 0, GAME_HERO_COUNT, GAME_HERO_COUNT);
         } else {
             for (ix = 0; ix < GAME_HERO_COUNT; ++ix) {
-                if (m_availableHeroes[ix] == HERO_AVAILABILITY_RETREATED)
+                if (m_heroOwners[ix] == HERO_AVAILABILITY_RETREATED)
                     idx = ix;
             }
         }
@@ -520,7 +520,7 @@ i16 game::SaveGame(char* filename, b8 generateName) {
     WriteWorldMap(outFile);
     WRITE_FILE_VALUE(outFile, m_obeliskCount);
     write(outFile, m_heroRecs, sizeof(m_heroRecs));
-    write(outFile, m_availableHeroes, sizeof(m_availableHeroes));
+    write(outFile, m_heroOwners, sizeof(m_heroOwners));
     write(outFile, m_castleRecs, sizeof(m_castleRecs));
     write(outFile, m_townOwners, sizeof(m_townOwners));
     write(outFile, m_townBuiltToday, sizeof(m_townBuiltToday));
@@ -622,7 +622,7 @@ i16 game::LoadGame(char* filename, b32 origData, b32 remoteGame) {
             strcpy(m_heroRecs[ix].m_shortName, gHeroNames[ix][1]);
         }
     }
-    read(theLoadHandle, m_availableHeroes, sizeof(m_availableHeroes));
+    read(theLoadHandle, m_heroOwners, sizeof(m_heroOwners));
     read(theLoadHandle, m_castleRecs, sizeof(m_castleRecs));
     read(theLoadHandle, m_townOwners, sizeof(m_townOwners));
     read(theLoadHandle, m_townBuiltToday, sizeof(m_townBuiltToday));
@@ -1268,7 +1268,7 @@ void game::NewMap(char* mapName) {
                     gTownHeroClass
                         [H1_ENUM_ENCODE(TownType, m_castleRecs[m_players[i].m_townIds[0]].m_type)]
                 );
-            m_availableHeroes[m_players[i].m_heroIds[0]] = i;
+            m_heroOwners[m_players[i].m_heroIds[0]] = i;
             m_heroRecs[m_players[i].m_heroIds[0]].m_owner = i;
             m_heroRecs[m_players[i].m_heroIds[0]].m_x = m_castleRecs[m_players[i].m_townIds[0]].m_x;
             m_heroRecs[m_players[i].m_heroIds[0]].m_y = m_castleRecs[m_players[i].m_townIds[0]].m_y;
@@ -1285,10 +1285,10 @@ void game::NewMap(char* mapName) {
         else
             k = Random(0, HERO_CLASS_COUNT - 1);
         m_players[i].m_availableHeroIds[0] = GetNewHeroId(k);
-        m_availableHeroes[m_players[i].m_availableHeroIds[0]] = HERO_AVAILABILITY_RETREATED;
+        m_heroOwners[m_players[i].m_availableHeroIds[0]] = HERO_AVAILABILITY_RETREATED;
         k = (k + Random(1, 3)) % HERO_CLASS_COUNT;
         m_players[i].m_availableHeroIds[1] = GetNewHeroId(k);
-        m_availableHeroes[m_players[i].m_availableHeroIds[1]] = HERO_AVAILABILITY_RETREATED;
+        m_heroOwners[m_players[i].m_availableHeroIds[1]] = HERO_AVAILABILITY_RETREATED;
     }
     if (!m_noMapHeroes)
         ProcessOnMapHeroes();
@@ -1319,7 +1319,7 @@ void game::NewMap(char* mapName) {
             savedHeroY = m_heroRecs[m_players[i].m_heroIds[j]].m_y;
             m_heroRecs[m_players[i].m_heroIds[j]].m_locationType =
                 m_map[myPosX][savedHeroY].m_triggerType;
-            m_heroRecs[m_players[i].m_heroIds[j]].m_occupiedTown =
+            m_heroRecs[m_players[i].m_heroIds[j]].m_locationMetadata =
                 m_map[myPosX][savedHeroY].m_objectMetadata;
             m_map[myPosX][savedHeroY].m_triggerType = MAP_EVENT_TRIGGER(MAP_OBJECT_HERO);
             m_map[myPosX][savedHeroY].m_objectMetadata = m_players[i].m_heroIds[j];
@@ -3086,9 +3086,9 @@ void game::PerWeek(void) {
     for (i = 0; i < GAME_PLAYER_COUNT; i++) {
         for (j = 0; j < PLAYER_TAVERN_HERO_COUNT; j++) {
             heroClass = (Random(1, 3) + heroClass) % HERO_CLASS_COUNT;
-            if (gGame->m_availableHeroes[gGame->m_players[i].m_availableHeroIds[j]]
+            if (gGame->m_heroOwners[gGame->m_players[i].m_availableHeroIds[j]]
                 == HERO_AVAILABILITY_RETREATED)
-                gGame->m_availableHeroes[gGame->m_players[i].m_availableHeroIds[j]] =
+                gGame->m_heroOwners[gGame->m_players[i].m_availableHeroIds[j]] =
                     HERO_AVAILABILITY_UNAVAILABLE;
             gGame->m_players[i].m_availableHeroIds[j] = gGame->GetNewHeroId(heroClass);
         }
@@ -4221,7 +4221,7 @@ void game::ProcessOnMapHeroes(void) {
                 else
                     iPlayer = extra->owner;
                 theHeroEntry->m_owner = iPlayer;
-                m_availableHeroes[extra->heroId] = iPlayer;
+                m_heroOwners[extra->heroId] = iPlayer;
                 m_players[theHeroEntry->m_owner]
                     .m_heroIds[m_players[theHeroEntry->m_owner].m_heroCount] = theHeroEntry->m_id;
                 m_players[theHeroEntry->m_owner].m_heroCount++;
@@ -4267,12 +4267,10 @@ void game::CheckHeroConsistency(void) {
     for (i = 0; i < m_playerCount; i++) {
         if (!m_playerDead[i]) {
             for (j = 0; j < PLAYER_TAVERN_HERO_COUNT; j++) {
-                if (m_availableHeroes[m_players[i].m_availableHeroIds[j]] >= 0
-                    && m_availableHeroes[m_players[i].m_availableHeroIds[j]]
-                           <= GAME_PLAYER_COUNT - 1) {
+                if (m_heroOwners[m_players[i].m_availableHeroIds[j]] >= 0
+                    && m_heroOwners[m_players[i].m_availableHeroIds[j]] <= GAME_PLAYER_COUNT - 1) {
                     m_players[i].m_availableHeroIds[j] = GetNewHeroId(0);
-                    m_availableHeroes[m_players[i].m_availableHeroIds[j]] =
-                        HERO_AVAILABILITY_RETREATED;
+                    m_heroOwners[m_players[i].m_availableHeroIds[j]] = HERO_AVAILABILITY_RETREATED;
                 }
             }
         }
@@ -4285,14 +4283,14 @@ void game::CheckHeroConsistency(void) {
                     boardHro = GetHero(cell->m_objectMetadata);
                     if (boardHro->m_owner < 0 || boardHro->m_owner > GAME_PLAYER_COUNT - 1) {
                         if (boardHro->m_locationType == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN)) {
-                            townOccupied = gGame->GetTown(boardHro->m_occupiedTown);
+                            townOccupied = gGame->GetTown(boardHro->m_locationMetadata);
                             townOccupied->m_occupyingHeroId = TOWN_OCCUPYING_HERO_NONE;
                         }
                         RestoreCell(
                             boardHro->m_x,
                             boardHro->m_y,
                             boardHro->m_locationType,
-                            boardHro->m_occupiedTown,
+                            boardHro->m_locationMetadata,
                             NULL,
                             1
                         );

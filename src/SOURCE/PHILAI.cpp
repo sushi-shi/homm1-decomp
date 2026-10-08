@@ -454,7 +454,7 @@ void philAI::CheckReload(hero* aiHero) {
                         }
                         break;
                     case MAP_EVENT_TRIGGER(MAP_OBJECT_HERO):
-                        if (gGame->m_availableHeroes[cell->m_objectMetadata] != aiHero->m_owner) {
+                        if (gGame->m_heroOwners[cell->m_objectMetadata] != aiHero->m_owner) {
                             armyFightValue = FightValueOfStack(
                                 &gGame->GetHero(cell->m_objectMetadata)->m_army,
                                 NULL,
@@ -517,14 +517,14 @@ void philAI::CheckBerserk(hero* aiHero) {
                     }
                     break;
                 case MAP_EVENT_TRIGGER(MAP_OBJECT_HERO):
-                    if (gGame->m_availableHeroes[cell->m_objectMetadata] != aiHero->m_owner) {
+                    if (gGame->m_heroOwners[cell->m_objectMetadata] != aiHero->m_owner) {
                         enemyHero = gGame->GetHero(cell->m_objectMetadata);
                         enemyStrength = FightValueOfStack(
                             &enemyHero->m_army,
                             NULL,
                             true,
                             enemyHero->m_locationType == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN),
-                            enemyHero->m_occupiedTown
+                            enemyHero->m_locationMetadata
                         );
                         if (enemyStrength * 2 > ownFightValue)
                             return;
@@ -847,19 +847,19 @@ void philAI::GetTurnAIVars(i32 player) {
         fightValue = FightValueOfStack(&townPointer->m_army, NULL, false);
         fightTotalSum = fightTotalSum + fightValue;
     }
-    gCurPlayerData->m_aiData.m_upgradeValueWeight =
+    gCurPlayerData->m_aiData.m_fightValueResourceWeight =
         static_cast<float>(
             gCurPlayerData->m_resources[RESOURCE_GOLD]
             + gCurPlayerData->m_aiData.m_income[RESOURCE_GOLD]
         ) / (fightTotalSum + 1000)
-        + gCurPlayerData->m_aiData.m_attentionWeights.upgradeBase;
+        + gCurPlayerData->m_aiData.m_attentionWeights.turnCreatureAttention;
     artifactValueSum = 0;
     for (i = ARTIFACT_REGULAR_FIRST; i < ARTIFACT_REGULAR_END; i++)
         artifactValueSum += gArtifactBaseRV[i];
     for (i = 0; i < gGame->m_playerCount; i++)
-        gGame->m_players[i].m_aiData.m_artifactPoolShare =
+        gGame->m_players[i].m_aiData.m_playerShare =
             1.0 / (gGame->m_playerCount + gGame->m_deadPlayerCount);
-    gCurPlayerData->m_aiData.m_artifactValue = artifactValueSum / 33.0;
+    gCurPlayerData->m_aiData.m_meanArtifactValue = artifactValueSum / 33.0;
     memset(gTurnValueOfMine, 7, sizeof(gTurnValueOfMine));
     for (playerIndex = 0; playerIndex < gGame->m_playerCount; playerIndex++) {
         if (playerIndex != gCurPlayer) {
@@ -1123,12 +1123,12 @@ void philAI::DetermineTargetPosition(hero* aiHero, i8& targetX, i8& targetY, i16
                         aiHero,
                         searchX,
                         searchY,
-                        gSearchArray->m_cells[searchX][searchY].rvFlag1,
-                        gSearchArray->m_cells[searchX][searchY].valueX,
-                        gSearchArray->m_cells[searchX][searchY].valueY,
-                        gSearchArray->m_cells[searchX][searchY].rvFlag2,
-                        gSearchArray->m_cells[searchX][searchY].previousX,
-                        gSearchArray->m_cells[searchX][searchY].previousY,
+                        gSearchArray->m_cells[searchX][searchY].hasAdjacentMonster,
+                        gSearchArray->m_cells[searchX][searchY].adjacentMonsterX,
+                        gSearchArray->m_cells[searchX][searchY].adjacentMonsterY,
+                        gSearchArray->m_cells[searchX][searchY].beyondTurnMobility,
+                        gSearchArray->m_cells[searchX][searchY].turnEndX,
+                        gSearchArray->m_cells[searchX][searchY].turnEndY,
                         AI_EVENT_TARGET
                     );
                     posValue = posValue * (Random(1, 50) + 75);
@@ -1267,10 +1267,10 @@ void philAI::ProbableOutcomeOfBattle(
         attackerLoss * winChance + (1.0f - winChance) * rawFight[AI_BATTLE_ATTACKER];
     expectedDefenderLoss =
         defenderLoss * (1.0f - winChance) + rawFight[AI_BATTLE_DEFENDER] * winChance;
-    lossWeight = 1.33 - gCurPlayerData->m_aiData.m_attentionWeights.upgradeBase;
+    lossWeight = 1.33 - gCurPlayerData->m_aiData.m_attentionWeights.turnCreatureAttention;
     outcomeValue = -expectedAttackerLoss * lossWeight * lossWeight;
     if (enemyPlayer >= 0) {
-        lossWeight = gCurPlayerData->m_aiData.m_attentionWeights.upgradeBase + 0.66;
+        lossWeight = gCurPlayerData->m_aiData.m_attentionWeights.turnCreatureAttention + 0.66;
         if (gHumanPlayer[enemyPlayer])
             outcomeValue =
                 outcomeValue + expectedDefenderLoss * gAttackHumanBonus * lossWeight * lossWeight;
@@ -1278,7 +1278,7 @@ void philAI::ProbableOutcomeOfBattle(
             outcomeValue = outcomeValue
                            + expectedDefenderLoss * gAttackComputerBonus * lossWeight * lossWeight;
     }
-    outcomeValue = outcomeValue * gCurPlayerData->m_aiData.m_upgradeValueWeight;
+    outcomeValue = outcomeValue * gCurPlayerData->m_aiData.m_fightValueResourceWeight;
     if (attackerHero) {
         for (artifactSlot = 0; artifactSlot < HERO_ARTIFACT_SLOT_COUNT; artifactSlot++) {
             if (ARTIFACT_HAS_BASE_VALUE(attackerHero->m_artifacts[artifactSlot]))
@@ -1362,13 +1362,15 @@ void philAI::ValueOfBuyingBuilding(
     switch (building) {
         case BUILDING_SLOT_CASTLE:
             score =
-                score * (gCurPlayerData->m_aiData.m_attentionWeights.buildingValue * 2.0f + 0.33);
+                score
+                * (gCurPlayerData->m_aiData.m_attentionWeights.turnBuildingAttention * 2.0f + 0.33);
             castleTier = dwellingsOwned;
             score = score * (1.6 - castleTier * 0.2);
             break;
         case BUILDING_SLOT_MAGE_GUILD:
             score =
-                score * (gCurPlayerData->m_aiData.m_attentionWeights.buildingValue * 2.0f + 0.33);
+                score
+                * (gCurPlayerData->m_aiData.m_attentionWeights.turnBuildingAttention * 2.0f + 0.33);
             score = score
                     * (1.33
                        - gCurPlayerData->BuildingsOwned(
@@ -1383,8 +1385,11 @@ void philAI::ValueOfBuyingBuilding(
             score = 0;
             break;
         case BUILDING_SLOT_WELL:
-            score = score * (gCurPlayerData->m_aiData.m_attentionWeights.buildingValue + 0.66);
-            score = score * (gCurPlayerData->m_aiData.m_attentionWeights.upgradeBase * 2.0f + 0.33);
+            score =
+                score * (gCurPlayerData->m_aiData.m_attentionWeights.turnBuildingAttention + 0.66);
+            score =
+                score
+                * (gCurPlayerData->m_aiData.m_attentionWeights.turnCreatureAttention * 2.0f + 0.33);
             score = score * (dwellingsOwned * 0.33 + 0.66);
             break;
         case BUILDING_SLOT_TAVERN:
@@ -1406,8 +1411,11 @@ void philAI::ValueOfBuyingBuilding(
                 if (!creaturePresent)
                     break;
             }
-            score = score * (gCurPlayerData->m_aiData.m_attentionWeights.buildingValue + 0.66);
-            score = score * (gCurPlayerData->m_aiData.m_attentionWeights.upgradeBase * 2.0f + 0.33);
+            score =
+                score * (gCurPlayerData->m_aiData.m_attentionWeights.turnBuildingAttention + 0.66);
+            score =
+                score
+                * (gCurPlayerData->m_aiData.m_attentionWeights.turnCreatureAttention * 2.0f + 0.33);
             score = score * (1.0 - gCurPlayerData->BuildingsOwned(factionId, building, 0) * 0.05);
             if (building - BUILDING_SLOT_DWELLING_FIRST < lastDwellingIndex)
                 score = score * (1.66 - dwellingsOwned * 0.33);
@@ -1517,7 +1525,7 @@ void philAI::ValueOfBuyingCreature(
     GetMonsterCost(creature, buyCost);
     costRV = purchaseCount * RVConversion(buyCost);
     creatureRV = purchaseCount * gMonsterDatabase[creature].fightValue
-                 * gCurPlayerData->m_aiData.m_upgradeValueWeight;
+                 * gCurPlayerData->m_aiData.m_fightValueResourceWeight;
     if (townPointer->m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE) {
         occupant = gGame->GetHero(townPointer->m_occupyingHeroId);
         creatureRV = creatureRV * 1.1;
@@ -1532,10 +1540,10 @@ void philAI::ValueOfBuyingCreature(
             }
             creatureRV = creatureRV * (1.18 - breathStacks * 0.06);
         }
-        creatureRV =
-            creatureRV
-            * (gGame->m_players[townPointer->m_owner].m_aiData.m_attentionWeights.upgradeBase
-               + 0.66);
+        creatureRV = creatureRV
+                     * (gGame->m_players[townPointer->m_owner]
+                            .m_aiData.m_attentionWeights.turnCreatureAttention
+                        + 0.66);
     }
     if ((gMonsterDatabase[creature].stats.attributes & MONSTER_FLAGS_BREATH_ATTACK)) {
         for (townSlot = 0; townSlot < ARMY_GROUP_SLOT_COUNT; townSlot++) {
@@ -1689,8 +1697,8 @@ void philAI::ValueOfBuyingHero(
     }
     heroRV += heroPointer->m_experience / 2;
     heroRV = heroRV
-             * (gCurPlayerData->m_aiData.m_attentionWeights.heroValue + 1.0
-                - gCurPlayerData->m_aiData.m_attentionWeights.upgradeBase);
+             * (gCurPlayerData->m_aiData.m_attentionWeights.turnHeroAttention + 1.0
+                - gCurPlayerData->m_aiData.m_attentionWeights.turnCreatureAttention);
     if (gTownHeroClass[H1_ENUM_ENCODE(TownType, townPointer->m_type)] == heroPointer->m_heroClass)
         heroRV = heroRV * AI_HERO_PURCHASE_SAME_RACE_FACTOR;
     heroRV += StrategicValueOfPosition(
@@ -1783,14 +1791,17 @@ i32 philAI::MeanRVOfUnexploredTerritory(i32 player) {
 VA(0x0044ba20, 0x14d)
 void philAI::GetGameAttentionValue(i32 player) {
     playerAttentionWeights* attention = &gGame->m_players[player].m_aiData.m_attentionWeights;
-    attention->gameWeightA = static_cast<float>(Random(0, 100) / 500.0) + 0.23;
-    attention->gameWeightB = static_cast<float>(Random(0, 100) / 500.0) + 0.23;
-    attention->gameWeightB *= (AI_ATTENTION_IDENTITY_FLOAT + 3.0) / 4.0;
-    attention->gameWeightB *= (5.0 - AI_ATTENTION_IDENTITY) / 4.0;
-    attention->gameWeightA *= (AI_ATTENTION_IDENTITY + 3.0) / 4.0;
-    attention->gameWeightB = attention->gameWeightB * ((3.0 - gGame->m_playerCount) * 0.15 + 1.0);
-    attention->gameWeightA = attention->gameWeightA * ((3.0 - gGame->m_playerCount) * 0.07 + 1.0);
-    attention->gameRemainder = ((1.0f - attention->gameWeightB) - attention->gameWeightA);
+    attention->gameBuildingAttention = static_cast<float>(Random(0, 100) / 500.0) + 0.23;
+    attention->gameHeroAttention = static_cast<float>(Random(0, 100) / 500.0) + 0.23;
+    attention->gameHeroAttention *= (AI_ATTENTION_IDENTITY_FLOAT + 3.0) / 4.0;
+    attention->gameHeroAttention *= (5.0 - AI_ATTENTION_IDENTITY) / 4.0;
+    attention->gameBuildingAttention *= (AI_ATTENTION_IDENTITY + 3.0) / 4.0;
+    attention->gameHeroAttention =
+        attention->gameHeroAttention * ((3.0 - gGame->m_playerCount) * 0.15 + 1.0);
+    attention->gameBuildingAttention =
+        attention->gameBuildingAttention * ((3.0 - gGame->m_playerCount) * 0.07 + 1.0);
+    attention->gameCreatureAttention =
+        ((1.0f - attention->gameHeroAttention) - attention->gameBuildingAttention);
 }
 
 // Reset the game weights and scale the hero weight down as the game ages.
@@ -1798,12 +1809,12 @@ VA(0x0044bb6d, 0xc6)
 void philAI::GetTurnAttentionValue(i32 player) {
     playerAttentionWeights* attentionWeights =
         &gGame->m_players[player].m_aiData.m_attentionWeights;
-    attentionWeights->gameWeightA = 0.4f;
-    attentionWeights->gameWeightB = 0.3f;
-    attentionWeights->gameRemainder = 0.3f;
-    attentionWeights->buildingValue = attentionWeights->gameWeightA;
-    attentionWeights->heroValue = attentionWeights->gameWeightB;
-    attentionWeights->upgradeBase = attentionWeights->gameRemainder;
+    attentionWeights->gameBuildingAttention = 0.4f;
+    attentionWeights->gameHeroAttention = 0.3f;
+    attentionWeights->gameCreatureAttention = 0.3f;
+    attentionWeights->turnBuildingAttention = attentionWeights->gameBuildingAttention;
+    attentionWeights->turnHeroAttention = attentionWeights->gameHeroAttention;
+    attentionWeights->turnCreatureAttention = attentionWeights->gameCreatureAttention;
     float scale;
     if (gCurTurn < 5)
         scale = 1.6f;
@@ -1815,7 +1826,7 @@ void philAI::GetTurnAttentionValue(i32 player) {
         scale = 1.0f;
     else
         scale = 0.8f;
-    attentionWeights->heroValue = attentionWeights->heroValue * scale;
+    attentionWeights->turnHeroAttention = attentionWeights->turnHeroAttention * scale;
 }
 
 VA(0x0044bc33, 0x71)
@@ -1859,38 +1870,40 @@ float philAI::TurnsToBuy(i32* const resources) {
     return maxT;
 }
 
+#define turnEndValue followWorth   // frame-slot spelling
+#define turnEndSafety followChance // frame-slot spelling
 VA(0x0044bd6b, 0x493)
 i32 philAI::RVOfPosition(
     hero* aiHero,
     i16 x,
     i16 y,
-    i8 hasEvent,
-    i16 eventX,
-    i16 eventY,
-    i8 hasStrategicEvent,
-    i16 strategicX,
-    i16 strategicY,
+    i8 hasAdjacentMonster,
+    i16 adjacentMonsterX,
+    i16 adjacentMonsterY,
+    i8 beyondTurnMobility,
+    i16 turnEndX,
+    i16 turnEndY,
     i32 eventMode
 ) {
     i32 targetOdds;
     H1_ENUM_LOCAL(MapObjectType, i32) triggerObjectType;
-    i32 followWorth;
+    i32 turnEndValue;
     i32 targetEventValue;
     i32 totalValue;
     i32 positionStrategicValue;
     float journeyTurns;
     i32 triggerType;
     i32 destinationSafety;
-    i32 followChance;
+    i32 turnEndSafety;
     i32 guardEventChance;
     i32 primaryEventChance;
     i32 originSurvival;
     i32 monsterX;
     i32 startStrategicValue;
     i32 monsterY;
-    followWorth = 0;
+    turnEndValue = 0;
     destinationSafety = AI_CHANCE_CERTAIN;
-    followChance = AI_CHANCE_CERTAIN;
+    turnEndSafety = AI_CHANCE_CERTAIN;
     triggerType = gAdvManager->GetCell(x, y)->m_triggerType;
     triggerObjectType = MAP_TRIGGER_OBJECT(triggerType);
     targetOdds = AI_CHANCE_CERTAIN;
@@ -1902,13 +1915,18 @@ i32 philAI::RVOfPosition(
     if (triggerObjectType == MAP_OBJECT_SHIP && positionStrategicValue < 0)
         positionStrategicValue = 0;
     totalValue = 0;
-    if (hasEvent)
-        totalValue +=
-            ValueOfEventAtPosition(aiHero, eventX, eventY, AI_EVENT_IMMEDIATE, &primaryEventChance);
-    if (hasStrategicEvent) {
-        followWorth = StrategicValueOfPosition(aiHero, strategicX, strategicY, true, &followChance);
-        if (followWorth < 0)
-            totalValue += followWorth;
+    if (hasAdjacentMonster)
+        totalValue += ValueOfEventAtPosition(
+            aiHero,
+            adjacentMonsterX,
+            adjacentMonsterY,
+            AI_EVENT_IMMEDIATE,
+            &primaryEventChance
+        );
+    if (beyondTurnMobility) {
+        turnEndValue = StrategicValueOfPosition(aiHero, turnEndX, turnEndY, true, &turnEndSafety);
+        if (turnEndValue < 0)
+            totalValue += turnEndValue;
     }
     if (gAdvManager->FindAdjacentMonster(
             x,
@@ -1961,9 +1979,9 @@ i32 philAI::RVOfPosition(
         targetEventValue = targetEventValue * destinationSafety / 100;
         positionStrategicValue = positionStrategicValue * destinationSafety / 100;
     }
-    if (followChance < AI_CHANCE_CERTAIN) {
-        targetEventValue = targetEventValue * followChance / 100;
-        positionStrategicValue = positionStrategicValue * followChance / 100;
+    if (turnEndSafety < AI_CHANCE_CERTAIN) {
+        targetEventValue = targetEventValue * turnEndSafety / 100;
+        positionStrategicValue = positionStrategicValue * turnEndSafety / 100;
     }
     if (primaryEventChance < AI_CHANCE_CERTAIN) {
         if (totalValue > 0)
@@ -1997,6 +2015,8 @@ i32 philAI::RVOfPosition(
         totalValue += 40;
     return totalValue;
 }
+#undef turnEndValue
+#undef turnEndSafety
 
 // StrategicValueOfPosition's shared search, constructed by its dynamic
 // initializer between RVOfPosition and its first user.
@@ -2102,7 +2122,7 @@ i32 philAI::StrategicValueOfPosition(
                     if (gHeroLiveChance[cell->m_objectMetadata] != RV_UNSET
                         && gHeroLiveChance[cell->m_objectMetadata] < AI_CHANCE_CERTAIN) {
                         reach = gGame->GetHero(cell->m_objectMetadata)->m_mobility;
-                        if (gHumanPlayer[gGame->m_availableHeroes[cell->m_objectMetadata]]) {
+                        if (gHumanPlayer[gGame->m_heroOwners[cell->m_objectMetadata]]) {
                             if (activeSearchArray->m_cells[searchX][searchY].distance <= reach) {
                                 if (activeSearchArray->m_cells[searchX][searchY].distance <= 14)
                                     danger = 100 - gHeroLiveChance[cell->m_objectMetadata];
@@ -2129,8 +2149,7 @@ i32 philAI::StrategicValueOfPosition(
                     && gAdvManager->GetCell(searchX, searchY)->m_triggerType
                            == MAP_EVENT_TRIGGER(MAP_OBJECT_HERO)
                     && gAdvManager->GetCell(searchX, searchY)->m_objectMetadata != aiHero->m_id
-                    && gGame->m_availableHeroes[gAdvManager->GetCell(searchX, searchY)
-                                                    ->m_objectMetadata]
+                    && gGame->m_heroOwners[gAdvManager->GetCell(searchX, searchY)->m_objectMetadata]
                            == aiHero->m_owner)
                     strategicWorth -=
                         (32 - activeSearchArray->m_cells[searchX][searchY].distance) * 1250 >> 5;
@@ -2232,7 +2251,8 @@ float philAI::TurnValueOfObelisk(i32 player) {
     aiData->m_obeliskValue =
         aiData->m_obeliskValue
         * (1.5 - abs(32 - gGame->m_players[player].CountPuzzlePiecesRemoved()) / 48.0f);
-    aiData->m_obeliskValue = aiData->m_obeliskValue * (aiData->m_attentionWeights.heroValue + 0.66);
+    aiData->m_obeliskValue =
+        aiData->m_obeliskValue * (aiData->m_attentionWeights.turnHeroAttention + 0.66);
     return aiData->m_obeliskValue;
 }
 #undef aiData
@@ -2444,7 +2464,7 @@ void philAI::EvaluateOneTimeCreaturePurchase(
     if (replacementSlot != -1)
         purchasedValue -= leastStackValue;
     purchaseValue =
-        purchasedValue * gGame->m_players[aiHero->m_owner].m_aiData.m_upgradeValueWeight;
+        purchasedValue * gGame->m_players[aiHero->m_owner].m_aiData.m_fightValueResourceWeight;
     if (!useAvailableCount) {
         GetMonsterCost(creature, gCreatureCost);
         purchaseValue -= purchaseCount * RVConversion(gCreatureCost);
@@ -2677,8 +2697,8 @@ void philAI::HeroInteractionAtTown(
             transferFactor = 0.13f;
         curveTerm = 1.0f + townShareDiff - 0.22;
         transferRating = (curveTerm * curveTerm - 1.0f)
-                         * gCurPlayerData->m_aiData.m_upgradeValueWeight * (townFV + heroArmyValue)
-                         * transferFactor;
+                         * gCurPlayerData->m_aiData.m_fightValueResourceWeight
+                         * (townFV + heroArmyValue) * transferFactor;
         if (transferRating < 0)
             transferRating = 0;
         hasRoom = false;
@@ -2950,16 +2970,16 @@ void philAI::BuildHero(town* townPointer, i16 availableHeroIndex) {
     newHero->m_remainingMobility = newHero->CalcMobility();
     newHero->m_mobility = newHero->m_remainingMobility;
     newHero->m_locationType = gGame->m_map[townX][townY].m_triggerType;
-    newHero->m_occupiedTown = gGame->m_map[townX][townY].m_objectMetadata;
+    newHero->m_locationMetadata = gGame->m_map[townX][townY].m_objectMetadata;
     gGame->m_map[townX][townY].m_triggerType = MAP_EVENT_TRIGGER(MAP_OBJECT_HERO);
     gGame->m_map[townX][townY].m_objectMetadata =
         gCurPlayerData->m_availableHeroIds[availableHeroIndex];
-    gGame->m_availableHeroes[newHero->m_id] = townPointer->m_owner;
+    gGame->m_heroOwners[newHero->m_id] = townPointer->m_owner;
     townPointer->m_occupyingHeroId = newHero->m_id;
     townPointer->GiveSpells();
     gCurPlayerData->m_availableHeroIds[availableHeroIndex] =
         gGame->GetNewHeroId(Random(0, HERO_CLASS_COUNT - 1));
-    gGame->m_availableHeroes[gCurPlayerData->m_availableHeroIds[availableHeroIndex]] =
+    gGame->m_heroOwners[gCurPlayerData->m_availableHeroIds[availableHeroIndex]] =
         HERO_AVAILABILITY_RETREATED;
     gHeroBuiltThisTurn = true;
     ShowStatus();
@@ -3091,7 +3111,7 @@ void philAI::FightEvent(hero* heroPointer, mapCell* cell) {
             break;
         case GHOST_SITE_HUGE:
             rewardValue = 2000.0f * gAITurnCostResource[RESOURCE_GOLD]
-                          + gCurPlayerData->m_aiData.m_artifactValue;
+                          + gCurPlayerData->m_aiData.m_meanArtifactValue;
             break;
         default:
             return;
@@ -3242,7 +3262,7 @@ void philAI::TownEvent(mapCell* cell, hero* heroPointer, i32 x, i32 y) {
     if (targetCastle->m_owner == gCurPlayer && heroPointer->m_x == x && heroPointer->m_y == y) {
         targetCastle->m_occupyingHeroId = gCurPlayerData->CurrentHero();
         heroPointer->m_locationType = MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN);
-        heroPointer->m_occupiedTown = targetCastle->m_id;
+        heroPointer->m_locationMetadata = targetCastle->m_id;
         HeroInteractionAtTown(heroPointer, targetCastle, false, &gDummy);
     }
     gAdvManager->MobilizeCurrHero(false);
@@ -3464,7 +3484,7 @@ i32 philAI::ValueOfEventAtPosition(hero* aiHero, i16 x, i16 y, i32 immediate, i3
                 gReduceByReload = false;
             break;
         case MAP_OBJECT_HERO:
-            if (gGame->m_availableHeroes[gEventLocation->m_objectMetadata] == aiHero->m_owner) {
+            if (gGame->m_heroOwners[gEventLocation->m_objectMetadata] == aiHero->m_owner) {
                 gHeroLiveChance[gEventLocation->m_objectMetadata] = AI_CHANCE_CERTAIN;
                 if (!immediate || gTroopReload)
                     gVisitResult = 0;
@@ -3472,8 +3492,7 @@ i32 philAI::ValueOfEventAtPosition(hero* aiHero, i16 x, i16 y, i32 immediate, i3
                     gVisitResult = -5000;
                 *liveChance = 0;
             } else if (gIAmGreatest
-                       && !gHumanPlayer
-                              [gGame->m_availableHeroes[gEventLocation->m_objectMetadata]]) {
+                       && !gHumanPlayer[gGame->m_heroOwners[gEventLocation->m_objectMetadata]]) {
                 gVisitResult = 0;
                 *liveChance = AI_CHANCE_CERTAIN;
             } else {
@@ -3482,7 +3501,7 @@ i32 philAI::ValueOfEventAtPosition(hero* aiHero, i16 x, i16 y, i32 immediate, i3
                 gEventTownArmy = NULL;
                 gEventHero = gGame->GetHero(gEventLocation->m_objectMetadata);
                 if (gEventHero->m_locationType == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN)) {
-                    gEventTown = gGame->GetTown(gEventHero->m_occupiedTown);
+                    gEventTown = gGame->GetTown(gEventHero->m_locationMetadata);
                     gEventTownArmy = &gEventTown->m_army;
                     gEventTownScore = ValueOfTown(gEventTown);
                     gEventTownId = gEventTown->m_id;
@@ -3619,7 +3638,7 @@ i32 philAI::ValueOfEventAtPosition(hero* aiHero, i16 x, i16 y, i32 immediate, i3
             } else {
                 gVisitResult = aiHero->m_aiFightValue * 0.3 * 1000.0
                                + (aiHero->m_aiFightValue * 0.1 * 1000.0
-                                  + gCurPlayerData->m_aiData.m_artifactValue)
+                                  + gCurPlayerData->m_aiData.m_meanArtifactValue)
                                + (aiHero->m_aiFightValue * 0.3 * 1000.0
                                   + 2500.0f * gAITurnCostResource[RESOURCE_GOLD])
                                + gAITurnCostResource[RESOURCE_GOLD] * -750.0;
@@ -3754,7 +3773,7 @@ i32 philAI::ValueOfEventAtPosition(hero* aiHero, i16 x, i16 y, i32 immediate, i3
             if (gEventLocation->m_objectMetadata == SKELETON_EMPTY)
                 gVisitResult = 0;
             else
-                gVisitResult = gCurPlayerData->m_aiData.m_artifactValue * 0.1;
+                gVisitResult = gCurPlayerData->m_aiData.m_meanArtifactValue * 0.1;
             break;
         case MAP_OBJECT_ANCIENT_LAMP:
             EvaluateOneTimeCreaturePurchase(
@@ -3876,7 +3895,7 @@ i32 philAI::ValueOfEventAtPosition(hero* aiHero, i16 x, i16 y, i32 immediate, i3
                     0,
                     lootGold * gAITurnCostResource[RESOURCE_GOLD]
                         + (gEventLocation->m_objectMetadata == GHOST_SITE_HUGE
-                               ? gCurPlayerData->m_aiData.m_artifactValue
+                               ? gCurPlayerData->m_aiData.m_meanArtifactValue
                                : 0),
                     shouldBattle,
                     gVisitResult
@@ -3903,7 +3922,7 @@ i32 philAI::ValueOfEventAtPosition(hero* aiHero, i16 x, i16 y, i32 immediate, i3
                     0,
                     captureValue
                         * (gGame->m_players[gGame->m_mineOwners[MINE_SLOT_DRAGON_CITY]]
-                               .m_aiData.m_artifactPoolShare
+                               .m_aiData.m_playerShare
                            + 1.0),
                     dragonBattle,
                     gVisitResult

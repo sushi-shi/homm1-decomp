@@ -788,8 +788,8 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) RecruitHeroHandler(tag_message& messa
                         heroSlot = message.id - viewButton1Value;
                         gTownManager->m_recruitHeroes[heroSlot]->HeroView(false);
                         gTownManager->RedrawTownScreen();
-                        gTownManager->m_heroWindow0->DrawWindow();
-                        gTownManager->m_heroWindow1->DrawWindow();
+                        gTownManager->m_buildingWindow->DrawWindow();
+                        gTownManager->m_childWindow->DrawWindow();
                         gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);
                         break;
                     default:
@@ -1510,9 +1510,9 @@ void PlayerDead(i32 player) {
     for (i = currentPlayer->m_heroCount - 1; i >= 0; --i)
         gGame->GetHero(currentPlayer->m_heroIds[i])->Deallocate();
     for (i = 0; i < HERO_AVAILABLE_SLOT_COUNT; ++i) {
-        if (gGame->m_availableHeroes[currentPlayer->m_availableHeroIds[i]]
+        if (gGame->m_heroOwners[currentPlayer->m_availableHeroIds[i]]
             == HERO_AVAILABILITY_RETREATED)
-            gGame->m_availableHeroes[currentPlayer->m_availableHeroIds[i]] =
+            gGame->m_heroOwners[currentPlayer->m_availableHeroIds[i]] =
                 HERO_AVAILABILITY_UNAVAILABLE;
     }
     if (gRemoteOn && gHumanPlayer[player])

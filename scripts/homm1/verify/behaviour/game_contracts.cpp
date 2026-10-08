@@ -617,8 +617,8 @@ static void ArtificialIntelligence(void) {
         {"goblins vs dragons", &goblins, NULL, &dragons, NULL, 0, GAME_PLAYER_NONE, false, PLAYER_TYPE_AVERAGE},
     };
     playerData& player = gGame->m_players[0];
-    player.m_aiData.m_attentionWeights.upgradeBase = 0.5f;
-    player.m_aiData.m_upgradeValueWeight = 1.0f;
+    player.m_aiData.m_attentionWeights.turnCreatureAttention = 0.5f;
+    player.m_aiData.m_fightValueResourceWeight = 1.0f;
     for (i32 i = 0; i < sizeof(cases) / sizeof(cases[0]); i++) {
         const OutcomeCase& c = cases[i];
         float winChance = 0.0f;
@@ -820,7 +820,7 @@ static void FillSavedState(void) {
     FixtureBytes(gGame->m_castleRecs, sizeof(gGame->m_castleRecs));
     FixtureBytes(gGame->m_townOwners, sizeof(gGame->m_townOwners));
     FixtureBytes(gGame->m_heroRecs, sizeof(gGame->m_heroRecs));
-    FixtureBytes(gGame->m_availableHeroes, sizeof(gGame->m_availableHeroes));
+    FixtureBytes(gGame->m_heroOwners, sizeof(gGame->m_heroOwners));
     FixtureBytes(gGame->m_mines, sizeof(gGame->m_mines));
     FixtureBytes(gGame->m_mineOwners, sizeof(gGame->m_mineOwners));
     FixtureBytes(gGame->m_randomArtifacts, sizeof(gGame->m_randomArtifacts));

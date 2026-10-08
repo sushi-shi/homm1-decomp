@@ -48,7 +48,7 @@ H1_ENUM_CONST_BEGIN(HeroConstant)
     HERO_SKILL_BONUS_ROW_LAST = 8
 H1_ENUM_CONST_END(HeroConstant)
 
-// game::m_availableHeroes per hero id: the owning player, UNAVAILABLE, or
+// game::m_heroOwners per hero id: the owning player, UNAVAILABLE, or
 // RETREATED for a hero that retreated or surrendered and waits in its
 // owner's tavern (Dismiss).
 H1_ENUM_CONST_BEGIN(HeroAvailability)
@@ -102,7 +102,7 @@ public:
     H1_ENUM_STORAGE(MapDirection, u8) m_direction;
     u8 m_locationType;
     // SetHeroContext passes it zero-extended to game::RestoreCell.
-    u8 m_occupiedTown;
+    u8 m_locationMetadata;
     i16 m_mobility;
     i16 m_remainingMobility;
     i32 m_experience;

@@ -74,9 +74,9 @@ i16 searchArray::FindNearestObject(
                     0,
                     0,
                     0,
-                    node.rvFlag2,
-                    node.previousX,
-                    node.previousY
+                    node.beyondTurnMobility,
+                    node.turnEndX,
+                    node.turnEndY
                 );
             }
         }
@@ -262,7 +262,7 @@ void searchArray::SeedPosition(
         }
         if (s_currentNode.distance > maximumCost && maximumCost > 0)
             goto point_complete;
-        if (s_currentNode.rvFlag1) {
+        if (s_currentNode.hasAdjacentMonster) {
             s_hasAdjacentMonster = 1;
             s_adjacentMonsterX = s_currentNode.adjacentMonsterX;
             s_adjacentMonsterY = s_currentNode.adjacentMonsterY;
@@ -274,15 +274,14 @@ void searchArray::SeedPosition(
             );
             if (s_triggerType == MAP_OBJECT_MONSTER || s_triggerType == MAP_OBJECT_STONE_LITHS
                 || s_triggerType == MAP_OBJECT_HERO || s_triggerType == MAP_OBJECT_SHIP) {
-                if (!findAdjacentMonster || s_currentNode.rvFlag1)
+                if (!findAdjacentMonster || s_currentNode.hasAdjacentMonster)
                     goto point_complete;
                 s_hasAdjacentMonster = 1;
                 s_adjacentMonsterX = s_currentNode.x;
                 s_adjacentMonsterY = s_currentNode.y;
                 if (s_triggerType == MAP_OBJECT_HERO
-                    && gGame->m_availableHeroes[gAdvManager
-                                                    ->GetCell(s_currentNode.x, s_currentNode.y)
-                                                    ->m_objectMetadata]
+                    && gGame->m_heroOwners[gAdvManager->GetCell(s_currentNode.x, s_currentNode.y)
+                                               ->m_objectMetadata]
                            == gCurPlayer)
                     goto point_complete;
             } else {
@@ -310,7 +309,7 @@ void searchArray::SeedPosition(
                 && (s_currentNode.x != seedX || s_currentNode.y != seedY)) {
                 if (!findAdjacentMonster)
                     goto point_complete;
-                if (s_currentNode.rvFlag1) {
+                if (s_currentNode.hasAdjacentMonster) {
                     if (gAdvManager->FindAdjacentMonster(
                             s_currentNode.x,
                             s_currentNode.y,
@@ -364,7 +363,7 @@ void searchArray::SeedPosition(
             if (findAdjacentMonster
                 && (gMapExtra[s_neighborX][s_neighborY] & MAP_EXTRA_MONSTER_ADJACENT)
                 && m_cells[s_neighborX][s_neighborY].visited
-                && m_cells[s_neighborX][s_neighborY].rvFlag1
+                && m_cells[s_neighborX][s_neighborY].hasAdjacentMonster
                 && m_cells[s_neighborX][s_neighborY].distance
                        < s_currentNode.distance + SEARCH_MONSTER_RESEED_WINDOW
                 && gAdvManager->FindAdjacentMonster(
@@ -388,16 +387,16 @@ void searchArray::SeedPosition(
                 s_hasAdjacentMonster,
                 s_adjacentMonsterX,
                 s_adjacentMonsterY,
-                s_currentNode.rvFlag2,
-                s_currentNode.previousX,
-                s_currentNode.previousY
+                s_currentNode.beyondTurnMobility,
+                s_currentNode.turnEndX,
+                s_currentNode.turnEndY
             );
             if (s_hasTarget
                 && s_currentNode.x + gNormalDirTable[H1_ENUM_ENCODE(MapDirection, s_direction)].x
                        == targetX
                 && s_currentNode.y + gNormalDirTable[H1_ENUM_ENCODE(MapDirection, s_direction)].y
                        == targetY
-                && !s_currentNode.rvFlag1) {
+                && !s_currentNode.hasAdjacentMonster) {
                 if (s_currentNode.distance
                         + CalcTerrainCost(
                             s_possibleDirections[s_direction],

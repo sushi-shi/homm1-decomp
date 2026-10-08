@@ -49,8 +49,7 @@ asks and the facts that bound it.
   `combatRemoteMessage`/`heroRemoteMessage` views over `char*` packets in
   `EVENTS` and the `game` save-transfer writes are the remaining pointer casts.
 - **Unions** model record variants (DirectDraw SDK, `tag_message` word views,
-  remote payloads, NetBIOS node payload, `searchNode` phases), not layout
-  workarounds.
+  remote payloads, NetBIOS node payload), not layout workarounds.
 - **gotos** in exact functions are byte evidence: replacing one of
   `PollRemote`'s `goto done` jumps with `return` drops it to 98.97.
 - **Address arithmetic, owner recovery, manual varargs**: none; keep it so.

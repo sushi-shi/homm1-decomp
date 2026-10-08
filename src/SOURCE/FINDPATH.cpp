@@ -265,16 +265,16 @@ void searchArray::PushPoint(
     i16 y,
     u16 direction,
     u16 cost,
-    u16 mobility,
+    u16 maximumCost,
     i8 occupied,
-    i8 rvFlag1,
-    i8 valueX,
-    i8 valueY,
-    i8 rvFlag2,
-    i8 previousX,
-    i8 previousY
+    i8 hasAdjacentMonster,
+    i8 adjacentMonsterX,
+    i8 adjacentMonsterY,
+    i8 beyondTurnMobility,
+    i8 turnEndX,
+    i8 turnEndY
 ) {
-    if (cost > mobility && mobility > 0)
+    if (cost > maximumCost && maximumCost > 0)
         return;
     if (x < 0 || x > MAP_CELL_GRID_SIZE - 1 || y < 0 || y > MAP_CELL_GRID_SIZE - 1)
         return;
@@ -285,9 +285,10 @@ void searchArray::PushPoint(
     gSearchLow = 0;
     gSearchCell = &m_cells[x][y];
     if (gSearchCell->visited) {
-        if (!gSearchCell->rvFlag1 && rvFlag1)
+        if (!gSearchCell->hasAdjacentMonster && hasAdjacentMonster)
             return;
-        if (gSearchCell->distance <= cost && (!gSearchCell->rvFlag1 || rvFlag1))
+        if (gSearchCell->distance <= cost
+            && (!gSearchCell->hasAdjacentMonster || hasAdjacentMonster))
             return;
     }
 
@@ -310,23 +311,23 @@ void searchArray::PushPoint(
         );
     m_queueCount++;
 
-    if (cost > gCurTempMobility && rvFlag2 == 0) {
-        gSearchQueueNode->rvFlag2 = 1;
-        gSearchQueueNode->previousX = x - gNormalDirTable[direction].x;
-        gSearchQueueNode->previousY = y - gNormalDirTable[direction].y;
+    if (cost > gCurTempMobility && beyondTurnMobility == 0) {
+        gSearchQueueNode->beyondTurnMobility = 1;
+        gSearchQueueNode->turnEndX = x - gNormalDirTable[direction].x;
+        gSearchQueueNode->turnEndY = y - gNormalDirTable[direction].y;
     } else {
-        gSearchQueueNode->rvFlag2 = rvFlag2;
-        gSearchQueueNode->previousX = previousX;
-        gSearchQueueNode->previousY = previousY;
+        gSearchQueueNode->beyondTurnMobility = beyondTurnMobility;
+        gSearchQueueNode->turnEndX = turnEndX;
+        gSearchQueueNode->turnEndY = turnEndY;
     }
     gSearchQueueNode->x = x;
     gSearchQueueNode->y = y;
     gSearchQueueNode->direction = direction;
     gSearchQueueNode->distance = cost;
     gSearchQueueNode->occupied = occupied;
-    gSearchQueueNode->rvFlag1 = rvFlag1;
-    gSearchQueueNode->valueX = valueX;
-    gSearchQueueNode->valueY = valueY;
+    gSearchQueueNode->hasAdjacentMonster = hasAdjacentMonster;
+    gSearchQueueNode->adjacentMonsterX = adjacentMonsterX;
+    gSearchQueueNode->adjacentMonsterY = adjacentMonsterY;
     gSearchQueueNode->visited = 1;
     *gSearchCell = *gSearchQueueNode;
 }

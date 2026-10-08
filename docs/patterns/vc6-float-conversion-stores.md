@@ -7,7 +7,7 @@ pinned VC6 SP5 unoptimized profile.
 the double base weight:
 
 ```cpp
-attention->gameWeightA = static_cast<float>(Random(0, 100) / 500.0) + 0.23;
+attention->gameBuildingAttention = static_cast<float>(Random(0, 100) / 500.0) + 0.23;
 ```
 
 Without the explicit conversion, VC6 emits `FILD; FDIV; FADD`. With it, VC6

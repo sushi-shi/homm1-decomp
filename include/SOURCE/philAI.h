@@ -138,12 +138,12 @@ public:
         class hero* aiHero,
         i16 x,
         i16 y,
-        i8 hasEvent,
-        i16 eventX,
-        i16 eventY,
-        i8 hasStrategicEvent,
-        i16 strategicX,
-        i16 strategicY,
+        i8 hasAdjacentMonster,
+        i16 adjacentMonsterX,
+        i16 adjacentMonsterY,
+        i8 beyondTurnMobility,
+        i16 turnEndX,
+        i16 turnEndY,
         i32 eventMode
     );
     i32 StrategicValueOfPosition(

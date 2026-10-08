@@ -292,7 +292,7 @@ operations: in-place event-bit clears, comparisons with the map-file object
 domain, secondary-trigger transfers and presence tests.
 
 **Unions and varargs.** Alternate views and manual argument access are kept only
-where retail evidence requires them. Eight unions remain; the other two `rg`
+where retail evidence requires them. Seven unions remain; the other two `rg`
 hits are comments in `ARMY.cpp` and `EVENTS.h`. Each one gives two or more readers of the same storage
 their own types:
 
@@ -300,7 +300,6 @@ their own types:
 | --- | --- |
 | `tag_message`, three anonymous words | Each message type reads the same word under its own name and type (command or key code or x, id or y, value or text). Retail reads every word directly off the message, so a named payload level would change the operand order. |
 | `icon` resource data | Raw bytes, the `IconEntry` directory and Buka's font word reads. |
-| `searchNode` tail | The adventure search reads adjacent-monster bytes, and the value search reads signed coordinates. |
 | `tag_Node` payload | The serial payload at +0xa, and the NetBIOS session byte then payload at +0xb. |
 | `RemotePayload` | The remote message payload layouts: text, the save transfer header and segments, and the relayed combat action. |
 | `advManager::SendHeroTownData` buffer (`EVENTS.cpp`) | The single allocation is filled as the combat record, then as each hero fragment. |

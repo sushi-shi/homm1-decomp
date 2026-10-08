@@ -309,8 +309,8 @@ public:
     u16 m_buildableBuildings;
     b8 m_castleDialogActive;
     H1_ENUM_STORAGE(BuildingSlotType, i16) m_selectedBuilding;
-    heroWindow* m_heroWindow0;
-    heroWindow* m_heroWindow1;
+    heroWindow* m_buildingWindow;
+    heroWindow* m_childWindow;
     i16 m_splitAmount;
     i16 m_splitMaximum;
     // RecruitHero: the chosen candidate slot (-1 if none) and both candidates.

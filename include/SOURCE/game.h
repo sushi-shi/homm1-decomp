@@ -238,11 +238,11 @@ struct boatRecord {
 };
 #pragma pack(pop)
 
-// boatRecord::heroId: when a hero lands, the cursor walk ORs OCCUPIED_FLAG
+// boatRecord::heroId: when a hero lands, the cursor walk ORs VACATED_FLAG
 // into the boat's hero id; SummonBoat looks for the current
-// hero's flagged boat, then any flagged boat of the player.
+// hero's vacated boat, then any vacated boat of the player.
 H1_ENUM_CONST_BEGIN(BoatRecordConstant)
-    BOAT_OCCUPIED_FLAG = 0x80
+    BOAT_VACATED_FLAG = 0x80
 H1_ENUM_CONST_END(BoatRecordConstant)
 
 // The map file's town records (LoadMap): a type byte whose low seven bits
@@ -329,7 +329,7 @@ public:
     i8 m_townOwners[GAME_TOWN_COUNT];
     u8 m_townBuiltToday[4];
     class hero m_heroRecs[GAME_HERO_COUNT];
-    i8 m_availableHeroes[GAME_HERO_COUNT];
+    i8 m_heroOwners[GAME_HERO_COUNT];
     mineRecord m_mines[GAME_MINE_COUNT];
     // ClaimMine mirrors each mine owner into this byte array.
     i8 m_mineOwners[GAME_MINE_COUNT];

@@ -75,12 +75,12 @@ H1_ENUM_END(PlayerColor)
 // TurnCostResource's &players[p]+0xa1 base and +0x34 income rows place
 // the per-player AI block inside playerData.
 struct playerAttentionWeights {
-    float gameWeightA;
-    float gameRemainder;
-    float gameWeightB;
-    float buildingValue;
-    float upgradeBase;
-    float heroValue;
+    float gameBuildingAttention;
+    float gameCreatureAttention;
+    float gameHeroAttention;
+    float turnBuildingAttention;
+    float turnCreatureAttention;
+    float turnHeroAttention;
 };
 
 class playerAIData {
@@ -93,10 +93,10 @@ public:
     i32 m_unexploredValue;
     // EvaluateOneTimeCreaturePurchase weights fight value by the float at +0xf9;
     // FightEvent adds the artifact float at +0xfd.
-    float m_upgradeValueWeight;
-    float m_artifactValue;
+    float m_fightValueResourceWeight;
+    float m_meanArtifactValue;
     // GetTurnAIVars' float share 1/(players + dead players) per player.
-    float m_artifactPoolShare;
+    float m_playerShare;
 };
 
 // Retail strides players by 0x105 bytes from game+0x20c (four records end at

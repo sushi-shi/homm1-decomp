@@ -141,12 +141,12 @@ src/SOURCE/HEXCELL.cpp	*	1	trivial-function-literal	1 bitwise	the single bit (1 
 src/SOURCE/AI.cpp	*	1	trivial-function-literal	1 initializer	a bit mask's first bit or a run counter starting at one
 src/SOURCE/ARMY.cpp	*	[01]	trivial-function-literal	[01] store m_limitCreatureCount[]	a stack marked (1) or cleared (0) for the limited redraw
 src/SOURCE/FINDPATH.cpp	*	[01]	trivial-function-literal	[01] store visited	a search node's visited bit
-src/SOURCE/FINDPATH.cpp	*	[01]	trivial-function-literal	[01] store rvFlag2	a search node's beyond-mobility bit
+src/SOURCE/FINDPATH.cpp	*	[01]	trivial-function-literal	[01] store beyondTurnMobility	a search node's beyond-mobility bit
 src/SOURCE/FINDPATH.cpp	*	[01]	trivial-function-literal	[01] store occupied[]	TestPossibleDirections' occupied-direction flag
 src/SOURCE/SEARCH.cpp	*	[01]	trivial-function-literal	[01] store s*_[a-z]*[A-Z]*	SeedPosition's static flags (target, adjacent monster, direction blocked)
 src/SOURCE/DRAWING.cpp	*	1	trivial-function-literal	1 equality m_castleSide[]	combatManager::m_castleSide's set flag
 src/SOURCE/HEXCELL.cpp	*	1	trivial-function-literal	1 equality m_castleSide[]	combatManager::m_castleSide's set flag
-src/SOURCE/FINDPATH.cpp	*	0	trivial-function-literal	0 equality rvFlag2	a search node's beyond-mobility bit clear
+src/SOURCE/FINDPATH.cpp	*	0	trivial-function-literal	0 equality beyondTurnMobility	a search node's beyond-mobility bit clear
 src/SOURCE/ARMY.cpp	*	[-1]*	trivial-function-literal	-1 conditional	a one-hex (or one-step) offset chosen by facing or direction
 src/SOURCE/FLY.cpp	*	[-1]*	trivial-function-literal	-1 conditional	a one-hex (or one-step) offset chosen by facing or direction
 src/SOURCE/ARMY.cpp	*	1	trivial-function-literal	1 conditional	a one-hex (or one-step) offset chosen by facing or direction
@@ -872,9 +872,9 @@ src/SOURCE/PHILAI.cpp	philAI::LikelihoodOfEnemyAttacking	*	store	store to attack
 src/SOURCE/PHILAI.cpp	philAI::LikelihoodOfEnemyAttacking	*	store	store to lossRisk	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::LikelihoodOfEnemyAttacking	*	store	store to attackStrength	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::LikelihoodOfEnemyAttacking	*	store	store to attackWeeks	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::GetTurnAttentionValue	*	store	store to gameWeightA	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::GetTurnAttentionValue	*	store	store to gameWeightB	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::GetTurnAttentionValue	*	store	store to gameRemainder	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
+src/SOURCE/PHILAI.cpp	philAI::GetTurnAttentionValue	*	store	store to gameBuildingAttention	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
+src/SOURCE/PHILAI.cpp	philAI::GetTurnAttentionValue	*	store	store to gameHeroAttention	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
+src/SOURCE/PHILAI.cpp	philAI::GetTurnAttentionValue	*	store	store to gameCreatureAttention	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::GetTurnAttentionValue	*	comparison-or-bound	operator < giCurTurn	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::TurnsToBuy	*	store	store to turnCount	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::RVOfPosition	*	arithmetic	operator /	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)

@@ -237,8 +237,8 @@ public:
     H1_ENUM_STORAGE(TerrainType, i8) m_currentTerrain;
     char m_unused9b[4];
     class mapCell (*m_mapData)[MAP_CELL_GRID_SIZE];
-    class iconWidget* m_scrollLeftButton;
-    class iconWidget* m_scrollRightButton;
+    class iconWidget* m_heroScrollKnob;
+    class iconWidget* m_townScrollKnob;
     // Open adds these five panel backdrops to the adventure window.
     class backdropWidget* m_panelBackdrops[ADVMGR_PANEL_ICON_COUNT];
     u8* m_adventureBorder;
@@ -903,7 +903,7 @@ H1_ENUM_CONST_BEGIN(AdventureTeleportConstant)
     TELEPORT_REMOTE_FIZZLE_ADJUSTMENT = 64
 H1_ENUM_CONST_END(AdventureTeleportConstant)
 
-// SummonBoat (the boat's hero flag is game.h BOAT_OCCUPIED_FLAG): the old
+// SummonBoat (the boat's hero flag is game.h BOAT_VACATED_FLAG): the old
 // berth is restored with mode 5; the fizzle boxes around the old berth (clamped to
 // the viewport's inner box) and at the hero.
 H1_ENUM_CONST_BEGIN(AdventureSummonBoatConstant)
@@ -939,12 +939,12 @@ H1_ENUM_CONST_BEGIN(AdventureStateConstant)
     CURSOR_SAMPLE_FAST_SET = 2,
     HIGH_MEMORY_BUFFER_DIVISOR = 100,
     // Open's locator scroll knobs (scroll.icn frame 4).
-    SCROLL_Y = 195,
-    SCROLL_LEFT_X = 540,
-    SCROLL_RIGHT_X = 612,
-    SCROLL_WIDTH = 8,
-    SCROLL_HEIGHT = 17,
-    SCROLL_ICON_FRAME = 4
+    LOCATOR_KNOB_Y = 195,
+    HERO_LOCATOR_KNOB_X = 540,
+    TOWN_LOCATOR_KNOB_X = 612,
+    LOCATOR_KNOB_WIDTH = 8,
+    LOCATOR_KNOB_HEIGHT = 17,
+    LOCATOR_KNOB_FRAME = 4
 H1_ENUM_CONST_END(AdventureStateConstant)
 
 // SetEnvironmentOrigin/InsertSound's looping map sounds: a slot's ring

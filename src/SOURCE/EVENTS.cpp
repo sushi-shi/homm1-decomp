@@ -920,7 +920,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
             } else {
                 theirTown = NULL;
                 if (opponent->m_locationType == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN)) {
-                    theirTown = gGame->GetTown(opponent->m_occupiedTown);
+                    theirTown = gGame->GetTown(opponent->m_locationMetadata);
                     theirTown->m_occupyingHeroId = opponent->m_id;
                 }
                 fightOutcome = DoCombat(
@@ -2371,7 +2371,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
             if (opponent->m_owner == gCurPlayer)
                 return;
             if (opponent->m_locationType == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN))
-                heroTown = gGame->GetTown(opponent->m_occupiedTown);
+                heroTown = gGame->GetTown(opponent->m_locationMetadata);
             if (!gHumanPlayer[opponent->m_owner]) {
                 battleResult = gPhilAI->QuickCombat(
                     &eventHero->m_army,

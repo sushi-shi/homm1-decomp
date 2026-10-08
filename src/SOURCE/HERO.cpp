@@ -516,12 +516,12 @@ void hero::Deallocate(void) {
         }
     }
     if (m_locationType == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN)) {
-        curTown = gGame->GetTown(m_occupiedTown);
+        curTown = gGame->GetTown(m_locationMetadata);
         curTown->m_occupyingHeroId = TOWN_OCCUPYING_HERO_NONE;
     }
     if (gCurPlayer != m_owner || gGame->m_players[m_owner].m_currentHero != m_id
         || !gAdvManager->m_heroContextLocked)
-        gGame->RestoreCell(m_x, m_y, m_locationType, m_occupiedTown, NULL, 1);
+        gGame->RestoreCell(m_x, m_y, m_locationType, m_locationMetadata, NULL, 1);
     if (!gCombatSurrender) {
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++)
             m_army.Dismiss(i);
@@ -545,15 +545,15 @@ void hero::Deallocate(void) {
     }
     playerPtr->m_heroCount--;
     playerPtr->m_heroLocatorPage = 0;
-    gGame->m_availableHeroes[m_id] = HERO_AVAILABILITY_UNAVAILABLE;
+    gGame->m_heroOwners[m_id] = HERO_AVAILABILITY_UNAVAILABLE;
     if (gRetreatWin) {
         availSlot = Random(0, HERO_AVAILABLE_SLOT_COUNT - 1);
-        if (gGame->m_availableHeroes[gGame->m_players[m_owner].m_availableHeroIds[availSlot]]
+        if (gGame->m_heroOwners[gGame->m_players[m_owner].m_availableHeroIds[availSlot]]
             == HERO_AVAILABILITY_RETREATED)
-            gGame->m_availableHeroes[gGame->m_players[m_owner].m_availableHeroIds[availSlot]] =
+            gGame->m_heroOwners[gGame->m_players[m_owner].m_availableHeroIds[availSlot]] =
                 HERO_AVAILABILITY_UNAVAILABLE;
         gGame->m_players[m_owner].m_availableHeroIds[availSlot] = m_id;
-        gGame->m_availableHeroes[m_id] = HERO_AVAILABILITY_RETREATED;
+        gGame->m_heroOwners[m_id] = HERO_AVAILABILITY_RETREATED;
     }
     m_owner = GAME_PLAYER_NONE;
     m_destinationX = m_destinationY = HERO_DESTINATION_NONE;
