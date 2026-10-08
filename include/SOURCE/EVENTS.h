@@ -247,8 +247,8 @@ struct combatRemoteData {
     b8 hasFirstHero;
     b8 hasTown;
     b8 hasSecondHero;
-    i8 setupCombatX;
-    i8 setupCombatY;
+    i8 eventX;
+    i8 eventY;
     i32 randomSeed;
     i8 combatResult;
     b8 retreatWin;

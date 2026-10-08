@@ -132,3 +132,6 @@ enum	CombatPathConstant	SPECIAL_DIRECTION_MASK	WIDE_DIRECTIONS_MASK	0xc0 is COMB
 global	SOURCE/PHILAI	AI_TARGET_HUMAN_VALUE_FACTOR	AI_CURRENT_DESTINATION_FACTOR	DetermineTargetPosition multiplies the value of the cell equal to its in/out target (the hero's current m_destinationX/Y) by it; nothing about human players
 local-aliased	philAI::DoAI	minValue	searchMobility	the hero's mobility plus a margin, passed as DetermineTargetPosition's mobility (the search range)
 member	strip	m_stripType	m_unusedStripType	the constructor stores it; nothing reads it
+param	advManager::DoCombat/SendHeroTownData/ReceiveHeroTownData	setupCombatX/setupCombatY	eventX/eventY	every caller passes the hero's event cell; DoCombat never hands them to SetupCombat (which takes x, y twice) and only relays them in the network combat record
+member	combatRemoteData	setupCombatX/setupCombatY	eventX/eventY	the same relayed event cell
+local-aliased	advManager::DoNetCombat	ourFoe/curPosX/theCellY/sx/curStartY/attackTroops/attackingHero	remotePlayer/combatX/combatY/eventX/eventY/firstArmy/firstHero	the ReceiveHeroTownData outputs it forwards to DoCombat and SendHeroTownData, named after those parameters

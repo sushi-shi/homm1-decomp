@@ -2589,97 +2589,109 @@ void advManager::ComputerMonsterInteract(
     }
 }
 
-#define secondHero secondHro       // frame-slot spelling
-#define attackingHero attackingHro // frame-slot spelling
+#define secondHero secondHro   // frame-slot spelling
+#define firstHero attackingHro // frame-slot spelling
+#define remotePlayer ourFoe    // frame-slot spelling
+#define combatX curPosX        // frame-slot spelling
+#define combatY theCellY       // frame-slot spelling
+#define eventX sx              // frame-slot spelling
+#define eventY curStartY       // frame-slot spelling
+#define firstArmy attackTroops // frame-slot spelling
 VA(0x00428f98, 0x16f)
 i32 advManager::DoNetCombat(RemoteMessage* packet) {
     hero* secondHero;
-    i32 theCellY;
-    i32 curPosX;
+    i32 combatY;
+    i32 combatX;
     i32 randSeed;
-    i32 ourFoe;
+    i32 remotePlayer;
     i8 combatRes;
     i32 firstSide;
-    hero* attackingHero;
-    i32 curStartY;
-    i32 sx;
+    hero* firstHero;
+    i32 eventY;
+    i32 eventX;
     armyGroup* secondArmy;
-    armyGroup* attackTroops;
+    armyGroup* firstArmy;
     town* battleTown;
     i32 allReserved;
     i32 curUnused2;
 
-    attackingHero = NULL;
-    attackTroops = NULL;
+    firstHero = NULL;
+    firstArmy = NULL;
     battleTown = NULL;
     secondHero = NULL;
     secondArmy = NULL;
     ReceiveHeroTownData(
         packet,
-        &ourFoe,
-        &curPosX,
-        &theCellY,
-        &attackingHero,
-        &attackTroops,
+        &remotePlayer,
+        &combatX,
+        &combatY,
+        &firstHero,
+        &firstArmy,
         &battleTown,
         &secondHero,
         &secondArmy,
-        &sx,
-        &curStartY,
+        &eventX,
+        &eventY,
         &randSeed,
         &combatRes,
         &gRetreatWin,
         &gCombatSurrender
     );
-    firstSide = attackingHero->m_owner;
+    firstSide = firstHero->m_owner;
     // The result goes back to the remote player as the record's result byte.
     combatRes = H1_ENUM_ENCODE(
         CombatSide,
         DoCombat(
-            curPosX,
-            theCellY,
-            attackingHero,
-            attackTroops,
+            combatX,
+            combatY,
+            firstHero,
+            firstArmy,
             battleTown,
             secondHero,
             secondArmy,
-            sx,
-            curStartY,
+            eventX,
+            eventY,
             randSeed,
             false
         )
     );
     if (!gHumanPlayer[firstSide])
         SendHeroTownData(
-            curPosX,
-            theCellY,
-            attackingHero,
-            attackTroops,
+            combatX,
+            combatY,
+            firstHero,
+            firstArmy,
             battleTown,
             secondHero,
             secondArmy,
-            sx,
-            curStartY,
+            eventX,
+            eventY,
             randSeed,
-            ourFoe,
+            remotePlayer,
             combatRes,
             gRetreatWin,
             gCombatSurrender
         );
-    if (attackTroops)
-        free(attackTroops);
+    if (firstArmy)
+        free(firstArmy);
     if (secondArmy)
         free(secondArmy);
     if (battleTown)
         free(battleTown);
     if (secondHero)
         free(secondHero);
-    if (attackingHero)
-        free(attackingHero);
+    if (firstHero)
+        free(firstHero);
     gRetreatWin = false;
     return 1;
 }
-#undef attackingHero
+#undef remotePlayer
+#undef combatX
+#undef combatY
+#undef eventX
+#undef eventY
+#undef firstArmy
+#undef firstHero
 #undef secondHero
 
 #define receivedSecondArmy army2NetRec  // frame-slot spelling
@@ -2696,8 +2708,8 @@ H1_ENUM_RETURN(CombatSide, i32) advManager::DoCombat(
     class town* combatTown,
     class hero* secondHero,
     class armyGroup* secondArmy,
-    i32 setupCombatX,
-    i32 setupCombatY,
+    i32 eventX,
+    i32 eventY,
     i32 randomSeed,
     b8 processLosses
 ) {
@@ -2740,8 +2752,8 @@ H1_ENUM_RETURN(CombatSide, i32) advManager::DoCombat(
                 combatTown,
                 secondHero,
                 secondArmy,
-                setupCombatX,
-                setupCombatY,
+                eventX,
+                eventY,
                 randomSeed,
                 defenderSide,
                 0,
@@ -2773,8 +2785,8 @@ H1_ENUM_RETURN(CombatSide, i32) advManager::DoCombat(
                                     &receivedTown,
                                     &receivedSecondHero,
                                     &receivedSecondArmy,
-                                    &setupCombatX,
-                                    &setupCombatY,
+                                    &eventX,
+                                    &eventY,
                                     &randomSeed,
                                     &combatRes,
                                     &gRetreatWin,
@@ -2900,8 +2912,8 @@ void advManager::SendHeroTownData(
     class town* combatTown,
     class hero* secondHero,
     class armyGroup* secondArmy,
-    i32 setupCombatX,
-    i32 setupCombatY,
+    i32 eventX,
+    i32 eventY,
     i32 randomSeed,
     i8 remotePlayer,
     i8 combatResult,
@@ -2925,8 +2937,8 @@ void advManager::SendHeroTownData(
     buffer.combat->hasFirstHero = firstHero != NULL;
     buffer.combat->hasTown = combatTown != NULL;
     buffer.combat->hasSecondHero = secondHero != NULL;
-    buffer.combat->setupCombatX = setupCombatX;
-    buffer.combat->setupCombatY = setupCombatY;
+    buffer.combat->eventX = eventX;
+    buffer.combat->eventY = eventY;
     buffer.combat->randomSeed = randomSeed;
     buffer.combat->combatResult = combatResult;
     buffer.combat->retreatWin = retreatWin;
@@ -2993,8 +3005,8 @@ void advManager::ReceiveHeroTownData(
     class town** combatTown,
     class hero** secondHero,
     class armyGroup** secondArmy,
-    i32* setupCombatX,
-    i32* setupCombatY,
+    i32* eventX,
+    i32* eventY,
     i32* randomSeed,
     i8* combatResult,
     b8* retreatWin,
@@ -3020,8 +3032,8 @@ void advManager::ReceiveHeroTownData(
     firstHeroIncluded = EVENTS_REMOTE_MESSAGE(packet)->combat.hasFirstHero;
     hasTownOn = EVENTS_REMOTE_MESSAGE(packet)->combat.hasTown;
     hasSecondHero = EVENTS_REMOTE_MESSAGE(packet)->combat.hasSecondHero;
-    *setupCombatX = EVENTS_REMOTE_MESSAGE(packet)->combat.setupCombatX;
-    *setupCombatY = EVENTS_REMOTE_MESSAGE(packet)->combat.setupCombatY;
+    *eventX = EVENTS_REMOTE_MESSAGE(packet)->combat.eventX;
+    *eventY = EVENTS_REMOTE_MESSAGE(packet)->combat.eventY;
     *randomSeed = EVENTS_REMOTE_MESSAGE(packet)->combat.randomSeed;
     *combatResult = EVENTS_REMOTE_MESSAGE(packet)->combat.combatResult;
     *retreatWin = EVENTS_REMOTE_MESSAGE(packet)->combat.retreatWin;
