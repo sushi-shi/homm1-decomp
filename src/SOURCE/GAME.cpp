@@ -1178,14 +1178,17 @@ void game::InitCampaignMap(i32 scenario, i32) {
 // Map setup helpers, a starting town and hero per player (campaign crests
 // pick them), two tavern heroes, the ultimate artifact site, starting
 // resources, town name indices and the first neutral garrisons.
+#define allTownsUnowned allNeutralVal // frame-slot spelling
+#define townX xTownVal                // frame-slot spelling
+#define townY yTown                   // frame-slot spelling
 VA(0x0042e7f0, 0xe31)
 void game::NewMap(char* mapName) {
     i32 nameId;
     i32 anyFreeValue;
     i8 savedHeroY;
     i8 myPosX;
-    i8 yTown;
-    i8 xTownVal;
+    i8 townY;
+    i8 townX;
     b32 prevHeroNo;
     i32 i;
     i32 j;
@@ -1193,7 +1196,7 @@ void game::NewMap(char* mapName) {
     i8 theUsed[GAME_TOWN_COUNT];
     i32 k;
     i32 ultimateSpread;
-    i8 allNeutralVal;
+    i8 allTownsUnowned;
     // A human seat's handicap less one picks its starting resources.
     H1_ENUM_LOCAL(GameDifficulty, i32) curDifficulty;
 
@@ -1221,7 +1224,7 @@ void game::NewMap(char* mapName) {
     RandomizeTerrainTiles();
     RandomizePlayerCrests();
     ProcessMapExtra();
-    allNeutralVal = SetupTowns();
+    allTownsUnowned = SetupTowns();
     ProcessRandomObjects(true);
     ProcessRandomObjects(false);
     RandomizeEvents();
@@ -1233,7 +1236,7 @@ void game::NewMap(char* mapName) {
         m_players[i].m_ultimateArtifactHintX = PLAYER_ULTIMATE_HINT_NONE;
         m_players[i].m_ultimateArtifactHintY = PLAYER_ULTIMATE_HINT_NONE;
         prevHeroNo = false;
-        if (allNeutralVal) {
+        if (allTownsUnowned) {
             if (m_campaignType <= 0 || m_campaignScenario < CAMPAIGN_SCENARIO_LORD_FIRST
                 || m_campaignScenario > CAMPAIGN_SCENARIO_LORD_LAST) {
                 if (m_campaignType > 0) {
@@ -1294,15 +1297,15 @@ void game::NewMap(char* mapName) {
         ProcessOnMapHeroes();
     if (m_campaignType <= 0) {
         for (k = 0; k < GAME_PLAYER_COUNT; k++) {
-            if (allNeutralVal && m_townOwners[k] == GAME_PLAYER_NONE) {
-                xTownVal = m_castleRecs[k].m_x;
-                yTown = m_castleRecs[k].m_y;
+            if (allTownsUnowned && m_townOwners[k] == GAME_PLAYER_NONE) {
+                townX = m_castleRecs[k].m_x;
+                townY = m_castleRecs[k].m_y;
                 for (i = 0; i < TOWN_FOOTPRINT_WIDTH; i++) {
-                    m_map[xTownVal - TOWN_FOOTPRINT_LEFT + i][yTown - TOWN_FOOTPRINT_TOP]
+                    m_map[townX - TOWN_FOOTPRINT_LEFT + i][townY - TOWN_FOOTPRINT_TOP]
                         .m_overlayIndex -= TOWN_CASTLE_FRAME_OFFSET;
-                    m_map[xTownVal - TOWN_FOOTPRINT_LEFT + i][yTown - 1].m_objectIndex -=
+                    m_map[townX - TOWN_FOOTPRINT_LEFT + i][townY - 1].m_objectIndex -=
                         TOWN_CASTLE_FRAME_OFFSET;
-                    m_map[xTownVal - TOWN_FOOTPRINT_LEFT + i][yTown].m_objectIndex -=
+                    m_map[townX - TOWN_FOOTPRINT_LEFT + i][townY].m_objectIndex -=
                         TOWN_CASTLE_FRAME_OFFSET;
                 }
                 m_castleRecs[k].m_buildings = H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_TENT);
@@ -1384,6 +1387,9 @@ void game::NewMap(char* mapName) {
     gPhilAI->GetGameAIVars();
     gInNewGameSetup = false;
 }
+#undef allTownsUnowned
+#undef townX
+#undef townY
 
 // Groups the multi-cell object triggers 0x34-0x37 and 0x38-0x3c by their
 // first trigger so neighbouring halves can be compared.
@@ -1454,6 +1460,7 @@ void game::SettleOverlay(i32 x, i32 y) {
 // Numbers sites and obelisks, rolls each event's contents, files town and
 // mine ids into their footprints, then settles overlays and the passive
 // trigger bits.
+#define nextObeliskId obeliskIdNum // frame-slot spelling
 VA(0x0042f830, 0xb14)
 void game::RandomizeEvents(void) {
     H1_ENUM_LOCAL(MapTileset, u8) curOverTileset;
@@ -1465,9 +1472,9 @@ void game::RandomizeEvents(void) {
     i32 siteNumIdx;
     i16 x;
     mapCell* myCell;
-    i8 obeliskIdNum;
+    i8 nextObeliskId;
 
-    obeliskIdNum = 1;
+    nextObeliskId = 1;
     siteNumIdx = 1;
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
@@ -1481,8 +1488,8 @@ void game::RandomizeEvents(void) {
                     myCell->m_triggerType |= MAP_TRIGGER_EVENT;
                     break;
                 case MAP_EVENT_TRIGGER(MAP_OBJECT_OBELISK):
-                    myCell->m_objectMetadata = obeliskIdNum;
-                    obeliskIdNum++;
+                    myCell->m_objectMetadata = nextObeliskId;
+                    nextObeliskId++;
                     break;
                 case MAP_EVENT_TRIGGER(MAP_OBJECT_STATUE):
                     myCell->m_objectMetadata = MAP_EVENT_DATA_AVAILABLE;
@@ -1794,6 +1801,7 @@ void game::RandomizeEvents(void) {
         }
     }
 }
+#undef nextObeliskId
 
 // .MAP files: an optional old header, the world map, town and mine
 // records, artifacts, obelisks, sounds and (from version 1112) the map
@@ -2486,6 +2494,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) ViewArmyHandler(tag_message& message)
 
 // Kingdom overview: heroes by class, castles and towns by type and mines by
 // resource drawn onto the backdrop, then the date, income and resources.
+#define castleCount numCastlesVal // frame-slot spelling
 VA(0x00432089, 0xc81)
 void game::Overview(void) {
     i16 activeTextW;
@@ -2502,7 +2511,7 @@ void game::Overview(void) {
     tag_message activeMessage;
     i16 oldGy;
     i16 oldBadgeY;
-    i16 numCastlesVal;
+    i16 castleCount;
     i16 curHeroTextW;
     i16 mineBaseValue;
     i16 activeBadge;
@@ -2614,16 +2623,16 @@ void game::Overview(void) {
             theTotals
                 [H1_ENUM_ENCODE(TownType, m_castleRecs[gCurPlayerData->m_townIds[j]].m_type)]++;
     }
-    numCastlesVal = 0;
+    castleCount = 0;
     for (j = 0; j < H1_ENUM_ENCODE(TownType, TOWN_TYPE_COUNT); j++) {
         if (theTotals[j])
-            numCastlesVal++;
+            castleCount++;
     }
-    if (numCastlesVal) {
+    if (castleCount) {
         spacing = 136;
         left = 100;
         oldNextType = 0;
-        for (j = 0; j < numCastlesVal; j++) {
+        for (j = 0; j < castleCount; j++) {
             while (!theTotals[oldNextType])
                 oldNextType++;
             ovIconRef->DrawToBuffer(
@@ -2753,6 +2762,7 @@ void game::Overview(void) {
     gResourceManager->Dispose(bigFont);
     gOverviewShowing = false;
 }
+#undef castleCount
 
 // Covers the 28 creatures.
 VA(0x00432d0a, 0x25d)
@@ -2831,12 +2841,13 @@ void game::TurnOffAIMusic(void) {}
 // Autosaves, advances to the next living player (a new day after the
 // last), restores hero movement (none on the campaign's goal town) and hands
 // the turn to the computer or the human.
+#define targetPlayer remoteVal // frame-slot spelling
 VA(0x00432f8c, 0x520)
 void game::NextPlayer(void) {
     hero* currentHero;
     i32 numHumans;
     i32 ii;
-    i32 remoteVal;
+    i32 targetPlayer;
     char unused[20];
 
     gCurHourGlassPhase = 0;
@@ -2884,10 +2895,10 @@ void game::NextPlayer(void) {
         gShowIt = false;
         if (gRemoteOn && (gHumanPlayer[gCurPlayer] || gThisGamePos != gHostGamePos)) {
             if (!gHumanPlayer[gCurPlayer])
-                remoteVal = gHostGamePos;
+                targetPlayer = gHostGamePos;
             else
-                remoteVal = gCurPlayer;
-            if (!gGame->TransmitSaveGame(remoteVal, 0))
+                targetPlayer = gCurPlayer;
+            if (!gGame->TransmitSaveGame(targetPlayer, 0))
                 ShutDown(NULL);
         }
         if (gBottomViewOverride == BOTTOM_VIEW_OVERRIDE_DISABLED)
@@ -2921,6 +2932,7 @@ void game::NextPlayer(void) {
     if (gThisNetHumanPlayer[gCurPlayer])
         gAdvManager->ForceNewHover();
 }
+#undef targetPlayer
 
 // The first mine and gold mines pay 1000, towns 250 (castles 1000), three
 // treasure artifacts add more, and computer players' gold scales with their
@@ -3595,6 +3607,8 @@ void game::RandomizeHeroPool(void) {
 }
 
 // Four classes; draws only from the first two stacks of each class table.
+#define minCount minNum // frame-slot spelling
+#define maxCount curMax // frame-slot spelling
 VA(0x00435566, 0x28f)
 void game::SetRandomHeroArmies(i16 heroId, i32 strongArmy) {
     armyGroup* curArmy = &m_heroRecs[heroId].m_army;
@@ -3615,8 +3629,8 @@ void game::SetRandomHeroArmies(i16 heroId, i32 strongArmy) {
     };
     b32 curPresent[RANDOM_HERO_ARMY_OPTION_COUNT];
     i32 i;
-    i32 curMax;
-    i32 minNum;
+    i32 maxCount;
+    i32 minCount;
 
     curPresent[RANDOM_HERO_ARMY_OPTION_SURE] = true;
     curPresent[RANDOM_HERO_ARMY_OPTION_FIRST_ROLL] =
@@ -3637,30 +3651,34 @@ void game::SetRandomHeroArmies(i16 heroId, i32 strongArmy) {
                 CreatureType,
                 armies[m_heroRecs[heroId].m_heroClass][i][RANDOM_HERO_ARMY_FIELD_CREATURE]
             );
-            minNum = armies[m_heroRecs[heroId].m_heroClass][i][RANDOM_HERO_ARMY_FIELD_MIN]
-                     * RANDOM_HERO_COUNT_SCALE;
-            curMax = armies[m_heroRecs[heroId].m_heroClass][i][RANDOM_HERO_ARMY_FIELD_MAX]
-                         * RANDOM_HERO_COUNT_SCALE
-                     + RANDOM_HERO_COUNT_ROUNDING;
+            minCount = armies[m_heroRecs[heroId].m_heroClass][i][RANDOM_HERO_ARMY_FIELD_MIN]
+                       * RANDOM_HERO_COUNT_SCALE;
+            maxCount = armies[m_heroRecs[heroId].m_heroClass][i][RANDOM_HERO_ARMY_FIELD_MAX]
+                           * RANDOM_HERO_COUNT_SCALE
+                       + RANDOM_HERO_COUNT_ROUNDING;
             if (strongArmy)
-                minNum = (minNum + curMax) / 2;
-            curArmy->m_creatureCounts[curSlot] = Random(minNum, curMax) / RANDOM_HERO_COUNT_SCALE;
+                minCount = (minCount + maxCount) / 2;
+            curArmy->m_creatureCounts[curSlot] =
+                Random(minCount, maxCount) / RANDOM_HERO_COUNT_SCALE;
             curSlot++;
         }
     }
 }
+#undef minCount
+#undef maxCount
 
 // Random towns, castles, monsters by strength band, resources, artifacts
 // and mines; NewMap runs the castles-only pass first.
+#define minFightValue lowFVVal // frame-slot spelling
 VA(0x004357f5, 0x27f)
 void game::ProcessRandomObjects(b32 castlesOnly) {
     mapCell* cellPtrItem;
-    i32 lowFVVal;
+    i32 minFightValue;
     i32 y;
     i32 x;
     // Also the player of the random-town reset.
     H1_ENUM_SHARED(ResourceType, i32) i;
-    i32 highFVNum;
+    i32 maxFightValue;
 
     for (i = RESOURCE_FIRST; i < RESOURCE_COUNT; i++)
         gMineTypeCount[i] = 0;
@@ -3679,24 +3697,24 @@ void game::ProcessRandomObjects(b32 castlesOnly) {
                         RandomizeTown(x, y, true);
                         break;
                     case MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_MONSTER):
-                        lowFVVal = RANDOM_MONSTER_ANY_LOW;
-                        highFVNum = RANDOM_MONSTER_ANY_HIGH;
+                        minFightValue = RANDOM_MONSTER_ANY_LOW;
+                        maxFightValue = RANDOM_MONSTER_ANY_HIGH;
                         goto pickMonster;
                     case MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_MONSTER_WEAK):
-                        lowFVVal = RANDOM_MONSTER_WEAK_LOW;
-                        highFVNum = RANDOM_MONSTER_WEAK_HIGH;
+                        minFightValue = RANDOM_MONSTER_WEAK_LOW;
+                        maxFightValue = RANDOM_MONSTER_WEAK_HIGH;
                         goto pickMonster;
                     case MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_MONSTER_MEDIUM):
-                        lowFVVal = RANDOM_MONSTER_MEDIUM_LOW;
-                        highFVNum = RANDOM_MONSTER_MEDIUM_HIGH;
+                        minFightValue = RANDOM_MONSTER_MEDIUM_LOW;
+                        maxFightValue = RANDOM_MONSTER_MEDIUM_HIGH;
                         goto pickMonster;
                     case MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_MONSTER_STRONG):
-                        lowFVVal = RANDOM_MONSTER_STRONG_LOW;
-                        highFVNum = RANDOM_MONSTER_STRONG_HIGH;
+                        minFightValue = RANDOM_MONSTER_STRONG_LOW;
+                        maxFightValue = RANDOM_MONSTER_STRONG_HIGH;
                         goto pickMonster;
                     case MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_MONSTER_VERY_STRONG):
-                        lowFVVal = RANDOM_MONSTER_VERY_STRONG_LOW;
-                        highFVNum = RANDOM_MONSTER_VERY_STRONG_HIGH;
+                        minFightValue = RANDOM_MONSTER_VERY_STRONG_LOW;
+                        maxFightValue = RANDOM_MONSTER_VERY_STRONG_HIGH;
                         goto pickMonster;
                     pickMonster:
                         cellPtrItem->m_triggerType = MAP_EVENT_TRIGGER(MAP_OBJECT_MONSTER);
@@ -3705,11 +3723,11 @@ void game::ProcessRandomObjects(b32 castlesOnly) {
                         while (gMonsterDatabase
                                        [H1_ENUM_DECODE(CreatureType, cellPtrItem->m_objectIndex)]
                                            .fightValue
-                                   <= lowFVVal
+                                   <= minFightValue
                                || gMonsterDatabase
                                           [H1_ENUM_DECODE(CreatureType, cellPtrItem->m_objectIndex)]
                                               .fightValue
-                                      >= highFVNum)
+                                      >= maxFightValue)
                             cellPtrItem->m_objectIndex =
                                 Random(0, H1_ENUM_ENCODE(CreatureType, CREATURE_LAST));
                         break;
@@ -3733,6 +3751,7 @@ void game::ProcessRandomObjects(b32 castlesOnly) {
         }
     }
 }
+#undef minFightValue
 
 VA(0x00435a74, 0x22f)
 void game::SetVisibility(i16 x, i16 y, i16 player, i16 radius) {
@@ -4478,6 +4497,7 @@ cleanup:
 
 // Collects the remote save in 200-byte segments, acknowledging each block
 // of 100, then decodes it and writes REMOTE.GAM.
+#define lastPacketTime lastPacketTimeNum // frame-slot spelling
 VA(0x004376cf, 0x4b0)
 b32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
     b32 oldUnused1;
@@ -4491,7 +4511,7 @@ b32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
     char* sendPacket;
     RemoteMessage* receivedPacketObj;
     i32 curRet;
-    i32 lastPacketTimeNum;
+    i32 lastPacketTime;
     char myGotIt[500];
     i32 packetStartValue;
     char* decodedData;
@@ -4518,17 +4538,17 @@ b32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
         decodedData = static_cast<char*>(malloc(REMOTE_SAVE_DECODE_BUFFER_SIZE));
     sendPacket = static_cast<char*>(malloc(REMOTE_MESSAGE_SIZE));
     curInData = static_cast<char*>(malloc(dataSize + REMOTE_SAVE_BUFFER_EXTRA));
-    lastPacketTimeNum = KBTickCount();
+    lastPacketTime = KBTickCount();
     while (!done) {
         PollSound();
         CheckDoMain(0, true);
-        if (lastPacketTimeNum + REMOTE_WAIT_TIMEOUT < KBTickCount()) {
+        if (lastPacketTime + REMOTE_WAIT_TIMEOUT < KBTickCount()) {
             NormalDialog(
                 localization::Tr("combat.network.receive_error"),
                 NORMAL_DIALOG_TYPE_YES_NO
             );
             if (gWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
-                lastPacketTimeNum = KBTickCount();
+                lastPacketTime = KBTickCount();
             else
                 ShutDown(NULL);
         }
@@ -4536,7 +4556,7 @@ b32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
         if (receivedPacketObj
             && (receivedPacketObj->type == REMOTE_MESSAGE_RELIABLE
                 || receivedPacketObj->type == REMOTE_MESSAGE_UNRELIABLE)) {
-            lastPacketTimeNum = KBTickCount();
+            lastPacketTime = KBTickCount();
             switch (receivedPacketObj->command) {
                 case REMOTE_COMMAND_SAVE_DATA:
                     packetStartValue = receivedPacketObj->payload.segment.index;
@@ -4592,6 +4612,7 @@ b32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
     }
     return okay;
 }
+#undef lastPacketTime
 
 VA(0x00437b7f, 0x5b5)
 void game::DoNewTurn(void) {

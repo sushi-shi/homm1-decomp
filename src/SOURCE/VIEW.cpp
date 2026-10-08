@@ -249,38 +249,45 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) HandleViewGeneral(tag_message& messag
 }
 
 // The creature quick view, placed beside the stack and clamped to the screen.
+#define windowX xWnd                        // frame-slot spelling
+#define windowY yWindow                     // frame-slot spelling
+#define stackOffsetX xDelta                 // frame-slot spelling
+#define unusedViewWidth viewWidthConstant   // frame-slot spelling
+#define unusedViewHeight viewHeightConstant // frame-slot spelling
+#define unusedViewOffsetX viewXOffsetFixed  // frame-slot spelling
+#define unusedViewOffsetY viewYOffsetConst  // frame-slot spelling
 VA(0x00466595, 0x135)
 void combatManager::ViewArmy(army* viewedArmy, H1_ENUM_PARAM(CombatSide, i32) side, i32 quickView) {
-    i16 xWnd;
-    i16 viewYOffsetConst;
-    i16 yWindow;
-    i16 xDelta;
-    i16 viewXOffsetFixed;
-    i16 viewWidthConstant;
-    i16 viewHeightConstant;
+    i16 windowX;
+    i16 unusedViewOffsetY;
+    i16 windowY;
+    i16 stackOffsetX;
+    i16 unusedViewOffsetX;
+    i16 unusedViewWidth;
+    i16 unusedViewHeight;
 
     if (viewedArmy == NULL)
         return;
-    viewWidthConstant = 488 - 86;
-    viewHeightConstant = 229;
-    viewXOffsetFixed = 86;
-    viewYOffsetConst = 164;
-    xWnd = m_hexCells[viewedArmy->m_hex].m_x;
-    yWindow = m_hexCells[viewedArmy->m_hex].m_y;
-    xDelta = (viewedArmy->m_facing == ARMY_FACING_LEFT ? 43 : 0) + 80;
-    xWnd -= xDelta;
-    if (xWnd < 0)
-        xWnd = 0;
-    if (xWnd + 488 > LOGICAL_SCREEN_WIDTH)
-        xWnd = 151;
-    yWindow -= 164;
-    if (yWindow < 0)
-        yWindow = 0;
-    if (yWindow + 229 > COMBAT_VIEW_HEIGHT)
-        yWindow = 230;
+    unusedViewWidth = 488 - 86;
+    unusedViewHeight = 229;
+    unusedViewOffsetX = 86;
+    unusedViewOffsetY = 164;
+    windowX = m_hexCells[viewedArmy->m_hex].m_x;
+    windowY = m_hexCells[viewedArmy->m_hex].m_y;
+    stackOffsetX = (viewedArmy->m_facing == ARMY_FACING_LEFT ? 43 : 0) + 80;
+    windowX -= stackOffsetX;
+    if (windowX < 0)
+        windowX = 0;
+    if (windowX + 488 > LOGICAL_SCREEN_WIDTH)
+        windowX = 151;
+    windowY -= 164;
+    if (windowY < 0)
+        windowY = 0;
+    if (windowY + 229 > COMBAT_VIEW_HEIGHT)
+        windowY = 230;
     gGame->ViewArmy(
-        xWnd,
-        yWindow,
+        windowX,
+        windowY,
         viewedArmy->m_creatureType,
         viewedArmy->m_quantity,
         m_combatTowns[side],
@@ -292,3 +299,10 @@ void combatManager::ViewArmy(army* viewedArmy, H1_ENUM_PARAM(CombatSide, i32) si
         m_armyGroups[side]
     );
 }
+#undef windowX
+#undef windowY
+#undef stackOffsetX
+#undef unusedViewWidth
+#undef unusedViewHeight
+#undef unusedViewOffsetX
+#undef unusedViewOffsetY

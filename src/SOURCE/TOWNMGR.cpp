@@ -1787,6 +1787,7 @@ void townManager::SetupWell(class heroWindow* window) {
 
 // Shows nine guild spells, hiding the levels above the guild and stacking
 // tower frames by level.
+#define spellFrame spellStateVal // frame-slot spelling
 VA(0x00463e70, 0x2bc)
 void townManager::SetupMage(class heroWindow* window) {
     i16 curOff = 0;
@@ -1799,7 +1800,7 @@ void townManager::SetupMage(class heroWindow* window) {
     i16 firstTower = TOWN_MAGE_FIRST_TOWER_CONTROL;
     tag_message message;
     i16 spellNo;
-    i32 spellStateVal;
+    i32 spellFrame;
 
     message.type = MESSAGE_WIDGET;
     if (m_town->m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE) {
@@ -1814,25 +1815,25 @@ void townManager::SetupMage(class heroWindow* window) {
             case MAGE_GUILD_SLOT_LEVEL_1_FIRST:
             case MAGE_GUILD_SLOT_LEVEL_1_SECOND:
             case MAGE_GUILD_SLOT_LEVEL_1_THIRD:
-                spellStateVal = static_cast<i16>(m_town->m_mageGuildLevel < MAGE_GUILD_LEVEL_1);
+                spellFrame = static_cast<i16>(m_town->m_mageGuildLevel < MAGE_GUILD_LEVEL_1);
                 break;
             case MAGE_GUILD_SLOT_LEVEL_2_FIRST:
             case MAGE_GUILD_SLOT_LEVEL_2_SECOND:
-                spellStateVal = static_cast<i16>(m_town->m_mageGuildLevel < MAGE_GUILD_LEVEL_2);
+                spellFrame = static_cast<i16>(m_town->m_mageGuildLevel < MAGE_GUILD_LEVEL_2);
                 break;
             case MAGE_GUILD_SLOT_LEVEL_3_FIRST:
             case MAGE_GUILD_SLOT_LEVEL_3_SECOND:
-                spellStateVal = static_cast<i16>(m_town->m_mageGuildLevel < MAGE_GUILD_LEVEL_3);
+                spellFrame = static_cast<i16>(m_town->m_mageGuildLevel < MAGE_GUILD_LEVEL_3);
                 break;
             default:
-                spellStateVal = static_cast<i16>(m_town->m_mageGuildLevel < MAGE_GUILD_LEVEL_4);
+                spellFrame = static_cast<i16>(m_town->m_mageGuildLevel < MAGE_GUILD_LEVEL_4);
                 break;
         }
         message.command = WIDGET_COMMAND_SET_FRAME;
         message.id = spellNo + TOWN_MAGE_FIRST_SPELL_CONTROL;
-        message.value = spellStateVal;
+        message.value = spellFrame;
         window->BroadcastMessage(message);
-        if (spellStateVal == MAGE_GUILD_SPELL_FRAME_LOCKED) {
+        if (spellFrame == MAGE_GUILD_SPELL_FRAME_LOCKED) {
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
             message.value = WIDGET_FLAG_DRAW;
             message.id = spellNo + TOWN_MAGE_FIRST_ICON_CONTROL;
@@ -1867,6 +1868,7 @@ void townManager::SetupMage(class heroWindow* window) {
                  + TOWN_MAGE_FIRST_TOWER_CONTROL + 1;
     window->BroadcastMessage(message);
 }
+#undef spellFrame
 
 // Numbers spells 1-9 and icons 10-18 and bounds them by the guild level.
 VA(0x0046412c, 0x14b)

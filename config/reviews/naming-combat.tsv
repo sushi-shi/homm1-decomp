@@ -543,3 +543,5 @@ member	combatManager	m_gridSelectionDisabled	m_autoCombat	set by widget 2, whose
 enum	CombatControlId	COMBAT_CONTROL_DISABLE_SELECTION	COMBAT_CONTROL_AUTO_COMBAT	the Auto Combat button
 member	combatManager	m_combatX/m_combatY	m_battleSiteX/m_battleSiteY	the battle's adventure-map cell (DoCombat passes the event x, y): seeds SRand and centres MoreTreesNear's terrain scan
 param	combatManager::SetupCombat	combatX/combatY	battleSiteX/battleSiteY	the same cell
+local-aliased	combatManager::ViewArmy	xWnd/yWindow/xDelta	windowX/windowY/stackOffsetX	the quick view window's position and its offset from the stack
+local-aliased	combatManager::ViewArmy	viewWidthConstant/viewHeightConstant/viewXOffsetFixed/viewYOffsetConst	unusedViewWidth/unusedViewHeight/unusedViewOffsetX/unusedViewOffsetY	stored once and never read

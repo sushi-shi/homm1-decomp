@@ -141,3 +141,11 @@ local-aliased	philAI::ValueOfBuyingCreature	attackOdds/lossOdds/weekCount/peril	
 local-aliased	advManager::ComputerMonsterInteract	numToBuy/purchaseWorth/bestSlot	purchaseCount/purchaseValue/replacementSlot	EvaluateOneTimeCreaturePurchase's outputs under its own parameter names
 local-aliased	advManager::DoAIEvent	freeSlot	replacementSlot	EvaluateOneTimeCreaturePurchase's replacement slot (-1 to add a stack), handed to GiveArmy
 local-aliased	philAI::RVOfPosition	primaryEventChance/guardEventChance	guardSurvivalChance/destinationGuardChance	the survival chance of the route's adjacent monster fight, combined with that of the monster guarding the destination
+local-aliased	game::NewMap	allNeutralVal/xTownVal/yTown	allTownsUnowned/townX/townY	SetupTowns' result (no town has an owner) and the unowned castle's cell
+local-aliased	game::ProcessRandomObjects	lowFVVal/highFVNum	minFightValue/maxFightValue	the exclusive fight-value band (RANDOM_MONSTER_*_LOW/HIGH) a random monster's creature must fall in
+local-aliased	game::SetRandomHeroArmies	minNum/curMax	minCount/maxCount	the creature count range of a starting army slot
+local-aliased	game::ReceiveSaveGame	lastPacketTimeNum	lastPacketTime	the tick of the last received packet, for REMOTE_WAIT_TIMEOUT
+local-aliased	game::NextPlayer	remoteVal	targetPlayer	the player TransmitSaveGame sends the save to (the host or the current player)
+local-aliased	game::RandomizeEvents	obeliskIdNum	nextObeliskId	the metadata number given to the next obelisk
+local-aliased	game::Overview	numCastlesVal	castleCount	the castles counted for the overview rows
+local-aliased	townManager::SetupMage	spellStateVal	spellFrame	MAGE_GUILD_SPELL_FRAME_SHOWN or _LOCKED for each spell slot
