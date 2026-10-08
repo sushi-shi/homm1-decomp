@@ -109,4 +109,4 @@ H1_C_LINKAGE i16 __cdecl
 nb_sess(i32 port, H1_ENUM_PARAM(NetbiosSessionOperation, i32) operation, ...);
 H1_C_LINKAGE u8 __cdecl nb_stat(i32 port, u16 session);
 
-#endif
+#endif // HOMM1_SOURCE_NETWIN_H

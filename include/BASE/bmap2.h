@@ -16,4 +16,4 @@ void BlitBitmap(
 void DimBitmapArea(bitmap* image, i32 x, i32 y, i32 width, i32 height);
 void FillBitmapArea(bitmap* image, i32 x, i32 y, i32 width, i32 height, i32 color);
 
-#endif
+#endif // HOMM1_BASE_BMAP2_H

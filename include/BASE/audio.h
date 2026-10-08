@@ -38,4 +38,4 @@ void SuspendSamples();
 void ResumeSamples();
 bool SamplesSuspended();
 
-#endif
+#endif // HOMM1_BASE_AUDIO_H

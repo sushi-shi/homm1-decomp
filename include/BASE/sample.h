@@ -46,4 +46,4 @@ H1_ENUM_CONST_BEGIN(SampleLoadConstant)
     SAMPLE_CHANNEL_COUNT_STEREO = 2
 H1_ENUM_CONST_END(SampleLoadConstant)
 
-#endif
+#endif // HOMM1_BASE_SAMPLE_H

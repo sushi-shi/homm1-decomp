@@ -25,4 +25,4 @@ H1_ENUM_BEGIN(ArmySizeLimit)
     ARMY_HORDE_LIMIT = 100
 H1_ENUM_END(ArmySizeLimit)
 
-#endif
+#endif // HOMM1_SOURCE_ARMYSIZENAMES_H

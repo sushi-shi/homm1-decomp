@@ -171,4 +171,4 @@ void ProcessAssert(i32 condition, char* file, i32 line);
 void WritePrefs();
 char* FindToken(char* text, char token);
 
-#endif
+#endif // HOMM1_SOURCE_KBWIN_H

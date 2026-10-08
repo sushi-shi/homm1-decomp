@@ -368,4 +368,4 @@ H1_ENUM_CONST_BEGIN(DirectConnectStage)
     DIRECT_CONNECT_ID_PACKET_LENGTH = 10
 H1_ENUM_CONST_END(DirectConnectStage)
 
-#endif
+#endif // HOMM1_SOURCE_REMOTE_H

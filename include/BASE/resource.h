@@ -30,14 +30,9 @@ public:
     resource* m_next;
 
     resource();
-    resource(
-        H1_ENUM_PARAM(ResourceCategory, i16) category,
-        i16 id,
-        i16 refCount,
-        resource* next
-    );
+    resource(H1_ENUM_PARAM(ResourceCategory, i16) category, i16 id, i16 refCount, resource* next);
     virtual ~resource() = 0;
 };
 #pragma pack(pop)
 
-#endif
+#endif // HOMM1_BASE_RESOURCE_H

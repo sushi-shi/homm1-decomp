@@ -76,4 +76,4 @@ H1_ENUM_BEGIN(MusicTrack)
 H1_ENUM_END(MusicTrack)
 H1_ENUM_STEPPED(MusicTrack)
 
-#endif
+#endif // HOMM1_BASE_AUDIOTYPES_H

@@ -32,4 +32,4 @@ i16 TerrainStepCost(H1_ENUM_PARAM(TerrainType, i8) terrain, i8 diagonal);
 // FindNearestObject seeds this mobility limit; PushPoint marks costlier nodes.
 extern i16 gCurTempMobility;
 
-#endif
+#endif // HOMM1_SOURCE_FINDPATH_H

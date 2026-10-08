@@ -95,4 +95,4 @@ struct tag_message {
 #define IS_BUTTON_RELEASE_MESSAGE(type)                                                            \
     ((type) == MESSAGE_LEFT_BUTTON_UP || (type) == MESSAGE_RIGHT_BUTTON_UP)
 
-#endif
+#endif // HOMM1_BASE_MESSAGE_H

@@ -7,4 +7,4 @@ class tileset;
 // BASE/TILE.asm cdecl tile blitter.
 extern "C" void __cdecl TileToBitmap(tileset* tiles, u32 tile, bitmap* destination, i32 x, i32 y);
 
-#endif
+#endif // HOMM1_BASE_TILE_H

@@ -21,4 +21,4 @@ H1_ENUM_CONST_END(FileDescriptorConstant)
 
 void SetPalette(i8* paletteData, b32 updateDisplay);
 
-#endif
+#endif // HOMM1_BASE_MISC_H

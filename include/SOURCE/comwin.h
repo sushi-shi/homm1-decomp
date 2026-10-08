@@ -77,4 +77,4 @@ i16 __cdecl com_sess(i32 port, i32 operation, ...);
 u8 com_stat(i16 port, u16 session);
 void comm_wrt_task(void);
 
-#endif
+#endif // HOMM1_SOURCE_COMWIN_H

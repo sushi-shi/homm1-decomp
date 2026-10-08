@@ -65,4 +65,4 @@ struct SmackSoundFormat {
 };
 #pragma pack(pop)
 
-#endif
+#endif // HOMM1_SOURCE_SMACKMANAGER_H

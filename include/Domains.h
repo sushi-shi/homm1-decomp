@@ -370,4 +370,4 @@ template<typename Domain> constexpr int H1EnumEncode(Domain value) {
 #define H1_ENUM_ENCODE(domain, value) (value)
 #endif
 
-#endif
+#endif // HOMM1_DOMAINS_H

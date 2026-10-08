@@ -86,4 +86,4 @@ extern "C" __declspec(dllimport) unsigned char __stdcall SmackSoundUseMSS(void*)
 
 extern "C" __declspec(dllimport) void __stdcall SmackSummary(Smack*, SmackSum*);
 
-#endif
+#endif // HOMM1_SOURCE_SMACK_H

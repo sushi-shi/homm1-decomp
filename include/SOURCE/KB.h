@@ -950,4 +950,4 @@ H1_ENUM_ID_BEGIN(DataEntryControl)
     DATA_ENTRY_TEXT = 10
 H1_ENUM_ID_END(DataEntryControl)
 
-#endif
+#endif // HOMM1_SOURCE_KB_H

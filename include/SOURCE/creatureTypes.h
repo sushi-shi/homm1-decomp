@@ -122,4 +122,4 @@ struct tag_monsterInfo {
 };
 #pragma pack(pop)
 
-#endif
+#endif // HOMM1_SOURCE_CREATURETYPES_H

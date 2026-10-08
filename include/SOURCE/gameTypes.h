@@ -44,4 +44,4 @@ H1_ENUM_CONST_BEGIN(GameCalendarConstant)
     CALENDAR_WEEKS_PER_MONTH = 4
 H1_ENUM_CONST_END(GameCalendarConstant)
 
-#endif
+#endif // HOMM1_SOURCE_GAMETYPES_H

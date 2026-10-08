@@ -12,4 +12,4 @@ H1_ENUM_CONST_END(FileIdHashConstant)
 
 u32 MAKEFILEID(char* name);
 
-#endif
+#endif // HOMM1_BASE_MAKEFILEID_H

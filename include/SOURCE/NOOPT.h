@@ -14,4 +14,4 @@ H1_ENUM_CONST_BEGIN(DelayTicksConstant)
     DELAY_TICK_MILLISECONDS = 15
 H1_ENUM_CONST_END(DelayTicksConstant)
 
-#endif
+#endif // HOMM1_SOURCE_NOOPT_H

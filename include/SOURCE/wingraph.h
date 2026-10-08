@@ -148,4 +148,4 @@ BOOL QueryNewPalette();
 BOOL SetGraphicsType(H1_ENUM_PARAM(WingraphGraphicsType, i32) graphicsType);
 void GetGraphicsInfo(void);
 
-#endif
+#endif // HOMM1_SOURCE_WINGRAPH_H

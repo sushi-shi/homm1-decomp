@@ -103,4 +103,4 @@ H1_ENUM_CONST_BEGIN(AdventurePointerConstant)
     ADVENTURE_POINTER_DAY_LAST = 3
 H1_ENUM_CONST_END(AdventurePointerConstant)
 
-#endif
+#endif // HOMM1_SOURCE_CURSORTYPES_H

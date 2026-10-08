@@ -83,4 +83,4 @@ typedef i32 b32;
 // retail VA and size, pinned to the owning datum.
 #define RVA_DYNINIT(address, size, owner)
 
-#endif
+#endif // HOMM1_MATCH_H

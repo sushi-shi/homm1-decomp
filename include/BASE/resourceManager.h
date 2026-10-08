@@ -74,4 +74,4 @@ public:
 };
 #pragma pack(pop)
 
-#endif
+#endif // HOMM1_BASE_RESOURCEMANAGER_H

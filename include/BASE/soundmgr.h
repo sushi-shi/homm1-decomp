@@ -23,4 +23,4 @@ H1_ENUM_CONST_BEGIN(ConfigVolumeLevel)
     SOUND_VOLUME_LAST = SOUND_VOLUME_10
 H1_ENUM_CONST_END(ConfigVolumeLevel)
 
-#endif
+#endif // HOMM1_BASE_SOUNDMGR_H

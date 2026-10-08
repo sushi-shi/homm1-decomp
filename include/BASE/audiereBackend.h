@@ -40,4 +40,4 @@ struct AudiereDevice {
     static i32 dummy;
 };
 
-#endif
+#endif // HOMM1_BASE_AUDIEREBACKEND_H

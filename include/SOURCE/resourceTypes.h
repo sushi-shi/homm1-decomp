@@ -23,4 +23,4 @@ H1_ENUM_BEGIN(ResourceType)
 H1_ENUM_END(ResourceType)
 H1_ENUM_STEPPED(ResourceType)
 
-#endif
+#endif // HOMM1_SOURCE_RESOURCETYPES_H

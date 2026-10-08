@@ -53,4 +53,4 @@ H1_ENUM_CONST_BEGIN(CombatPathConstant)
     WIDE_HEX_OFFSET = 1
 H1_ENUM_CONST_END(CombatPathConstant)
 
-#endif
+#endif // HOMM1_SOURCE_PATH_H
