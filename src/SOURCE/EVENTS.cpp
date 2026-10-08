@@ -65,7 +65,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
     visitingHero = gGame->GetHero(gCurPlayerData->m_currentHero);
     eventKind = MAP_TRIGGER_OBJECT(cell->m_triggerType);
     removeObj = false;
-    fizzleEffect = EVENT_FIZZLE_HERO_LOSS;
+    fizzleEffect = EVENT_FIZZLE_KILL;
     gEventMusicPlaying = true;
     gMouseManager->ReallyHidePointer();
     EventSound(eventKind, cell->m_objectMetadata);
@@ -1934,7 +1934,7 @@ void advManager::HeroLoses(class hero* lostHero) {
     CompleteDraw(m_mapOriginX, m_mapOriginY, false);
     UpdateScreen(false, false);
     lostHero->Deallocate();
-    FizzleCenter(EVENT_FIZZLE_HERO_LOSS);
+    FizzleCenter(EVENT_FIZZLE_KILL);
     UpdateRadar(true, false);
     UpdateHeroLocators(true, 1);
 }
@@ -1981,7 +1981,7 @@ void advManager::FizzleCenter(H1_ENUM_PARAM(EventFizzleType, i32) fizzleType) {
     if (!gShowIt)
         return;
     switch (fizzleType) {
-        case EVENT_FIZZLE_HERO_LOSS:
+        case EVENT_FIZZLE_KILL:
             sprintf(gText, "killfade.82M");
             break;
         case EVENT_FIZZLE_PICKUP:

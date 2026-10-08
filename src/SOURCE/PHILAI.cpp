@@ -1355,10 +1355,11 @@ void philAI::ValueOfBuyingBuilding(
     score = GetBuildingBaseResourceValue(
         factionId,
         building,
-        building == BUILDING_SLOT_MAGE_GUILD ? townPointer->m_buildState : 0
+        building == BUILDING_SLOT_MAGE_GUILD ? townPointer->m_mageGuildLevel : 0
     );
-    if (building == BUILDING_SLOT_MAGE_GUILD && townPointer->m_buildState > 0)
-        score -= GetBuildingBaseResourceValue(factionId, building, townPointer->m_buildState - 1);
+    if (building == BUILDING_SLOT_MAGE_GUILD && townPointer->m_mageGuildLevel > 0)
+        score -=
+            GetBuildingBaseResourceValue(factionId, building, townPointer->m_mageGuildLevel - 1);
     switch (building) {
         case BUILDING_SLOT_CASTLE:
             score =
@@ -1376,7 +1377,7 @@ void philAI::ValueOfBuyingBuilding(
                        - gCurPlayerData->BuildingsOwned(
                              factionId,
                              BUILDING_SLOT_MAGE_GUILD,
-                             MAGE_GUILD_STATE_LEVEL_1
+                             MAGE_GUILD_LEVEL_1
                          ) * 0.33);
             break;
         case BUILDING_SLOT_THIEVES_GUILD:
@@ -1454,7 +1455,7 @@ void philAI::ValueOfBuyingBuilding(
         factionId,
         building,
         buildingCost,
-        building == BUILDING_SLOT_MAGE_GUILD ? townPointer->m_buildState : 0
+        building == BUILDING_SLOT_MAGE_GUILD ? townPointer->m_mageGuildLevel : 0
     );
     score = score * FutureDeflator(buildingCost);
     resourceValue = score;
@@ -1478,7 +1479,7 @@ void philAI::GetBestBuilding(town* townPointer, BHC& purchase, float& benefitCos
          curBuilding++) {
         if (!(townPointer->m_buildings & H1_ENUM_BIT(BuildingSlotType, curBuilding))
             || (curBuilding == BUILDING_SLOT_MAGE_GUILD
-                && townPointer->m_buildState < TOWN_MAGE_GUILD_COST_LEVEL_LAST)) {
+                && townPointer->m_mageGuildLevel < TOWN_MAGE_GUILD_COST_LEVEL_LAST)) {
             if (CanBuild(townPointer, curBuilding)) {
                 ValueOfBuyingBuilding(townPointer, curBuilding, resourceValue, buildingBenefitCost);
                 grade = (Random(1, 5) + 95) * buildingBenefitCost / 100.0f;
@@ -2204,7 +2205,7 @@ i32 philAI::ValueOfTown(town* townPointer) {
             sum += GetBuildingBaseResourceValue(
                 townPointer->m_type,
                 building,
-                __max(townPointer->m_buildState, 0)
+                __max(townPointer->m_mageGuildLevel, 0)
             );
     }
     sum = sum + 250.0f * gAITurnCostResource[RESOURCE_GOLD] * 5.0f * 1.5;
@@ -2654,7 +2655,7 @@ void philAI::HeroInteractionAtTown(
     }
     if ((townPointer->m_buildings & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_MAGE_GUILD))
         && (evaluateOnly || heroPointer->HasArtifact(ARTIFACT_MAGIC_BOOK))) {
-        for (i = 0; i < gMageGuildSpellCount[townPointer->m_buildState]; i++) {
+        for (i = 0; i < gMageGuildSpellCount[townPointer->m_mageGuildLevel]; i++) {
             whichSpell = heroPointer->AddSpell(
                 townPointer->m_mageGuildSpells[i],
                 heroPointer->m_primaryStats[HERO_PRIMARY_KNOWLEDGE],
@@ -2923,12 +2924,12 @@ void philAI::BuildBuilding(town* townPointer, H1_ENUM_PARAM(BuildingSlotType, i1
     H1_ENUM_LOCAL(ResourceType, i32) i;
     H1_ENUM_ARRAY(i32, cost, ResourceType, RESOURCE_COUNT);
 
-    GetBuildingCost(townPointer->m_type, building, cost, townPointer->m_buildState);
+    GetBuildingCost(townPointer->m_type, building, cost, townPointer->m_mageGuildLevel);
     for (i = RESOURCE_FIRST; i < RESOURCE_COUNT; i++)
         gCurPlayerData->m_resources[i] -= cost[i];
     if (building == BUILDING_SLOT_MAGE_GUILD) {
         if (townPointer->m_buildings & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_MAGE_GUILD))
-            townPointer->m_buildState++;
+            townPointer->m_mageGuildLevel++;
         if (townPointer->m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE)
             townPointer->GiveSpells();
     }

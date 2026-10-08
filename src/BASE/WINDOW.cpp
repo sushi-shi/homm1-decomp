@@ -318,17 +318,18 @@ void heroWindow::RestoreBackground(void) {
     m_savedBackground = NULL;
 }
 
-#define oldX x           // frame-slot spelling
-#define oldY yPrev       // frame-slot spelling
-#define oldHeight oldHgt // frame-slot spelling
-#define newX toX         // frame-slot spelling
-#define newY toY         // frame-slot spelling
+#define dirtyX x            // frame-slot spelling
+#define dirtyY yPrev        // frame-slot spelling
+#define dirtyHeight oldHgt  // frame-slot spelling
+#define newX toX            // frame-slot spelling
+#define newY toY            // frame-slot spelling
+#define dirtyWidth oldWidth // frame-slot spelling
 VA(0x0046dcb2, 0x1bc)
 void heroWindow::MoveWindow(i16 dx, i16 dy) {
-    i16 oldX = m_posX;
-    i16 oldY = m_posY;
-    i16 oldWidth = m_winWidth;
-    i16 oldHeight = m_winHeight;
+    i16 dirtyX = m_posX;
+    i16 dirtyY = m_posY;
+    i16 dirtyWidth = m_winWidth;
+    i16 dirtyHeight = m_winHeight;
     i16 newX = m_posX + dx;
     i16 newY = m_posY + dy;
     if (newX < 0)
@@ -344,16 +345,17 @@ void heroWindow::MoveWindow(i16 dx, i16 dy) {
     m_posY = newY;
     m_savedBackground->GrabBitmap(gWindowManager->m_screen, m_posX, m_posY);
     DrawWindow(0);
-    oldWidth += abs(m_posX - oldX);
-    oldHeight += abs(m_posY - oldY);
-    if (m_posX < oldX)
-        oldX = m_posX;
-    if (m_posY < oldY)
-        oldY = m_posY;
-    gWindowManager->UpdateScreenRegion(oldX, oldY, oldWidth, oldHeight);
+    dirtyWidth += abs(m_posX - dirtyX);
+    dirtyHeight += abs(m_posY - dirtyY);
+    if (m_posX < dirtyX)
+        dirtyX = m_posX;
+    if (m_posY < dirtyY)
+        dirtyY = m_posY;
+    gWindowManager->UpdateScreenRegion(dirtyX, dirtyY, dirtyWidth, dirtyHeight);
 }
-#undef oldX
-#undef oldY
-#undef oldHeight
+#undef dirtyWidth
+#undef dirtyX
+#undef dirtyY
+#undef dirtyHeight
 #undef newX
 #undef newY

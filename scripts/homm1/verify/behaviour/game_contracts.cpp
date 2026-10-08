@@ -745,7 +745,7 @@ static void Buildings(void) {
         t.m_type = type;
         t.m_x = 40;
         t.m_y = 40;
-        t.m_buildState = 0;
+        t.m_mageGuildLevel = 0;
         printf("town %d can build:", type);
         static const i16 sets[3] = {
             0,

@@ -109,7 +109,7 @@ struct tag_monsterStats {
     // army::PowEffect index into gPowEffectNames.
     i8 powEffect;
     i8 shots;
-    char unknown09[6];
+    char unused09[6];
     i32 attributes;
 };
 struct tag_monsterInfo {

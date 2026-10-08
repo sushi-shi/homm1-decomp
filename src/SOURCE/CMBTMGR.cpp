@@ -1299,7 +1299,7 @@ void combatManager::KeepAttack(void) {
         mod += m_heroes[COMBAT_DEFENDER_SIDE]->m_primaryStats[HERO_PRIMARY_ATTACK];
     if (m_combatTowns[COMBAT_DEFENDER_SIDE]->m_buildings
         & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_MAGE_GUILD))
-        mod += m_combatTowns[COMBAT_DEFENDER_SIDE]->m_buildState + 1;
+        mod += m_combatTowns[COMBAT_DEFENDER_SIDE]->m_mageGuildLevel + 1;
     mod -= hisStack->m_stats.defense;
     if (mod > STAT_CURVE_OFFSET)
         mod = STAT_CURVE_OFFSET;

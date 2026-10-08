@@ -79,7 +79,7 @@ townObject::townObject(char* name) {
     sprintf(fileNameText, "%s.icn", name);
     m_icon = gResourceManager->GetIcon(fileNameText);
     if (id == BUILDING_SLOT_MAGE_GUILD) {
-        h = gTownManager->m_town->m_buildState * TOWN_MAGE_GUILD_LEVEL_HEIGHT
+        h = gTownManager->m_town->m_mageGuildLevel * TOWN_MAGE_GUILD_LEVEL_HEIGHT
             + TOWN_MAGE_GUILD_BASE_HEIGHT;
         y = TOWN_MAGE_GUILD_BOTTOM_Y - h;
     }
@@ -107,7 +107,7 @@ void townObject::Draw(b8 advanceAnimation) {
         return;
     m_icon->DrawToBuffer(0, 0, 0, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
     if (m_buildingId == BUILDING_SLOT_MAGE_GUILD) {
-        for (level = 0; level < gTownManager->m_town->m_buildState; level++)
+        for (level = 0; level < gTownManager->m_town->m_mageGuildLevel; level++)
             m_icon->DrawToBuffer(
                 0,
                 0,
@@ -118,7 +118,7 @@ void townObject::Draw(b8 advanceAnimation) {
         m_icon->DrawToBuffer(
             0,
             0,
-            gTownManager->m_town->m_buildState * TOWN_MAGE_GUILD_LEVEL_FRAME_STRIDE + 1,
+            gTownManager->m_town->m_mageGuildLevel * TOWN_MAGE_GUILD_LEVEL_FRAME_STRIDE + 1,
             ICON_DRAW_NORMAL,
             ICON_DRAW_OFFSET_FULL
         );
@@ -1286,7 +1286,7 @@ i16 townManager::BuyBuild(
                    + H1_ENUM_ENCODE(TownType, m_town->m_type) * TOWN_DWELLINGS_PER_FACTION;
     if (building == BUILDING_SLOT_MAGE_GUILD) {
         if (m_town->m_buildings & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_MAGE_GUILD))
-            guildRank = gTownManager->m_town->m_buildState + 1;
+            guildRank = gTownManager->m_town->m_mageGuildLevel + 1;
         else
             guildRank = 0;
         if (guildRank > TOWN_MAGE_GUILD_COST_LEVEL_LAST)
@@ -1572,7 +1572,7 @@ void townManager::BuildObj(H1_ENUM_PARAM(BuildingSlotType, i16) building) {
     DrawTown(true, true);
     if (building == BUILDING_SLOT_MAGE_GUILD) {
         if (m_town->m_buildings & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_MAGE_GUILD))
-            m_town->m_buildState++;
+            m_town->m_mageGuildLevel++;
         if (m_town->m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE)
             m_town->GiveSpells();
     }
@@ -1814,18 +1814,18 @@ void townManager::SetupMage(class heroWindow* window) {
             case MAGE_GUILD_SLOT_LEVEL_1_FIRST:
             case MAGE_GUILD_SLOT_LEVEL_1_SECOND:
             case MAGE_GUILD_SLOT_LEVEL_1_THIRD:
-                spellStateVal = static_cast<i16>(m_town->m_buildState < MAGE_GUILD_STATE_LEVEL_1);
+                spellStateVal = static_cast<i16>(m_town->m_mageGuildLevel < MAGE_GUILD_LEVEL_1);
                 break;
             case MAGE_GUILD_SLOT_LEVEL_2_FIRST:
             case MAGE_GUILD_SLOT_LEVEL_2_SECOND:
-                spellStateVal = static_cast<i16>(m_town->m_buildState < MAGE_GUILD_STATE_LEVEL_2);
+                spellStateVal = static_cast<i16>(m_town->m_mageGuildLevel < MAGE_GUILD_LEVEL_2);
                 break;
             case MAGE_GUILD_SLOT_LEVEL_3_FIRST:
             case MAGE_GUILD_SLOT_LEVEL_3_SECOND:
-                spellStateVal = static_cast<i16>(m_town->m_buildState < MAGE_GUILD_STATE_LEVEL_3);
+                spellStateVal = static_cast<i16>(m_town->m_mageGuildLevel < MAGE_GUILD_LEVEL_3);
                 break;
             default:
-                spellStateVal = static_cast<i16>(m_town->m_buildState < MAGE_GUILD_STATE_LEVEL_4);
+                spellStateVal = static_cast<i16>(m_town->m_mageGuildLevel < MAGE_GUILD_LEVEL_4);
                 break;
         }
         message.command = WIDGET_COMMAND_SET_FRAME;
@@ -1858,12 +1858,12 @@ void townManager::SetupMage(class heroWindow* window) {
     }
     message.command = WIDGET_COMMAND_SET_FLAGS;
     message.value = WIDGET_FLAG_DRAW;
-    for (spellNo = 0; spellNo < m_town->m_buildState; spellNo++) {
+    for (spellNo = 0; spellNo < m_town->m_mageGuildLevel; spellNo++) {
         message.id =
             (spellNo + 1) * TOWN_MAGE_GUILD_LEVEL_FRAME_STRIDE + TOWN_MAGE_FIRST_TOWER_CONTROL;
         window->BroadcastMessage(message);
     }
-    message.id = m_town->m_buildState * TOWN_MAGE_GUILD_LEVEL_FRAME_STRIDE
+    message.id = m_town->m_mageGuildLevel * TOWN_MAGE_GUILD_LEVEL_FRAME_STRIDE
                  + TOWN_MAGE_FIRST_TOWER_CONTROL + 1;
     window->BroadcastMessage(message);
 }
@@ -1905,12 +1905,12 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) MageGuildHandler(struct tag_message& 
                     case TOWN_MAGE_FIRST_ICON_CONTROL + 8:
                         spellPosIndex = message.id - TOWN_MAGE_FIRST_ICON_CONTROL;
                     showSpell:
-                        theMageLevel = gTownManager->m_town->m_buildState;
-                        if ((theMageLevel == MAGE_GUILD_STATE_LEVEL_1
+                        theMageLevel = gTownManager->m_town->m_mageGuildLevel;
+                        if ((theMageLevel == MAGE_GUILD_LEVEL_1
                              && spellPosIndex > MAGE_GUILD_LEVEL_1_LAST_SLOT)
-                            || (theMageLevel == MAGE_GUILD_STATE_LEVEL_2
+                            || (theMageLevel == MAGE_GUILD_LEVEL_2
                                 && spellPosIndex > MAGE_GUILD_LEVEL_2_LAST_SLOT)
-                            || (theMageLevel == MAGE_GUILD_STATE_LEVEL_3
+                            || (theMageLevel == MAGE_GUILD_LEVEL_3
                                 && spellPosIndex > MAGE_GUILD_LEVEL_3_LAST_SLOT))
                             return MESSAGE_DISPATCH_CONSUME;
                         spellId = gTownManager->m_town->m_mageGuildSpells[spellPosIndex];
@@ -2357,7 +2357,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) CastleHandler(struct tag_message& mes
                             if (!(gTownManager->m_town->m_buildings
                                   & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_MAGE_GUILD)))
                                 objNum = TOWN_CASTLE_INFO_BUILD_MAGE_GUILD;
-                            else if (gTownManager->m_town->m_buildState == MAGE_GUILD_STATE_LEVEL_4)
+                            else if (gTownManager->m_town->m_mageGuildLevel == MAGE_GUILD_LEVEL_4)
                                 objNum = TOWN_CASTLE_INFO_MAGE_GUILD_MAX_LEVEL;
                             else if (!CanBuy(gTownManager->m_town, BUILDING_SLOT_MAGE_GUILD))
                                 objNum = TOWN_CASTLE_INFO_CANNOT_AFFORD_MAGE_LEVEL;
@@ -2453,7 +2453,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) CastleHandler(struct tag_message& mes
                 switch (message.id) {
                     case H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_MAGE_GUILD):
                         if (!quickViewVal
-                            && (gTownManager->m_town->m_buildState == MAGE_GUILD_STATE_LEVEL_4
+                            && (gTownManager->m_town->m_mageGuildLevel == MAGE_GUILD_LEVEL_4
                                 || !(gTownManager->m_buildableBuildings & (1 << message.id))))
                             break;
                         else

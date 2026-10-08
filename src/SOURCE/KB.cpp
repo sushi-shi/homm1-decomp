@@ -924,7 +924,7 @@ b8 CanBuild(town* townPointer, H1_ENUM_PARAM(BuildingSlotType, i16) building) {
             return false;
     }
     if (building == BUILDING_SLOT_MAGE_GUILD
-        && townPointer->m_buildState >= TOWN_MAGE_GUILD_COST_LEVEL_LAST)
+        && townPointer->m_mageGuildLevel >= TOWN_MAGE_GUILD_COST_LEVEL_LAST)
         return false;
     if (building == BUILDING_SLOT_TENT)
         return false;
@@ -948,8 +948,8 @@ b8 CanBuy(town* townPointer, H1_ENUM_PARAM(BuildingSlotType, i16) building) {
         building,
         cost,
         (townPointer->m_buildings & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_MAGE_GUILD))
-            ? (townPointer->m_buildState < TOWN_MAGE_GUILD_COST_LEVEL_LAST
-                   ? townPointer->m_buildState + 1
+            ? (townPointer->m_mageGuildLevel < TOWN_MAGE_GUILD_COST_LEVEL_LAST
+                   ? townPointer->m_mageGuildLevel + 1
                    : TOWN_MAGE_GUILD_COST_LEVEL_LAST)
             : TOWN_MAGE_GUILD_COST_LEVEL_FIRST
     );

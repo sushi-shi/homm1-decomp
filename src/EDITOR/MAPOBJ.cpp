@@ -138,7 +138,7 @@ void editManager::GenerateRandomMap(void) {
             gDensityPercent[H1_ENUM_ENCODE(GeneratorDensity, GENERATOR_DENSITY_MONSTERS)]
         );
         ShowStatusText(localization::Tr("editor.random.status.land"));
-        PlaceTowns();
+        PlaceCastles();
         for (terrain = 0; terrain <= H1_ENUM_ENCODE(TerrainType, TERRAIN_LAST); terrain++)
             BlendTerrain(H1_ENUM_DECODE(TerrainType, terrain), 1, 0, 1, 0);
         gVaryTiles = true;
@@ -746,11 +746,12 @@ b32 editManager::PlaceChainLink(
 #define fromY y0                         // frame-slot spelling
 #define foundX freeX                     // frame-slot spelling
 #define nearY scanY                      // frame-slot spelling
+#define extraLiths extraRoads            // frame-slot spelling
 VA(0x0041262a, 0x1f4c)
-void editManager::PlaceTowns(void) {
+void editManager::PlaceCastles(void) {
     i32 terrain;
     b32 cutOff[RANDOM_MAP_CASTLE_SLOTS];
-    b32 extraRoads[RANDOM_MAP_CASTLE_SLOTS];
+    b32 extraLiths[RANDOM_MAP_CASTLE_SLOTS];
     i32 nearX;
     i32 castleRegion[RANDOM_MAP_CASTLE_SLOTS];
     i32 tileX;
@@ -798,7 +799,7 @@ void editManager::PlaceTowns(void) {
 
     for (slot = 0; slot < RANDOM_MAP_CASTLE_SLOTS; slot++) {
         cutOff[slot] = false;
-        extraRoads[slot] = false;
+        extraLiths[slot] = false;
     }
     castle = NULL;
     snowStoneLiths = NULL;
@@ -1090,14 +1091,14 @@ void editManager::PlaceTowns(void) {
         }
     }
     if (Random(0, 100) < 50) {
-        extraRoads[0] = true;
-        extraRoads[1] = true;
+        extraLiths[0] = true;
+        extraLiths[1] = true;
         if (Random(0, 100) < 50)
-            extraRoads[2] = true;
+            extraLiths[2] = true;
         if (Random(0, 100) < 50)
-            extraRoads[3] = true;
+            extraLiths[3] = true;
     }
-    if (cutOff[0] || cutOff[1] || cutOff[2] || cutOff[3] || extraRoads[0]) {
+    if (cutOff[0] || cutOff[1] || cutOff[2] || cutOff[3] || extraLiths[0]) {
         ShowStatusText(localization::Tr("editor.random.status.roads"));
         for (slot = 0; slot < RANDOM_MAP_CASTLE_SLOTS; slot++) {
             cutOff[slot] = false;
@@ -1166,7 +1167,7 @@ void editManager::PlaceTowns(void) {
             }
         }
         for (slot = 0; slot < RANDOM_MAP_CASTLE_SLOTS; slot++) {
-            if (cutOff[slot] || extraRoads[slot]) {
+            if (cutOff[slot] || extraLiths[slot]) {
                 steps = 20000;
                 tracing = true;
                 while (tracing) {
@@ -1213,6 +1214,7 @@ void editManager::PlaceTowns(void) {
     for (slot = 0; slot < RANDOM_MAP_CASTLE_SLOTS; slot++)
         free(reachedGrids[slot]);
 }
+#undef extraLiths
 #undef castleRegion
 #undef stoneLiths
 #undef snowStoneLiths

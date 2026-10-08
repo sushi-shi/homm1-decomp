@@ -73,7 +73,7 @@ struct tag_message {
         i16 y;
     };
     H1_ENUM_STORAGE(MessageModifier, i16) modifiers;
-    char unknown8[4];
+    char unused8[4];
     union {
         i32 value;
         char* text;

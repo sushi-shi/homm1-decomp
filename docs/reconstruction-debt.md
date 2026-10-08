@@ -343,7 +343,7 @@ with the same passes as the game. Every editor function stays exact.
 - `static_cast`: **30** (from 38). The `double`-to-`i32` argument and store
   casts are gone. The rest are the `void*` map-extra record and tool-manager
   downcasts (9), `malloc` results (6), the map-code field's CP1251 character
-  tests (13, as `REQUEST.cpp`'s) and PlaceTowns' float shares (2), whose
+  tests (13, as `REQUEST.cpp`'s) and PlaceCastles' float shares (2), whose
   parenthesized divisor is the [parenthesized-cast pattern](patterns/vc6-parenthesized-cast-operand.md).
 - Unknown members and unread tails: `overlayManager::m_unused16ca` (no
   instruction of the editor image touches the offset) and the town and hero

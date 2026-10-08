@@ -97,7 +97,7 @@ H1_ENUM_CONST_BEGIN(ExtraWindowConstant)
     // A toggle per building slot (BuildingSlotType) up to the last dwelling,
     // except the tent and castle slots the town type decides.
     TOWN_WINDOW_FIRST_BUILDING = 0x225,
-    // The mage guild field shows town::m_buildState + 1 (levels 1..4).
+    // The mage guild field shows town::m_mageGuildLevel + 1 (levels 1..4).
     TOWN_WINDOW_MAGE_GUILD = 0x230,
     TOWN_WINDOW_MIN_MAGE_GUILD = 1,
     TOWN_WINDOW_MAX_MAGE_GUILD = 4,

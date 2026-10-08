@@ -29,7 +29,7 @@ typedef i32 MapStepPair[MAP_STEP_AXES];
 // and each castle's reach.
 #define MAP_GRID_CELL(grid, x, y) (*((grid) + (x) + (y) * MAP_CELL_GRID_SIZE))
 
-// PlaceTowns: castle slots (one per player) and the land regions it numbers.
+// PlaceCastles: castle slots (one per player) and the land regions it numbers.
 H1_ENUM_CONST_BEGIN(TownPlacementConstant)
     RANDOM_MAP_CASTLE_SLOTS = 4,
     RANDOM_MAP_REGION_LIMIT = 255
@@ -75,7 +75,7 @@ H1_ENUM_CONST_BEGIN(RandomMapConstant)
     // GenerateRandomMap's terrain index past TERRAIN_LAST once the base
     // terrain is painted.
     RANDOM_MAP_END_TERRAIN_SCAN = 99,
-    // PlaceTowns: a castle on another continent than its peers walks its
+    // PlaceCastles: a castle on another continent than its peers walks its
     // approach towards water without a step limit.
     RANDOM_MAP_UNLIMITED_STEPS = 999,
     // PlaceChainLink: a tileset with no chain of the cell's terrain matches

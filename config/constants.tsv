@@ -586,7 +586,7 @@ src/SOURCE/REQUEST.cpp	*	0	trivial-function-literal	0 store gText[[]]	a counter,
 src/SOURCE/REQUEST.cpp	*	0	trivial-function-literal	0 store m_topIndex	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/SWAPMGR.cpp	*	0	trivial-function-literal	0 store m_creatureCounts[[]]	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/SWAPMGR.cpp	*	0	trivial-function-literal	0 store m_splitAmount	a counter, accumulator, coordinate or field reset to zero
-src/SOURCE/TOWN.cpp	*	0	trivial-function-literal	0 store m_buildState	a counter, accumulator, coordinate or field reset to zero
+src/SOURCE/TOWN.cpp	*	0	trivial-function-literal	0 store m_mageGuildLevel	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/TOWN.cpp	*	0	trivial-function-literal	0 store m_id	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/TOWN.cpp	*	0	trivial-function-literal	0 store m_owner	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/TOWN.cpp	*	0	trivial-function-literal	0 store m_nameIndex	a counter, accumulator, coordinate or field reset to zero
@@ -1166,24 +1166,24 @@ src/EDITOR/MAPOBJ.cpp	editManager::Place*	[12]	call-argument	PlaceOverlay(* argu
 src/EDITOR/MAPOBJ.cpp	editManager::PlaceTreasures	*	comparison-or-bound	operator < kindRoll	the treasure kind's percent roll thresholds (chest or artifact when guarded; lamp, chest, campfire or resource)
 src/EDITOR/MAPOBJ.cpp	editManager::PlaceTreasures	*	comparison-or-bound	operator < k	a wandering monster's strength roll thresholds (weak, medium, strong)
 src/EDITOR/MAPOBJ.cpp	editManager::PlaceTreasures	*	*	*guardsDone	at most one guarded treasure for every six, and 31 in all
-src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	*	*	*belongs	the castle slots of the four castles (castleRegion)
-src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	*	*	*rank	the regions by rank; rank[1] is the largest region
-src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	*	*	*array* extraRoads	the castle slots of the four castles
-src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	*	*	*array* cutOff	the castle slots of the four castles
-src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	*	arithmetic	compound assignment to rating	a castle site's score: the coastal-entrance and own-region bonuses and the penalty near another castle
-src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	*	arithmetic	operator * continents	a castle site's coastal-entrance bonus per land region
-src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	*	arithmetic	operator +	a castle site's coastal-entrance bonus
-src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	*	arithmetic	operator - dist	a castle site's penalty per cell closer than 40 to another castle
-src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	*	arithmetic	operator [*]	a castle site's penalty per cell closer than 40 to another castle
-src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	*	comparison-or-bound	operator < dist	a distance in cells to another castle or stone liths within which a site is penalised or refused
-src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	*	arithmetic	operator [-+] tile[XY]	an offset from the castle's anchor to its entrance approach or to a road end beside its site
-src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	*	arithmetic	operator - x	a road end beside the peer castle's site (retail reads the peer's x for both ends)
-src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	*	*	* tile[XY]	the castle search's margins from the map edges
-src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	*	arithmetic	operator - MAP_CELL_GRID_SIZE	the castle search's margins from the map edges
-src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	*	store	store to steps	the approach steps cut towards water, and the stone liths search's try budget
-src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	*	comparison-or-bound	operator [<>] steps	the stone liths search: the first half of its tries prefers far cells and keeps away from other liths
-src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	*	store	store to regionsUsed	the castles split over the two largest land regions
-src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	*	store	store to shareValue[]	a region's land share starts at zero
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceCastles	*	*	*belongs	the castle slots of the four castles (castleRegion)
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceCastles	*	*	*rank	the regions by rank; rank[1] is the largest region
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceCastles	*	*	*array* extraRoads	the castle slots of the four castles
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceCastles	*	*	*array* cutOff	the castle slots of the four castles
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceCastles	*	arithmetic	compound assignment to rating	a castle site's score: the coastal-entrance and own-region bonuses and the penalty near another castle
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceCastles	*	arithmetic	operator * continents	a castle site's coastal-entrance bonus per land region
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceCastles	*	arithmetic	operator +	a castle site's coastal-entrance bonus
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceCastles	*	arithmetic	operator - dist	a castle site's penalty per cell closer than 40 to another castle
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceCastles	*	arithmetic	operator [*]	a castle site's penalty per cell closer than 40 to another castle
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceCastles	*	comparison-or-bound	operator < dist	a distance in cells to another castle or stone liths within which a site is penalised or refused
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceCastles	*	arithmetic	operator [-+] tile[XY]	an offset from the castle's anchor to its entrance approach or to a road end beside its site
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceCastles	*	arithmetic	operator - x	a road end beside the peer castle's site (retail reads the peer's x for both ends)
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceCastles	*	*	* tile[XY]	the castle search's margins from the map edges
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceCastles	*	arithmetic	operator - MAP_CELL_GRID_SIZE	the castle search's margins from the map edges
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceCastles	*	store	store to steps	the approach steps cut towards water, and the stone liths search's try budget
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceCastles	*	comparison-or-bound	operator [<>] steps	the stone liths search: the first half of its tries prefers far cells and keeps away from other liths
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceCastles	*	store	store to regionsUsed	the castles split over the two largest land regions
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceCastles	*	store	store to shareValue[]	a region's land share starts at zero
 src/EDITOR/MAPOBJ.cpp	editManager::Place*	*	arithmetic	operator / g*Land*	land cells per placed object (towns, mines, obelisks, treasure, wandering monsters)
 src/EDITOR/MAPOBJ.cpp	editManager::PlaceRandomObjects	*	arithmetic	operator - mineTries	the mine quota per resource: (target - 13) / 7, plus 5 for wood and ore and 2 for the others
 src/EDITOR/MAPOBJ.cpp	editManager::PlaceRandomObjects	*	arithmetic	operator /	the mine quota per resource: (target - 13) / 7, plus 5 for wood and ore and 2 for the others
@@ -1211,7 +1211,7 @@ src/EDITOR/MAPOBJ.cpp	ScaleByDensity	*	arithmetic	operator + base	the count's si
 src/EDITOR/MAPOBJ.cpp	editManager::GenerateRandomMap	*	store	store to unusedPercent	an unread percent total
 src/EDITOR/MAPOBJ.cpp	editManager::ScatterDecorations	*	initializer-payload	initializer list	each terrain's chance in 1000 of a decoration on a bare cell
 src/EDITOR/MAPOBJ.cpp	editManager::PlaceResourceSite	*	store	initializer of name	the object name buffer's extent
-src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	1	trivial-function-literal	1 for-init	land regions and region ranks count from 1 (0 marks water)
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceCastles	1	trivial-function-literal	1 for-init	land regions and region ranks count from 1 (0 marks water)
 src/SOURCE/EVENTS.cpp	*	*	store	initializer of resourceText	the resource name buffer's extent
 src/SOURCE/EVENTS.cpp	advManager::DoAIEvent	4	store	initializer of eventWork	the extent of an unused retail work array (it sizes DoAIEvent's frame)
 src/SOURCE/EVENTS.cpp	*	0	trivial-function-literal	0 store m_remainingMobility	the hero's movement points used up (the event ends its move)
@@ -1308,12 +1308,12 @@ src/EDITOR/MAPOBJ.cpp	editManager::*	0	trivial-function-literal	0 store pilesSoF
 src/EDITOR/MAPOBJ.cpp	editManager::*	0	trivial-function-literal	0 store landCells	a land cell count reset to zero
 src/EDITOR/MAPOBJ.cpp	editManager::*	0	trivial-function-literal	0 store gcLandSquares	gLandCellCount, the land cell count, reset to zero
 src/EDITOR/MAPOBJ.cpp	editManager::*	0	trivial-function-literal	0 store continents	the land region count reset to zero
-src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	0	trivial-function-literal	0 store reachable[]	a castle's reachable cell count reset to zero
-src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	0	trivial-function-literal	0 store top	the best castle site rating so far reset to zero
-src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	[01]	trivial-function-literal	[01] store steps	the approach steps cut towards water: one for a coast beside the entrance, none inland
-src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	*	trivial-function-literal	*[01] store step[XY]	a unit step of the road towards its end (-1, 0 or 1 per axis)
-src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	1	trivial-function-literal	1 * regionsUsed	one land region holds every castle (more than one splits them)
-src/EDITOR/MAPOBJ.cpp	editManager::PlaceTowns	1	trivial-function-literal	1 store	a castle's own site marked as reached in its u8 reach grid
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceCastles	0	trivial-function-literal	0 store reachable[]	a castle's reachable cell count reset to zero
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceCastles	0	trivial-function-literal	0 store top	the best castle site rating so far reset to zero
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceCastles	[01]	trivial-function-literal	[01] store steps	the approach steps cut towards water: one for a coast beside the entrance, none inland
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceCastles	*	trivial-function-literal	*[01] store step[XY]	a unit step of the road towards its end (-1, 0 or 1 per axis)
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceCastles	1	trivial-function-literal	1 * regionsUsed	one land region holds every castle (more than one splits them)
+src/EDITOR/MAPOBJ.cpp	editManager::PlaceCastles	1	trivial-function-literal	1 store	a castle's own site marked as reached in its u8 reach grid
 src/EDITOR/MAPOBJ.cpp	editManager::GenerateRandomMap	0	trivial-function-literal	0 store canvas	no base terrain painted yet: the shares are painted from the first terrain
 src/EDITOR/MAPOBJ.cpp	editManager::PaintRandomTerrain	0	trivial-function-literal	0 conditional	snow seeds near the top of the map (or 48 rows lower)
 src/EDITOR/MAPOBJ.cpp	editManager::PlaceChainLink	0	trivial-function-literal	0 array-index name	an object name's first letter (a tree chain's family)

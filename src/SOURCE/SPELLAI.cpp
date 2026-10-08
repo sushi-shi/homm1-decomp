@@ -32,6 +32,7 @@ DATA(0x0048a6ec)
 static const float SPELL_AI_PROTECTION_MODIFIER = 0.24f;
 DATA(0x0048a6f0)
 static const float SPELL_AI_ANTI_MAGIC_MODIFIER = 0.15f;
+#define SPELL_AI_DWARF_EXPECTED_SHARE 0.75
 
 // The weaker side's hero halves (or quarters) a spell's raw effect.
 DATA(0x004cccb4)
@@ -292,7 +293,7 @@ i32 combatManager::RawEffectSpellInfluence(army* target, H1_ENUM_PARAM(SpellType
     if (ARMY_IGNORES_SPELLS(target))
         effect = 0;
     else if (target->m_creatureType == CREATURE_DWARF && effect < 0)
-        effect = effect * 0.75;
+        effect = effect * SPELL_AI_DWARF_EXPECTED_SHARE;
     return effect;
 }
 
@@ -417,6 +418,7 @@ void combatManager::EffectSpellResurrect(i32* effect, i32 hex) {
 
 // The net fight value a damage spell destroys, or a decisive value when it
 // wipes out a side.
+#define expectedDamage hitDamage // frame-slot spelling
 VA(0x004599be, 0x491)
 void combatManager::EffectSpellDamage(
     i32* effect,
@@ -429,7 +431,7 @@ void combatManager::EffectSpellDamage(
     H1_ENUM_ARRAY(i32, stacksKilled, CombatSide, COMBAT_SIDE_COUNT);
     H1_ENUM_ARRAY(i32, killedValue, CombatSide, COMBAT_SIDE_COUNT);
     H1_ENUM_LOCAL(CombatSide, i32) side;
-    i32 hitDamage;
+    i32 expectedDamage;
     army* targetArmy;
     i32 hex;
     b32 done;
@@ -481,11 +483,11 @@ void combatManager::EffectSpellDamage(
                 gArmyEffected[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex] = 1;
                 if (!ARMY_IGNORES_SPELLS(targetArmy)) {
                     if (targetArmy->m_creatureType == CREATURE_DWARF)
-                        hitDamage = baseDamage * 0.75;
+                        expectedDamage = baseDamage * SPELL_AI_DWARF_EXPECTED_SHARE;
                     else
-                        hitDamage = baseDamage;
-                    killedCount = hitDamage / targetArmy->m_stats.hitPoints;
-                    leftDamage = hitDamage % targetArmy->m_stats.hitPoints;
+                        expectedDamage = baseDamage;
+                    killedCount = expectedDamage / targetArmy->m_stats.hitPoints;
+                    leftDamage = expectedDamage % targetArmy->m_stats.hitPoints;
                     if (leftDamage + targetArmy->m_hitPointsLost >= targetArmy->m_stats.hitPoints) {
                         killedCount++;
                         leftDamage -= targetArmy->m_stats.hitPoints - targetArmy->m_hitPointsLost;
@@ -516,3 +518,4 @@ void combatManager::EffectSpellDamage(
     } else
         *effect = damagedValue[COMBAT_OPPOSING_SIDE(m_currentSide)] - damagedValue[m_currentSide];
 }
+#undef expectedDamage

@@ -83,3 +83,5 @@ enum	EditExtraConstant	EDIT_EXTRA_RESERVED_SIZE	EDIT_EXTRA_UNUSED_SIZE	the unuse
 global	EVENTMGR	gMonsterCount	gMonsterCountEdit	the monster dialog's edited count, named beside the town and hero dialogs' gTownEdit/gHeroEdit (zero-initialized, so its .bss place follows definition order, not the name)
 enum	EventsManagerConstant	EVENTS_CELL_EDIT_DEBUG_LEVEL	EVENTS_CELL_EDIT_DEBUG_LEVEL_MIN (KB.h DebugLevel)	EditCell compares giDebugLevel against it, so it is a threshold of KB.h's DebugLevel domain like the game's _MIN levels
 global	EDITOR	gGeneratingMaps	gGeneratingUnseen	set only when gSaveUnseen: the map view draws clouds, the radar stays black and each generated map is saved
+function	editManager	PlaceTowns	PlaceCastles	its status line is "placing castles"; it places only the players' castle slots (neutral towns come from PlaceRandomObjects)
+aliased	editManager::PlaceCastles	extraRoads	extraLiths	never lays a road: a set slot gets a Stone Liths teleporter like a cut-off castle

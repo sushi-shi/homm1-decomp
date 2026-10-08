@@ -577,7 +577,7 @@ public:
         H1_ENUM_PARAM(MapTileset, i32) tileset,
         char treeFamily
     );
-    void PlaceTowns(void);
+    void PlaceCastles(void);
     // Places the site producing `resource` at (x, y): a sawmill, an
     // alchemist's lab, or a mine with the resource's marker to its right.
     void PlaceResourceSite(i32 x, i32 y, H1_ENUM_PARAM(ResourceType, i32) resource);

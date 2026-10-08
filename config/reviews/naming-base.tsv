@@ -160,3 +160,4 @@ member	heroWindowManager	m_updateFlags	m_colorCycling	CycleColors returns while 
 global	BASE/WINMGR	gFadeSavedUpdate	gFadeSavedColorCycling	FadeScreen's saved copy across a fade out/in (storage spelling kept through the .bss alias)
 local-aliased	heroWindowManager::FizzleForward, PlaySmacker	savedUpdateFlags	savedColorCycling	the saved m_colorCycling
 member	heroWindowManager	m_activeWindow	m_previousFocusWindow	AddWindow and UpdateHoverWindow copy the focus window into it before the new one takes focus; RemoveWindow gives focus back to it
+local-aliased	heroWindow::MoveWindow	oldX/oldY/oldWidth/oldHeight	dirtyX/dirtyY/dirtyWidth/dirtyHeight	start as the old rectangle and grow to cover the new one; UpdateScreenRegion repaints that union

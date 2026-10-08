@@ -266,7 +266,7 @@ struct mapTownExtra {
     b8 customized;
     i8 owner;
     i16 buildings;
-    i8 buildState;
+    i8 mageGuildLevel;
     H1_ENUM_STORAGE(CreatureType, i8) troopTypes[ARMY_GROUP_SLOT_COUNT];
     i16 troopCounts[ARMY_GROUP_SLOT_COUNT];
 };

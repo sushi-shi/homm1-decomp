@@ -45,14 +45,14 @@ H1_ENUM_BEGIN(TownType)
 H1_ENUM_END(TownType)
 H1_ENUM_STEPPED(TownType)
 
-// town::m_buildState is the mage guild's level - 1 (STATE_LEVEL_1..4); its
+// town::m_mageGuildLevel counts from 0 (MAGE_GUILD_LEVEL_1..4); its
 // nine m_mageGuildSpells slots fill three, two, two and two per level
 // (SetupTown's pools, SetupMageGuild's locks, MageGuildHandler's bounds).
 H1_ENUM_CONST_BEGIN(TownMageGuildConstant)
-    MAGE_GUILD_STATE_LEVEL_1 = 0,
-    MAGE_GUILD_STATE_LEVEL_2 = 1,
-    MAGE_GUILD_STATE_LEVEL_3 = 2,
-    MAGE_GUILD_STATE_LEVEL_4 = 3,
+    MAGE_GUILD_LEVEL_1 = 0,
+    MAGE_GUILD_LEVEL_2 = 1,
+    MAGE_GUILD_LEVEL_3 = 2,
+    MAGE_GUILD_LEVEL_4 = 3,
     MAGE_GUILD_LEVEL_1_LAST_SLOT = 2,
     MAGE_GUILD_LEVEL_2_LAST_SLOT = 4,
     MAGE_GUILD_LEVEL_3_LAST_SLOT = 6,
@@ -98,7 +98,7 @@ public:
     armyGroup m_army;
     i8 m_occupyingHeroId;
     i16 m_buildings;
-    i8 m_buildState;
+    i8 m_mageGuildLevel;
     // Cleared by the constructor and carried by saved games; no code of any
     // build reads it.
     i8 m_unused19;
@@ -180,6 +180,6 @@ H1_ENUM_STEPPED(BuildingSlotType)
 // mask first, then the guild level.
 #define TOWN_BUILDING_COMPLETE(t, slot)                                                            \
     (((t).m_buildings & H1_ENUM_BIT(BuildingSlotType, slot))                                       \
-     && ((slot) != BUILDING_SLOT_MAGE_GUILD || (t).m_buildState == MAGE_GUILD_STATE_LEVEL_4))
+     && ((slot) != BUILDING_SLOT_MAGE_GUILD || (t).m_mageGuildLevel == MAGE_GUILD_LEVEL_4))
 
 #endif // HOMM1_SOURCE_TOWN_H

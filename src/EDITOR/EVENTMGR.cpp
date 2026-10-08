@@ -449,7 +449,7 @@ void eventsManager::UpdateTownWindow(editTownExtra* town) {
             message.id = i + EXTRA_WINDOW_FIRST_NAME;
             gEditDialog->BroadcastMessage(message);
         }
-        sprintf(text, "%d", town->record.buildState + 1);
+        sprintf(text, "%d", town->record.mageGuildLevel + 1);
         message.id = TOWN_WINDOW_MAGE_GUILD;
         gEditDialog->BroadcastMessage(message);
         toggleIndex = 0;
@@ -589,7 +589,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) TownWindowHandler(tag_message& messag
                                 );
                                 amount = TOWN_WINDOW_MIN_MAGE_GUILD;
                             }
-                            gTownEdit.record.buildState = amount - 1;
+                            gTownEdit.record.mageGuildLevel = amount - 1;
                             changed = true;
                             break;
                     }

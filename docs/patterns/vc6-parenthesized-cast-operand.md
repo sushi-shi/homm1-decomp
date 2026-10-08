@@ -54,7 +54,7 @@ eight unparenthesized spellings. It covered `/Od` and `/O1`, `/O2`, `/Ox`,
 
 ## Editor control
 
-`editManager::PlaceTowns` (`EDITOR/MAPOBJ`, editor RVA `0x1262a`, `/Od /Ob1
+`editManager::PlaceCastles` (`EDITOR/MAPOBJ`, editor RVA `0x1262a`, `/Od /Ob1
 /GX /MT /G5`) computes each land region's share as
 `static_cast<float>(regionSizes[slot]) / (static_cast<float>(gLandCellCount))
 * 100.0f`. Without the parentheses, and without the second cast, the divisor

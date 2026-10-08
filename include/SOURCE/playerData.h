@@ -148,7 +148,7 @@ public:
     i32 BuildingsOwned(
         H1_ENUM_PARAM(TownType, i32) townType,
         H1_ENUM_PARAM(BuildingSlotType, i32) buildingIndex,
-        i32 buildState
+        i32 mageGuildLevel
     );
     i32 NumOfGivenArtifact(H1_ENUM_PARAM(ArtifactType, i32) artifact);
     i8 CountPuzzlePiecesRemoved(void);

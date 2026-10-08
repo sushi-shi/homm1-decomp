@@ -76,10 +76,10 @@ H1_ENUM_CONST_BEGIN(MapEventRewardConstant)
     GHOST_HUGE_GOLD = 2000
 H1_ENUM_CONST_END(MapEventRewardConstant)
 
-// FizzleCenter's sample: the hero-loss fade or the pickup chime
+// FizzleCenter's sample: the kill fade (a beaten monster or lost hero) or the pickup chime
 // ("pickup%02d" plays for every erased pickup).
 H1_ENUM_BEGIN(EventFizzleType)
-    EVENT_FIZZLE_HERO_LOSS = 0,
+    EVENT_FIZZLE_KILL = 0,
     EVENT_FIZZLE_PICKUP = 1
 H1_ENUM_END(EventFizzleType)
 

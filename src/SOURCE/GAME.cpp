@@ -152,7 +152,7 @@ VA(0x0042b97f, 0xb6)
 i32 playerData::BuildingsOwned(
     H1_ENUM_PARAM(TownType, i32) townType,
     H1_ENUM_PARAM(BuildingSlotType, i32) buildingIndex,
-    i32 buildState
+    i32 mageGuildLevel
 ) {
     i32 count = 0;
     i32 i;
@@ -162,7 +162,7 @@ i32 playerData::BuildingsOwned(
             if (buildingIndex == BUILDING_SLOT_MAGE_GUILD) {
                 if (ownedTown->m_buildings
                     & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_MAGE_GUILD)) {
-                    if (ownedTown->m_buildState == buildState)
+                    if (ownedTown->m_mageGuildLevel == mageGuildLevel)
                         ++count;
                 }
             } else {
@@ -1608,7 +1608,7 @@ void game::RandomizeEvents(void) {
                             myCell->m_objectMetadata =
                                 H1_ENUM_ENCODE(
                                     SpellType,
-                                    gMageGuildSpellPool[MAGE_GUILD_STATE_LEVEL_1][Random(0, 7)]
+                                    gMageGuildSpellPool[MAGE_GUILD_LEVEL_1][Random(0, 7)]
                                 )
                                 + 1;
                             break;
@@ -1619,7 +1619,7 @@ void game::RandomizeEvents(void) {
                             myCell->m_objectMetadata =
                                 H1_ENUM_ENCODE(
                                     SpellType,
-                                    gMageGuildSpellPool[MAGE_GUILD_STATE_LEVEL_2][Random(0, 7)]
+                                    gMageGuildSpellPool[MAGE_GUILD_LEVEL_2][Random(0, 7)]
                                 )
                                 + 1;
                             break;
@@ -1627,7 +1627,7 @@ void game::RandomizeEvents(void) {
                             myCell->m_objectMetadata =
                                 H1_ENUM_ENCODE(
                                     SpellType,
-                                    gMageGuildSpellPool[MAGE_GUILD_STATE_LEVEL_3][Random(0, 7)]
+                                    gMageGuildSpellPool[MAGE_GUILD_LEVEL_3][Random(0, 7)]
                                 )
                                 + 1;
                             break;
@@ -3372,13 +3372,13 @@ void game::SetupTown(i8 townId, b8 aiOwned) {
     memset(nextUsed, 0, sizeof(nextUsed));
     for (n = 0; n < TOWN_MAGE_GUILD_SPELL_COUNT; n++) {
         if (n <= MAGE_GUILD_LEVEL_1_LAST_SLOT)
-            spellLevel = MAGE_GUILD_STATE_LEVEL_1;
+            spellLevel = MAGE_GUILD_LEVEL_1;
         else if (n <= MAGE_GUILD_LEVEL_2_LAST_SLOT)
-            spellLevel = MAGE_GUILD_STATE_LEVEL_2;
+            spellLevel = MAGE_GUILD_LEVEL_2;
         else if (n <= MAGE_GUILD_LEVEL_3_LAST_SLOT)
-            spellLevel = MAGE_GUILD_STATE_LEVEL_3;
+            spellLevel = MAGE_GUILD_LEVEL_3;
         else
-            spellLevel = MAGE_GUILD_STATE_LEVEL_4;
+            spellLevel = MAGE_GUILD_LEVEL_4;
         do {
             newSpell = gMageGuildSpellPool[spellLevel][Random(0, 7)];
             if (aiOwned)
@@ -4160,7 +4160,7 @@ i8 game::SetupTowns(void) {
                     else
                         curTown->m_army.m_creatureTypes[j] = CREATURE_NONE;
                 }
-                curTown->m_buildState = newExtra->buildState;
+                curTown->m_mageGuildLevel = newExtra->mageGuildLevel;
                 curTown->m_buildings = curTown->m_buildings - (curTown->m_buildings & mask)
                                        + (newExtra->buildings & mask);
             }

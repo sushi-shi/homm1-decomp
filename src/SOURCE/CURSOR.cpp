@@ -657,7 +657,7 @@ void advManager::CheckAdjacentMon(b8* adjacentMonster) {
         if (clearMonster) {
             EraseObj(monCell, monsterX, monsterY);
             if (gThisNetHumanPlayer[gCurPlayer])
-                FizzleCenter(EVENT_FIZZLE_HERO_LOSS);
+                FizzleCenter(EVENT_FIZZLE_KILL);
         }
         *adjacentMonster = true;
     }

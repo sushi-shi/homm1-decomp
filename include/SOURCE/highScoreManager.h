@@ -116,7 +116,7 @@ struct HighScoreEntry {
     char playerName[17];
     char scenarioName[15];
     i32 score;
-    char unknown24[0x33];
+    char unused24[0x33];
 };
 #pragma pack(pop)
 
