@@ -32,7 +32,6 @@ DATA(0x0048a6ec)
 static const float SPELL_AI_PROTECTION_MODIFIER = 0.24f;
 DATA(0x0048a6f0)
 static const float SPELL_AI_ANTI_MAGIC_MODIFIER = 0.15f;
-#define SPELL_AI_DWARF_EXPECTED_SHARE 0.75
 
 // The weaker side's hero halves (or quarters) a spell's raw effect.
 DATA(0x004cccb4)
@@ -293,7 +292,7 @@ i32 combatManager::RawEffectSpellInfluence(army* target, H1_ENUM_PARAM(SpellType
     if (ARMY_IGNORES_SPELLS(target))
         effect = 0;
     else if (target->m_creatureType == CREATURE_DWARF && effect < 0)
-        effect = effect * SPELL_AI_DWARF_EXPECTED_SHARE;
+        effect = effect * 0.75;
     return effect;
 }
 
@@ -483,7 +482,7 @@ void combatManager::EffectSpellDamage(
                 gArmyEffected[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex] = 1;
                 if (!ARMY_IGNORES_SPELLS(targetArmy)) {
                     if (targetArmy->m_creatureType == CREATURE_DWARF)
-                        expectedDamage = baseDamage * SPELL_AI_DWARF_EXPECTED_SHARE;
+                        expectedDamage = baseDamage * 0.75;
                     else
                         expectedDamage = baseDamage;
                     killedCount = expectedDamage / targetArmy->m_stats.hitPoints;

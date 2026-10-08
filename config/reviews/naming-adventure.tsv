@@ -108,7 +108,7 @@ enum	TownMageGuildConstant	MAGE_GUILD_STATE_LEVEL_1..4	MAGE_GUILD_LEVEL_1..4	the
 member	mapTownExtra	buildState	mageGuildLevel	the map file's mage guild level, copied to town::m_mageGuildLevel (SetupTowns) and edited as level + 1 in the editor's town dialog
 param	playerData::BuildingsOwned	buildState	mageGuildLevel	compared with town::m_mageGuildLevel for the mage guild slot
 enum	EventFizzleType	EVENT_FIZZLE_HERO_LOSS	EVENT_FIZZLE_KILL	FizzleCenter plays killfade.82M; DoEvent's default fizzle for a beaten monster, CheckAdjacentMon's erased monster and HeroLoses all pass it
-local-aliased	combatManager::EffectSpellDamage	hitDamage	expectedDamage	the damage the AI expects on the stack: a dwarf's is scaled by SPELL_AI_DWARF_EXPECTED_SHARE (0.75), the mean of the in-game one-in-four resist roll
+local-aliased	combatManager::EffectSpellDamage	hitDamage	expectedDamage	the damage the AI expects on the stack: a dwarf's is scaled by 0.75, the mean of the in-game one-in-four resist roll
 member	HighScoreEntry/tag_monsterStats/tag_message	unknown24/unknown09/unknown8	unused24/unused09/unused8	no reader or writer in either image beyond whole-record copies
 local-aliased	advManager::DoAdvCommand	anyMoveChanged/moveDone	outOfMobility/adjacentMonster	MoveHero's outOfMobility and adjacentMonster outputs; the walk stops on either
 local-aliased	advManager::Main	movedSet/bEnded	outOfMobility/adjacentMonster	the same two MoveHero outputs for a keyboard step
