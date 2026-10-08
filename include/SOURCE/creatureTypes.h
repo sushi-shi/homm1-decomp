@@ -76,7 +76,7 @@ struct tag_monsterStats {
     i8 damageMax;
     i8 powEffect;
     i8 shots;
-    char unknown09[6];
+    char unused09[6];
     i32 attributes;
 };
 struct tag_monsterInfo {

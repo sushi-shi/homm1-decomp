@@ -47,7 +47,7 @@ i16 clearManager::Open(i16 priority) {
         "buttons.icn",
         EDIT_FRAME_CLEAR_OPTIONS,
         EDIT_FRAME_CLEAR_OPTIONS_PRESSED,
-        0,
+        BUTTON_SELECT_NOTIFY,
         BUTTON_NO_HOTKEY,
         EDIT_CONTROL_TOOL_OPTIONS,
         WIDGET_KIND_DEFAULT

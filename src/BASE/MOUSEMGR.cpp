@@ -89,7 +89,7 @@ void mouseManager::SetPointer(char* name, i16 frame) {
 i32 gMouseCursorType = 0;
 
 void mouseManager::SetPointer(i16 frame) {
-    static bool gInSetPointer = false;
+    static b32 gInSetPointer = false;
     i32 cursorIndex;
     i32 x;
     i32 y;

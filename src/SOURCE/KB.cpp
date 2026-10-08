@@ -1,7 +1,7 @@
 #include <H1/Ints.h>
 
 #include <BASE/BITS.h>
-#include <BASE/BMAP2.h>
+#include <BASE/bmap2.h>
 #include <BASE/Misc.h>
 #include <BASE/baseManager.h>
 #include <BASE/executive.h>
@@ -237,7 +237,7 @@ i32 oldmain(void) {
     gPalette = gResourceManager->GetPalette("kb.pal");
     PostprocessPalette(gPalette->m_data);
     SetPalette(gPalette->m_data, true);
-    gWindowManager->m_updateFlags = 1;
+    gWindowManager->m_colorCycling = 1;
     gPhilAI->m_debugFont = gResourceManager->GetFont("smalfont.fnt");
     if (gShowIntro) {
         FillBitmapArea(
@@ -288,7 +288,7 @@ i32 oldmain(void) {
         }
         backdropLoaded = true;
         if (gGameCommand != MAIN_MENU_QUIT)
-            gWindowManager->m_updateFlags = 1;
+            gWindowManager->m_colorCycling = 1;
         gCampaignChoice = CAMPAIGN_NONE;
         gMouseManager->ReallyShowPointer();
 
@@ -489,7 +489,7 @@ i32 oldmain(void) {
                 gWindowManager
                     ->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
                 gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, gPalette);
-                gWindowManager->m_updateFlags = 1;
+                gWindowManager->m_colorCycling = 1;
                 backdropLoaded = true;
             } else {
                 ShowCongrats();
@@ -680,8 +680,8 @@ i16 RecruitHeroHandler(tag_message& message) {
                         heroSlot = message.id - viewButton1Value;
                         gTownManager->m_recruitHeroes[heroSlot]->HeroView(false);
                         gTownManager->RedrawTownScreen();
-                        gTownManager->m_heroWindow0->DrawWindow();
-                        gTownManager->m_heroWindow1->DrawWindow();
+                        gTownManager->m_buildingWindow->DrawWindow();
+                        gTownManager->m_childWindow->DrawWindow();
                         gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);
                         break;
                     default:
@@ -691,12 +691,12 @@ i16 RecruitHeroHandler(tag_message& message) {
             case WIDGET_NOTIFY_DESELECT:
                 switch (message.id) {
                     case DIALOG_BUTTON_1:
-                        gTownManager->m_recruitState = RECRUIT_HERO_NONE;
+                        gTownManager->m_recruitSlot = RECRUIT_HERO_NONE;
                         shouldClose = true;
                         break;
                     case recruitButton1:
                     case recruitButton2:
-                        gTownManager->m_recruitState = message.id - recruitButton1;
+                        gTownManager->m_recruitSlot = message.id - recruitButton1;
                         gWindowManager->m_dialogResult = message.id;
                         shouldClose = true;
                         break;
@@ -800,7 +800,7 @@ b8 CanBuild(town* townPointer, i16 building) {
             return false;
     }
     if (building == BUILDING_SLOT_MAGE_GUILD
-        && townPointer->m_buildState >= TOWN_MAGE_GUILD_COST_LEVEL_LAST)
+        && townPointer->m_mageGuildLevel >= TOWN_MAGE_GUILD_COST_LEVEL_LAST)
         return false;
     if (building == BUILDING_SLOT_TENT)
         return false;
@@ -823,8 +823,8 @@ b8 CanBuy(town* townPointer, i16 building) {
         building,
         cost,
         (townPointer->m_buildings & (1 << BUILDING_SLOT_MAGE_GUILD))
-            ? (townPointer->m_buildState < TOWN_MAGE_GUILD_COST_LEVEL_LAST
-                   ? townPointer->m_buildState + 1
+            ? (townPointer->m_mageGuildLevel < TOWN_MAGE_GUILD_COST_LEVEL_LAST
+                   ? townPointer->m_mageGuildLevel + 1
                    : TOWN_MAGE_GUILD_COST_LEVEL_LAST)
             : TOWN_MAGE_GUILD_COST_LEVEL_FIRST
     );
@@ -1197,7 +1197,7 @@ void NormalDialog(
             12,
             labelTexts[index],
             "smalfont.fnt",
-            1,
+            TEXT_WIDGET_PLAIN_COLOR,
             nextId++,
             WIDGET_KIND_TEXT
         );
@@ -1220,7 +1220,7 @@ void NormalDialog(
             12,
             orWord,
             "smalfont.fnt",
-            1,
+            TEXT_WIDGET_PLAIN_COLOR,
             nextId++,
             WIDGET_KIND_TEXT
         );
@@ -1362,9 +1362,9 @@ void PlayerDead(i32 player) {
     for (i = currentPlayer->m_heroCount - 1; i >= 0; --i)
         gGame->GetHero(currentPlayer->m_heroIds[i])->Deallocate();
     for (i = 0; i < HERO_AVAILABLE_SLOT_COUNT; ++i) {
-        if (gGame->m_availableHeroes[currentPlayer->m_availableHeroIds[i]]
+        if (gGame->m_heroOwners[currentPlayer->m_availableHeroIds[i]]
             == HERO_AVAILABILITY_RETREATED)
-            gGame->m_availableHeroes[currentPlayer->m_availableHeroIds[i]] =
+            gGame->m_heroOwners[currentPlayer->m_availableHeroIds[i]] =
                 HERO_AVAILABILITY_UNAVAILABLE;
     }
     if (gRemoteOn && gHumanPlayer[player])
@@ -1431,7 +1431,7 @@ i8 gMageGuildSpellPool[4][8] = {
     {SPELL_DIMENSION_DOOR, SPELL_RESURRECT, SPELL_ARMAGEDDON, SPELL_METEOR_SHOWER, SPELL_TOWN_GATE,
      SPELL_VIEW_ALL, SPELL_TOWN_GATE, SPELL_DIMENSION_DOOR},
 };
-i8 gCombatAdjacency[45][COMBAT_DIRECTION_ADJACENT_COUNT] = {
+i8 gCombatAdjacency[COMBAT_HEX_COUNT][COMBAT_DIRECTION_ADJACENT_COUNT] = {
     {-1, -1, -1, -1, -1, -1}, {-1, 2, 10, -1, -1, -1},  {-1, 3, 11, 10, 1, -1},
     {-1, 4, 12, 11, 2, -1},   {-1, 5, 13, 12, 3, -1},   {-1, 6, 14, 13, 4, -1},
     {-1, 7, 15, 14, 5, -1},   {-1, -1, 16, 15, 6, -1},  {-1, -1, -1, -1, -1, -1},
@@ -1459,7 +1459,7 @@ char* gTownObjectNames[20] = {
     "magegld", "thievesg", "tavern", "dock", "well", "farm", "frst", "plns", "mtn", "tent",
     "cast",    "_d0",      "_d1",    "_d2",  "_d3",  "_d4",  "_d5",  "_e0",  "_e1", "_e2",
 };
-i8 gDwellingType[TOWN_TYPE_COUNT][6] = {
+i8 gDwellingType[TOWN_TYPE_COUNT][BUILDING_SLOT_DWELLING_COUNT] = {
     {CREATURE_PEASANT,
      CREATURE_ARCHER,
      CREATURE_PIKEMAN,
@@ -1594,7 +1594,7 @@ void ReceiveRemotePlayerExit(i8 position, i8 hadControl, b8 eliminated, b8 timed
             NormalDialog(
                 gText,
                 NORMAL_DIALOG_TYPE_OK,
-                0x61,
+                NORMAL_DIALOG_ADVENTURE_X,
                 NORMAL_DIALOG_AUTO_POSITION,
                 NORMAL_DIALOG_CREST,
                 (gGame->m_players[position].Color())
@@ -1669,7 +1669,7 @@ void CheckEndGame(b32 forceWin) {
                 NormalDialog(
                     gText,
                     NORMAL_DIALOG_TYPE_OK,
-                    0x61,
+                    NORMAL_DIALOG_ADVENTURE_X,
                     NORMAL_DIALOG_AUTO_POSITION,
                     NORMAL_DIALOG_CREST,
                     (gGame->m_players[static_cast<i8>(playerIndex)].Color())
@@ -1713,7 +1713,7 @@ void CheckEndGame(b32 forceWin) {
                     NormalDialog(
                         gText,
                         NORMAL_DIALOG_TYPE_OK,
-                        0x61,
+                        NORMAL_DIALOG_ADVENTURE_X,
                         NORMAL_DIALOG_AUTO_POSITION,
                         NORMAL_DIALOG_CREST,
                         (gGame->m_players[static_cast<i8>(playerIndex)].Color())
@@ -1788,9 +1788,9 @@ void CheckEndGame(b32 forceWin) {
                 break;
             case CAMPAIGN_SCENARIO_DRAGON_CITY:
                 defaultWin = false;
-                if (!gGame->m_mineOwners[0])
+                if (!gGame->m_mineOwners[MINE_SLOT_DRAGON_CITY])
                     won = true;
-                if (gGame->m_mineOwners[0] > 0) {
+                if (gGame->m_mineOwners[MINE_SLOT_DRAGON_CITY] > 0) {
                     defeated = true;
                     strcpy(message, localization::Tr("endgame.enemy.captured_dragon_city"));
                 }
@@ -3022,7 +3022,7 @@ float gSpellCastNumMod[21] = {
 };
 u8 gUnusedByteTable1[16] = {0, 0, 2, 9, 4, 17, 10, 13, 6, 8, 16, 12, 11, 15, 14, 18};
 u8 gUnusedByteTable2[16] = {4, 2, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1};
-i16 gMinExpForLevel[4][12] = {
+i16 gMinExpForLevel[HERO_CLASS_COUNT][HERO_EXPERIENCE_LEVEL_TABLE_COUNT] = {
     {0, 1000, 2000, 3200, 4500, 6000, 7700, 9000, 11000, 13200, 15500, 18500},
     {0, 1000, 2000, 3200, 4500, 6000, 7700, 9000, 11000, 13200, 15500, 18500},
     {0, 1000, 2000, 3200, 4500, 6000, 7700, 9000, 11000, 13200, 15500, 18500},
@@ -3183,7 +3183,7 @@ i8 gCampaignSideCrests[4][2] = {
 i16 gCrestTownTypes[PLAYER_COLOR_COUNT] =
     {TOWN_TYPE_WARLOCK, TOWN_TYPE_BARBARIAN, TOWN_TYPE_KNIGHT, TOWN_TYPE_SORCERESS};
 i16 gCrestHeroClass[PLAYER_COLOR_COUNT] = {3, 1, 0, 2};
-i8 gHeroSkillBonus[4][9][HERO_PRIMARY_STAT_COUNT] = {
+i8 gHeroSkillBonus[HERO_CLASS_COUNT][HERO_SKILL_BONUS_ROW_LAST + 1][HERO_PRIMARY_STAT_COUNT] = {
     {{20, 60, 10, 10},
      {60, 20, 10, 10},
      {20, 60, 10, 10},
@@ -3241,7 +3241,7 @@ u8 gMonoColorMap[256] = {
 i32 gMonoIconSkip = -1;
 b32 gEnlargeScreenBlit = true;
 i32 gMenuCommand = APP_MENU_NONE;
-SMenuEnableStatus gMenuEnableStatus[70] = {
+SMenuEnableStatus gMenuEnableStatus[KBWIN_MENU_ENTRY_COUNT] = {
     {0, 0, 0, 0},     {40005, 1, 1, 0}, {40006, 1, 1, 0}, {40007, 1, 1, 0}, {40008, 1, 1, 0},
     {40009, 1, 1, 0}, {40012, 0, 0, 0}, {40013, 0, 0, 0}, {40014, 0, 0, 0}, {40015, 0, 0, 0},
     {40016, 1, 0, 0}, {40017, 1, 0, 0}, {40018, 1, 0, 0}, {40019, 1, 0, 0}, {40020, 1, 0, 0},
@@ -3353,7 +3353,7 @@ char* gStatDesc[5] = {
     localization::Tr("table.gStatDesc.3"),
     localization::Tr("table.gStatDesc.4"),
 };
-char* gClassNames[4] = {
+char* gClassNames[HERO_CLASS_COUNT] = {
     localization::Tr("table.gClassNames.0"),
     localization::Tr("table.gClassNames.1"),
     localization::Tr("table.gClassNames.2"),
@@ -3529,7 +3529,7 @@ char* gObjectNames[63] = {
     "",
     localization::Tr("table.gObjectNames.62")
 };
-char* gTownNames[36] = {
+char* gTownNames[GAME_TOWN_COUNT] = {
     localization::Tr("table.gTownNames.0"),  localization::Tr("table.gTownNames.1"),
     localization::Tr("table.gTownNames.2"),  localization::Tr("table.gTownNames.3"),
     localization::Tr("table.gTownNames.4"),  localization::Tr("table.gTownNames.5"),
@@ -3680,7 +3680,7 @@ char* gSpellDesc[SPELL_COUNT] = {
     localization::Tr("table.gSpellDesc.26"), localization::Tr("table.gSpellDesc.27"),
     localization::Tr("table.gSpellDesc.28"),
 };
-char* gMonthNames[10] = {
+char* gMonthNames[CALENDAR_MONTH_NAME_COUNT] = {
     localization::Tr("table.gMonthNames.0"),
     localization::Tr("table.gMonthNames.1"),
     localization::Tr("table.gMonthNames.2"),
@@ -3692,7 +3692,7 @@ char* gMonthNames[10] = {
     localization::Tr("table.gMonthNames.8"),
     localization::Tr("table.gMonthNames.9"),
 };
-char* gWeekNames[15] = {
+char* gWeekNames[CALENDAR_WEEK_NAME_COUNT] = {
     localization::Tr("table.gWeekNames.0"),
     localization::Tr("table.gWeekNames.1"),
     localization::Tr("table.gWeekNames.2"),
@@ -4187,11 +4187,8 @@ i32 gForceSwitchMusic = FORCED_MUSIC_IDLE;
 b32 gCurrArmyDrawn = true;
 i8 gHighScoreRank = -1;
 i32 gHighMemBuffer = 4000;
-#include <SOURCE/combatTypes.h>
-#include <SOURCE/mapCell.h>
-#include <SOURCE/EVENTS.h>
 
-b32 gHumanPlayer[4];
+b32 gHumanPlayer[GAME_PLAYER_COUNT];
 i32 gOldKBMark;
 i32 gMaxExtentX;
 i32 gMaxExtentY;
@@ -4258,23 +4255,23 @@ i32 gThisNetPos;
 char gRegCDRomPath[352];
 class heroWindow* gHeroScreenWindow;
 class icon* gCurLoadedSpellIcon;
-void* gMapExtraBlocks[255];
+void* gMapExtraBlocks[MAP_EXTRA_RECORD_CAPACITY];
 i32 gCurGeneral;
 i32 gThisGamePos;
 i32 gNumHumanPlayers;
 b8 gIconClipOn;
-i32 gMapExtraSizes[255];
+i32 gMapExtraSizes[MAP_EXTRA_RECORD_CAPACITY];
 i32 gDataEntryMaxLen;
 class combatManager* gCombatManager;
 i16 gSpellEffectFrame;
 executive* gExec;
-i8 gGroundToTerrain[140];
+i8 gGroundToTerrain[MAP_CELL_GROUND_TILE_COUNT];
 i32 gCurWindowsStyleFlags;
 i16 gGameCommand;
 i8 gMonthType;
 char gMapDescription[124];
 char* gDefaultAggregateName;
-b8 gThisNetHumanPlayer[4];
+b8 gThisNetHumanPlayer[GAME_PLAYER_COUNT];
 char gAggPathName[352];
 class highScoreManager* gHighScoreManager;
 b8 gFunctionComplete;
@@ -4295,4 +4292,4 @@ i32 gExtraKBType;
 townManager* gTownManager;
 b8 gScreenScroll;
 advManager* gAdvManager;
-i8 gGamePosToNetPos[4];
+i8 gGamePosToNetPos[GAME_PLAYER_COUNT];

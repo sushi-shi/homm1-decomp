@@ -4,9 +4,6 @@
 
 #include <BASE/LZHUF_internal.h>
 #include <BASE/Misc.h>
-void InitializeTree(void);
-void ReconstructEncoderTree(void);
-static void EncodeEnd(void);
 #include <SOURCE/KB.h>
 
 #include <stdio.h>

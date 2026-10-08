@@ -36,14 +36,14 @@ public:
     heroWindow* m_windowListHead;
     heroWindow* m_windowListTail;
     heroWindow* m_focusWindow;
-    heroWindow* m_activeWindow;
+    heroWindow* m_previousFocusWindow;
     i8 m_unused40;
     i8 m_unused41;
     bitmap* m_screen;
     bitmap* m_fizzleSource;
     bitmap* m_fizzleWork;
     i16 m_screenshotIndex;
-    i16 m_updateFlags;
+    i16 m_colorCycling;
     i32 m_dialogResult;
     i8 m_lastHoverId;
 
@@ -88,9 +88,7 @@ public:
     (gWindowManager->UpdateScreenRegion((left), (top), (right) - (left) + 1, (bottom) - (top) + 1))
 extern i8 gCyclePal[PALETTE_CYCLE_BYTES];
 void CycleColors(void);
-extern i8 gFadeSavedUpdate;
-
-class palette;
+extern i8 gFadeSavedColorCycling;
 
 enum WindowFizzleConstant {
     CYCLE_FRAME_COUNT = 8,

@@ -9,6 +9,8 @@
 #include <BASE/inputManager.h>
 #include <BASE/message.h>
 #include <BASE/Misc.h>
+#include <BASE/palette.h>
+#include <BASE/textWidget.h>
 #include <BASE/widget.h>
 #include <SOURCE/fileRequester.h>
 #include <SOURCE/game.h>
@@ -342,7 +344,7 @@ i16 fileRequester::Main(tag_message& message) {
     const i16 arrowUpId = FILE_REQUESTER_SCROLL_UP;
     tag_message reply;
     i16 length;
-    i16 key;
+    i16 number;
     b32 handled;
     i16 mouseY;
     i16 mouseX;
@@ -422,29 +424,30 @@ i16 fileRequester::Main(tag_message& message) {
                             memset(nameBuffer, 0, 9);
                             strcpy(nameBuffer, reply.text);
                             length = strlen(nameBuffer);
-                            for (key = 0; key < length; key++) {
-                                if ((static_cast<u8>(nameBuffer[key]) < 'A'
-                                     || static_cast<u8>(nameBuffer[key]) > 'Z')
-                                    && (static_cast<u8>(nameBuffer[key]) < 'a'
-                                        || static_cast<u8>(nameBuffer[key]) > 'z')
-                                    && (static_cast<u8>(nameBuffer[key]) < '0'
-                                        || static_cast<u8>(nameBuffer[key]) > '9')
-                                    && (static_cast<u8>(nameBuffer[key]) < CYRILLIC_CAPITAL_A
-                                        || static_cast<u8>(nameBuffer[key]) > CYRILLIC_CAPITAL_YA)
-                                    && (static_cast<u8>(nameBuffer[key]) < CYRILLIC_SMALL_A
-                                        || static_cast<u8>(nameBuffer[key]) > CYRILLIC_SMALL_YA)
-                                    && static_cast<u8>(nameBuffer[key]) != CYRILLIC_CAPITAL_YO
-                                    && static_cast<u8>(nameBuffer[key]) != CYRILLIC_SMALL_YO
-                                    && static_cast<u8>(nameBuffer[key]) != '_'
-                                    && static_cast<u8>(nameBuffer[key]) != ' '
-                                    && !FindToken("$%'-_@~`!(){}^#&+,;=[].", nameBuffer[key]))
-                                    nameBuffer[key] = '\0';
+                            for (number = 0; number < length; number++) {
+                                if ((static_cast<u8>(nameBuffer[number]) < 'A'
+                                     || static_cast<u8>(nameBuffer[number]) > 'Z')
+                                    && (static_cast<u8>(nameBuffer[number]) < 'a'
+                                        || static_cast<u8>(nameBuffer[number]) > 'z')
+                                    && (static_cast<u8>(nameBuffer[number]) < '0'
+                                        || static_cast<u8>(nameBuffer[number]) > '9')
+                                    && (static_cast<u8>(nameBuffer[number]) < CYRILLIC_CAPITAL_A
+                                        || static_cast<u8>(nameBuffer[number])
+                                               > CYRILLIC_CAPITAL_YA)
+                                    && (static_cast<u8>(nameBuffer[number]) < CYRILLIC_SMALL_A
+                                        || static_cast<u8>(nameBuffer[number]) > CYRILLIC_SMALL_YA)
+                                    && static_cast<u8>(nameBuffer[number]) != CYRILLIC_CAPITAL_YO
+                                    && static_cast<u8>(nameBuffer[number]) != CYRILLIC_SMALL_YO
+                                    && static_cast<u8>(nameBuffer[number]) != '_'
+                                    && static_cast<u8>(nameBuffer[number]) != ' '
+                                    && !FindToken("$%'-_@~`!(){}^#&+,;=[].", nameBuffer[number]))
+                                    nameBuffer[number] = '\0';
                             }
-                            for (key = strlen(nameBuffer) - 1; key >= 0; key--) {
-                                if (static_cast<u8>(nameBuffer[key]) == ' ')
-                                    nameBuffer[key] = '\0';
+                            for (number = strlen(nameBuffer) - 1; number >= 0; number--) {
+                                if (static_cast<u8>(nameBuffer[number]) == ' ')
+                                    nameBuffer[number] = '\0';
                                 else
-                                    key = -1;
+                                    number = -1;
                             }
                             if (strlen(nameBuffer) > 0 && static_cast<u8>(nameBuffer[0]) > ' ') {
                                 m_selectedIndex = FILE_REQUESTER_SELECTION_NONE;
@@ -529,19 +532,20 @@ i16 fileRequester::Main(tag_message& message) {
 #ifndef HOMM1_EDITOR
         if (gCampaignChoice <= CAMPAIGN_NONE && m_mode == FILE_REQUESTER_LOAD
             && m_selectedIndex >= 0 && gRequestingGames && message.value != FILE_REQUESTER_CANCEL) {
-            key = m_extensions[m_selectedIndex].text[FILE_REQUESTER_EXTENSION_PLAYER_DIGIT] - '0';
-            if (key < gNumHumanPlayers
+            number =
+                m_extensions[m_selectedIndex].text[FILE_REQUESTER_EXTENSION_PLAYER_DIGIT] - '0';
+            if (number < gNumHumanPlayers
                 && gDebugLevel < FILE_REQUESTER_DEBUG_ALLOW_PLAYER_MISMATCH_MIN) {
-                sprintf(gText, localization::Tr("file.humans.minimum"), key, gNumHumanPlayers);
+                sprintf(gText, localization::Tr("file.humans.minimum"), number, gNumHumanPlayers);
                 NormalDialog(gText, NORMAL_DIALOG_TYPE_OK);
                 handled = false;
             }
-            if (key > gNumHumanPlayers) {
+            if (number > gNumHumanPlayers) {
                 sprintf(
                     gText,
                     localization::Tr("file.humans.computer"),
-                    key,
-                    key - gNumHumanPlayers
+                    number,
+                    number - gNumHumanPlayers
                 );
                 NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO);
                 if (gWindowManager->m_dialogResult != NORMAL_DIALOG_CONFIRM)
@@ -628,10 +632,10 @@ void fileRequester::Update(b8 drawWindow) {
     const i16 firstRowId = FILE_REQUESTER_LIST_FIRST;
     const i16 filenameEntryId = FILE_REQUESTER_FILENAME_ENTRY;
     i32 length;
-    const i16 selectedColor = 0xe8;
+    const i16 selectedColor = PALETTE_SELECTION_COLOR;
     i32 savedPlayerCount;
     b32 hasPlayerSuffix;
-    const i16 plainColor = 1;
+    const i16 plainColor = TEXT_WIDGET_PLAIN_COLOR;
     tag_message message;
     char playersString[FILE_REQUESTER_UPDATE_STORAGE_SIZE];
     i32 theSuffixWidth;
@@ -709,7 +713,7 @@ void fileRequester::Update(b8 drawWindow) {
         m_window->BroadcastMessage(message);
     }
     if (m_fileCount <= FILE_REQUESTER_VISIBLE_ROWS) {
-        m_scrollKnob->m_y = 134;
+        m_scrollKnob->m_y = (FILE_REQUESTER_GUTTER_TOP + FILE_REQUESTER_GUTTER_BOTTOM) / 2;
     } else {
         gutterFactor = 156.0 / (m_fileCount - FILE_REQUESTER_VISIBLE_ROWS);
         m_scrollKnob->m_y = m_topIndex * gutterFactor + 56.0;

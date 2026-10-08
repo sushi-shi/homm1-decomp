@@ -5,21 +5,21 @@
 
 bool InitAudio();
 void ShutdownAudio();
-float VolumeLevel(int level);
+float VolumeLevel(i32 level);
 float GetEffectsVolume();
-float ScaleSampleVolume(int volume);
+float ScaleSampleVolume(i32 volume);
 float GetMusicVolume();
 void StopAllAudio();
-void SetEffectsVolume(int level);
-void SetMusicVolume(int level);
-void SetVolumes(int effects, int music);
+void SetEffectsVolume(i32 level);
+void SetMusicVolume(i32 level);
+void SetVolumes(i32 effects, i32 music);
 
-bool ShouldRepeatMusic(int track);
-void PlayMusic(int track);
-int GetCurrentTrack();
+bool ShouldRepeatMusic(i32 track);
+void PlayMusic(i32 track);
+i32 GetCurrentTrack();
 void StopMusic();
 void UpdateMusicVolume();
-void SetMusicSource(int source);
+void SetMusicSource(i32 source);
 bool MusicPlaying();
 void SuspendMusic();
 void ResumeMusic();

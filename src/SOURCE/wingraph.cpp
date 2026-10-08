@@ -21,8 +21,8 @@
 #define WINGRAPH_CPP_PATH "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\wingraph.cpp"
 #endif
 
-BOOL gWinGAttached = TRUE;
-BOOL gDDrawAttached = FALSE;
+b32 gWinGAttached = true;
+b32 gDDrawAttached = false;
 i32 gGraphicsType = WINGRAPH_GRAPHICS_WING;
 i32 gMainVideoModeColorDepth = 16;
 i32 gMainVideoModeWidth = 1024;
@@ -32,7 +32,7 @@ WingPalette gLogicalPalette = {0x300, PALETTE_COLOR_COUNT};
 void* gInitWin = NULL;
 i32 gUnusedPaintCount = 0;
 i32 gTtlBlts = 0;
-BOOL gWinGraphBusy = FALSE;
+b32 gWinGraphBusy = false;
 DirectDrawCreateProc gDirectDrawCreate = NULL;
 IDirectDraw* gDD = NULL;
 IDirectDrawSurface* gDDSPrimary = NULL;
@@ -40,7 +40,7 @@ IDirectDrawSurface* gDDSOne = NULL;
 IDirectDrawClipper* gClipper = NULL;
 IDirectDrawPalette* gDDPal = NULL;
 i32 gBusyRetry = 0;
-BOOL gInDDSD = FALSE;
+b32 gInDDSD = false;
 HDC gImageDC = NULL;
 HBITMAP gOldMonoBitmap = NULL;
 HPALETTE gAppPalette = NULL;
@@ -107,7 +107,7 @@ void SetupClipper(void) {
 void DDInitGraphics(void) {
     i32 result;
 
-    if (gWinGraphBusy != FALSE)
+    if (gWinGraphBusy)
         return;
     result = gDirectDrawCreate(NULL, &gDD, NULL);
     if (result != DD_OK)
@@ -143,14 +143,14 @@ BOOL DDAppPaint(HWND window, HDC paintDC) {
     PAINTSTRUCT ps;
     POINT pt;
 
-    if (gWinGraphBusy != FALSE)
+    if (gWinGraphBusy)
         return TRUE;
     if (gMinimized != 0)
         return TRUE;
     if (gDD == NULL)
         return TRUE;
     {
-        gWinGraphBusy = TRUE;
+        gWinGraphBusy = true;
         paintDC = BeginPaint(window, &ps);
         GetClientRect(window, &gDDClientRect);
         if (ps.rcPaint.right == 0 || ps.rcPaint.bottom == 0)
@@ -196,7 +196,7 @@ BOOL DDAppPaint(HWND window, HDC paintDC) {
             gDDSourceRect.bottom = LOGICAL_SCREEN_HEIGHT;
 
         gDDPaintStart = KBTickCount();
-        while (TRUE) {
+        while (true) {
             gDDResult =
                 gDDSPrimary->Blt(&gDDDestinationRect, gDDSOne, &gDDSourceRect, DDBLT_WAIT, NULL);
             if (gDDResult == DDERR_SURFACELOST) {
@@ -240,7 +240,7 @@ BOOL DDAppPaint(HWND window, HDC paintDC) {
         if (gDDResult != DD_OK)
             DDSD(gDDResult, __FILE__, __LINE__);
         EndPaint(window, &ps);
-        gWinGraphBusy = FALSE;
+        gWinGraphBusy = false;
     }
     return TRUE;
 }
@@ -249,7 +249,7 @@ void DDInitializePalette() {
     i32 status;
     HDC systemDeviceContext;
     i32 i;
-    if (gWinGraphBusy != FALSE)
+    if (gWinGraphBusy)
         return;
     {
         systemDeviceContext = GetDC(NULL);
@@ -285,7 +285,7 @@ void DDInitializePalette() {
 
 BOOL DDSetPalette() {
     i32 result;
-    if (gWinGraphBusy != FALSE)
+    if (gWinGraphBusy)
         return TRUE;
     if (gForegroundApp == 0)
         return TRUE;
@@ -306,7 +306,7 @@ struct IDirectDrawSurface* DDCreateSurface(u32 width, u32 height, b32 primary) {
 
     memset(&ddsd, 0, sizeof(ddsd));
     ddsd.dwSize = sizeof(ddsd);
-    if (primary != false) {
+    if (primary) {
         ddsd.dwFlags = 0;
         ddsd.ddsCaps.dwCaps = DDSCAPS_PRIMARYSURFACE;
     } else {
@@ -319,7 +319,7 @@ struct IDirectDrawSurface* DDCreateSurface(u32 width, u32 height, b32 primary) {
     status = gDD->CreateSurface(&ddsd, &createdSurface, NULL);
     if (status != DD_OK)
         DDSD(status, __FILE__, __LINE__);
-    if (primary == false) {
+    if (!primary) {
         status = createdSurface->Lock(NULL, &ddsd, DDLOCK_WAIT, NULL);
         if (status != DD_OK)
             DDSD(status, __FILE__, __LINE__);
@@ -337,9 +337,9 @@ void DDSD(i32 error, char* file, i32 line) {
     i32 restoreResult;
     i32 reportCode;
 
-    if (gInDDSD != FALSE)
+    if (gInDDSD)
         return;
-    gInDDSD = TRUE;
+    gInDDSD = true;
     restoreResult = gDD->RestoreDisplayMode();
     reportCode = DDSD_REPORT_NONE;
     switch (error) {
@@ -444,7 +444,7 @@ void DDUpdatePalette(i8* paletteData) {
     i32 entry;
     i32 status;
 
-    if (gWinGraphBusy != FALSE)
+    if (gWinGraphBusy)
         return;
     if (gForegroundApp == 0)
         return;
@@ -512,7 +512,7 @@ void DDSetFullScreenStatus(i32 fullScreen) {
     i32 y;
     i32 hres;
 
-    if (gWinGraphBusy != FALSE)
+    if (gWinGraphBusy)
         return;
     if (CURRENT_GRAPHICS_CONFIG.fullScreen == fullScreen)
         return;
@@ -521,7 +521,7 @@ void DDSetFullScreenStatus(i32 fullScreen) {
         y = CURRENT_GRAPHICS_CONFIG.y;
         width = CURRENT_GRAPHICS_CONFIG.width;
         windowHeight = CURRENT_GRAPHICS_CONFIG.height;
-        gWinGraphBusy = TRUE;
+        gWinGraphBusy = true;
         CURRENT_GRAPHICS_CONFIG.fullScreen = fullScreen;
         if (CURRENT_GRAPHICS_CONFIG.fullScreen != 0)
             SetMenuStatus(0);
@@ -557,7 +557,7 @@ void DDSetFullScreenStatus(i32 fullScreen) {
         if (hres != DD_OK)
             DDSD(hres, __FILE__, __LINE__);
         WritePrefs();
-        gWinGraphBusy = FALSE;
+        gWinGraphBusy = false;
         if (CURRENT_GRAPHICS_CONFIG.fullScreen == 0) {
             SetMenuStatus(1);
             ResizeWindow(x, y, width, windowHeight);
@@ -668,8 +668,8 @@ void WGUpdatePalette(i8* paletteData) {
 #ifdef HOMM1_EDITOR
         {
 #else
-        if (gLimitedCombatUpdatePalette != false) {
-            if (gFullCombatScreenDrawn != false)
+        if (gLimitedCombatUpdatePalette) {
+            if (gFullCombatScreenDrawn)
                 BlitBitmapToScreen(
                     gWindowManager->m_screen,
                     0,
@@ -823,7 +823,7 @@ void ConnectToDLLs() {
             GetProcAddress(gDDrawLibrary, "DirectDrawCreate")
         );
         if (gDirectDrawCreate != NULL)
-            gDDrawAttached = TRUE;
+            gDDrawAttached = true;
         else
             ShutDown("Error loading DDRAW.DLL");
     }
@@ -904,17 +904,17 @@ void CleanUpWinGraphics() {
 }
 
 void SetFullScreenStatus(i32 fullScreen) {
-    if (gInSmacker != false)
+    if (gInSmacker)
         return;
     if (fullScreen == CURRENT_GRAPHICS_CONFIG.fullScreen)
         return;
     if (gGraphicsType == WINGRAPH_GRAPHICS_WING) {
         CURRENT_GRAPHICS_CONFIG.fullScreen = 1;
-        if (SetGraphicsType(WINGRAPH_GRAPHICS_DIRECT_DRAW) != FALSE)
+        if (SetGraphicsType(WINGRAPH_GRAPHICS_DIRECT_DRAW))
             DDSetFullScreenStatus(fullScreen);
         return;
     } else if (fullScreen == 0) {
-        if (gWinGAttached != FALSE)
+        if (gWinGAttached)
             SetGraphicsType(WINGRAPH_GRAPHICS_WING);
     } else {
         DDSetFullScreenStatus(fullScreen);
@@ -938,9 +938,9 @@ BOOL SetGraphicsType(i32 graphicsType) {
 
     if (gGraphicsType == graphicsType)
         return TRUE;
-    if (graphicsType == WINGRAPH_GRAPHICS_WING && gWinGAttached == FALSE)
+    if (graphicsType == WINGRAPH_GRAPHICS_WING && !gWinGAttached)
         return FALSE;
-    if (graphicsType == WINGRAPH_GRAPHICS_DIRECT_DRAW && gDDrawAttached == FALSE)
+    if (graphicsType == WINGRAPH_GRAPHICS_DIRECT_DRAW && !gDDrawAttached)
         return FALSE;
 
     fullState = CURRENT_GRAPHICS_CONFIG.fullScreen;

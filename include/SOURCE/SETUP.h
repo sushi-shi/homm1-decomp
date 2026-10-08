@@ -19,11 +19,15 @@ i16 SetupGameHandler(struct tag_message& message);
 extern b32 gDoModemConfig;
 
 enum SetupDialogChoice {
-DIALOG_CANCEL = DIALOG_BUTTON_1,
-    CHOICE_ONE = 1, CHOICE_TWO = 2, CHOICE_THREE = 3, CHOICE_FOUR = 4,
-    CHOICE_ID_LAST = 1000 };
+    DIALOG_CANCEL = DIALOG_BUTTON_1,
+    CHOICE_ONE = 1,
+    CHOICE_TWO = 2,
+    CHOICE_THREE = 3,
+    CHOICE_FOUR = 4,
+    CHOICE_ID_LAST = 1000
+};
 
-    enum SetupCampaignHelp {
+enum SetupCampaignHelp {
     SETUP_CAMPAIGN_HELP_NONE = -1,
     SETUP_CAMPAIGN_HELP_FIRST = 0,
     SETUP_CAMPAIGN_HELP_IRONFIST = 0,

@@ -11,6 +11,12 @@
 
 #include <SOURCE/kbwin.h>
 
+enum KbwinWindowStyle {
+    KBWIN_CLASS_STYLE = CS_BYTEALIGNCLIENT | CS_DBLCLKS | CS_HREDRAW | CS_VREDRAW,
+    KBWIN_WINDOWED_STYLE = WS_VISIBLE | WS_CLIPSIBLINGS | WS_OVERLAPPEDWINDOW,
+    KBWIN_FULLSCREEN_STYLE = WS_VISIBLE | WS_CLIPSIBLINGS
+};
+
 extern HINSTANCE gAppInstance;
 extern HANDLE gEventHandle;
 extern u8 gProcessMessage[];
@@ -18,8 +24,8 @@ extern struct tagRECT gTempRect;
 extern HWND gAppWindow;
 
 i32 AppCommand(HWND window, u32 message, u32 messageParam, i32 messageData);
-i32 AppInit(HINSTANCE instance, HINSTANCE previousInstance, i32 showCommand, char* commandLine);
-long __stdcall AppWndProc(HWND window, u32 message, u32 messageParam, long messageData);
+BOOL AppInit(HINSTANCE instance, HINSTANCE previousInstance, i32 showCommand, char* commandLine);
+LRESULT CALLBACK AppWndProc(HWND window, UINT message, WPARAM messageParam, LPARAM messageData);
 extern "C" BOOL __stdcall
 AppAbout(HWND dialog, UINT message, WPARAM messageParam, LPARAM messageData);
 

@@ -913,7 +913,7 @@ b32 TransmitRemoteData(
     msg.command = command;
     if (length > 0)
         memcpy(msg.payload.data, data, length);
-    while (result == false && tries <= REMOTE_RETRY_COUNT) {
+    while (!result && tries <= REMOTE_RETRY_COUNT) {
         result = SendRemoteData(&msg, NULL, destination, length + REMOTE_MESSAGE_HEADER_SIZE);
         if (!reliable && result) {
             return true;
@@ -930,7 +930,7 @@ b32 TransmitRemoteData(
         } else {
             DelayMilli(1000);
         }
-        if (allowRetryDialog && tries == REMOTE_RETRY_COUNT && result == false) {
+        if (allowRetryDialog && tries == REMOTE_RETRY_COUNT && !result) {
             NormalDialog(localization::Tr("network.send.retry"), NORMAL_DIALOG_TYPE_YES_NO);
             if (gWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
                 tries = -1;
@@ -1118,7 +1118,7 @@ b32 TransmitAndWait(
         return true;
     receivedData = NULL;
     result = TransmitRemoteData(bytes, destination, length, command, true);
-    if (result == false)
+    if (!result)
         goto transmitComplete;
     clock = KBTickCount();
     complete = false;

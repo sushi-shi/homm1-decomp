@@ -27,7 +27,7 @@ i8 combatManager::ViewGeneral(
     i16 pictureCtrlVal;
     i16 borderIdNum;
     i32 morale;
-    i32 iLuck;
+    i32 luck;
     i16 theBarId;
     i16 castSpellControl;
     tag_message packet;
@@ -86,7 +86,7 @@ i8 combatManager::ViewGeneral(
     packet.text = gText;
     wnd->BroadcastMessage(packet);
     morale = m_heroes[side]->m_army.GetMorale(m_heroes[side], NULL);
-    iLuck = gGame->GetLuck(m_heroes[side], NULL);
+    luck = gGame->GetLuck(m_heroes[side], NULL);
     sprintf(
         gText,
         "\n%s%d\n%s%d\n%s%d\n%s%d\n%s%s\n%s%s\n",
@@ -101,15 +101,14 @@ i8 combatManager::ViewGeneral(
         gViewGeneralLabels[4],
         gMoraleText[morale + 3],
         gViewGeneralLabels[5],
-        gLuckText[iLuck + 3]
+        gLuckText[luck + 3]
     );
     packet.command = WIDGET_COMMAND_SET_TEXT;
     packet.id = GENERAL_STATS_WIDGET;
     packet.text = gText;
     wnd->BroadcastMessage(packet);
-    if (m_heroes[side] == NULL || allowActions == false
-        || !m_heroes[side]->HasArtifact(ARTIFACT_MAGIC_BOOK) || m_heroCastSpell[side] != 0
-        || gCurGeneral != m_currentSide) {
+    if (m_heroes[side] == NULL || !allowActions || !m_heroes[side]->HasArtifact(ARTIFACT_MAGIC_BOOK)
+        || m_heroCastSpell[side] || gCurGeneral != m_currentSide) {
         packet.command = WIDGET_COMMAND_CLEAR_FLAGS;
         packet.id = GENERAL_CAST_SPELL;
         packet.value = WIDGET_FLAG_ENABLED;
@@ -118,7 +117,7 @@ i8 combatManager::ViewGeneral(
         packet.value = WIDGET_FLAG_DIMMED;
         wnd->BroadcastMessage(packet);
     }
-    if (allowActions == false || m_heroes[COMBAT_OPPOSING_SIDE(m_currentSide)] == NULL
+    if (!allowActions || m_heroes[COMBAT_OPPOSING_SIDE(m_currentSide)] == NULL
         || gCurGeneral != m_currentSide) {
         packet.command = WIDGET_COMMAND_CLEAR_FLAGS;
         packet.id = GENERAL_SURRENDER;
@@ -128,10 +127,9 @@ i8 combatManager::ViewGeneral(
         packet.value = WIDGET_FLAG_DIMMED;
         wnd->BroadcastMessage(packet);
     }
-    if (allowActions == false || gCurGeneral != m_currentSide
+    if (!allowActions || gCurGeneral != m_currentSide
         || (gCurGeneral == COMBAT_DEFENDER_SIDE && m_combatTowns[COMBAT_DEFENDER_SIDE] != NULL)
-        || m_sideRetreated[COMBAT_DEFENDER_SIDE] != 0
-        || m_sideRetreated[COMBAT_ATTACKER_SIDE] != 0) {
+        || m_sideRetreated[COMBAT_DEFENDER_SIDE] || m_sideRetreated[COMBAT_ATTACKER_SIDE]) {
         packet.command = WIDGET_COMMAND_CLEAR_FLAGS;
         packet.id = GENERAL_RETREAT;
         packet.value = WIDGET_FLAG_ENABLED;
@@ -239,36 +237,36 @@ i16 HandleViewGeneral(tag_message& message) {
 }
 
 void combatManager::ViewArmy(army* viewedArmy, i32 side, i32 quickView) {
-    i16 xWnd;
-    i16 viewYOffsetConst;
-    i16 yWindow;
-    i16 xDelta;
-    i16 viewXOffsetFixed;
-    i16 viewWidthConstant;
-    i16 viewHeightConstant;
+    i16 windowX;
+    i16 unusedViewOffsetY;
+    i16 windowY;
+    i16 stackOffsetX;
+    i16 unusedViewOffsetX;
+    i16 unusedViewWidth;
+    i16 unusedViewHeight;
 
     if (viewedArmy == NULL)
         return;
-    viewWidthConstant = 488 - 86;
-    viewHeightConstant = 229;
-    viewXOffsetFixed = 86;
-    viewYOffsetConst = 164;
-    xWnd = m_hexCells[viewedArmy->m_hex].m_x;
-    yWindow = m_hexCells[viewedArmy->m_hex].m_y;
-    xDelta = (viewedArmy->m_facing == ARMY_FACING_LEFT ? 43 : 0) + 80;
-    xWnd -= xDelta;
-    if (xWnd < 0)
-        xWnd = 0;
-    if (xWnd + 488 > LOGICAL_SCREEN_WIDTH)
-        xWnd = 151;
-    yWindow -= 164;
-    if (yWindow < 0)
-        yWindow = 0;
-    if (yWindow + 229 > COMBAT_VIEW_HEIGHT)
-        yWindow = 230;
+    unusedViewWidth = 488 - 86;
+    unusedViewHeight = 229;
+    unusedViewOffsetX = 86;
+    unusedViewOffsetY = 164;
+    windowX = m_hexCells[viewedArmy->m_hex].m_x;
+    windowY = m_hexCells[viewedArmy->m_hex].m_y;
+    stackOffsetX = (viewedArmy->m_facing == ARMY_FACING_LEFT ? 43 : 0) + 80;
+    windowX -= stackOffsetX;
+    if (windowX < 0)
+        windowX = 0;
+    if (windowX + 488 > LOGICAL_SCREEN_WIDTH)
+        windowX = 151;
+    windowY -= 164;
+    if (windowY < 0)
+        windowY = 0;
+    if (windowY + 229 > COMBAT_VIEW_HEIGHT)
+        windowY = 230;
     gGame->ViewArmy(
-        xWnd,
-        yWindow,
+        windowX,
+        windowY,
         viewedArmy->m_creatureType,
         viewedArmy->m_quantity,
         m_combatTowns[side],

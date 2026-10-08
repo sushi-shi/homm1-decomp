@@ -91,7 +91,7 @@ i8 playerData::CountPuzzlePiecesRemoved(void) {
 i32 playerData::BuildingsOwned(
     i32 townType,
     i32 buildingIndex,
-    i32 buildState
+    i32 mageGuildLevel
 ) {
     i32 count = 0;
     i32 i;
@@ -101,7 +101,7 @@ i32 playerData::BuildingsOwned(
             if (buildingIndex == BUILDING_SLOT_MAGE_GUILD) {
                 if (ownedTown->m_buildings
                     & (1 << BUILDING_SLOT_MAGE_GUILD)) {
-                    if (ownedTown->m_buildState == buildState)
+                    if (ownedTown->m_mageGuildLevel == mageGuildLevel)
                         ++count;
                 }
             } else {
@@ -275,16 +275,16 @@ i8 game::GetNewHeroId(i8 heroClass) {
     i8 idx = HERO_ID_NONE;
     i16 first = heroClass * HERO_PER_CLASS_COUNT;
     i32 ix;
-    freeSlot = Scan(m_availableHeroes, first, HERO_PER_CLASS_COUNT);
+    freeSlot = Scan(m_heroOwners, first, HERO_PER_CLASS_COUNT);
     if (freeSlot != GAME_TABLE_FREE) {
-        idx = RandomScan(m_availableHeroes, first, HERO_PER_CLASS_COUNT, HERO_PER_CLASS_COUNT);
+        idx = RandomScan(m_heroOwners, first, HERO_PER_CLASS_COUNT, HERO_PER_CLASS_COUNT);
     } else {
-        freeSlot = Scan(m_availableHeroes, 0, GAME_HERO_COUNT);
+        freeSlot = Scan(m_heroOwners, 0, GAME_HERO_COUNT);
         if (freeSlot != GAME_TABLE_FREE) {
-            idx = RandomScan(m_availableHeroes, 0, GAME_HERO_COUNT, GAME_HERO_COUNT);
+            idx = RandomScan(m_heroOwners, 0, GAME_HERO_COUNT, GAME_HERO_COUNT);
         } else {
             for (ix = 0; ix < GAME_HERO_COUNT; ++ix) {
-                if (m_availableHeroes[ix] == HERO_AVAILABILITY_RETREATED)
+                if (m_heroOwners[ix] == HERO_AVAILABILITY_RETREATED)
                     idx = ix;
             }
         }
@@ -461,7 +461,7 @@ void game::WriteSaveRecord(RecordWriter& outFile) {
     outFile.Put(m_obeliskCount);
     for (iFile = 0; iFile < GAME_HERO_COUNT; iFile++)
         WriteHero(outFile, m_heroRecs[iFile]);
-    outFile.Put(m_availableHeroes, sizeof(m_availableHeroes));
+    outFile.Put(m_heroOwners, sizeof(m_heroOwners));
     for (iFile = 0; iFile < GAME_TOWN_COUNT; iFile++)
         WriteTown(outFile, m_castleRecs[iFile]);
     outFile.Put(m_townOwners, sizeof(m_townOwners));
@@ -469,7 +469,7 @@ void game::WriteSaveRecord(RecordWriter& outFile) {
     for (iFile = 0; iFile < GAME_MINE_COUNT; iFile++)
         WriteMine(outFile, m_mines[iFile]);
     outFile.Put(m_mineOwners, sizeof(m_mineOwners));
-    outFile.Put(m_randomArtifacts, sizeof(m_randomArtifacts));
+    outFile.Put(m_artifactHolders, sizeof(m_artifactHolders));
     for (iFile = 0; iFile < GAME_BOAT_COUNT; iFile++)
         WriteBoat(outFile, m_boats[iFile]);
     outFile.Put(m_boatSlots, sizeof(m_boatSlots));
@@ -482,7 +482,7 @@ void game::WriteSaveRecord(RecordWriter& outFile) {
     outFile.Put(&gMapVisitFlags[0][0], sizeof(gMapVisitFlags));
 }
 
-i16 game::LoadGame(char* filename, b32 origData, b32) {
+i16 game::LoadGame(char* filename, b32 origData, b32 remoteGame) {
     i32 junk2;
     i32 numHumans;
     i32 ix;
@@ -561,7 +561,7 @@ i16 game::LoadGame(char* filename, b32 origData, b32) {
             strcpy(m_heroRecs[ix].m_shortName, gHeroNames[ix][1]);
         }
     }
-    theLoadHandle.Get(m_availableHeroes, sizeof(m_availableHeroes));
+    theLoadHandle.Get(m_heroOwners, sizeof(m_heroOwners));
     for (ix = 0; ix < GAME_TOWN_COUNT; ix++)
         ReadTown(theLoadHandle, m_castleRecs[ix]);
     theLoadHandle.Get(m_townOwners, sizeof(m_townOwners));
@@ -569,7 +569,7 @@ i16 game::LoadGame(char* filename, b32 origData, b32) {
     for (ix = 0; ix < GAME_MINE_COUNT; ix++)
         ReadMine(theLoadHandle, m_mines[ix]);
     theLoadHandle.Get(m_mineOwners, sizeof(m_mineOwners));
-    theLoadHandle.Get(m_randomArtifacts, sizeof(m_randomArtifacts));
+    theLoadHandle.Get(m_artifactHolders, sizeof(m_artifactHolders));
     for (ix = 0; ix < GAME_BOAT_COUNT; ix++)
         ReadBoat(theLoadHandle, m_boats[ix]);
     theLoadHandle.Get(m_boatSlots, sizeof(m_boatSlots));
@@ -601,7 +601,7 @@ i16 game::LoadGame(char* filename, b32 origData, b32) {
         || m_mapSize > MAP_SIZE_LARGE || m_mapDifficulty < MAP_DIFFICULTY_EASY
         || m_mapDifficulty > MAP_DIFFICULTY_FORGET_IT)
         FileError(pathName);
-    gAdvManager->m_heroContextLocked = false;
+    gAdvManager->m_heroMobilized = false;
     gCurPlayerData = &gGame->m_players[gCurPlayer];
     gCurPlayerBit = 1 << gCurPlayer;
     gCurWatchPlayer = gCurPlayer;
@@ -1101,8 +1101,8 @@ void game::NewMap(char* mapName) {
     i32 anyFreeValue;
     i8 savedHeroY;
     i8 myPosX;
-    i8 yTown;
-    i8 xTownVal;
+    i8 townY;
+    i8 townX;
     b32 prevHeroNo;
     i32 i;
     i32 j;
@@ -1110,7 +1110,7 @@ void game::NewMap(char* mapName) {
     i8 theUsed[GAME_TOWN_COUNT];
     i32 k;
     i32 ultimateSpread;
-    i8 allNeutralVal;
+    i8 allTownsUnowned;
     i32 curDifficulty;
 
     gInNewGameSetup = true;
@@ -1142,7 +1142,7 @@ void game::NewMap(char* mapName) {
     RandomizeTerrainTiles();
     RandomizePlayerCrests();
     ProcessMapExtra();
-    allNeutralVal = SetupTowns();
+    allTownsUnowned = SetupTowns();
     ProcessRandomObjects(true);
     ProcessRandomObjects(false);
     RandomizeEvents();
@@ -1159,7 +1159,7 @@ void game::NewMap(char* mapName) {
                     continue;
                 mapHeroExtra* placed =
                     static_cast<mapHeroExtra*>(gMapExtraBlocks[m_map[i][j].m_objectMetadata]);
-                m_availableHeroes[placed->heroId] =
+                m_heroOwners[placed->heroId] =
                     placed->owner >= m_playerCount ? m_playerCount - 1 : placed->owner;
             }
         }
@@ -1172,7 +1172,7 @@ void game::NewMap(char* mapName) {
         m_players[i].m_ultimateArtifactHintX = PLAYER_ULTIMATE_HINT_NONE;
         m_players[i].m_ultimateArtifactHintY = PLAYER_ULTIMATE_HINT_NONE;
         prevHeroNo = false;
-        if (allNeutralVal) {
+        if (allTownsUnowned) {
             if (m_campaignType <= 0 || m_campaignScenario < CAMPAIGN_SCENARIO_LORD_FIRST
                 || m_campaignScenario > CAMPAIGN_SCENARIO_LORD_LAST) {
                 if (m_campaignType > 0) {
@@ -1212,7 +1212,7 @@ void game::NewMap(char* mapName) {
                     gTownHeroClass
                         [(m_castleRecs[m_players[i].m_townIds[0]].m_type)]
                 );
-            m_availableHeroes[m_players[i].m_heroIds[0]] = i;
+            m_heroOwners[m_players[i].m_heroIds[0]] = i;
             m_heroRecs[m_players[i].m_heroIds[0]].m_owner = i;
             m_heroRecs[m_players[i].m_heroIds[0]].m_x = m_castleRecs[m_players[i].m_townIds[0]].m_x;
             m_heroRecs[m_players[i].m_heroIds[0]].m_y = m_castleRecs[m_players[i].m_townIds[0]].m_y;
@@ -1227,26 +1227,26 @@ void game::NewMap(char* mapName) {
         if (m_campaignType > 0)
             k = gCrestHeroClass[m_players[i].m_color];
         else
-            k = Random(0, 3);
+            k = Random(0, HERO_CLASS_COUNT - 1);
         m_players[i].m_availableHeroIds[0] = GetNewHeroId(k);
-        m_availableHeroes[m_players[i].m_availableHeroIds[0]] = HERO_AVAILABILITY_RETREATED;
+        m_heroOwners[m_players[i].m_availableHeroIds[0]] = HERO_AVAILABILITY_RETREATED;
         k = (k + Random(1, 3)) % HERO_CLASS_COUNT;
         m_players[i].m_availableHeroIds[1] = GetNewHeroId(k);
-        m_availableHeroes[m_players[i].m_availableHeroIds[1]] = HERO_AVAILABILITY_RETREATED;
+        m_heroOwners[m_players[i].m_availableHeroIds[1]] = HERO_AVAILABILITY_RETREATED;
     }
     if (!m_noMapHeroes)
         ProcessOnMapHeroes();
     if (m_campaignType <= 0) {
         for (k = 0; k < GAME_PLAYER_COUNT; k++) {
-            if (allNeutralVal && m_townOwners[k] == GAME_PLAYER_NONE) {
-                xTownVal = m_castleRecs[k].m_x;
-                yTown = m_castleRecs[k].m_y;
+            if (allTownsUnowned && m_townOwners[k] == GAME_PLAYER_NONE) {
+                townX = m_castleRecs[k].m_x;
+                townY = m_castleRecs[k].m_y;
                 for (i = 0; i < TOWN_FOOTPRINT_WIDTH; i++) {
-                    m_map[xTownVal - TOWN_FOOTPRINT_LEFT + i][yTown - TOWN_FOOTPRINT_TOP]
+                    m_map[townX - TOWN_FOOTPRINT_LEFT + i][townY - TOWN_FOOTPRINT_TOP]
                         .m_overlayIndex -= TOWN_CASTLE_FRAME_OFFSET;
-                    m_map[xTownVal - TOWN_FOOTPRINT_LEFT + i][yTown - 1].m_objectIndex -=
+                    m_map[townX - TOWN_FOOTPRINT_LEFT + i][townY - 1].m_objectIndex -=
                         TOWN_CASTLE_FRAME_OFFSET;
-                    m_map[xTownVal - TOWN_FOOTPRINT_LEFT + i][yTown].m_objectIndex -=
+                    m_map[townX - TOWN_FOOTPRINT_LEFT + i][townY].m_objectIndex -=
                         TOWN_CASTLE_FRAME_OFFSET;
                 }
                 m_castleRecs[k].m_buildings = (1 << BUILDING_SLOT_TENT);
@@ -1263,7 +1263,7 @@ void game::NewMap(char* mapName) {
             savedHeroY = m_heroRecs[m_players[i].m_heroIds[j]].m_y;
             m_heroRecs[m_players[i].m_heroIds[j]].m_locationType =
                 m_map[myPosX][savedHeroY].m_triggerType;
-            m_heroRecs[m_players[i].m_heroIds[j]].m_occupiedTown =
+            m_heroRecs[m_players[i].m_heroIds[j]].m_locationMetadata =
                 m_map[myPosX][savedHeroY].m_objectMetadata;
             m_map[myPosX][savedHeroY].m_triggerType = MAP_EVENT_TRIGGER(MAP_OBJECT_HERO);
             m_map[myPosX][savedHeroY].m_objectMetadata = m_players[i].m_heroIds[j];
@@ -1393,9 +1393,9 @@ void game::RandomizeEvents(void) {
     i32 siteNumIdx;
     i16 x;
     mapCell* myCell;
-    i8 obeliskIdNum;
+    i8 nextObeliskId;
 
-    obeliskIdNum = 1;
+    nextObeliskId = 1;
     siteNumIdx = 1;
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
@@ -1409,8 +1409,8 @@ void game::RandomizeEvents(void) {
                     myCell->m_triggerType |= MAP_TRIGGER_EVENT;
                     break;
                 case MAP_EVENT_TRIGGER(MAP_OBJECT_OBELISK):
-                    myCell->m_objectMetadata = obeliskIdNum;
-                    obeliskIdNum++;
+                    myCell->m_objectMetadata = nextObeliskId;
+                    nextObeliskId++;
                     break;
                 case MAP_EVENT_TRIGGER(MAP_OBJECT_STATUE):
                     myCell->m_objectMetadata = MAP_EVENT_DATA_AVAILABLE;
@@ -1534,7 +1534,7 @@ void game::RandomizeEvents(void) {
                         case RANDOM_DECILE_2:
                         case RANDOM_DECILE_3:
                             myCell->m_objectMetadata =
-                                gMageGuildSpellPool[MAGE_GUILD_STATE_LEVEL_1][Random(0, 7)]
+                                gMageGuildSpellPool[MAGE_GUILD_LEVEL_1][Random(0, 7)]
                                 + 1;
                             break;
                         case RANDOM_DECILE_4:
@@ -1542,12 +1542,12 @@ void game::RandomizeEvents(void) {
                         case RANDOM_DECILE_6:
                         case RANDOM_DECILE_7:
                             myCell->m_objectMetadata =
-                                gMageGuildSpellPool[MAGE_GUILD_STATE_LEVEL_2][Random(0, 7)]
+                                gMageGuildSpellPool[MAGE_GUILD_LEVEL_2][Random(0, 7)]
                                 + 1;
                             break;
                         default:
                             myCell->m_objectMetadata =
-                                gMageGuildSpellPool[MAGE_GUILD_STATE_LEVEL_3][Random(0, 7)]
+                                gMageGuildSpellPool[MAGE_GUILD_LEVEL_3][Random(0, 7)]
                                 + 1;
                             break;
                     }
@@ -1762,7 +1762,7 @@ i16 game::LoadMap(char* filename) {
             m_mines[i].type = type;
         }
     }
-    handle.Get(m_randomArtifacts, sizeof(m_randomArtifacts));
+    handle.Get(m_artifactHolders, sizeof(m_artifactHolders));
     handle.Get(m_obeliskCount);
     handle.Get(&m_mapSounds[0][0], sizeof(m_mapSounds));
     if (theVersion >= MAP_EXTRA_VERSION) {
@@ -2010,8 +2010,8 @@ i16 ViewSpellsHandler(tag_message& message) {
                             NormalDialog(
                                 gSpellDesc[spell],
                                 NORMAL_DIALOG_TYPE_QUICK_VIEW,
-                                -1,
-                                -1,
+                                NORMAL_DIALOG_AUTO_POSITION,
+                                NORMAL_DIALOG_AUTO_POSITION,
                                 NORMAL_DIALOG_SPELL,
                                 spell
                             );
@@ -2054,8 +2054,8 @@ i16 ViewSpellsHandler(tag_message& message) {
                                 NormalDialog(
                                     gSpellDesc[spell],
                                     NORMAL_DIALOG_TYPE_OK,
-                                    -1,
-                                    -1,
+                                    NORMAL_DIALOG_AUTO_POSITION,
+                                    NORMAL_DIALOG_AUTO_POSITION,
                                     NORMAL_DIALOG_SPELL,
                                     spell
                                 );
@@ -2409,7 +2409,7 @@ void game::Overview(void) {
     tag_message activeMessage;
     i16 oldGy;
     i16 oldBadgeY;
-    i16 numCastlesVal;
+    i16 castleCount;
     i16 curHeroTextW;
     i16 mineBaseValue;
     i16 activeBadge;
@@ -2518,16 +2518,16 @@ void game::Overview(void) {
             theTotals
                 [(m_castleRecs[gCurPlayerData->m_townIds[j]].m_type)]++;
     }
-    numCastlesVal = 0;
+    castleCount = 0;
     for (j = 0; j < TOWN_TYPE_COUNT; j++) {
         if (theTotals[j])
-            numCastlesVal++;
+            castleCount++;
     }
-    if (numCastlesVal) {
+    if (castleCount) {
         spacing = 136;
         left = 100;
         oldNextType = 0;
-        for (j = 0; j < numCastlesVal; j++) {
+        for (j = 0; j < castleCount; j++) {
             while (!theTotals[oldNextType])
                 oldNextType++;
             ovIconRef->DrawToBuffer(
@@ -2730,7 +2730,7 @@ void game::NextPlayer(void) {
     hero* currentHero;
     i32 numHumans;
     i32 ii;
-    i32 remoteVal;
+    i32 targetPlayer;
     char unused[20];
 
     gCurHourGlassPhase = 0;
@@ -2778,10 +2778,10 @@ void game::NextPlayer(void) {
         gShowIt = false;
         if (gRemoteOn && (gHumanPlayer[gCurPlayer] || gThisGamePos != gHostGamePos)) {
             if (!gHumanPlayer[gCurPlayer])
-                remoteVal = gHostGamePos;
+                targetPlayer = gHostGamePos;
             else
-                remoteVal = gCurPlayer;
-            if (!gGame->TransmitSaveGame(remoteVal, 0))
+                targetPlayer = gCurPlayer;
+            if (!gGame->TransmitSaveGame(targetPlayer, 0))
                 ShutDown(NULL);
         }
         if (gBottomViewOverride == BOTTOM_VIEW_OVERRIDE_DISABLED)
@@ -2967,9 +2967,9 @@ void game::PerWeek(void) {
             // until the first week; the original tested the byte before the
             // table for them.
             if (gGame->m_players[i].m_availableHeroIds[j] != HERO_ID_NONE
-                && gGame->m_availableHeroes[gGame->m_players[i].m_availableHeroIds[j]]
+                && gGame->m_heroOwners[gGame->m_players[i].m_availableHeroIds[j]]
                        == HERO_AVAILABILITY_RETREATED)
-                gGame->m_availableHeroes[gGame->m_players[i].m_availableHeroIds[j]] =
+                gGame->m_heroOwners[gGame->m_players[i].m_availableHeroIds[j]] =
                     HERO_AVAILABILITY_UNAVAILABLE;
             gGame->m_players[i].m_availableHeroIds[j] = gGame->GetNewHeroId(heroClass);
         }
@@ -3022,7 +3022,7 @@ void game::PerWeek(void) {
 }
 
 void game::PerMonth(void) {
-    static i8 gMonType[12] = {
+    static i8 gMonType[CALENDAR_MONTH_CREATURE_COUNT] = {
         CREATURE_PEASANT,
         CREATURE_GOBLIN,
         CREATURE_DWARF,
@@ -3102,7 +3102,7 @@ void game::PerMonth(void) {
 void game::RandomizeTown(i8 x, i8 y, b8 isCastle) {
     i8 j;
     b8 curUnique;
-    town* town;
+    town* randomTown;
     i8 i;
     u8 activeFrameShift;
     i8 townNum;
@@ -3129,10 +3129,10 @@ void game::RandomizeTown(i8 x, i8 y, b8 isCastle) {
         }
     }
     m_map[x][y].m_triggerType |= MAP_TRIGGER_EVENT;
-    town = GetTown(townNum);
-    town->m_turnsOwned = TOWN_RANDOM_AGE;
+    randomTown = GetTown(townNum);
+    randomTown->m_turnsOwned = TOWN_RANDOM_AGE;
     if (m_campaignType > 0 && m_campaignScenario >= CAMPAIGN_SCENARIO_LORD_FIRST
-        && m_campaignScenario <= CAMPAIGN_SCENARIO_LORD_LAST && town->m_owner == 0) {
+        && m_campaignScenario <= CAMPAIGN_SCENARIO_LORD_LAST && randomTown->m_owner == 0) {
         race = gCrestTownTypes[m_players[0].m_color];
     } else if (townNum < GAME_PLAYER_COUNT) {
         curUnique = false;
@@ -3158,8 +3158,8 @@ void game::RandomizeTown(i8 x, i8 y, b8 isCastle) {
     }
     m_castleRecs[townNum].m_type = race;
     plain = true;
-    if (town->m_extraIndex >= 1
-        && static_cast<mapTownExtra*>(gMapExtraBlocks[town->m_extraIndex])->customized)
+    if (randomTown->m_extraIndex >= 1
+        && static_cast<mapTownExtra*>(gMapExtraBlocks[randomTown->m_extraIndex])->customized)
         plain = false;
     if (plain) {
         m_castleRecs[townNum].m_buildings =
@@ -3226,16 +3226,16 @@ void game::SetupTown(i8 townId, b8 aiOwned) {
             dwellingCount--;
         }
     }
-    memset(nextUsed, 0, 29);
+    memset(nextUsed, 0, sizeof(nextUsed));
     for (n = 0; n < TOWN_MAGE_GUILD_SPELL_COUNT; n++) {
         if (n <= MAGE_GUILD_LEVEL_1_LAST_SLOT)
-            spellLevel = MAGE_GUILD_STATE_LEVEL_1;
+            spellLevel = MAGE_GUILD_LEVEL_1;
         else if (n <= MAGE_GUILD_LEVEL_2_LAST_SLOT)
-            spellLevel = MAGE_GUILD_STATE_LEVEL_2;
+            spellLevel = MAGE_GUILD_LEVEL_2;
         else if (n <= MAGE_GUILD_LEVEL_3_LAST_SLOT)
-            spellLevel = MAGE_GUILD_STATE_LEVEL_3;
+            spellLevel = MAGE_GUILD_LEVEL_3;
         else
-            spellLevel = MAGE_GUILD_STATE_LEVEL_4;
+            spellLevel = MAGE_GUILD_LEVEL_4;
         do {
             newSpell = gMageGuildSpellPool[spellLevel][Random(0, 7)];
             if (aiOwned)
@@ -3384,11 +3384,11 @@ void game::RandomizeMine(i8 x, i8 y) {
 
 i8 game::GetRandomArtifactId(void) {
     i8
-    freeSlot = (Scan( m_randomArtifacts, ARTIFACT_REGULAR_FIRST, ARTIFACT_REGULAR_END - ARTIFACT_REGULAR_FIRST ));
+    freeSlot = (Scan( m_artifactHolders, ARTIFACT_REGULAR_FIRST, ARTIFACT_REGULAR_END - ARTIFACT_REGULAR_FIRST ));
     if (freeSlot == ARTIFACT_NONE)
         return ARTIFACT_NONE;
     i8
-    artifact = (RandomScan( m_randomArtifacts, ARTIFACT_REGULAR_FIRST, ARTIFACT_REGULAR_END - ARTIFACT_REGULAR_FIRST, ARTIFACT_REGULAR_END ));
+    artifact = (RandomScan( m_artifactHolders, ARTIFACT_REGULAR_FIRST, ARTIFACT_REGULAR_END - ARTIFACT_REGULAR_FIRST, ARTIFACT_REGULAR_END ));
     if (artifact == ARTIFACT_NONE)
         return freeSlot;
     else
@@ -3425,8 +3425,8 @@ void game::SetRandomHeroArmies(i16 heroId, i32 strongArmy) {
     };
     b32 curPresent[RANDOM_HERO_ARMY_OPTION_COUNT];
     i32 i;
-    i32 curMax;
-    i32 minNum;
+    i32 maxCount;
+    i32 minCount;
 
     curPresent[RANDOM_HERO_ARMY_OPTION_SURE] = true;
     curPresent[RANDOM_HERO_ARMY_OPTION_FIRST_ROLL] =
@@ -3444,14 +3444,15 @@ void game::SetRandomHeroArmies(i16 heroId, i32 strongArmy) {
     for (i = 0; i < RANDOM_HERO_ARMY_SELECTION_COUNT; i++) {
         if (curPresent[i]) {
             curArmy->m_creatureTypes[curSlot] = (armies[m_heroRecs[heroId].m_heroClass][i][RANDOM_HERO_ARMY_FIELD_CREATURE]);
-            minNum = armies[m_heroRecs[heroId].m_heroClass][i][RANDOM_HERO_ARMY_FIELD_MIN]
-                     * RANDOM_HERO_COUNT_SCALE;
-            curMax = armies[m_heroRecs[heroId].m_heroClass][i][RANDOM_HERO_ARMY_FIELD_MAX]
-                         * RANDOM_HERO_COUNT_SCALE
-                     + RANDOM_HERO_COUNT_ROUNDING;
+            minCount = armies[m_heroRecs[heroId].m_heroClass][i][RANDOM_HERO_ARMY_FIELD_MIN]
+                       * RANDOM_HERO_COUNT_SCALE;
+            maxCount = armies[m_heroRecs[heroId].m_heroClass][i][RANDOM_HERO_ARMY_FIELD_MAX]
+                           * RANDOM_HERO_COUNT_SCALE
+                       + RANDOM_HERO_COUNT_ROUNDING;
             if (strongArmy)
-                minNum = (minNum + curMax) / 2;
-            curArmy->m_creatureCounts[curSlot] = Random(minNum, curMax) / RANDOM_HERO_COUNT_SCALE;
+                minCount = (minCount + maxCount) / 2;
+            curArmy->m_creatureCounts[curSlot] =
+                Random(minCount, maxCount) / RANDOM_HERO_COUNT_SCALE;
             curSlot++;
         }
     }
@@ -3459,11 +3460,11 @@ void game::SetRandomHeroArmies(i16 heroId, i32 strongArmy) {
 
 void game::ProcessRandomObjects(b32 castlesOnly) {
     mapCell* cellPtrItem;
-    i32 lowFVVal;
+    i32 minFightValue;
     i32 y;
     i32 x;
     i32 i;
-    i32 highFVNum;
+    i32 maxFightValue;
 
     for (i = RESOURCE_FIRST; i < RESOURCE_COUNT; i++)
         gMineTypeCount[i] = 0;
@@ -3482,37 +3483,39 @@ void game::ProcessRandomObjects(b32 castlesOnly) {
                         RandomizeTown(x, y, true);
                         break;
                     case MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_MONSTER):
-                        lowFVVal = RANDOM_MONSTER_ANY_LOW;
-                        highFVNum = RANDOM_MONSTER_ANY_HIGH;
+                        minFightValue = RANDOM_MONSTER_ANY_LOW;
+                        maxFightValue = RANDOM_MONSTER_ANY_HIGH;
                         goto pickMonster;
                     case MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_MONSTER_WEAK):
-                        lowFVVal = RANDOM_MONSTER_WEAK_LOW;
-                        highFVNum = RANDOM_MONSTER_WEAK_HIGH;
+                        minFightValue = RANDOM_MONSTER_WEAK_LOW;
+                        maxFightValue = RANDOM_MONSTER_WEAK_HIGH;
                         goto pickMonster;
                     case MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_MONSTER_MEDIUM):
-                        lowFVVal = RANDOM_MONSTER_MEDIUM_LOW;
-                        highFVNum = RANDOM_MONSTER_MEDIUM_HIGH;
+                        minFightValue = RANDOM_MONSTER_MEDIUM_LOW;
+                        maxFightValue = RANDOM_MONSTER_MEDIUM_HIGH;
                         goto pickMonster;
                     case MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_MONSTER_STRONG):
-                        lowFVVal = RANDOM_MONSTER_STRONG_LOW;
-                        highFVNum = RANDOM_MONSTER_STRONG_HIGH;
+                        minFightValue = RANDOM_MONSTER_STRONG_LOW;
+                        maxFightValue = RANDOM_MONSTER_STRONG_HIGH;
                         goto pickMonster;
                     case MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_MONSTER_VERY_STRONG):
-                        lowFVVal = RANDOM_MONSTER_VERY_STRONG_LOW;
-                        highFVNum = RANDOM_MONSTER_VERY_STRONG_HIGH;
+                        minFightValue = RANDOM_MONSTER_VERY_STRONG_LOW;
+                        maxFightValue = RANDOM_MONSTER_VERY_STRONG_HIGH;
                         goto pickMonster;
                     pickMonster:
                         cellPtrItem->m_triggerType = MAP_EVENT_TRIGGER(MAP_OBJECT_MONSTER);
-                        cellPtrItem->m_objectIndex = Random(0, 27);
+                        cellPtrItem->m_objectIndex =
+                            Random(0, CREATURE_LAST);
                         while (gMonsterDatabase
                                        [cellPtrItem->m_objectIndex]
                                            .fightValue
-                                   <= lowFVVal
+                                   <= minFightValue
                                || gMonsterDatabase
                                           [cellPtrItem->m_objectIndex]
                                               .fightValue
-                                      >= highFVNum)
-                            cellPtrItem->m_objectIndex = Random(0, 27);
+                                      >= maxFightValue)
+                            cellPtrItem->m_objectIndex =
+                                Random(0, CREATURE_LAST);
                         break;
                     case MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_RESOURCE):
                         cellPtrItem->m_triggerType = MAP_EVENT_TRIGGER(MAP_OBJECT_RESOURCE);
@@ -3530,7 +3533,7 @@ void game::ProcessRandomObjects(b32 castlesOnly) {
                             cellPtrItem->m_objectIndex = MAP_CELL_NO_FRAME;
                             break;
                         }
-                        m_randomArtifacts[cellPtrItem->m_objectIndex] = GAME_ARTIFACT_ON_MAP;
+                        m_artifactHolders[cellPtrItem->m_objectIndex] = GAME_ARTIFACT_ON_MAP;
                         break;
                     case MAP_EVENT_TRIGGER(MAP_FILE_OBJECT_RANDOM_MINE):
                         RandomizeMine(x, y);
@@ -3759,7 +3762,7 @@ foundAdjacentMonster:
 void game::SetupAdjacentMons(void) {
     i32 x;
     i32 y;
-    i32 oldMask = 0x7f;
+    i32 notAdjacentMask = 0x7f;
     i32 monY;
     i32 monX;
 
@@ -3768,7 +3771,7 @@ void game::SetupAdjacentMons(void) {
             if (gAdvManager->FindAdjacentMonster(x, y, &monX, &monY, -1, -1))
                 gMapExtra[x][y] |= MAP_EXTRA_MONSTER_ADJACENT;
             else
-                gMapExtra[x][y] &= oldMask;
+                gMapExtra[x][y] &= notAdjacentMask;
         }
     }
 }
@@ -3846,8 +3849,8 @@ void game::WaitForPlayer(char* text, i32 player) {
         NormalDialog(
             text,
             NORMAL_DIALOG_TYPE_OK,
-            0x61,
-            -1,
+            NORMAL_DIALOG_ADVENTURE_X,
+            NORMAL_DIALOG_AUTO_POSITION,
             NORMAL_DIALOG_CREST,
             (gGame->m_players[player].m_color)
         );
@@ -4027,17 +4030,17 @@ i8 game::SetupTowns(void) {
     mapTownExtra* newExtra;
     i32 curOwn;
     b8 isUnowned;
-    town* town;
+    class town* curTown;
     i32 j;
     i32 i;
     i32 mask;
     isUnowned = true;
     mask = MAP_TOWN_EXTRA_BUILDING_MASK;
     for (i = 0; i < GAME_TOWN_COUNT; i++) {
-        town = GetTown(i);
-        town->m_customized = false;
-        if (town->m_extraIndex >= 1) {
-            newExtra = static_cast<mapTownExtra*>(gMapExtraBlocks[town->m_extraIndex]);
+        curTown = GetTown(i);
+        curTown->m_customized = false;
+        if (curTown->m_extraIndex >= 1) {
+            newExtra = static_cast<mapTownExtra*>(gMapExtraBlocks[curTown->m_extraIndex]);
             if (newExtra->customized && newExtra->owner != MAP_TOWN_OWNER_UNSET) {
                 if (newExtra->owner >= gGame->m_playerCount)
                     curOwn = gGame->m_playerCount - 1;
@@ -4048,25 +4051,25 @@ i8 game::SetupTowns(void) {
                     ClaimTown(i, curOwn);
             }
             if (newExtra->customized) {
-                town->m_customized = true;
+                curTown->m_customized = true;
                 for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
-                    town->m_army.m_creatureCounts[j] = newExtra->troopCounts[j];
-                    if (town->m_army.m_creatureCounts[j] > 0)
-                        town->m_army.m_creatureTypes[j] = newExtra->troopTypes[j];
+                    curTown->m_army.m_creatureCounts[j] = newExtra->troopCounts[j];
+                    if (curTown->m_army.m_creatureCounts[j] > 0)
+                        curTown->m_army.m_creatureTypes[j] = newExtra->troopTypes[j];
                     else
-                        town->m_army.m_creatureTypes[j] = CREATURE_NONE;
+                        curTown->m_army.m_creatureTypes[j] = CREATURE_NONE;
                 }
-                town->m_buildState = newExtra->buildState;
-                town->m_buildings =
-                    town->m_buildings - (town->m_buildings & mask) + (newExtra->buildings & mask);
+                curTown->m_mageGuildLevel = newExtra->mageGuildLevel;
+                curTown->m_buildings = curTown->m_buildings - (curTown->m_buildings & mask)
+                                       + (newExtra->buildings & mask);
             }
         }
     }
     if (!isUnowned) {
         for (i = 0; i < GAME_TOWN_COUNT; i++) {
-            town = GetTown(i);
-            if (town->m_owner == MAP_TOWN_OWNER_UNSET)
-                town->m_owner = GAME_PLAYER_NONE;
+            curTown = GetTown(i);
+            if (curTown->m_owner == MAP_TOWN_OWNER_UNSET)
+                curTown->m_owner = GAME_PLAYER_NONE;
         }
     }
     return isUnowned;
@@ -4113,7 +4116,7 @@ void game::ProcessOnMapHeroes(void) {
                 else
                     iPlayer = extra->owner;
                 theHeroEntry->m_owner = iPlayer;
-                m_availableHeroes[extra->heroId] = iPlayer;
+                m_heroOwners[extra->heroId] = iPlayer;
                 m_players[theHeroEntry->m_owner]
                     .m_heroIds[m_players[theHeroEntry->m_owner].m_heroCount] = theHeroEntry->m_id;
                 m_players[theHeroEntry->m_owner].m_heroCount++;
@@ -4156,12 +4159,10 @@ void game::CheckHeroConsistency(void) {
     for (i = 0; i < m_playerCount; i++) {
         if (!m_playerDead[i]) {
             for (j = 0; j < PLAYER_TAVERN_HERO_COUNT; j++) {
-                if (m_availableHeroes[m_players[i].m_availableHeroIds[j]] >= 0
-                    && m_availableHeroes[m_players[i].m_availableHeroIds[j]]
-                           <= GAME_PLAYER_COUNT - 1) {
+                if (m_heroOwners[m_players[i].m_availableHeroIds[j]] >= 0
+                    && m_heroOwners[m_players[i].m_availableHeroIds[j]] <= GAME_PLAYER_COUNT - 1) {
                     m_players[i].m_availableHeroIds[j] = GetNewHeroId(0);
-                    m_availableHeroes[m_players[i].m_availableHeroIds[j]] =
-                        HERO_AVAILABILITY_RETREATED;
+                    m_heroOwners[m_players[i].m_availableHeroIds[j]] = HERO_AVAILABILITY_RETREATED;
                 }
             }
         }
@@ -4174,14 +4175,14 @@ void game::CheckHeroConsistency(void) {
                     boardHro = GetHero(cell->m_objectMetadata);
                     if (boardHro->m_owner < 0 || boardHro->m_owner > GAME_PLAYER_COUNT - 1) {
                         if (boardHro->m_locationType == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN)) {
-                            townOccupied = gGame->GetTown(boardHro->m_occupiedTown);
+                            townOccupied = gGame->GetTown(boardHro->m_locationMetadata);
                             townOccupied->m_occupyingHeroId = TOWN_OCCUPYING_HERO_NONE;
                         }
                         RestoreCell(
                             boardHro->m_x,
                             boardHro->m_y,
                             boardHro->m_locationType,
-                            boardHro->m_occupiedTown,
+                            boardHro->m_locationMetadata,
                             NULL,
                             1
                         );
@@ -4381,7 +4382,7 @@ b32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
     char ackFlags[REMOTE_SAVE_BATCH_SIZE];
     RemoteMessage* receivedPacketObj;
     i32 curRet;
-    i32 lastPacketTimeNum;
+    i32 lastPacketTime;
     char myGotIt[REMOTE_SAVE_SEGMENT_LIMIT];
     i32 packetStartValue;
     i32 segmentLength;
@@ -4414,17 +4415,17 @@ b32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
     if (REMOTE_SAVE_ENCODED())
         decodedData = static_cast<char*>(malloc(REMOTE_SAVE_DECODE_BUFFER_SIZE));
     curInData = static_cast<char*>(calloc(dataSize + REMOTE_SAVE_BUFFER_EXTRA, 1));
-    lastPacketTimeNum = KBTickCount();
+    lastPacketTime = KBTickCount();
     while (!done) {
         PollSound();
         CheckDoMain(0, true);
-        if (lastPacketTimeNum + REMOTE_WAIT_TIMEOUT < KBTickCount()) {
+        if (lastPacketTime + REMOTE_WAIT_TIMEOUT < KBTickCount()) {
             NormalDialog(
                 localization::Tr("combat.network.receive_error"),
                 NORMAL_DIALOG_TYPE_YES_NO
             );
             if (gWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
-                lastPacketTimeNum = KBTickCount();
+                lastPacketTime = KBTickCount();
             else
                 ShutDown(NULL);
         }
@@ -4432,7 +4433,7 @@ b32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
         if (receivedPacketObj
             && (receivedPacketObj->type == REMOTE_MESSAGE_RELIABLE
                 || receivedPacketObj->type == REMOTE_MESSAGE_UNRELIABLE)) {
-            lastPacketTimeNum = KBTickCount();
+            lastPacketTime = KBTickCount();
             RecordReader payload = RemotePayloadReader(*receivedPacketObj);
             switch (receivedPacketObj->command) {
                 case REMOTE_COMMAND_SAVE_DATA:
@@ -4554,8 +4555,8 @@ void game::DoNewTurn(void) {
         NormalDialog(
             gText,
             NORMAL_DIALOG_TYPE_OK,
-            0x61,
-            -1,
+            NORMAL_DIALOG_ADVENTURE_X,
+            NORMAL_DIALOG_AUTO_POSITION,
             NORMAL_DIALOG_CREST,
             (gGame->m_players[gCurPlayer].Color())
         );
@@ -4616,7 +4617,7 @@ void game::DoNewTurn(void) {
             }
             PlayMusic(track);
             gMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
-            NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, 0x61);
+            NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, NORMAL_DIALOG_ADVENTURE_X);
             PlayMusic(TERRAIN_MUSIC_TRACK(gAdvManager->m_currentTerrain));
         }
     }
@@ -4783,15 +4784,15 @@ done:
 
 void game::ShowScenInfo(void) {
     i16 jj;
-    const i8 sizeIdNo = 100;
-    const i8 selLevelId = 101;
-    const i8 selDescId = 102;
-    const i8 crestId = 103;
-    const i8 nameIdIndex = 104;
-    const i8 levelIdIdx = 105;
-    const i8 playersIdPos = 106;
-    const i8 kingOfHillId = 107;
-    const i8 ratingId = 108;
+    const i8 sizeIdNo = SCENARIO_INFO_MAP_SIZE;
+    const i8 selLevelId = SCENARIO_INFO_MAP_LEVEL;
+    const i8 selDescId = SCENARIO_INFO_MAP_DESCRIPTION;
+    const i8 crestId = SCENARIO_INFO_CREST;
+    const i8 nameIdIndex = SCENARIO_INFO_MAP_NAME;
+    const i8 levelIdIdx = SCENARIO_INFO_DIFFICULTY;
+    const i8 playersIdPos = SCENARIO_INFO_OPPONENTS;
+    const i8 kingOfHillId = SCENARIO_INFO_KING_OF_THE_HILL;
+    const i8 ratingId = SCENARIO_INFO_RATING;
     char line1Buf[20];
     i32 baseDifficulty;
     heroWindow* scenWindow;
@@ -4864,7 +4865,9 @@ void game::ShowScenInfo(void) {
     packet.command = WIDGET_COMMAND_SET_FRAME;
     if (m_players[gCurPlayer].m_color != PLAYER_COLOR_NONE) {
         packet.id = crestId;
-        packet.value = (m_players[gCurPlayer].m_color) * 2 + 11;
+        packet.value =
+            (m_players[gCurPlayer].m_color) * NEW_GAME_FRAME_CREST_STRIDE
+            + NEW_GAME_FRAME_CREST_BASE;
         scenWindow->BroadcastMessage(packet);
     }
     gWindowManager->DoDialog(scenWindow, EventWindowHandler, false);
@@ -4916,7 +4919,7 @@ i8 gSavedCrest;
 i8 gSavedDifficulty;
 b8 gDismissArmy;
 heroWindow* gReqExtraWindow;
-i8 gSavedDifficulties[4];
+i8 gSavedDifficulties[GAME_PLAYER_COUNT];
 i16 gMineTypeCount[RESOURCE_COUNT];
 i8 gSavedKingOfTheHill;
-i8 gRandomTownTypes[4];
+i8 gRandomTownTypes[GAME_PLAYER_COUNT];

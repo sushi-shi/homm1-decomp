@@ -35,7 +35,7 @@ public:
     char m_unused04[0x12];
     i16 m_x;
     i16 m_y;
-    i8 m_stripType;
+    i8 m_unusedStripType;
     i8 m_selectedSlot;
     border* m_borders[6];
     font* m_font;
@@ -50,7 +50,7 @@ public:
         i8 stripType,
         i16 portraitIconId,
         i8 portraitFrame,
-        class armyGroup* army,
+        class armyGroup* troops,
         i16 firstBorderId,
         i32 drawWindow
     );

@@ -54,7 +54,7 @@ enum MapEventRewardConstant {
     WATERWHEEL_GOLD_MULTIPLIER = 500,
     RESOURCE_PILE_GOLD_MULTIPLIER = 100,
     WINDMILL_RESOURCE_AMOUNT = 2,
-    TEMPLE_MORALE_BONUS = 2,
+    STATUE_MORALE_BONUS = 2,
     ARTIFACT_EVENT_GUARD_ROGUE_COUNT = 50,
     ARTIFACT_EVENT_GOLD_COST = 2000,
     EVENT_RANDOM_ARTIFACT_GOLD = 1000,
@@ -71,7 +71,7 @@ enum MapEventRewardConstant {
 };
 
 enum EventFizzleType {
-    EVENT_FIZZLE_HERO_LOSS = 0,
+    EVENT_FIZZLE_KILL = 0,
     EVENT_FIZZLE_PICKUP = 1
 };
 
@@ -205,8 +205,8 @@ struct combatRemoteData {
     b8 hasFirstHero;
     b8 hasTown;
     b8 hasSecondHero;
-    i8 setupCombatX;
-    i8 setupCombatY;
+    i8 eventX;
+    i8 eventY;
     i32 randomSeed;
     i8 combatResult;
     b8 retreatWin;

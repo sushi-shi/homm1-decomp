@@ -27,7 +27,7 @@ struct AudiereMusic {
 };
 struct AudiereDevice {
     static audiere::AudioDevicePtr driver;
-    static int dummy;
+    static i32 dummy;
 };
 
 #endif

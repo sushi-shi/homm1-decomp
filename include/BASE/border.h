@@ -5,10 +5,11 @@
 #include <BASE/widget.h>
 
 enum BorderBackgroundKind {
-BORDER_BACKGROUND_SOLID = 0x400, BORDER_BACKGROUND_BITMAP =
-                                     0x800 };
+    BORDER_BACKGROUND_SOLID = 0x400,
+    BORDER_BACKGROUND_BITMAP = 0x800
+};
 
-                                 class bitmap;
+class bitmap;
 struct tag_message;
 
 class border : public widget {

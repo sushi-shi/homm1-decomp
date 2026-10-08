@@ -24,7 +24,7 @@ i16
 OppositeDirection(i16 direction);
 
 enum CombatPathConstant {
-    SPECIAL_DIRECTION_MASK = 0xc0,
+    WIDE_DIRECTIONS_MASK = 0xc0,
     IGNORE_SPEED = 99,
     WIDE_HEX_OFFSET = 1
 };

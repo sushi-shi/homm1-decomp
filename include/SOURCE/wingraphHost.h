@@ -26,16 +26,16 @@ struct WingPalette {
 
 struct WingImage {
     BITMAPINFOHEADER header;
-    RGBQUAD colors[256];
+    RGBQUAD colors[PALETTE_COLOR_COUNT];
     void* bits;
 };
 
 extern i32 gGraphicsType;
 extern i32 gMainVideoModeHeight;
 extern i32 gMainVideoModeWidth;
-extern BOOL gDDrawAttached;
-extern BOOL gWinGAttached;
-extern BOOL gWinGraphBusy;
+extern b32 gDDrawAttached;
+extern b32 gWinGAttached;
+extern b32 gWinGraphBusy;
 extern HPALETTE gAppPalette;
 extern HINSTANCE gDDrawLibrary;
 extern DirectDrawCreateProc gDirectDrawCreate;
@@ -44,18 +44,7 @@ extern IDirectDrawSurface* gDDSPrimary;
 extern IDirectDrawSurface* gDDSOne;
 extern IDirectDrawClipper* gClipper;
 extern IDirectDrawPalette* gDDPal;
-extern i16 gDDRestoreLineBase;
-extern i16 gDDSetPaletteLineBase;
-extern i16 gDDInitializePaletteLineBase;
-extern i16 gDDUpdatePaletteLineBase;
-extern i16 gDDCleanUpLineBase;
-extern i16 gCreatePrimaryLineBase;
-extern i16 gSetupClipperLineBase;
-extern i16 gDDInitLineBase;
-extern i16 gDDCreateSurfaceLineBase;
-extern BOOL gInDDSD;
-extern i16 gDDSetFullScreenLineBase;
-extern i16 gDDPaintLineBase;
+extern b32 gInDDSD;
 extern RECT gDDClientRect;
 extern RECT gDDSourceRect;
 extern RECT gDDDestinationRect;

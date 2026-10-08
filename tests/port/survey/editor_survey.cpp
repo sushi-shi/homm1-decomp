@@ -68,7 +68,7 @@ void RandomSettings() {
         gTerrainPercent[i] = std::uniform_int_distribution<int>(0, 4)(gRandom) == 0 ? 0.0 : Share(0, 60);
     for (int i = 0; i < EDITOR_GENERATOR_DENSITY_COUNT; i++)
         gDensityPercent[i] = Share(0, 100);
-    gScatterTowns = std::uniform_int_distribution<int>(0, 1)(gRandom);
+    gScatterTerrain = std::uniform_int_distribution<int>(0, 1)(gRandom);
     gSaveUnseen = 0;
 }
 
@@ -100,11 +100,11 @@ int main(int argc, char** argv) {
     for (int index = 0; index < count; index++) {
         RandomSettings();
         Progress("map %d: terrain %.0f %.0f %.0f %.0f %.0f %.0f %.0f, density %.0f %.0f %.0f %.0f %.0f, "
-                 "%s towns",
+                 "%s terrain",
                  index, gTerrainPercent[0], gTerrainPercent[1], gTerrainPercent[2], gTerrainPercent[3],
                  gTerrainPercent[4], gTerrainPercent[5], gTerrainPercent[6], gDensityPercent[0],
                  gDensityPercent[1], gDensityPercent[2], gDensityPercent[3], gDensityPercent[4],
-                 gScatterTowns ? "scattered" : "central");
+                 gScatterTerrain ? "scattered" : "central");
         gEditManager->GenerateRandomMap();
         char name[32];
         std::snprintf(name, sizeof(name), "R%03d%03d1.MAP", seed % 1000, index % 1000);

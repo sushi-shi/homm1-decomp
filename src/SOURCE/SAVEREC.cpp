@@ -117,7 +117,7 @@ void WriteHero(RecordWriter& out, const hero& record) {
     out.Put(record.m_destinationY);
     out.Put(record.m_direction);
     out.Put(record.m_locationType);
-    out.Put(record.m_occupiedTown);
+    out.Put(record.m_locationMetadata);
     out.Put(record.m_mobility);
     out.Put(record.m_remainingMobility);
     out.Put(record.m_experience);
@@ -152,7 +152,7 @@ void ReadHero(RecordReader& in, hero& record) {
     in.Get(record.m_destinationY);
     in.Get(record.m_direction);
     in.Get(record.m_locationType);
-    in.Get(record.m_occupiedTown);
+    in.Get(record.m_locationMetadata);
     record.m_mobility = in.GetI16();
     record.m_remainingMobility = in.GetI16();
     record.m_experience = in.GetI32();
@@ -187,7 +187,7 @@ void WriteTown(RecordWriter& out, const town& record) {
     WriteArmyGroup(out, record.m_army);
     out.Put(record.m_occupyingHeroId);
     out.Put(record.m_buildings);
-    out.Put(record.m_buildState);
+    out.Put(record.m_mageGuildLevel);
     out.Put(record.m_unused19);
     for (i32 dwelling = 0; dwelling < 6; dwelling++)
         out.Put(record.m_dwellingAvailable[dwelling]);
@@ -208,7 +208,7 @@ void ReadTown(RecordReader& in, town& record) {
     ReadArmyGroup(in, record.m_army);
     in.Get(record.m_occupyingHeroId);
     record.m_buildings = in.GetI16();
-    in.Get(record.m_buildState);
+    in.Get(record.m_mageGuildLevel);
     in.Get(record.m_unused19);
     for (i32 dwelling = 0; dwelling < 6; dwelling++)
         record.m_dwellingAvailable[dwelling] = in.GetI16();
@@ -291,14 +291,14 @@ void WriteHighScore(RecordWriter& out, const HighScoreEntry& record) {
     out.Put(record.playerName, sizeof(record.playerName));
     out.Put(record.scenarioName, sizeof(record.scenarioName));
     out.Put(record.score);
-    out.Put(record.unknown24, sizeof(record.unknown24));
+    out.Put(record.unused24, sizeof(record.unused24));
 }
 
 void ReadHighScore(RecordReader& in, HighScoreEntry& record) {
     in.Get(record.playerName, sizeof(record.playerName));
     in.Get(record.scenarioName, sizeof(record.scenarioName));
     record.score = in.GetI32();
-    in.Get(record.unknown24, sizeof(record.unknown24));
+    in.Get(record.unused24, sizeof(record.unused24));
     record.playerName[sizeof(record.playerName) - 1] = '\0';
     record.scenarioName[sizeof(record.scenarioName) - 1] = '\0';
 }

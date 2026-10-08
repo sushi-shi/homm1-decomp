@@ -117,12 +117,12 @@ public:
         class hero* aiHero,
         i16 x,
         i16 y,
-        i8 hasEvent,
-        i16 eventX,
-        i16 eventY,
-        i8 hasStrategicEvent,
-        i16 strategicX,
-        i16 strategicY,
+        i8 hasAdjacentMonster,
+        i16 adjacentMonsterX,
+        i16 adjacentMonsterY,
+        i8 beyondTurnMobility,
+        i16 turnEndX,
+        i16 turnEndY,
         i32 eventMode
     );
     i32 StrategicValueOfPosition(
@@ -147,7 +147,7 @@ public:
         class hero* aiHero,
         i32 creature,
         i32 availableCount,
-        b32 useAvailableCount,
+        b32 isFree,
         i32& purchaseCount,
         i32& purchaseValue,
         i32& replacementSlot
@@ -177,7 +177,7 @@ public:
         i32 isCastle,
         i32 castleId,
         i32 rewardValue,
-        i32& canWin,
+        i32& worthFighting,
         i32& rating
     );
     b32 ChooseToBuyArtifact(
@@ -206,7 +206,7 @@ public:
     float StatChangeValue(i32 oldValue, i32 newValue);
     void IncrementHourGlass(void);
     void TownEvent(class mapCell* cell, class hero* heroPointer, i32 x, i32 y);
-    i32 ValueOfEventAtPosition(class hero* aiHero, i16 x, i16 y, i32 immediate, i32* liveChance);
+    i32 ValueOfEventAtPosition(class hero* aiHero, i16 x, i16 y, i32 eventMode, i32* liveChance);
 };
 
 extern i32 gCreatureCost[RESOURCE_COUNT];

@@ -226,8 +226,8 @@ void WriteCombatRemoteData(RecordWriter& out, const combatRemoteData& record) {
     out.Put(record.hasFirstHero);
     out.Put(record.hasTown);
     out.Put(record.hasSecondHero);
-    out.Put(record.setupCombatX);
-    out.Put(record.setupCombatY);
+    out.Put(record.eventX);
+    out.Put(record.eventY);
     out.Put(record.randomSeed);
     out.Put(record.combatResult);
     out.Put(record.retreatWin);
@@ -248,8 +248,8 @@ void ReadCombatRemoteData(RecordReader& in, combatRemoteData& record) {
     in.Get(record.hasFirstHero);
     in.Get(record.hasTown);
     in.Get(record.hasSecondHero);
-    in.Get(record.setupCombatX);
-    in.Get(record.setupCombatY);
+    in.Get(record.eventX);
+    in.Get(record.eventY);
     record.randomSeed = in.GetI32();
     in.Get(record.combatResult);
     in.Get(record.retreatWin);

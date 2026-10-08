@@ -38,9 +38,9 @@ extern "C" u16 __cdecl nb_init(u16 maxSessions) {
     NCB ncb;
     i32 jj;
     i32 returnCode;
-    if (is_netbios_avail() == 0)
+    if (!is_netbios_avail())
         return 1;
-    if (gNetbiosAvail != 0) {
+    if (gNetbiosAvail) {
         gNbMaxSess = maxSessions;
         for (jj = 0; jj < NETBIOS_SESSION_COUNT; jj++) {
             gNetStatus[jj] = 0;
@@ -136,7 +136,7 @@ extern "C" i16 __cdecl nb_rcv(i32 port, u16 maxLength, void* buffer) {
 extern "C" i16 __cdecl nb_snd(i32 port, u16 session, u16 length, void* data, i32 priority) {
     tag_Node* node;
     if (session == gNbMaxSess && length == 0) {
-        nb_add_name();
+        nb_announce_name();
         return NRC_GOODRET;
     }
     if (!(gNetStatus[session] & NETBIOS_SESSION_ACTIVE))
@@ -340,7 +340,7 @@ void nb_thr_ctl(void)
     }
 }
 
-void nb_add_name(void) {
+void nb_announce_name(void) {
     if (gNbCtlNcb.ncb_cmd_cplt != NRC_PENDING) {
         RecordWriter announce;
         WriteNetbiosAnnounce(announce, gNbNameBuf[gNbMaxSess].bytes);
@@ -576,22 +576,22 @@ u8 gNbCallRetries = 0;
 u8 gNetbiosAvail = 0;
 u8 gNbShutdown = 0;
 u8 gNbMaxSess = 255;
-u8 gNetStatus[7] = {0, 0, 0, 0, 0, 0, 0};
+u8 gNetStatus[NETBIOS_SESSION_COUNT] = {0, 0, 0, 0, 0, 0, 0};
 char* gNbGroupName = "Empire Too ";
 u8* gNbListenName =
     reinterpret_cast<u8*>(const_cast<char*>("*"));
 tag_Anchor gNbPriorityQueue;
-u8 gNbSessLsn[7];
-u8 gNbRcvData[7][0x1000];
-NetbiosName gNbNameBuf[7];
+u8 gNbSessLsn[NETBIOS_SESSION_COUNT];
+u8 gNbRcvData[NETBIOS_SESSION_COUNT][NETBIOS_PAYLOAD_SIZE];
+NetbiosName gNbNameBuf[NETBIOS_SESSION_COUNT];
 u8 gNbSessBuf[0xfd0];
 u8 gNetwinDeadName[48];
-NCB gNbSessNcb[7];
+NCB gNbSessNcb[NETBIOS_SESSION_COUNT];
 NCB gNbCtlNcb;
 u8 gNbLocalNum;
 tag_Anchor gNbRcvQueue;
 tag_Anchor gNbSndQueue;
 CRITICAL_SECTION gNbRcvLock;
-HANDLE gNbEvents[9];
+HANDLE gNbEvents[NETBIOS_THREAD_EVENT_COUNT];
 CRITICAL_SECTION gNbSndLock;
 u8 gNetbiosLana;

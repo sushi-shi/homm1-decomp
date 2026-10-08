@@ -4,7 +4,6 @@
 
 #include <BASE/bitmap.h>
 #include <BASE/bmap2.h>
-#include <BASE/BMAP2.h>
 
 #include <stddef.h>
 #include <stdint.h>

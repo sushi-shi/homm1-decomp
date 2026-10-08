@@ -81,11 +81,12 @@ enum OverlayManagerConstant {
 };
 
 enum OverlayControlId {
-OVERLAY_PREVIEW_BORDER = 0x26, OVERLAY_NEXT_CATEGORY_BUTTON = 0x28,
-                               OVERLAY_PREVIOUS_CATEGORY_BUTTON =
-                                   0x29 };
+    OVERLAY_PREVIEW_BORDER = 0x26,
+    OVERLAY_NEXT_CATEGORY_BUTTON = 0x28,
+    OVERLAY_PREVIOUS_CATEGORY_BUTTON = 0x29
+};
 
-                                       enum OverlayManagerLayout {
+enum OverlayManagerLayout {
     OVERLAY_PREVIEW_X = 509,
     OVERLAY_PREVIEW_Y = 227,
     OVERLAY_PREVIEW_WIDTH = 86,

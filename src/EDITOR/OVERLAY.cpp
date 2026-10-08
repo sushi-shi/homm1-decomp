@@ -84,7 +84,7 @@ i16 overlayManager::Open(i16 priority) {
         "escroll.icn",
         EDIT_SCROLL_LEFT_ARROW,
         EDIT_SCROLL_LEFT_ARROW_PRESSED,
-        0,
+        BUTTON_SELECT_NOTIFY,
         BUTTON_NO_HOTKEY,
         OVERLAY_PREVIOUS_CATEGORY_BUTTON,
         WIDGET_KIND_DEFAULT
@@ -97,7 +97,7 @@ i16 overlayManager::Open(i16 priority) {
         "escroll.icn",
         EDIT_SCROLL_RIGHT_ARROW,
         EDIT_SCROLL_RIGHT_ARROW_PRESSED,
-        0,
+        BUTTON_SELECT_NOTIFY,
         BUTTON_NO_HOTKEY,
         OVERLAY_NEXT_CATEGORY_BUTTON,
         WIDGET_KIND_DEFAULT

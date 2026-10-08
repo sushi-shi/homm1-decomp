@@ -123,7 +123,7 @@ void ShutdownComError(char* function) {
     ShutDown(message);
 }
 
-i16 com_init(u8 portNumber, i32 baudRate, i32 useDtr) {
+i16 com_init(u8 portNumber, i32 baudRate, i32 dsrFlowControl) {
     i32 err;
     i32 slot;
     BOOL rv;
@@ -173,7 +173,7 @@ i16 com_init(u8 portNumber, i32 baudRate, i32 useDtr) {
     }
     state.fParity = FALSE;
     state.fOutxCtsFlow = TRUE;
-    state.fOutxDsrFlow = useDtr != 0;
+    state.fOutxDsrFlow = dsrFlowControl != 0;
     state.fDtrControl = DTR_CONTROL_ENABLE;
     state.fInX = FALSE;
     state.fOutX = FALSE;
