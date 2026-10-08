@@ -2004,10 +2004,11 @@ void advManager::FizzleCenter(H1_ENUM_PARAM(EventFizzleType, i32) fizzleType) {
     WaitSample(fizzleSample);
 }
 
-#define worthFighting canWin // frame-slot spelling
+#define worthFighting canWin     // frame-slot spelling
+#define replacementSlot freeSlot // frame-slot spelling
 VA(0x00427cdd, 0x1005)
 void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i32 y) {
-    i32 freeSlot;
+    i32 replacementSlot;
     town* heroTown;
     playerData* ownerPlayerData;
     i32 purchaseValue;
@@ -2263,10 +2264,10 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                     isFree,
                     recruited,
                     purchaseValue,
-                    freeSlot
+                    replacementSlot
                 );
                 if (recruited > 0) {
-                    gGame->GiveArmy(&eventHero->m_army, recruitType, recruited, freeSlot);
+                    gGame->GiveArmy(&eventHero->m_army, recruitType, recruited, replacementSlot);
                     cell->m_objectMetadata -= recruited;
                     if (!isFree) {
                         GetMonsterCost(recruitType, troopCost);
@@ -2461,6 +2462,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
     gCurPlayerData = ownerPlayerData;
     CheckEndGame(false);
 }
+#undef replacementSlot
 #undef worthFighting
 
 VA(0x00428ce2, 0x17d)
@@ -2539,15 +2541,18 @@ void advManager::PlayerMonsterInteract(
 
 // Computer heroes absorb a willing stack (bit 7) they outmatch by
 // 7:4, otherwise fight it through philAI's quick combat.
+#define purchaseCount numToBuy      // frame-slot spelling
+#define purchaseValue purchaseWorth // frame-slot spelling
+#define replacementSlot bestSlot    // frame-slot spelling
 VA(0x00428e5f, 0x139)
 void advManager::ComputerMonsterInteract(
     class mapCell* cell,
     class hero* eventHero,
     b8* removeMonsterObject
 ) {
-    i32 numToBuy;
-    i32 purchaseWorth;
-    i32 bestSlot;
+    i32 purchaseCount;
+    i32 purchaseValue;
+    i32 replacementSlot;
     i32 won;
     i32 monsterCount;
 
@@ -2562,16 +2567,16 @@ void advManager::ComputerMonsterInteract(
             H1_ENUM_DECODE(CreatureType, cell->m_objectIndex),
             cell->m_objectMetadata & MONSTER_COUNT_MASK,
             true,
-            numToBuy,
-            purchaseWorth,
-            bestSlot
+            purchaseCount,
+            purchaseValue,
+            replacementSlot
         );
-        if (numToBuy > 0) {
+        if (purchaseCount > 0) {
             gGame->GiveArmy(
                 &eventHero->m_army,
                 H1_ENUM_DECODE(CreatureType, cell->m_objectIndex),
                 cell->m_objectMetadata & MONSTER_COUNT_MASK,
-                bestSlot
+                replacementSlot
             );
             *removeMonsterObject = true;
         }
@@ -2588,6 +2593,9 @@ void advManager::ComputerMonsterInteract(
             *removeMonsterObject = true;
     }
 }
+#undef purchaseCount
+#undef purchaseValue
+#undef replacementSlot
 
 #define secondHero secondHro   // frame-slot spelling
 #define firstHero attackingHro // frame-slot spelling

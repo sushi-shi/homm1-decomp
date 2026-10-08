@@ -1499,7 +1499,11 @@ void philAI::GetBestBuilding(town* townPointer, BHC& purchase, float& benefitCos
     benefitCost = bestBenefitCost;
 }
 
-#define slot n // frame-slot spelling
+#define slot n                  // frame-slot spelling
+#define attackChance attackOdds // frame-slot spelling
+#define lossRisk lossOdds       // frame-slot spelling
+#define attackWeeks weekCount   // frame-slot spelling
+#define dangerRating peril      // frame-slot spelling
 VA(0x0044b215, 0x268)
 void philAI::ValueOfBuyingCreature(
     town* townPointer,
@@ -1511,17 +1515,17 @@ void philAI::ValueOfBuyingCreature(
     hero* occupant;
     i32 weightedAttack;
     H1_ENUM_ARRAY(i32, buyCost, ResourceType, RESOURCE_COUNT);
-    float peril;
+    float dangerRating;
     // Counts breath-attack stacks.
     i32 breathStacks;
     i32 creatureRV;
     i32 costRV;
-    float attackOdds;
-    float lossOdds;
+    float attackChance;
+    float lossRisk;
     float dangerFactor;
     i32 attackStrength;
     i32 slot;
-    i32 weekCount;
+    i32 attackWeeks;
     i32 townSlot;
 
     breathStacks = 0;
@@ -1560,19 +1564,23 @@ void philAI::ValueOfBuyingCreature(
     LikelihoodOfEnemyAttacking(
         townPointer,
         NULL,
-        attackOdds,
-        lossOdds,
+        attackChance,
+        lossRisk,
         attackStrength,
         weightedAttack,
-        weekCount,
-        peril
+        attackWeeks,
+        dangerRating
     );
-    dangerFactor = peril + 0.96;
+    dangerFactor = dangerRating + 0.96;
     creatureRV = creatureRV * (dangerFactor * dangerFactor * dangerFactor);
     creatureRV = creatureRV * FutureDeflator(buyCost);
     resourceValue = creatureRV;
     benefitCost = static_cast<float>(resourceValue) / (static_cast<float>(costRV));
 }
+#undef attackChance
+#undef lossRisk
+#undef attackWeeks
+#undef dangerRating
 #undef slot
 
 VA(0x0044b47d, 0x188)
@@ -1873,8 +1881,10 @@ float philAI::TurnsToBuy(i32* const resources) {
     return maxT;
 }
 
-#define turnEndValue followWorth   // frame-slot spelling
-#define turnEndSafety followChance // frame-slot spelling
+#define turnEndValue followWorth                // frame-slot spelling
+#define turnEndSafety followChance              // frame-slot spelling
+#define guardSurvivalChance primaryEventChance  // frame-slot spelling
+#define destinationGuardChance guardEventChance // frame-slot spelling
 VA(0x0044bd6b, 0x493)
 i32 philAI::RVOfPosition(
     hero* aiHero,
@@ -1898,8 +1908,8 @@ i32 philAI::RVOfPosition(
     i32 triggerType;
     i32 destinationSafety;
     i32 turnEndSafety;
-    i32 guardEventChance;
-    i32 primaryEventChance;
+    i32 destinationGuardChance;
+    i32 guardSurvivalChance;
     i32 originSurvival;
     i32 monsterX;
     i32 startStrategicValue;
@@ -1910,8 +1920,8 @@ i32 philAI::RVOfPosition(
     triggerType = gAdvManager->GetCell(x, y)->m_triggerType;
     triggerObjectType = MAP_TRIGGER_OBJECT(triggerType);
     targetOdds = AI_CHANCE_CERTAIN;
-    primaryEventChance = AI_CHANCE_CERTAIN;
-    guardEventChance = AI_CHANCE_CERTAIN;
+    guardSurvivalChance = AI_CHANCE_CERTAIN;
+    destinationGuardChance = AI_CHANCE_CERTAIN;
     startStrategicValue =
         StrategicValueOfPosition(aiHero, aiHero->m_x, aiHero->m_y, false, &originSurvival);
     positionStrategicValue = StrategicValueOfPosition(aiHero, x, y, false, &destinationSafety);
@@ -1924,7 +1934,7 @@ i32 philAI::RVOfPosition(
             adjacentMonsterX,
             adjacentMonsterY,
             AI_EVENT_IMMEDIATE,
-            &primaryEventChance
+            &guardSurvivalChance
         );
     if (beyondTurnMobility) {
         turnEndValue = StrategicValueOfPosition(aiHero, turnEndX, turnEndY, true, &turnEndSafety);
@@ -1959,14 +1969,14 @@ i32 philAI::RVOfPosition(
                     monsterX,
                     monsterY,
                     AI_EVENT_IMMEDIATE,
-                    &guardEventChance
+                    &destinationGuardChance
                 );
                 if (targetEventValue < 0)
                     totalValue += targetEventValue;
-                if (primaryEventChance == AI_CHANCE_CERTAIN)
-                    primaryEventChance = guardEventChance;
+                if (guardSurvivalChance == AI_CHANCE_CERTAIN)
+                    guardSurvivalChance = destinationGuardChance;
                 else
-                    primaryEventChance = primaryEventChance * guardEventChance / 100;
+                    guardSurvivalChance = guardSurvivalChance * destinationGuardChance / 100;
                 break;
         }
     }
@@ -1986,12 +1996,12 @@ i32 philAI::RVOfPosition(
         targetEventValue = targetEventValue * turnEndSafety / 100;
         positionStrategicValue = positionStrategicValue * turnEndSafety / 100;
     }
-    if (primaryEventChance < AI_CHANCE_CERTAIN) {
+    if (guardSurvivalChance < AI_CHANCE_CERTAIN) {
         if (totalValue > 0)
-            totalValue =
-                (totalValue + targetEventValue + positionStrategicValue) * primaryEventChance / 100;
+            totalValue = (totalValue + targetEventValue + positionStrategicValue)
+                         * guardSurvivalChance / 100;
         else
-            totalValue += (targetEventValue + positionStrategicValue) * primaryEventChance / 100;
+            totalValue += (targetEventValue + positionStrategicValue) * guardSurvivalChance / 100;
     } else {
         totalValue += targetEventValue;
     }
@@ -2012,12 +2022,14 @@ i32 philAI::RVOfPosition(
         journeyTurns = journeyTurns * 1.2;
     totalValue = totalValue / (journeyTurns + 0.2);
     positionStrategicValue = positionStrategicValue * 2 / (1.0f + journeyTurns);
-    if (primaryEventChance == AI_CHANCE_CERTAIN)
+    if (guardSurvivalChance == AI_CHANCE_CERTAIN)
         totalValue += positionStrategicValue;
     if (aiHero->IsEmbarked() && triggerType == MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST))
         totalValue += 40;
     return totalValue;
 }
+#undef guardSurvivalChance
+#undef destinationGuardChance
 #undef turnEndValue
 #undef turnEndSafety
 
