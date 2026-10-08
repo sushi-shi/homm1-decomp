@@ -418,8 +418,8 @@ void townManager::SetCommandAndText(struct tag_message& message) {
             strcpy(m_statusText, gTownCommand[TOWN_TEXT_EMPTY_STATUS]);
             break;
         case TOWN_GARRISON_CREST_CONTROL:
-            strcpy(m_statusText, gTownCommand[TOWN_TEXT_GARRISON]);
-            m_command = TOWN_ARMY_COMMAND_GARRISON;
+            strcpy(m_statusText, gTownCommand[TOWN_TEXT_KINGDOM_OVERVIEW]);
+            m_command = TOWN_ARMY_COMMAND_KINGDOM_OVERVIEW;
             break;
         case TOWN_GARRISON_SLOT_FIRST:
         case TOWN_GARRISON_SLOT_FIRST + 1:
@@ -1058,7 +1058,7 @@ void townManager::DoCommand(H1_ENUM_PARAM(TownArmyCommand, i8) command) {
             RedrawTownScreen();
             gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);
             break;
-        case TOWN_ARMY_COMMAND_GARRISON:
+        case TOWN_ARMY_COMMAND_KINGDOM_OVERVIEW:
             gGame->Overview();
             RedrawTownScreen();
             gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);

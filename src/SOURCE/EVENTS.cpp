@@ -1818,7 +1818,7 @@ void advManager::GiveTakeArtifactStat(
             amount = 1;
             break;
         case ARTIFACT_BALLISTA:
-            theStat = HERO_PRIMARY_BALLISTA;
+            theStat = HERO_PRIMARY_SIEGE;
             amount = 3;
             break;
         case ARTIFACT_STEALTH_SHIELD:

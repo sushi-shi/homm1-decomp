@@ -135,3 +135,5 @@ member	strip	m_stripType	m_unusedStripType	the constructor stores it; nothing re
 param	advManager::DoCombat/SendHeroTownData/ReceiveHeroTownData	setupCombatX/setupCombatY	eventX/eventY	every caller passes the hero's event cell; DoCombat never hands them to SetupCombat (which takes x, y twice) and only relays them in the network combat record
 member	combatRemoteData	setupCombatX/setupCombatY	eventX/eventY	the same relayed event cell
 local-aliased	advManager::DoNetCombat	ourFoe/curPosX/theCellY/sx/curStartY/attackTroops/attackingHero	remotePlayer/combatX/combatY/eventX/eventY/firstArmy/firstHero	the ReceiveHeroTownData outputs it forwards to DoCombat and SendHeroTownData, named after those parameters
+enum	HeroPrimaryStat	HERO_PRIMARY_BALLISTA	HERO_PRIMARY_SIEGE	gStatNames[4] is "Siege Skill" and gStatDesc[4] the catapult shots per turn; GiveTakeArtifactStat raises it for the Ballista of Quickness
+enum	TownCommandText/TownArmyCommand	TOWN_TEXT_GARRISON/TOWN_ARMY_COMMAND_GARRISON	TOWN_TEXT_KINGDOM_OVERVIEW/TOWN_ARMY_COMMAND_KINGDOM_OVERVIEW	gTownCommand[10] reads "Kingdom Overview" and DoCommand runs game::Overview for it (the crest control)
