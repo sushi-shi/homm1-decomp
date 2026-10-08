@@ -31,7 +31,7 @@ H1_ENUM_CONST_BEGIN(GamePlayerConstant)
     GAME_TABLE_FREE = -1,
     GAME_RANDOM_SCAN_TRIES = 10000,
     GAME_PLAYER_HIGH_BIT_SHIFT = 4,
-    // game::m_randomArtifacts holds the hero id carrying each random
+    // game::m_artifactHolders holds the hero id carrying each regular
     // artifact (EVENTS pickup/trade), FREE when unused, and this past-the-
     // hero-table id once ProcessRandomObjects has placed it on the map.
     GAME_ARTIFACT_ON_MAP = 36

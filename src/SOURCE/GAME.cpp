@@ -526,7 +526,7 @@ i16 game::SaveGame(char* filename, b8 generateName) {
     write(outFile, m_townBuiltToday, sizeof(m_townBuiltToday));
     write(outFile, m_mines, sizeof(m_mines));
     write(outFile, m_mineOwners, sizeof(m_mineOwners));
-    write(outFile, m_randomArtifacts, sizeof(m_randomArtifacts));
+    write(outFile, m_artifactHolders, sizeof(m_artifactHolders));
     write(outFile, m_boats, sizeof(m_boats));
     write(outFile, m_boatSlots, sizeof(m_boatSlots));
     write(outFile, m_obeliskVisitors, sizeof(m_obeliskVisitors));
@@ -628,7 +628,7 @@ i16 game::LoadGame(char* filename, b32 origData, b32 remoteGame) {
     read(theLoadHandle, m_townBuiltToday, sizeof(m_townBuiltToday));
     read(theLoadHandle, m_mines, sizeof(m_mines));
     read(theLoadHandle, m_mineOwners, sizeof(m_mineOwners));
-    read(theLoadHandle, m_randomArtifacts, sizeof(m_randomArtifacts));
+    read(theLoadHandle, m_artifactHolders, sizeof(m_artifactHolders));
     read(theLoadHandle, m_boats, sizeof(m_boats));
     read(theLoadHandle, m_boatSlots, sizeof(m_boatSlots));
     read(theLoadHandle, m_obeliskVisitors, sizeof(m_obeliskVisitors));
@@ -1852,7 +1852,7 @@ i16 game::LoadMap(char* filename) {
             m_mines[i].type = H1_ENUM_DECODE(ResourceType, type);
         }
     }
-    read(handle, m_randomArtifacts, sizeof(m_randomArtifacts));
+    read(handle, m_artifactHolders, sizeof(m_artifactHolders));
     READ_FILE_VALUE(handle, m_obeliskCount);
     read(handle, m_mapSounds, sizeof(m_mapSounds));
     if (theVersion >= MAP_EXTRA_VERSION) {
@@ -3559,7 +3559,7 @@ H1_ENUM_RETURN(ArtifactType, i8) game::GetRandomArtifactId(void) {
     freeSlot = H1_ENUM_DECODE(
         ArtifactType,
         Scan(
-            m_randomArtifacts,
+            m_artifactHolders,
             H1_ENUM_ENCODE(ArtifactType, ARTIFACT_REGULAR_FIRST),
             ARTIFACT_REGULAR_END - ARTIFACT_REGULAR_FIRST
         )
@@ -3570,7 +3570,7 @@ H1_ENUM_RETURN(ArtifactType, i8) game::GetRandomArtifactId(void) {
     artifact = H1_ENUM_DECODE(
         ArtifactType,
         RandomScan(
-            m_randomArtifacts,
+            m_artifactHolders,
             H1_ENUM_ENCODE(ArtifactType, ARTIFACT_REGULAR_FIRST),
             ARTIFACT_REGULAR_END - ARTIFACT_REGULAR_FIRST,
             H1_ENUM_ENCODE(ArtifactType, ARTIFACT_REGULAR_END)
@@ -3721,7 +3721,7 @@ void game::ProcessRandomObjects(b32 castlesOnly) {
                         cellPtrItem->m_triggerType = MAP_EVENT_TRIGGER(MAP_OBJECT_ARTIFACT);
                         cellPtrItem->m_objectIndex =
                             H1_ENUM_ENCODE(ArtifactType, GetRandomArtifactId());
-                        m_randomArtifacts
+                        m_artifactHolders
                             [H1_ENUM_DECODE(ArtifactType, cellPtrItem->m_objectIndex)] =
                                 GAME_ARTIFACT_ON_MAP;
                         break;

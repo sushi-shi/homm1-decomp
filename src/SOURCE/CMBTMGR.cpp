@@ -50,8 +50,8 @@ combatManager::combatManager(void) {
     m_drawRightToLeft = 0;
     m_unused6f9 = -1;
     m_currentSide = COMBAT_DEFENDER_SIDE;
-    m_limitCreatureHex = 0;
-    m_limitCreature = false;
+    m_selectorHex = 0;
+    m_selectorVisible = false;
     m_showArmyQuantities = true;
     m_gridUpdateRow = 0;
     m_currentCommand = COMBAT_MESSAGE_COMMAND_DEFAULT;
@@ -106,16 +106,16 @@ void combatManager::SetupCombat(
     town* defenderTown,
     hero* defenderHero,
     armyGroup* defenderGroup,
-    i32 combatX,
-    i32 combatY,
+    i32 battleSiteX,
+    i32 battleSiteY,
     i32 randomSeed
 ) {
     H1_ENUM_LOCAL(CombatSide, i32) i;
 
     gSavedSeed = randomSeed;
-    SRand(combatX * 100 + combatY);
-    m_combatX = combatX;
-    m_combatY = combatY;
+    SRand(battleSiteX * 100 + battleSiteY);
+    m_battleSiteX = battleSiteX;
+    m_battleSiteY = battleSiteY;
     if (mapX >= 0 && mapY >= 0)
         m_battlefieldCell = gAdvManager->GetCell(mapX, mapY);
     else
@@ -218,14 +218,14 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) combatManager::Open(i16 priority) {
     LoadIcons();
     LoadArmies();
     m_selectedHex = ARMY_HEX_INVALID;
-    m_limitCreatureHex = ARMY_HEX_INVALID;
+    m_selectorHex = ARMY_HEX_INVALID;
     m_previousCommand = COMBAT_INVALID_COMMAND;
     GenerateMap();
     gRetreatWin = false;
     gCombatSurrender = false;
     m_sideSurrendered[COMBAT_DEFENDER_SIDE] = 0;
     m_sideSurrendered[COMBAT_ATTACKER_SIDE] = 0;
-    m_limitCreature = true;
+    m_selectorVisible = true;
     SetDrawRightToLeft(0);
     m_gridUpdateRow = 0;
     m_combatWindowOpen = true;
@@ -237,12 +237,9 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) combatManager::Open(i16 priority) {
     gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, m_combatPalette);
     gLimitedCombatUpdatePalette = true;
     gMouseManager->NewUpdate(true);
-    gMouseManager->WarpPointer(
-        m_hexCells[m_limitCreatureHex].m_x,
-        m_hexCells[m_limitCreatureHex].m_y - 50
-    );
+    gMouseManager->WarpPointer(m_hexCells[m_selectorHex].m_x, m_hexCells[m_selectorHex].m_y - 50);
     gMouseManager->ReallyShowPointer();
-    m_gridSelectionDisabled = false;
+    m_autoCombat = false;
     WaitSample(sample);
     musicList[0] = MUSIC_TRACK_BATTLE_2;
     musicList[1] = MUSIC_TRACK_BATTLE_3;
@@ -545,8 +542,8 @@ i8 combatManager::MoreTreesNear(void) {
     H1_ENUM_LOCAL(MapDirection, i16) dir;
 
     memset(nearbyTypeGrid, -1, sizeof(nearbyTypeGrid));
-    originX = m_combatX;
-    originY = m_combatY;
+    originX = m_battleSiteX;
+    originY = m_battleSiteY;
     for (radius = 0; radius < 3; radius++) {
         for (dir = MAP_DIRECTION_FIRST; dir < MAP_DIRECTION_COUNT; dir++) {
             xPos = originX + gNormalDirTable[H1_ENUM_ENCODE(MapDirection, dir)].x * radius;

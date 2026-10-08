@@ -474,7 +474,7 @@ rva	name	provenance
 0x0004520f	_nb_sess	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency
 0x000456ff	_nb_stat	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency
 0x00045712	?nb_thr_ctl@@YAXXZ	Buka TU-order, instruction/call or constructor-vtable identity review (identity only, strict body/reference comparison unchanged).
-0x0004592e	?nb_add_name@@YAXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency
+0x0004592e	?nb_announce_name@@YAXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency
 0x000459e3	?nb_add_name_done@@YGXPAU_NCB@@@Z	Buka TU-order, instruction/call or constructor-vtable identity review (identity only, strict body/reference comparison unchanged).
 0x00045b79	?nb_recv_any@@YAGH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency
 0x00045c27	?nb_recv_any_done@@YGXPAU_NCB@@@Z	Buka address-taken callback in complete-body-proven caller

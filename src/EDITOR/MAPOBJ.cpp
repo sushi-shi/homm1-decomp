@@ -79,7 +79,7 @@ void editManager::GenerateRandomMap(void) {
         return;
     }
     if (gSaveUnseen)
-        gGeneratingMaps = true;
+        gGeneratingUnseen = true;
     NewMap(true);
     done = false;
     attempt = 0;
@@ -152,7 +152,7 @@ void editManager::GenerateRandomMap(void) {
         done = HasEnoughCastles();
         if (!done)
             continue;
-        if (gGeneratingMaps) {
+        if (gGeneratingUnseen) {
             ShowStatusText(localization::Tr("editor.random.status.save_prompt"));
             if (MapDetailsDialog(true)
                 && !H1_ENUM_ENCODE(BaseManagerStatus, SaveMap(m_mapFileName))) {
@@ -160,7 +160,7 @@ void editManager::GenerateRandomMap(void) {
                 NormalDialog(gText, NORMAL_DIALOG_TYPE_OK);
             }
             ResetArea(0, 0, MAP_CELL_GRID_SIZE, MAP_CELL_GRID_SIZE);
-            gGeneratingMaps = false;
+            gGeneratingUnseen = false;
         }
     }
     DrawMap();

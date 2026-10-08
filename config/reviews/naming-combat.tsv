@@ -535,3 +535,11 @@ member	combatManager	m_unknown6d9	m_unused6d9	constructor clears it; no reader i
 member	combatManager	m_unknown6db	m_unused6db	constructor clears it; no reader in the Windows or DOS images
 member	combatManager	m_unknown6e8	m_unused6e8	constructor clears it; no reader in the Windows or DOS images
 member	combatManager	m_unknown6f9	m_unused6f9	constructor sets -1; no reader in the Windows or DOS images
+member	combatManager	m_limitCreature/m_limitCreatureHex	m_selectorVisible/m_selectorHex	CheckChangeSelector moves the current stack's outline: army::DrawToBuffer fills the stack on m_selectorHex while the flag is set; MoveAttack hides it while the stack moves
+enum	ArmyDrawingConstant	ARMY_LIMIT_OUTLINE_COLOR	ARMY_SELECTOR_OUTLINE_COLOR	the selector outline's palette index
+enum	CombatHexDirection	COMBAT_DIRECTION_WIDE_WEST/COMBAT_DIRECTION_WIDE_EAST	COMBAT_DIRECTION_WIDE_NORTH/COMBAT_DIRECTION_WIDE_SOUTH	GetAdjacentCellIndex, GetAdjacentCellIndexNoArmy, ValidMove and the attack-direction picker map 6 to the northern (NW/NE) and 7 to the southern (SW/SE) neighbour
+enum	CombatDirectionMask	COMBAT_DIRECTION_BIT_WIDE_WEST/COMBAT_DIRECTION_BIT_WIDE_EAST	COMBAT_DIRECTION_BIT_WIDE_NORTH/COMBAT_DIRECTION_BIT_WIDE_SOUTH	the bits of the two directions above
+member	combatManager	m_gridSelectionDisabled	m_autoCombat	set by widget 2, whose help is gCombatHelp[COMBAT_HELP_AUTO_COMBAT] "Auto Combat"; while set Main hands the player's side to CheckGetAIMove and hides the pointer until a key or click
+enum	CombatControlId	COMBAT_CONTROL_DISABLE_SELECTION	COMBAT_CONTROL_AUTO_COMBAT	the Auto Combat button
+member	combatManager	m_combatX/m_combatY	m_battleSiteX/m_battleSiteY	the battle's adventure-map cell (DoCombat passes the event x, y): seeds SRand and centres MoreTreesNear's terrain scan
+param	combatManager::SetupCombat	combatX/combatY	battleSiteX/battleSiteY	the same cell

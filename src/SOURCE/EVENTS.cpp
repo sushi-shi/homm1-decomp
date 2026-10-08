@@ -1431,7 +1431,7 @@ i16 advManager::GiveArtifact(class hero* eventHero, H1_ENUM_PARAM(ArtifactType, 
     if (slot == HERO_ARTIFACT_SLOT_COUNT)
         return GIVE_ARTIFACT_NO_SLOT;
     eventHero->m_artifacts[slot] = artifact;
-    gGame->m_randomArtifacts[artifact] = eventHero->m_id;
+    gGame->m_artifactHolders[artifact] = eventHero->m_id;
     GiveTakeArtifactStat(eventHero, artifact, EVENT_ARTIFACT_GIVE);
     return slot;
 }
@@ -1904,7 +1904,7 @@ void advManager::TransferArtifacts(class hero* sourceHero, class hero* destHero)
                                 H1_ENUM_ENCODE(ArtifactType, sourceHero->m_artifacts[j])
                             );
                         }
-                        gGame->m_randomArtifacts[sourceHero->m_artifacts[j]] = HERO_ID_NONE;
+                        gGame->m_artifactHolders[sourceHero->m_artifacts[j]] = HERO_ID_NONE;
                     } else {
                         GiveTakeArtifactStat(
                             destHero,
@@ -1912,7 +1912,7 @@ void advManager::TransferArtifacts(class hero* sourceHero, class hero* destHero)
                             EVENT_ARTIFACT_GIVE
                         );
                         destHero->m_artifacts[i] = sourceHero->m_artifacts[j];
-                        gGame->m_randomArtifacts[sourceHero->m_artifacts[j]] = destHero->m_id;
+                        gGame->m_artifactHolders[sourceHero->m_artifacts[j]] = destHero->m_id;
                     }
                     GiveTakeArtifactStat(
                         sourceHero,

@@ -46,7 +46,7 @@ public:
     heroWindow* m_windowListHead;
     heroWindow* m_windowListTail;
     heroWindow* m_focusWindow;
-    heroWindow* m_activeWindow;
+    heroWindow* m_previousFocusWindow;
     // Cleared by the constructor; no code of any build (Windows or DOS) reads
     // them.
     i8 m_unused40;
@@ -55,7 +55,7 @@ public:
     bitmap* m_fizzleSource;
     bitmap* m_fizzleWork;
     i16 m_screenshotIndex;
-    i16 m_updateFlags;
+    i16 m_colorCycling;
     i32 m_dialogResult;
     i8 m_lastHoverId;
 
@@ -110,7 +110,8 @@ public:
     (gWindowManager->UpdateScreenRegion((left), (top), (right) - (left) + 1, (bottom) - (top) + 1))
 extern i8 gCyclePal[PALETTE_CYCLE_BYTES];
 void CycleColors(void);
-extern i8 gFadeSavedUpdate;
+#define gFadeSavedColorCycling gFadeSavedUpdate // spelling fixes .bss order
+extern i8 gFadeSavedColorCycling;
 
 // FizzleForward's colour-cycle transition: eight CCYCLE tables of 64K
 // word-indexed lookups.

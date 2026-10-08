@@ -376,20 +376,22 @@ void CloseSmackers() {
     ShutdownSmackSound();
 }
 
+#define savedColorCycling savedUpdateFlags // frame-slot spelling
 VA(0x00458cf4, 0xa9)
 i32 PlaySmacker(H1_ENUM_PARAM(SmackVideo, i32) smackNumber) {
     i8 savedPalette[PALETTE_DATA_SIZE];
-    i32 savedUpdateFlags;
+    i32 savedColorCycling;
     gInSmacker = true;
     gSmackEnded = false;
     memcpy(savedPalette, gBufferPalette->m_data, PALETTE_DATA_SIZE);
-    savedUpdateFlags = gWindowManager->m_updateFlags;
-    gWindowManager->m_updateFlags = 0;
+    savedColorCycling = gWindowManager->m_colorCycling;
+    gWindowManager->m_colorCycling = 0;
     StopMusic();
     gMovieId = smackNumber;
     SmackMain();
     memcpy(gBufferPalette->m_data, savedPalette, PALETTE_DATA_SIZE);
-    gWindowManager->m_updateFlags = savedUpdateFlags;
+    gWindowManager->m_colorCycling = savedColorCycling;
     gInSmacker = false;
     return gSmackEnded;
 }
+#undef savedColorCycling

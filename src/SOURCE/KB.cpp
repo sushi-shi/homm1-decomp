@@ -321,7 +321,7 @@ i32 oldmain(void) {
     gPalette = gResourceManager->GetPalette("kb.pal");
     PostprocessPalette(gPalette->m_data);
     SetPalette(gPalette->m_data, true);
-    gWindowManager->m_updateFlags = 1;
+    gWindowManager->m_colorCycling = 1;
     gPhilAI->m_debugFont = gResourceManager->GetFont("smalfont.fnt");
     if (gShowIntro) {
         FillBitmapArea(
@@ -372,7 +372,7 @@ i32 oldmain(void) {
         }
         backdropLoaded = true;
         if (gGameCommand != MAIN_MENU_QUIT)
-            gWindowManager->m_updateFlags = 1;
+            gWindowManager->m_colorCycling = 1;
         gCampaignChoice = CAMPAIGN_NONE;
         gMouseManager->ReallyShowPointer();
 
@@ -581,7 +581,7 @@ i32 oldmain(void) {
                 gWindowManager
                     ->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
                 gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, gPalette);
-                gWindowManager->m_updateFlags = 1;
+                gWindowManager->m_colorCycling = 1;
                 backdropLoaded = true;
             } else {
                 ShowCongrats();

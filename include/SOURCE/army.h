@@ -252,12 +252,12 @@ extern i16 gCurLoadedSpellEffect;
 // DamageEnemy flags a genie halving the target stack.
 extern b8 gGenieHalf;
 // DrawToBuffer's outline colours (palette indices FillToBuffer paints the
-// sprite with): the stack m_limitCreature highlights, a beneficial spell
+// sprite with): the stack the selector outlines, a beneficial spell
 // (haste, bless, protection, anti-magic) and any other spell. SpecialAttack
 // saves a MISSILE_PATCH_WIDTH x MISSILE_PATCH_HEIGHT screen patch centred on
 // the missile (half sizes either side) and restores it each step.
 H1_ENUM_CONST_BEGIN(ArmyDrawingConstant)
-    ARMY_LIMIT_OUTLINE_COLOR = 0xe4,
+    ARMY_SELECTOR_OUTLINE_COLOR = 0xe4,
     ARMY_GOOD_SPELL_OUTLINE_COLOR = 0xf7,
     ARMY_BAD_SPELL_OUTLINE_COLOR = 0xe0,
     ARMY_MISSILE_PATCH_WIDTH = 70,

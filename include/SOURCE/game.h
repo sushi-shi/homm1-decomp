@@ -334,7 +334,7 @@ public:
     // ClaimMine mirrors each mine owner into this byte array.
     i8 m_mineOwners[GAME_MINE_COUNT];
     // GetRandomArtifactId scans artifacts 4..36 for a free (-1) entry.
-    H1_ENUM_ARRAY(i8, m_randomArtifacts, ArtifactType, ARTIFACT_REGULAR_END);
+    H1_ENUM_ARRAY(i8, m_artifactHolders, ArtifactType, ARTIFACT_REGULAR_END);
     boatRecord m_boats[GAME_BOAT_COUNT];
     i8 m_boatSlots[GAME_BOAT_COUNT];
     // Obelisk events test and set the visiting player bit, one byte per obelisk.

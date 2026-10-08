@@ -475,7 +475,7 @@ rva	name
 0x0004520f	_nb_sess
 0x000456ff	_nb_stat
 0x00045712	?nb_thr_ctl@@YAXXZ
-0x0004592e	?nb_add_name@@YAXXZ
+0x0004592e	?nb_announce_name@@YAXXZ
 0x000459e3	?nb_add_name_done@@YGXPAU_NCB@@@Z
 0x00045b79	?nb_recv_any@@YAGH@Z
 0x00045c27	?nb_recv_any_done@@YGXPAU_NCB@@@Z

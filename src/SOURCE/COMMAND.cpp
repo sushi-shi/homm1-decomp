@@ -77,12 +77,12 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) combatManager::Main(struct tag_messag
         if (CheckWin(&message))
             return MESSAGE_DISPATCH_FORWARD;
     }
-    if (m_gridSelectionDisabled) {
+    if (m_autoCombat) {
         while (message.type != MESSAGE_KEY_DOWN && message.type != MESSAGE_LEFT_BUTTON_DOWN
                && message.type != MESSAGE_RIGHT_BUTTON_DOWN && message.type != MESSAGE_NONE)
             message = gInputManager->GetEvent();
         if (message.type != MESSAGE_NONE) {
-            m_gridSelectionDisabled = false;
+            m_autoCombat = false;
             gMouseManager->ReallyShowPointer();
         }
     }
@@ -90,7 +90,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) combatManager::Main(struct tag_messag
 processAction:
     if (gNextAction == ACTION_NONE) {
         if (m_playerId[m_currentSide] == GAME_PLAYER_NONE
-            || !gThisNetHumanPlayer[m_playerId[m_currentSide]] || m_gridSelectionDisabled)
+            || !gThisNetHumanPlayer[m_playerId[m_currentSide]] || m_autoCombat)
             CheckGetAIMove();
         else
             result = ProcessCombatMsg(message);
@@ -139,20 +139,20 @@ void combatManager::SetCombatDirections(i32 targetHex) {
     CLEAR_ARMY_TARGET(currentArmy);
     enemyArmy = &m_armies[enemySide][targetIndex];
     for (dir = COMBAT_DIRECTION_ADJACENT_FIRST; dir < COMBAT_DIRECTION_COUNT; dir++) {
-        if (dir == COMBAT_DIRECTION_WIDE_WEST || dir == COMBAT_DIRECTION_WIDE_EAST) {
+        if (dir == COMBAT_DIRECTION_WIDE_NORTH || dir == COMBAT_DIRECTION_WIDE_SOUTH) {
             if (currentArmy->m_stats.attributes & MONSTER_FLAGS_WIDE) {
                 if (currentArmy->m_facing == ARMY_FACING_RIGHT) {
-                    if (dir == COMBAT_DIRECTION_WIDE_WEST)
+                    if (dir == COMBAT_DIRECTION_WIDE_NORTH)
                         directionHexes[dir] =
                             gCombatAdjacency[targetHex][COMBAT_DIRECTION_NORTHWEST];
-                    if (dir == COMBAT_DIRECTION_WIDE_EAST)
+                    if (dir == COMBAT_DIRECTION_WIDE_SOUTH)
                         directionHexes[dir] =
                             gCombatAdjacency[targetHex][COMBAT_DIRECTION_SOUTHWEST];
                 } else {
-                    if (dir == COMBAT_DIRECTION_WIDE_WEST)
+                    if (dir == COMBAT_DIRECTION_WIDE_NORTH)
                         directionHexes[dir] =
                             gCombatAdjacency[targetHex][COMBAT_DIRECTION_NORTHEAST];
-                    if (dir == COMBAT_DIRECTION_WIDE_EAST)
+                    if (dir == COMBAT_DIRECTION_WIDE_SOUTH)
                         directionHexes[dir] =
                             gCombatAdjacency[targetHex][COMBAT_DIRECTION_SOUTHEAST];
                 }
@@ -215,30 +215,30 @@ void combatManager::SetCombatDirections(i32 targetHex) {
             m_validDirectionCount++;
     }
     if (!m_validDirectionCount)
-        pathValid[COMBAT_DIRECTION_WIDE_WEST] = true;
+        pathValid[COMBAT_DIRECTION_WIDE_NORTH] = true;
     memset(m_directionMap, -1, sizeof(m_directionMap));
     for (dir = COMBAT_DIRECTION_ADJACENT_FIRST; dir < COMBAT_DIRECTION_COUNT; dir++) {
         attackDirection = dir;
         if (dir < COMBAT_DIRECTION_ADJACENT_COUNT)
             approachDir = COMBAT_OPPOSITE_ADJACENT(dir);
         else
-            approachDir = dir == COMBAT_DIRECTION_WIDE_WEST
-                              ? H1_ENUM_CAST(CombatHexDirection, i8, COMBAT_DIRECTION_WIDE_EAST)
-                              : H1_ENUM_CAST(CombatHexDirection, i8, COMBAT_DIRECTION_WIDE_WEST);
+            approachDir = dir == COMBAT_DIRECTION_WIDE_NORTH
+                              ? H1_ENUM_CAST(CombatHexDirection, i8, COMBAT_DIRECTION_WIDE_SOUTH)
+                              : H1_ENUM_CAST(CombatHexDirection, i8, COMBAT_DIRECTION_WIDE_NORTH);
         if (pathValid[approachDir]) {
             if (enemyArmy->m_stats.attributes & MONSTER_FLAGS_WIDE) {
                 if (dir == COMBAT_DIRECTION_NORTHEAST
                     && HEX_HAS_OCCUPANT(m_hexCells[targetHex - 1], enemySide, targetIndex))
-                    attackDirection = COMBAT_DIRECTION_WIDE_WEST;
+                    attackDirection = COMBAT_DIRECTION_WIDE_NORTH;
                 else if (dir == COMBAT_DIRECTION_NORTHWEST
                          && HEX_HAS_OCCUPANT(m_hexCells[targetHex + 1], enemySide, targetIndex))
-                    attackDirection = COMBAT_DIRECTION_WIDE_WEST;
+                    attackDirection = COMBAT_DIRECTION_WIDE_NORTH;
                 else if (dir == COMBAT_DIRECTION_SOUTHEAST
                          && HEX_HAS_OCCUPANT(m_hexCells[targetHex - 1], enemySide, targetIndex))
-                    attackDirection = COMBAT_DIRECTION_WIDE_EAST;
+                    attackDirection = COMBAT_DIRECTION_WIDE_SOUTH;
                 else if (dir == COMBAT_DIRECTION_SOUTHWEST
                          && HEX_HAS_OCCUPANT(m_hexCells[targetHex + 1], enemySide, targetIndex))
-                    attackDirection = COMBAT_DIRECTION_WIDE_EAST;
+                    attackDirection = COMBAT_DIRECTION_WIDE_SOUTH;
             }
             if (dir < COMBAT_DIRECTION_ADJACENT_COUNT)
                 memset(
@@ -248,7 +248,7 @@ void combatManager::SetCombatDirections(i32 targetHex) {
                     H1_ENUM_ENCODE(CombatHexDirection, attackDirection),
                     COMBAT_POINTER_SECTORS_PER_DIRECTION
                 );
-            else if (dir == COMBAT_DIRECTION_WIDE_WEST) {
+            else if (dir == COMBAT_DIRECTION_WIDE_NORTH) {
                 m_directionMap[11] = H1_ENUM_ENCODE(CombatHexDirection, attackDirection);
                 m_directionMap[12] = H1_ENUM_ENCODE(CombatHexDirection, attackDirection);
                 m_directionMap[13] = H1_ENUM_ENCODE(CombatHexDirection, attackDirection);
@@ -306,7 +306,7 @@ void combatManager::CheckSetMouseDirection(i32 mouseX, i32 mouseY, i32 targetHex
     army* enemyArmy;
     army* movingUnit;
 
-    if (m_gridSelectionDisabled)
+    if (m_autoCombat)
         return;
     if (m_validDirectionCount <= 1 && m_mouseDirection >= COMBAT_DIRECTION_FIRST)
         return;
@@ -364,17 +364,18 @@ void combatManager::CheckSetMouseDirection(i32 mouseX, i32 mouseY, i32 targetHex
     alternateDirection = COMBAT_DIRECTION_INVALID;
     movingUnit = &m_armies[m_currentSide][m_currentArmyIndex];
     enemyArmy = &m_armies[movingUnit->m_targetSide][movingUnit->m_targetIndex];
-    if (hexDir == COMBAT_DIRECTION_WIDE_WEST || hexDir == COMBAT_DIRECTION_WIDE_EAST) {
+    if (hexDir == COMBAT_DIRECTION_WIDE_NORTH || hexDir == COMBAT_DIRECTION_WIDE_SOUTH) {
         if (movingUnit->m_stats.attributes & MONSTER_FLAGS_WIDE) {
-            if (movingUnit->m_facing == ARMY_FACING_RIGHT && hexDir == COMBAT_DIRECTION_WIDE_WEST) {
+            if (movingUnit->m_facing == ARMY_FACING_RIGHT
+                && hexDir == COMBAT_DIRECTION_WIDE_NORTH) {
                 hexDir = COMBAT_DIRECTION_NORTHWEST;
                 alternateDirection = COMBAT_DIRECTION_NORTHEAST;
             } else if (movingUnit->m_facing == ARMY_FACING_RIGHT
-                       && hexDir == COMBAT_DIRECTION_WIDE_EAST) {
+                       && hexDir == COMBAT_DIRECTION_WIDE_SOUTH) {
                 hexDir = COMBAT_DIRECTION_SOUTHWEST;
                 alternateDirection = COMBAT_DIRECTION_SOUTHEAST;
             } else if (movingUnit->m_facing == ARMY_FACING_LEFT
-                       && hexDir == COMBAT_DIRECTION_WIDE_WEST) {
+                       && hexDir == COMBAT_DIRECTION_WIDE_NORTH) {
                 hexDir = COMBAT_DIRECTION_NORTHEAST;
                 alternateDirection = COMBAT_DIRECTION_NORTHWEST;
             } else {
@@ -388,7 +389,7 @@ void combatManager::CheckSetMouseDirection(i32 mouseX, i32 mouseY, i32 targetHex
                     movingUnit->m_targetIndex
                 ))
                 targetHex--;
-            if (hexDir == COMBAT_DIRECTION_WIDE_WEST)
+            if (hexDir == COMBAT_DIRECTION_WIDE_NORTH)
                 hexDir = COMBAT_DIRECTION_NORTHEAST;
             else
                 hexDir = COMBAT_DIRECTION_SOUTHEAST;
@@ -415,8 +416,8 @@ void combatManager::CheckSetMouseDirection(i32 mouseX, i32 mouseY, i32 targetHex
         rearHex = m_directionTargetHex + 1;
     if (!ValidHexToStandOn(m_directionTargetHex) || !ValidHexToStandOn(rearHex)) {
         if ((movingUnit->m_stats.attributes & MONSTER_FLAGS_WIDE)
-            && (directionCopy == COMBAT_DIRECTION_WIDE_WEST
-                || directionCopy == COMBAT_DIRECTION_WIDE_EAST)) {
+            && (directionCopy == COMBAT_DIRECTION_WIDE_NORTH
+                || directionCopy == COMBAT_DIRECTION_WIDE_SOUTH)) {
             if (movingUnit->m_facing == ARMY_FACING_RIGHT)
                 m_directionTargetHex = m_directionTargetHex + 1;
             else
@@ -458,7 +459,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i32) combatManager::ProcessCombatMsg(struc
         case MESSAGE_WIDGET:
             switch (message.command) {
                 case WIDGET_COMMAND_HOVER:
-                    if (m_gridSelectionDisabled)
+                    if (m_autoCombat)
                         break;
                     switch (message.id) {
                         case COMBAT_CONTROL_FIELD:
@@ -509,9 +510,9 @@ H1_ENUM_RETURN(MessageDispatchResult, i32) combatManager::ProcessCombatMsg(struc
                     break;
                 case WIDGET_NOTIFY_DESELECT:
                     switch (message.id) {
-                        case COMBAT_CONTROL_DISABLE_SELECTION:
+                        case COMBAT_CONTROL_AUTO_COMBAT:
                             if (!(message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)) {
-                                m_gridSelectionDisabled = true;
+                                m_autoCombat = true;
                                 gMouseManager->ReallyHidePointer();
                             }
                             break;
@@ -796,7 +797,7 @@ void combatManager::DoCommand(H1_ENUM_PARAM(CombatMessageCommand, i8) command) {
         case COMBAT_MESSAGE_COMMAND_ATTACK:
             gNextActionGridIndex = m_selectedHex;
             if (m_playerId[m_currentSide] == GAME_PLAYER_NONE
-                || !gHumanPlayer[m_playerId[m_currentSide]] || m_gridSelectionDisabled) {
+                || !gHumanPlayer[m_playerId[m_currentSide]] || m_autoCombat) {
                 gNextAction = ACTION_MOVE;
                 gNextActionExtra = ARMY_HEX_INVALID;
             } else {
@@ -1430,13 +1431,10 @@ void combatManager::CheckChangeSelector(void) {
     army* currentArmy;
 
     currentArmy = &m_armies[m_currentSide][m_currentArmyIndex];
-    if (!m_limitCreature || m_limitCreatureHex != currentArmy->m_hex) {
-        UpdateGrid(
-            m_limitCreatureHex < currentArmy->m_hex ? m_limitCreatureHex : currentArmy->m_hex,
-            1
-        );
-        m_limitCreatureHex = currentArmy->m_hex;
-        m_limitCreature = true;
+    if (!m_selectorVisible || m_selectorHex != currentArmy->m_hex) {
+        UpdateGrid(m_selectorHex < currentArmy->m_hex ? m_selectorHex : currentArmy->m_hex, 1);
+        m_selectorHex = currentArmy->m_hex;
+        m_selectorVisible = true;
         DrawFrame(true);
     }
 }
@@ -1607,8 +1605,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) combatManager::ProcessNextAction(stru
         GetNextArmy(true);
     }
     CheckChangeSelector();
-    if (gThisNetHasControl && !m_gridSelectionDisabled
-        && m_playerId[m_currentSide] != GAME_PLAYER_NONE
+    if (gThisNetHasControl && !m_autoCombat && m_playerId[m_currentSide] != GAME_PLAYER_NONE
         && gThisNetHumanPlayer[m_playerId[m_currentSide]])
         gMouseManager->ReallyShowPointer();
     else

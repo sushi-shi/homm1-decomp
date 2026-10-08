@@ -156,3 +156,7 @@ member	mouseManager	m_unknown51	m_drawIntoScreen	DOS advManager::UpdateScreen se
 member	mouseManager	m_unused52	m_bandFlushed/m_bandSplitY/m_cursorWidth/m_cursorHeight	DOS UpdateScreen's band flag and split line and the cursor frame size the DOS cursor code reads; no Windows instruction addresses them
 member	heroWindowManager	m_unknown40	m_unused40	constructor clears it; no reader in the Windows, editor or DOS images
 member	heroWindowManager	m_unknown41	m_unused41	constructor clears it; no reader in the Windows, editor or DOS images
+member	heroWindowManager	m_updateFlags	m_colorCycling	CycleColors returns while it is 0; fades, fizzles and PlaySmacker save, zero and restore it; KB startup and the Armageddon effect switch it
+global	BASE/WINMGR	gFadeSavedUpdate	gFadeSavedColorCycling	FadeScreen's saved copy across a fade out/in (storage spelling kept through the .bss alias)
+local-aliased	heroWindowManager::FizzleForward, PlaySmacker	savedUpdateFlags	savedColorCycling	the saved m_colorCycling
+member	heroWindowManager	m_activeWindow	m_previousFocusWindow	AddWindow and UpdateHoverWindow copy the focus window into it before the new one takes focus; RemoveWindow gives focus back to it

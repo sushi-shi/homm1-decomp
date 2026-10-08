@@ -39,7 +39,7 @@ void CycleColors(void) {
         return;
     if (gWindowManager->m_active != 1)
         return;
-    if (gWindowManager->m_updateFlags == 0)
+    if (gWindowManager->m_colorCycling == 0)
         return;
 
     memcpy(savedColor, gCyclePal + 0, PALETTE_GRAPHICS_CHANNELS);
@@ -93,7 +93,7 @@ void CycleColors(void) {
 VA(0x0046a14c, 0x9f)
 heroWindowManager::heroWindowManager(void) : baseManager() {
     m_active = 0;
-    m_activeWindow = NULL;
+    m_previousFocusWindow = NULL;
     m_focusWindow = NULL;
     m_windowListTail = NULL;
     m_windowListHead = NULL;
@@ -101,7 +101,7 @@ heroWindowManager::heroWindowManager(void) : baseManager() {
     m_unused41 = 0;
     m_screen = NULL;
     m_screenshotIndex = 0;
-    m_updateFlags = 0;
+    m_colorCycling = 0;
     m_fizzleSource = NULL;
     m_fizzleWork = NULL;
     m_lastHoverId = WINDOW_MANAGER_NO_HOVER_WIDGET;
@@ -148,7 +148,7 @@ void heroWindowManager::Close(void) {
 
 // Descriptive name: an unreferenced hit test. The topmost window containing
 // (x, y) becomes the focus window and the previous focus moves to
-// m_activeWindow; returns whether the focus changed.
+// m_previousFocusWindow; returns whether the focus changed.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0046a393, 0xc3)
@@ -159,7 +159,7 @@ i16 heroWindowManager::UpdateHoverWindow(i16 x, i16 y) {
         if (x >= window->m_posX && y >= window->m_posY && x < window->m_posX + window->m_winWidth
             && y < window->m_posY + window->m_winHeight) {
             if (window != m_focusWindow) {
-                m_activeWindow = m_focusWindow;
+                m_previousFocusWindow = m_focusWindow;
                 m_focusWindow = window;
                 return 1;
             }
@@ -167,7 +167,7 @@ i16 heroWindowManager::UpdateHoverWindow(i16 x, i16 y) {
         }
         window = window->m_prevWindow;
     }
-    m_activeWindow = m_focusWindow;
+    m_previousFocusWindow = m_focusWindow;
     m_focusWindow = NULL;
     return 1;
 }
@@ -241,7 +241,7 @@ void heroWindowManager::AddWindow(heroWindow* window, i16 zOrder, i8 updateScree
         currentWindow->m_nextWindow->m_prevWindow = window;
         currentWindow->m_nextWindow = window;
     }
-    m_activeWindow = m_focusWindow;
+    m_previousFocusWindow = m_focusWindow;
     m_focusWindow = window;
 }
 
@@ -267,13 +267,13 @@ void heroWindowManager::RemoveWindow(heroWindow* window) {
                 window->m_nextWindow->m_prevWindow = window->m_prevWindow;
         }
     }
-    if (m_activeWindow == window)
-        m_activeWindow = NULL;
-    if (m_activeWindow == NULL) {
+    if (m_previousFocusWindow == window)
+        m_previousFocusWindow = NULL;
+    if (m_previousFocusWindow == NULL) {
         m_focusWindow = m_windowListTail;
         return;
     }
-    m_focusWindow = m_activeWindow;
+    m_focusWindow = m_previousFocusWindow;
 }
 
 VA(0x0046a740, 0x1a8)
@@ -402,15 +402,15 @@ void heroWindowManager::FadeScreen(
     PollSound();
     switch (direction) {
         case WINDOW_FADE_IN: {
-            i8 saved = m_updateFlags;
-            m_updateFlags = 0;
+            i8 saved = m_colorCycling;
+            m_colorCycling = 0;
             FadeIn(increment);
-            m_updateFlags = saved | gFadeSavedUpdate;
+            m_colorCycling = saved | gFadeSavedColorCycling;
             break;
         }
         case WINDOW_FADE_OUT:
-            gFadeSavedUpdate = m_updateFlags;
-            m_updateFlags = 0;
+            gFadeSavedColorCycling = m_colorCycling;
+            m_colorCycling = 0;
             FadeOut(increment);
             break;
     }
@@ -529,8 +529,8 @@ void CreateFizzleTables(void) {
     free(blend);
 }
 
-#define cycleTable ccycleBuf       // frame-slot spelling
-#define savedUpdateFlags saveFlags // frame-slot spelling
+#define cycleTable ccycleBuf        // frame-slot spelling
+#define savedColorCycling saveFlags // frame-slot spelling
 VA(0x0046b11d, 0x36a)
 void heroWindowManager::FizzleForward(i16 x, i16 y, i16 width, i16 height, i32 delay) {
     u8* workPixel;
@@ -541,13 +541,13 @@ void heroWindowManager::FizzleForward(i16 x, i16 y, i16 width, i16 height, i32 d
     i32 sourceY;
     i32 sourceX;
     i8* cycleTable;
-    i32 savedUpdateFlags;
+    i32 savedColorCycling;
     if (!gShowIt)
         return;
     gEnlargeScreenBlit = false;
     tickStart = 0;
-    savedUpdateFlags = gWindowManager->m_updateFlags;
-    gWindowManager->m_updateFlags = 0;
+    savedColorCycling = gWindowManager->m_colorCycling;
+    gWindowManager->m_colorCycling = 0;
     if (delay == FIZZLE_USE_DEFAULT_DELAY)
         delay = FIZZLE_DEFAULT_DELAY;
     m_fizzleWork = new bitmap(BITMAP_TYPE_NONE, width, height);
@@ -580,7 +580,7 @@ void heroWindowManager::FizzleForward(i16 x, i16 y, i16 width, i16 height, i32 d
     DelayTilMilli(tickStart + delay);
     BlitBitmapToScreen(m_fizzleWork, 0, 0, width, height, x, y);
     gEnlargeScreenBlit = true;
-    gWindowManager->m_updateFlags = savedUpdateFlags;
+    gWindowManager->m_colorCycling = savedColorCycling;
     delete m_fizzleSource;
     m_fizzleSource = NULL;
     delete m_fizzleWork;
@@ -588,7 +588,7 @@ void heroWindowManager::FizzleForward(i16 x, i16 y, i16 width, i16 height, i32 d
     free(cycleTable);
 }
 #undef cycleTable
-#undef savedUpdateFlags
+#undef savedColorCycling
 
 VA(0x0046b487, 0x4d)
 void heroWindowManager::ReleaseFizzleSource(void) {
@@ -597,9 +597,9 @@ void heroWindowManager::ReleaseFizzleSource(void) {
     m_fizzleSource = NULL;
 }
 
-// Window-manager data: the fade's saved update flags and the cycling palette
+// Window-manager data: the fade's saved colour-cycling switch and the cycling palette
 // entries.
 DATA(0x004ce110)
-i8 gFadeSavedUpdate;
+i8 gFadeSavedColorCycling;
 DATA(0x004ce114)
 i8 gCyclePal[PALETTE_CYCLE_BYTES];

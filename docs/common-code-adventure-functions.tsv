@@ -675,7 +675,7 @@ src/SOURCE/netwin.cpp	0x45121	nb_snd	read	none	Locked queue add.		kept-existing-
 src/SOURCE/netwin.cpp	0x4520f	nb_sess	read	ncb-cancel	Two NCBCANCEL blocks; kept explicit.		kept-existing-source	100	100
 src/SOURCE/netwin.cpp	0x456ff	nb_stat	read	none	Status read.		kept-existing-source	100	100
 src/SOURCE/netwin.cpp	0x45712	nb_thr_ctl	read	none	Send loop.		kept-existing-source	100	100
-src/SOURCE/netwin.cpp	0x4592e	nb_add_name	read	none	Broadcast name send.		kept-existing-source	100	100
+src/SOURCE/netwin.cpp	0x4592e	nb_announce_name	read	none	Broadcast name send.		kept-existing-source	100	100
 src/SOURCE/netwin.cpp	0x459e3	nb_add_name_done	read	none	Name registration result.		kept-existing-source	100	100
 src/SOURCE/netwin.cpp	0x45b79	nb_recv_any	read	none	Receive-any NCB.		kept-existing-source	100	100
 src/SOURCE/netwin.cpp	0x45c27	nb_recv_any_done	read	ncb-session-index	Session lookup by NCB pointer also in nb_call_done; two sites, kept open.		kept-existing-source	100	100

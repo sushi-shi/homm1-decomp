@@ -149,7 +149,7 @@ void combatManager::DoCompAI(H1_ENUM_PARAM(CombatSide, i8) side) {
     i32 targetHexValue;
     i32 keptAdj;
 
-    m_limitCreature = false;
+    m_selectorVisible = false;
     gMouseManager->ReallyHidePointer();
     curArmy = &m_armies[m_currentSide][m_currentArmyIndex];
     newPlan = COMBAT_AI_ATTACK_NONE;

@@ -292,12 +292,12 @@ public:
     heroWindow* m_townWindow;
     strip* m_garrisonStrip;
     strip* m_heroStrip;
-    strip* m_selectedStrip;
-    i16 m_selectedArmySlot;
-    strip* m_swapStrip;
-    i16 m_swapArmySlot;
-    strip* m_pendingStrip;
-    i16 m_pendingArmySlot;
+    strip* m_hoverStrip;
+    i16 m_hoverArmySlot;
+    strip* m_sourceStrip;
+    i16 m_sourceArmySlot;
+    strip* m_targetStrip;
+    i16 m_targetArmySlot;
     bankBox* m_bankBox;
     char m_statusText[TOWN_MANAGER_STATUS_TEXT_SIZE];
     i16 m_lastHoverId;

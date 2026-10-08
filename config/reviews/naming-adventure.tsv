@@ -97,3 +97,9 @@ member	playerAttentionWeights	gameWeightA/gameRemainder/gameWeightB	gameBuilding
 member	playerAttentionWeights	buildingValue/upgradeBase/heroValue	turnBuildingAttention/turnCreatureAttention/turnHeroAttention	the per-turn weights: buildings (GetBestBuilding), creatures (every army valuation and lossWeight) and heroes (hire value, obelisks); upgradeBase has nothing to do with upgrades
 member	playerAIData	m_upgradeValueWeight/m_artifactValue/m_artifactPoolShare	m_fightValueResourceWeight/m_meanArtifactValue/m_playerShare	gold per fight value plus the creature attention; the regular artifacts' mean RV (sum / 33); 1/(players + dead players), read as the Dragon City owner's share
 member	townManager	m_heroWindow0/m_heroWindow1	m_buildingWindow/m_childWindow	the building dialog (caslwind, magewind, shipwind ...) and the dialog it opens on top (splitwin, rcrthero)
+member	townManager	m_selectedStrip/m_selectedArmySlot	m_hoverStrip/m_hoverArmySlot	ProcessHover stores the strip and slot under the cursor; ViewArmy and DoCommand read them
+member	townManager	m_swapStrip/m_swapArmySlot	m_sourceStrip/m_sourceArmySlot	TOWN_ARMY_COMMAND_SELECT copies the hovered strip here and draws its highlight; the swap and merge move creatures out of it
+member	townManager	m_pendingStrip/m_pendingArmySlot	m_targetStrip/m_targetArmySlot	set once a source is held: the strip and slot the creatures go to
+member	game	m_randomArtifacts	m_artifactHolders	per regular artifact: the hero id carrying it (GiveArtifact, trades), GAME_TABLE_FREE, or GAME_ARTIFACT_ON_MAP once placed; GetRandomArtifactId picks a free one; the editor's WriteArtifacts already calls its copy artifactHolders
+function	netwin	nb_add_name	nb_announce_name	sends the NCBDGSENDBC group-name broadcast that announces the host; nb_add_name_done is the real add-name completion
+param	com_init	useDtr	dsrFlowControl	sets DCB::fOutxDsrFlow; fDtrControl is always DTR_CONTROL_ENABLE

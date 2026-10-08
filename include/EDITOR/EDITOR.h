@@ -156,7 +156,7 @@ extern char* gGeneratorTerrainNames[];
 extern i32 gLandCellCount;
 // Set while the generator works unseen (gSaveUnseen): the map view draws
 // clouds only and the radar black.
-extern b32 gGeneratingMaps;
+extern b32 gGeneratingUnseen;
 // Cleared while a map without the editor's format word is loaded: such maps
 // keep no object ids, so the eraser clears whole cells.
 extern b32 gNewMapFormat;

@@ -823,7 +823,7 @@ static void FillSavedState(void) {
     FixtureBytes(gGame->m_heroOwners, sizeof(gGame->m_heroOwners));
     FixtureBytes(gGame->m_mines, sizeof(gGame->m_mines));
     FixtureBytes(gGame->m_mineOwners, sizeof(gGame->m_mineOwners));
-    FixtureBytes(gGame->m_randomArtifacts, sizeof(gGame->m_randomArtifacts));
+    FixtureBytes(gGame->m_artifactHolders, sizeof(gGame->m_artifactHolders));
     FixtureBytes(gGame->m_boats, sizeof(gGame->m_boats));
     FixtureBytes(gGame->m_boatSlots, sizeof(gGame->m_boatSlots));
     FixtureBytes(gGame->m_obeliskVisitors, sizeof(gGame->m_obeliskVisitors));
@@ -904,7 +904,7 @@ static u32 MapStateDigest(void) {
     u32 hash = Digest(gGame->m_map, sizeof(gGame->m_map));
     hash = Digest(gGame->m_castleRecs, sizeof(gGame->m_castleRecs), hash);
     hash = Digest(gGame->m_mines, sizeof(gGame->m_mines), hash);
-    hash = Digest(gGame->m_randomArtifacts, sizeof(gGame->m_randomArtifacts), hash);
+    hash = Digest(gGame->m_artifactHolders, sizeof(gGame->m_artifactHolders), hash);
     hash = Digest(&gGame->m_obeliskCount, sizeof(gGame->m_obeliskCount), hash);
     hash = Digest(gGame->m_mapSounds, sizeof(gGame->m_mapSounds), hash);
     for (i32 i = 1; i < gMaxMapExtra; i++)
@@ -1000,7 +1000,7 @@ static void MapRecord(void) {
     gGame->LoadMap("FIXTURE.MAP");
     i32 cellsSame = !memcmp(gGame->m_map, cells, sizeof(cells));
     i32 soundsSame = !memcmp(gGame->m_mapSounds, sounds, sizeof(sounds));
-    i32 artifactsSame = !memcmp(gGame->m_randomArtifacts, artifacts, sizeof(artifacts));
+    i32 artifactsSame = !memcmp(gGame->m_artifactHolders, artifacts, sizeof(artifacts));
     printf("map record: cells %s sounds %s artifacts %s; towns",
            cellsSame ? "read" : "DIFFER",
            soundsSame ? "read" : "DIFFER",

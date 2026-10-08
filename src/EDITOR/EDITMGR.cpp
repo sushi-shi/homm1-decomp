@@ -9516,7 +9516,7 @@ void editManager::DrawView(i16 viewX, i16 viewY) {
     H1_ENUM_LOCAL(EditZoom, i32) savedZoom;
 
     savedZoom = m_zoomedOut;
-    if (gGeneratingMaps)
+    if (gGeneratingUnseen)
         m_zoomedOut = EDIT_ZOOM_NORMAL;
     numCells = H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? EDIT_VIEW_ZOOMED_CELLS : EDIT_VIEW_CELLS;
     for (cy = 0; cy < numCells; cy++)
@@ -9608,7 +9608,7 @@ void editManager::DrawRadar(b32) {
                     m_map.cells[x][y].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN
                 )];
             }
-            if (gGeneratingMaps)
+            if (gGeneratingUnseen)
                 color = EDIT_RADAR_UNSEEN_COLOR;
             buttonsIcon->FillToBuffer(
                 x * RADAR_CELL_PIXELS + RADAR_LEFT,
@@ -9657,7 +9657,7 @@ void editManager::DrawCell(i16 x, i16 y, i16 column, i16 row, u8 layers) {
                   * (H1_ENUM_ENCODE(EditZoom, m_zoomedOut) ? EDIT_VIEW_ZOOMED_CELL_PIXELS
                                                            : EDIT_VIEW_CELL_PIXELS)
               + EDIT_VIEW_TOP;
-    if (gGeneratingMaps) {
+    if (gGeneratingUnseen) {
         if (layers & EDIT_DRAW_OVERLAY)
             TileToBitmap(
                 m_cloudTiles[m_zoomedOut],
@@ -10893,7 +10893,7 @@ void editManager::WriteMines(i32 file) {
 #undef markerCell
 #undef mineSlot
 
-// The random-artifact table: each artifact on the map is marked placed.
+// The artifact holder table: each artifact on the map is marked placed.
 VA(0x00406dac, 0xba)
 void editManager::WriteArtifacts(i32 file) {
     u8 x;

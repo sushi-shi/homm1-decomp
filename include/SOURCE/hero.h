@@ -36,7 +36,7 @@ H1_ENUM_CONST_BEGIN(HeroConstant)
     HERO_CLASS_COUNT = 4,
     // Dismiss clears the destination (and m_owner to GAME_PLAYER_NONE);
     // playerData's hero lists (m_heroIds, m_currentHero), the boat records
-    // and game::m_randomArtifacts mark an empty entry with HERO_ID_NONE.
+    // and game::m_artifactHolders mark an empty entry with HERO_ID_NONE.
     HERO_DESTINATION_NONE = -1,
     HERO_ID_NONE = -1,
     // playerData::m_availableHeroIds: the tavern's two heroes for hire.

@@ -239,7 +239,7 @@ src/SOURCE/SWAPMGR.cpp	*	*	*	store to gMonoIconSkip	gMonoIconSkip writes; retail
 src/SOURCE/SWAPMGR.cpp	*	*	*	* store gMonoIconSkip	gMonoIconSkip writes; retail never reads the variable
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_drawRightToLeft	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	-1	trivial-function-literal	-1 store m_unused6f9	an index, position or timer local/field reset to -1 (none yet)
-src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_limitCreatureHex	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_selectorHex	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_gridUpdateRow	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_unused6e8	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_unused6db	a flag, counter or index local/field set to 0 or 1
@@ -387,8 +387,8 @@ src/SOURCE/SPELLS.cpp	*	0	trivial-function-literal	0 store m_gridUpdateRow	a fla
 src/SOURCE/SPELLS.cpp	*	0	trivial-function-literal	0 array-index affectedHexes	the first or second element of a local buffer, table or slot pair
 src/SOURCE/SPELLS.cpp	*	1	trivial-function-literal	1 equality	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
 src/SOURCE/SPELLS.cpp	*	1	trivial-function-literal	1 store gArmyEffected[[][]]	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/SPELLS.cpp	*	0	trivial-function-literal	0 store m_updateFlags	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/SPELLS.cpp	*	1	trivial-function-literal	1 store m_updateFlags	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLS.cpp	*	0	trivial-function-literal	0 store m_colorCycling	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLS.cpp	*	1	trivial-function-literal	1 store m_colorCycling	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/VIEW.cpp	*	0	trivial-function-literal	0 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
 src/SOURCE/VIEW.cpp	*	0	trivial-function-literal	0 store m_gridUpdateRow	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/comwin.cpp	*	-1	trivial-function-literal	-1 return	the -1 failure / no-result return
@@ -1378,7 +1378,7 @@ src/SOURCE/ADVMGR.cpp	*	1	call-argument	CheckDoMain(i32, b32) argument 1	CheckDo
 src/SOURCE/ADVMGR.cpp	advManager::TrimLoopingSounds	0	trivial-function-literal	0 equality keep[[]]	a looping sample no sound slot uses (a zero use count)
 
 *	*	[01]	trivial-function-literal	[01] *m_active	baseManager::m_active, the managers' 16-bit active word: an i16 flag (b8/b32 are the 8- and 32-bit flag storage), set on Open and tested against 1
-*	*	[01]	trivial-function-literal	[01] *m_updateFlags	heroWindowManager::m_updateFlags, the 16-bit palette-cycling switch: an i16 flag that FadeScreen saves in a byte and ORs back in
+*	*	[01]	trivial-function-literal	[01] *m_colorCycling	heroWindowManager::m_colorCycling, the 16-bit palette-cycling switch: an i16 flag that FadeScreen saves in a byte and ORs back in
 include/SOURCE/KB.h	NormalDialog	0	trivial-function-literal	0 parm_decl	an unused resource quantity: the slot shows no amount
 src/BASE/Audio.cpp	*	0	trivial-function-literal	0 store gMusicPositions*	a track's saved play position back at its start
 src/BASE/BASEMGR.cpp	baseManager::GetInfo	0	trivial-function-literal	0 return	an unknown info selector reads as zero

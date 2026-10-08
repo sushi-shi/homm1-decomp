@@ -4,7 +4,7 @@
 // the functions both programs define.
 // Descriptive names: ShowStatusText, ClearStatusText, gStatusTextShown,
 // gStatusTextClearTime, gStatusTextHoldTime, gStatusText,
-// gCommandLineInterpreted, gNewMapFormat, gGeneratingMaps, gEditButtonHelp,
+// gCommandLineInterpreted, gNewMapFormat, gGeneratingUnseen, gEditButtonHelp,
 // gEditAreaHelp, EditorStartupHook, EditorIdleHook, IncrementArgumentA,
 // IncrementArgumentB.
 
@@ -1407,7 +1407,7 @@ b32 gInSetupDialog = false;
 DATA(0x004528e0)
 i32 gSaveUnseen = 0;
 DATA(0x004528e4)
-b32 gGeneratingMaps = false;
+b32 gGeneratingUnseen = false;
 DATA(0x004528e8)
 b32 gHeroMoving = false;
 DATA(0x004528ec)

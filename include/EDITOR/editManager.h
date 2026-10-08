@@ -42,7 +42,7 @@ H1_ENUM_CONST_BEGIN(EditManagerConstant)
     EDIT_MAP_FILE_NAME_SIZE = 16,
     // gEditErrors holds at most this many save-check messages.
     EDIT_MANAGER_ERROR_CAPACITY = 100,
-    // The map file's random-artifact table (game::m_randomArtifacts).
+    // The map file's artifact holder table (game::m_artifactHolders).
     EDIT_MAP_ARTIFACT_SLOTS = 37,
     // The save check allows at most this many obelisks.
     EDIT_MAP_OBELISK_LIMIT = 48,

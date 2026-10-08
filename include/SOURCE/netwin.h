@@ -57,7 +57,7 @@ struct NetbiosName {
     u8 bytes[NCBNAMSZ];
 };
 
-void nb_add_name(void);
+void nb_announce_name(void);
 void nb_format_name(char* source, u8* destination);
 void __stdcall nb_add_name_done(NCB* ncb);
 u16 nb_recv_any(i32 session);

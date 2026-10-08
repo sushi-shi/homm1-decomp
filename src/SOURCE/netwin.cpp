@@ -148,7 +148,7 @@ VA(0x00445121, 0xee)
 H1_C_LINKAGE i16 __cdecl nb_snd(i32 port, u16 session, u16 length, void* data, i32 priority) {
     tag_Node* node;
     if (session == gNbMaxSess && length == 0) {
-        nb_add_name();
+        nb_announce_name();
         return NRC_GOODRET;
     }
     if (!(gNetStatus[session] & NETBIOS_SESSION_ACTIVE))
@@ -360,7 +360,7 @@ void nb_thr_ctl(void)
 }
 
 VA(0x0044592e, 0xb5)
-void nb_add_name(void) {
+void nb_announce_name(void) {
     if (gNbCtlNcb.ncb_cmd_cplt != NRC_PENDING) {
         strcpy(
             reinterpret_cast<char*>(gNbSessBuf), // API-forced: NCB name bytes are unsigned.
