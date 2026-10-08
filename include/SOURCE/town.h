@@ -133,7 +133,7 @@ public:
 // bit 1 << id. CanBuild confirms the roles: 6 needs no castle, 3 needs water
 // at the dock cell, 5 is never built and 0 has mage-guild levels.
 H1_ENUM_BEGIN(BuildingSlotType)
-// townManager::m_selectedBuilding with no building bought.
+// townManager::m_purchasedBuilding with no building bought.
     BUILDING_SLOT_NONE = -1,
     BUILDING_SLOT_FIRST = 0,
     BUILDING_SLOT_MAGE_GUILD = 0,

@@ -520,7 +520,7 @@ void hero::Deallocate(void) {
         curTown->m_occupyingHeroId = TOWN_OCCUPYING_HERO_NONE;
     }
     if (gCurPlayer != m_owner || gGame->m_players[m_owner].m_currentHero != m_id
-        || !gAdvManager->m_heroContextLocked)
+        || !gAdvManager->m_heroMobilized)
         gGame->RestoreCell(m_x, m_y, m_locationType, m_locationMetadata, NULL, 1);
     if (!gCombatSurrender) {
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++)
@@ -541,7 +541,7 @@ void hero::Deallocate(void) {
             gGame->m_map[m_x][m_y].m_flags &= ~MAP_CELL_HERO_CURSOR;
         }
         if (oldOwner == gCurPlayer)
-            gAdvManager->m_heroContextLocked = false;
+            gAdvManager->m_heroMobilized = false;
     }
     playerPtr->m_heroCount--;
     playerPtr->m_heroLocatorPage = 0;

@@ -110,3 +110,22 @@ param	playerData::BuildingsOwned	buildState	mageGuildLevel	compared with town::m
 enum	EventFizzleType	EVENT_FIZZLE_HERO_LOSS	EVENT_FIZZLE_KILL	FizzleCenter plays killfade.82M; DoEvent's default fizzle for a beaten monster, CheckAdjacentMon's erased monster and HeroLoses all pass it
 local-aliased	combatManager::EffectSpellDamage	hitDamage	expectedDamage	the damage the AI expects on the stack: a dwarf's is scaled by SPELL_AI_DWARF_EXPECTED_SHARE (0.75), the mean of the in-game one-in-four resist roll
 member	HighScoreEntry/tag_monsterStats/tag_message	unknown24/unknown09/unknown8	unused24/unused09/unused8	no reader or writer in either image beyond whole-record copies
+local-aliased	advManager::DoAdvCommand	anyMoveChanged/moveDone	outOfMobility/adjacentMonster	MoveHero's outOfMobility and adjacentMonster outputs; the walk stops on either
+local-aliased	advManager::Main	movedSet/bEnded	outOfMobility/adjacentMonster	the same two MoveHero outputs for a keyboard step
+local-aliased	advManager::TownGate	selectedTown	townSlot	an index into gCurPlayerData->m_townIds, not a town id
+param	philAI::ChooseEvaluateBattle	canWin	worthFighting	set to netValue + reward * winChance > 0 before any battle; FightEvent and DoAIEvent fight only when it is set
+local-aliased	advManager::DoAIEvent, philAI::FightEvent	canWin/canFight	worthFighting	ChooseEvaluateBattle's verdict
+param	philAI::ValueOfEventAtPosition	immediate	eventMode	the three-way AIEventEvaluation (STRATEGIC, IMMEDIATE, TARGET); only STRATEGIC uses the per-cell cache
+member	advManager	m_bottomViewPrimaryWidgets/m_bottomViewSecondaryWidgets	m_bottomViewIconWidgets/m_bottomViewTextWidgets	every bottom-view builder stores iconWidgets in the first array (background, foreground, icons) and textWidgets in the second
+member	advManager	m_heroContextLocked	m_heroMobilized	SetHeroContext sets it, DemobilizeCurrHero clears it, MobilizeCurrHero returns while it is set; the readers' locals were already heroWasMobilized
+member	advManager	m_townContextLocked	m_unusedTownContextLocked	the constructor clears it; nothing reads it
+member	townManager	m_recruitState/m_recruitResult	m_recruitSlot/m_heroRecruited	RecruitHeroHandler stores the chosen candidate slot (or RECRUIT_HERO_NONE); RecruitHero sets the flag once a hero is hired
+member	townManager	m_selectedBuilding	m_purchasedBuilding	BuyBuild stores the building only after the purchase is confirmed and paid; the close path builds it
+enum	AdventureKingdomViewConstant	KINGDOM_VIEW_TOWN_ENTRY/KINGDOM_VIEW_TOWN_TEXT_Y	KINGDOM_VIEW_VILLAGE_ENTRY/KINGDOM_VIEW_TOP_ROW_Y	the entry counts villages (numVillage, VILLAGE_TEXT_X); the row also holds the castle count and gold
+enum	TownControl	TOWN_GARRISON_FIRST_CONTROL/TOWN_HERO_FIRST_CONTROL	TOWN_GARRISON_CREST_CONTROL/TOWN_HERO_PORTRAIT_CONTROL	each strip's first widget: the town crest and the hero portrait (TOWN_TEXT_GARRISON, TOWN_TEXT_VIEW_HERO); the slots follow
+param	philAI::EvaluateOneTimeCreaturePurchase	useAvailableCount	isFree	set: take every creature and pay nothing; clear: buy what MaxBuyableCreatures allows and subtract the cost; DoAIEvent's argument is already isFree
+static	searchArray::SeedPosition	s_possibleDirections	s_directionTerrain	TestPossibleDirections fills the terrain of each step's cell (storage spelling kept through the .bss alias)
+local	searchArray::FindNearestObject	possibleDirections	directionTerrain	the same terrain output
+local-aliased	advManager::TownQuickView	scouting	informationLevel	a TownQuickInformation level from the thieves' guild count
+local-aliased	advManager::SummonBoat	okCell/slotIndex/heroSlot	foundWaterCell/boatIndex/summonHeroId	an empty water cell beside the hero was found; the boat table index; the hero id (CurrentHero) matched against boatRecord::heroId
+enum	CombatPathConstant	SPECIAL_DIRECTION_MASK	WIDE_DIRECTIONS_MASK	0xc0 is COMBAT_DIRECTION_BIT_WIDE_NORTH | WIDE_SOUTH: the two directions only a two-hex creature uses

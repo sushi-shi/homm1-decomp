@@ -648,7 +648,7 @@ i16 game::LoadGame(char* filename, b32 origData, b32 remoteGame) {
             strcpy(gGame->m_saveName, filename);
     }
     close(theLoadHandle);
-    gAdvManager->m_heroContextLocked = false;
+    gAdvManager->m_heroMobilized = false;
     gCurPlayerData = &gGame->m_players[gCurPlayer];
     gCurPlayerBit = 1 << gCurPlayer;
     gCurWatchPlayer = gCurPlayer;

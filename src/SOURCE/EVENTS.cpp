@@ -2004,6 +2004,7 @@ void advManager::FizzleCenter(H1_ENUM_PARAM(EventFizzleType, i32) fizzleType) {
     WaitSample(fizzleSample);
 }
 
+#define worthFighting canWin // frame-slot spelling
 VA(0x00427cdd, 0x1005)
 void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i32 y) {
     i32 freeSlot;
@@ -2023,7 +2024,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
     i32 battleResult;
     H1_ENUM_LOCAL(MapObjectType, i8) eventType;
     i8 teleX;
-    i32 canWin;
+    i32 worthFighting;
     i8 teleY;
     i32 armyStrength;
     i8 portalCount;
@@ -2096,10 +2097,10 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                 0,
                 0,
                 500,
-                canWin,
+                worthFighting,
                 armyStrength
             );
-            if (canWin) {
+            if (worthFighting) {
                 c = DRAGON_CITY_DRAGON_COUNT;
                 success = gPhilAI->CombatMonsterEvent(eventHero, CREATURE_DRAGON, &c, cell);
                 if (success)
@@ -2460,6 +2461,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
     gCurPlayerData = ownerPlayerData;
     CheckEndGame(false);
 }
+#undef worthFighting
 
 VA(0x00428ce2, 0x17d)
 void advManager::PlayerMonsterInteract(

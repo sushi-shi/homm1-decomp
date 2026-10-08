@@ -73,18 +73,18 @@ extern H1_ENUM_ARRAY(char*, gTownCommand, TownCommandText, TOWN_TEXT_COUNT);
 H1_ENUM_ID_BEGIN(TownControl)
     TOWN_EMPTY_STATUS_CONTROL_FIRST = 0x1c,
     TOWN_EMPTY_STATUS_CONTROL_LAST = 0x1d,
-    TOWN_GARRISON_FIRST_CONTROL = 0x10,
+    TOWN_GARRISON_CREST_CONTROL = 0x10,
     TOWN_GARRISON_SLOT_FIRST = 0x11,
     // The five army slots of each strip run FIRST..LAST (Main's hover range).
     TOWN_GARRISON_SLOT_LAST = 0x15,
-    TOWN_HERO_FIRST_CONTROL = 0x16,
+    TOWN_HERO_PORTRAIT_CONTROL = 0x16,
     TOWN_HERO_SLOT_FIRST = 0x17,
     TOWN_HERO_SLOT_LAST = 0x1b,
     TOWN_CLOSE_CONTROL = DIALOG_BUTTON_0
 H1_ENUM_ID_END(TownControl)
 
 // Town objects: gTownObjectType's empty entry and a .tod without a border
-// widget are NONE (m_selectedBuilding's empty value is BUILDING_SLOT_NONE).
+// widget are NONE (m_purchasedBuilding's empty value is BUILDING_SLOT_NONE).
 // gTownObjectNames holds the neutral objects, the four town-type
 // prefixes, then the faction-object suffixes (index type + TOWN_TYPE_COUNT).
 // The mage guild's border grows 20 pixels a level above 0x61, bottom 0x99;
@@ -186,7 +186,7 @@ H1_ENUM_CONST_BEGIN(TownCastleControl)
     TOWN_CASTLE_STATUS_HEIGHT = 0x10
 H1_ENUM_CONST_END(TownCastleControl)
 
-// RecruitHero's m_recruitState: which of the two candidate heroes was hired.
+// RecruitHero's m_recruitSlot: which of the two candidate heroes was hired.
 H1_ENUM_CONST_BEGIN(TownRecruitHeroConstant)
     RECRUIT_HERO_NONE = -1
 H1_ENUM_CONST_END(TownRecruitHeroConstant)
@@ -304,17 +304,17 @@ public:
     H1_ENUM_STORAGE(TownArmyCommand, i8) m_command;
     // Set once RecruitHero hires a hero this visit (SetupCastle, CastleHandler
     // and Main read it), then SetupCastle's affordable/buildable masks.
-    b8 m_recruitResult;
+    b8 m_heroRecruited;
     u16 m_affordableBuildings;
     u16 m_buildableBuildings;
     b8 m_castleDialogActive;
-    H1_ENUM_STORAGE(BuildingSlotType, i16) m_selectedBuilding;
+    H1_ENUM_STORAGE(BuildingSlotType, i16) m_purchasedBuilding;
     heroWindow* m_buildingWindow;
     heroWindow* m_childWindow;
     i16 m_splitAmount;
     i16 m_splitMaximum;
     // RecruitHero: the chosen candidate slot (-1 if none) and both candidates.
-    i16 m_recruitState;
+    i16 m_recruitSlot;
     hero* m_recruitHeroes[2];
     // Main tests this additional mask against message.type.
     i16 m_dispatchMask;

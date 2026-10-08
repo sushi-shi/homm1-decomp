@@ -101,7 +101,7 @@ static void SetUpManagers(void) {
     memset(gGame, 0, sizeof(game));
     gAdvManager = new advManager;
     gAdvManager->m_mapData = gGame->m_map;
-    gAdvManager->m_heroContextLocked = false;
+    gAdvManager->m_heroMobilized = false;
     gCombatManager = new combatManager;
     gSearchArray = new searchArray;
     gPhilAI = new philAI;
@@ -1048,7 +1048,7 @@ static void InstalledSaves(const char* root, const char* folder, const char* pat
         gGame->LoadGame(found.cFileName, false, false);
         strcpy(gDataPath, "installed\\");
         strcpy(gGamePath, "installed\\");
-        gAdvManager->m_heroContextLocked = false;
+        gAdvManager->m_heroMobilized = false;
         gGame->SaveGame(found.cFileName, false);
         sprintf(source, "%s\\%s\\%s", root, folder, found.cFileName);
         sprintf(copy, "installed\\%s", found.cFileName);

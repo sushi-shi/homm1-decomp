@@ -36,7 +36,7 @@ struct tag_message;
 
 H1_ENUM_CONST_BEGIN(AdventureManagerStorageConstant)
     ADVMGR_BOTTOM_VIEW_WIDGET_COUNT = 12,
-    // m_bottomViewPrimaryWidgets slots: the stone backdrop, the view's
+    // m_bottomViewIconWidgets slots: the stone backdrop, the view's
     // foreground icon, then its further icons; the secondary (text) array's
     // army/count labels start at HERO_TEXT_FIRST.
     ADVMGR_BOTTOM_VIEW_BACKGROUND = 0,
@@ -228,8 +228,8 @@ H1_ENUM_FLAGS_END(AdventureDrawMask)
 class advManager : public baseManager {
 public:
     H1_ENUM_STORAGE(AdventureCommand, i8) m_pendingCommand;
-    class widget* m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_WIDGET_COUNT];
-    class widget* m_bottomViewSecondaryWidgets[ADVMGR_BOTTOM_VIEW_WIDGET_COUNT];
+    class widget* m_bottomViewIconWidgets[ADVMGR_BOTTOM_VIEW_WIDGET_COUNT];
+    class widget* m_bottomViewTextWidgets[ADVMGR_BOTTOM_VIEW_WIDGET_COUNT];
     class heroWindow* m_adventureWindow;
     // ShowRoute clears 72*72 bytes and stores signed route frames.
     i8* m_routeMap;
@@ -279,8 +279,8 @@ public:
     i16 m_cursorMapY;
     i16 m_previousCursorMapY;
     b8 m_comboHeroDrawn;
-    b32 m_heroContextLocked;
-    b32 m_townContextLocked;
+    b32 m_heroMobilized;
+    b32 m_unusedTownContextLocked;
     b8 m_forceCompleteDraw;
     i8 m_combatMonsterX;
     i8 m_combatMonsterY;
@@ -1053,7 +1053,7 @@ H1_ENUM_CONST_END(AdventureResourceViewConstant)
 H1_ENUM_CONST_BEGIN(AdventureKingdomViewConstant)
     KINGDOM_VIEW_ENTRY_COUNT = 9,
     KINGDOM_VIEW_CASTLE_ENTRY = 7,
-    KINGDOM_VIEW_TOWN_ENTRY = 8,
+    KINGDOM_VIEW_VILLAGE_ENTRY = 8,
     KINGDOM_VIEW_ICON_X = 481,
     KINGDOM_VIEW_ICON_Y = 393,
     KINGDOM_VIEW_TEXT_X_BASE = 464,
@@ -1061,9 +1061,9 @@ H1_ENUM_CONST_BEGIN(AdventureKingdomViewConstant)
     KINGDOM_VIEW_TEXT_WIDTH = 32,
     KINGDOM_VIEW_TEXT_HEIGHT = 12,
     KINGDOM_VIEW_RESOURCE_TEXT_Y = 59,
-    KINGDOM_VIEW_TOWN_TEXT_Y = 28,
+    KINGDOM_VIEW_TOP_ROW_Y = 28,
     // Gold shares the castles' and villages' row.
-    KINGDOM_VIEW_GOLD_TEXT_Y = KINGDOM_VIEW_TOWN_TEXT_Y,
+    KINGDOM_VIEW_GOLD_TEXT_Y = KINGDOM_VIEW_TOP_ROW_Y,
     KINGDOM_VIEW_WOOD_TEXT_X = 15,
     KINGDOM_VIEW_MERCURY_TEXT_X = 38,
     KINGDOM_VIEW_ORE_TEXT_X = 61,

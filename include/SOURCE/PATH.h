@@ -48,7 +48,7 @@ OppositeDirection(H1_ENUM_PARAM(CombatHexDirection, i16) direction);
 // wide-creature directions, the speed FindPath grants when speed is ignored,
 // and the second hex of a wide creature.
 H1_ENUM_CONST_BEGIN(CombatPathConstant)
-    SPECIAL_DIRECTION_MASK = 0xc0,
+    WIDE_DIRECTIONS_MASK = 0xc0,
     IGNORE_SPEED = 99,
     WIDE_HEX_OFFSET = 1
 H1_ENUM_CONST_END(CombatPathConstant)

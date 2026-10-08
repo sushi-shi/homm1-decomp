@@ -26,7 +26,7 @@ i16 searchArray::FindNearestObject(
 ) {
     searchNode node;
     // TestPossibleDirections fills the terrain of each step's cell as bytes.
-    H1_ENUM_ARRAY(i8, possibleDirections, MapDirection, MAP_DIRECTION_COUNT);
+    H1_ENUM_ARRAY(i8, directionTerrain, MapDirection, MAP_DIRECTION_COUNT);
     H1_ENUM_ARRAY(u8, directionOccupied, MapDirection, MAP_DIRECTION_COUNT);
     H1_ENUM_LOCAL(MapDirection, i16) i;
     H1_ENUM_LOCAL(TerrainType, i16) terrain;
@@ -52,9 +52,9 @@ i16 searchArray::FindNearestObject(
                 m_specialTargetY = node.y;
                 break;
             }
-        TestPossibleDirections(node.x, node.y, possibleDirections, directionOccupied, 1, 0);
+        TestPossibleDirections(node.x, node.y, directionTerrain, directionOccupied, 1, 0);
         for (i = MAP_DIRECTION_FIRST; i < MAP_DIRECTION_COUNT; i++) {
-            terrain = H1_ENUM_DECODE(TerrainType, possibleDirections[i]);
+            terrain = H1_ENUM_DECODE(TerrainType, directionTerrain[i]);
             if (terrain != TERRAIN_INVALID) {
                 cost = CalcTerrainCost(
                     H1_ENUM_ENCODE(TerrainType, terrain),
@@ -169,8 +169,9 @@ void searchArray::SeedPosition(
 #define s_stepCost s6_stepCost // spelling fixes .bss order
     DATA(0x004cc8a4)
     static i32 s_stepCost[FINDPATH_STEP_COST_COUNT];
+#define s_directionTerrain s_possibleDirections // spelling fixes .bss order
     DATA(0x004cc86c)
-    static H1_ENUM_ARRAY(i8, s_possibleDirections, MapDirection, MAP_DIRECTION_COUNT);
+    static H1_ENUM_ARRAY(i8, s_directionTerrain, MapDirection, MAP_DIRECTION_COUNT);
     DATA(0x004cc884)
     static i32 s_currentCost;
 #define s_hasTarget sr_hasTarget // spelling fixes .bss order
@@ -333,7 +334,7 @@ void searchArray::SeedPosition(
         TestPossibleDirections(
             s_currentNode.x,
             s_currentNode.y,
-            s_possibleDirections,
+            s_directionTerrain,
             s_directionOccupied,
             1,
             waterMode
@@ -354,7 +355,7 @@ void searchArray::SeedPosition(
                                                  heroClass
                                              );
         for (s_direction = MAP_DIRECTION_FIRST; s_direction < MAP_DIRECTION_COUNT; s_direction++) {
-            if (H1_ENUM_DECODE(TerrainType, s_possibleDirections[s_direction]) == TERRAIN_INVALID)
+            if (H1_ENUM_DECODE(TerrainType, s_directionTerrain[s_direction]) == TERRAIN_INVALID)
                 continue;
             s_neighborX =
                 s_currentNode.x + gNormalDirTable[H1_ENUM_ENCODE(MapDirection, s_direction)].x;
@@ -399,7 +400,7 @@ void searchArray::SeedPosition(
                 && !s_currentNode.hasAdjacentMonster) {
                 if (s_currentNode.distance
                         + CalcTerrainCost(
-                            s_possibleDirections[s_direction],
+                            s_directionTerrain[s_direction],
                             H1_ENUM_ENCODE(MapDirection, s_direction) & SEARCH_DIAGONAL_COST_MASK,
                             gCurTempMobility - s_currentNode.distance,
                             heroClass
@@ -408,7 +409,7 @@ void searchArray::SeedPosition(
                     s_bestTargetCost =
                         s_currentNode.distance
                         + CalcTerrainCost(
-                            s_possibleDirections[s_direction],
+                            s_directionTerrain[s_direction],
                             H1_ENUM_ENCODE(MapDirection, s_direction) & SEARCH_DIAGONAL_COST_MASK,
                             gCurTempMobility - s_currentNode.distance,
                             heroClass

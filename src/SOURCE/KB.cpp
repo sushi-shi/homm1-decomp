@@ -799,12 +799,12 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) RecruitHeroHandler(tag_message& messa
             case WIDGET_NOTIFY_DESELECT:
                 switch (message.id) {
                     case DIALOG_BUTTON_1:
-                        gTownManager->m_recruitState = RECRUIT_HERO_NONE;
+                        gTownManager->m_recruitSlot = RECRUIT_HERO_NONE;
                         shouldClose = true;
                         break;
                     case recruitButton1:
                     case recruitButton2:
-                        gTownManager->m_recruitState = message.id - recruitButton1;
+                        gTownManager->m_recruitSlot = message.id - recruitButton1;
                         gWindowManager->m_dialogResult = message.id;
                         shouldClose = true;
                         break;

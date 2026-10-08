@@ -168,7 +168,7 @@ public:
         class hero* aiHero,
         H1_ENUM_PARAM(CreatureType, i32) creature,
         i32 availableCount,
-        b32 useAvailableCount,
+        b32 isFree,
         i32& purchaseCount,
         i32& purchaseValue,
         i32& replacementSlot
@@ -198,7 +198,7 @@ public:
         i32 isCastle,
         i32 castleId,
         i32 rewardValue,
-        i32& canWin,
+        i32& worthFighting,
         i32& rating
     );
     b32 ChooseToBuyArtifact(
@@ -227,7 +227,7 @@ public:
     float StatChangeValue(i32 oldValue, i32 newValue);
     void IncrementHourGlass(void);
     void TownEvent(class mapCell* cell, class hero* heroPointer, i32 x, i32 y);
-    i32 ValueOfEventAtPosition(class hero* aiHero, i16 x, i16 y, i32 immediate, i32* liveChance);
+    i32 ValueOfEventAtPosition(class hero* aiHero, i16 x, i16 y, i32 eventMode, i32* liveChance);
 };
 
 #define gCreatureCost costTemp // spelling fixes .bss order
@@ -347,7 +347,7 @@ H1_ENUM_CONST_BEGIN(AIEventValueConstant)
     AI_DEBUG_TRACE_COLUMN = 15
 H1_ENUM_CONST_END(AIEventValueConstant)
 
-// ValueOfEventAtPosition's evaluation mode (its `immediate` argument): STRATEGIC
+// ValueOfEventAtPosition's evaluation mode (its eventMode argument): STRATEGIC
 // (StrategicValueOfPosition's survey) reads and fills the per-cell event
 // cache; any other mode evaluates the event afresh. RVOfPosition passes
 // IMMEDIATE for the events and guards on the way; GoodAdjacent's step and

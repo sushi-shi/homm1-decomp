@@ -2421,7 +2421,7 @@ void philAI::EvaluateOneTimeCreaturePurchase(
     hero* aiHero,
     H1_ENUM_PARAM(CreatureType, i32) creature,
     i32 availableCount,
-    b32 useAvailableCount,
+    b32 isFree,
     i32& purchaseCount,
     i32& purchaseValue,
     i32& replacementSlot
@@ -2435,7 +2435,7 @@ void philAI::EvaluateOneTimeCreaturePurchase(
     purchaseValue = 0;
     replacementSlot = -1;
     leastStackValue = 999999;
-    if (useAvailableCount)
+    if (isFree)
         purchaseCount = availableCount;
     else
         purchaseCount = MaxBuyableCreatures(creature);
@@ -2466,7 +2466,7 @@ void philAI::EvaluateOneTimeCreaturePurchase(
         purchasedValue -= leastStackValue;
     purchaseValue =
         purchasedValue * gGame->m_players[aiHero->m_owner].m_aiData.m_fightValueResourceWeight;
-    if (!useAvailableCount) {
+    if (!isFree) {
         GetMonsterCost(creature, gCreatureCost);
         purchaseValue -= purchaseCount * RVConversion(gCreatureCost);
     }
@@ -2858,7 +2858,7 @@ void philAI::ChooseEvaluateBattle(
     i32 isCastle,
     i32 castleId,
     i32 rewardValue,
-    i32& canWin,
+    i32& worthFighting,
     i32& rating
 ) {
     float winChance;
@@ -2888,10 +2888,10 @@ void philAI::ChooseEvaluateBattle(
     netValue = netValue + rewardValue * winChance;
     if (netValue <= 0) {
         rating = 0;
-        canWin = 0;
+        worthFighting = 0;
     } else {
         rating = netValue;
-        canWin = 1;
+        worthFighting = 1;
     }
 }
 
@@ -3078,9 +3078,10 @@ i8 philAI::CombatMonsterEvent(
 
 #define netValue theWorth             // frame-slot spelling
 #define rewardValue activeRewardValue // frame-slot spelling
+#define worthFighting canFight        // frame-slot spelling
 VA(0x0044ea2c, 0x22f)
 void philAI::FightEvent(hero* heroPointer, mapCell* cell) {
-    i32 canFight;
+    i32 worthFighting;
     i32 rewardValue;
     i32 unusedValue;
     i32 netValue;
@@ -3125,10 +3126,10 @@ void philAI::FightEvent(hero* heroPointer, mapCell* cell) {
         0,
         0,
         rewardValue,
-        canFight,
+        worthFighting,
         netValue
     );
-    if (canFight) {
+    if (worthFighting) {
         heroVictory = QuickCombat(
             &heroPointer->m_army,
             heroPointer,
@@ -3159,6 +3160,7 @@ void philAI::FightEvent(hero* heroPointer, mapCell* cell) {
         }
     }
 }
+#undef worthFighting
 #undef netValue
 #undef rewardValue
 
@@ -3312,7 +3314,7 @@ hero* gEventHero;
 #define replacementSlot theArmySlot2 // frame-slot spelling
 #define unusedChance tempChance      // frame-slot spelling
 VA(0x0044efb4, 0x1d37)
-i32 philAI::ValueOfEventAtPosition(hero* aiHero, i16 x, i16 y, i32 immediate, i32* liveChance) {
+i32 philAI::ValueOfEventAtPosition(hero* aiHero, i16 x, i16 y, i32 eventMode, i32* liveChance) {
     DATA(0x0049ef80)
     static b32 gEvaluatingTravelGates = true;
     i32 numToBuy;
@@ -3333,7 +3335,7 @@ i32 philAI::ValueOfEventAtPosition(hero* aiHero, i16 x, i16 y, i32 immediate, i3
     mapCell* candidateCell;
     i32 bestGateX;
 
-    if (!immediate && gHeroEventStratRVOfPos[x][y] != RV_UNSET)
+    if (!eventMode && gHeroEventStratRVOfPos[x][y] != RV_UNSET)
         return gHeroEventStratRVOfPos[x][y];
     gReduceByReload = true;
     gReduceByBerserk = true;
@@ -3487,7 +3489,7 @@ i32 philAI::ValueOfEventAtPosition(hero* aiHero, i16 x, i16 y, i32 immediate, i3
         case MAP_OBJECT_HERO:
             if (gGame->m_heroOwners[gEventLocation->m_objectMetadata] == aiHero->m_owner) {
                 gHeroLiveChance[gEventLocation->m_objectMetadata] = AI_CHANCE_CERTAIN;
-                if (!immediate || gTroopReload)
+                if (!eventMode || gTroopReload)
                     gVisitResult = 0;
                 else
                     gVisitResult = -5000;
@@ -3514,7 +3516,7 @@ i32 philAI::ValueOfEventAtPosition(hero* aiHero, i16 x, i16 y, i32 immediate, i3
                                                                         : gAttackComputerBonus)
                                + 1.0);
                 }
-                if (immediate && gDebugLevel == AI_DEBUG_LEVEL_EVENT && x == AI_DEBUG_TRACE_COLUMN)
+                if (eventMode && gDebugLevel == AI_DEBUG_LEVEL_EVENT && x == AI_DEBUG_TRACE_COLUMN)
                     gDebugLevel = AI_DEBUG_LEVEL_BATTLE;
                 ProbableOutcomeOfBattle(
                     &aiHero->m_army,
@@ -3532,12 +3534,12 @@ i32 philAI::ValueOfEventAtPosition(hero* aiHero, i16 x, i16 y, i32 immediate, i3
                     gExpectedDefenderLoss,
                     gVisitResult
                 );
-                if (immediate && gDebugLevel == AI_DEBUG_LEVEL_BATTLE)
+                if (eventMode && gDebugLevel == AI_DEBUG_LEVEL_BATTLE)
                     gDebugLevel = AI_DEBUG_LEVEL_EVENT;
                 *liveChance = gWinChance * 100.0f;
                 if (gEventTownScore > 0)
                     gVisitResult = gVisitResult + gEventTownScore * gWinChance;
-                if (immediate && gHumanPlayer[gEventHero->m_owner] && gVisitResult > 200)
+                if (eventMode && gHumanPlayer[gEventHero->m_owner] && gVisitResult > 200)
                     gVisitResult = gVisitResult * 1.5;
                 if (gWinChance > 0.75)
                     gHeroLiveChance[gEventLocation->m_objectMetadata] = AI_CHANCE_CERTAIN;
@@ -3553,9 +3555,9 @@ i32 philAI::ValueOfEventAtPosition(hero* aiHero, i16 x, i16 y, i32 immediate, i3
                     gHeroLiveChance[gEventLocation->m_objectMetadata] = gWinChance * 100.0f;
                 if (gHeroLiveChance[gEventLocation->m_objectMetadata] > AI_CHANCE_CERTAIN)
                     gHeroLiveChance[gEventLocation->m_objectMetadata] = AI_CHANCE_CERTAIN;
-                if (!immediate && gWinChance < 0.4)
+                if (!eventMode && gWinChance < 0.4)
                     gVisitResult = gVisitResult * (3.0f - gWinChance * 2.0f);
-                if (!immediate && gWinChance < 0.2)
+                if (!eventMode && gWinChance < 0.2)
                     gVisitResult = gVisitResult * (2.0f - gWinChance * 2.0f);
                 if (gVisitResult < 0)
                     gReduceByReload = false;
@@ -3578,7 +3580,7 @@ i32 philAI::ValueOfEventAtPosition(hero* aiHero, i16 x, i16 y, i32 immediate, i3
                 gVisitResult = 0;
             } else {
                 gEventTownScore = ValueOfTown(gEventTown);
-                if (immediate && gDebugLevel == AI_DEBUG_LEVEL_EVENT && x == AI_DEBUG_TRACE_COLUMN)
+                if (eventMode && gDebugLevel == AI_DEBUG_LEVEL_EVENT && x == AI_DEBUG_TRACE_COLUMN)
                     gDebugLevel = AI_DEBUG_LEVEL_BATTLE;
                 if (gGame->GetTown(gEventLocation->m_objectMetadata)->m_occupyingHeroId
                     != TOWN_OCCUPYING_HERO_NONE)
@@ -3620,7 +3622,7 @@ i32 philAI::ValueOfEventAtPosition(hero* aiHero, i16 x, i16 y, i32 immediate, i3
                     gOutcome = 0;
                 }
                 *liveChance = gWinChance * 100.0f;
-                if (immediate && gDebugLevel == AI_DEBUG_LEVEL_BATTLE)
+                if (eventMode && gDebugLevel == AI_DEBUG_LEVEL_BATTLE)
                     gDebugLevel = AI_DEBUG_LEVEL_EVENT;
                 if (gEventTown->m_owner >= 0)
                     gEventTownScore =
@@ -4014,7 +4016,7 @@ i32 philAI::ValueOfEventAtPosition(hero* aiHero, i16 x, i16 y, i32 immediate, i3
         gVisitResult = gVisitResult * gReduceFactor;
     if (gBerserk && gReduceByBerserk)
         gVisitResult = gVisitResult * gBerserkFactor;
-    if (!immediate) {
+    if (!eventMode) {
         if (gVisitResult > 0 && (gMapExtra[x][y] & MAP_EXTRA_MONSTER_ADJACENT)
             && MAP_TRIGGER_OBJECT(gEventLocation->m_triggerType) != MAP_OBJECT_MONSTER)
             gVisitResult = 0;

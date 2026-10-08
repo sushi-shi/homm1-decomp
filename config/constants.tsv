@@ -1048,7 +1048,7 @@ src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	-1	trivial-function-literal	
 src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	-9999	store	store to bestFV	below every stack's fight value: the best one found so far
 src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	0	trivial-function-literal	0 equality m_creatureCounts[[][]]	a stack emptied by the transfer
 src/SOURCE/PHILAI.cpp	philAI::ChooseEvaluateBattle	0	trivial-function-literal	0 store rating	a battle worth nothing
-src/SOURCE/PHILAI.cpp	philAI::ChooseEvaluateBattle	[01]	trivial-function-literal	[01] store canWin	ChooseEvaluateBattle's i32& verdict, shared with EVENTS' integer locals
+src/SOURCE/PHILAI.cpp	philAI::ChooseEvaluateBattle	[01]	trivial-function-literal	[01] store worthFighting	ChooseEvaluateBattle's i32& verdict, shared with EVENTS' integer locals
 src/SOURCE/PHILAI.cpp	philAI::CombatMonsterEvent	0	trivial-function-literal	0 store remaining	a count reset to zero
 src/SOURCE/PHILAI.cpp	philAI::CombatMonsterEvent	0	trivial-function-literal	0 equality result	QuickCombat's integer victory result: the hero lost
 src/SOURCE/PHILAI.cpp	philAI::CombatMonsterEvent	[01]	trivial-function-literal	[01] return	CombatMonsterEvent's i8 victory result for advManager (1 won, 0 lost)

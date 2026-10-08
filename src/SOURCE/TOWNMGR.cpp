@@ -139,7 +139,7 @@ townManager::townManager(void) {
     m_townObjectCount = 0;
     m_buildingWindow = NULL;
     m_coverWindow = NULL;
-    m_selectedBuilding = BUILDING_SLOT_NONE;
+    m_purchasedBuilding = BUILDING_SLOT_NONE;
     m_castleDialogActive = false;
     m_dispatchMask = TOWN_MANAGER_DISPATCH_MASK;
 }
@@ -220,7 +220,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) townManager::Open(i16 priority) {
         gResourceManager->MakeId(gText),
         0,
         &m_town->m_army,
-        TOWN_GARRISON_FIRST_CONTROL,
+        TOWN_GARRISON_CREST_CONTROL,
         1
     );
     if (m_garrisonStrip == NULL)
@@ -234,7 +234,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) townManager::Open(i16 priority) {
             gResourceManager->MakeId(gText),
             0,
             &gGame->GetHero(m_town->m_occupyingHeroId)->m_army,
-            TOWN_HERO_FIRST_CONTROL,
+            TOWN_HERO_PORTRAIT_CONTROL,
             1
         );
         if (m_heroStrip == NULL)
@@ -268,7 +268,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) townManager::Open(i16 priority) {
     KBChangeMenu(gTownMenu);
     gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);
     m_castleDialogActive = false;
-    m_recruitResult = false;
+    m_heroRecruited = false;
     m_lastHoverId = WINDOW_MANAGER_NO_HOVER_WIDGET;
     m_messageMask = BASE_MANAGER_ACCEPT_TOWN_EVENT;
     m_priority = priority;
@@ -417,7 +417,7 @@ void townManager::SetCommandAndText(struct tag_message& message) {
         case TOWN_EMPTY_STATUS_CONTROL_LAST:
             strcpy(m_statusText, gTownCommand[TOWN_TEXT_EMPTY_STATUS]);
             break;
-        case TOWN_GARRISON_FIRST_CONTROL:
+        case TOWN_GARRISON_CREST_CONTROL:
             strcpy(m_statusText, gTownCommand[TOWN_TEXT_GARRISON]);
             m_command = TOWN_ARMY_COMMAND_GARRISON;
             break;
@@ -445,7 +445,7 @@ void townManager::SetCommandAndText(struct tag_message& message) {
                 }
             }
             break;
-        case TOWN_HERO_FIRST_CONTROL:
+        case TOWN_HERO_PORTRAIT_CONTROL:
             strcpy(m_statusText, gTownCommand[TOWN_TEXT_VIEW_HERO]);
             m_command = TOWN_ARMY_COMMAND_VIEW_HERO;
             break;
@@ -747,9 +747,9 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) townManager::Main(struct tag_message&
                                 delete m_buildingWindow;
                             gWindowManager->RemoveWindow(m_coverWindow);
                             delete m_coverWindow;
-                            if (m_selectedBuilding != BUILDING_SLOT_NONE)
-                                BuildObj(m_selectedBuilding);
-                            if (m_recruitResult) {
+                            if (m_purchasedBuilding != BUILDING_SLOT_NONE)
+                                BuildObj(m_purchasedBuilding);
+                            if (m_heroRecruited) {
                                 hero* visitingHero;
                                 i32 i;
                                 i32 width;
@@ -772,7 +772,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) townManager::Main(struct tag_message&
                                     FIZZLE_USE_DEFAULT_DELAY
                                 );
                                 WaitSample(res);
-                                m_recruitResult = false;
+                                m_heroRecruited = false;
                                 gMouseManager->ReallyShowPointer();
                             }
                             gWindowManager->ReleaseFizzleSource();
@@ -1504,7 +1504,7 @@ i16 townManager::BuyBuild(
             TOWN_CLOSE_CONTROL,
             WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED
         );
-    m_selectedBuilding = BUILDING_SLOT_NONE;
+    m_purchasedBuilding = BUILDING_SLOT_NONE;
     if (quickView) {
         msg.command = WIDGET_COMMAND_CLEAR_FLAGS;
         msg.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
@@ -1536,7 +1536,7 @@ i16 townManager::BuyBuild(
         }
         gWindowManager->DoDialog(panel, TrueFalseDialogHandler, false);
         if (gWindowManager->m_dialogResult == DIALOG_BUTTON_2) {
-            m_selectedBuilding = building;
+            m_purchasedBuilding = building;
             for (i = 0; i < requiredCount; i++)
                 gCurPlayerData->m_resources[resourceTypes[i]] -= buildCosts[i];
         }
@@ -1612,7 +1612,7 @@ void townManager::BuildObj(H1_ENUM_PARAM(BuildingSlotType, i16) building) {
         FIZZLE_USE_DEFAULT_DELAY
     );
     WaitSample(sample);
-    m_selectedBuilding = BUILDING_SLOT_NONE;
+    m_purchasedBuilding = BUILDING_SLOT_NONE;
     m_bankBox->Update();
     m_townWindow->DrawWindow();
     gMouseManager->ReallyShowPointer();
@@ -1712,7 +1712,7 @@ void townManager::SetupCastle(class heroWindow* window) {
     else if (gCurPlayerData->m_heroCount == PLAYER_HERO_CAPACITY
              || m_town->m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE)
         stateFrame = TOWN_CASTLE_FRAME_CANNOT_BUILD;
-    else if (m_recruitResult)
+    else if (m_heroRecruited)
         stateFrame = TOWN_CASTLE_FRAME_BUILT;
     else
         stateFrame = TOWN_CASTLE_FRAME_NONE;
@@ -2169,7 +2169,7 @@ b8 townManager::RecruitHero(b8 quickView) {
     evtCopy.id = RECRUIT_HERO_CLASS_SECOND;
     evtCopy.text = gClassNames[m_recruitHeroes[1]->m_heroClass];
     m_childWindow->BroadcastMessage(evtCopy);
-    m_recruitState = RECRUIT_HERO_NONE;
+    m_recruitSlot = RECRUIT_HERO_NONE;
     if (quickView) {
         gMouseManager->ReallyHidePointer();
         gWindowManager->AddWindow(m_childWindow, WINDOW_Z_ORDER_APPEND, 1);
@@ -2179,40 +2179,40 @@ b8 townManager::RecruitHero(b8 quickView) {
     } else
         gWindowManager->DoDialog(m_childWindow, RecruitHeroHandler, false);
     delete m_childWindow;
-    if (m_recruitState != RECRUIT_HERO_NONE) {
+    if (m_recruitSlot != RECRUIT_HERO_NONE) {
         i32 newHeroClass;
         i16 townY;
         i16 townX;
 
         gCurPlayerData->m_resources[RESOURCE_GOLD] -= gHeroGoldCost;
         gCurPlayerData->m_heroIds[gCurPlayerData->m_heroCount] =
-            gCurPlayerData->m_availableHeroIds[m_recruitState];
+            gCurPlayerData->m_availableHeroIds[m_recruitSlot];
         gCurPlayerData->m_heroCount++;
         townX = m_town->m_x;
         townY = m_town->m_y;
-        m_recruitHeroes[m_recruitState]->m_x = townX;
-        m_recruitHeroes[m_recruitState]->m_y = townY;
-        m_recruitHeroes[m_recruitState]->m_eventFlags = HERO_EVENT_NONE;
-        m_recruitHeroes[m_recruitState]->m_direction = MAP_DIRECTION_EAST;
-        m_recruitHeroes[m_recruitState]->m_remainingMobility =
-            m_recruitHeroes[m_recruitState]->CalcMobility();
-        m_recruitHeroes[m_recruitState]->m_mobility =
-            m_recruitHeroes[m_recruitState]->m_remainingMobility;
-        m_recruitHeroes[m_recruitState]->m_locationType = gGame->m_map[townX][townY].m_triggerType;
-        m_recruitHeroes[m_recruitState]->m_locationMetadata =
+        m_recruitHeroes[m_recruitSlot]->m_x = townX;
+        m_recruitHeroes[m_recruitSlot]->m_y = townY;
+        m_recruitHeroes[m_recruitSlot]->m_eventFlags = HERO_EVENT_NONE;
+        m_recruitHeroes[m_recruitSlot]->m_direction = MAP_DIRECTION_EAST;
+        m_recruitHeroes[m_recruitSlot]->m_remainingMobility =
+            m_recruitHeroes[m_recruitSlot]->CalcMobility();
+        m_recruitHeroes[m_recruitSlot]->m_mobility =
+            m_recruitHeroes[m_recruitSlot]->m_remainingMobility;
+        m_recruitHeroes[m_recruitSlot]->m_locationType = gGame->m_map[townX][townY].m_triggerType;
+        m_recruitHeroes[m_recruitSlot]->m_locationMetadata =
             gGame->m_map[townX][townY].m_objectMetadata;
         gGame->m_map[townX][townY].m_triggerType = MAP_EVENT_TRIGGER(MAP_OBJECT_HERO);
         gGame->m_map[townX][townY].m_objectMetadata =
-            gCurPlayerData->m_availableHeroIds[m_recruitState];
-        m_recruitResult = true;
-        m_town->m_occupyingHeroId = m_recruitHeroes[m_recruitState]->m_id;
-        gGame->m_heroOwners[gCurPlayerData->m_availableHeroIds[m_recruitState]] = gCurPlayer;
+            gCurPlayerData->m_availableHeroIds[m_recruitSlot];
+        m_heroRecruited = true;
+        m_town->m_occupyingHeroId = m_recruitHeroes[m_recruitSlot]->m_id;
+        gGame->m_heroOwners[gCurPlayerData->m_availableHeroIds[m_recruitSlot]] = gCurPlayer;
         delete m_garrisonStrip;
         sprintf(
             gText,
             "crst%04d.icn",
             H1_ENUM_ENCODE(PlayerColor, gCurPlayerData->Color()) * HERO_CLASS_COUNT
-                + m_recruitHeroes[m_recruitState]->m_heroClass
+                + m_recruitHeroes[m_recruitSlot]->m_heroClass
         );
         m_garrisonStrip = new strip(
             0,
@@ -2223,32 +2223,31 @@ b8 townManager::RecruitHero(b8 quickView) {
             gResourceManager->MakeId(gText),
             0,
             &m_town->m_army,
-            TOWN_GARRISON_FIRST_CONTROL,
+            TOWN_GARRISON_CREST_CONTROL,
             0
         );
         if (m_garrisonStrip == NULL)
             MemError();
         delete m_heroStrip;
-        sprintf(gText, "port%04d.icn", m_recruitHeroes[m_recruitState]->m_portrait);
+        sprintf(gText, "port%04d.icn", m_recruitHeroes[m_recruitSlot]->m_portrait);
         m_heroStrip = new strip(
             0,
             TOWN_HERO_STRIP_Y,
             TOWN_HERO_STRIP_FRAME_COUNT,
             gResourceManager->MakeId(gText),
             0,
-            &m_recruitHeroes[m_recruitState]->m_army,
-            TOWN_HERO_FIRST_CONTROL,
+            &m_recruitHeroes[m_recruitSlot]->m_army,
+            TOWN_HERO_PORTRAIT_CONTROL,
             0
         );
         if (m_heroStrip == NULL)
             MemError();
         if (m_town->m_buildings & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_MAGE_GUILD))
             m_town->GiveSpells();
-        newHeroClass =
-            gCurPlayerData->m_availableHeroIds[1 - m_recruitState] / HERO_PER_CLASS_COUNT;
+        newHeroClass = gCurPlayerData->m_availableHeroIds[1 - m_recruitSlot] / HERO_PER_CLASS_COUNT;
         newHeroClass = (newHeroClass + Random(1, 3)) % HERO_CLASS_COUNT;
-        gCurPlayerData->m_availableHeroIds[m_recruitState] = gGame->GetNewHeroId(newHeroClass);
-        gGame->m_heroOwners[gCurPlayerData->m_availableHeroIds[m_recruitState]] =
+        gCurPlayerData->m_availableHeroIds[m_recruitSlot] = gGame->GetNewHeroId(newHeroClass);
+        gGame->m_heroOwners[gCurPlayerData->m_availableHeroIds[m_recruitSlot]] =
             HERO_AVAILABILITY_RETREATED;
     } else {
         if (m_castleDialogActive)
@@ -2264,8 +2263,8 @@ b8 townManager::RecruitHero(b8 quickView) {
         WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED
     );
     m_recruitHeroes[0]->m_owner = m_recruitHeroes[1]->m_owner = GAME_PLAYER_NONE;
-    if (m_recruitState != RECRUIT_HERO_NONE)
-        m_recruitHeroes[m_recruitState]->m_owner = gCurPlayer;
+    if (m_recruitSlot != RECRUIT_HERO_NONE)
+        m_recruitHeroes[m_recruitSlot]->m_owner = gCurPlayer;
     return gWindowManager->m_dialogResult != DIALOG_BUTTON_1;
 }
 
@@ -2487,7 +2486,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) CastleHandler(struct tag_message& mes
                     case TOWN_CASTLE_HERO_CONTROL:
                         if (quickViewVal)
                             gTownManager->RecruitHero(true);
-                        else if (!gTownManager->m_recruitResult
+                        else if (!gTownManager->m_heroRecruited
                                  && gCurPlayerData->m_resources[RESOURCE_GOLD] >= gHeroGoldCost
                                  && gCurPlayerData->m_heroCount < PLAYER_HERO_CAPACITY
                                  && gTownManager->m_town->m_occupyingHeroId

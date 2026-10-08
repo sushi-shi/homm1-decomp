@@ -95,7 +95,7 @@ i16 army::GetAttackMask(
     i16 curMask;
     H1_ENUM_LOCAL(CombatHexDirection, i16) nDirectionCount;
 
-    curMask = (m_stats.attributes & MONSTER_FLAGS_WIDE) ? 0 : SPECIAL_DIRECTION_MASK;
+    curMask = (m_stats.attributes & MONSTER_FLAGS_WIDE) ? 0 : WIDE_DIRECTIONS_MASK;
     curDirBit = 1;
     nDirectionCount = (m_stats.attributes & MONSTER_FLAGS_WIDE) ? COMBAT_DIRECTION_COUNT
                                                                 : COMBAT_DIRECTION_ADJACENT_COUNT;
@@ -284,7 +284,7 @@ i16 army::ValidRange(i16 targetHex) {
         return 0;
     m_moveTargetHex = m_hex;
     if (!(m_stats.attributes & MONSTER_FLAGS_WIDE)) {
-        m_attackDirection = GetBestDirection(m_hex, targetHex, SPECIAL_DIRECTION_MASK);
+        m_attackDirection = GetBestDirection(m_hex, targetHex, WIDE_DIRECTIONS_MASK);
         adjacentHex = GetAdjacentCellIndex(m_hex, m_attackDirection);
         if (adjacentHex == targetHex)
             return 1;
@@ -294,7 +294,7 @@ i16 army::ValidRange(i16 targetHex) {
     } else {
         switch (m_facing) {
             case ARMY_FACING_RIGHT:
-                res = GetBestDirection(m_hex, targetHex, SPECIAL_DIRECTION_MASK);
+                res = GetBestDirection(m_hex, targetHex, WIDE_DIRECTIONS_MASK);
                 if (res > COMBAT_DIRECTION_EASTERN_LAST) {
                     m_attackDirection = res;
                     adjacentHex = GetAdjacentCellIndex(m_hex, res);
@@ -304,7 +304,7 @@ i16 army::ValidRange(i16 targetHex) {
                     if (adjacentHex == targetHex)
                         return 1;
                 }
-                res = GetBestDirection(m_hex + WIDE_HEX_OFFSET, targetHex, SPECIAL_DIRECTION_MASK);
+                res = GetBestDirection(m_hex + WIDE_HEX_OFFSET, targetHex, WIDE_DIRECTIONS_MASK);
                 if (res < COMBAT_DIRECTION_WESTERN_FIRST) {
                     m_attackDirection = res;
                     adjacentHex = GetAdjacentCellIndex(m_hex + WIDE_HEX_OFFSET, res);
@@ -328,7 +328,7 @@ i16 army::ValidRange(i16 targetHex) {
                     return 1;
                 break;
             case ARMY_FACING_LEFT:
-                res = GetBestDirection(m_hex, targetHex, SPECIAL_DIRECTION_MASK);
+                res = GetBestDirection(m_hex, targetHex, WIDE_DIRECTIONS_MASK);
                 if (res < COMBAT_DIRECTION_WESTERN_FIRST) {
                     m_attackDirection = res;
                     adjacentHex = GetAdjacentCellIndex(m_hex, res);
@@ -339,7 +339,7 @@ i16 army::ValidRange(i16 targetHex) {
                         return 1;
                     return 0;
                 }
-                res = GetBestDirection(m_hex - WIDE_HEX_OFFSET, targetHex, SPECIAL_DIRECTION_MASK);
+                res = GetBestDirection(m_hex - WIDE_HEX_OFFSET, targetHex, WIDE_DIRECTIONS_MASK);
                 if (res > COMBAT_DIRECTION_EASTERN_LAST) {
                     m_attackDirection = res;
                     adjacentHex = GetAdjacentCellIndex(m_hex - WIDE_HEX_OFFSET, res);
