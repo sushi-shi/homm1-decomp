@@ -7,6 +7,7 @@
 #include <BASE/Misc.h>
 #include <BASE/miscwin.h>
 #include <BASE/resourceManager.h>
+#include <BASE/textWidget.h>
 #include <BASE/widget.h>
 #include <SOURCE/highScoreManager.h>
 #include <SOURCE/KB.h>
@@ -61,7 +62,7 @@ i16 highScoreManager::Main(struct tag_message& message) {
     tag_message windowMessage;
 
     result = false;
-    if (gShowHighScore != false)
+    if (gShowHighScore)
         gShowHighScore = false;
 
     if (gTimers[HIGH_SCORE_TIMER_SLOT] < KBTickCount()) {
@@ -236,7 +237,7 @@ void highScoreManager::Update(void) {
                 hsMessage.value = HIGH_SCORE_HIGHLIGHT_COLOR;
             } else {
                 hsMessage.command = WIDGET_COMMAND_SET_COLOR;
-                hsMessage.value = HIGH_SCORE_NORMAL_COLOR;
+                hsMessage.value = TEXT_WIDGET_PLAIN_COLOR;
             }
             hsMessage.id = rank * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET;
             m_window->BroadcastMessage(hsMessage);

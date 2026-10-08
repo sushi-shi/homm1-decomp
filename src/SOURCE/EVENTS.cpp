@@ -63,7 +63,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
     visitingHero = gGame->GetHero(gCurPlayerData->m_currentHero);
     eventKind = MAP_TRIGGER_OBJECT(cell->m_triggerType);
     removeObj = false;
-    fizzleEffect = EVENT_FIZZLE_HERO_LOSS;
+    fizzleEffect = EVENT_FIZZLE_KILL;
     gEventMusicPlaying = true;
     gMouseManager->ReallyHidePointer();
     EventSound(eventKind, cell->m_objectMetadata);
@@ -373,7 +373,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                 );
             } else {
                 visitingHero->m_eventFlags |= HERO_EVENT_STATUE;
-                visitingHero->m_morale += TEMPLE_MORALE_BONUS;
+                visitingHero->m_morale += STATUE_MORALE_BONUS;
                 EventWindow(
                     EVENT_TEXT_STATUE_REWARD,
                     NORMAL_DIALOG_TYPE_OK,
@@ -985,7 +985,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
             } else {
                 theirTown = NULL;
                 if (opponent->m_locationType == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN)) {
-                    theirTown = gGame->GetTown(opponent->m_occupiedTown);
+                    theirTown = gGame->GetTown(opponent->m_locationMetadata);
                     theirTown->m_occupyingHeroId = opponent->m_id;
                 }
                 fightOutcome = DoCombat(
@@ -1451,7 +1451,17 @@ void advManager::EventWindow(
     }
     else
         sprintf(eventText, localization::Tr("event.unknown"), eventId);
-    NormalDialog(eventText, buttons, 0x61, -1, type1, value1, type2, value2, showOrText);
+    NormalDialog(
+        eventText,
+        buttons,
+        NORMAL_DIALOG_ADVENTURE_X,
+        NORMAL_DIALOG_AUTO_POSITION,
+        type1,
+        value1,
+        type2,
+        value2,
+        showOrText
+    );
 }
 
 i16 advManager::GiveArtifact(class hero* eventHero, i8 artifact) {
@@ -1465,7 +1475,7 @@ i16 advManager::GiveArtifact(class hero* eventHero, i8 artifact) {
         return GIVE_ARTIFACT_NO_SLOT;
     eventHero->m_artifacts[slot] = artifact;
     if (artifact >= 0 && artifact < ARTIFACT_REGULAR_END)
-        gGame->m_randomArtifacts[artifact] = eventHero->m_id;
+        gGame->m_artifactHolders[artifact] = eventHero->m_id;
     GiveTakeArtifactStat(eventHero, artifact, EVENT_ARTIFACT_GIVE);
     return slot;
 }
@@ -1843,7 +1853,7 @@ void advManager::GiveTakeArtifactStat(
             amount = 1;
             break;
         case ARTIFACT_BALLISTA:
-            theStat = HERO_PRIMARY_BALLISTA;
+            theStat = HERO_PRIMARY_SIEGE;
             amount = 3;
             break;
         case ARTIFACT_STEALTH_SHIELD:
@@ -1928,7 +1938,7 @@ void advManager::TransferArtifacts(class hero* sourceHero, class hero* destHero)
                                 sourceHero->m_artifacts[j]
                             );
                         }
-                        gGame->m_randomArtifacts[sourceHero->m_artifacts[j]] = HERO_ID_NONE;
+                        gGame->m_artifactHolders[sourceHero->m_artifacts[j]] = HERO_ID_NONE;
                     } else {
                         GiveTakeArtifactStat(
                             destHero,
@@ -1936,7 +1946,7 @@ void advManager::TransferArtifacts(class hero* sourceHero, class hero* destHero)
                             EVENT_ARTIFACT_GIVE
                         );
                         destHero->m_artifacts[i] = sourceHero->m_artifacts[j];
-                        gGame->m_randomArtifacts[sourceHero->m_artifacts[j]] = destHero->m_id;
+                        gGame->m_artifactHolders[sourceHero->m_artifacts[j]] = destHero->m_id;
                     }
                     GiveTakeArtifactStat(
                         sourceHero,
@@ -1957,7 +1967,7 @@ void advManager::HeroLoses(class hero* lostHero) {
     CompleteDraw(m_mapOriginX, m_mapOriginY, false);
     UpdateScreen(false, false);
     lostHero->Deallocate();
-    FizzleCenter(EVENT_FIZZLE_HERO_LOSS);
+    FizzleCenter(EVENT_FIZZLE_KILL);
     UpdateRadar(true, false);
     UpdateHeroLocators(true, 1);
 }
@@ -2002,7 +2012,7 @@ void advManager::FizzleCenter(i32 fizzleType) {
     if (!gShowIt)
         return;
     switch (fizzleType) {
-        case EVENT_FIZZLE_HERO_LOSS:
+        case EVENT_FIZZLE_KILL:
             sprintf(gText, "killfade.82M");
             break;
         case EVENT_FIZZLE_PICKUP:
@@ -2026,7 +2036,7 @@ void advManager::FizzleCenter(i32 fizzleType) {
 }
 
 void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i32 y) {
-    i32 freeSlot;
+    i32 replacementSlot;
     town* heroTown;
     playerData* ownerPlayerData;
     i32 purchaseValue;
@@ -2043,7 +2053,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
     i32 battleResult;
     i8 eventType;
     i8 teleX;
-    i32 canWin;
+    i32 worthFighting;
     i8 teleY;
     i32 armyStrength;
     i8 portalCount;
@@ -2118,10 +2128,10 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                 0,
                 0,
                 500,
-                canWin,
+                worthFighting,
                 armyStrength
             );
-            if (canWin) {
+            if (worthFighting) {
                 c = DRAGON_CITY_DRAGON_COUNT;
                 success = gPhilAI->CombatMonsterEvent(eventHero, CREATURE_DRAGON, &c, cell);
                 if (success)
@@ -2176,7 +2186,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
         case MAP_OBJECT_STATUE:
             if (!(eventHero->m_eventFlags & HERO_EVENT_STATUE)) {
                 eventHero->m_eventFlags |= HERO_EVENT_STATUE;
-                eventHero->m_morale += TEMPLE_MORALE_BONUS;
+                eventHero->m_morale += STATUE_MORALE_BONUS;
             }
             break;
         case MAP_OBJECT_SKELETON:
@@ -2282,10 +2292,10 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                     isFree,
                     recruited,
                     purchaseValue,
-                    freeSlot
+                    replacementSlot
                 );
                 if (recruited > 0) {
-                    gGame->GiveArmy(&eventHero->m_army, recruitType, recruited, freeSlot);
+                    gGame->GiveArmy(&eventHero->m_army, recruitType, recruited, replacementSlot);
                     cell->m_objectMetadata -= recruited;
                     if (!isFree) {
                         GetMonsterCost(recruitType, troopCost);
@@ -2392,7 +2402,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
             if (opponent->m_owner == gCurPlayer)
                 return;
             if (opponent->m_locationType == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN))
-                heroTown = gGame->GetTown(opponent->m_occupiedTown);
+                heroTown = gGame->GetTown(opponent->m_locationMetadata);
             if (!gHumanPlayer[opponent->m_owner]) {
                 battleResult = gPhilAI->QuickCombat(
                     &eventHero->m_army,
@@ -2564,9 +2574,9 @@ void advManager::ComputerMonsterInteract(
     class hero* eventHero,
     b8* removeMonsterObject
 ) {
-    i32 numToBuy;
-    i32 purchaseWorth;
-    i32 bestSlot;
+    i32 purchaseCount;
+    i32 purchaseValue;
+    i32 replacementSlot;
     i32 won;
     i32 monsterCount;
 
@@ -2581,16 +2591,16 @@ void advManager::ComputerMonsterInteract(
             cell->m_objectIndex,
             cell->m_objectMetadata & MONSTER_COUNT_MASK,
             true,
-            numToBuy,
-            purchaseWorth,
-            bestSlot
+            purchaseCount,
+            purchaseValue,
+            replacementSlot
         );
-        if (numToBuy > 0) {
+        if (purchaseCount > 0) {
             gGame->GiveArmy(
                 &eventHero->m_army,
                 cell->m_objectIndex,
                 cell->m_objectMetadata & MONSTER_COUNT_MASK,
-                bestSlot
+                replacementSlot
             );
             *removeMonsterObject = true;
         }
@@ -2609,73 +2619,73 @@ void advManager::ComputerMonsterInteract(
 }
 
 i32 advManager::DoNetCombat(RemoteMessage* packet) {
-    hero* secondHro;
-    i32 theCellY;
-    i32 curPosX;
+    hero* secondHero;
+    i32 combatY;
+    i32 combatX;
     i32 randSeed;
-    i32 ourFoe;
+    i32 remotePlayer;
     i8 combatRes;
     i32 firstSide;
-    hero* attackingHro;
-    i32 curStartY;
-    i32 sx;
+    hero* firstHero;
+    i32 eventY;
+    i32 eventX;
     armyGroup* secondArmy;
-    armyGroup* attackTroops;
+    armyGroup* firstArmy;
     town* battleTown;
     i32 allReserved;
     i32 curUnused2;
 
-    attackingHro = NULL;
-    attackTroops = NULL;
+    firstHero = NULL;
+    firstArmy = NULL;
     battleTown = NULL;
-    secondHro = NULL;
+    secondHero = NULL;
     secondArmy = NULL;
     ReceiveHeroTownData(
         packet,
-        &ourFoe,
-        &curPosX,
-        &theCellY,
-        &attackingHro,
-        &attackTroops,
+        &remotePlayer,
+        &combatX,
+        &combatY,
+        &firstHero,
+        &firstArmy,
         &battleTown,
-        &secondHro,
+        &secondHero,
         &secondArmy,
-        &sx,
-        &curStartY,
+        &eventX,
+        &eventY,
         &randSeed,
         &combatRes,
         &gRetreatWin,
         &gCombatSurrender
     );
-    firstSide = attackingHro->m_owner;
-    combatRes = (DoCombat( curPosX, theCellY, attackingHro, attackTroops, battleTown, secondHro, secondArmy, sx, curStartY, randSeed, false ));
+    firstSide = firstHero->m_owner;
+    combatRes = (DoCombat( combatX, combatY, firstHero, firstArmy, battleTown, secondHero, secondArmy, eventX, eventY, randSeed, false ));
     if (!gHumanPlayer[firstSide])
         SendHeroTownData(
-            curPosX,
-            theCellY,
-            attackingHro,
-            attackTroops,
+            combatX,
+            combatY,
+            firstHero,
+            firstArmy,
             battleTown,
-            secondHro,
+            secondHero,
             secondArmy,
-            sx,
-            curStartY,
+            eventX,
+            eventY,
             randSeed,
-            ourFoe,
+            remotePlayer,
             combatRes,
             gRetreatWin,
             gCombatSurrender
         );
-    if (attackTroops)
-        free(attackTroops);
+    if (firstArmy)
+        free(firstArmy);
     if (secondArmy)
         free(secondArmy);
     if (battleTown)
         free(battleTown);
-    if (secondHro)
-        free(secondHro);
-    if (attackingHro)
-        free(attackingHro);
+    if (secondHero)
+        free(secondHero);
+    if (firstHero)
+        free(firstHero);
     gRetreatWin = false;
     gCombatSurrender = false;
     return 1;
@@ -2689,16 +2699,16 @@ i32 advManager::DoCombat(
     class town* combatTown,
     class hero* secondHero,
     class armyGroup* secondArmy,
-    i32 setupCombatX,
-    i32 setupCombatY,
+    i32 eventX,
+    i32 eventY,
     i32 randomSeed,
     b8 processLosses
 ) {
-    armyGroup* army2NetRec;
-    hero* hero2NetItem;
-    hero* hero1Net;
-    armyGroup* army1NetRef;
-    town* townNetItem;
+    armyGroup* receivedSecondArmy;
+    hero* receivedSecondHero;
+    hero* receivedFirstHero;
+    armyGroup* receivedFirstArmy;
+    town* receivedTown;
     i32 senderPlayer;
     RemoteMessage* receivedPacket;
     i8 combatRes;
@@ -2733,8 +2743,8 @@ i32 advManager::DoCombat(
                 combatTown,
                 secondHero,
                 secondArmy,
-                setupCombatX,
-                setupCombatY,
+                eventX,
+                eventY,
                 randomSeed,
                 defenderSide,
                 0,
@@ -2761,37 +2771,37 @@ i32 advManager::DoCombat(
                                     &senderPlayer,
                                     &x,
                                     &y,
-                                    &hero1Net,
-                                    &army1NetRef,
-                                    &townNetItem,
-                                    &hero2NetItem,
-                                    &army2NetRec,
-                                    &setupCombatX,
-                                    &setupCombatY,
+                                    &receivedFirstHero,
+                                    &receivedFirstArmy,
+                                    &receivedTown,
+                                    &receivedSecondHero,
+                                    &receivedSecondArmy,
+                                    &eventX,
+                                    &eventY,
                                     &randomSeed,
                                     &combatRes,
                                     &gRetreatWin,
                                     &gCombatSurrender
                                 );
-                                if (army1NetRef) {
-                                    memcpy(firstArmy, army1NetRef, sizeof(armyGroup));
-                                    free(army1NetRef);
+                                if (receivedFirstArmy) {
+                                    memcpy(firstArmy, receivedFirstArmy, sizeof(armyGroup));
+                                    free(receivedFirstArmy);
                                 }
-                                if (army2NetRec) {
-                                    memcpy(secondArmy, army2NetRec, sizeof(armyGroup));
-                                    free(army2NetRec);
+                                if (receivedSecondArmy) {
+                                    memcpy(secondArmy, receivedSecondArmy, sizeof(armyGroup));
+                                    free(receivedSecondArmy);
                                 }
-                                if (townNetItem) {
-                                    memcpy(combatTown, townNetItem, sizeof(town));
-                                    free(townNetItem);
+                                if (receivedTown) {
+                                    memcpy(combatTown, receivedTown, sizeof(town));
+                                    free(receivedTown);
                                 }
-                                if (hero2NetItem) {
-                                    memcpy(secondHero, hero2NetItem, sizeof(hero));
-                                    free(hero2NetItem);
+                                if (receivedSecondHero) {
+                                    memcpy(secondHero, receivedSecondHero, sizeof(hero));
+                                    free(receivedSecondHero);
                                 }
-                                if (hero1Net) {
-                                    memcpy(firstHero, hero1Net, sizeof(hero));
-                                    free(hero1Net);
+                                if (receivedFirstHero) {
+                                    memcpy(firstHero, receivedFirstHero, sizeof(hero));
+                                    free(receivedFirstHero);
                                 }
                                 gCombatManager->m_combatResult =
                                     combatRes;
@@ -2889,8 +2899,8 @@ void advManager::SendHeroTownData(
     class town* combatTown,
     class hero* secondHero,
     class armyGroup* secondArmy,
-    i32 setupCombatX,
-    i32 setupCombatY,
+    i32 eventX,
+    i32 eventY,
     i32 randomSeed,
     i8 remotePlayer,
     i8 combatResult,
@@ -2913,8 +2923,8 @@ void advManager::SendHeroTownData(
     buffer.combat->hasFirstHero = firstHero != NULL;
     buffer.combat->hasTown = combatTown != NULL;
     buffer.combat->hasSecondHero = secondHero != NULL;
-    buffer.combat->setupCombatX = setupCombatX;
-    buffer.combat->setupCombatY = setupCombatY;
+    buffer.combat->eventX = eventX;
+    buffer.combat->eventY = eventY;
     buffer.combat->randomSeed = randomSeed;
     buffer.combat->combatResult = combatResult;
     buffer.combat->retreatWin = retreatWin;
@@ -2980,8 +2990,8 @@ void advManager::ReceiveHeroTownData(
     class town** combatTown,
     class hero** secondHero,
     class armyGroup** secondArmy,
-    i32* setupCombatX,
-    i32* setupCombatY,
+    i32* eventX,
+    i32* eventY,
     i32* randomSeed,
     i8* combatResult,
     b8* retreatWin,
@@ -2992,7 +3002,7 @@ void advManager::ReceiveHeroTownData(
     i32 lastReceiveTick;
     i8 firstOwner;
     i8 secondOwner;
-    b8 bFirstHero;
+    b8 firstHeroIncluded;
     b8 hasSecondHero;
 
     *firstHero = NULL;
@@ -3000,15 +3010,15 @@ void advManager::ReceiveHeroTownData(
     *combatTown = NULL;
     *secondHero = NULL;
     *secondArmy = NULL;
-    bFirstHero = hasSecondHero = hasTownOn = false;
+    firstHeroIncluded = hasSecondHero = hasTownOn = false;
     *remotePlayer = packet->sender;
     *x = EVENTS_REMOTE_MESSAGE(packet)->combat.x;
     *y = EVENTS_REMOTE_MESSAGE(packet)->combat.y;
-    bFirstHero = EVENTS_REMOTE_MESSAGE(packet)->combat.hasFirstHero;
+    firstHeroIncluded = EVENTS_REMOTE_MESSAGE(packet)->combat.hasFirstHero;
     hasTownOn = EVENTS_REMOTE_MESSAGE(packet)->combat.hasTown;
     hasSecondHero = EVENTS_REMOTE_MESSAGE(packet)->combat.hasSecondHero;
-    *setupCombatX = EVENTS_REMOTE_MESSAGE(packet)->combat.setupCombatX;
-    *setupCombatY = EVENTS_REMOTE_MESSAGE(packet)->combat.setupCombatY;
+    *eventX = EVENTS_REMOTE_MESSAGE(packet)->combat.eventX;
+    *eventY = EVENTS_REMOTE_MESSAGE(packet)->combat.eventY;
     *randomSeed = EVENTS_REMOTE_MESSAGE(packet)->combat.randomSeed;
     *combatResult = EVENTS_REMOTE_MESSAGE(packet)->combat.combatResult;
     *retreatWin = EVENTS_REMOTE_MESSAGE(packet)->combat.retreatWin;
@@ -3037,7 +3047,7 @@ void advManager::ReceiveHeroTownData(
         ShutDown(NULL);
 
     lastReceiveTick = KBTickCount();
-    while ((hasSecondHero && !*secondHero) || (bFirstHero && !*firstHero)) {
+    while ((hasSecondHero && !*secondHero) || (firstHeroIncluded && !*firstHero)) {
         PollSound();
         if (lastReceiveTick + REMOTE_WAIT_TIMEOUT < KBTickCount()) {
             NormalDialog(

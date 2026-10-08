@@ -25,12 +25,7 @@ public:
     resource* m_next;
 
     resource();
-    resource(
-        i16 category,
-        i16 id,
-        i16 refCount,
-        resource* next
-    );
+    resource(i16 category, i16 id, i16 refCount, resource* next);
     virtual ~resource() = 0;
 };
 #pragma pack(pop)

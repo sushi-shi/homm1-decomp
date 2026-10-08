@@ -75,9 +75,9 @@ enum PrefsConstant {
     KBWIN_COMMAND_LINE_LIMIT = 60,
     KBWIN_MESSAGE_FILTER_SIZE = 0x400,
     KBWIN_APPLICATION_ICON = 109,
-    KBWIN_CLASS_STYLE = 0x100b,
-    KBWIN_WINDOWED_STYLE = 0x14cf0000,
-    KBWIN_FULLSCREEN_STYLE = 0x14000000,
+    KBWIN_CLASS_STYLE = CS_BYTEALIGNCLIENT | CS_DBLCLKS | CS_HREDRAW | CS_VREDRAW,
+    KBWIN_WINDOWED_STYLE = WS_VISIBLE | WS_CLIPSIBLINGS | WS_OVERLAPPEDWINDOW,
+    KBWIN_FULLSCREEN_STYLE = WS_VISIBLE | WS_CLIPSIBLINGS,
     KBWIN_PROCESS_MESSAGE_MAX = 0x3ff,
     KBWIN_TIMER_ID = 1,
     KBWIN_TIMER_INTERVAL = 10,
@@ -126,13 +126,13 @@ struct WindowTextEntry {
 
 extern HMENU gCurrentMenu;
 i32 AppCommand(HWND window, u32 message, u32 messageParam, i32 messageData);
-i32 AppIdle(void);
+BOOL AppIdle(void);
 void AppExit(void);
 void SetGameDefaults(void);
 void ReadPrefs(void);
 i32 SetupCDDrive(void);
-i32 AppInit(HINSTANCE instance, HINSTANCE previousInstance, i32 showCommand, char* commandLine);
-long __stdcall AppWndProc(HWND window, u32 message, u32 messageParam, long messageData);
+BOOL AppInit(HINSTANCE instance, HINSTANCE previousInstance, i32 showCommand, char* commandLine);
+LRESULT CALLBACK AppWndProc(HWND window, UINT message, WPARAM messageParam, LPARAM messageData);
 extern "C" BOOL __stdcall
 AppAbout(HWND dialog, UINT message, WPARAM messageParam, LPARAM messageData);
 void KBChangeMenu(HMENU menu);
@@ -141,15 +141,12 @@ void SetMenuStatus(i32 showMenu);
 void SetWinText(class heroWindow* window, i16 id);
 void UpdateDfltMenu(HMENU menu);
 extern i32 gForegroundApp;
-extern i32 gNoDialogMenusOn;
 extern HMENU gAppMenu;
 extern HMENU gAdventureMenu;
 extern HMENU gDefaultMenu;
 extern HMENU gCombatMenu;
 extern HMENU gTownMenu;
 extern b32 gClosingApp;
-extern i32 gLastGetMessage;
-extern i32 gLastAilServe;
 i32 KBTickCount();
 void Process1WindowsMessage();
 void SetNoDialogMenus(i32 menusEnabled);

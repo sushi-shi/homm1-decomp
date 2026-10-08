@@ -50,15 +50,15 @@ heroWindow::heroWindow(i16 x, i16 y, i16 width, i16 height, i16 flags) {
 heroWindow::heroWindow(i16 x, i16 y, char* resourceName) {
     i16 finished;
     i16 resourceFile;
-    dimmerWidget* pDimmer;
-    border* pBorder;
-    widget* pWidget;
-    textEntryWidget* pTextEnt;
-    iconWidget* pIcon;
-    button* pButton;
-    textWidget* pText;
+    dimmerWidget* dimmerItem;
+    border* borderItem;
+    widget* item;
+    textEntryWidget* textEntryItem;
+    iconWidget* iconItem;
+    button* buttonItem;
+    textWidget* textItem;
     i16 recordKind;
-    backdropWidget* pBack;
+    backdropWidget* backdropItem;
 
     strcpy(m_name, resourceName);
     resourceFile = gResourceManager->MakeId(resourceName);
@@ -78,59 +78,59 @@ heroWindow::heroWindow(i16 x, i16 y, char* resourceName) {
     while (finished == 0) {
         PollSound();
         recordKind = static_cast<i16>(gResourceManager->ReadWord());
-        pWidget = NULL;
+        item = NULL;
         switch (recordKind) {
             case WIDGET_RECORD_END:
                 finished++;
                 break;
             case WIDGET_RECORD_BORDER:
-                pBorder = new border();
-                pBorder->Read();
-                pWidget = pBorder;
+                borderItem = new border();
+                borderItem->Read();
+                item = borderItem;
                 break;
             case WIDGET_RECORD_BUTTON:
-                pButton = new button();
-                pButton->Read();
-                pWidget = pButton;
+                buttonItem = new button();
+                buttonItem->Read();
+                item = buttonItem;
                 break;
             case WIDGET_RECORD_ICON:
-                pIcon = new iconWidget();
-                pIcon->Read();
-                pWidget = pIcon;
+                iconItem = new iconWidget();
+                iconItem->Read();
+                item = iconItem;
                 break;
             case WIDGET_RECORD_DIMMER:
-                pDimmer = new dimmerWidget();
-                pDimmer->Read();
-                pWidget = pDimmer;
+                dimmerItem = new dimmerWidget();
+                dimmerItem->Read();
+                item = dimmerItem;
                 break;
             case WIDGET_RECORD_BACKDROP:
-                pBack = new backdropWidget();
-                pBack->Read();
-                pWidget = pBack;
+                backdropItem = new backdropWidget();
+                backdropItem->Read();
+                item = backdropItem;
                 break;
             case WIDGET_RECORD_TEXT:
-                pText = new textWidget();
-                pText->Read();
-                pWidget = pText;
+                textItem = new textWidget();
+                textItem->Read();
+                item = textItem;
                 break;
             case WIDGET_RECORD_TEXT_ENTRY:
-                pTextEnt = new textEntryWidget();
-                pTextEnt->Read(TEXT_ENTRY_READ_DEFAULT);
-                pWidget = pTextEnt;
+                textEntryItem = new textEntryWidget();
+                textEntryItem->Read(TEXT_ENTRY_READ_DEFAULT);
+                item = textEntryItem;
                 break;
             case WIDGET_RECORD_TEXT_ENTRY_RECT:
-                pTextEnt = new textEntryWidget();
-                pTextEnt->Read(TEXT_ENTRY_READ_RECT);
-                pWidget = pTextEnt;
+                textEntryItem = new textEntryWidget();
+                textEntryItem->Read(TEXT_ENTRY_READ_RECT);
+                item = textEntryItem;
                 break;
             case WIDGET_RECORD_TEXT_ENTRY_SCROLLING:
-                pTextEnt = new textEntryWidget();
-                pTextEnt->Read(TEXT_ENTRY_READ_SCROLLING);
-                pWidget = pTextEnt;
+                textEntryItem = new textEntryWidget();
+                textEntryItem->Read(TEXT_ENTRY_READ_SCROLLING);
+                item = textEntryItem;
                 break;
         }
-        if (finished == 0 && pWidget != NULL)
-            AddWidget(pWidget, WINDOW_Z_ORDER_APPEND);
+        if (finished == 0 && item != NULL)
+            AddWidget(item, WINDOW_Z_ORDER_APPEND);
     }
 }
 
@@ -286,10 +286,10 @@ void heroWindow::RestoreBackground(void) {
 }
 
 void heroWindow::MoveWindow(i16 dx, i16 dy) {
-    i16 oldX = m_posX;
-    i16 oldY = m_posY;
-    i16 oldWidth = m_winWidth;
-    i16 oldHeight = m_winHeight;
+    i16 dirtyX = m_posX;
+    i16 dirtyY = m_posY;
+    i16 dirtyWidth = m_winWidth;
+    i16 dirtyHeight = m_winHeight;
     i16 newX = m_posX + dx;
     i16 newY = m_posY + dy;
     if (newX < 0)
@@ -305,11 +305,11 @@ void heroWindow::MoveWindow(i16 dx, i16 dy) {
     m_posY = newY;
     m_savedBackground->GrabBitmap(gWindowManager->m_screen, m_posX, m_posY);
     DrawWindow(0);
-    oldWidth += abs(m_posX - oldX);
-    oldHeight += abs(m_posY - oldY);
-    if (m_posX < oldX)
-        oldX = m_posX;
-    if (m_posY < oldY)
-        oldY = m_posY;
-    gWindowManager->UpdateScreenRegion(oldX, oldY, oldWidth, oldHeight);
+    dirtyWidth += abs(m_posX - dirtyX);
+    dirtyHeight += abs(m_posY - dirtyY);
+    if (m_posX < dirtyX)
+        dirtyX = m_posX;
+    if (m_posY < dirtyY)
+        dirtyY = m_posY;
+    gWindowManager->UpdateScreenRegion(dirtyX, dirtyY, dirtyWidth, dirtyHeight);
 }

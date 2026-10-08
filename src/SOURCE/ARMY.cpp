@@ -234,13 +234,13 @@ void army::DrawToBuffer(i16 x, i16 y) {
                 ARMY_FACING_ORIENTATION(m_facing),
                 offsetMode
             );
-            if (m_hex == gCombatManager->m_limitCreatureHex
-                && gCombatManager->m_limitCreature == true) {
+            if (m_hex == gCombatManager->m_selectorHex
+                && gCombatManager->m_selectorVisible == true) {
                 m_standIcon->FillToBuffer(
                     x,
                     y,
                     0,
-                    ARMY_LIMIT_OUTLINE_COLOR,
+                    ARMY_SELECTOR_OUTLINE_COLOR,
                     ARMY_FACING_ORIENTATION(m_facing),
                     offsetMode
                 );
@@ -1037,11 +1037,11 @@ void army::DoAttack(b32 retaliation) {
         m_facing = ARMY_FACING_LEFT;
     if (m_attackDirection == COMBAT_DIRECTION_NORTHWEST
         || m_attackDirection == COMBAT_DIRECTION_NORTHEAST
-        || m_attackDirection == COMBAT_DIRECTION_WIDE_WEST)
+        || m_attackDirection == COMBAT_DIRECTION_WIDE_NORTH)
         frameBase = 6;
     else if (m_attackDirection == COMBAT_DIRECTION_SOUTHWEST
              || m_attackDirection == COMBAT_DIRECTION_SOUTHEAST
-             || m_attackDirection == COMBAT_DIRECTION_WIDE_EAST)
+             || m_attackDirection == COMBAT_DIRECTION_WIDE_SOUTH)
         frameBase = 8;
     else
         frameBase = 7;
@@ -1288,7 +1288,7 @@ void army::DoAttack(b32 retaliation) {
                         : static_cast<i8>(COMBAT_DIRECTION_NORTHEAST)
                 );
                 if (checkHex == m_hex)
-                    struckArmy->m_attackDirection = COMBAT_DIRECTION_WIDE_WEST;
+                    struckArmy->m_attackDirection = COMBAT_DIRECTION_WIDE_NORTH;
                 checkHex = GetAdjacentCellIndex(
                     struckArmy->m_hex,
                     struckArmy->m_facing
@@ -1296,7 +1296,7 @@ void army::DoAttack(b32 retaliation) {
                         : static_cast<i8>(COMBAT_DIRECTION_SOUTHEAST)
                 );
                 if (checkHex == m_hex)
-                    struckArmy->m_attackDirection = COMBAT_DIRECTION_WIDE_EAST;
+                    struckArmy->m_attackDirection = COMBAT_DIRECTION_WIDE_SOUTH;
             }
             struckArmy->DoAttack(true);
             struckArmy->m_stats.attributes |= MONSTER_FLAGS_RETALIATED;
@@ -1766,7 +1766,7 @@ void army::GoBerserk(void) {
         attackMask = GetAttackMask(m_hex, ARMY_ATTACK_TARGET_OCCUPIED, ARMY_HEX_INVALID);
         if (attackMask != COMBAT_ALL_DIRECTIONS_BLOCKED) {
             while (!targetFound) {
-                attackDir = (Random( COMBAT_DIRECTION_NORTHEAST, COMBAT_DIRECTION_WIDE_EAST ));
+                attackDir = (Random( COMBAT_DIRECTION_NORTHEAST, COMBAT_DIRECTION_WIDE_SOUTH ));
                 if (!(attackMask & (1 << attackDir))) {
                     gNextAction = ACTION_MOVE;
                     ValidAttack(
@@ -1815,7 +1815,7 @@ void army::MoveAttack(i32 destination, b32 moveOnly) {
     i32 neighborHex;
     i32 direction;
 
-    gCombatManager->m_limitCreature = false;
+    gCombatManager->m_selectorVisible = false;
     CLEAR_ARMY_TARGET(this);
     if (!ValidHex(destination))
         return;
@@ -1875,7 +1875,7 @@ void army::MoveAttack(i32 destination, b32 moveOnly) {
     } else {
         WalkTo(destination);
     }
-    gCombatManager->m_limitCreature = true;
+    gCombatManager->m_selectorVisible = true;
 }
 
 b8 gGenieHalf;

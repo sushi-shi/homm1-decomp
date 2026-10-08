@@ -5,6 +5,7 @@
 #include <BASE/heroWindow.h>
 #include <BASE/message.h>
 #include <BASE/resourceManager.h>
+#include <BASE/textEntryWidget.h>
 #include <BASE/textWidget.h>
 #include <SOURCE/KB.h>
 
@@ -14,7 +15,7 @@
 textWidget::textWidget(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
     m_font = NULL;
     m_text = NULL;
-    m_color = 1;
+    m_color = TEXT_WIDGET_PLAIN_COLOR;
     m_alignment = FONT_ALIGN_CENTER;
     m_kind = WIDGET_KIND_TEXT;
 }
@@ -133,7 +134,7 @@ void textWidget::SetText(char* text) {
         u16 newLength = strlen(text);
         if (newLength > strlen(m_text)) {
             free(m_text);
-            m_text = static_cast<char*>(malloc(newLength + 5));
+            m_text = static_cast<char*>(malloc(newLength + TEXT_ENTRY_ALLOCATION_PADDING));
         }
         strcpy(m_text, text);
     } else {

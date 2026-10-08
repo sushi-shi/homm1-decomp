@@ -42,7 +42,7 @@ enum TownArmyCommand {
     TOWN_ARMY_COMMAND_SWAP = 3,
     TOWN_ARMY_COMMAND_VIEW_HERO = 4,
     TOWN_ARMY_COMMAND_SPLIT = 5,
-    TOWN_ARMY_COMMAND_GARRISON = 6
+    TOWN_ARMY_COMMAND_KINGDOM_OVERVIEW = 6
 };
 
 enum TownCommandText {
@@ -56,7 +56,7 @@ enum TownCommandText {
     TOWN_TEXT_EXCHANGE_ARMIES = 7,
     TOWN_TEXT_EXIT = 8,
     TOWN_TEXT_EMPTY_STATUS = 9,
-    TOWN_TEXT_GARRISON = 10,
+    TOWN_TEXT_KINGDOM_OVERVIEW = 10,
     TOWN_TEXT_EMPTY_SLOT = 11,
     TOWN_TEXT_SELECT_ARMY = 12,
     TOWN_TEXT_VIEW_HERO = 13,
@@ -67,14 +67,18 @@ enum TownCommandText {
 extern char* gTownCommand[TOWN_TEXT_COUNT];
 
 enum TownControl {
-TOWN_EMPTY_STATUS_CONTROL_FIRST = 0x1c,
-    TOWN_EMPTY_STATUS_CONTROL_LAST = 0x1d, TOWN_GARRISON_FIRST_CONTROL = 0x10,
+    TOWN_EMPTY_STATUS_CONTROL_FIRST = 0x1c,
+    TOWN_EMPTY_STATUS_CONTROL_LAST = 0x1d,
+    TOWN_GARRISON_CREST_CONTROL = 0x10,
     TOWN_GARRISON_SLOT_FIRST = 0x11,
-    TOWN_GARRISON_SLOT_LAST = 0x15, TOWN_HERO_FIRST_CONTROL = 0x16, TOWN_HERO_SLOT_FIRST = 0x17,
+    TOWN_GARRISON_SLOT_LAST = 0x15,
+    TOWN_HERO_PORTRAIT_CONTROL = 0x16,
+    TOWN_HERO_SLOT_FIRST = 0x17,
     TOWN_HERO_SLOT_LAST = 0x1b,
-    TOWN_CLOSE_CONTROL = DIALOG_BUTTON_0 };
+    TOWN_CLOSE_CONTROL = DIALOG_BUTTON_0
+};
 
-    enum TownObjectConstant {
+enum TownObjectConstant {
     TOWN_OBJECT_NONE = -1,
     TOWN_MAGE_GUILD_LEVEL_HEIGHT = 20,
     TOWN_MAGE_GUILD_BASE_HEIGHT = 0x61,
@@ -161,9 +165,11 @@ enum TownRecruitHeroConstant {
 };
 
 enum TownBuyBuildControl {
-BUY_BUILD_ICON_CONTROL = 2, BUY_BUILD_NAME_CONTROL = 3 };
+    BUY_BUILD_ICON_CONTROL = 2,
+    BUY_BUILD_NAME_CONTROL = 3
+};
 
-                            enum TownCastleFrame {
+enum TownCastleFrame {
     TOWN_CASTLE_FRAME_NONE = -1,
     TOWN_CASTLE_FRAME_BUILT = 0xb,
     TOWN_CASTLE_FRAME_CANNOT_BUILD = 0xc,
@@ -221,13 +227,16 @@ enum TownScreenConstant {
 };
 
 enum TownRecruitHeroControl {
-RECRUIT_HERO_PORTRAIT_FIRST = 2,
-    RECRUIT_HERO_PORTRAIT_SECOND = 3, RECRUIT_HERO_CLASS_FIRST = 6, RECRUIT_HERO_CLASS_SECOND = 7,
+    RECRUIT_HERO_PORTRAIT_FIRST = 2,
+    RECRUIT_HERO_PORTRAIT_SECOND = 3,
+    RECRUIT_HERO_CLASS_FIRST = 6,
+    RECRUIT_HERO_CLASS_SECOND = 7,
     RECRUIT_HERO_SELECT_FIRST = 8,
-    RECRUIT_HERO_SELECT_SECOND = 9 };
+    RECRUIT_HERO_SELECT_SECOND = 9
+};
 
 #pragma pack(push, 1)
-        class townManager : public baseManager {
+class townManager : public baseManager {
 public:
     town* m_town;
     bitmap* m_backgroundBitmap;
@@ -237,26 +246,26 @@ public:
     heroWindow* m_townWindow;
     strip* m_garrisonStrip;
     strip* m_heroStrip;
-    strip* m_selectedStrip;
-    i16 m_selectedArmySlot;
-    strip* m_swapStrip;
-    i16 m_swapArmySlot;
-    strip* m_pendingStrip;
-    i16 m_pendingArmySlot;
+    strip* m_hoverStrip;
+    i16 m_hoverArmySlot;
+    strip* m_sourceStrip;
+    i16 m_sourceArmySlot;
+    strip* m_targetStrip;
+    i16 m_targetArmySlot;
     bankBox* m_bankBox;
     char m_statusText[TOWN_MANAGER_STATUS_TEXT_SIZE];
     i16 m_lastHoverId;
     i8 m_command;
-    b8 m_recruitResult;
+    b8 m_heroRecruited;
     u16 m_affordableBuildings;
     u16 m_buildableBuildings;
     b8 m_castleDialogActive;
-    i16 m_selectedBuilding;
-    heroWindow* m_heroWindow0;
-    heroWindow* m_heroWindow1;
+    i16 m_purchasedBuilding;
+    heroWindow* m_buildingWindow;
+    heroWindow* m_childWindow;
     i16 m_splitAmount;
     i16 m_splitMaximum;
-    i16 m_recruitState;
+    i16 m_recruitSlot;
     hero* m_recruitHeroes[2];
     i16 m_dispatchMask;
     townManager(void);
@@ -268,7 +277,7 @@ public:
     }
     void SetArmyCommand(i16 qualifier);
     void SetCommandAndText(struct tag_message& message);
-    void ShowText(char*);
+    void ShowText(char* text);
     void DoCommand(i8 command);
     void RedrawTownScreen(void);
     void SplitArmy(void);

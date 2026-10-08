@@ -34,4 +34,8 @@ enum PaletteChannel {
     PALETTE_CHANNEL_BLUE = 2
 };
 
+enum PaletteSelectionColor {
+    PALETTE_SELECTION_COLOR = 232
+};
+
 #endif

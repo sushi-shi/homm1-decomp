@@ -20,7 +20,7 @@ i16 searchArray::FindNearestObject(
     u8 triggerType
 ) {
     searchNode node;
-    i8 possibleDirections[MAP_DIRECTION_COUNT];
+    i8 directionTerrain[MAP_DIRECTION_COUNT];
     u8 directionOccupied[MAP_DIRECTION_COUNT];
     i16 i;
     i16 terrain;
@@ -46,9 +46,9 @@ i16 searchArray::FindNearestObject(
                 m_specialTargetY = node.y;
                 break;
             }
-        TestPossibleDirections(node.x, node.y, possibleDirections, directionOccupied, 1, 0);
+        TestPossibleDirections(node.x, node.y, directionTerrain, directionOccupied, 1, 0);
         for (i = MAP_DIRECTION_FIRST; i < MAP_DIRECTION_COUNT; i++) {
-            terrain = possibleDirections[i];
+            terrain = directionTerrain[i];
             if (terrain != TERRAIN_INVALID) {
                 cost = CalcTerrainCost(
                     terrain,
@@ -68,9 +68,9 @@ i16 searchArray::FindNearestObject(
                     0,
                     0,
                     0,
-                    node.rvFlag2,
-                    node.previousX,
-                    node.previousY
+                    node.beyondTurnMobility,
+                    node.turnEndX,
+                    node.turnEndY
                 );
             }
         }
@@ -143,7 +143,7 @@ void searchArray::SeedPosition(
     static i32 s_adjacentMonsterX;
     static i32 s_adjacentMonsterY;
     static i32 s_stepCost[FINDPATH_STEP_COST_COUNT];
-    static i8 s_possibleDirections[MAP_DIRECTION_COUNT];
+    static i8 s_directionTerrain[MAP_DIRECTION_COUNT];
     static i32 s_currentCost;
     static b32 s_hasTarget;
     static hero* s_currentHero;
@@ -211,7 +211,7 @@ void searchArray::SeedPosition(
         }
         if (s_currentNode.distance > maximumCost && maximumCost > 0)
             goto point_complete;
-        if (s_currentNode.rvFlag1) {
+        if (s_currentNode.hasAdjacentMonster) {
             s_hasAdjacentMonster = 1;
             s_adjacentMonsterX = s_currentNode.adjacentMonsterX;
             s_adjacentMonsterY = s_currentNode.adjacentMonsterY;
@@ -223,15 +223,14 @@ void searchArray::SeedPosition(
             );
             if (s_triggerType == MAP_OBJECT_MONSTER || s_triggerType == MAP_OBJECT_STONE_LITHS
                 || s_triggerType == MAP_OBJECT_HERO || s_triggerType == MAP_OBJECT_SHIP) {
-                if (!findAdjacentMonster || s_currentNode.rvFlag1)
+                if (!findAdjacentMonster || s_currentNode.hasAdjacentMonster)
                     goto point_complete;
                 s_hasAdjacentMonster = 1;
                 s_adjacentMonsterX = s_currentNode.x;
                 s_adjacentMonsterY = s_currentNode.y;
                 if (s_triggerType == MAP_OBJECT_HERO
-                    && gGame->m_availableHeroes[gAdvManager
-                                                    ->GetCell(s_currentNode.x, s_currentNode.y)
-                                                    ->m_objectMetadata]
+                    && gGame->m_heroOwners[gAdvManager->GetCell(s_currentNode.x, s_currentNode.y)
+                                               ->m_objectMetadata]
                            == gCurPlayer)
                     goto point_complete;
             } else {
@@ -259,7 +258,7 @@ void searchArray::SeedPosition(
                 && (s_currentNode.x != seedX || s_currentNode.y != seedY)) {
                 if (!findAdjacentMonster)
                     goto point_complete;
-                if (s_currentNode.rvFlag1) {
+                if (s_currentNode.hasAdjacentMonster) {
                     if (gAdvManager->FindAdjacentMonster(
                             s_currentNode.x,
                             s_currentNode.y,
@@ -283,7 +282,7 @@ void searchArray::SeedPosition(
         TestPossibleDirections(
             s_currentNode.x,
             s_currentNode.y,
-            s_possibleDirections,
+            s_directionTerrain,
             s_directionOccupied,
             1,
             waterMode
@@ -304,7 +303,7 @@ void searchArray::SeedPosition(
                                                  heroClass
                                              );
         for (s_direction = MAP_DIRECTION_FIRST; s_direction < MAP_DIRECTION_COUNT; s_direction++) {
-            if (s_possibleDirections[s_direction] == TERRAIN_INVALID)
+            if (s_directionTerrain[s_direction] == TERRAIN_INVALID)
                 continue;
             s_neighborX =
                 s_currentNode.x + gNormalDirTable[s_direction].x;
@@ -313,7 +312,7 @@ void searchArray::SeedPosition(
             if (findAdjacentMonster
                 && (gMapExtra[s_neighborX][s_neighborY] & MAP_EXTRA_MONSTER_ADJACENT)
                 && m_cells[s_neighborX][s_neighborY].visited
-                && m_cells[s_neighborX][s_neighborY].rvFlag1
+                && m_cells[s_neighborX][s_neighborY].hasAdjacentMonster
                 && m_cells[s_neighborX][s_neighborY].distance
                        < s_currentNode.distance + SEARCH_MONSTER_RESEED_WINDOW
                 && gAdvManager->FindAdjacentMonster(
@@ -337,19 +336,19 @@ void searchArray::SeedPosition(
                 s_hasAdjacentMonster,
                 s_adjacentMonsterX,
                 s_adjacentMonsterY,
-                s_currentNode.rvFlag2,
-                s_currentNode.previousX,
-                s_currentNode.previousY
+                s_currentNode.beyondTurnMobility,
+                s_currentNode.turnEndX,
+                s_currentNode.turnEndY
             );
             if (s_hasTarget
                 && s_currentNode.x + gNormalDirTable[s_direction].x
                        == targetX
                 && s_currentNode.y + gNormalDirTable[s_direction].y
                        == targetY
-                && !s_currentNode.rvFlag1) {
+                && !s_currentNode.hasAdjacentMonster) {
                 if (s_currentNode.distance
                         + CalcTerrainCost(
-                            s_possibleDirections[s_direction],
+                            s_directionTerrain[s_direction],
                             s_direction & SEARCH_DIAGONAL_COST_MASK,
                             gCurTempMobility - s_currentNode.distance,
                             heroClass
@@ -358,7 +357,7 @@ void searchArray::SeedPosition(
                     s_bestTargetCost =
                         s_currentNode.distance
                         + CalcTerrainCost(
-                            s_possibleDirections[s_direction],
+                            s_directionTerrain[s_direction],
                             s_direction & SEARCH_DIAGONAL_COST_MASK,
                             gCurTempMobility - s_currentNode.distance,
                             heroClass

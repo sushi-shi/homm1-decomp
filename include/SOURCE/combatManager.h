@@ -45,10 +45,12 @@ enum CombatAction {
 };
 
 enum CombatPointerCode {
-COMBAT_POINTER_VIEW = 5, COMBAT_POINTER_DEFAULT = 6,
-                         COMBAT_POINTER_ATTACK_FIRST = 7 };
+    COMBAT_POINTER_VIEW = 5,
+    COMBAT_POINTER_DEFAULT = 6,
+    COMBAT_POINTER_ATTACK_FIRST = 7
+};
 
-                         enum CombatGridConstant {
+enum CombatGridConstant {
     COMBAT_HEX_COUNT = 45,
     COMBAT_SIDE_ARMY_COUNT = 6,
     COMBAT_CASTLE_WALL_COLUMN = 5,
@@ -166,9 +168,9 @@ public:
     i8 m_currentSide;
     i8 m_currentArmyIndex;
     i8 m_currentSpeed;
-    b8 m_gridSelectionDisabled;
-    b8 m_limitCreature;
-    i8 m_limitCreatureHex;
+    b8 m_autoCombat;
+    b8 m_selectorVisible;
+    i8 m_selectorHex;
     b8 m_showArmyQuantities;
     i8 m_selectedHex;
     i8 m_directionTargetHex;
@@ -195,14 +197,14 @@ public:
     i16 m_unused6f9;
     i16 m_messageTypeMask;
     i8 m_sideRetreated[COMBAT_SIDE_COUNT];
-    i32 m_limitCreatureCount[COMBAT_SIDE_COUNT][5];
+    i32 m_limitCreatureCount[COMBAT_SIDE_COUNT][ARMY_GROUP_SLOT_COUNT];
     b32 m_computeExtent;
     b32 m_redrawExtent;
     b32 m_combatWindowOpen;
     class widget* m_winLoseBottomWidgets[15];
     class widget* m_winLoseBottomTextWidgets[15];
-    i32 m_combatX;
-    i32 m_combatY;
+    i32 m_battleSiteX;
+    i32 m_battleSiteY;
     i8 m_directionMap[24];
     i8 m_mouseDirection;
     i8 m_validDirectionCount;
@@ -297,8 +299,8 @@ public:
         class town* defenderTown,
         class hero* defenderHero,
         class armyGroup* defenderGroup,
-        i32 combatX,
-        i32 combatY,
+        i32 battleSiteX,
+        i32 battleSiteY,
         i32 randomSeed
     );
     void UpdateArmyGroup(i8 side);
@@ -392,12 +394,17 @@ enum BattleResultText {
 extern char* gBattleResults[BATTLE_RESULT_COUNT];
 
 enum CombatWinLoseControl {
-WIN_LOSE_ANIMATION = 1, WIN_LOSE_RESULT_TEXT = 0x65, WIN_LOSE_CASUALTY_ICON_FIRST = 0x7d0,
-                        WIN_LOSE_ARTIFACT_BACKGROUND = 0x7d1, WIN_LOSE_ARTIFACT_ICON = 0x7d2,
-                        WIN_LOSE_CASUALTY_TEXT_FIRST = 0x834, WIN_LOSE_ARTIFACT_NAME = 0x835,
-                        WIN_LOSE_CASUALTY_HEADING = 0x83e };
+    WIN_LOSE_ANIMATION = 1,
+    WIN_LOSE_RESULT_TEXT = 0x65,
+    WIN_LOSE_CASUALTY_ICON_FIRST = 0x7d0,
+    WIN_LOSE_ARTIFACT_BACKGROUND = 0x7d1,
+    WIN_LOSE_ARTIFACT_ICON = 0x7d2,
+    WIN_LOSE_CASUALTY_TEXT_FIRST = 0x834,
+    WIN_LOSE_ARTIFACT_NAME = 0x835,
+    WIN_LOSE_CASUALTY_HEADING = 0x83e
+};
 
-                        enum CombatVictoryConstant {
+enum CombatVictoryConstant {
     COMBAT_VICTORY_EXPERIENCE_TEXT_SIZE = 152
 };
 
@@ -408,16 +415,20 @@ enum CombatWinLoseSlot {
 };
 
 enum SurrenderControl {
-SURRENDER_PORTRAIT = 1, SURRENDER_TEXT = 2 };
+    SURRENDER_PORTRAIT = 1,
+    SURRENDER_TEXT = 2
+};
 
-                        enum CombatRearHexConstant {
+enum CombatRearHexConstant {
     COMBAT_REAR_HEX_UNUSED = -2
 };
 
 enum CombatControlId {
-COMBAT_CONTROL_NONE = 0,
-    COMBAT_CONTROL_DISABLE_SELECTION = 2, COMBAT_CONTROL_SKIP_TURN = 8,
-    COMBAT_CONTROL_FIELD = 0x40 };
+    COMBAT_CONTROL_NONE = 0,
+    COMBAT_CONTROL_AUTO_COMBAT = 2,
+    COMBAT_CONTROL_SKIP_TURN = 8,
+    COMBAT_CONTROL_FIELD = 0x40
+};
 
 enum CombatStatusLineConstant {
     COMBAT_STATUS_FIRST_CONTROL = 2,

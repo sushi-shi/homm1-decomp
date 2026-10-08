@@ -69,19 +69,19 @@ WinMain(HINSTANCE instance, HINSTANCE previousInstance, char* commandLine, i32 s
     strncpy(gCommandLine, commandLine, KBWIN_COMMAND_LINE_LIMIT);
     // A fine timer lets the idle Sleep in the message pump stay short.
     timeBeginPeriod(KBWIN_TIMER_RESOLUTION);
-    if (EarlySetup() == false)
+    if (!EarlySetup())
         return 0;
-    if (AppInit(instance, previousInstance, showCommand, commandLine) == 0)
+    if (!AppInit(instance, previousInstance, showCommand, commandLine))
         return 0;
 
     for (;;) {
-        if (PeekMessageA(&message, NULL, 0, 0, PM_REMOVE) != FALSE) {
+        if (PeekMessageA(&message, NULL, 0, 0, PM_REMOVE)) {
             if (message.message == WM_QUIT)
                 break;
             TranslateMessage(&message);
             DispatchMessageA(&message);
         } else {
-            if (AppIdle() != 0)
+            if (AppIdle())
                 WaitMessage();
         }
     }
@@ -127,8 +127,7 @@ BOOL AppInit(HINSTANCE instance, HINSTANCE previousInstance, i32 showCommand, ch
             reinterpret_cast<HBRUSH>(COLOR_WINDOW + 1);
         appClass.hInstance = instance;
         appClass.style = KBWIN_CLASS_STYLE;
-        appClass.lpfnWndProc =
-            reinterpret_cast<WNDPROC>(AppWndProc);
+        appClass.lpfnWndProc = AppWndProc;
         appClass.cbWndExtra = 0;
         appClass.cbClsExtra = 0;
         if (RegisterClassA(&appClass) == 0)
@@ -175,7 +174,7 @@ BOOL AppIdle(void) {
     return TRUE;
 }
 
-long __stdcall AppWndProc(HWND window, u32 message, u32 messageParam, long messageData) {
+LRESULT CALLBACK AppWndProc(HWND window, UINT message, WPARAM messageParam, LPARAM messageData) {
     static i32 gLastGTimerTickCount = 0;
     static i32 gLastCycleTickCount = 0;
     if (message > KBWIN_PROCESS_MESSAGE_MAX || gProcessMessage[message] == 0)
@@ -189,7 +188,7 @@ long __stdcall AppWndProc(HWND window, u32 message, u32 messageParam, long messa
             return 0;
         case WM_KEYDOWN:
         case WM_KEYUP:
-            if (KeyboardMessageHandler(window, message, messageParam, messageData) == false)
+            if (!KeyboardMessageHandler(window, message, messageParam, messageData))
                 return 0;
             break;
         case WM_MOUSEMOVE:
@@ -199,7 +198,7 @@ long __stdcall AppWndProc(HWND window, u32 message, u32 messageParam, long messa
         case WM_RBUTTONDOWN:
         case WM_RBUTTONUP:
         case WM_RBUTTONDBLCLK:
-            if (MouseMessageHandler(window, message, messageParam, messageData) == false)
+            if (!MouseMessageHandler(window, message, messageParam, messageData))
                 return 0;
             break;
         case WM_TIMER:
@@ -230,8 +229,8 @@ long __stdcall AppWndProc(HWND window, u32 message, u32 messageParam, long messa
             if (gAppWindow == NULL)
                 return 0;
             gTempValue = GetWindowLongA(gAppWindow, GWL_STYLE);
-            if ((gTempValue & WS_MAXIMIZE) == 0 && (gTempValue & WS_MINIMIZE) == 0
-                && gClosingApp == false && CURRENT_GRAPHICS_CONFIG.fullScreen == 0) {
+            if ((gTempValue & WS_MAXIMIZE) == 0 && (gTempValue & WS_MINIMIZE) == 0 && !gClosingApp
+                && CURRENT_GRAPHICS_CONFIG.fullScreen == 0) {
                 GetWindowRect(window, &gTempRect);
                 CURRENT_GRAPHICS_CONFIG.x = gTempRect.left;
                 CURRENT_GRAPHICS_CONFIG.y = gTempRect.top;
@@ -262,7 +261,7 @@ long __stdcall AppWndProc(HWND window, u32 message, u32 messageParam, long messa
             if (gMainWinScreenHeight < 1)
                 gMainWinScreenHeight = 1;
             if (gAppWindow != NULL && (gTempValue & WS_MAXIMIZE) == 0
-                && (gTempValue & WS_MINIMIZE) == 0 && gClosingApp == false
+                && (gTempValue & WS_MINIMIZE) == 0 && !gClosingApp
                 && CURRENT_GRAPHICS_CONFIG.fullScreen == 0) {
                 CURRENT_GRAPHICS_CONFIG.width = gMainWinScreenWidth;
                 CURRENT_GRAPHICS_CONFIG.height = gMainWinScreenHeight;
@@ -282,7 +281,7 @@ long __stdcall AppWndProc(HWND window, u32 message, u32 messageParam, long messa
             return 0;
         case WM_CLOSE:
             if (window == gAppWindow) {
-                if (GameUnsaved() != false) {
+                if (GameUnsaved()) {
                     NormalDialog(
                         localization::Tr("adventure.confirm_quit"),
                         NORMAL_DIALOG_TYPE_YES_NO
@@ -337,14 +336,14 @@ void Process1WindowsMessage(void) {
 
     // Give the processor away between passes so waiting loops stay idle.
     Sleep(KBWIN_IDLE_SLEEP);
-    while (PeekMessageA(&message, NULL, 0, 0, PM_REMOVE) != FALSE) {
+    while (PeekMessageA(&message, NULL, 0, 0, PM_REMOVE)) {
         TranslateMessage(&message);
         DispatchMessageA(&message);
     }
     currentTick = KBTickCount();
     if (currentTick - gLastGetMessage > KBWIN_GET_MESSAGE_INTERVAL) {
         gLastGetMessage = currentTick;
-        if (GetMessageA(&message, NULL, 0, 0) != FALSE) {
+        if (GetMessageA(&message, NULL, 0, 0)) {
             TranslateMessage(&message);
             DispatchMessageA(&message);
         }
@@ -453,7 +452,7 @@ void UpdateDfltMenu(HMENU menu) {
         EnableMenuItem(menu, KBWIN_MENU_SIZE_1024_768, MF_GRAYED);
     if (gMainVideoModeWidth <= KBWIN_WIDTH_1280)
         EnableMenuItem(menu, KBWIN_MENU_SIZE_1280_1024, MF_GRAYED);
-    if (gDDrawAttached == FALSE)
+    if (!gDDrawAttached)
         EnableMenuItem(menu, KBWIN_MENU_FULLSCREEN, MF_GRAYED);
 }
 
@@ -492,9 +491,9 @@ void SetMenuStatus(i32 showMenu) {
     WritePrefs();
     windowStyle = GetWindowLongA(gAppWindow, GWL_STYLE);
     if (CURRENT_GRAPHICS_CONFIG.showMenu)
-        gCurWindowsStyleFlags = WS_VISIBLE | WS_CLIPSIBLINGS | WS_OVERLAPPEDWINDOW;
+        gCurWindowsStyleFlags = KBWIN_WINDOWED_STYLE;
     else
-        gCurWindowsStyleFlags = WS_VISIBLE | WS_CLIPSIBLINGS;
+        gCurWindowsStyleFlags = KBWIN_FULLSCREEN_STYLE;
     replacedStyle = SetWindowLongA(gAppWindow, GWL_STYLE, gCurWindowsStyleFlags);
     ShowWindow(gAppWindow, SW_SHOWNA);
     ResizeWindow(
@@ -1232,7 +1231,7 @@ bool DriveSupportsFreeSpaceQuery(char driveLetter) {
 
     wsprintfA(path, "%c:", driveLetter);
     oldMode = SetErrorMode(SEM_FAILCRITICALERRORS);
-    if (GetDiskFreeSpaceExA(path, &availableToCaller, &total, &freeBytes) != FALSE) {
+    if (GetDiskFreeSpaceExA(path, &availableToCaller, &total, &freeBytes)) {
         SetErrorMode(oldMode);
         return true;
     } else {

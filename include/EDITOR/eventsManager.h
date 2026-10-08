@@ -9,6 +9,8 @@ class heroWindow;
 class icon;
 class iconWidget;
 struct tag_message;
+struct editTownExtra;
+struct editHeroExtra;
 
 enum EventsWindowText {
     EVENTS_WINDOW_TEXT_TOWN = 0x65,
@@ -20,10 +22,11 @@ enum EventsWindowText {
 };
 
 enum EventsDialogButton {
-EVENTS_DIALOG_CANCEL = DIALOG_BUTTON_1, EVENTS_DIALOG_OK =
-                                            DIALOG_BUTTON_2 };
+    EVENTS_DIALOG_CANCEL = DIALOG_BUTTON_1,
+    EVENTS_DIALOG_OK = DIALOG_BUTTON_2
+};
 
-                                        enum EventsManagerLayout {
+enum EventsManagerLayout {
     EVENTS_DIALOG_X = 16,
     EVENTS_DIALOG_Y = 16,
     EVENTS_HOVER_COLOR = 1
@@ -114,8 +117,8 @@ enum NewMapWindowConstant {
     NEW_MAP_FIRST_DENSITY_INCREASE = 700,
     NEW_MAP_FIRST_DENSITY_TRACK = 900,
     NEW_MAP_FIRST_DENSITY_KNOB = 1000,
-    NEW_MAP_SCATTER_TOWNS = 1100,
-    NEW_MAP_CENTRE_TOWNS = 1101,
+    NEW_MAP_SCATTER_TERRAIN = 1100,
+    NEW_MAP_CENTRE_TERRAIN = 1101,
     NEW_MAP_SAVE_UNSEEN = 1300,
     NEW_MAP_TRACK_X = 154,
     NEW_MAP_TRACK_WIDTH = 250,

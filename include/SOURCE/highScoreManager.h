@@ -11,14 +11,18 @@ struct tag_message;
 class heroWindow;
 
 enum HighScoreControlId {
-HIGH_SCORE_CLOSE_BUTTON = DIALOG_BUTTON_0,
-    HIGH_SCORE_STANDARD_BUTTON = 100, HIGH_SCORE_TITLE_WIDGET = 0x67,
-    HIGH_SCORE_SUBTITLE_WIDGET = 0x68, HIGH_SCORE_FIRST_TEXT_WIDGET = 0x6a,
-    HIGH_SCORE_CAMPAIGN_BUTTON = 0x93, HIGH_SCORE_ANIMATED_WIDGET_FIRST = 200,
+    HIGH_SCORE_CLOSE_BUTTON = DIALOG_BUTTON_0,
+    HIGH_SCORE_STANDARD_BUTTON = 100,
+    HIGH_SCORE_TITLE_WIDGET = 0x67,
+    HIGH_SCORE_SUBTITLE_WIDGET = 0x68,
+    HIGH_SCORE_FIRST_TEXT_WIDGET = 0x6a,
+    HIGH_SCORE_CAMPAIGN_BUTTON = 0x93,
+    HIGH_SCORE_ANIMATED_WIDGET_FIRST = 200,
     HIGH_SCORE_FIRST_MONSTER_WIDGET = 0xc9,
-    HIGH_SCORE_ANIMATED_WIDGET_LAST = 210 };
+    HIGH_SCORE_ANIMATED_WIDGET_LAST = 210
+};
 
-    enum HighScoreTextColumn {
+enum HighScoreTextColumn {
     HIGH_SCORE_TEXT_NAME_OFFSET = 0,
     HIGH_SCORE_TEXT_SCENARIO_OFFSET = 1,
     HIGH_SCORE_TEXT_SCORE_OFFSET = 2,
@@ -54,8 +58,7 @@ enum HighScoreLayoutConstant {
 };
 
 enum HighScoreColor {
-    HIGH_SCORE_HIGHLIGHT_COLOR = -65,
-    HIGH_SCORE_NORMAL_COLOR = 1
+    HIGH_SCORE_HIGHLIGHT_COLOR = -65
 };
 
 #pragma pack(push, 1)
@@ -89,7 +92,7 @@ struct HighScoreEntry {
     char playerName[17];
     char scenarioName[15];
     i32 score;
-    char unknown24[0x33];
+    char unused24[0x33];
 };
 #pragma pack(pop)
 

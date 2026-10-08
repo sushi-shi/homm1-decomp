@@ -100,7 +100,7 @@ void mouseManager::SetPointer(char* name, i16 frame) {
 i32 gMouseCursorType = 0;
 
 void mouseManager::SetPointer(i16 frame) {
-    static BOOL gInSetPointer = FALSE;
+    static b32 gInSetPointer = false;
     i32 cursorIndex;
     i32 x;
     i32 y;
@@ -119,7 +119,7 @@ void mouseManager::SetPointer(i16 frame) {
 
     if (gInSetPointer)
         return;
-    gInSetPointer = TRUE;
+    gInSetPointer = true;
 
     if (frame == MOUSE_KEEP_CURRENT_FRAME)
         frame = m_cursorFrame;
@@ -214,7 +214,7 @@ void mouseManager::SetPointer(i16 frame) {
     }
 
     SetCursor(gMouseCursors[cursorIndex]);
-    gInSetPointer = FALSE;
+    gInSetPointer = false;
 }
 
 void mouseManager::ReallyShowPointer(void) {}

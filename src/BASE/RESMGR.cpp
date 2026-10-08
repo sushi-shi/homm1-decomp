@@ -5,7 +5,6 @@
 #include <BASE/font.h>
 #include <BASE/icon.h>
 #include <BASE/MAKEFILEID.h>
-#include <BASE/MIDIWrap.h>
 #include <BASE/Misc.h>
 #include <BASE/miscwin.h>
 #include <BASE/palette.h>
@@ -152,7 +151,7 @@ class sample* resourceManager::GetSample(char* name) {
 }
 
 void resourceManager::Dispose(class resource* resourceToDispose) {
-    if (m_expunging != false)
+    if (m_expunging)
         return;
     if (resourceToDispose != NULL) {
         resourceToDispose->m_refCount--;

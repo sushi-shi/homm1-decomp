@@ -63,7 +63,7 @@ void advManager::DrawCursor(void) {
     i16 posY;
     i16 drawFrame;
 
-    if (gShowIt == false || gSpecialHideCursor)
+    if (!gShowIt || gSpecialHideCursor)
         return;
     if (gDrawSavedCursor) {
         m_cursorDirection = gSavedCursorDirection;
@@ -349,7 +349,7 @@ mapCell* advManager::MoveHero(
         boat->savedTriggerType = boatCell->m_triggerType;
         boat->savedEventData = boatCell->m_objectMetadata;
         boat->direction = m_cursorDirection;
-        boat->heroId |= BOAT_OCCUPIED_FLAG;
+        boat->heroId |= BOAT_VACATED_FLAG;
         boatCell->m_triggerType = MAP_EVENT_TRIGGER(MAP_OBJECT_SHIP);
         boatCell->m_objectMetadata = inc;
         boat->x = champion->m_x;
@@ -463,7 +463,7 @@ mapCell* advManager::MoveHero(
     if (champion->m_locationType == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN)) {
         town* occupiedTown;
 
-        occupiedTown = gGame->GetTown(champion->m_occupiedTown);
+        occupiedTown = gGame->GetTown(champion->m_locationMetadata);
         occupiedTown->m_occupyingHeroId = TOWN_OCCUPYING_HERO_NONE;
     }
     if (m_routeShown)
@@ -637,7 +637,7 @@ void advManager::CheckAdjacentMon(b8* adjacentMonster) {
         if (clearMonster) {
             EraseObj(monCell, monsterX, monsterY);
             if (gThisNetHumanPlayer[gCurPlayer])
-                FizzleCenter(EVENT_FIZZLE_HERO_LOSS);
+                FizzleCenter(EVENT_FIZZLE_KILL);
         }
         *adjacentMonster = true;
     }

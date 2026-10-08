@@ -6,9 +6,11 @@
 #include <BASE/widget.h>
 
 enum IconWidgetKind {
-ICON_WIDGET_DRAW = 0x10, ICON_WIDGET_FILL = 0x80 };
+    ICON_WIDGET_DRAW = 0x10,
+    ICON_WIDGET_FILL = 0x80
+};
 
-                         enum IconWidgetConstant {
+enum IconWidgetConstant {
     ICON_WIDGET_ORIENTATION_MASK = 0xff
 };
 

@@ -8,6 +8,10 @@
 class font;
 struct tag_message;
 
+enum TextWidgetColor {
+    TEXT_WIDGET_PLAIN_COLOR = 1
+};
+
 #pragma pack(push, 1)
 class textWidget : public widget {
 public:

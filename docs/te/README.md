@@ -47,33 +47,30 @@ send function keys as raw key codes (XTest) instead.
 ## Resynchronising with a regenerated source-buka-2003
 
 `source-buka-2003` is regenerated from `decomp-buka-2003` (`homm1 clean`),
-often with whole-program renames. Replay the TE commits one by one:
+often with whole-program renames, as a new root commit unrelated to the last.
+Merge it with the export merged last as the merge base, so the merge brings
+in exactly what the regeneration changed:
 
-1. Branch from the new export: `git checkout -b te-replay source-buka-2003`.
-   When the export changed little, cherry-pick each commit with diff3
-   conflicts and resolve them token by token (the export's renames and
-   constants on the base side, the commit's change on the other), then go
-   to step 5.
-2. Build an old-to-new identifier map: diff the token streams of every
-   source file between the old and the new export; a token that no longer
-   exists anywhere in the new tree and is consistently replaced by one name
-   is renamed (a per-file map adds locals that vanished from that file).
-   The decomp's `config/reviews/naming-*.tsv` adds parameter and local
-   renames scoped to their function.
-3. For each TE commit, rewrite the identifiers of its source diff (code
-   only, never strings or comments) and apply it with `git apply -3`,
-   falling back to `--reject`. Apply rejected hunks with whitespace- and
-   line-break-insensitive matching that must cover whole lines (the export
-   reflows code after renames); resolve what is left by hand.
-4. Reformat only the changed lines with the decomp's `.clang-format`
-   (`git clang-format --style=file:... HEAD`).
-5. Move the commit's catalog changes into the new `.po` files: new and
-   changed entries for `en` and `ru`, removed entries dropped; then run
-   `python3 catalog.py update`. `catalog.py check` and `update --check`
-   must pass.
-6. Build both locales after every commit; compare each replayed commit with
-   the original by the multiset of tokens it adds and removes per file.
-   Every difference must be explained by the new base (renamed names,
-   removed casts) or by a deliberate adaptation.
-7. Smoke-test with `nix run .#play`: main menu, a new game, F5 and F9; and
+```sh
+old=$(git log -1 --format=%H --grep='^Generated-By: homm1 clean$' source-te)
+git merge-recursive "$old" -- source-te origin/source-buka-2003
+```
+
+`git merge-recursive` leaves the result in the working tree; commit it with
+the new export as the second parent.
+
+1. Resolve the conflicts token by token: the export's renames and constants,
+   the edition's change. Keep this branch's `README.md` and `AGENTS.md`.
+2. Rename what the edition's own code and `docs/te` still call by an old
+   name: list the identifiers the old export has and the new one lacks, and
+   look for them in the merged tree. The decomp's `config/reviews/naming-*.tsv`
+   lists the parameter and local renames scoped to their function; the build
+   finds the rest.
+3. `python3 catalog.py check` and `update --check` must pass.
+4. Build both locales.
+5. Smoke-test with `nix run .#play`: main menu, a new game, F5 and F9; and
    the editor (`--editor`) loading a shipped map with the shared settings.
+
+The first exports were carried forward by replaying the TE commits one by
+one onto each new export; since `a5004479` (from `327da239`) the branch
+merges them.

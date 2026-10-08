@@ -83,16 +83,24 @@ enum GameWeeklyConstant {
 };
 
 enum SpellBookControl {
-SPELL_BOOK_PREVIOUS_PAGE = 2,
-    SPELL_BOOK_NEXT_PAGE = 3, SPELL_BOOK_ADVENTURE_SPELLS = 4, SPELL_BOOK_COMBAT_SPELLS = 5,
-    SPELL_BOOK_ENTRY_FIRST = 6, SPELL_BOOK_ENTRY_LAST = 9,
-    SPELL_BOOK_LABEL_FIRST = 10 };
+    SPELL_BOOK_PREVIOUS_PAGE = 2,
+    SPELL_BOOK_NEXT_PAGE = 3,
+    SPELL_BOOK_ADVENTURE_SPELLS = 4,
+    SPELL_BOOK_COMBAT_SPELLS = 5,
+    SPELL_BOOK_ENTRY_FIRST = 6,
+    SPELL_BOOK_ENTRY_LAST = 9,
+    SPELL_BOOK_LABEL_FIRST = 10
+};
 
-    enum CampaignInfoControl { CAMPAIGN_INFO_NAME = 1,
-    CAMPAIGN_INFO_TEXT = 2, CAMPAIGN_INFO_PROGRESS = 3, CAMPAIGN_INFO_PROGRESS_FRAME_BASE = 4,
-    CAMPAIGN_INFO_RESTART = 0x385 };
+enum CampaignInfoControl {
+    CAMPAIGN_INFO_NAME = 1,
+    CAMPAIGN_INFO_TEXT = 2,
+    CAMPAIGN_INFO_PROGRESS = 3,
+    CAMPAIGN_INFO_PROGRESS_FRAME_BASE = 4,
+    CAMPAIGN_INFO_RESTART = 0x385
+};
 
-    enum CampaignScenarioConstant {
+enum CampaignScenarioConstant {
     CAMPAIGN_SCENARIO_LORD_FIRST = 4,
     CAMPAIGN_SCENARIO_LORD_LAST = 7
 };
@@ -196,7 +204,7 @@ struct boatRecord {
 #pragma pack(pop)
 
 enum BoatRecordConstant {
-    BOAT_OCCUPIED_FLAG = 0x80
+    BOAT_VACATED_FLAG = 0x80
 };
 
 enum MapTownRecordConstant {
@@ -212,7 +220,7 @@ struct mapTownExtra {
     b8 customized;
     i8 owner;
     i16 buildings;
-    i8 buildState;
+    i8 mageGuildLevel;
     i8 troopTypes[ARMY_GROUP_SLOT_COUNT];
     i16 troopCounts[ARMY_GROUP_SLOT_COUNT];
 };
@@ -259,10 +267,10 @@ public:
     i8 m_townOwners[GAME_TOWN_COUNT];
     u8 m_townBuiltToday[GAME_TOWN_FLAG_BYTES];
     class hero m_heroRecs[GAME_HERO_COUNT];
-    i8 m_availableHeroes[GAME_HERO_COUNT];
+    i8 m_heroOwners[GAME_HERO_COUNT];
     mineRecord m_mines[GAME_MINE_COUNT];
     i8 m_mineOwners[GAME_MINE_COUNT];
-    i8 m_randomArtifacts[ARTIFACT_REGULAR_END];
+    i8 m_artifactHolders[ARTIFACT_REGULAR_END];
     boatRecord m_boats[GAME_BOAT_COUNT];
     i8 m_boatSlots[GAME_BOAT_COUNT];
     i8 m_obeliskVisitors[0x30];
@@ -428,7 +436,7 @@ extern i8 gSavedDifficulties[];
 extern i8 gSavedKingOfTheHill;
 
 extern i8 gSavedCrest;
-extern i8 gRandomTownTypes[4];
+extern i8 gRandomTownTypes[GAME_PLAYER_COUNT];
 extern i16 gMineTypeCount[RESOURCE_COUNT];
 extern i32 gLastSeed;
 i32 SGenRand(void);
@@ -441,15 +449,35 @@ extern char gCurMapName[];
 extern b8 gDismissArmy;
 
 enum NewGameControl {
-NEW_GAME_OPPONENT_FIRST = 2,
-    NEW_GAME_OPPONENT_LAST = 4, NEW_GAME_COLOR = 8, NEW_GAME_SCENARIO_SELECT = 0xc,
-    NEW_GAME_DIFFICULTY_FIRST = 0xd, NEW_GAME_DIFFICULTY_LAST = 0x10, NEW_GAME_SCENARIO_NAME = 0x11,
-    NEW_GAME_SCENARIO_PANEL = 0x12, NEW_GAME_KING_OF_THE_HILL = 0x13, NEW_GAME_RATING = 0x14,
-    NEW_GAME_CANCEL = DIALOG_BUTTON_1, NEW_GAME_OK = DIALOG_BUTTON_2,
+    NEW_GAME_OPPONENT_FIRST = 2,
+    NEW_GAME_OPPONENT_LAST = 4,
+    NEW_GAME_COLOR = 8,
+    NEW_GAME_SCENARIO_SELECT = 0xc,
+    NEW_GAME_DIFFICULTY_FIRST = 0xd,
+    NEW_GAME_DIFFICULTY_LAST = 0x10,
+    NEW_GAME_SCENARIO_NAME = 0x11,
+    NEW_GAME_SCENARIO_PANEL = 0x12,
+    NEW_GAME_KING_OF_THE_HILL = 0x13,
+    NEW_GAME_RATING = 0x14,
+    NEW_GAME_CANCEL = DIALOG_BUTTON_1,
+    NEW_GAME_OK = DIALOG_BUTTON_2,
     NEW_GAME_OPPONENT_TOGGLE_BASE = 1,
-    NEW_GAME_OPPONENT_LABEL_BASE = 4 };
+    NEW_GAME_OPPONENT_LABEL_BASE = 4
+};
 
-    enum NewGameFrame {
+enum ScenarioInfoControl {
+    SCENARIO_INFO_MAP_SIZE = 100,
+    SCENARIO_INFO_MAP_LEVEL = 101,
+    SCENARIO_INFO_MAP_DESCRIPTION = 102,
+    SCENARIO_INFO_CREST = 103,
+    SCENARIO_INFO_MAP_NAME = 104,
+    SCENARIO_INFO_DIFFICULTY = 105,
+    SCENARIO_INFO_OPPONENTS = 106,
+    SCENARIO_INFO_KING_OF_THE_HILL = 107,
+    SCENARIO_INFO_RATING = 108
+};
+
+enum NewGameFrame {
     NEW_GAME_FRAME_COMPUTER_TYPE_BASE = 5,
     NEW_GAME_FRAME_CREST_BASE = 11,
     NEW_GAME_FRAME_CREST_STRIDE = 2,
@@ -493,23 +521,28 @@ enum NeutralTownReinforcementConstant {
 };
 
 enum ViewArmyControl {
-VIEW_ARMY_COUNT_FRAME = 1,
-    VIEW_ARMY_COUNT_TEXT = 2, VIEW_ARMY_TITLE = 3, VIEW_ARMY_STATS = 4, VIEW_ARMY_ANIMATION = 5,
+    VIEW_ARMY_COUNT_FRAME = 1,
+    VIEW_ARMY_COUNT_TEXT = 2,
+    VIEW_ARMY_TITLE = 3,
+    VIEW_ARMY_STATS = 4,
+    VIEW_ARMY_ANIMATION = 5,
     VIEW_ARMY_DISMISS = DIALOG_BUTTON_3,
-    VIEW_ARMY_CLOSE = DIALOG_BUTTON_0 };
+    VIEW_ARMY_CLOSE = DIALOG_BUTTON_0
+};
 
-        enum ViewArmyConstant {
+enum ViewArmyConstant {
     VIEW_ARMY_ANIMATION_FRAMES = 6,
     VIEW_ARMY_FRAME_DELAY = 90,
     VIEW_ARMY_STAT_TEXT_SIZE = 550
 };
 
 enum OverviewControl {
-OVERVIEW_RESOURCE_BASE = 1,
+    OVERVIEW_RESOURCE_BASE = 1,
     OVERVIEW_DATE = 64,
-    OVERVIEW_DAILY_GOLD = 65 };
+    OVERVIEW_DAILY_GOLD = 65
+};
 
-    enum CalendarConstant {
+enum CalendarConstant {
     CALENDAR_WEEK_NAME_COUNT = 15,
     CALENDAR_WEEK_CREATURE_COUNT = 24,
     CALENDAR_MONTH_NAME_COUNT = 10,

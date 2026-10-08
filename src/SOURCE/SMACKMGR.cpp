@@ -342,19 +342,19 @@ void CloseSmackers() {
 
 i32 PlaySmacker(i32 smackNumber) {
     i8 savedPalette[PALETTE_DATA_SIZE];
-    i32 savedUpdateFlags;
+    i32 savedColorCycling;
     gInSmacker = true;
     gSmackEnded = false;
     memcpy(savedPalette, gBufferPalette->m_data, PALETTE_DATA_SIZE);
-    savedUpdateFlags = gWindowManager->m_updateFlags;
-    gWindowManager->m_updateFlags = 0;
+    savedColorCycling = gWindowManager->m_colorCycling;
+    gWindowManager->m_colorCycling = 0;
     StopMusic();
     gMovieId = smackNumber;
     // Videos play only when the player enabled them.
     if (gConfig.playVideos)
         SmackMain();
     memcpy(gBufferPalette->m_data, savedPalette, PALETTE_DATA_SIZE);
-    gWindowManager->m_updateFlags = savedUpdateFlags;
+    gWindowManager->m_colorCycling = savedColorCycling;
     gInSmacker = false;
     return gSmackEnded;
 }
