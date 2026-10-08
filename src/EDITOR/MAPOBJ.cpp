@@ -240,22 +240,22 @@ void editManager::PaintRandomTerrain(
         patches = Random(0, percent + 51) / 30 + 1;
         balance = targetCells;
         escapes = 0;
-        minWeight = gScatterTowns ? 2 : 3;
-        maxWeight = (gScatterTowns != false) + 6;
+        minWeight = gScatterTerrain ? 2 : 3;
+        maxWeight = (gScatterTerrain != false) + 6;
         for (cluster = 0; cluster < patches; cluster++) {
             perSeed = balance / (patches - cluster);
             looking = true;
             guard = 0;
             while (guard < RANDOM_MAP_SEED_TRIES && looking) {
                 guard++;
-                if (gScatterTowns)
+                if (gScatterTerrain)
                     seedX = Random(0, MAP_CELL_GRID_SIZE - 1);
                 else
                     seedX =
                         (Random(0, MAP_CELL_GRID_SIZE - 1) + Random(0, MAP_CELL_GRID_SIZE - 1)
                          + Random(0, MAP_CELL_GRID_SIZE - 1) + Random(0, MAP_CELL_GRID_SIZE - 1))
                         / 4;
-                if (gScatterTowns) {
+                if (gScatterTerrain) {
                     if (terrain == TERRAIN_DESERT || terrain == TERRAIN_LAVA)
                         seedY =
                             (Random(0, MAP_CELL_GRID_SIZE - 1) + Random(0, MAP_CELL_GRID_SIZE - 1)

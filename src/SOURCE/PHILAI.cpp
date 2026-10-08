@@ -131,7 +131,7 @@ b8 gActualShipyardFound;
 
 // Named AI factors, kept in .rdata ahead of the anonymous float literals.
 DATA(0x0048a4ac)
-static const float AI_TARGET_HUMAN_VALUE_FACTOR = 1.5f;
+static const float AI_CURRENT_DESTINATION_FACTOR = 1.5f;
 DATA(0x0048a4b0)
 static const float AI_STRATEGIC_POSITION_SCORE_FACTOR = 1.25f;
 DATA(0x0048a4b4)
@@ -585,6 +585,7 @@ b8 philAI::DoDimensionDoor(hero* aiHero) {
 #define unusedValue newDummyValue // frame-slot spelling
 #define unusedFlags flagsState    // frame-slot spelling
 #define unusedArray tempArrayData // frame-slot spelling
+#define searchMobility minValue   // frame-slot spelling
 VA(0x00448a6f, 0x72f)
 void philAI::DoAI(i32 player) {
     i32 pathIndex;
@@ -599,7 +600,7 @@ void philAI::DoAI(i32 player) {
     H1_ENUM_LOCAL(MapDirection, i32) adjacentDirection;
     i32 stopPosX;
     i32 stopPosY;
-    i16 minValue;
+    i16 searchMobility;
     i32 unusedArray[4];
     hero* movingHero;
     i32 unusedFlags;
@@ -639,10 +640,10 @@ void philAI::DoAI(i32 player) {
         allMoveDone = false;
         ResetHeroRVs(false, 0, 0);
         stepQuota = movingHero->IsEmbarked() ? 15 : 5;
-        minValue = movingHero->m_mobility + 42;
+        searchMobility = movingHero->m_mobility + 42;
         stepQuota = stepQuota * (1.7 - gCurPlayerData->m_difficulty * 0.1);
-        minValue =
-            minValue
+        searchMobility =
+            searchMobility
             * ((gCurPlayerData->m_difficulty - H1_ENUM_ENCODE(ComputerPlayerType, PLAYER_TYPE_DUMB))
                    * 0.06
                + 0.8);
@@ -662,7 +663,7 @@ void philAI::DoAI(i32 player) {
                 movingHero,
                 movingHero->m_destinationX,
                 movingHero->m_destinationY,
-                minValue
+                searchMobility
             );
             for (pathIndex = 0; pathIndex < gCurPlaceToVisit; pathIndex++) {
                 if (gPlacesVisited[pathIndex][AI_PLACE_X] == movingHero->m_destinationX
@@ -782,6 +783,7 @@ void philAI::DoAI(i32 player) {
     ResumeSamples();
     ResumeMusic();
 }
+#undef searchMobility
 #undef savedShowIt
 #undef unusedValue
 #undef unusedFlags
@@ -1137,7 +1139,7 @@ void philAI::DetermineTargetPosition(hero* aiHero, i8& targetX, i8& targetY, i16
                     posValue = -100;
                 }
                 if (searchX == targetX && searchY == targetY) {
-                    posValue = posValue * AI_TARGET_HUMAN_VALUE_FACTOR;
+                    posValue = posValue * AI_CURRENT_DESTINATION_FACTOR;
                     if (MANHATTAN_LENGTH(searchX - aiHero->m_x, searchY - aiHero->m_y) > 3)
                         posValue++;
                 }

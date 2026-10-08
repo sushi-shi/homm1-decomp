@@ -93,7 +93,7 @@ double gTerrainPercent[EDITOR_TERRAIN_COUNT] = {30.0, 30.0, 20.0, 0.0, 0.0, 0.0,
 DATA(0x0043f3e0)
 double gDensityPercent[EDITOR_GENERATOR_DENSITY_COUNT] = {50.0, 50.0, 50.0, 50.0, 50.0};
 DATA(0x0043f408)
-b32 gScatterTowns = true;
+b32 gScatterTerrain = true;
 DATA(0x0043f410)
 SMenuEnableStatus gMenuEnableStatus[70] = {
     {0, 0, 0, 0},     {40005, 1, 1, 0}, {40006, 1, 1, 0}, {40007, 1, 1, 0}, {40008, 1, 1, 0},

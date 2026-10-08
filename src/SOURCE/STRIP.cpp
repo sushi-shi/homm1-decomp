@@ -33,7 +33,7 @@ strip::strip(
     m_selectedSlot = STRIP_SLOT_NONE;
     m_x = x;
     m_y = y;
-    m_stripType = stripType;
+    m_unusedStripType = stripType;
     m_portraitIcon = gResourceManager->GetIcon(portraitIconId);
     m_portraitFrame = portraitFrame;
     m_army = troops;

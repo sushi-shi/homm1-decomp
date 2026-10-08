@@ -44,7 +44,7 @@ public:
     char m_unused04[0x12];
     i16 m_x;
     i16 m_y;
-    i8 m_stripType;
+    i8 m_unusedStripType;
     i8 m_selectedSlot;
     border* m_borders[6];
     font* m_font;

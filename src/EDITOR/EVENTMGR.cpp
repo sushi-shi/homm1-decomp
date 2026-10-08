@@ -1218,11 +1218,11 @@ void UpdateNewMapWindow(void) {
         gDensityKnobs[i]->m_x = NEW_MAP_KNOB_TRAVEL * gDensityPercent[i] / 100.0 + NEW_MAP_KNOB_X;
     message.type = MESSAGE_WIDGET;
     message.value = WIDGET_FLAG_DRAW;
-    message.id = NEW_MAP_SCATTER_TOWNS;
-    message.command = gScatterTowns ? WIDGET_COMMAND_SET_FLAGS : WIDGET_COMMAND_CLEAR_FLAGS;
+    message.id = NEW_MAP_SCATTER_TERRAIN;
+    message.command = gScatterTerrain ? WIDGET_COMMAND_SET_FLAGS : WIDGET_COMMAND_CLEAR_FLAGS;
     gNewMapWindow->BroadcastMessage(message);
-    message.id = NEW_MAP_CENTRE_TOWNS;
-    message.command = gScatterTowns ? WIDGET_COMMAND_CLEAR_FLAGS : WIDGET_COMMAND_SET_FLAGS;
+    message.id = NEW_MAP_CENTRE_TERRAIN;
+    message.command = gScatterTerrain ? WIDGET_COMMAND_CLEAR_FLAGS : WIDGET_COMMAND_SET_FLAGS;
     gNewMapWindow->BroadcastMessage(message);
     message.id = NEW_MAP_SAVE_UNSEEN;
     message.command = gSaveUnseen ? WIDGET_COMMAND_SET_FLAGS : WIDGET_COMMAND_CLEAR_FLAGS;
@@ -1333,8 +1333,8 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) NewMapWindowHandler(tag_message& mess
             else if (message.id >= NEW_MAP_FIRST_DENSITY_KNOB
                      && message.id < NEW_MAP_FIRST_DENSITY_KNOB + EDITOR_TERRAIN_COUNT)
                 DragNewMapSlider(false, message.id - NEW_MAP_FIRST_DENSITY_KNOB);
-            if (message.id >= NEW_MAP_SCATTER_TOWNS && message.id <= NEW_MAP_CENTRE_TOWNS) {
-                gScatterTowns = message.id == NEW_MAP_SCATTER_TOWNS;
+            if (message.id >= NEW_MAP_SCATTER_TERRAIN && message.id <= NEW_MAP_CENTRE_TERRAIN) {
+                gScatterTerrain = message.id == NEW_MAP_SCATTER_TERRAIN;
                 redraw = true;
             }
             if (message.id == NEW_MAP_SAVE_UNSEEN) {

@@ -273,7 +273,7 @@ rva	size	symbol	provenance
 0x000a0190	4	?gWinGAttached@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000a7fbc	4	?giScore@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000ca168	4	?iCurPlaceToVisit@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x0008a4ac	4	_AI_TARGET_HUMAN_VALUE_FACTOR	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
+0x0008a4ac	4	_AI_CURRENT_DESTINATION_FACTOR	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x0008a4b4	4	_AI_CREATURE_SAME_RACE_FACTOR	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000bb160	56148	?SVSearchArray@@3VsearchArray@@A	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x0009f054	4	?gBaudBits@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls

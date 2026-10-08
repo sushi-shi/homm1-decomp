@@ -85,3 +85,5 @@ enum	EventsManagerConstant	EVENTS_CELL_EDIT_DEBUG_LEVEL	EVENTS_CELL_EDIT_DEBUG_L
 global	EDITOR	gGeneratingMaps	gGeneratingUnseen	set only when gSaveUnseen: the map view draws clouds, the radar stays black and each generated map is saved
 function	editManager	PlaceTowns	PlaceCastles	its status line is "placing castles"; it places only the players' castle slots (neutral towns come from PlaceRandomObjects)
 aliased	editManager::PlaceCastles	extraRoads	extraLiths	never lays a road: a set slot gets a Stone Liths teleporter like a cut-off castle
+global	EDITOR	gScatterTowns	gScatterTerrain	only PaintRandomTerrain reads it: scattered or centre-weighted terrain seeds and patch weights; the dialog's labels sit under "Land share" ("Scattered:", "Centered:")
+enum	NewMapWindowConstant	NEW_MAP_SCATTER_TOWNS/NEW_MAP_CENTRE_TOWNS	NEW_MAP_SCATTER_TERRAIN/NEW_MAP_CENTRE_TERRAIN	the two radio buttons that set gScatterTerrain

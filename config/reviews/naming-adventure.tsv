@@ -129,3 +129,6 @@ local	searchArray::FindNearestObject	possibleDirections	directionTerrain	the sam
 local-aliased	advManager::TownQuickView	scouting	informationLevel	a TownQuickInformation level from the thieves' guild count
 local-aliased	advManager::SummonBoat	okCell/slotIndex/heroSlot	foundWaterCell/boatIndex/summonHeroId	an empty water cell beside the hero was found; the boat table index; the hero id (CurrentHero) matched against boatRecord::heroId
 enum	CombatPathConstant	SPECIAL_DIRECTION_MASK	WIDE_DIRECTIONS_MASK	0xc0 is COMBAT_DIRECTION_BIT_WIDE_NORTH | WIDE_SOUTH: the two directions only a two-hex creature uses
+global	SOURCE/PHILAI	AI_TARGET_HUMAN_VALUE_FACTOR	AI_CURRENT_DESTINATION_FACTOR	DetermineTargetPosition multiplies the value of the cell equal to its in/out target (the hero's current m_destinationX/Y) by it; nothing about human players
+local-aliased	philAI::DoAI	minValue	searchMobility	the hero's mobility plus a margin, passed as DetermineTargetPosition's mobility (the search range)
+member	strip	m_stripType	m_unusedStripType	the constructor stores it; nothing reads it

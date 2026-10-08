@@ -135,11 +135,11 @@ extern class heroWindow* gEditDialog;
 #define gMapHeader gpMapHeader // spelling fixes .bss order
 extern struct SMapHeader* gMapHeader;
 // The random map generator's settings (editnew.bin): the share of each
-// terrain and the density of each object class, in percent; whether towns are
-// scattered rather than centred; whether the map is saved unseen.
+// terrain and the density of each object class, in percent; whether terrain
+// patches are scattered rather than centred; whether the map is saved unseen.
 extern double gTerrainPercent[EDITOR_TERRAIN_COUNT];
 extern double gDensityPercent[EDITOR_GENERATOR_DENSITY_COUNT];
-extern b32 gScatterTowns;
+extern b32 gScatterTerrain;
 extern i32 gSaveUnseen;
 // gDensityPercent's rows.
 H1_ENUM_BEGIN(GeneratorDensity)

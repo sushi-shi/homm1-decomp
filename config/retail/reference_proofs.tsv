@@ -7788,7 +7788,7 @@ site_rva	target_rva	symbol
 0x00049e63	0x00006d26	?GetCell@advManager@@QAEPAVmapCell@@FF@Z
 0x00049e9c	0x0008a530	__real@8@3fffa000000000000000
 0x00049ea1	0x000782f4	__ftol
-0x0004a42c	0x0008a4ac	_AI_TARGET_HUMAN_VALUE_FACTOR
+0x0004a42c	0x0008a4ac	_AI_CURRENT_DESTINATION_FACTOR
 0x0004a431	0x000782f4	__ftol
 0x0004a532	0x000b9cb4	?gbPossibleShipyardFound@@3CA
 0x0004a53d	0x000ca170	?gbActualShipyardFound@@3CA

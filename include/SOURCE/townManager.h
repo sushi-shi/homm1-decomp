@@ -261,7 +261,7 @@ H1_ENUM_CONST_BEGIN(TownScreenConstant)
     TOWN_BANK_BOX_X = 0x222,
     TOWN_BANK_BOX_Y = 0x100,
     TOWN_EMPTY_HERO_PORTRAIT_FRAME = 8,
-    // strip's type argument (stored in strip::m_stripType, which nothing
+    // strip's type argument (stored in strip::m_unusedStripType, which nothing
     // reads): the garrison strip with or without a visiting hero and the
     // hero strip.
     TOWN_CREST_FRAME_WITH_HERO = 1,
