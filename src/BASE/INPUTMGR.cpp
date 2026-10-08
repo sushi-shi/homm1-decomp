@@ -159,14 +159,12 @@ b32 MouseMessageHandler(void* window, u32 message, u32 keyFlags, i32 messageData
             event->y = CLIENT_TO_GAME_Y(INPUT_MESSAGE_Y(messageData));
     }
 
-mouseMoveCursorCheck:
     if (message == INPUT_MESSAGE_MOUSE_MOVE && gMouseManager != NULL) {
         if (event->x > INPUT_CURSOR_INTERIOR_X_MIN && event->x < INPUT_CURSOR_INTERIOR_X_MAX
             && event->y > INPUT_CURSOR_INTERIOR_Y_MIN && event->y < INPUT_CURSOR_INTERIOR_Y_MAX)
             gMouseManager->SetPointer(MOUSE_KEEP_CURRENT_FRAME);
     }
 
-afterMouseCoordinates:
     event->modifiers = MESSAGE_MODIFIER_NONE;
     if (event->type != MESSAGE_NONE) {
         event->modifiers = gInputManager->m_modifiers;

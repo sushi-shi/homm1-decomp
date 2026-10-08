@@ -129,7 +129,7 @@ void StartGame() {
     gPalette = gResourceManager->GetPalette("kb.pal");
     PostprocessPalette(gPalette->m_data);
     SetPalette(gPalette->m_data, 1);
-    gWindowManager->m_updateFlags = 1;
+    gWindowManager->m_colorCycling = 1;
     gPhilAI->m_debugFont = gResourceManager->GetFont("smalfont.fnt");
     LoadSystemwideIcons();
     memset(gThisNetHumanPlayer, 0, GAME_PLAYER_COUNT);

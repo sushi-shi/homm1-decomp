@@ -68,7 +68,7 @@ struct tag_message {
         i16 y;
     };
     i16 modifiers;
-    char unknown8[4];
+    char unused8[4];
     union {
         i32 value;
         char* text;

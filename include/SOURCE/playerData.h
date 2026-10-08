@@ -46,12 +46,12 @@ enum PlayerColor {
 };
 
 struct playerAttentionWeights {
-    float gameWeightA;
-    float gameRemainder;
-    float gameWeightB;
-    float buildingValue;
-    float upgradeBase;
-    float heroValue;
+    float gameBuildingAttention;
+    float gameCreatureAttention;
+    float gameHeroAttention;
+    float turnBuildingAttention;
+    float turnCreatureAttention;
+    float turnHeroAttention;
 };
 
 class playerAIData {
@@ -61,9 +61,9 @@ public:
     i32 m_income[RESOURCE_COUNT];
     i32 m_obeliskValue;
     i32 m_unexploredValue;
-    float m_upgradeValueWeight;
-    float m_artifactValue;
-    float m_artifactPoolShare;
+    float m_fightValueResourceWeight;
+    float m_meanArtifactValue;
+    float m_playerShare;
 };
 
 class playerData {
@@ -97,7 +97,7 @@ public:
     i32 BuildingsOwned(
         i32 townType,
         i32 buildingIndex,
-        i32 buildState
+        i32 mageGuildLevel
     );
     i32 NumOfGivenArtifact(i32 artifact);
     i8 CountPuzzlePiecesRemoved(void);

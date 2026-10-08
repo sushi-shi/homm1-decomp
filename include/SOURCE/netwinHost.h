@@ -14,7 +14,7 @@ struct NetbiosName {
     u8 bytes[NCBNAMSZ];
 };
 
-void nb_add_name(void);
+void nb_announce_name(void);
 void nb_format_name(char* source, u8* destination);
 void __stdcall nb_add_name_done(NCB* ncb);
 u16 nb_recv_any(i32 session);
@@ -29,20 +29,20 @@ extern u8* gNbListenName;
 
 extern u8 gNbMaxSess;
 extern u8 gNbShutdown;
-extern u8 gNetStatus[7];
-extern u8 gNbSessLsn[7];
-extern NCB gNbSessNcb[7];
+extern u8 gNetStatus[NETBIOS_SESSION_COUNT];
+extern u8 gNbSessLsn[NETBIOS_SESSION_COUNT];
+extern NCB gNbSessNcb[NETBIOS_SESSION_COUNT];
 extern NCB gNbCtlNcb;
 extern u8 gNbSessBuf[];
 extern u8 gNbLocalNum;
 extern char* gNbGroupName;
 extern u8 gNbCallRetries;
-extern u8 gNbRcvData[7][0x1000];
-extern NetbiosName gNbNameBuf[7];
+extern u8 gNbRcvData[NETBIOS_SESSION_COUNT][NETBIOS_PAYLOAD_SIZE];
+extern NetbiosName gNbNameBuf[NETBIOS_SESSION_COUNT];
 extern CRITICAL_SECTION gNbRcvLock;
 extern CRITICAL_SECTION gNbSndLock;
 extern tag_Anchor gNbRcvQueue;
 extern tag_Anchor gNbSndQueue;
 extern tag_Anchor gNbPriorityQueue;
-extern HANDLE gNbEvents[9];
+extern HANDLE gNbEvents[NETBIOS_THREAD_EVENT_COUNT];
 #endif

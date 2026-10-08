@@ -143,7 +143,7 @@ void combatManager::DoCompAI(i8 side) {
     i32 targetHexValue;
     i32 keptAdj;
 
-    m_limitCreature = false;
+    m_selectorVisible = false;
     gMouseManager->ReallyHidePointer();
     curArmy = &m_armies[m_currentSide][m_currentArmyIndex];
     newPlan = COMBAT_AI_ATTACK_NONE;
@@ -174,7 +174,7 @@ void combatManager::DoCompAI(i8 side) {
             if (castleCopy->m_buildings & (1 << newDir))
                 curNumArchers += COMBAT_AI_CASTLE_ARCHERS_PER_DWELLING;
         for (newDir = BUILDING_SLOT_MAGE_GUILD;
-             newDir <= (BUILDING_SLOT_RACE_FIRST - 1);
+             newDir <= BUILDING_SLOT_GENERIC_LAST;
              newDir++)
             if (castleCopy->m_buildings & (1 << newDir))
                 curNumArchers++;

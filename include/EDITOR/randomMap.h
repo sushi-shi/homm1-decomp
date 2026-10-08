@@ -98,4 +98,6 @@ enum ChainTreeFamily {
     CHAIN_TREE_DECIDUOUS = 2
 };
 
+void ScaleByDensity(i32* count, i32 density);
+
 #endif

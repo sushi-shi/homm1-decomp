@@ -71,9 +71,6 @@ enum PrefsConstant {
     KBWIN_COMMAND_LINE_LIMIT = 60,
     KBWIN_MESSAGE_FILTER_SIZE = 0x400,
     KBWIN_APPLICATION_ICON = 109,
-    KBWIN_CLASS_STYLE = 0x100b,
-    KBWIN_WINDOWED_STYLE = 0x14cf0000,
-    KBWIN_FULLSCREEN_STYLE = 0x14000000,
     KBWIN_PROCESS_MESSAGE_MAX = 0x3ff,
     KBWIN_TIMER_ID = 1,
     KBWIN_TIMER_INTERVAL = 10,
@@ -137,15 +134,12 @@ void SetMenuStatus(i32 showMenu);
 void SetWinText(class heroWindow* window, i16 id);
 void UpdateDfltMenu(KBMenu menu);
 extern i32 gForegroundApp;
-extern i32 gNoDialogMenusOn;
 extern KBMenu gAppMenu;
 extern KBMenu gAdventureMenu;
 extern KBMenu gDefaultMenu;
 extern KBMenu gCombatMenu;
 extern KBMenu gTownMenu;
 extern b32 gClosingApp;
-extern i32 gLastGetMessage;
-extern i32 gLastAilServe;
 i32 KBTickCount();
 void Process1WindowsMessage();
 void SetNoDialogMenus(i32 menusEnabled);

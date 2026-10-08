@@ -4,8 +4,6 @@
 #include <BASE/IconEntry.h>
 #include <BASE/resource.h>
 
-struct SLimitData;
-
 enum IconMonoRleConstant {
     ICON_MONO_SKIP_MASK = 0x7f,
     ICON_MONO_END_COMMAND = 0x80,

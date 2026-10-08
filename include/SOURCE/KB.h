@@ -38,7 +38,7 @@ enum MainMenuControl {
     MAIN_MENU_QUICK_LOAD = 0x40
 };
 
-                               extern b8 gInPollSound;
+extern b8 gInPollSound;
 extern i8 gNoSound;
 extern b8 gShowHighScore;
 extern b8 gHeroWindShowing;
@@ -400,7 +400,7 @@ extern i8 gIAmGreatest;
 extern struct campaignScenario gCampaignScenarios[];
 extern char* gSpellHelp[SPELL_HELP_COUNT];
 extern b8 gInCombat;
-extern i8 gCombatAdjacency[45][COMBAT_DIRECTION_ADJACENT_COUNT];
+extern i8 gCombatAdjacency[][COMBAT_DIRECTION_ADJACENT_COUNT];
 extern i16 gCurLoadedSpellFileId;
 
 extern i32 gCurGeneral;
@@ -441,7 +441,7 @@ extern b32 gSpecialHideCursor;
 extern i32 gArtifactBaseRV[ARTIFACT_REGULAR_END];
 extern b8 gDrawSavedCursor;
 extern i8 gSpellAIFlags[SPELL_COUNT];
-extern i8 gDwellingType[TOWN_TYPE_COUNT][6];
+extern i8 gDwellingType[TOWN_TYPE_COUNT][BUILDING_SLOT_DWELLING_COUNT];
 extern float gSpellCastNumMod[];
 extern float gStatPower[];
 enum StatCurveConstant {
@@ -513,7 +513,7 @@ extern char* gHeroNamesAccusative[];
 extern char* gHeroNamesGenitive[];
 extern char* gClassNamesAccusative[];
 extern char* gArmyNamesMoved[];
-extern i8 gHeroSkillBonus[4][9][HERO_PRIMARY_STAT_COUNT];
+extern i8 gHeroSkillBonus[HERO_CLASS_COUNT][HERO_SKILL_BONUS_ROW_LAST + 1][HERO_PRIMARY_STAT_COUNT];
 extern char* gHumanPlayerTypeNames[];
 
 extern i8 gCampaignChoice;
@@ -650,20 +650,26 @@ enum NetBoxLineSlot {
 };
 
 enum NetBoxControl {
-NET_BOX_LINE_PREVIOUS = 1, NET_BOX_LINE_LATEST = 2,
-                           NET_BOX_INPUT = 3 };
+    NET_BOX_LINE_PREVIOUS = 1,
+    NET_BOX_LINE_LATEST = 2,
+    NET_BOX_INPUT = 3
+};
 
-                           enum NetBoxConstant {
+enum NetBoxConstant {
     NET_BOX_BLINK_DELAY = 360
 };
 
 enum CongratsControl {
-CONGRATS_TITLE = 100, CONGRATS_SCORE_LABEL_FIRST = 101, CONGRATS_DAYS = 106,
-                      CONGRATS_BASE_SCORE = 107, CONGRATS_DIFFICULTY = 108,
-                      CONGRATS_FINAL_SCORE = 109,
-                      CONGRATS_RATING = 110 };
+    CONGRATS_TITLE = 100,
+    CONGRATS_SCORE_LABEL_FIRST = 101,
+    CONGRATS_DAYS = 106,
+    CONGRATS_BASE_SCORE = 107,
+    CONGRATS_DIFFICULTY = 108,
+    CONGRATS_FINAL_SCORE = 109,
+    CONGRATS_RATING = 110
+};
 
-                          enum CongratsConstant {
+enum CongratsConstant {
     CONGRATS_SCORE_LABEL_COUNT = 5
 };
 
@@ -673,6 +679,8 @@ enum DataEntryStep {
 };
 
 enum DataEntryControl {
-DATA_ENTRY_PROMPT = 1, DATA_ENTRY_TEXT = 10 };
+    DATA_ENTRY_PROMPT = 1,
+    DATA_ENTRY_TEXT = 10
+};
 
 #endif

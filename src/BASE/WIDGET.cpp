@@ -1,6 +1,6 @@
 #include <H1/Ints.h>
 
-#include <BASE/BMAP2.h>
+#include <BASE/bmap2.h>
 #include <BASE/heroWindow.h>
 #include <BASE/heroWindowManager.h>
 #include <BASE/message.h>

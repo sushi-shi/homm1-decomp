@@ -47,36 +47,33 @@ send function keys as raw key codes (XTest) instead.
 ## Resynchronising with a regenerated source-buka-2003
 
 `source-buka-2003` is regenerated from `decomp-buka-2003` (`homm1 clean`),
-often with whole-program renames. Replay the TE commits one by one:
+often with whole-program renames, as a new root commit unrelated to the last.
+Merge it with the export merged last as the merge base, so the merge brings
+in exactly what the regeneration changed:
 
-1. Branch from the new export: `git checkout -b te-replay source-buka-2003`.
-   When the export changed little, cherry-pick each commit with diff3
-   conflicts and resolve them token by token (the export's renames and
-   constants on the base side, the commit's change on the other), then go
-   to step 5.
-2. Build an old-to-new identifier map: diff the token streams of every
-   source file between the old and the new export; a token that no longer
-   exists anywhere in the new tree and is consistently replaced by one name
-   is renamed (a per-file map adds locals that vanished from that file).
-   The decomp's `config/reviews/naming-*.tsv` adds parameter and local
-   renames scoped to their function.
-3. For each TE commit, rewrite the identifiers of its source diff (code
-   only, never strings or comments) and apply it with `git apply -3`,
-   falling back to `--reject`. Apply rejected hunks with whitespace- and
-   line-break-insensitive matching that must cover whole lines (the export
-   reflows code after renames); resolve what is left by hand.
-4. Reformat only the changed lines with the decomp's `.clang-format`
-   (`git clang-format --style=file:... HEAD`).
-5. Move the commit's catalog changes into the new `.po` files: new and
-   changed entries for `en` and `ru`, removed entries dropped; then run
-   `python3 catalog.py update`. `catalog.py check` and `update --check`
-   must pass.
-6. Build both locales after every commit; compare each replayed commit with
-   the original by the multiset of tokens it adds and removes per file.
-   Every difference must be explained by the new base (renamed names,
-   removed casts) or by a deliberate adaptation.
-7. Smoke-test with `nix run .#play`: main menu, a new game, F5 and F9; and
+```sh
+old=$(git log -1 --format=%H --grep='^Generated-By: homm1 clean$' source-te)
+git merge-recursive "$old" -- source-te origin/source-buka-2003
+```
+
+`git merge-recursive` leaves the result in the working tree; commit it with
+the new export as the second parent.
+
+1. Resolve the conflicts token by token: the export's renames and constants,
+   the edition's change. Keep this branch's `README.md` and `AGENTS.md`.
+2. Rename what the edition's own code and `docs/te` still call by an old
+   name: list the identifiers the old export has and the new one lacks, and
+   look for them in the merged tree. The decomp's `config/reviews/naming-*.tsv`
+   lists the parameter and local renames scoped to their function; the build
+   finds the rest.
+3. `python3 catalog.py check` and `update --check` must pass.
+4. Build both locales.
+5. Smoke-test with `nix run .#play`: main menu, a new game, F5 and F9; and
    the editor (`--editor`) loading a shipped map with the shared settings.
+
+The first exports were carried forward by replaying the TE commits one by
+one onto each new export; since `a5004479` (from `327da239`) the branch
+merges them.
 
 ## The edition on the native port (port-te)
 
@@ -229,28 +226,14 @@ implementation, the port's when it is equivalent, and keep the edition's
 gameplay on top of it; record the case in this section. Then build and test
 as below.
 
-When `port` and `source-te` move onto a regenerated `source-buka-2003`,
-re-derive port-te as a line again:
-
-1. `git checkout -b port-te-new port` (the new port).
-2. List port-te's own commits: `git rev-list --reverse --first-parent
-   --no-merges OLD_PORT..port-te`, where `OLD_PORT` is the port commit
-   port-te last branched from or merged (the replayed TE commits and the
-   port-te commits; the port's commits come with the new port).
-3. Cherry-pick them in order (`git cherry-pick -x`). A replayed TE commit
-   is the source-te commit of the same subject plus its "Native port:"
-   adaptation. Where it conflicts with the new base, take the new
-   source-te commit (`git log NEW_SOURCE..source-te`, same subject), apply
-   it (`git cherry-pick`), and redo the adaptation its old message names.
-   `git range-diff OLD_SOURCE..OLD_SOURCE_TE NEW_SOURCE..source-te` shows
-   what changed in the edition itself; every difference between the old
-   and the new port-te commit must be one of those or come from the new
-   port.
-4. Rename catalog ids and identifiers as the source-te resync did (its
-   steps 2 and 5 above); the native settings file stays the locale
-   descriptor's `settings_file`, beside `registry_key`.
-5. After every commit: `nix develop .#port -c ninja -C build/port`. At the
-   end, the checks below; then move `port-te` to the new line.
+When `port` and `source-te` merge a regenerated `source-buka-2003`, merge
+the new `port` the same way. Its conflicts are where the edition's changes
+meet the regeneration's renames: resolve them as the source-te merge did
+(the same hunks, in the same files), keeping the port's guards where a port
+fix and an edition change meet. Then rename what the edition's own code, the
+port-te tests and `docs/te` still call by an old name (step 2 of the resync
+above). Until `a5004479` port-te was re-derived as a line on each new port,
+its replayed TE commits cherry-picked again.
 
 Checks: the native game and editor with GCC and Clang, `ctest` (with
 `HOMM1_DATA`) in a normal and a `-DHOMM1_SANITIZERS=ON` build,

@@ -278,14 +278,14 @@ void combatManager::CastSpell(
     army* teleportArmy;
 
     spellSound = NULL;
-    if (m_limitCreature) {
+    if (m_selectorVisible) {
         ResetLimitCreature();
-        if (ValidHex(m_limitCreatureHex)
-            && m_hexCells[m_limitCreatureHex].m_occupantSide >= COMBAT_SIDE_FIRST)
-            m_limitCreatureCount[m_hexCells[m_limitCreatureHex].m_occupantSide]
-                                [m_hexCells[m_limitCreatureHex].m_occupantIndex]++;
-        m_limitCreature = false;
-        m_limitCreatureHex = ARMY_HEX_INVALID;
+        if (ValidHex(m_selectorHex)
+            && m_hexCells[m_selectorHex].m_occupantSide >= COMBAT_SIDE_FIRST)
+            m_limitCreatureCount[m_hexCells[m_selectorHex].m_occupantSide]
+                                [m_hexCells[m_selectorHex].m_occupantIndex]++;
+        m_selectorVisible = false;
+        m_selectorHex = ARMY_HEX_INVALID;
         gCombatManager->DrawFrame(true);
     }
     gMouseManager->ReallyHidePointer();
@@ -913,20 +913,20 @@ void combatManager::Armageddon(void) {
         sprintf(gText, localization::Tr("combat.armageddon.damage"), damage);
         CombatMessage(gText, true);
     }
-    gWindowManager->m_updateFlags = 0;
+    gWindowManager->m_colorCycling = 0;
     gamePal = gResourceManager->GetPalette("kb.pal");
     effectPalette = new palette;
     if (!effectPalette)
         MemError();
-    memcpy(effectPalette->Data(), gamePal->Data(), 0x300);
+    memcpy(effectPalette->Data(), gamePal->Data(), PALETTE_DATA_SIZE);
     gTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
     paletteBytes = effectPalette->Data();
     for (fadeStep = 0; fadeStep < 32; fadeStep++) {
         for (color = 0; color < PALETTE_COLOR_COUNT; color++) {
-            if (paletteBytes[color * 3 + 1])
-                paletteBytes[color * 3 + 1]--;
-            if (paletteBytes[color * 3 + 2])
-                paletteBytes[color * 3 + 2]--;
+            if (paletteBytes[color * PALETTE_GRAPHICS_CHANNELS + PALETTE_CHANNEL_GREEN])
+                paletteBytes[color * PALETTE_GRAPHICS_CHANNELS + PALETTE_CHANNEL_GREEN]--;
+            if (paletteBytes[color * PALETTE_GRAPHICS_CHANNELS + PALETTE_CHANNEL_BLUE])
+                paletteBytes[color * PALETTE_GRAPHICS_CHANNELS + PALETTE_CHANNEL_BLUE]--;
         }
         DelayTil(&gTimers[COMBAT_FRAME_TIMER_SLOT]);
         SetPalette(paletteBytes, true);
@@ -943,7 +943,7 @@ void combatManager::Armageddon(void) {
     }
     DrawFrame(true);
     SetPalette(gamePal->Data(), true);
-    gWindowManager->m_updateFlags = 1;
+    gWindowManager->m_colorCycling = 1;
     gResourceManager->Dispose(gamePal);
     delete effectPalette;
 }

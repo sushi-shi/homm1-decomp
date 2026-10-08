@@ -58,9 +58,9 @@ extern i32 gGraphicsType;
 extern i32 gMainVideoModeHeight;
 extern i32 gMainVideoModeWidth;
 extern i32 gMainVideoModeColorDepth;
-extern i32 gDDrawAttached;
-extern i32 gWinGAttached;
-extern i32 gWinGraphBusy;
+extern b32 gDDrawAttached;
+extern b32 gWinGAttached;
+extern b32 gWinGraphBusy;
 extern void* gInitWin;
 extern i32 gTtlBlts;
 

@@ -671,17 +671,19 @@ with strict warnings as errors; see [lessons.md](lessons.md).
 ## Keeping up with the source branch
 
 `source-buka-2003` is generated from `decomp-buka-2003` and is replaced by a
-new single root commit each time it is regenerated. This branch is that root
-commit plus the port's commits, so carrying the port forward is a replay of
-those commits onto the new root:
+new single root commit each time it is regenerated. The port merges each new
+root, with the root it merged last as the merge base, so the merge brings in
+exactly what the regeneration changed:
 
 ```sh
 git fetch origin source-buka-2003
-old=$(git rev-list --max-parents=0 port)         # the source commit the port sits on
-git rebase --rebase-merges --onto origin/source-buka-2003 "$old" port
+old=$(git log -1 --format=%H --grep='^Generated-By: homm1 clean$' port)   # the last merged root
+git merge-recursive "$old" -- port origin/source-buka-2003
 ```
 
-Then rebuild both programs and run the tests:
+`git merge-recursive` leaves the result (and any conflicts) in the working
+tree; commit it with the new root as the second parent. Then rebuild both
+programs and run the tests:
 
 ```sh
 nix develop -c python3 build.py --target all      # Visual C++ 6 HEROES.EXE, EDITOR.EXE
@@ -690,15 +692,20 @@ nix develop .#port -c ninja -C build/port
 HOMM1_DATA=... nix develop .#port -c ctest --test-dir build/port
 ```
 
-`tools/port/sync.sh` runs the replay and both builds. Conflicts arise where
+`tools/port/sync.sh` runs the merge and both builds. Conflicts arise where
 the regenerated source changed the lines a port commit edits; resolve them in
-favour of the new source and re-apply the port's intent. New Windows calls in
-shared units show up as native compile errors (the shared units no longer see
-`windows.h`); renamed host functions show up as link errors. Port changes that
-leave the Visual C++ output byte-identical (the header splits, for example)
-can be made on `decomp-buka-2003` instead, which shrinks the replay.
+favour of the new source and re-apply the port's intent. Renames also reach
+code only the port has (`src/PORT`, the record codecs, the tests) and the
+`*Host.h` headers, which hold the Windows part of split headers: list the
+identifiers the old root has and the new one lacks, and look for them in the
+merged tree. New Windows calls in shared units show up as native compile
+errors (the shared units no longer see `windows.h`); renamed host functions
+show up as link errors. Port changes that leave the Visual C++ output
+byte-identical (the header splits, for example) can be made on
+`decomp-buka-2003` instead, which shrinks the merge.
 
-The first regeneration replayed this way (`b0488801` to `52922394`, which
+The first two regenerations were replayed instead (`git rebase --onto NEW OLD`),
+which rewrote the port's history. The first (`b0488801` to `52922394`, which
 brought the editor, `build.json` targets and a naming and comment pass)
 conflicted in thirteen files (twelve sources and `build.json` in the first
 port commit, `flake.nix` in the second), all where a port commit edited lines the
@@ -725,3 +732,16 @@ place. Windows spellings the regeneration added to shared units (`BOOL`,
 `TRUE`, `FALSE`) became `b32`, `true` and `false` there; the record codecs
 follow the renamed members (`m_unused00`, `m_unused9a`, `m_unused19`) and
 the network codec's entry points take `b8` flags like `TransmitRemoteData`.
+
+The third (`d59c9910` to `a5004479`, from `327da239`: the semantic naming
+pass, the review's local names, `delete[]` for the route map, the spell AI's
+literal `0.75`) was the first merge. It conflicted in fifteen files where the
+port had rewritten lines the pass renamed: the record codecs' save and map
+reads (`m_heroOwners`, `m_artifactHolders`), the network battle record
+(`eventX`, `eventY`), and the bug pass's guards (`townSlot`, `currentHero`,
+`m_locationMetadata`, `m_buildingWindow`, `isFree`, `eventMode`). The
+`*Host.h` headers took the regeneration's Windows spellings (`BOOL AppInit`,
+`LRESULT CALLBACK AppWndProc`, `NETBIOS_SESSION_COUNT`, the dropped
+`*LineBase` globals), the window styles spelled with `CS_` and `WS_` flags
+moved to `kbwinHost.h`, and the tests follow `m_colorCycling` and
+`gScatterTerrain`.

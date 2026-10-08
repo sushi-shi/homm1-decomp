@@ -54,10 +54,10 @@ char gMapPath[20] = ".\\MAPS\\";
 i32 gCurExe = CONFIG_EXECUTABLE_EDITOR;
 b32 gNewMapFormat = true;
 i32 gClearFlags = EDITOR_CLEAR_FLAGS_DEFAULT;
-i32 gSelectionX = -1;
+i32 gSelectionX = EDIT_NO_CELL;
 double gTerrainPercent[EDITOR_TERRAIN_COUNT] = {30.0, 30.0, 20.0, 0.0, 0.0, 0.0, 20.0};
 double gDensityPercent[EDITOR_GENERATOR_DENSITY_COUNT] = {50.0, 50.0, 50.0, 50.0, 50.0};
-b32 gScatterTowns = true;
+b32 gScatterTerrain = true;
 SMenuEnableStatus gMenuEnableStatus[70] = {
     {0, 0, 0, 0},     {40005, 1, 1, 0}, {40006, 1, 1, 0}, {40007, 1, 1, 0}, {40008, 1, 1, 0},
     {40009, 1, 1, 0}, {40012, 0, 0, 0}, {40013, 0, 0, 0}, {40014, 0, 0, 0}, {40015, 0, 0, 0},
@@ -1200,7 +1200,7 @@ b32 gInDialog = false;
 i32 gMinimized = 0;
 b32 gInSetupDialog = false;
 i32 gSaveUnseen = 0;
-b32 gGeneratingMaps = false;
+b32 gGeneratingUnseen = false;
 b32 gHeroMoving = false;
 b32 gInSmacker = false;
 i32 gStatusTextClearTime = 0;

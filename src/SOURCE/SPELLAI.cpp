@@ -436,7 +436,7 @@ void combatManager::EffectSpellDamage(
     i32 stacksKilled[COMBAT_SIDE_COUNT];
     i32 killedValue[COMBAT_SIDE_COUNT];
     i32 side;
-    i32 hitDamage;
+    i32 expectedDamage;
     army* targetArmy;
     i32 hex;
     b32 done;
@@ -491,11 +491,11 @@ void combatManager::EffectSpellDamage(
                 gArmyEffected[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex] = 1;
                 if (!ARMY_IGNORES_SPELLS(targetArmy)) {
                     if (targetArmy->m_creatureType == CREATURE_DWARF)
-                        hitDamage = baseDamage * 0.75;
+                        expectedDamage = baseDamage * 0.75;
                     else
-                        hitDamage = baseDamage;
-                    killedCount = hitDamage / targetArmy->m_stats.hitPoints;
-                    leftDamage = hitDamage % targetArmy->m_stats.hitPoints;
+                        expectedDamage = baseDamage;
+                    killedCount = expectedDamage / targetArmy->m_stats.hitPoints;
+                    leftDamage = expectedDamage % targetArmy->m_stats.hitPoints;
                     if (leftDamage + targetArmy->m_hitPointsLost >= targetArmy->m_stats.hitPoints) {
                         killedCount++;
                         leftDamage -= targetArmy->m_stats.hitPoints - targetArmy->m_hitPointsLost;

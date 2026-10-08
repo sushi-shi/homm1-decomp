@@ -1,15 +1,14 @@
 #!/usr/bin/env bash
-# Replays the port's commits onto a regenerated source-buka-2003 and rebuilds
-# both programs.
+# Merges a regenerated source-buka-2003 into the port and rebuilds both
+# programs.
 #
 #   tools/port/sync.sh [NEW_SOURCE_REF]     (default: origin/source-buka-2003)
 #
-# The port branch is the source branch's single root commit plus the port's
-# commits; a regenerated source branch is a new root. The replay is
-# `git rebase --rebase-merges --onto NEW OLD_ROOT`, which keeps the merges of
-# the side branches; a merge's own conflict resolutions are redone by hand. On
-# a conflict git stops: resolve, run `git rebase --continue`, then run this
-# script again with --build-only.
+# Each regeneration of the source branch is a new root commit, unrelated to
+# the last one. The merge takes the root the port merged last as its base, so
+# it brings in exactly what the regeneration changed, and records the new
+# root as the merge's second parent. On a conflict git stops: resolve, `git
+# add` the files, `git commit`, then run this script again with --build-only.
 set -euo pipefail
 
 cd "$(git rev-parse --show-toplevel)"
@@ -30,13 +29,19 @@ if ! $build_only; then
     case "$target" in
         origin/*) git fetch origin "${target#origin/}" ;;
     esac
-    old=$(git rev-list --max-parents=0 HEAD)
+    old=$(git log -1 --format=%H --grep='^Generated-By: homm1 clean$' HEAD)
     new=$(git rev-parse "$target")
     if [ "$old" = "$new" ]; then
         echo "already on $target ($new)"
     else
-        echo "replaying $(git rev-list --count "$old"..HEAD) port commits from $old onto $new"
-        git rebase --rebase-merges --onto "$new" "$old"
+        echo "merging $(git log -1 --format=%s "$new") (base $old)"
+        git rev-parse "$new" >"$(git rev-parse --git-path MERGE_HEAD)"
+        echo "Merge $(git log -1 --format=%s "$new")" >"$(git rev-parse --git-path MERGE_MSG)"
+        if ! git merge-recursive "$old" -- HEAD "$new"; then
+            echo "resolve the conflicts, git add and git commit, then rerun with --build-only" >&2
+            exit 1
+        fi
+        git commit --no-edit
     fi
 fi
 

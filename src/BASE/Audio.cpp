@@ -14,15 +14,15 @@
 #include <stdio.h>
 
 #ifndef HOMM1_EDITOR
-static int gAudioOldStore;
+static i32 gAudioOldStore;
 #endif
 static void* gSampleBuffer;
-static int gSampleFrames;
-static int gSampleChannels;
-static int gSampleRate;
+static i32 gSampleFrames;
+static i32 gSampleChannels;
+static i32 gSampleRate;
 static audiere::SampleFormat gSampleFormat;
 static AudiereSampleNode* gSamples;
-static int gSampleSuspensions;
+static i32 gSampleSuspensions;
 
 void CleanupSamples() {
     if (gSamples == NULL)
@@ -170,9 +170,9 @@ bool SamplesSuspended() {
 
 audiere::OutputStreamPtr AudiereMusic::channel;
 audiere::SampleSourcePtr AudiereMusic::origin;
-static int gMusicSuspensions;
-static int gCurrentTrack = -1;
-static int gCDTrackMap[AUDIO_TRACK_SLOT_COUNT] = {
+static i32 gMusicSuspensions;
+static i32 gCurrentTrack = -1;
+static i32 gCDTrackMap[AUDIO_TRACK_SLOT_COUNT] = {
     2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
     22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, -1, -1, -1, -1, -1, -1, -1,
     35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, -1, -1, -1, -1, -1,
@@ -181,10 +181,10 @@ static int gCDTrackMap[AUDIO_TRACK_SLOT_COUNT] = {
 };
 
 static char gMusicFilename[352];
-static int gMusicPositions[AUDIO_TRACK_SLOT_COUNT];
-static int gMusicSource;
+static i32 gMusicPositions[AUDIO_TRACK_SLOT_COUNT];
+static i32 gMusicSource;
 
-bool ShouldRepeatMusic(int track) {
+bool ShouldRepeatMusic(i32 track) {
     if (track < MUSIC_TRACK_TERRAIN_END
         || (track >= MUSIC_TRACK_BATTLE_FIRST && track <= MUSIC_TRACK_BATTLE_LAST)
         || track == MUSIC_TRACK_BATTLE_4 || track == MUSIC_TRACK_CONGRATULATIONS
@@ -195,7 +195,7 @@ bool ShouldRepeatMusic(int track) {
     return false;
 }
 
-void PlayMusic(int track) {
+void PlayMusic(i32 track) {
     if (!GetAudioDevice())
         return;
     if (MusicSuspended())
@@ -216,7 +216,7 @@ void PlayMusic(int track) {
     } else {
         // The disc's tracks are installed in the game folder, as Ogg files
         // or, with the LosslessAudio option, as FLAC files.
-        int discTrack = gCDTrackMap[track];
+        i32 discTrack = gCDTrackMap[track];
         if (gConfig.losslessAudio)
             sprintf(gMusicFilename, ".\\Audio\\Track %02d.flac", discTrack);
         else
@@ -251,7 +251,7 @@ void PlayMusic(int track) {
     }
 }
 
-int GetCurrentTrack() {
+i32 GetCurrentTrack() {
     return gCurrentTrack;
 }
 
@@ -280,17 +280,17 @@ void UpdateMusicVolume() {
     AudiereMusic::channel->setVolume(GetMusicVolume());
 }
 
-void SetMusicSource(int source) {
+void SetMusicSource(i32 source) {
     if (AudiereMusic::channel) {
         AudiereMusic::channel->stop();
         AudiereMusic::channel = NULL;
     }
     AudiereMusic::origin = NULL;
-    for (int track = 0; track <= AUDIO_TRACK_SLOT_LAST; ++track)
+    for (i32 track = 0; track <= AUDIO_TRACK_SLOT_LAST; ++track)
         gMusicPositions[track] = 0;
     gMusicSource = source;
     if (gCurrentTrack >= 0) {
-        int oldTrack = gCurrentTrack;
+        i32 oldTrack = gCurrentTrack;
         gCurrentTrack = MUSIC_TRACK_NONE;
         PlayMusic(oldTrack);
     }
@@ -315,13 +315,13 @@ bool MusicSuspended() {
 }
 
 audiere::AudioDevicePtr AudiereDevice::driver;
-int AudiereDevice::dummy;
+i32 AudiereDevice::dummy;
 static float gEffectsVolume = 1.0f;
 static float gMusicVolume = 1.0f;
 static float gVolumeLevels[11] =
     {0.0f, 1.0f, 0.8f, 0.65f, 0.5f, 0.4f, 0.3f, 0.2f, 0.15f, 0.1f, 0.05f};
 
-float VolumeLevel(int level) {
+float VolumeLevel(i32 level) {
     return gVolumeLevels[level];
 }
 
@@ -352,7 +352,7 @@ float GetEffectsVolume() {
     return gEffectsVolume;
 }
 
-float ScaleSampleVolume(int volume) {
+float ScaleSampleVolume(i32 volume) {
     return GetEffectsVolume() * (static_cast<float>(volume)) / 127.0f;
 }
 
@@ -365,17 +365,17 @@ void StopAllAudio() {
     StopMusic();
 }
 
-void SetEffectsVolume(int level) {
+void SetEffectsVolume(i32 level) {
     gEffectsVolume = VolumeLevel(level);
     UpdateAllSampleVolumes();
 }
 
-void SetMusicVolume(int level) {
+void SetMusicVolume(i32 level) {
     gMusicVolume = VolumeLevel(level);
     UpdateMusicVolume();
 }
 
-void SetVolumes(int effects, int music) {
+void SetVolumes(i32 effects, i32 music) {
     SetEffectsVolume(effects);
     SetMusicVolume(music);
 }

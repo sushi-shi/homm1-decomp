@@ -70,7 +70,7 @@ enum HeroPrimaryStat {
     HERO_PRIMARY_DEFENSE = 1,
     HERO_PRIMARY_SPELL_POWER = 2,
     HERO_PRIMARY_KNOWLEDGE = 3,
-    HERO_PRIMARY_BALLISTA = 4
+    HERO_PRIMARY_SIEGE = 4
 };
 
 class hero {
@@ -87,7 +87,7 @@ public:
     i8 m_destinationY;
     u8 m_direction;
     u8 m_locationType;
-    u8 m_occupiedTown;
+    u8 m_locationMetadata;
     i16 m_mobility;
     i16 m_remainingMobility;
     i32 m_experience;

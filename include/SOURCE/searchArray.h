@@ -37,22 +37,12 @@ struct searchNode {
     u16 distance : 12;
     u8 visited : SEARCH_FLAG_BIT_COUNT;
     u8 occupied : SEARCH_FLAG_BIT_COUNT;
-    u8 rvFlag1 : SEARCH_FLAG_BIT_COUNT;
-    u8 rvFlag2 : 5;
-    union {
-        struct {
-            i8 adjacentMonsterX;
-            i8 adjacentMonsterY;
-            u8 previousFlags;
-            u8 terrain;
-        };
-        struct {
-            i8 valueX;
-            i8 valueY;
-            i8 previousX;
-            i8 previousY;
-        };
-    };
+    u8 hasAdjacentMonster : SEARCH_FLAG_BIT_COUNT;
+    u8 beyondTurnMobility : 5;
+    i8 adjacentMonsterX;
+    i8 adjacentMonsterY;
+    i8 turnEndX;
+    i8 turnEndY;
 };
 
 class searchArray {
@@ -89,14 +79,14 @@ public:
         i16 y,
         u16 direction,
         u16 cost,
-        u16 mobility,
+        u16 maximumCost,
         i8 occupied,
-        i8 rvFlag1,
-        i8 valueX,
-        i8 valueY,
-        i8 rvFlag2,
-        i8 previousX,
-        i8 previousY
+        i8 hasAdjacentMonster,
+        i8 adjacentMonsterX,
+        i8 adjacentMonsterY,
+        i8 beyondTurnMobility,
+        i8 turnEndX,
+        i8 turnEndY
     );
     void TestPossibleDirections(
         i16 x,

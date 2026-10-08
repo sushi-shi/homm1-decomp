@@ -235,7 +235,7 @@ texts. *Risk:* balance; multiplayer must match.
 
 **X21 — Spell book no longer corrupts the boat table (bug fix).**
 `advManager::GiveArtifact` (SOURCE/EVENTS) `0x426eda–0x426ef9`:
-`gpGame->m_randomArtifacts[artifact] = heroId` only when `artifact <= 36`
+`gpGame->m_artifactHolders[artifact] = heroId` only when `artifact <= 36`
 (the array has 0x25 entries; `ARTIFACT_MAGIC_BOOK` = 37 wrote into
 `m_boats[0]`). *source-te:* bounds check.
 
@@ -559,7 +559,7 @@ Hooks (EN; RU is identical except where noted in 4.5):
 | 0x44d708 | philAI::QuickCombat+1e7 | LoHook | Attacker wins: the losing defender hero also gets the loss temps and the cowardice penalty (see the morale block), which the original never applied. |
 | 0x44d6df | philAI::QuickCombat+1be | LoHook | Auto-resolved town battle (`townBattle`): the winning attacker gets +500 experience, mirroring the castle bonus of interactive combat. |
 | 0x451077, 0x451084 | recruitUnit::Open+17e/+18b | LoHook | The maximum recruitable count is kept as 32 bits (a dword store at +0x50 and the full value in eax) instead of being truncated to `i16` (more than 32,767 affordable). The dword store also overwrites the following field (risk). |
-| 0x40c91a, 0x40cba5, 0x40c9e6, 0x40cc71 | advManager::ViewWorld+6d7/+962/+7a3/+a2e | LoHook | View-World handling for heroes standing on a mine. The case tests are rewritten (+6d7 requires the event bit: 0x81/0x99/0xa0), and the mine-type letter is drawn from a hero-record byte instead of the hero index used as a mine index. The handler reads hero+0x23 (`m_locationType`), which looks like a slip for +0x24 (`m_occupiedTown`, the mine index); verify in game. |
+| 0x40c91a, 0x40cba5, 0x40c9e6, 0x40cc71 | advManager::ViewWorld+6d7/+962/+7a3/+a2e | LoHook | View-World handling for heroes standing on a mine. The case tests are rewritten (+6d7 requires the event bit: 0x81/0x99/0xa0), and the mine-type letter is drawn from a hero-record byte instead of the hero index used as a mine index. The handler reads hero+0x23 (`m_locationType`), which looks like a slip for +0x24 (`m_locationMetadata`, the mine index); verify in game. |
 | 0x434a8a, 0x434a9d | game::RandomizeTown+46c/+47f | WriteByte 0x40, WriteJmp →+4aa | A random town flagged as castle gets only `BUILDING_SLOT_CASTLE`. It no longer gets a free `BUILDING_SLOT_DWELLING_1` (0xc0→0x40) or the initial `m_garrison[0] = growth`. This is a balance change. |
 | 0x4314d4 | ViewSpellsHandler+436 | WriteByte 0xEB | Disables the trailing `if (message.id == WIDGET_COMMAND_DIALOG_SELECT) forward` path in the spell book, so widget id 10 no longer acts as "select". The motivation is unresolved (likely a stray close/select). |
 | 0x434d89 | game::SetupTown+202 | LoHook | Before the original memset, writes the town index into `m_objectMetadata` for the 4×3 cells x-2..x+1 by y-2..y (bounds 0..71) of each town footprint. |
@@ -808,7 +808,7 @@ become off-by-default options at most.
 - TE keeps the record layouts but changes the meaning of spare bytes that are
   saved: `hero::m_primaryStats[4]` (`+0x34`, fled state), `hero::m_cowardice`
   (`+0x37`, now live), `hero::m_name[16]` (`+0x12`, only in the static patch),
-  `m_availableHeroes` value `0x40` used as "reserved for a tavern".
+  `m_heroOwners` value `0x40` used as "reserved for a tavern".
   Retail saves load into TE; TE saves read by retail carry nonzero
   cowardice and possibly unterminated 16-character names. Give these fields
   names and add a save-format marker on `source-te`.
@@ -826,7 +826,7 @@ Quickload is already refused in network games.
 **Verify before porting.**
 - X26 leaves `gHeroWindShowing` set after the hero screen; likely accidental.
 - TE-FIX-8 (View World mine letters) reads `hero+0x23`
-  (`m_locationType`) where `+0x24` (`m_occupiedTown`) looks intended.
+  (`m_locationType`) where `+0x24` (`m_locationMetadata`) looks intended.
 - TE-FIX-7 stores a dword into a 16-bit field and overwrites its neighbour.
 - TE-UNR-1 (`DetermineEffectOfSpell` replacement) and TE-UI-1
   (`ViewSpellsHandler` byte patch) are not fully decoded.
@@ -862,7 +862,7 @@ does not fit source, this branch implements the intended behaviour:
 - **Hero screen (X26).** The edition's early return left `gHeroWindShowing`
   set and skipped the movement refresh only to free bytes; both are kept.
 - **View World (TE-FIX-8).** The mine letter comes from
-  `m_mines[hero.m_occupiedTown]` (+0x24); the edition read `m_locationType`
+  `m_mines[hero.m_locationMetadata]` (+0x24); the edition read `m_locationType`
   (+0x23), an out-of-range index.
 - **Recruit maximum (TE-FIX-7).** The count is clamped to the available
   creatures before it is stored in the 16-bit field; the edition's dword store

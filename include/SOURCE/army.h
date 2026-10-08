@@ -182,7 +182,7 @@ i16 GetAdjacentCellIndexNoArmy(i16 hex, i16 direction);
 extern i16 gCurLoadedSpellEffect;
 extern b8 gGenieHalf;
 enum ArmyDrawingConstant {
-    ARMY_LIMIT_OUTLINE_COLOR = 0xe4,
+    ARMY_SELECTOR_OUTLINE_COLOR = 0xe4,
     ARMY_GOOD_SPELL_OUTLINE_COLOR = 0xf7,
     ARMY_BAD_SPELL_OUTLINE_COLOR = 0xe0,
     ARMY_MISSILE_PATCH_WIDTH = 70,

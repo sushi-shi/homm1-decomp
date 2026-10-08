@@ -102,7 +102,7 @@ extern class heroWindow* gEditDialog;
 extern struct SMapHeader* gMapHeader;
 extern double gTerrainPercent[EDITOR_TERRAIN_COUNT];
 extern double gDensityPercent[EDITOR_GENERATOR_DENSITY_COUNT];
-extern b32 gScatterTowns;
+extern b32 gScatterTerrain;
 extern i32 gSaveUnseen;
 enum GeneratorDensity {
     GENERATOR_DENSITY_MOUNTAINS = 0,
@@ -113,7 +113,7 @@ enum GeneratorDensity {
 };
 extern char* gGeneratorTerrainNames[];
 extern i32 gLandCellCount;
-extern b32 gGeneratingMaps;
+extern b32 gGeneratingUnseen;
 extern b32 gNewMapFormat;
 extern char* gEditButtonHelp[];
 extern char* gEditAreaHelp[];

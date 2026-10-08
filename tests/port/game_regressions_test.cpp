@@ -389,7 +389,7 @@ void SummonBoatOnTheEdge() {
     map->m_tileIndex = 0;
     map->m_objectIndex = MAP_CELL_NO_FRAME;
     gGame->m_boatSlots[0] = 0;
-    gGame->m_boats[0].heroId = static_cast<i8>(BOAT_OCCUPIED_FLAG);
+    gGame->m_boats[0].heroId = static_cast<i8>(BOAT_VACATED_FLAG);
     gGame->m_boats[0].owner = 0;
     gGame->m_boats[0].x = 60;
     gGame->m_boats[0].y = 60;

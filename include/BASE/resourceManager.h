@@ -6,7 +6,6 @@
 #include <BASE/message.h>
 #include <BASE/resource.h>
 
-class MIDIWrap;
 class bitmap;
 class font;
 class icon;

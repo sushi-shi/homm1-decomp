@@ -32,10 +32,10 @@ enum TownType {
 };
 
 enum TownMageGuildConstant {
-    MAGE_GUILD_STATE_LEVEL_1 = 0,
-    MAGE_GUILD_STATE_LEVEL_2 = 1,
-    MAGE_GUILD_STATE_LEVEL_3 = 2,
-    MAGE_GUILD_STATE_LEVEL_4 = 3,
+    MAGE_GUILD_LEVEL_1 = 0,
+    MAGE_GUILD_LEVEL_2 = 1,
+    MAGE_GUILD_LEVEL_3 = 2,
+    MAGE_GUILD_LEVEL_4 = 3,
     MAGE_GUILD_LEVEL_1_LAST_SLOT = 2,
     MAGE_GUILD_LEVEL_2_LAST_SLOT = 4,
     MAGE_GUILD_LEVEL_3_LAST_SLOT = 6,
@@ -69,7 +69,7 @@ public:
     armyGroup m_army;
     i8 m_occupyingHeroId;
     i16 m_buildings;
-    i8 m_buildState;
+    i8 m_mageGuildLevel;
     i8 m_unused19;
     i16 m_dwellingAvailable[6];
     u8 m_extraIndex;
@@ -118,6 +118,6 @@ enum BuildingSlotType {
 
 #define TOWN_BUILDING_COMPLETE(t, slot)                                                            \
     (((t).m_buildings & (1 << slot))                                       \
-     && ((slot) != BUILDING_SLOT_MAGE_GUILD || (t).m_buildState == MAGE_GUILD_STATE_LEVEL_4))
+     && ((slot) != BUILDING_SLOT_MAGE_GUILD || (t).m_mageGuildLevel == MAGE_GUILD_LEVEL_4))
 
 #endif

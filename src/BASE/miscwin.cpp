@@ -38,7 +38,7 @@ void BlitBitmapToScreen(
                 width
             );
     }
-    if (gEnlargeScreenBlit != false) {
+    if (gEnlargeScreenBlit) {
         if (gMainWinScreenWidth == LOGICAL_SCREEN_WIDTH
             && gMainWinScreenHeight == LOGICAL_SCREEN_HEIGHT) {
             if (width < LOGICAL_SCREEN_WIDTH)
@@ -88,7 +88,7 @@ void SetPalette(i8* paletteData, b32 updateDisplay) {
         paletteData + PALETTE_CYCLE_FIRST * PALETTE_GRAPHICS_CHANNELS,
         sizeof(gCyclePal)
     );
-    if (updateDisplay != false)
+    if (updateDisplay)
         UpdatePalette(gBufferPalette->m_data);
 }
 
@@ -117,7 +117,7 @@ void FadeIn(i32 increment) throw() {
             UpdatePalette(pal->m_data);
         }
     }
-    if (done == false) {
+    if (!done) {
         i = PALETTE_FADE_LEVEL_LAST;
         goto fadeStep;
     }
@@ -149,7 +149,7 @@ void FadeOut(i32 increment) throw() {
         }
         UpdatePalette(pal->m_data);
     }
-    if (done == false) {
+    if (!done) {
         i = PALETTE_FADE_LEVEL_LAST;
         goto fadeStep;
     }
@@ -267,7 +267,7 @@ void ClippedMonoIconToBitmap(
     i32 curX = x + entry->x;
     i32 curY = y + entry->y;
     i32 run;
-    bool decoding = true;
+    b32 decoding = true;
     while (decoding) {
         run = IconDataByte(sourceIcon, source, ICON_MONO_END_COMMAND);
         if (static_cast<i8>(run) < 0) {
@@ -312,7 +312,7 @@ static i32 gClipSource;
 static i32 gClipLimitX;
 static i32 gClipX;
 static u32 gClipRun;
-static bool gClipInside;
+static b32 gClipInside;
 static u8 gMiscScanTable[64];
 
 void ClipIconToBitmap(

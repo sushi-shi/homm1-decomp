@@ -54,7 +54,7 @@ void editManager::GenerateRandomMap(void) {
         return;
     }
     if (gSaveUnseen)
-        gGeneratingMaps = true;
+        gGeneratingUnseen = true;
     NewMap(true);
     done = false;
     attempt = 0;
@@ -116,7 +116,7 @@ void editManager::GenerateRandomMap(void) {
             gDensityPercent[GENERATOR_DENSITY_MONSTERS]
         );
         ShowStatusText(localization::Tr("editor.random.status.land"));
-        PlaceTowns();
+        PlaceCastles();
         for (terrain = 0; terrain <= TERRAIN_LAST; terrain++)
             BlendTerrain(terrain, 1, 0, 1, 0);
         gVaryTiles = true;
@@ -130,7 +130,7 @@ void editManager::GenerateRandomMap(void) {
         done = HasEnoughCastles();
         if (!done)
             continue;
-        if (gGeneratingMaps) {
+        if (gGeneratingUnseen) {
             ShowStatusText(localization::Tr("editor.random.status.save_prompt"));
             if (MapDetailsDialog(true)
                 && !(SaveMap(m_mapFileName))) {
@@ -138,7 +138,7 @@ void editManager::GenerateRandomMap(void) {
                 NormalDialog(gText, NORMAL_DIALOG_TYPE_OK);
             }
             ResetArea(0, 0, MAP_CELL_GRID_SIZE, MAP_CELL_GRID_SIZE);
-            gGeneratingMaps = false;
+            gGeneratingUnseen = false;
         }
     }
     DrawMap();
@@ -206,22 +206,22 @@ void editManager::PaintRandomTerrain(
         patches = Random(0, percent + 51) / 30 + 1;
         balance = targetCells;
         escapes = 0;
-        minWeight = gScatterTowns ? 2 : 3;
-        maxWeight = (gScatterTowns != false) + 6;
+        minWeight = gScatterTerrain ? 2 : 3;
+        maxWeight = (gScatterTerrain != false) + 6;
         for (cluster = 0; cluster < patches; cluster++) {
             perSeed = balance / (patches - cluster);
             looking = true;
             guard = 0;
             while (guard < RANDOM_MAP_SEED_TRIES && looking) {
                 guard++;
-                if (gScatterTowns)
+                if (gScatterTerrain)
                     seedX = Random(0, MAP_CELL_GRID_SIZE - 1);
                 else
                     seedX =
                         (Random(0, MAP_CELL_GRID_SIZE - 1) + Random(0, MAP_CELL_GRID_SIZE - 1)
                          + Random(0, MAP_CELL_GRID_SIZE - 1) + Random(0, MAP_CELL_GRID_SIZE - 1))
                         / 4;
-                if (gScatterTowns) {
+                if (gScatterTerrain) {
                     if (terrain == TERRAIN_DESERT || terrain == TERRAIN_LAVA)
                         seedY =
                             (Random(0, MAP_CELL_GRID_SIZE - 1) + Random(0, MAP_CELL_GRID_SIZE - 1)
@@ -661,10 +661,10 @@ b32 editManager::PlaceChainLink(
     return false;
 }
 
-void editManager::PlaceTowns(void) {
+void editManager::PlaceCastles(void) {
     i32 terrain;
     b32 cutOff[RANDOM_MAP_CASTLE_SLOTS];
-    b32 extraRoads[RANDOM_MAP_CASTLE_SLOTS];
+    b32 extraLiths[RANDOM_MAP_CASTLE_SLOTS];
     i32 nearX;
     i32 castleRegion[RANDOM_MAP_CASTLE_SLOTS];
     i32 tileX;
@@ -712,7 +712,7 @@ void editManager::PlaceTowns(void) {
 
     for (slot = 0; slot < RANDOM_MAP_CASTLE_SLOTS; slot++) {
         cutOff[slot] = false;
-        extraRoads[slot] = false;
+        extraLiths[slot] = false;
     }
     castle = NULL;
     snowStoneLiths = NULL;
@@ -999,14 +999,14 @@ void editManager::PlaceTowns(void) {
         }
     }
     if (Random(0, 100) < 50) {
-        extraRoads[0] = true;
-        extraRoads[1] = true;
+        extraLiths[0] = true;
+        extraLiths[1] = true;
         if (Random(0, 100) < 50)
-            extraRoads[2] = true;
+            extraLiths[2] = true;
         if (Random(0, 100) < 50)
-            extraRoads[3] = true;
+            extraLiths[3] = true;
     }
-    if (cutOff[0] || cutOff[1] || cutOff[2] || cutOff[3] || extraRoads[0]) {
+    if (cutOff[0] || cutOff[1] || cutOff[2] || cutOff[3] || extraLiths[0]) {
         ShowStatusText(localization::Tr("editor.random.status.roads"));
         for (slot = 0; slot < RANDOM_MAP_CASTLE_SLOTS; slot++) {
             cutOff[slot] = false;
@@ -1072,7 +1072,7 @@ void editManager::PlaceTowns(void) {
             }
         }
         for (slot = 0; slot < RANDOM_MAP_CASTLE_SLOTS; slot++) {
-            if (cutOff[slot] || extraRoads[slot]) {
+            if (cutOff[slot] || extraLiths[slot]) {
                 steps = 20000;
                 tracing = true;
                 while (tracing) {

@@ -57,7 +57,7 @@ tag_Node* pop_node(tag_Anchor* anchor);
 
 void ShutdownComError(char* function);
 
-i16 com_init(u8 portNumber, i32 baudRate, i32 useDtr);
+i16 com_init(u8 portNumber, i32 baudRate, i32 dsrFlowControl);
 void com_term(i16 port);
 i16 com_rcv(i16 port, u16 requested, void* buffer);
 i16 com_snd(i16 port, u16 session, u16 length, void* data, i32 priority);

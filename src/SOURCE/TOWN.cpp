@@ -22,7 +22,7 @@ town::town(void) {
     m_y = 0;
     m_occupyingHeroId = TOWN_OCCUPYING_HERO_NONE;
     m_buildings = (1 << BUILDING_SLOT_TENT);
-    m_buildState = 0;
+    m_mageGuildLevel = 0;
     m_unused19 = 0;
 }
 
@@ -46,7 +46,7 @@ void town::GiveSpells(void) {
     if (!(m_buildings & (1 << BUILDING_SLOT_MAGE_GUILD)))
         return;
     if (visitingHero->m_owner == m_owner) {
-        for (i = 0; i < gMageGuildSpellCount[m_buildState]; i++)
+        for (i = 0; i < gMageGuildSpellCount[m_mageGuildLevel]; i++)
             visitingHero->AddSpell(
                 m_mageGuildSpells[i],
                 visitingHero->m_primaryStats[HERO_PRIMARY_KNOWLEDGE],
