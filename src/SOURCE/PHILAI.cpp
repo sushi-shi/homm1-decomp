@@ -3056,7 +3056,7 @@ b8 philAI::CombatMonsterEvent(
 ) {
     float guardLosses;
     float heroCasualtyFraction;
-    i32 result;
+    b32 result;
     i16 remaining;
     i16 i;
 
@@ -3085,7 +3085,7 @@ b8 philAI::CombatMonsterEvent(
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++)
         remaining += gMonGroup->m_creatureCounts[i];
     *monsterCount = remaining;
-    if (result != 0)
+    if (result != false)
         return true;
     return false;
 }
@@ -3103,7 +3103,7 @@ void philAI::FightEvent(hero* heroPointer, mapCell* cell) {
     float heroCasualtyFraction;
     i16 n;
     float ghostLossFraction;
-    i32 heroVictory;
+    b32 heroVictory;
 
     if (cell->m_objectMetadata == GHOST_SITE_EMPTY)
         return;
@@ -3230,7 +3230,7 @@ void philAI::TownEvent(mapCell* cell, hero* heroPointer, i32 x, i32 y) {
     float heroCasualtyFraction;
     i32 savedPlayer;
     town* targetCastle;
-    i32 heroVictory;
+    b32 heroVictory;
     hero* defenderHero;
     H1_ENUM_LOCAL(CombatSide, i32) combatResult;
 

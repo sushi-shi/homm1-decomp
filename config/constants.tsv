@@ -1004,7 +1004,6 @@ src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	0	trivial-function-literal	0
 src/SOURCE/PHILAI.cpp	philAI::ChooseEvaluateBattle	0	trivial-function-literal	0 store rating	a battle worth nothing
 src/SOURCE/PHILAI.cpp	philAI::ChooseEvaluateBattle	[01]	trivial-function-literal	[01] store worthFighting	ChooseEvaluateBattle's i32& verdict, shared with EVENTS' integer locals
 src/SOURCE/PHILAI.cpp	philAI::CombatMonsterEvent	0	trivial-function-literal	0 store remaining	a count reset to zero
-src/SOURCE/PHILAI.cpp	philAI::CombatMonsterEvent	0	trivial-function-literal	0 equality result	QuickCombat's integer victory result: the hero lost
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	0	trivial-function-literal	0 store gVisitResult	the event is worth nothing to this hero
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	0	trivial-function-literal	0 store g*	a sum, score or estimate reset to zero before it accumulates
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	0	trivial-function-literal	0 store liveChance	no chance to survive the event

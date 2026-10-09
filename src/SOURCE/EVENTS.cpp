@@ -2022,7 +2022,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
     b8 removeEvent;
     hero* opponent;
     H1_ENUM_LOCAL(CombatSide, i32) fightOutcome;
-    i32 battleResult;
+    b32 battleResult;
     H1_ENUM_LOCAL(MapObjectType, i8) eventType;
     i8 teleX;
     i32 worthFighting;
@@ -2032,7 +2032,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
     H1_ENUM_LOCAL(ResourceType, i32) eventResource;
     b8 priorShowIt;
     boatRecord* boat;
-    i32 success;
+    b32 success;
     b8 guardMonster;
     float theirLosses;
     float ourLosses;
@@ -2553,7 +2553,7 @@ void advManager::ComputerMonsterInteract(
     i32 purchaseCount;
     i32 purchaseValue;
     i32 replacementSlot;
-    i32 won;
+    b32 won;
     i32 monsterCount;
 
     if (cell->m_objectMetadata & MONSTER_WILLING_FLAG

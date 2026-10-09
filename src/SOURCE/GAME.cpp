@@ -1196,7 +1196,7 @@ void game::NewMap(char* mapName) {
     i8 theUsed[GAME_TOWN_COUNT];
     i32 k;
     i32 ultimateSpread;
-    i8 allTownsUnowned;
+    b8 allTownsUnowned;
     // A human seat's handicap less one picks its starting resources.
     H1_ENUM_LOCAL(GameDifficulty, i32) curDifficulty;
 

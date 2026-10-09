@@ -6652,7 +6652,7 @@ void advManager::LoadRemote(void) {
 VA(0x00410e9f, 0x13b)
 RemoteMessage* advManager::CheckHandleNet(void) {
     RemoteMessage* receivedPacket;
-    i32 exitedFlag;
+    b32 exitedFlag;
 
     receivedPacket = GetRemoteData(true);
     if (receivedPacket && receivedPacket->type == REMOTE_MESSAGE_RELIABLE) {

@@ -131,7 +131,7 @@ union RemotePayload {
     // CheckHandleNet also reads the sender's exit flag after it.
     struct {
         i32 saveSize;
-        i32 playerExited;
+        b32 playerExited;
     };
     // Save-game transfer segments: segment index, then segment bytes.
     struct {

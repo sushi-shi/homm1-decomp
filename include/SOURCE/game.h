@@ -364,7 +364,7 @@ public:
     H1_ENUM_STORAGE(SpellType, i16) m_viewSpell;
     i16 m_viewSpellsTop;
     H1_ENUM_RETURN(MessageDispatchResult, i16) (*m_viewSpellsCallback)(struct tag_message&);
-    i8 m_viewSpellsReadOnly;
+    b8 m_viewSpellsReadOnly;
     // LoadGame sets it; ProcessMapExtra clears it for a 0xc7 (map hero)
     // trigger cell. While set, every player starts with a town hero;
     // otherwise the map's heroes are processed.
