@@ -591,7 +591,7 @@ void ModemSetup(void) {
     }
 }
 
-i32 Dial(void) {
+b32 Dial(void) {
     char dialCommand[40];
     gLastDialPos = 0;
     sprintf(dialCommand, "ATDT%s", gPhoneNumber);
@@ -599,16 +599,16 @@ i32 Dial(void) {
     GUIModemCommand(gText, dialCommand);
     sprintf(gText, "%s %s", localization::Tr("modem.dialing"), gPhoneNumber);
     if (GUIModemResponse(gText, "CONNECT"))
-        return 1;
-    return 0;
+        return true;
+    return false;
 }
 
-i32 Wait(void) {
+b32 Wait(void) {
     GUIModemResponse(localization::Tr("modem.ring.wait"), "RING");
     GUIModemCommand(localization::Tr("modem.initializing"), "ATA");
     if (GUIModemResponse(localization::Tr("modem.connecting"), "CONNECT"))
-        return 1;
-    return 0;
+        return true;
+    return false;
 }
 
 void GUIModemCommand(char* message, char* command) {
@@ -814,7 +814,7 @@ b32 WaitForDirectConnect(void) {
     return false;
 }
 
-char ReadPacket(void) {
+bchar ReadPacket(void) {
     i32 input;
     char scratch[28];
     if (gModemInQueue.writePosition > 4092) {
@@ -830,12 +830,12 @@ readPacketStart:
     readNextByte:
         input = read_byte();
         if (input < 0)
-            return 0;
+            return false;
         if (gModemInEscape) {
             gModemInEscape = false;
             if (input == MODEM_PACKET_END) {
                 gModemNewPacket = true;
-                return 1;
+                return true;
             } else if (input == MODEM_PACKET_START) {
                 gModemNewPacket = true;
                 goto readPacketStart;
@@ -990,7 +990,7 @@ RemoteMessage* GetRemoteData(b8 remove) {
 
 void PollRemote(void) {
     static b8 gInTimeoutFail = false;
-    i8 peerHadControl;
+    b8 peerHadControl;
     b8 queueFull;
     i32 i;
     i32 numQueued;
@@ -1023,14 +1023,14 @@ void PollRemote(void) {
             gInTimeoutFail = true;
             if (gHumanPlayer[gCurPlayer]) {
                 if (gCurPlayer == gThisGamePos)
-                    peerHadControl = 0;
+                    peerHadControl = false;
                 else
-                    peerHadControl = 1;
+                    peerHadControl = true;
             } else {
                 if (gThisGamePos == gHostGamePos)
-                    peerHadControl = 0;
+                    peerHadControl = false;
                 else
-                    peerHadControl = 1;
+                    peerHadControl = true;
             }
             ReceiveRemotePlayerExit(1 - gThisGamePos, peerHadControl, false, true);
         }

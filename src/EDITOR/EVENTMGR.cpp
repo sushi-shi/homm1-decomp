@@ -954,7 +954,7 @@ i16 ClearWindowHandler(tag_message& message) {
     return MESSAGE_DISPATCH_CONSUME;
 }
 
-i32 MapDetailsDialog(b32) {
+b32 MapDetailsDialog(b32) {
     SMapHeader saved;
 
     saved = *gMapHeader;

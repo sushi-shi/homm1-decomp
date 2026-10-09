@@ -404,7 +404,7 @@ extern i8 gCombatAdjacency[][COMBAT_DIRECTION_ADJACENT_COUNT];
 extern i16 gCurLoadedSpellFileId;
 
 extern i32 gCurGeneral;
-extern i8 gArmyEffected[COMBAT_SIDE_COUNT][ARMY_GROUP_SLOT_COUNT];
+extern b8 gArmyEffected[COMBAT_SIDE_COUNT][ARMY_GROUP_SLOT_COUNT];
 extern char* gDifficultyNames[DIFFICULTY_COUNT];
 extern i32 gMapDifficulty;
 extern i32 gMapSize;

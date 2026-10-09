@@ -134,7 +134,7 @@ heroWindow::heroWindow(i16 x, i16 y, char* resourceName) {
     }
 }
 
-i16 heroWindow::Open(i16 zOrder, i8 updateScreen) {
+i16 heroWindow::Open(i16 zOrder, b8 updateScreen) {
     if ((m_winState & WINDOW_STATE_OPEN) != WINDOW_STATE_CLOSED)
         return WINDOW_OPEN_FAILURE;
     gMouseManager->ReallyHidePointer();

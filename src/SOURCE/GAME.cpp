@@ -71,12 +71,12 @@ i8 playerData::NextHero(i32) {
     return HERO_ID_NONE;
 }
 
-i8 playerData::HasMobileHero(void) {
+b8 playerData::HasMobileHero(void) {
     for (i16 i = 0; i < m_heroCount; ++i) {
         if (gGame->IsMobile(m_heroIds[i]))
-            return 1;
+            return true;
     }
-    return 0;
+    return false;
 }
 
 i8 playerData::CountPuzzlePiecesRemoved(void) {
@@ -383,7 +383,7 @@ i16 game::SaveGame(char* filename, b8 generateName) {
     i32 nHuman;
     i32 unusedName;
     i32 mySaveFlag;
-    char humans[GAME_PLAYER_COUNT];
+    bchar humans[GAME_PLAYER_COUNT];
     i32 iFile;
     RecordWriter outFile;
     i32 scratchVals[4];
@@ -469,7 +469,7 @@ void game::WriteSaveRecord(RecordWriter& outFile) {
     for (iFile = 0; iFile < GAME_PLAYER_COUNT; iFile++) {
         humans[iFile] = gHumanPlayer[iFile];
         if (m_playerDead[iFile])
-            humans[iFile] = 0;
+            humans[iFile] = false;
     }
     outFile.Put(humans, GAME_PLAYER_COUNT);
     outFile.Put(m_day);
@@ -1024,17 +1024,17 @@ char gCurMapName[16] = "";
 i32 gEndSequence = GAME_END_LOST;
 b32 gGameOver = false;
 
-i8 game::NewGame(void) {
+b8 game::NewGame(void) {
     static b8 gNewGameSettingsSaved = false;
     i32 player;
     if (!SetupGame(true))
-        return 0;
+        return false;
     if (gCampaignChoice > CAMPAIGN_NONE) {
         InitEntireCampaign(gCampaignChoice);
-        return 1;
+        return true;
     }
     if (gWaitForRemoteReceive)
-        return 1;
+        return true;
     LoadGame("origdata.bin", true, false);
     m_newGameWindow = new heroWindow(310, 14, "newgame.bin");
     if (!m_newGameWindow)
@@ -1076,7 +1076,7 @@ i8 game::NewGame(void) {
     gWindowManager->DoDialog(m_newGameWindow, NewGameHandler, false);
     delete m_newGameWindow;
     if (gWindowManager->m_dialogResult == DIALOG_BUTTON_1)
-        return 0;
+        return false;
     strcpy(m_mapName, gFullMapName);
     strcpy(m_mapDescription, gMapDescription);
     m_mapSize = gMapSize;
@@ -1090,7 +1090,7 @@ i8 game::NewGame(void) {
     gSavedKingOfTheHill = gIAmGreatest;
     gSavedCrest = m_players[0].m_color;
     NewMap(gMapName);
-    return 1;
+    return true;
 }
 
 void game::ShowCampaignInfo(i32 scenario, b32 viewOnly, i32) {
@@ -1213,7 +1213,7 @@ void game::NewMap(char* mapName) {
     i8 theUsed[GAME_TOWN_COUNT];
     i32 k;
     i32 ultimateSpread;
-    i8 allTownsUnowned;
+    b8 allTownsUnowned;
     i32 curDifficulty;
 
     gInNewGameSetup = true;
@@ -1995,7 +1995,7 @@ i8 game::ViewSpells(
     class hero* spellHero,
     i8 spellType,
     i16 (*callback)(struct tag_message&),
-    i8 readOnly
+    b8 readOnly
 ) {
     tag_message msg;
 
@@ -2254,7 +2254,7 @@ void game::ViewArmy(
     class town* castle,
     b8 disableDismiss,
     i8 facing,
-    i8 quickView,
+    b8 quickView,
     class hero* theHero,
     class army* theArmy,
     class armyGroup* theGroup
@@ -2439,7 +2439,7 @@ void game::ViewArmy(
     m_dialogAnimationCounter = 0;
     if (quickView) {
         gMouseManager->ReallyHidePointer();
-        gWindowManager->AddWindow(m_viewArmyWindow, WINDOW_Z_ORDER_APPEND, 1);
+        gWindowManager->AddWindow(m_viewArmyWindow, WINDOW_Z_ORDER_APPEND, true);
         QuickViewWait();
         gWindowManager->RemoveWindow(m_viewArmyWindow);
         gMouseManager->ReallyShowPointer();
@@ -2742,7 +2742,7 @@ void game::Overview(void) {
         activeMessage.id = j + OVERVIEW_RESOURCE_BASE;
         baseWin->BroadcastMessage(activeMessage);
     }
-    gWindowManager->AddWindow(baseWin, WINDOW_Z_ORDER_APPEND, 1);
+    gWindowManager->AddWindow(baseWin, WINDOW_Z_ORDER_APPEND, true);
     baseWin->DrawWindow();
     gText[0] = 0;
     if (m_mineOwners[MINE_SLOT_DRAGON_CITY] == gCurPlayer) {
@@ -2892,7 +2892,7 @@ void game::NextPlayer(void) {
                 targetPlayer = gHostGamePos;
             else
                 targetPlayer = gCurPlayer;
-            if (!gGame->TransmitSaveGame(targetPlayer, 0))
+            if (!gGame->TransmitSaveGame(targetPlayer, false))
                 ShutDown(NULL);
         }
         if (gBottomViewOverride == BOTTOM_VIEW_OVERRIDE_DISABLED)
@@ -3862,7 +3862,7 @@ static i32 s_adjacentMonsterY;
 static i32 s_adjacentMonsterMinX;
 static i32 s_adjacentMonsterMinY;
 
-i8 advManager::FindAdjacentMonster(
+b8 advManager::FindAdjacentMonster(
     i32 originX,
     i32 originY,
     i32* monsterX,
@@ -3925,12 +3925,12 @@ i8 advManager::FindAdjacentMonster(
             }
         }
     }
-    return 0;
+    return false;
 
 foundAdjacentMonster:
     *monsterX = s_adjacentMonsterX;
     *monsterY = s_adjacentMonsterY;
-    return 1;
+    return true;
 }
 
 void game::SetupAdjacentMons(void) {
@@ -3978,8 +3978,8 @@ void game::ShowComputerScreen(void) {
         gMouseManager->ReallyHidePointer();
         gAllBlack = true;
         gAdvManager->CompleteDraw(true);
-        gAdvManager->UpdateHeroLocators(true, 1);
-        gAdvManager->UpdateTownLocators(true, 1);
+        gAdvManager->UpdateHeroLocators(true, true);
+        gAdvManager->UpdateTownLocators(true, true);
         gAdvManager->UpdBottomView(true, true, true);
         gAdvManager->UpdateScreen(false, true);
         gAllBlack = false;
@@ -4014,8 +4014,8 @@ void game::WaitForPlayer(char* text, i32 player) {
         PlayMusic(MUSIC_TRACK_NETWORK_TURN);
         gMouseManager->ReallyHidePointer();
         gAdvManager->CompleteDraw(true);
-        gAdvManager->UpdateHeroLocators(true, 1);
-        gAdvManager->UpdateTownLocators(true, 1);
+        gAdvManager->UpdateHeroLocators(true, true);
+        gAdvManager->UpdateTownLocators(true, true);
         gAdvManager->UpdateScreen(false, true);
         ShowHeroesLogo();
         gAllBlack = false;
@@ -4232,7 +4232,7 @@ void game::ProcessMapExtra(void) {
     }
 }
 
-i8 game::SetupTowns(void) {
+b8 game::SetupTowns(void) {
     mapTownExtra* newExtra;
     i32 curOwn;
     b8 isUnowned;
@@ -4419,7 +4419,7 @@ void game::CheckHeroConsistency(void) {
     }
 }
 
-i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
+b32 game::TransmitSaveGame(i32 remotePlayer, b32 playerExited) {
     b32 okay;
     char curPathname[452];
     i32 unusedSum;
@@ -4591,7 +4591,7 @@ b32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
     b8 done;
     char ackFlags[REMOTE_SAVE_BATCH_SIZE];
     RemoteMessage* receivedPacketObj;
-    i32 curRet;
+    b32 curRet;
     i32 lastPacketTime;
     char myGotIt[REMOTE_SAVE_SEGMENT_LIMIT];
     i32 packetStartValue;
@@ -4609,7 +4609,7 @@ b32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
     // (and, compressed, hold the decoded size).
     if (dataSize < REMOTE_SAVE_DECODED_SIZE_BYTES
         || dataSize > REMOTE_SAVE_SEGMENT_LIMIT * REMOTE_SAVE_SEGMENT_SIZE)
-        return 0;
+        return false;
     if (gAdvManager->m_active == 1)
         BVResMsg(localization::Tr("network.receive.title"), RESOURCE_NONE, 0);
     trackOld = GetCurrentTrack();
@@ -5086,12 +5086,12 @@ void game::ShowScenInfo(void) {
 
 void game::RandomizePlayerCrests(void) {
     i32 i;
-    i8 taken[PLAYER_COLOR_COUNT];
-    taken[PLAYER_COLOR_BLUE] = 0;
-    taken[PLAYER_COLOR_GREEN] = 0;
-    taken[PLAYER_COLOR_RED] = 0;
-    taken[PLAYER_COLOR_YELLOW] = 0;
-    taken[m_players[0].m_color] = 1;
+    b8 taken[PLAYER_COLOR_COUNT];
+    taken[PLAYER_COLOR_BLUE] = false;
+    taken[PLAYER_COLOR_GREEN] = false;
+    taken[PLAYER_COLOR_RED] = false;
+    taken[PLAYER_COLOR_YELLOW] = false;
+    taken[m_players[0].m_color] = true;
     for (i = 1; i < m_playerCount; i++) {
         do {
             // The table has crests for three players; the fourth player's
@@ -5106,8 +5106,8 @@ void game::RandomizePlayerCrests(void) {
                 m_players[i].m_color = (gCampaignScenarios[m_campaignScenario].playerCrests[i]);
             else
                 m_players[i].m_color = (Random( PLAYER_COLOR_BLUE, PLAYER_COLOR_YELLOW ));
-        } while (taken[m_players[i].m_color] == 1);
-        taken[m_players[i].m_color] = 1;
+        } while (taken[m_players[i].m_color] == true);
+        taken[m_players[i].m_color] = true;
     }
 }
 

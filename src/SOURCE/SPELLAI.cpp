@@ -24,7 +24,7 @@ static const float SPELL_AI_ANTI_MAGIC_MODIFIER = 0.15f;
 i32 gSpellAIEffectShift;
 i32 gSpellAITargetSide;
 
-i32 combatManager::DoSpellAI(i8 side) {
+b32 combatManager::DoSpellAI(i8 side) {
     i32 chosenSpell;
     i32 bestValue;
     i32 effect;
@@ -36,7 +36,7 @@ i32 combatManager::DoSpellAI(i8 side) {
     chosenSpell = SPELL_NONE;
     bestHex = -1;
     if (m_heroes[side] == NULL)
-        return 0;
+        return false;
     if (m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] == HERO_SPELL_POWER_ONE)
         gSpellAIEffectShift = 2;
     else if (m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER]
@@ -60,9 +60,9 @@ i32 combatManager::DoSpellAI(i8 side) {
         gNextAction = ACTION_CAST_SPELL;
         gNextActionExtra = chosenSpell;
         gNextActionGridIndex = bestHex;
-        return 1;
+        return true;
     }
-    return 0;
+    return false;
 }
 
 // A computer hero whose surrender was refused spends its last turn on the
@@ -323,7 +323,7 @@ void combatManager::ClearEffects(void) {
     i32 armyIndex;
     for (side = COMBAT_SIDE_FIRST; side < COMBAT_SIDE_COUNT; ++side) {
         for (armyIndex = 0; armyIndex < ARMY_GROUP_SLOT_COUNT; ++armyIndex)
-            gArmyEffected[side][armyIndex] = 0;
+            gArmyEffected[side][armyIndex] = false;
     }
 }
 
@@ -488,7 +488,8 @@ void combatManager::EffectSpellDamage(
             if (targetArmy->m_stats.hitPoints > 0
                 && !gArmyEffected[m_hexCells[hex].m_occupantSide]
                                  [m_hexCells[hex].m_occupantIndex]) {
-                gArmyEffected[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex] = 1;
+                gArmyEffected[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex] =
+                    true;
                 if (!ARMY_IGNORES_SPELLS(targetArmy)) {
                     if (targetArmy->m_creatureType == CREATURE_DWARF)
                         expectedDamage = baseDamage * 0.75;

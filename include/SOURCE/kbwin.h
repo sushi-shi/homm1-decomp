@@ -130,7 +130,7 @@ void ReadPrefs(void);
 i32 SetupCDDrive(void);
 void KBChangeMenu(KBMenu menu);
 void ResizeWindow(i32 x, i32 y, i32 width, i32 height);
-void SetMenuStatus(i32 showMenu);
+void SetMenuStatus(b32 showMenu);
 void SetWinText(class heroWindow* window, i16 id);
 void UpdateDfltMenu(KBMenu menu);
 extern i32 gForegroundApp;

@@ -38,7 +38,7 @@ void ConvertSmackerPalette(u8* paletteData);
 void DoAdvance(Smack* smack, b32 drawFrame, b32 advanceFrame, b32 updatePalette, b32 skipPalette);
 void SmackMain();
 void CloseSmackers();
-i32 PlaySmacker(i32 smackNumber);
+b32 PlaySmacker(i32 smackNumber);
 
 enum SmackSoundConstant {
     SMACK_SOUND_FORMAT_COUNT = 12,

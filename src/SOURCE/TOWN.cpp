@@ -26,12 +26,12 @@ town::town(void) {
     m_unused19 = 0;
 }
 
-i8 town::HasGarrison(void) {
+b8 town::HasGarrison(void) {
     for (i16 slot = 0; slot < ARMY_GROUP_SLOT_COUNT; ++slot) {
         if (m_army.m_creatureTypes[slot] != CREATURE_NONE)
-            return 1;
+            return true;
     }
-    return 0;
+    return false;
 }
 
 void town::GiveSpells(void) {

@@ -53,7 +53,7 @@ public:
     heroWindow(void);
     heroWindow(i16 x, i16 y, i16 width, i16 height, i16 flags);
     heroWindow(i16 x, i16 y, char* resourceName);
-    i16 Open(i16 zOrder, i8 updateScreen);
+    i16 Open(i16 zOrder, b8 updateScreen);
     void Close(void);
     void AddWidget(class widget* newWidget, i16 zOrder);
     void RemoveWidget(class widget* removedWidget);

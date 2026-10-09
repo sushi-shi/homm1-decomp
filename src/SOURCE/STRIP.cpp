@@ -25,7 +25,7 @@ strip::strip(
     i8 portraitFrame,
     class armyGroup* troops,
     i16 firstBorderId,
-    i32 drawWindow
+    b32 drawWindow
 ) {
     i16 i;
 
@@ -94,11 +94,11 @@ strip::~strip() {
 }
 
 void strip::Draw(void) {
-    DrawIcons(1);
+    DrawIcons(true);
     gWindowManager->UpdateScreenRegion(m_x, m_y, STRIP_WINDOW_WIDTH, STRIP_WINDOW_HEIGHT);
 }
 
-void strip::DrawIcons(i8 drawWindow) {
+void strip::DrawIcons(b8 drawWindow) {
     i16 i;
     i8 creatureType;
 
@@ -181,7 +181,7 @@ bankBox::bankBox(i16 x, i16 y, class playerData* player) {
     m_window = new heroWindow(m_x, m_y, "bankbox.bin");
     if (!m_window)
         MemError();
-    gWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, 1);
+    gWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, true);
     Update();
 }
 

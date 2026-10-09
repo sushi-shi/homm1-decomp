@@ -199,7 +199,7 @@ i16 advManager::Open(i16 id) {
             MemError();
     }
     m_routeShown = false;
-    gWindowManager->AddWindow(m_adventureWindow, WINDOW_Z_ORDER_BOTTOM, 1);
+    gWindowManager->AddWindow(m_adventureWindow, WINDOW_Z_ORDER_BOTTOM, true);
     if (m_groundTiles == NULL)
         m_groundTiles = gResourceManager->GetTileset("ground32.til");
     if (m_cloudTiles == NULL)
@@ -1193,14 +1193,14 @@ i32 advManager::ProcessSelect(struct tag_message* message, class mapCell** event
         case ADVENTURE_CONTROL_HERO_PAGE_PREVIOUS:
             if (gCurPlayerData->m_heroLocatorPage > 0) {
                 gCurPlayerData->m_heroLocatorPage--;
-                UpdateHeroLocators(true, 1);
+                UpdateHeroLocators(true, true);
             }
             break;
         case ADVENTURE_CONTROL_HERO_PAGE_NEXT:
             if (gCurPlayerData->m_heroLocatorPage + LOCATOR_VISIBLE_COUNT
                 < gCurPlayerData->m_heroCount) {
                 gCurPlayerData->m_heroLocatorPage++;
-                UpdateHeroLocators(true, 1);
+                UpdateHeroLocators(true, true);
             }
             break;
         case ADVENTURE_CONTROL_HERO_KNOB:
@@ -1219,7 +1219,7 @@ i32 advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                 locatorIndex = 0;
             }
             gCurPlayerData->m_heroLocatorPage = locatorIndex;
-            UpdateHeroLocators(true, 1);
+            UpdateHeroLocators(true, true);
             break;
         case ADVENTURE_CONTROL_TOWN_KNOB:
             DoTownKnob();
@@ -1237,19 +1237,19 @@ i32 advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                 locatorIndex = 0;
             }
             gCurPlayerData->m_townLocatorPage = locatorIndex;
-            UpdateTownLocators(true, 1);
+            UpdateTownLocators(true, true);
             break;
         case ADVENTURE_CONTROL_TOWN_PAGE_PREVIOUS:
             if (gCurPlayerData->m_townLocatorPage > 0) {
                 gCurPlayerData->m_townLocatorPage--;
-                UpdateTownLocators(true, 1);
+                UpdateTownLocators(true, true);
             }
             break;
         case ADVENTURE_CONTROL_TOWN_PAGE_NEXT:
             if (gCurPlayerData->m_townLocatorPage + LOCATOR_VISIBLE_COUNT
                 < gCurPlayerData->m_townCount) {
                 gCurPlayerData->m_townLocatorPage++;
-                UpdateTownLocators(true, 1);
+                UpdateTownLocators(true, true);
             }
             break;
         case ADVENTURE_CONTROL_MAP_VIEW:
@@ -1507,7 +1507,7 @@ b32 advManager::ProcessSearch(i32 x, i32 y) {
     // The search key works without a selected hero too; the original then
     // searched with hero -1, the bytes before the hero table.
     if (gCurPlayerData->m_currentHero == HERO_ID_NONE)
-        return 1;
+        return true;
     currentHero = gGame->GetHero(gCurPlayerData->m_currentHero);
     if (currentHero->m_remainingMobility != currentHero->m_mobility
         && !gCheatUnlimitedMovement[gCurPlayer][currentHero->m_id]) {
@@ -1567,7 +1567,7 @@ b32 advManager::ProcessSearch(i32 x, i32 y) {
                     NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, 0xb1, 0x1c);
                 } else {
                     NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, 0xb1, 0x1c);
-                    currentHero->ViewArtifact(gGame->m_ultimateArtifactId, 0);
+                    currentHero->ViewArtifact(gGame->m_ultimateArtifactId, false);
                 }
                 PlayMusic(TERRAIN_MUSIC_TRACK(m_currentTerrain));
             } else if (gGame->m_campaignType > 0
@@ -2824,7 +2824,7 @@ void advManager::QuickInfo(i16 cellX, i16 cellY) {
     message.text = gText;
     infoWindow->BroadcastMessage(message);
     GrabScreen();
-    gWindowManager->AddWindow(infoWindow, WINDOW_Z_ORDER_APPEND, 1);
+    gWindowManager->AddWindow(infoWindow, WINDOW_Z_ORDER_APPEND, true);
     gMouseManager->HideSystemCursor();
     QuickViewWait();
     gWindowManager->RemoveWindow(infoWindow);
@@ -2920,7 +2920,7 @@ void advManager::UpdateHeroLocator(i32 locatorSlot, b8 drawWindow, b8 updateScre
     }
 }
 
-void advManager::UpdateHeroLocators(b8 drawWindow, i8 updateScreen) {
+void advManager::UpdateHeroLocators(b8 drawWindow, b8 updateScreen) {
     i32 locatorSlot;
     double scrollStep;
 
@@ -2940,7 +2940,7 @@ void advManager::UpdateHeroLocators(b8 drawWindow, i8 updateScreen) {
         m_adventureWindow->DrawWindow(updateScreen);
 }
 
-void advManager::UpdateTownLocators(b8 drawWindow, i8 updateScreen) {
+void advManager::UpdateTownLocators(b8 drawWindow, b8 updateScreen) {
     i16 i;
     i8 whichTown;
     tag_message msg;
@@ -3973,7 +3973,7 @@ void advManager::HeroQuickView(i8 heroId, i8 locatorSlot, i16 windowX, i16 windo
     m_mapOriginY = targetHero->m_y - ADVMGR_VIEW_CENTER;
     UpdateRadar(true, false);
     GrabScreen();
-    gWindowManager->AddWindow(win, WINDOW_Z_ORDER_APPEND, 1);
+    gWindowManager->AddWindow(win, WINDOW_Z_ORDER_APPEND, true);
     gMouseManager->HideSystemCursor();
     QuickViewWait();
     gWindowManager->RemoveWindow(win);
@@ -4260,7 +4260,7 @@ void advManager::TownQuickView(i8 townId, i8 locatorSlot, i16 windowX, i16 windo
     }
 
     GrabScreen();
-    gWindowManager->AddWindow(window, WINDOW_Z_ORDER_APPEND, 1);
+    gWindowManager->AddWindow(window, WINDOW_Z_ORDER_APPEND, true);
     oldX = m_mapOriginX;
     oldY = m_mapOriginY;
     m_mapOriginX = townPtr->m_x - ADVMGR_VIEW_CENTER;
@@ -4285,8 +4285,8 @@ void advManager::RedrawAdvScreen(b32 update) {
         return;
     gResourceManager->GetBackdrop("bord.bmp", gWindowManager->m_screen);
     SaveAdventureBorder();
-    UpdateHeroLocators(false, 0);
-    UpdateTownLocators(false, 0);
+    UpdateHeroLocators(false, false);
+    UpdateTownLocators(false, false);
     UpdBottomView(true, false, false);
     m_adventureWindow->DrawWindow(0);
     if (update)
@@ -4361,8 +4361,8 @@ void advManager::SetTownContext(i8 townId) {
         gCurPlayerData->m_townLocatorPage = townNo;
     else if (townNo > gCurPlayerData->m_townLocatorPage + (LOCATOR_VISIBLE_COUNT - 1))
         gCurPlayerData->m_townLocatorPage = townNo - (LOCATOR_VISIBLE_COUNT - 1);
-    UpdateHeroLocators(true, 1);
-    UpdateTownLocators(true, 1);
+    UpdateHeroLocators(true, true);
+    UpdateTownLocators(true, true);
     HideRoute(false, false, true);
     UpdBottomView(true, true, true);
     UpdateRadar(true, false);
@@ -4425,8 +4425,8 @@ void advManager::SetHeroContext(i8 heroId, b8 update) {
         gCurPlayerData->m_heroLocatorPage = curHeroSlot;
     else if (curHeroSlot > gCurPlayerData->m_heroLocatorPage + (LOCATOR_VISIBLE_COUNT - 1))
         gCurPlayerData->m_heroLocatorPage = curHeroSlot - (LOCATOR_VISIBLE_COUNT - 1);
-    UpdateHeroLocators(true, 1);
-    UpdateTownLocators(true, 1);
+    UpdateHeroLocators(true, true);
+    UpdateTownLocators(true, true);
     if (!update && (m_active == 1 || gThisNetHumanPlayer[gCurPlayer])) {
         Reseed(0, 0);
         SeedTo(heroPtr->m_destinationX, heroPtr->m_destinationY);
@@ -4484,7 +4484,7 @@ void advManager::DoHeroKnob(void) {
                     gCurPlayerData->m_heroLocatorPage = pageIndex;
                     if (pageIndex > count - (LOCATOR_VISIBLE_COUNT - 1))
                         pageIndex = count - (LOCATOR_VISIBLE_COUNT - 1);
-                    UpdateHeroLocators(false, 1);
+                    UpdateHeroLocators(false, true);
                     m_heroScrollKnob->m_y = message.y - offset;
                     m_adventureWindow->DrawWindow();
                     prevPage = pageIndex;
@@ -4496,7 +4496,7 @@ void advManager::DoHeroKnob(void) {
     }
     gMouseManager->SetCursorShape(6);
     m_heroScrollKnob->m_flags &= ~WIDGET_FLAG_SELECTED;
-    UpdateHeroLocators(true, 1);
+    UpdateHeroLocators(true, true);
 }
 
 void advManager::DoTownKnob(void) {
@@ -4532,7 +4532,7 @@ void advManager::DoTownKnob(void) {
                     gCurPlayerData->m_townLocatorPage = pageIndex;
                     if (pageIndex > count - (LOCATOR_VISIBLE_COUNT - 1))
                         pageIndex = count - (LOCATOR_VISIBLE_COUNT - 1);
-                    UpdateTownLocators(false, 1);
+                    UpdateTownLocators(false, true);
                     m_townScrollKnob->m_y = message.y - offset;
                     m_adventureWindow->DrawWindow();
                     prevPage = pageIndex;
@@ -4544,7 +4544,7 @@ void advManager::DoTownKnob(void) {
     }
     gMouseManager->SetCursorShape(6);
     m_townScrollKnob->m_flags &= ~WIDGET_FLAG_SELECTED;
-    UpdateTownLocators(true, 1);
+    UpdateTownLocators(true, true);
 }
 
 void advManager::ViewPuzzle(void) {
@@ -4576,7 +4576,7 @@ void advManager::ViewPuzzle(void) {
     puzzleWindow = new heroWindow(RADAR_LEFT, RADAR_TOP, "viewpuzl.bin");
     if (!puzzleWindow)
         MemError();
-    gWindowManager->AddWindow(puzzleWindow, WINDOW_Z_ORDER_APPEND, 1);
+    gWindowManager->AddWindow(puzzleWindow, WINDOW_Z_ORDER_APPEND, true);
 
     puzzleX = gGame->m_ultimateArtifactX - ADVMGR_VIEW_CENTER;
     puzzleY = gGame->m_ultimateArtifactY - ADVMGR_VIEW_CENTER;
@@ -5526,7 +5526,7 @@ void advManager::CheckCastSpell(void) {
             gGame->GetHero(gCurPlayerData->m_currentHero),
             SPELL_TYPE_ADVENTURE,
             NullHandler,
-            0
+            false
         ));
     }
 }
@@ -6500,7 +6500,7 @@ void advManager::CheckDimHero(void) {
         return;
     if (!gGame->IsMobile(gCurPlayerData->CurrentHero())) {
         ShowRoute(true, 0, false);
-        UpdateHeroLocators(true, 1);
+        UpdateHeroLocators(true, true);
         gAdvManager->CheckDimNextHeroBut();
     }
 }
@@ -6744,8 +6744,8 @@ void advManager::LoadRemote(void) {
     if (gThisNetHumanPlayer[gCurPlayer])
         gGame->CancelComputerScreen();
     gGame->DoNewTurn();
-    UpdateHeroLocators(true, 1);
-    UpdateTownLocators(true, 1);
+    UpdateHeroLocators(true, true);
+    UpdateTownLocators(true, true);
     UpdateRadar(true, false);
     gMouseManager->ReallyShowPointer();
     UpdBottomView(true, true, true);
@@ -6759,7 +6759,7 @@ void advManager::LoadRemote(void) {
 
 RemoteMessage* advManager::CheckHandleNet(void) {
     RemoteMessage* receivedPacket;
-    i32 exitedFlag;
+    b32 exitedFlag;
     RemoteSaveHeader saveHeader;
     RemotePlayerExit playerExit;
 

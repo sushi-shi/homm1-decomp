@@ -203,7 +203,7 @@ i32 oldmain(void) {
     b8 backdropLoaded;
     b8 initialScreen;
     i32 gamePlayer;
-    i32 sendResult;
+    b32 sendResult;
     b8 creditsDone;
     b8 leave;
     i16 command;
@@ -412,7 +412,7 @@ i32 oldmain(void) {
                 }
                 for (gamePlayer = 0; gamePlayer < gGame->m_playerCount; gamePlayer++) {
                     if (gHumanPlayer[gamePlayer] && !gThisNetHumanPlayer[gamePlayer]) {
-                        if (!gGame->TransmitSaveGame(gamePlayer, 0))
+                        if (!gGame->TransmitSaveGame(gamePlayer, false))
                             ShutDown(NULL);
                     }
                 }
@@ -1230,7 +1230,7 @@ void NormalDialog(
         gWindowManager->DoDialog(gNormalDialogWindow, WaitHandler, false);
     } else if (dialogType == NORMAL_DIALOG_TYPE_QUICK_VIEW) {
         gMouseManager->ReallyHidePointer();
-        gWindowManager->AddWindow(gNormalDialogWindow, WINDOW_Z_ORDER_APPEND, 1);
+        gWindowManager->AddWindow(gNormalDialogWindow, WINDOW_Z_ORDER_APPEND, true);
         QuickViewWait();
         gWindowManager->RemoveWindow(gNormalDialogWindow);
         gMouseManager->ReallyShowPointer();
@@ -1508,7 +1508,7 @@ i8 gCastleResources[4] = {0, 2, -1, -1};
 
 void HandleRemoteDeadPlayerExit(i32 position) {
     if (position == gThisGamePos) {
-        if (!gGame->TransmitSaveGame(REMOTE_BROADCAST_PLAYER, 1))
+        if (!gGame->TransmitSaveGame(REMOTE_BROADCAST_PLAYER, true))
             ShutDown(NULL);
         RemoteCleanup();
     } else if (gNumHumanPlayers == REMOTE_PLAYER_COUNT) {
@@ -2096,7 +2096,7 @@ void PopNetBox(char* notice) {
     b8 enterPressed;
     tag_message messageData;
     i32 closeDelay;
-    i32 sendOk;
+    b32 sendOk;
     font* boxFont;
     b8 redrawText;
     i32 noticeStamp;
@@ -2133,7 +2133,7 @@ void PopNetBox(char* notice) {
     messageData.id = NET_BOX_LINE_LATEST;
     messageData.text = gNetBoxLine[NET_BOX_SLOT_LATEST];
     netBox->BroadcastMessage(messageData);
-    gWindowManager->AddWindow(netBox, WINDOW_Z_ORDER_APPEND, 1);
+    gWindowManager->AddWindow(netBox, WINDOW_Z_ORDER_APPEND, true);
     gMouseManager->ReallyHidePointer();
     exitForIncomingData = false;
     closeWindow = false;
@@ -2382,7 +2382,7 @@ void ShowCongrats(void) {
         message.id = CONGRATS_RATING;
         window->BroadcastMessage(message);
     }
-    gWindowManager->AddWindow(window, WINDOW_Z_ORDER_APPEND, 1);
+    gWindowManager->AddWindow(window, WINDOW_Z_ORDER_APPEND, true);
     gMouseManager->ReallyHidePointer();
     gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);
     CongratsWait();
@@ -3088,7 +3088,7 @@ WindowTextEntry gWinSetup[68] = {
 };
 i8 gTownTheme[TOWN_TYPE_COUNT] = {3, 0, 2, 1};
 campaignScenario gCampaignScenarios[CAMPAIGN_SCENARIO_COUNT] = {
-    {0,
+    {false,
      36,
      35,
      localization::Chars("campaign.town_name.0"),
@@ -3098,7 +3098,7 @@ campaignScenario gCampaignScenarios[CAMPAIGN_SCENARIO_COUNT] = {
       {30, 10, 30, 10, 10, 10, 10000},
       {30, 10, 30, 10, 10, 10, 10000},
       {30, 10, 30, 10, 10, 10, 10000}}},
-    {0,
+    {false,
      -1,
      -1,
      {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
@@ -3108,7 +3108,7 @@ campaignScenario gCampaignScenarios[CAMPAIGN_SCENARIO_COUNT] = {
       {30, 10, 30, 10, 10, 10, 10000},
       {30, 10, 30, 10, 10, 10, 10000},
       {30, 10, 30, 10, 10, 10, 10000}}},
-    {0,
+    {false,
      -1,
      -1,
      {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
@@ -3118,7 +3118,7 @@ campaignScenario gCampaignScenarios[CAMPAIGN_SCENARIO_COUNT] = {
       {30, 10, 30, 10, 10, 10, 10000},
       {30, 10, 30, 10, 10, 10, 10000},
       {30, 10, 30, 10, 10, 10, 10000}}},
-    {0,
+    {false,
      -1,
      -1,
      {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
@@ -3128,7 +3128,7 @@ campaignScenario gCampaignScenarios[CAMPAIGN_SCENARIO_COUNT] = {
       {30, 10, 30, 10, 10, 10, 10000},
       {30, 10, 30, 10, 10, 10, 10000},
       {30, 10, 30, 10, 10, 10, 10000}}},
-    {0,
+    {false,
      13,
      10,
      localization::Chars("campaign.town_name.4"),
@@ -3138,7 +3138,7 @@ campaignScenario gCampaignScenarios[CAMPAIGN_SCENARIO_COUNT] = {
       {30, 10, 30, 10, 10, 10, 10000},
       {30, 10, 30, 10, 10, 10, 10000},
       {30, 10, 30, 10, 10, 10, 10000}}},
-    {0,
+    {false,
      62,
      20,
      localization::Chars("campaign.town_name.5"),
@@ -3148,7 +3148,7 @@ campaignScenario gCampaignScenarios[CAMPAIGN_SCENARIO_COUNT] = {
       {30, 10, 30, 10, 10, 10, 10000},
       {30, 10, 30, 10, 10, 10, 10000},
       {30, 10, 30, 10, 10, 10, 10000}}},
-    {0,
+    {false,
      8,
      8,
      localization::Chars("campaign.town_name.6"),
@@ -3158,7 +3158,7 @@ campaignScenario gCampaignScenarios[CAMPAIGN_SCENARIO_COUNT] = {
       {30, 10, 30, 10, 10, 10, 10000},
       {30, 10, 30, 10, 10, 10, 10000},
       {30, 10, 30, 10, 10, 10, 10000}}},
-    {0,
+    {false,
      66,
      69,
      localization::Chars("campaign.town_name.7"),
@@ -3168,7 +3168,7 @@ campaignScenario gCampaignScenarios[CAMPAIGN_SCENARIO_COUNT] = {
       {30, 10, 30, 10, 10, 10, 10000},
       {30, 10, 30, 10, 10, 10, 10000},
       {30, 10, 30, 10, 10, 10, 10000}}},
-    {1,
+    {true,
      -1,
      -1,
      {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
@@ -4315,7 +4315,7 @@ i32 gMaxExtentX;
 i32 gMaxExtentY;
 class font* gSmallFont;
 i32 gBottomViewOverrideEndTime;
-i8 gArmyEffected[COMBAT_SIDE_COUNT][ARMY_GROUP_SLOT_COUNT];
+b8 gArmyEffected[COMBAT_SIDE_COUNT][ARMY_GROUP_SLOT_COUNT];
 i32 gBottomViewResource;
 b32 gSeedingValid;
 i8 gLimitPlayer;
