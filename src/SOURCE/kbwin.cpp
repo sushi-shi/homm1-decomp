@@ -126,7 +126,8 @@ BOOL AppInit(void* instance, void* previousInstance, i32 showCommand, char* comm
         giCurWindowsStyleFlags = KBWIN_WINDOWED_STYLE;
     else
         giCurWindowsStyleFlags = KBWIN_FULLSCREEN_STYLE;
-    rc.left = rc.top = 0;
+    rc.top = 0;
+    rc.left = rc.top;
     rc.right = gConfig.gfx[gCurExe].width - 1;
     rc.bottom = gConfig.gfx[gCurExe].height - 1;
     AdjustWindowRect(&rc, giCurWindowsStyleFlags, gConfig.gfx[gCurExe].showMenu);

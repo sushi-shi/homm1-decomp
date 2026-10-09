@@ -84,7 +84,11 @@ VA(0x00447b19, 0x153)
 H1_ENUM_RETURN(ArmyGroupAlignmentResult, i8) armyGroup::IsHomogeneous(i8 countRaces) {
     i32 numTypes = 0;
     i8 raceSeen[ARMY_GROUP_RACE_COUNT];
-    raceSeen[0] = raceSeen[1] = raceSeen[2] = raceSeen[3] = raceSeen[4] = 0;
+    raceSeen[4] = 0;
+    raceSeen[3] = raceSeen[4];
+    raceSeen[2] = raceSeen[3];
+    raceSeen[1] = raceSeen[2];
+    raceSeen[0] = raceSeen[1];
     i32 previous = -1;
     i32 numRaces;
     i16 i;

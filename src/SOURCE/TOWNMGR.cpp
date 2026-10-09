@@ -259,8 +259,12 @@ i16 townManager::Open(i16 id) {
     m_bankBox = new bankBox(TOWN_BANK_BOX_X, TOWN_BANK_BOX_Y, gpCurPlayer);
     if (m_bankBox == NULL)
         MemError();
-    m_selectedStrip = m_swapStrip = m_pendingStrip = NULL;
-    m_selectedArmySlot = m_swapArmySlot = m_pendingArmySlot = STRIP_SLOT_NONE;
+    m_pendingStrip = NULL;
+    m_swapStrip = m_pendingStrip;
+    m_selectedStrip = m_swapStrip;
+    m_pendingArmySlot = STRIP_SLOT_NONE;
+    m_swapArmySlot = m_pendingArmySlot;
+    m_selectedArmySlot = m_swapArmySlot;
     DrawTown(0, 0);
     gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
     gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
@@ -1111,8 +1115,10 @@ void townManager::ResetStrips(void) {
         m_pendingStrip->m_selectedSlot = STRIP_SLOT_NONE;
     m_heroStrip->Draw();
     m_garrisonStrip->Draw();
-    m_swapStrip = m_pendingStrip = NULL;
-    m_swapArmySlot = m_pendingArmySlot = STRIP_SLOT_NONE;
+    m_pendingStrip = NULL;
+    m_swapStrip = m_pendingStrip;
+    m_pendingArmySlot = STRIP_SLOT_NONE;
+    m_swapArmySlot = m_pendingArmySlot;
 }
 
 // Buka TOWNMGR.cpp:1993-2003.
@@ -1210,8 +1216,10 @@ i16 townManager::BuyBuild(i16 building, i8 cannotBuy, i8 quickView) {
     j = 0;
     curCost = 0;
     descText = static_cast<char*>(malloc(300));
-    for (j = 0; j < RESOURCE_COUNT; j++)
-        resType[j] = prices[j] = RESOURCE_NONE;
+    for (j = 0; j < RESOURCE_COUNT; j++) {
+        prices[j] = RESOURCE_NONE;
+        resType[j] = prices[j];
+    }
     dwellIndex = -1;
     if (building > TOWN_NEUTRAL_BUILDING_LAST)
         dwellIndex =
@@ -1390,7 +1398,8 @@ i16 townManager::BuyBuild(i16 building, i8 cannotBuy, i8 quickView) {
                     totalWidth += 40;
             }
             space = (266 - totalWidth) / (inRow + 1);
-            currX = startX = space + 10;
+            startX = space + 10;
+            currX = startX;
             for (j = 0; j < inRow; j++) {
                 if (nRowTypes[j] == RESOURCE_GOLD)
                     nEntryWidth = 80;
@@ -1570,7 +1579,8 @@ void townManager::SetupCastle(class heroWindow* window) {
     tag_message message;
     i32 stateFrame;
 
-    m_affordableBuildings = m_buildableBuildings = 0;
+    m_buildableBuildings = 0;
+    m_affordableBuildings = m_buildableBuildings;
     for (i = 0; i < BUILDING_SLOT_COUNT; i++) {
         if (CanBuy(m_town, i))
             m_affordableBuildings |= 1 << i;
@@ -2079,7 +2089,8 @@ i8 townManager::RecruitHero(i8 cannotRecruit) {
     SetWinText(m_heroWindow1, WINDOW_TEXT_RECRUIT_HERO);
     m_recruitHeroes[0] = gpGame->GetHero(gpCurPlayer->m_availableHeroIds[0]);
     m_recruitHeroes[1] = gpGame->GetHero(gpCurPlayer->m_availableHeroIds[1]);
-    m_recruitHeroes[0]->m_owner = m_recruitHeroes[1]->m_owner = giCurPlayer;
+    m_recruitHeroes[1]->m_owner = giCurPlayer;
+    m_recruitHeroes[0]->m_owner = m_recruitHeroes[1]->m_owner;
     message.type = MESSAGE_WIDGET;
     if (cannotRecruit) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
@@ -2197,7 +2208,8 @@ i8 townManager::RecruitHero(i8 cannotRecruit) {
         TOWN_CLOSE_CONTROL,
         WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED
     );
-    m_recruitHeroes[0]->m_owner = m_recruitHeroes[1]->m_owner = GAME_PLAYER_NONE;
+    m_recruitHeroes[1]->m_owner = GAME_PLAYER_NONE;
+    m_recruitHeroes[0]->m_owner = m_recruitHeroes[1]->m_owner;
     if (m_recruitState != RECRUIT_HERO_NONE)
         m_recruitHeroes[m_recruitState]->m_owner = giCurPlayer;
     return gpWindowManager->m_dialogResult != DIALOG_BUTTON_1;
@@ -2433,7 +2445,8 @@ i16 CastleHandler(struct tag_message& message) {
         }
     }
     if (result) {
-        message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
+        message.id = WIDGET_COMMAND_DIALOG_SELECT;
+        message.command = message.id;
         return MESSAGE_DISPATCH_FORWARD;
     }
     return TrueFalseDialogHandler(message);
@@ -2497,7 +2510,8 @@ i16 SplitArmyHandler(struct tag_message& message) {
     }
 
     if (handled == 1) {
-        message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
+        message.id = WIDGET_COMMAND_DIALOG_SELECT;
+        message.command = message.id;
         return MESSAGE_DISPATCH_FORWARD;
     }
     return MESSAGE_DISPATCH_CONSUME;

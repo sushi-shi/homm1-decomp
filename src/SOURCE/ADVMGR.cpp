@@ -619,21 +619,23 @@ H1_ENUM_CONST_END(QuickViewWidget)
 
 // Buka 2.1's unconditional six-button enable/disable broadcast.
 #define SET_ADVENTURE_BUTTON_FLAGS(message, window, cmd)                                           \
-    ((message).type = MESSAGE_WIDGET,                                                              \
-     (message).command = (cmd),                                                                    \
-     (message).value = WIDGET_FLAG_ENABLED,                                                        \
-     (message).id = ADVMGR_PANEL_BUTTON_FIRST,                                                     \
-     (window)->BroadcastMessage(message),                                                          \
-     (message).id = ADVMGR_PANEL_BUTTON_FIRST + 1,                                                 \
-     (window)->BroadcastMessage(message),                                                          \
-     (message).id = ADVMGR_PANEL_BUTTON_FIRST + 2,                                                 \
-     (window)->BroadcastMessage(message),                                                          \
-     (message).id = ADVMGR_PANEL_BUTTON_FIRST + 3,                                                 \
-     (window)->BroadcastMessage(message),                                                          \
-     (message).id = ADVMGR_PANEL_BUTTON_FIRST + 4,                                                 \
-     (window)->BroadcastMessage(message),                                                          \
-     (message).id = ADVMGR_PANEL_BUTTON_LAST,                                                      \
-     (window)->BroadcastMessage(message))
+    do {                                                                                           \
+        (message).type = MESSAGE_WIDGET;                                                           \
+        (message).command = (cmd);                                                                 \
+        (message).value = WIDGET_FLAG_ENABLED;                                                     \
+        (message).id = ADVMGR_PANEL_BUTTON_FIRST;                                                  \
+        (window)->BroadcastMessage(message);                                                       \
+        (message).id = ADVMGR_PANEL_BUTTON_FIRST + 1;                                              \
+        (window)->BroadcastMessage(message);                                                       \
+        (message).id = ADVMGR_PANEL_BUTTON_FIRST + 2;                                              \
+        (window)->BroadcastMessage(message);                                                       \
+        (message).id = ADVMGR_PANEL_BUTTON_FIRST + 3;                                              \
+        (window)->BroadcastMessage(message);                                                       \
+        (message).id = ADVMGR_PANEL_BUTTON_FIRST + 4;                                              \
+        (window)->BroadcastMessage(message);                                                       \
+        (message).id = ADVMGR_PANEL_BUTTON_LAST;                                                   \
+        (window)->BroadcastMessage(message);                                                       \
+    } while (0)
 
 // donor PoL RVA 0x00056350; preferred Buka symbol ??0advManager@@QAE@XZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -1122,7 +1124,8 @@ class mapCell* advManager::DoAdvCommand(void) {
             break;
     }
     m_selectedCell = ADVMGR_COMMAND_NONE;
-    m_lastHoverCell = m_hoverCellY = CURSOR_INVALID_POSITION;
+    m_hoverCellY = CURSOR_INVALID_POSITION;
+    m_lastHoverCell = m_hoverCellY;
     if (hover)
         ForceNewHover();
     return stopCell;
@@ -2352,8 +2355,10 @@ void advManager::CompleteDraw(i16 originX, i16 originY, i32 forceDraw) {
     gLimitUpdMinX = UPDATE_NONE;
     m_previousOriginX = m_mapOriginX;
     m_previousOriginY = m_mapOriginY;
-    if (gAllBlack)
-        m_mapOriginX = m_mapOriginY = 0;
+    if (gAllBlack) {
+        m_mapOriginY = 0;
+        m_mapOriginX = m_mapOriginY;
+    }
     m_comboHeroDrawn = 0;
     m_forceCompleteDraw = 0;
 
@@ -4756,8 +4761,10 @@ void advManager::SetHeroContext(i8 heroId, i8 update) {
     currentHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
     m_mapOriginX = currentHero->m_x - ADVMGR_VIEW_CENTER;
     m_mapOriginY = currentHero->m_y - ADVMGR_VIEW_CENTER;
-    m_cursorMapX = m_cursorMapY = ADVMGR_VIEW_CENTER;
-    m_previousCursorMapX = m_previousCursorMapY = CURSOR_CELL_NONE;
+    m_cursorMapY = ADVMGR_VIEW_CENTER;
+    m_cursorMapX = m_cursorMapY;
+    m_previousCursorMapY = CURSOR_CELL_NONE;
+    m_previousCursorMapX = m_previousCursorMapY;
     if (currentHero->m_eventFlags & HERO_EVENT_EMBARKED)
         m_cursorType = ADVMGR_HERO_ICON_BOAT;
     else
@@ -6150,7 +6157,8 @@ i16 DimensionDoorHandler(struct tag_message& message) {
             break;
     }
     if (result) {
-        message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
+        message.id = WIDGET_COMMAND_DIALOG_SELECT;
+        message.command = message.id;
         return MESSAGE_DISPATCH_FORWARD;
     }
     return MESSAGE_DISPATCH_CONSUME;
@@ -7176,7 +7184,8 @@ void advManager::SetInitialMapOrigin(void) {
         ADVENTURE_CONTROL_CONTINUE_ROUTE,
         WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED
     );
-    m_lastHoverCell = m_hoverCellY = 0;
+    m_hoverCellY = 0;
+    m_lastHoverCell = m_hoverCellY;
     m_cursorActive = 0;
     gHeroMoving = 0;
     if (gpCurPlayer->CurrentTown() != GAME_TOWN_NONE) {

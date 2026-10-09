@@ -60,11 +60,16 @@ combatManager::combatManager(void) {
     m_unknown6e8 = 0;
     m_currentSpeed = CREATURE_SPEED_BLAZING;
     m_savedBorder = NULL;
-    m_heroType[COMBAT_DEFENDER_SIDE] = m_heroType[COMBAT_ATTACKER_SIDE] =
-        m_catapultFrame[COMBAT_DEFENDER_SIDE] = m_catapultFrame[COMBAT_ATTACKER_SIDE] =
-            m_wallFrame = m_wallDamage = COMBAT_WALL_DAMAGE_NONE;
-    m_unknown6d9 = m_unknown6db = 0;
-    m_castleSide[COMBAT_DEFENDER_SIDE] = m_castleSide[COMBAT_ATTACKER_SIDE] = 0;
+    m_wallDamage = COMBAT_WALL_DAMAGE_NONE;
+    m_wallFrame = m_wallDamage;
+    m_catapultFrame[COMBAT_ATTACKER_SIDE] = m_wallFrame;
+    m_catapultFrame[COMBAT_DEFENDER_SIDE] = m_catapultFrame[COMBAT_ATTACKER_SIDE];
+    m_heroType[COMBAT_ATTACKER_SIDE] = m_catapultFrame[COMBAT_DEFENDER_SIDE];
+    m_heroType[COMBAT_DEFENDER_SIDE] = m_heroType[COMBAT_ATTACKER_SIDE];
+    m_unknown6db = 0;
+    m_unknown6d9 = m_unknown6db;
+    m_castleSide[COMBAT_ATTACKER_SIDE] = 0;
+    m_castleSide[COMBAT_DEFENDER_SIDE] = m_castleSide[COMBAT_ATTACKER_SIDE];
     m_combatWindowOpen = 0;
 }
 
@@ -153,9 +158,12 @@ void combatManager::SetupCombat(
             m_armyGroups[i] = attackerGroup;
         else
             m_armyGroups[i] = defenderGroup;
-        m_catapultAttackCount[i] = m_catapultAttacksRemaining[i] = 1;
-        if (m_heroes[i] && m_heroes[i]->HasArtifact(ARTIFACT_BALLISTA))
-            m_catapultAttackCount[i] = m_catapultAttacksRemaining[i] = 2;
+        m_catapultAttacksRemaining[i] = 1;
+        m_catapultAttackCount[i] = m_catapultAttacksRemaining[i];
+        if (m_heroes[i] && m_heroes[i]->HasArtifact(ARTIFACT_BALLISTA)) {
+            m_catapultAttacksRemaining[i] = 2;
+            m_catapultAttackCount[i] = m_catapultAttacksRemaining[i];
+        }
         m_keepAttacksRemaining[i] = 1;
         m_visitingHeroPresent[i] = 0;
         m_heroCastSpell[i] = 0;
@@ -630,7 +638,8 @@ void combatManager::LoadArmies(void) {
     i16 j;
     i16 i;
 
-    m_numArmies[COMBAT_ATTACKER_SIDE] = m_numArmies[COMBAT_DEFENDER_SIDE] = 0;
+    m_numArmies[COMBAT_DEFENDER_SIDE] = 0;
+    m_numArmies[COMBAT_ATTACKER_SIDE] = m_numArmies[COMBAT_DEFENDER_SIDE];
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
         for (j = 0; j < COMBAT_SIDE_COUNT; j++) {
             m_armies[j][i].m_quantity = 0;
@@ -1096,7 +1105,8 @@ void combatManager::CatAttack(i8 side) {
             DrawFrame(1);
             m_wallFrame++;
         }
-        m_wallFrame = m_wallDamage = COMBAT_WALL_DAMAGE_NONE;
+        m_wallDamage = COMBAT_WALL_DAMAGE_NONE;
+        m_wallFrame = m_wallDamage;
         m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + col].m_obstacleIndex =
             COMBAT_OBSTACLE_NONE;
     } else {

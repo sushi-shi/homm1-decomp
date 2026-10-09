@@ -31,17 +31,23 @@ i32 CPUSpeed(u8 cpuType) {
     switch (cpuType) {
         case CPU_FAMILY_386:
             clockNs = 62.5;
-            ticks = (totalNs = (divNs = clockNs * 22.0) * divs) / tickPeriod;
+            divNs = clockNs * 22.0;
+            totalNs = divNs * divs;
+            ticks = totalNs / tickPeriod;
             freq = ticks / TimeProcessor() * 16.0;
             break;
         case CPU_FAMILY_486:
             clockNs = 30.303030303030305;
-            ticks = (totalNs = (divNs = clockNs * 24.0) * divs) / tickPeriod;
+            divNs = clockNs * 24.0;
+            totalNs = divNs * divs;
+            ticks = totalNs / tickPeriod;
             freq = ticks / TimeProcessor() * 33.0;
             break;
         default:
             clockNs = 15.151515151515152;
-            ticks = (totalNs = (divNs = clockNs * 25.0) * divs) / tickPeriod;
+            divNs = clockNs * 25.0;
+            totalNs = divNs * divs;
+            ticks = totalNs / tickPeriod;
             freq = ticks / TimeProcessor() * 66.0;
             break;
     }

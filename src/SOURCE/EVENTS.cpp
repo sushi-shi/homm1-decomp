@@ -3141,7 +3141,9 @@ void advManager::ReceiveHeroTownData(
     *combatTown = NULL;
     *secondHero = NULL;
     *secondArmy = NULL;
-    bFirstHero = hasSecondHero = hasTown = 0;
+    hasTown = 0;
+    hasSecondHero = hasTown;
+    bFirstHero = hasSecondHero;
     *remotePlayer =
         reinterpret_cast<combatRemoteMessage*>(packet)
             ->sender; // byte-evidenced: the remote packet buffer holds this message layout

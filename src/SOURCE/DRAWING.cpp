@@ -70,7 +70,8 @@ void combatManager::CombatMessage(char* text, i32 updateScreen) {
     m_combatWindow->BroadcastMessage(message);
     oldCompute = gComputeExtent;
     prevLimit = gLimitToExtent;
-    gComputeExtent = gLimitToExtent = 0;
+    gLimitToExtent = 0;
+    gComputeExtent = gLimitToExtent;
     m_combatWindow->DrawWindow(0, COMBAT_STATUS_FIRST_CONTROL, COMBAT_STATUS_TEXT_CONTROL);
     SaveCombatBorder();
     if (updateScreen)
@@ -250,7 +251,8 @@ void combatManager::DrawFrame(i8 updateScreen) {
     if (!m_combatWindowOpen)
         return;
     if (m_computeExtent) {
-        giMaxExtentX = giMaxExtentY = 0;
+        giMaxExtentY = 0;
+        giMaxExtentX = giMaxExtentY;
         giMinExtentX = LOGICAL_SCREEN_WIDTH - 1;
         giMinExtentY = COMBAT_VIEW_HEIGHT - 1;
         drawn = 0;

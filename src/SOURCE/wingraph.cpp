@@ -850,9 +850,12 @@ void WGInitializePalette() {
         LogicalPalette.entries[WINGRAPH_MUTABLE_PALETTE_END + i].peFlags = 0;
     }
     for (i = WINGRAPH_SYSTEM_PALETTE_SIZE; i < WINGRAPH_MUTABLE_PALETTE_END; i++) {
-        screenImage.colors[i].rgbRed = LogicalPalette.entries[i].peRed = 0;
-        screenImage.colors[i].rgbGreen = LogicalPalette.entries[i].peGreen = 0;
-        screenImage.colors[i].rgbBlue = LogicalPalette.entries[i].peBlue = 0;
+        LogicalPalette.entries[i].peRed = 0;
+        screenImage.colors[i].rgbRed = LogicalPalette.entries[i].peRed;
+        LogicalPalette.entries[i].peGreen = 0;
+        screenImage.colors[i].rgbGreen = LogicalPalette.entries[i].peGreen;
+        LogicalPalette.entries[i].peBlue = 0;
+        screenImage.colors[i].rgbBlue = LogicalPalette.entries[i].peBlue;
         screenImage.colors[i].rgbReserved = 0;
         LogicalPalette.entries[i].peFlags = PC_NOCOLLAPSE;
     }

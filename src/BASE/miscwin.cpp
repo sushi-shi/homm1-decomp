@@ -328,7 +328,8 @@ void ClipIconToBitmap(
     sClipEntry = reinterpret_cast<IconEntry*>(sourceIcon->m_data)
                  + frame; // byte-evidenced: packed frame directory decoded from resource bytes.
     sClipSource = sourceIcon->m_data + sClipEntry->srcOffset;
-    sClipX = sClipRowStart = x + sClipEntry->x;
+    sClipRowStart = x + sClipEntry->x;
+    sClipX = sClipRowStart;
     sClipY = y + sClipEntry->y;
     if (sClipRowStart < clipX || sClipRowStart + sClipEntry->w > clipX + clipW || sClipY < clipY
         || sClipY + sClipEntry->h > clipY + clipH) {

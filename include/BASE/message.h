@@ -87,9 +87,11 @@ struct tag_message {
 
 // Address a widget command to widget idValue (Buka 2.1 message.h).
 #define SET_WIDGET_MESSAGE(messageValue, commandValue, idValue)                                    \
-    ((messageValue).type = MESSAGE_WIDGET,                                                         \
-     (messageValue).command = (commandValue),                                                      \
-     (messageValue).id = (idValue))
+    do {                                                                                           \
+        (messageValue).type = MESSAGE_WIDGET;                                                      \
+        (messageValue).command = (commandValue);                                                   \
+        (messageValue).id = (idValue);                                                             \
+    } while (0)
 
 #define IS_WIDGET_SELECTION_NOTIFICATION(command)                                                  \
     ((command) == WIDGET_NOTIFY_SELECT || (command) == WIDGET_NOTIFY_RIGHT_CLICK)

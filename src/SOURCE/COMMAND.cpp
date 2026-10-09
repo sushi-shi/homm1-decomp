@@ -657,7 +657,8 @@ void combatManager::ResetRound(void) {
     m_catapultAttacksRemaining[COMBAT_DEFENDER_SIDE] = m_catapultAttackCount[COMBAT_DEFENDER_SIDE];
     m_keepAttacksRemaining[COMBAT_ATTACKER_SIDE] = 1;
     m_keepAttacksRemaining[COMBAT_DEFENDER_SIDE] = 1;
-    m_heroCastSpell[COMBAT_ATTACKER_SIDE] = m_heroCastSpell[COMBAT_DEFENDER_SIDE] = 0;
+    m_heroCastSpell[COMBAT_DEFENDER_SIDE] = 0;
+    m_heroCastSpell[COMBAT_ATTACKER_SIDE] = m_heroCastSpell[COMBAT_DEFENDER_SIDE];
     for (side = 0; side < COMBAT_SIDE_COUNT; side++) {
         for (index = 0; index < ARMY_GROUP_SLOT_COUNT; index++) {
             curArmy = &m_armies[side][index];
@@ -849,7 +850,8 @@ void combatManager::DoCommand(i8 command) {
         case COMBAT_MESSAGE_COMMAND_MOVE:
         case COMBAT_MESSAGE_COMMAND_FLY:
         case COMBAT_MESSAGE_COMMAND_SHOOT:
-            giNextAction = ACTION_MOVE, giNextActionGridIndex = m_selectedHex;
+            giNextAction = ACTION_MOVE;
+            giNextActionGridIndex = m_selectedHex;
             giNextActionExtra = ARMY_HEX_INVALID;
             break;
         case COMBAT_MESSAGE_COMMAND_ATTACK:

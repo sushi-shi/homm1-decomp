@@ -86,7 +86,10 @@ H1_ENUM_END(ArmyLuck)
 // Forget an army's attack target (Buka 2.1 army.h). VC4 rejects an
 // assignment through (*this).member, so the army is passed by pointer.
 #define CLEAR_ARMY_TARGET(a)                                                                       \
-    ((a)->m_targetSide = COMBAT_SIDE_NONE, (a)->m_targetIndex = COMBAT_ARMY_INDEX_NONE)
+    do {                                                                                           \
+        (a)->m_targetSide = COMBAT_SIDE_NONE;                                                      \
+        (a)->m_targetIndex = COMBAT_ARMY_INDEX_NONE;                                               \
+    } while (0)
 
 #pragma pack(push, 1)
 class army {

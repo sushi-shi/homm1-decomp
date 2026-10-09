@@ -589,7 +589,8 @@ void combatManager::CastMassSpell(i8 castSide, i8 cureOnly) {
     i16 fileId;
     i32 startSide;
 
-    m_computeExtent = m_redrawExtent = 0;
+    m_redrawExtent = 0;
+    m_computeExtent = m_redrawExtent;
     fileId = MAKEFILEID(gCombatFxNames[COMBAT_EFFECT_DISPEL_MAGIC]);
     if (fileId != gCurLoadedSpellFileId) {
         gpResourceManager->Dispose(gCurLoadedSpellIcon);

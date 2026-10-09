@@ -796,7 +796,8 @@ i16 RecruitHeroHandler(tag_message& message) {
         }
     }
     if (shouldClose == 1) {
-        message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
+        message.id = WIDGET_COMMAND_DIALOG_SELECT;
+        message.command = message.id;
         return MESSAGE_DISPATCH_FORWARD;
     }
     return MESSAGE_DISPATCH_CONSUME;
@@ -1395,7 +1396,8 @@ i16 WaitHandler(tag_message& message) {
     if (result) {
         gpWindowManager->m_dialogResult = DIALOG_BUTTON_1;
         message.type = MESSAGE_WIDGET;
-        message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
+        message.id = WIDGET_COMMAND_DIALOG_SELECT;
+        message.command = message.id;
         return MESSAGE_DISPATCH_FORWARD;
     }
     return MESSAGE_DISPATCH_CONSUME;

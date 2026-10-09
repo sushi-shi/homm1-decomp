@@ -91,7 +91,11 @@ swapManager::swapManager(class hero* leftHero, class hero* rightHero) {
 
 VA(0x0046ed63, 0x4d)
 void swapManager::Reset(void) {
-    m_selectedSide = m_targetSide = m_itemType = m_selectedSlot = m_targetSlot = SWAP_SLOT_NONE;
+    m_targetSlot = SWAP_SLOT_NONE;
+    m_selectedSlot = m_targetSlot;
+    m_itemType = m_selectedSlot;
+    m_targetSide = m_itemType;
+    m_selectedSide = m_targetSide;
 }
 
 VA(0x0046edb0, 0x2d5)

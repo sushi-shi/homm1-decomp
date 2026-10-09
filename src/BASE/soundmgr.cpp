@@ -358,7 +358,9 @@ i16 soundManager::Open(i16) {
     m_currentTrack = MUSIC_TRACK_NONE;
     if (gbNoSound != 0)
         goto managerReady;
-    m_pollToggle = m_pollDue = m_pollRequested = 0;
+    m_pollRequested = 0;
+    m_pollDue = m_pollRequested;
+    m_pollToggle = m_pollDue;
     AIL_startup();
     CDStartup();
     m_musicReady = 1;

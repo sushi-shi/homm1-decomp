@@ -264,7 +264,8 @@ i16 HandleViewGeneral(tag_message& message) {
         }
     }
     if (retVal) {
-        message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
+        message.id = WIDGET_COMMAND_DIALOG_SELECT;
+        message.command = message.id;
         return MESSAGE_DISPATCH_FORWARD;
     }
     return MESSAGE_DISPATCH_CONSUME;

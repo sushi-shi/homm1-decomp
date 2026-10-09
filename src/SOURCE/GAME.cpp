@@ -2595,7 +2595,8 @@ i16 ViewArmyHandler(tag_message& message) {
                         );
                         if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                             gbDismissArmy = 1;
-                            message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
+                            message.id = WIDGET_COMMAND_DIALOG_SELECT;
+                            message.command = message.id;
                             return MESSAGE_DISPATCH_FORWARD;
                         }
                         break;

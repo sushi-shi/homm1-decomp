@@ -155,7 +155,8 @@ i16 heroWindowManager::Main(tag_message& message) {
     i16 result = MESSAGE_DISPATCH_CONTINUE;
     heroWindow* window = m_windowListTail;
     while (window != NULL) {
-        switch (result = window->BroadcastMessage(message)) {
+        result = window->BroadcastMessage(message);
+        switch (result) {
             case MESSAGE_DISPATCH_CONTINUE:
                 break;
             case MESSAGE_DISPATCH_CONSUME:

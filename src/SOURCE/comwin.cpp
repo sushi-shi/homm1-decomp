@@ -34,7 +34,8 @@ extern ComPortState gComPorts[];
 
 VA(0x00472c60, 0x6b)
 void add_node(tag_Anchor* anchor, tag_Node* node) {
-    node->prev = node->next = NULL;
+    node->next = NULL;
+    node->prev = node->next;
     if (anchor->tail) {
         anchor->tail->next = node;
         node->prev = anchor->tail;
@@ -125,8 +126,10 @@ i16 com_init(u8 portNumber, i32 baudRate, i32 useDtr) {
     SetupComm(gComPorts[slot].handle, COM_RECEIVE_BUFFER_SIZE, COM_TRANSMIT_BUFFER_SIZE);
     SetCommState(gComPorts[slot].handle, &state);
     commTimeouts.ReadIntervalTimeout = MAXDWORD;
-    commTimeouts.ReadTotalTimeoutMultiplier = commTimeouts.ReadTotalTimeoutConstant = 0;
-    commTimeouts.WriteTotalTimeoutMultiplier = commTimeouts.WriteTotalTimeoutConstant = 0;
+    commTimeouts.ReadTotalTimeoutConstant = 0;
+    commTimeouts.ReadTotalTimeoutMultiplier = commTimeouts.ReadTotalTimeoutConstant;
+    commTimeouts.WriteTotalTimeoutConstant = 0;
+    commTimeouts.WriteTotalTimeoutMultiplier = commTimeouts.WriteTotalTimeoutConstant;
     SetCommTimeouts(gComPorts[slot].handle, &commTimeouts);
     init_anchor(&gComPorts[slot].normalQueue, 1, 0);
     init_anchor(&gComPorts[slot].priorityQueue, 1, 0);
@@ -142,10 +145,18 @@ void com_term(i16 port) {
         SetCommTimeouts(gComPorts[port].handle, &gComPorts[port].savedTimeouts);
         CloseHandle(gComPorts[port].handle);
         gComPorts[port].handle = INVALID_HANDLE_VALUE;
-        while ((node = pop_node(&gComPorts[port].normalQueue)) != NULL)
+    drainQueue0:
+        node = pop_node(&gComPorts[port].normalQueue);
+        if (node != NULL) {
             free(node);
-        while ((node = pop_node(&gComPorts[port].priorityQueue)) != NULL)
+            goto drainQueue0;
+        }
+    drainQueue1:
+        node = pop_node(&gComPorts[port].priorityQueue);
+        if (node != NULL) {
             free(node);
+            goto drainQueue1;
+        }
     }
 }
 

@@ -770,7 +770,9 @@ void philAI::DoAI(i32 player) {
     }
     CheckBuyStuff();
     IncrementHourGlass();
-    while ((aiHero = DetermineHeroToMove(player)) != NULL) {
+aiHeroLoop:
+    aiHero = DetermineHeroToMove(player);
+    if (aiHero != NULL) {
         giHumanTownConquered = GAME_TOWN_NONE;
         iCurPlaceToVisit = 0;
         if (gGameOver)
@@ -928,6 +930,7 @@ void philAI::DoAI(i32 player) {
     nextHero:
         if (aiHero->m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN))
             CheckBuyStuff();
+        goto aiHeroLoop;
     }
 }
 

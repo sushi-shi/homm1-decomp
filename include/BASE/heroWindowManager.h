@@ -66,8 +66,11 @@ public:
 // the message into the dialog-select notification (Buka 2.1
 // heroWindowManager.h; HoMM1 assigns id and command in one chain).
 #define FINISH_DIALOG_MESSAGE(message)                                                             \
-    (gpWindowManager->m_dialogResult = (message).id,                                               \
-     (message).command = (message).id = WIDGET_COMMAND_DIALOG_SELECT)
+    do {                                                                                           \
+        gpWindowManager->m_dialogResult = (message).id;                                            \
+        (message).id = WIDGET_COMMAND_DIALOG_SELECT;                                               \
+        (message).command = (message).id;                                                          \
+    } while (0)
 
 // Redraw the inclusive screen rectangle left..right, top..bottom (Buka 2.1
 // heroWindowManager.h).

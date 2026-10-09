@@ -92,7 +92,8 @@ void advManager::StopCursor(i8 stopSound) {
     if (m_previousCursorMapX != CURSOR_CELL_NONE) {
         m_mapData[m_mapOriginX + m_previousCursorMapX][m_mapOriginY + m_previousCursorMapY]
             .m_flags &= ~MAP_CELL_HERO_CURSOR;
-        m_previousCursorMapX = m_previousCursorMapY = CURSOR_CELL_NONE;
+        m_previousCursorMapY = CURSOR_CELL_NONE;
+        m_previousCursorMapX = m_previousCursorMapY;
     }
     m_cursorTurning = 0;
 }
@@ -532,7 +533,8 @@ mapCell* advManager::MoveHero(
     if (m_routeShown)
         *(m_visibilityMap + (movingHero->m_x + xInc)
           + (movingHero->m_y + yInc) * MAP_CELL_GRID_SIZE) = 0;
-    m_updateMinX = m_updateMinY = 0;
+    m_updateMinY = 0;
+    m_updateMinX = m_updateMinY;
     gpGame->SetVisibility(
         m_mapOriginX + xInc + CURSOR_MAP_DRAW_OFFSET,
         m_mapOriginY + yInc + CURSOR_MAP_DRAW_OFFSET,
@@ -616,7 +618,8 @@ mapCell* advManager::MoveHero(
         m_currentTerrain = giGroundToTerrain[step];
         gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
     }
-    m_updateMinX = m_updateMinY = 0;
+    m_updateMinY = 0;
+    m_updateMinX = m_updateMinY;
     pCursorCell = GetCell(m_cursorMapX + m_mapOriginX, m_cursorMapY + m_mapOriginY);
     *eventX = m_cursorMapX + m_mapOriginX;
     *eventY = m_cursorMapY + m_mapOriginY;

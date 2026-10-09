@@ -395,8 +395,10 @@ void army::Walk(i16 direction, i8 standAfter, i8 continued) {
     i32 nextTail;
 
     if (!continued) {
-        giMinExtentX = giMinExtentY = COMBAT_EXTENT_MIN_START;
-        giMaxExtentX = giMaxExtentY = 0;
+        giMinExtentY = COMBAT_EXTENT_MIN_START;
+        giMinExtentX = giMinExtentY;
+        giMaxExtentY = 0;
+        giMaxExtentX = giMaxExtentY;
         gComputeExtent = 1;
         gSaveBiggestExtent = 1;
         DrawToBuffer(
@@ -503,8 +505,10 @@ void army::Walk(i16 direction, i8 standAfter, i8 continued) {
             rectMaxX = giMaxExtentX;
             rectMaxY = giMaxExtentY;
         }
-        giMinExtentX = giMinExtentY = COMBAT_EXTENT_MIN_START;
-        giMaxExtentX = giMaxExtentY = 0;
+        giMinExtentY = COMBAT_EXTENT_MIN_START;
+        giMinExtentX = giMinExtentY;
+        giMaxExtentY = 0;
+        giMaxExtentX = giMaxExtentY;
         gComputeExtent = 1;
         gSaveBiggestExtent = 1;
         DrawToBuffer(
@@ -958,7 +962,8 @@ void army::DoHydraAttack(void) {
             }
         }
     }
-    m_targetSide = targetHex = ARMY_HEX_INVALID;
+    targetHex = ARMY_HEX_INVALID;
+    m_targetSide = targetHex;
     gpCombatManager->m_computeExtent = 0;
     for (occSide = 0; occSide < COMBAT_SIDE_COUNT; occSide++) {
         for (armyIndex = 0; armyIndex < gpCombatManager->m_numArmies[occSide]; armyIndex++) {
@@ -1280,7 +1285,8 @@ secondStrike:
         DoAttack(1);
         m_attackDirection = curDir;
     }
-    m_targetSide = newHex = ARMY_HEX_INVALID;
+    newHex = ARMY_HEX_INVALID;
+    m_targetSide = newHex;
     if (retaliation)
         gpCombatManager->m_currentSide = 1 - gpCombatManager->m_currentSide;
 }
@@ -1308,7 +1314,8 @@ i16 army::WalkTo(i16 destHex) {
     i8 step;
     i32 moved;
 
-    m_targetSide = m_targetIndex = COMBAT_ARMY_INDEX_NONE;
+    m_targetIndex = COMBAT_ARMY_INDEX_NONE;
+    m_targetSide = m_targetIndex;
     if (!FindPath(m_hex, destHex, m_stats.speed, 1, ARMY_PATH_ANY_TARGET_HEX))
         return ARMY_PATH_BLOCKED;
     moved = 0;

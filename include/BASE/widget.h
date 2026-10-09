@@ -48,10 +48,12 @@ H1_ENUM_CONST_END(WidgetIdConstant)
 // (Buka 2.1 widget.h). VC4 rejects an assignment through (*this).member, so
 // the widget is passed by pointer.
 #define READ_WIDGET_GEOMETRY(w, resources)                                                         \
-    ((w)->m_x = (resources)->ReadWord(),                                                           \
-     (w)->m_y = (resources)->ReadWord(),                                                           \
-     (w)->m_width = (resources)->ReadWord(),                                                       \
-     (w)->m_height = (resources)->ReadWord())
+    do {                                                                                           \
+        (w)->m_x = (resources)->ReadWord();                                                        \
+        (w)->m_y = (resources)->ReadWord();                                                        \
+        (w)->m_width = (resources)->ReadWord();                                                    \
+        (w)->m_height = (resources)->ReadWord();                                                   \
+    } while (0)
 
 #pragma pack(push, 1)
 class widget /* abstract */ {
