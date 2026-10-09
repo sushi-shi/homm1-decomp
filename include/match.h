@@ -16,11 +16,12 @@ typedef __int64 i64;
 typedef unsigned __int64 u64;
 #endif
 
-// Boolean storage: b8 and b32 hold a flag in an 8- or 32-bit integer and are
-// written with true/false. The retail view is the plain integer, so loads,
-// stores and tests compile exactly as before (C++ bool would normalize
-// stores). The strict C++20 view wraps the integer in H1Bool, which converts
-// to and from bool only: assigning or comparing an integer is an error.
+// Boolean storage: b8 and b32 hold a flag in an 8- or 32-bit integer, bchar
+// in a plain char, and are written with true/false. The retail view is the
+// plain integer, so loads, stores and tests compile exactly as before (C++
+// bool would normalize stores). The strict C++20 view wraps the integer in
+// H1Bool, which converts to and from bool only: assigning or comparing an
+// integer is an error.
 #ifndef HOMM1_BOOL_DEFINED
 #define HOMM1_BOOL_DEFINED
 #if defined(__cplusplus) && __cplusplus >= 202002L
@@ -47,9 +48,11 @@ template<typename Storage, typename Other>
 requires(!H1IsBool<Other>) bool operator==(H1Bool<Storage>, Other) = delete;
 typedef H1Bool<i8> b8;
 typedef H1Bool<i32> b32;
+typedef H1Bool<char> bchar;
 #else
 typedef i8 b8;
 typedef i32 b32;
+typedef char bchar;
 #endif
 #endif
 

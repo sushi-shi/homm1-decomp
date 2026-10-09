@@ -32,7 +32,7 @@
 // campaign maps, so the game's copy keeps only the accepting branch.
 VA(0x00453b70, 0xa)
 VA_AT(editor, 0x00416290, 0x248)
-i32 ShowThisMap(char* fileName) {
+b32 ShowThisMap(char* fileName) {
 #ifdef HOMM1_EDITOR
     if (strnicmp(fileName, "AES3", FILE_REQUESTER_SHIPPED_MAP_PREFIX_LENGTH)
         && strnicmp(fileName, "BEM2", FILE_REQUESTER_SHIPPED_MAP_PREFIX_LENGTH)
@@ -57,8 +57,8 @@ i32 ShowThisMap(char* fileName) {
         && strnicmp(fileName, "THS5", FILE_REQUESTER_SHIPPED_MAP_PREFIX_LENGTH)
         && strnicmp(fileName, "UHS6", FILE_REQUESTER_SHIPPED_MAP_PREFIX_LENGTH))
 #endif
-        return 1;
-    return 0;
+        return true;
+    return false;
 }
 
 // Counts and sorts every match of the pattern and reads .MAP headers only
@@ -312,9 +312,9 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) fileRequester::Open(i16 priority) {
     Update(false);
 #ifndef HOMM1_EDITOR
     if (gShowMapInfo)
-        gWindowManager->AddWindow(gReqExtraWindow, WINDOW_Z_ORDER_APPEND, 1);
+        gWindowManager->AddWindow(gReqExtraWindow, WINDOW_Z_ORDER_APPEND, true);
 #endif
-    gWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, 1);
+    gWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, true);
     SetOK(enableOk);
     UpdateMapInfo();
     m_messageMask = BASE_MANAGER_ACCEPT_EXECUTIVE;

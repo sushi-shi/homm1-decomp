@@ -1,0 +1,7 @@
+category	file	qualified_name	write_kind	detail	reason
+integer	include/SOURCE/KB.h	<anonymous>::gDirectConnect	variable	i8	The ConfigConnection slot of the chosen serial link: it indexes the baud-rate and COM-port tables.
+integer	include/BASE/audio.h	SetMusicSource::source	parameter	i32	Stored as gMusicSource, a SoundMusicSource value; callers pass the source compared with DIGITAL.
+integer	include/SOURCE/kbwin.h	AppCommand	result	i32	The WM_COMMAND handler's window-procedure result (the LRESULT WindowProc returns), not a truth value.
+integer	include/SOURCE/KB.h	HandleAppSpecificMenuCommands	result	i32	AppCommand's window-procedure result for the program's own menu commands: 1 passes an unknown command on.
+integer	include/SOURCE/philAI.h	philAI::RVOfPosition::hasAdjacentMonster	parameter	i8	Its one caller passes the search cell's one-bit u8 field, which the strict view cannot take as b8 without a normalizing conversion the retail body does not make.
+integer	include/SOURCE/combatManager.h	combatManager::m_castleSide	field	i8	SetupCombat stores the castle test as an int ? 1 : 0, whose retail branches a flag store cannot spell, and every reader compares it with 1.

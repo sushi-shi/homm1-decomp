@@ -43,7 +43,7 @@ H1_ENUM_STORAGE(CombatSide, i32) gSpellAITargetSide;
 // Heroes memorize spells with charges.
 #define bestHex bestHexWork // frame-slot spelling
 VA(0x00458de0, 0x196)
-i32 combatManager::DoSpellAI(H1_ENUM_PARAM(CombatSide, i8) side) {
+b32 combatManager::DoSpellAI(H1_ENUM_PARAM(CombatSide, i8) side) {
     H1_ENUM_LOCAL(SpellType, i32) chosenSpell;
     i32 bestValue;
     i32 effect;
@@ -55,7 +55,7 @@ i32 combatManager::DoSpellAI(H1_ENUM_PARAM(CombatSide, i8) side) {
     chosenSpell = SPELL_NONE;
     bestHex = -1;
     if (m_heroes[side] == NULL)
-        return 0;
+        return false;
     if (m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] == HERO_SPELL_POWER_ONE)
         gSpellAIEffectShift = 2;
     else if (m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER]
@@ -79,9 +79,9 @@ i32 combatManager::DoSpellAI(H1_ENUM_PARAM(CombatSide, i8) side) {
         gNextAction = ACTION_CAST_SPELL;
         gNextActionExtra = H1_ENUM_ENCODE(SpellType, chosenSpell);
         gNextActionGridIndex = bestHex;
-        return 1;
+        return true;
     }
-    return 0;
+    return false;
 }
 #undef bestHex
 
@@ -302,7 +302,7 @@ void combatManager::ClearEffects(void) {
     i32 armyIndex;
     for (side = COMBAT_SIDE_FIRST; side < COMBAT_SIDE_COUNT; ++side) {
         for (armyIndex = 0; armyIndex < ARMY_GROUP_SLOT_COUNT; ++armyIndex)
-            gArmyEffected[side][armyIndex] = 0;
+            gArmyEffected[side][armyIndex] = false;
     }
 }
 
@@ -479,7 +479,8 @@ void combatManager::EffectSpellDamage(
             if (targetArmy->m_stats.hitPoints > 0
                 && !gArmyEffected[m_hexCells[hex].m_occupantSide]
                                  [m_hexCells[hex].m_occupantIndex]) {
-                gArmyEffected[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex] = 1;
+                gArmyEffected[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex] =
+                    true;
                 if (!ARMY_IGNORES_SPELLS(targetArmy)) {
                     if (targetArmy->m_creatureType == CREATURE_DWARF)
                         expectedDamage = baseDamage * 0.75;

@@ -165,7 +165,7 @@ void DDInitGraphics(void) {
 #line 122
         DDSD(result, __FILE__, __LINE__);
     if (CURRENT_GRAPHICS_CONFIG.fullScreen != 0) {
-        SetMenuStatus(0);
+        SetMenuStatus(false);
         result = gDD->SetCooperativeLevel(
             gAppWindow,
             DDSCL_EXCLUSIVE | DDSCL_FULLSCREEN | DDSCL_ALLOWREBOOT
@@ -613,7 +613,7 @@ void DDSetFullScreenStatus(i32 fullScreen) {
         gWinGraphBusy = true;
         CURRENT_GRAPHICS_CONFIG.fullScreen = fullScreen;
         if (CURRENT_GRAPHICS_CONFIG.fullScreen != 0)
-            SetMenuStatus(0);
+            SetMenuStatus(false);
 
         hres = gDD->SetCooperativeLevel(
             gAppWindow,
@@ -653,7 +653,7 @@ void DDSetFullScreenStatus(i32 fullScreen) {
         WritePrefs();
         gWinGraphBusy = false;
         if (CURRENT_GRAPHICS_CONFIG.fullScreen == 0) {
-            SetMenuStatus(1);
+            SetMenuStatus(true);
             ResizeWindow(x, y, width, windowHeight);
         } else {
             CURRENT_GRAPHICS_CONFIG.x = x;
@@ -1102,7 +1102,7 @@ BOOL SetGraphicsType(H1_ENUM_PARAM(WingraphGraphicsType, i32) graphicsType) {
     );
     free(buffer);
     if (fullState != 0 && graphicsType == WINGRAPH_GRAPHICS_WING) {
-        SetMenuStatus(1);
+        SetMenuStatus(true);
         ResizeWindow(x, y, width, hgt);
     }
     BlitBitmapToScreen(

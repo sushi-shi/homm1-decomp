@@ -28,12 +28,12 @@ town::town(void) {
 }
 
 VA(0x0045ea20, 0x43)
-i8 town::HasGarrison(void) {
+b8 town::HasGarrison(void) {
     for (i16 slot = 0; slot < ARMY_GROUP_SLOT_COUNT; ++slot) {
         if (m_army.m_creatureTypes[slot] != CREATURE_NONE)
-            return 1;
+            return true;
     }
-    return 0;
+    return false;
 }
 
 VA(0x0045ea63, 0xb9)

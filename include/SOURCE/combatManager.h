@@ -213,13 +213,13 @@ public:
     // game::ViewArmy).
     H1_ENUM_ARRAY(class armyGroup*, m_armyGroups, CombatSide, COMBAT_SIDE_COUNT);
     // Set by a surrender (ProcessNextAction).
-    H1_ENUM_ARRAY(i8, m_sideSurrendered, CombatSide, COMBAT_SIDE_COUNT);
+    H1_ENUM_ARRAY(b8, m_sideSurrendered, CombatSide, COMBAT_SIDE_COUNT);
     // SetupCombat copies gHumanPlayer per side; a bad-morale roll may spare
     // a computer side.
-    H1_ENUM_ARRAY(char, m_humanPlayerSide, CombatSide, COMBAT_SIDE_COUNT);
+    H1_ENUM_ARRAY(bchar, m_humanPlayerSide, CombatSide, COMBAT_SIDE_COUNT);
     H1_ENUM_ARRAY(i8, m_playerId, CombatSide, COMBAT_SIDE_COUNT);
     H1_ENUM_ARRAY(i32, m_experienceValue, CombatSide, COMBAT_SIDE_COUNT);
-    H1_ENUM_ARRAY(i8, m_heroCastSpell, CombatSide, COMBAT_SIDE_COUNT);
+    H1_ENUM_ARRAY(b8, m_heroCastSpell, CombatSide, COMBAT_SIDE_COUNT);
     // Live stacks per side (CastMassSpell walks each side's armies).
     H1_ENUM_ARRAY(i16, m_numArmies, CombatSide, COMBAT_SIDE_COUNT);
     H1_ENUM_ARRAY_ROWS(army, m_armies, CombatSide, COMBAT_SIDE_COUNT, COMBAT_SIDE_ARMY_COUNT);
@@ -273,7 +273,7 @@ public:
     i16 m_unused6f9;
     // ProcessCombatMsg ignores message types outside this mask.
     i16 m_messageTypeMask;
-    H1_ENUM_ARRAY(i8, m_sideRetreated, CombatSide, COMBAT_SIDE_COUNT);
+    H1_ENUM_ARRAY(b8, m_sideRetreated, CombatSide, COMBAT_SIDE_COUNT);
     // Per stack draw state: ResetLimitCreature clears it (-1 for the dead)
     // and army::SpellEffect marks the stack it animates.
     H1_ENUM_ARRAY_ROWS(
@@ -325,28 +325,28 @@ public:
     void DrawFrame(b8 updateScreen);
     void SetDrawRightToLeft(i8 rightToLeft);
     i8 ViewGeneral(H1_ENUM_PARAM(CombatSide, i32) side, b32 allowActions, b32 quickView);
-    void ViewArmy(class army* viewedArmy, H1_ENUM_PARAM(CombatSide, i32) side, i32 quickView);
-    i8 ViewSpells(i32);
-    i8 ValidSpellTarget(H1_ENUM_PARAM(SpellType, i8) spell, i8 hex);
+    void ViewArmy(class army* viewedArmy, H1_ENUM_PARAM(CombatSide, i32) side, b32 quickView);
+    b8 ViewSpells(i32);
+    b8 ValidSpellTarget(H1_ENUM_PARAM(SpellType, i8) spell, i8 hex);
     void SpellMessage(H1_ENUM_PARAM(SpellType, i8) spell, i8 hex);
     void
     CastSpell(H1_ENUM_PARAM(SpellType, i8) spell, i8 targetHex, b8 castByCreature, i8 teleportDest);
     void DefaultSpell(i8 targetHex);
     // Cure (one side) and Dispel (both sides) animation; side 2 means both.
-    void CastMassSpell(H1_ENUM_PARAM(CombatSide, i8) castSide, i8 cureOnly);
+    void CastMassSpell(H1_ENUM_PARAM(CombatSide, i8) castSide, b8 cureOnly);
     // Cancels the side's spells after the mass animation.
-    void CancelSideSpells(H1_ENUM_PARAM(CombatSide, i8) side, i8 cureOnly);
+    void CancelSideSpells(H1_ENUM_PARAM(CombatSide, i8) side, b8 cureOnly);
     void Fireball(i8 targetHex);
     void MeteorShower(i8 targetHex);
     void ElementalStorm(void);
     void Armageddon(void);
-    i8 ValidHexToStandOn(i32 hex);
+    b8 ValidHexToStandOn(i32 hex);
     void SetCombatDirections(i32 targetHex);
     void CheckSetMouseDirection(i32 mouseX, i32 mouseY, i32 targetHex);
     H1_ENUM_RETURN(CombatPointerCode, i32) GetPointer(H1_ENUM_PARAM(CombatMessageCommand, i32) command);
     H1_ENUM_RETURN(MessageDispatchResult, i32) ProcessCombatMsg(struct tag_message& message);
     void ResetRound(void);
-    i32 CheckWin(struct tag_message* message);
+    b32 CheckWin(struct tag_message* message);
     H1_ENUM_RETURN(CombatMessageCommand, i8) GetCommand(i16 hex);
     i8 RightClick(i8 hex);
     void DoCommand(H1_ENUM_PARAM(CombatMessageCommand, i8) command);
@@ -362,7 +362,7 @@ public:
     void GetControl(void);
     void ResetMouse(void);
     H1_ENUM_RETURN(MessageDispatchResult, i16) ProcessNextAction(struct tag_message& message);
-    i32 DoSpellAI(H1_ENUM_PARAM(CombatSide, i8) side);
+    b32 DoSpellAI(H1_ENUM_PARAM(CombatSide, i8) side);
     void DetermineEffectOfSpell(H1_ENUM_PARAM(SpellType, i32) spell, i32* bestEffect, i32* bestHex);
     i32 EffectSpellCreateCreature(i32 hex, i32 spell);
     i32 RawEffectSpellInfluence(class army* target, H1_ENUM_PARAM(SpellType, i32) spell);
@@ -396,7 +396,7 @@ public:
     void UpdateArmyGroup(H1_ENUM_PARAM(CombatSide, i8) side);
     void GenerateMap(void);
     char* GetBackgroundName(void);
-    i8 MoreTreesNear(void);
+    b8 MoreTreesNear(void);
     // No callers; rebuilds the field and redraws.
     void RegenerateField(void);
     void LoadIcons(void);
@@ -405,9 +405,9 @@ public:
     void FreeArmies(void);
     i16 GetGridIndex(i16 x, i16 y);
     void CheckApplyGoodMorale(H1_ENUM_PARAM(CombatSide, i32) side, i32 index);
-    i32 CheckApplyBadMorale(H1_ENUM_PARAM(CombatSide, i32) side, i32 index);
-    i8 GetNextArmy(b32 checkMorale);
-    i8 IsWinner(H1_ENUM_PARAM(CombatSide, i8) side);
+    b32 CheckApplyBadMorale(H1_ENUM_PARAM(CombatSide, i32) side, i32 index);
+    b8 GetNextArmy(b32 checkMorale);
+    b8 IsWinner(H1_ENUM_PARAM(CombatSide, i8) side);
     void CatAttack(H1_ENUM_PARAM(CombatSide, i8) side);
     // A town has a single keep.
     void KeepAttack(void);
@@ -415,7 +415,7 @@ public:
     void ResetHitByCreature(void);
     void SaveCombatBorder(void);
     void DrawCombatBorder(void);
-    i32 AICheckRetreat(void);
+    b32 AICheckRetreat(void);
     void DoCompAI(H1_ENUM_PARAM(CombatSide, i8) side);
     i16 GetShooterMask(H1_ENUM_PARAM(CombatSide, i8) side);
     i16 GetFlyerMask(H1_ENUM_PARAM(CombatSide, i8) side);
@@ -424,14 +424,14 @@ public:
     i16 GetWorstArmy(H1_ENUM_PARAM(CombatSide, i8) side, i16 mask);
     i16 GetClosestArmy(class army* currentArmy, H1_ENUM_PARAM(CombatSide, i8) side, i16 mask);
     u32 GetStrength(H1_ENUM_PARAM(CombatSide, i8) side, i16 mask);
-    i8 AttemptAttack(class army* currentArmy, H1_ENUM_PARAM(CombatSide, i8) side, i16 mask);
-    i8 AttemptAdjacentAttack(class army* currentArmy);
-    i8 WalkTowardArmyFront(class army* currentArmy, H1_ENUM_PARAM(CombatSide, i8) side, i16 mask);
-    i8 WalkTowardArmy(class army* currentArmy, H1_ENUM_PARAM(CombatSide, i8) side, i16 mask);
+    b8 AttemptAttack(class army* currentArmy, H1_ENUM_PARAM(CombatSide, i8) side, i16 mask);
+    b8 AttemptAdjacentAttack(class army* currentArmy);
+    b8 WalkTowardArmyFront(class army* currentArmy, H1_ENUM_PARAM(CombatSide, i8) side, i16 mask);
+    b8 WalkTowardArmy(class army* currentArmy, H1_ENUM_PARAM(CombatSide, i8) side, i16 mask);
 };
 #pragma pack(pop)
 
-i32 ValidHex(i32 hex);
+b32 ValidHex(i32 hex);
 H1_ENUM_RETURN(MessageDispatchResult, i16) WinCombatHandler(struct tag_message& message);
 H1_ENUM_RETURN(MessageDispatchResult, i16) CombatSpecialHandler(struct tag_message& message);
 H1_ENUM_RETURN(MessageDispatchResult, i16) HandleCastSpell(struct tag_message& message);

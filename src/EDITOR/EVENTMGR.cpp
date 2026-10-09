@@ -998,7 +998,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) ClearWindowHandler(tag_message& messa
 }
 
 VA(0x0040b67a, 0x152)
-i32 MapDetailsDialog(b32) {
+b32 MapDetailsDialog(b32) {
     SMapHeader saved;
 
     saved = *gMapHeader;

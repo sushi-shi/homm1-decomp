@@ -148,7 +148,7 @@ i8 combatManager::ViewGeneral(
     }
     if (quickView) {
         gMouseManager->ReallyHidePointer();
-        gWindowManager->AddWindow(wnd, WINDOW_Z_ORDER_APPEND, 1);
+        gWindowManager->AddWindow(wnd, WINDOW_Z_ORDER_APPEND, true);
         QuickViewWait();
         gWindowManager->RemoveWindow(wnd);
         gMouseManager->ReallyShowPointer();
@@ -257,7 +257,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) HandleViewGeneral(tag_message& messag
 #define unusedViewOffsetX viewXOffsetFixed  // frame-slot spelling
 #define unusedViewOffsetY viewYOffsetConst  // frame-slot spelling
 VA(0x00466595, 0x135)
-void combatManager::ViewArmy(army* viewedArmy, H1_ENUM_PARAM(CombatSide, i32) side, i32 quickView) {
+void combatManager::ViewArmy(army* viewedArmy, H1_ENUM_PARAM(CombatSide, i32) side, b32 quickView) {
     i16 windowX;
     i16 unusedViewOffsetY;
     i16 windowY;

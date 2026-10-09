@@ -62,12 +62,12 @@ public:
         i8 portraitFrame,
         class armyGroup* troops,
         i16 firstBorderId,
-        i32 drawWindow
+        b32 drawWindow
     );
     ~strip();
     // --- methods ---
     void Draw(void);
-    void DrawIcons(i8 drawWindow);
+    void DrawIcons(b8 drawWindow);
     void DrawFrame(void);
 };
 #pragma pack(pop)

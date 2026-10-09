@@ -117,7 +117,7 @@ public:
     // --- constructors ---
     town(void);
     // --- methods ---
-    i8 HasGarrison(void);
+    b8 HasGarrison(void);
     i8 OccupyingHero(void) {
         return m_occupyingHeroId;
     }

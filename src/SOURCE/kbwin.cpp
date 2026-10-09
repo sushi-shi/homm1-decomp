@@ -165,7 +165,7 @@ BOOL AppInit(HINSTANCE instance, HINSTANCE previousInstance, i32 showCommand, ch
         ShowWindow(gAppWindow, showCommand);
         SetWindowLongA(gAppWindow, GWL_STYLE, gCurWindowsStyleFlags);
         if (CURRENT_GRAPHICS_CONFIG.showMenu == 0)
-            SetMenuStatus(0);
+            SetMenuStatus(false);
         InitGraphics();
         SetCursor(LoadCursorA(NULL, IDC_ARROW));
         oldmain();
@@ -500,7 +500,7 @@ void KBChangeMenu(HMENU menu) {
 }
 
 VA(0x00443bb5, 0x118)
-void SetMenuStatus(i32 showMenu) {
+void SetMenuStatus(b32 showMenu) {
     i32 winWidth;
     i32 height;
     i32 windowStyle;

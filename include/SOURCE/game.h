@@ -384,15 +384,15 @@ public:
     }
     // --- methods ---
     void Overview(void);
-    i8 SetupCampaignGame(void);
-    i8 SetupBaud(void);
-    i8 SetupComPort(void);
-    i8 SetupHotSeatGame(void);
-    i8 SetupNetworkGame(void);
-    i8 SetupModemGame(void);
-    i8 SetupMultiPlayerGame(void);
-    i8 SetupGame(b8 newGame);
-    i8 PickLoadGame(void);
+    b8 SetupCampaignGame(void);
+    b8 SetupBaud(void);
+    b8 SetupComPort(void);
+    b8 SetupHotSeatGame(void);
+    b8 SetupNetworkGame(void);
+    b8 SetupModemGame(void);
+    b8 SetupMultiPlayerGame(void);
+    b8 SetupGame(b8 newGame);
+    b8 PickLoadGame(void);
     void ShowCampaignInfo(i32 scenario, b32 viewOnly, i32);
     void InitEntireCampaign(i32 side);
     // Retail InitCampaignMap takes the scenario and an unused int (ret 8).
@@ -420,7 +420,7 @@ public:
         class hero* spellHero,
         H1_ENUM_PARAM(HeroSpellType, i8) spellType,
         H1_ENUM_RETURN(MessageDispatchResult, i16) (*callback)(struct tag_message&),
-        i8 readOnly
+        b8 readOnly
     );
     // Limits the spell page to the combat or adventure slots.
     void SetupSpellRange(H1_ENUM_PARAM(HeroSpellType, i16) spellType);
@@ -433,7 +433,7 @@ public:
         class town* castle,
         b8 disableDismiss,
         H1_ENUM_PARAM(ArmyFacing, i8) facing,
-        i8 quickView,
+        b8 quickView,
         class hero* theHero,
         class army* theArmy,
         class armyGroup* theGroup
@@ -475,10 +475,10 @@ public:
     void RandomizeTerrainTiles(void);
     void ProcessMapExtra(void);
     // Retail returns whether no town took an owner from its map extra (AL).
-    i8 SetupTowns(void);
+    b8 SetupTowns(void);
     void ProcessOnMapHeroes(void);
     void CheckHeroConsistency(void);
-    i32 TransmitSaveGame(i32 remotePlayer, i32 playerExited);
+    b32 TransmitSaveGame(i32 remotePlayer, b32 playerExited);
     b32 ReceiveSaveGame(i32 dataSize, i32 remotePlayer);
     void DoNewTurn(void);
     i32 GetBoatsBuilt(void);
@@ -490,7 +490,7 @@ public:
     // Retail GetMap never reads ecx; its caller passes no this.
     static void GetMap(void);
     // Retail returns the started flag in AL.
-    i8 NewGame(void);
+    b8 NewGame(void);
     void UpdateNewGameWindow(void);
     void ShowScenInfo(void);
     // NewMap gives every opponent a distinct crest.

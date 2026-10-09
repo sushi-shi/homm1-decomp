@@ -1745,7 +1745,7 @@ void NormalDialog(
 
     if (dialogType == NORMAL_DIALOG_TYPE_QUICK_VIEW) {
         gMouseManager->ReallyHidePointer();
-        gWindowManager->AddWindow(gNormalDialogWindow, WINDOW_Z_ORDER_APPEND, 1);
+        gWindowManager->AddWindow(gNormalDialogWindow, WINDOW_Z_ORDER_APPEND, true);
         QuickViewWait();
         gWindowManager->RemoveWindow(gNormalDialogWindow);
         gMouseManager->ReallyShowPointer();
@@ -1784,7 +1784,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) EventWindowHandler(tag_message& messa
 VA(0x00409056, 0x7a)
 void QuickViewWait(void) {
     tag_message event;
-    i32 done = 0;
+    b32 done = false;
     while (!done) {
         PollSound();
         Process1WindowsMessage();

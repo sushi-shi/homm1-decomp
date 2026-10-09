@@ -39,7 +39,7 @@ void ConvertSmackerPalette(u8* paletteData);
 void DoAdvance(Smack* smack, b32 drawFrame, b32 advanceFrame, b32 updatePalette, b32 skipPalette);
 void SmackMain();
 void CloseSmackers();
-i32 PlaySmacker(H1_ENUM_PARAM(SmackVideo, i32) smackNumber);
+b32 PlaySmacker(H1_ENUM_PARAM(SmackVideo, i32) smackNumber);
 
 // InitSmackSound tries the wave formats from 44 kHz 16-bit stereo down to
 // 11 kHz 8-bit mono and falls back to 22 kHz 8-bit mono when the device

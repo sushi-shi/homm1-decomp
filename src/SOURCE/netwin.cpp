@@ -20,7 +20,7 @@
 // asserts.
 
 VA(0x00444c90, 0x94)
-i32 is_netbios_avail(void) {
+b32 is_netbios_avail(void) {
     NCB ncb;
     memset(&ncb, 0, sizeof(ncb));
     for (gNetbiosLana = 0; gNetbiosLana < MAX_LANA; gNetbiosLana++) {
@@ -32,9 +32,9 @@ i32 is_netbios_avail(void) {
     }
     if (gNetbiosLana < MAX_LANA) {
         gNetbiosAvail = 1;
-        return 1;
+        return true;
     }
-    return 0;
+    return false;
 }
 
 VA(0x00444d24, 0x19b)

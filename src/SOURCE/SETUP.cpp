@@ -25,7 +25,7 @@
 
 // The stpcmpgn.bin dialog driven by SetupCampaignGameHandler.
 VA(0x00456b10, 0x10d)
-i8 game::SetupCampaignGame(void) {
+b8 game::SetupCampaignGame(void) {
     heroWindow* window = new heroWindow(400, 35, "stpcmpgn.bin");
     if (!window)
         MemError();
@@ -45,13 +45,13 @@ i8 game::SetupCampaignGame(void) {
             gCampaignChoice = CAMPAIGN_ALAMAR;
             break;
         case DIALOG_CANCEL:
-            return 0;
+            return false;
     }
-    return 1;
+    return true;
 }
 
 VA(0x00456c1d, 0x139)
-i8 game::SetupBaud(void) {
+b8 game::SetupBaud(void) {
     heroWindow* window = new heroWindow(400, 35, "stpbaud.bin");
     if (!window)
         MemError();
@@ -71,13 +71,13 @@ i8 game::SetupBaud(void) {
             gConfig.baudRate[H1_ENUM_DECODE(ConfigConnection, gDirectConnect)] = CBR_38400;
             break;
         case DIALOG_CANCEL:
-            return 0;
+            return false;
     }
-    return 1;
+    return true;
 }
 
 VA(0x00456d56, 0x1ae)
-i8 game::SetupComPort(void) {
+b8 game::SetupComPort(void) {
     char initString[40];
 
     heroWindow* setupWindow = new heroWindow(400, 35, "stpcom.bin");
@@ -99,10 +99,10 @@ i8 game::SetupComPort(void) {
             gConfig.comPort[H1_ENUM_DECODE(ConfigConnection, gDirectConnect)] = 4;
             break;
         case DIALOG_CANCEL:
-            return 0;
+            return false;
     }
     if (!SetupBaud())
-        return 0;
+        return false;
     if (!gDirectConnect) {
         strcpy(gConfig.modemInitString, "ATZ");
         sprintf(gText, "%s", gConfig.modemInitString);
@@ -115,11 +115,11 @@ i8 game::SetupComPort(void) {
         strcpy(gConfig.modemInitString, initString);
     }
     WritePrefs();
-    return 1;
+    return true;
 }
 
 VA(0x00456f04, 0x107)
-i8 game::SetupHotSeatGame(void) {
+b8 game::SetupHotSeatGame(void) {
     heroWindow* window = new heroWindow(400, 35, "stphotst.bin");
     if (!window)
         MemError();
@@ -136,13 +136,13 @@ i8 game::SetupHotSeatGame(void) {
             gNumHumanPlayers = 4;
             break;
         case DIALOG_CANCEL:
-            return 0;
+            return false;
     }
-    return 1;
+    return true;
 }
 
 VA(0x0045700b, 0xe7)
-i8 game::SetupNetworkGame(void) {
+b8 game::SetupNetworkGame(void) {
     heroWindow* window = new heroWindow(400, 35, "stpnet.bin");
     if (!window)
         MemError();
@@ -156,13 +156,13 @@ i8 game::SetupNetworkGame(void) {
             gMapExtendedType = REMOTE_GAME_NETWORK_GUEST;
             break;
         case DIALOG_CANCEL:
-            return 0;
+            return false;
     }
-    return 1;
+    return true;
 }
 
 VA(0x004570f2, 0x299)
-i8 game::SetupModemGame(void) {
+b8 game::SetupModemGame(void) {
     heroWindow* window;
 
     if (gDirectConnect) {
@@ -185,7 +185,7 @@ i8 game::SetupModemGame(void) {
             gMapExtendedType = REMOTE_GAME_MODEM_HOST;
             if (gConfig.comPort[H1_ENUM_DECODE(ConfigConnection, gDirectConnect)] == 0) {
                 if (!SetupComPort())
-                    return 0;
+                    return false;
             }
             if (!gDirectConnect)
                 GetDataEntry(localization::Tr("modem.telephone.required"), gPhoneNumber, 35, NULL);
@@ -194,19 +194,19 @@ i8 game::SetupModemGame(void) {
             gMapExtendedType = REMOTE_GAME_MODEM_GUEST;
             if (gConfig.comPort[H1_ENUM_DECODE(ConfigConnection, gDirectConnect)] == 0
                 && !SetupComPort())
-                return 0;
+                return false;
             break;
         case CHOICE_THREE:
             gDoModemConfig = true;
             break;
         case DIALOG_CANCEL:
-            return 0;
+            return false;
     }
-    return 1;
+    return true;
 }
 
 VA(0x0045738b, 0x1a2)
-i8 game::SetupMultiPlayerGame(void) {
+b8 game::SetupMultiPlayerGame(void) {
     b32 loop;
 
     heroWindow* window = new heroWindow(400, 35, "stpmp.bin");
@@ -220,12 +220,12 @@ i8 game::SetupMultiPlayerGame(void) {
         case CHOICE_ONE:
             gMapBaseType = MULTIPLAYER_BASE_HOT_SEAT;
             if (!SetupHotSeatGame())
-                return 0;
+                return false;
             break;
         case CHOICE_TWO:
             gMapBaseType = MULTIPLAYER_BASE_NETWORK;
             if (!SetupNetworkGame())
-                return 0;
+                return false;
             break;
         case CHOICE_FOUR:
             gDirectConnect = 1;
@@ -237,25 +237,25 @@ i8 game::SetupMultiPlayerGame(void) {
             loop = true;
             while (loop) {
                 if (!SetupModemGame())
-                    return 0;
+                    return false;
                 if (gDoModemConfig) {
                     gDoModemConfig = false;
                     if (!SetupComPort())
-                        return 0;
+                        return false;
                 } else {
                     loop = false;
                 }
             }
             break;
         case DIALOG_CANCEL:
-            return 0;
+            return false;
     }
-    return 1;
+    return true;
 }
 
 // The menu shortcuts keep separate restart and load command ids.
 VA(0x0045752d, 0x372)
-i8 game::SetupGame(b8 newGame) {
+b8 game::SetupGame(b8 newGame) {
     heroWindow* window;
     b32 result;
 
@@ -389,14 +389,14 @@ done:
 }
 
 VA(0x0045789f, 0x1c1)
-i8 game::PickLoadGame(void) {
+b8 game::PickLoadGame(void) {
     fileRequester* fileReq;
     i16 dialogResult;
 
     if (!SetupGame(false))
-        return 0;
+        return false;
     if (gWaitForRemoteReceive)
-        return 1;
+        return true;
     fileReq = new fileRequester(
         0x136,
         0xe,
@@ -413,10 +413,10 @@ i8 game::PickLoadGame(void) {
     if (dialogResult == DIALOG_BUTTON_2) {
         gGame->LoadGame(gLastFilename, false, false);
         delete fileReq;
-        return 1;
+        return true;
     } else {
         delete fileReq;
-        return 0;
+        return false;
     }
 }
 

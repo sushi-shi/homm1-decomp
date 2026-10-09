@@ -9045,7 +9045,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) editManager::Open(i16 priority) {
     m_window->AddWidget(m_verticalTrack, WINDOW_Z_ORDER_APPEND);
     m_window->AddWidget(m_horizontalKnob, WINDOW_Z_ORDER_APPEND);
     m_window->AddWidget(m_verticalKnob, WINDOW_Z_ORDER_APPEND);
-    gWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, 1);
+    gWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, true);
     m_groundTiles[EDIT_ZOOM_NORMAL] = gResourceManager->GetTileset("ground32.til");
     m_groundTiles[EDIT_ZOOM_OUT] = gResourceManager->GetTileset("ground16.til");
     m_cloudTiles[EDIT_ZOOM_NORMAL] = gResourceManager->GetTileset("clof32.til");

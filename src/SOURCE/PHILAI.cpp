@@ -2491,12 +2491,12 @@ void philAI::EvaluateOneTimeCreaturePurchase(
 }
 
 VA(0x0044d521, 0x300)
-i32 philAI::QuickCombat(
+b32 philAI::QuickCombat(
     armyGroup* attacker,
     hero* attackerHero,
     armyGroup* defender,
     hero* defenderHero,
-    i8 townBattle,
+    b8 townBattle,
     i8 townId,
     float& attackerCasualtyFraction,
     float& defenderCasualtyFraction
@@ -2854,7 +2854,7 @@ void philAI::HeroInteractionAtTown(
 
 // Weighs the experience by the hero's AI fight value.
 VA(0x0044e236, 0x3f)
-i32 philAI::ChooseGoldOrExperience(hero* heroPointer, i32 gold, i32 experience) {
+b32 philAI::ChooseGoldOrExperience(hero* heroPointer, i32 gold, i32 experience) {
     i32 goldRV;
     i32 expRV;
 
@@ -3048,7 +3048,7 @@ b32 philAI::CanBuyBHC(BHC& purchase) {
 }
 
 VA(0x0044e8bc, 0x170)
-i8 philAI::CombatMonsterEvent(
+b8 philAI::CombatMonsterEvent(
     hero* heroPointer,
     H1_ENUM_PARAM(CreatureType, i8) monsterType,
     i32* monsterCount,
@@ -3076,7 +3076,7 @@ i8 philAI::CombatMonsterEvent(
         heroPointer,
         gMonGroup,
         NULL,
-        0,
+        false,
         0,
         heroCasualtyFraction,
         guardLosses
@@ -3086,8 +3086,8 @@ i8 philAI::CombatMonsterEvent(
         remaining += gMonGroup->m_creatureCounts[i];
     *monsterCount = remaining;
     if (result != 0)
-        return 1;
-    return 0;
+        return true;
+    return false;
 }
 
 #define netValue theWorth             // frame-slot spelling
@@ -3149,7 +3149,7 @@ void philAI::FightEvent(hero* heroPointer, mapCell* cell) {
             heroPointer,
             gMonGroup,
             NULL,
-            0,
+            false,
             0,
             heroCasualtyFraction,
             ghostLossFraction
@@ -3179,16 +3179,16 @@ void philAI::FightEvent(hero* heroPointer, mapCell* cell) {
 #undef rewardValue
 
 VA(0x0044ec5b, 0x55)
-i32 philAI::DamageGroup(armyGroup* group, hero* loser, hero* winner, float casualtyFraction) {
+b32 philAI::DamageGroup(armyGroup* group, hero* loser, hero* winner, float casualtyFraction) {
     if (casualtyFraction < 0.99) {
         group->DamageGroup(casualtyFraction);
-        return 0;
+        return false;
     } else {
         if (loser != NULL)
             gAdvManager->HeroLoses(loser);
         else
             group->DamageGroup(casualtyFraction);
-        return 1;
+        return true;
     }
 }
 
@@ -3245,7 +3245,7 @@ void philAI::TownEvent(mapCell* cell, hero* heroPointer, i32 x, i32 y) {
                     heroPointer,
                     &targetCastle->m_army,
                     NULL,
-                    1,
+                    true,
                     targetCastle->m_id,
                     heroCasualtyFraction,
                     garrisonCasualtyFraction

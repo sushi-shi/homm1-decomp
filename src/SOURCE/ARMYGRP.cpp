@@ -63,12 +63,12 @@ void armyGroup::Dismiss(i8 slot) {
 }
 
 VA(0x0041862f, 0x47)
-i8 armyGroup::IsMember(H1_ENUM_PARAM(CreatureType, i8) creatureType) {
+b8 armyGroup::IsMember(H1_ENUM_PARAM(CreatureType, i8) creatureType) {
     for (i16 slot = 0; slot < ARMY_GROUP_SLOT_COUNT; ++slot) {
         if (m_creatureTypes[slot] == creatureType)
-            return 1;
+            return true;
     }
-    return 0;
+    return false;
 }
 
 // Races are six consecutive creature ids.
@@ -112,12 +112,12 @@ H1_ENUM_RETURN(ArmyGroupAlignmentResult, i8) armyGroup::IsHomogeneous(i8 alignme
 }
 
 VA(0x004187b4, 0x3b)
-i8 armyGroup::CanJoin(H1_ENUM_PARAM(CreatureType, i8) creatureType) {
+b8 armyGroup::CanJoin(H1_ENUM_PARAM(CreatureType, i8) creatureType) {
     if (IsMember(creatureType))
-        return 1;
+        return true;
     if (IsMember(CREATURE_NONE))
-        return 1;
-    return 0;
+        return true;
+    return false;
 }
 
 VA(0x004187ef, 0x52)

@@ -1177,8 +1177,8 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
             break;
     }
     UpdateRadar(true, false);
-    UpdateHeroLocators(true, 1);
-    UpdateTownLocators(true, 1);
+    UpdateHeroLocators(true, true);
+    UpdateTownLocators(true, true);
     UpdBottomView(true, true, true);
     if (removeObj) {
         EraseObj(cell, x, y);
@@ -1274,8 +1274,8 @@ void advManager::TownEvent(class mapCell* cell, i32 x, i32 y) {
     } else {
         gGame->ClaimTown(eventTown->m_id, gCurPlayer);
         UpdateRadar(true, false);
-        UpdateHeroLocators(true, 1);
-        UpdateTownLocators(true, 1);
+        UpdateHeroLocators(true, true);
+        UpdateTownLocators(true, true);
         eventTown->m_occupyingHeroId = gCurPlayerData->CurrentHero();
         eventTown->View();
     }
@@ -1936,7 +1936,7 @@ void advManager::HeroLoses(class hero* lostHero) {
     lostHero->Deallocate();
     FizzleCenter(EVENT_FIZZLE_KILL);
     UpdateRadar(true, false);
-    UpdateHeroLocators(true, 1);
+    UpdateHeroLocators(true, true);
 }
 
 VA(0x00427af9, 0x122)
@@ -2380,7 +2380,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                     eventHero,
                     &opponent->m_army,
                     opponent,
-                    0,
+                    false,
                     0,
                     ourLosses,
                     theirLosses
@@ -2391,7 +2391,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                         eventHero,
                         &heroTown->m_army,
                         NULL,
-                        1,
+                        true,
                         heroTown->m_id,
                         ourLosses,
                         theirLosses
@@ -2929,7 +2929,7 @@ void advManager::SendHeroTownData(
     b8 combatSurrender
 ) {
     RemoteMessage* reply;
-    i32 result;
+    b32 result;
     // One allocation carries the combat record, then each hero fragment.
     union {
         combatRemoteData* combat;
@@ -3021,7 +3021,7 @@ void advManager::ReceiveHeroTownData(
     b8* combatSurrender
 ) {
     b8 hasTownOn;
-    i32 confirmSent;
+    b32 confirmSent;
     i32 lastReceiveTick;
     i8 firstOwner;
     i8 secondOwner;

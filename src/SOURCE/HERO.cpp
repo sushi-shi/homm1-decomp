@@ -46,14 +46,14 @@ VA(0x00438f7d, 0xd)
 void hero::GetArmyStrengths(u32* const) {}
 
 VA(0x00438f8a, 0x4b)
-i8 hero::HasArtifact(H1_ENUM_PARAM(ArtifactType, i8) artifact) {
+b8 hero::HasArtifact(H1_ENUM_PARAM(ArtifactType, i8) artifact) {
     i16 i;
 
     for (i = 0; i < HERO_ARTIFACT_SLOT_COUNT; i++) {
         if (m_artifacts[i] == artifact)
-            return 1;
+            return true;
     }
-    return 0;
+    return false;
 }
 
 VA(0x00438fd5, 0x1bd)
@@ -106,14 +106,14 @@ i16 hero::CalcMobility(void) {
 }
 
 VA(0x00439192, 0x41)
-i8 hero::HasSpell(H1_ENUM_PARAM(SpellType, i8) spell) {
+b8 hero::HasSpell(H1_ENUM_PARAM(SpellType, i8) spell) {
     i32 i;
 
     for (i = 0; i < HERO_SPELL_SLOT_COUNT; i++) {
         if (m_spells[i] == spell)
-            return 1;
+            return true;
     }
-    return 0;
+    return false;
 }
 
 VA(0x004391d3, 0xc8)
@@ -231,7 +231,7 @@ void hero::RedrawHeroScreen(void) {
 }
 
 VA(0x0043968e, 0x64a)
-i8 hero::HeroView(b8 viewOnly) {
+b8 hero::HeroView(b8 viewOnly) {
     i32 heroLuck;
     i32 moraleValue;
     tag_message message;
@@ -362,14 +362,14 @@ i8 hero::HeroView(b8 viewOnly) {
     delete gHeroScreenWindow;
     gHeroWin = NULL;
     if (gWindowManager->m_dialogResult == HERO_SCREEN_DISMISS) {
-        return 1;
+        return true;
     } else {
         m_mobility = CalcMobility();
         if (m_remainingMobility > m_mobility)
             m_remainingMobility = m_mobility;
     }
     gHeroWindShowing = false;
-    return 0;
+    return false;
 }
 
 VA(0x00439cd8, 0x6c)
@@ -450,7 +450,7 @@ void hero::UpdateArmies(void) {
 }
 
 VA(0x00439f93, 0x181)
-void hero::ViewStat(i8 stat, i8 quickView) {
+void hero::ViewStat(i8 stat, b8 quickView) {
     heroWindow* win;
     tag_message message;
 
@@ -475,23 +475,23 @@ void hero::ViewStat(i8 stat, i8 quickView) {
 }
 
 VA(0x0043a114, 0x3e)
-void hero::ViewArtifact(H1_ENUM_PARAM(ArtifactType, i8) artifact, i8 quickView) {
+void hero::ViewArtifact(H1_ENUM_PARAM(ArtifactType, i8) artifact, b8 quickView) {
     NormalDialog(
         gArtifactDesc[artifact],
-        quickView == 0 ? NORMAL_DIALOG_TYPE_OK : NORMAL_DIALOG_TYPE_QUICK_VIEW,
+        quickView == false ? NORMAL_DIALOG_TYPE_OK : NORMAL_DIALOG_TYPE_QUICK_VIEW,
         -1,
         0x1c
     );
 }
 
 VA(0x0043a152, 0x47)
-i8 hero::Dismiss(void) {
+b8 hero::Dismiss(void) {
     NormalDialog(localization::Tr("hero.dismiss.confirm"), NORMAL_DIALOG_TYPE_YES_NO, 0xb1, 0x1c);
     if (gWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
         Deallocate();
-        return 1;
+        return true;
     }
-    return 0;
+    return false;
 }
 
 VA(0x0043a199, 0x400)
@@ -1032,7 +1032,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) HeroHandler(struct tag_message& messa
                                     gInfoViewedHero,
                                     SPELL_TYPE_ALL,
                                     ViewSpecialHandler,
-                                    1
+                                    true
                                 );
                             else
                                 gInfoViewedHero->ViewArtifact(

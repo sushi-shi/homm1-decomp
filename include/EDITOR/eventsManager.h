@@ -226,7 +226,7 @@ b32 ClearOptionsDialog(void);
 void UpdateClearWindow(void);
 H1_ENUM_RETURN(MessageDispatchResult, i16) ClearWindowHandler(tag_message& message);
 // Edits the map header (dtlwind.bin); returns 0 when cancelled.
-i32 MapDetailsDialog(b32 randomMap);
+b32 MapDetailsDialog(b32 randomMap);
 void UpdateMapDetailsWindow(void);
 H1_ENUM_RETURN(MessageDispatchResult, i16) MapDetailsWindowHandler(tag_message& message);
 // Sets up the random map generator (editnew.bin); returns false when

@@ -378,7 +378,7 @@ void CloseSmackers() {
 
 #define savedColorCycling savedUpdateFlags // frame-slot spelling
 VA(0x00458cf4, 0xa9)
-i32 PlaySmacker(H1_ENUM_PARAM(SmackVideo, i32) smackNumber) {
+b32 PlaySmacker(H1_ENUM_PARAM(SmackVideo, i32) smackNumber) {
     i8 savedPalette[PALETTE_DATA_SIZE];
     i32 savedColorCycling;
     gInSmacker = true;

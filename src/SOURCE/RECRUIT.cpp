@@ -103,7 +103,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) recruitUnit::Open(i16 priority) {
         RECRUIT_CLOSE_CONTROL,
         WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED
     );
-    gWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, 1);
+    gWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, true);
 
     goldMaximum = gCurPlayerData->m_resources[RESOURCE_GOLD] / m_goldCost;
     if (m_resourceType != RESOURCE_NONE) {
@@ -195,13 +195,13 @@ VA(0x00451325, 0x372)
 H1_ENUM_RETURN(MessageDispatchResult, i16) recruitUnit::Main(struct tag_message& message) {
     b32 done;
     i32 cost;
-    i8 quickView;
+    b8 quickView;
 
     done = false;
     if (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
-        quickView = 1;
+        quickView = true;
     else
-        quickView = 0;
+        quickView = false;
     if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
             case WIDGET_NOTIFY_SELECT:
@@ -394,7 +394,7 @@ void QuickViewRecruit(town* townData, i8 dwelling) {
         MemError();
     SetupRecruitWin(recruitWindow, monsterType, goldCost, resourceType, resourceCost, avail);
     gMouseManager->ReallyHidePointer();
-    gWindowManager->AddWindow(recruitWindow, WINDOW_Z_ORDER_APPEND, 1);
+    gWindowManager->AddWindow(recruitWindow, WINDOW_Z_ORDER_APPEND, true);
     QuickViewWait();
     gWindowManager->RemoveWindow(recruitWindow);
     gMouseManager->ReallyShowPointer();

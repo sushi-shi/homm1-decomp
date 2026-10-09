@@ -164,7 +164,7 @@ public:
     // --- constructors ---
     army(void);
     // DoSurrender inlines this test.
-    i32 IsAlive(void) {
+    b32 IsAlive(void) {
         return m_creatureType >= CREATURE_FIRST && m_quantity > 0;
     }
     // --- methods ---

@@ -173,12 +173,12 @@ public:
         i32& purchaseValue,
         i32& replacementSlot
     );
-    i32 QuickCombat(
+    b32 QuickCombat(
         class armyGroup* attacker,
         class hero* attackerHero,
         class armyGroup* defender,
         class hero* defenderHero,
-        i8 townBattle,
+        b8 townBattle,
         i8 townId,
         float& attackerCasualtyFraction,
         float& defenderCasualtyFraction
@@ -189,7 +189,7 @@ public:
         b32 evaluateOnly,
         i32* value
     );
-    i32 ChooseGoldOrExperience(class hero* heroPointer, i32 gold, i32 experience);
+    b32 ChooseGoldOrExperience(class hero* heroPointer, i32 gold, i32 experience);
     void ChooseEvaluateBattle(
         class armyGroup* attackerArmy,
         class hero* attackerHero,
@@ -211,14 +211,14 @@ public:
     void BuildHero(class town* townPointer, i16 availableHeroIndex);
     void BuildCreature(class town* townPointer, i32 dwelling, i32 purchaseCount);
     b32 CanBuyBHC(struct BHC& purchase);
-    i8 CombatMonsterEvent(
+    b8 CombatMonsterEvent(
         class hero* heroPointer,
         H1_ENUM_PARAM(CreatureType, i8) monsterType,
         i32* monsterCount,
         class mapCell* cell
     );
     void FightEvent(class hero* heroPointer, class mapCell* cell);
-    i32 DamageGroup(
+    b32 DamageGroup(
         class armyGroup* group,
         class hero* loser,
         class hero* winner,

@@ -144,7 +144,7 @@ public:
     void Write(i32 file);
     void Read(i32 file);
     i8 NextHero(i32);
-    i8 HasMobileHero(void);
+    b8 HasMobileHero(void);
     i32 BuildingsOwned(
         H1_ENUM_PARAM(TownType, i32) townType,
         H1_ENUM_PARAM(BuildingSlotType, i32) buildingIndex,

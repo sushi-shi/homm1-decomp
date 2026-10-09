@@ -39,7 +39,7 @@ H1_ENUM_CONST_END(CampaignScenarioRow)
 // every player's starting resources.
 #pragma pack(push, 1)
 struct campaignScenario {
-    i8 kingOfTheHill;
+    b8 kingOfTheHill;
     i8 victoryTownX;
     i8 victoryTownY;
     // Space-padded name of the campaign town the map renames (not NUL-terminated).

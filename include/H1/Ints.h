@@ -25,15 +25,17 @@ typedef __int64 i64;
 typedef unsigned __int64 u64;
 #endif
 
-// Boolean storage: b8 and b32 hold a flag in an 8- or 32-bit integer and are
-// written with true/false. They are the plain integer, so loads, stores and
-// tests compile exactly as an integer flag (C++ bool would normalize stores).
+// Boolean storage: b8 and b32 hold a flag in an 8- or 32-bit integer, bchar
+// in a plain char, and are written with true/false. They are the plain
+// integer, so loads, stores and tests compile exactly as an integer flag (C++
+// bool would normalize stores).
 // include/match.h defines them first; its strict C++20 view wraps the integer
 // in a type that converts to and from bool only.
 #ifndef HOMM1_BOOL_DEFINED
 #define HOMM1_BOOL_DEFINED
 typedef i8 b8;
 typedef i32 b32;
+typedef char bchar;
 #endif
 
 // Buka's project-wide prelude: every retail C++ unit (sixty /Od and two /O2)

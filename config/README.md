@@ -17,6 +17,8 @@ read by the named tooling. Generated state belongs in `build/`.
   link passes stack sizes explicitly and omits `/DEF` (`homm1 link`).
 - `constants.tsv`: numeric spellings kept on purpose (`homm1 verify constants`).
 - `reviews/enum-reuse.tsv`: enum-reuse review ledger (`homm1 verify enum-reuse`).
+- `reviews/bool_exceptions.tsv`: proven 0/1 contracts kept as integers and
+  truth values that are not 0/1, each with its reason (`homm1 audit bool-fields`).
 
 ## Cleanliness floors (`cleanliness/`)
 

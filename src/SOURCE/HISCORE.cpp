@@ -41,7 +41,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) highScoreManager::Open(i16 priority) {
     if (m_window == NULL)
         MemError();
     Update();
-    gWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, 1);
+    gWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, true);
     m_messageMask = BASE_MANAGER_ACCEPT_EXECUTIVE;
     m_priority = priority;
     m_active = 1;

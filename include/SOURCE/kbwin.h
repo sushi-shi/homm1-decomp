@@ -145,7 +145,7 @@ extern "C" BOOL __stdcall
 AppAbout(HWND dialog, UINT message, WPARAM messageParam, LPARAM messageData);
 void KBChangeMenu(HMENU menu);
 void ResizeWindow(i32 x, i32 y, i32 width, i32 height);
-void SetMenuStatus(i32 showMenu);
+void SetMenuStatus(b32 showMenu);
 // Sets a window's caption from a text id.
 void SetWinText(class heroWindow* window, H1_ENUM_PARAM(WindowTextId, i16) id);
 void UpdateDfltMenu(HMENU menu);

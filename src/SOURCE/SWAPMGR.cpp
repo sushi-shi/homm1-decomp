@@ -87,7 +87,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) swapManager::Open(i16 id) {
     m_window->BroadcastMessage(message);
     SET_ADVENTURE_BUTTON_FLAGS(message, gAdvManager->m_adventureWindow, WIDGET_COMMAND_CLEAR_FLAGS);
     Update();
-    gWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, 1);
+    gWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, true);
     KBChangeMenu(gAdventureMenu);
     gMonoIconSkip = 2;
     m_selectorIcon = gResourceManager->GetIcon("swapbtn.icn");
@@ -265,7 +265,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) swapManager::Main(struct tag_message&
                                     break;
                                 m_heroes[SWAP_SIDE_LEFT]->ViewArtifact(
                                     m_heroes[SWAP_SIDE_LEFT]->m_artifacts[artIndex],
-                                    1
+                                    true
                                 );
                                 break;
                             }
@@ -287,7 +287,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) swapManager::Main(struct tag_message&
                                     && m_selectedSlot == m_targetSlot) {
                                     m_heroes[SWAP_SIDE_LEFT]->ViewArtifact(
                                         m_heroes[SWAP_SIDE_LEFT]->m_artifacts[artIndex],
-                                        0
+                                        false
                                     );
                                     Reset();
                                 }
@@ -327,7 +327,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) swapManager::Main(struct tag_message&
                                     break;
                                 m_heroes[SWAP_SIDE_RIGHT]->ViewArtifact(
                                     m_heroes[SWAP_SIDE_RIGHT]->m_artifacts[artIndex],
-                                    1
+                                    true
                                 );
                                 break;
                             }
@@ -349,7 +349,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) swapManager::Main(struct tag_message&
                                     && m_selectedSlot == m_targetSlot) {
                                     m_heroes[SWAP_SIDE_RIGHT]->ViewArtifact(
                                         m_heroes[SWAP_SIDE_RIGHT]->m_artifacts[artIndex],
-                                        0
+                                        false
                                     );
                                     Reset();
                                 }
@@ -379,7 +379,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) swapManager::Main(struct tag_message&
                                         NULL,
                                         false,
                                         ARMY_FACING_RIGHT,
-                                        1,
+                                        true,
                                         m_heroes[SWAP_SIDE_LEFT],
                                         NULL,
                                         &m_heroes[SWAP_SIDE_LEFT]->m_army
@@ -444,7 +444,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) swapManager::Main(struct tag_message&
                                         NULL,
                                         false,
                                         ARMY_FACING_RIGHT,
-                                        1,
+                                        true,
                                         m_heroes[SWAP_SIDE_RIGHT],
                                         NULL,
                                         &m_heroes[SWAP_SIDE_RIGHT]->m_army
@@ -522,7 +522,7 @@ void swapManager::ViewMon(void) {
         NULL,
         m_heroes[m_selectedSide]->m_army.GetNumArmies() == 1,
         ARMY_FACING_RIGHT,
-        0,
+        false,
         m_heroes[m_selectedSide],
         NULL,
         &m_heroes[m_selectedSide]->m_army

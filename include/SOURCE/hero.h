@@ -134,19 +134,19 @@ public:
     hero(void);
     // --- methods ---
     void GetArmyStrengths(u32* const);
-    i8 HasArtifact(H1_ENUM_PARAM(ArtifactType, i8) artifact);
+    b8 HasArtifact(H1_ENUM_PARAM(ArtifactType, i8) artifact);
     i16 CalcMobility(void);
-    i8 HasSpell(H1_ENUM_PARAM(SpellType, i8) spell);
+    b8 HasSpell(H1_ENUM_PARAM(SpellType, i8) spell);
     i16 GetNumSpells(H1_ENUM_PARAM(HeroSpellType, i8) type);
     void UseSpell(H1_ENUM_PARAM(SpellType, i8) spell);
     i32 AddSpell(H1_ENUM_PARAM(SpellType, i8) spell, i8 charges, b32 checkOnly);
     void HeroScreenUpdate(void);
     void UpdateArmies(void);
     void RedrawHeroScreen(void);
-    i8 HeroView(b8 viewOnly);
-    void ViewStat(i8 stat, i8 quickView);
-    void ViewArtifact(H1_ENUM_PARAM(ArtifactType, i8) artifact, i8 quickView);
-    i8 Dismiss(void);
+    b8 HeroView(b8 viewOnly);
+    void ViewStat(i8 stat, b8 quickView);
+    void ViewArtifact(H1_ENUM_PARAM(ArtifactType, i8) artifact, b8 quickView);
+    b8 Dismiss(void);
     void Deallocate(void);
     i32 GetExperience(i32 level);
     i32 GetLevel(i32 experienceValue);

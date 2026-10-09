@@ -525,7 +525,7 @@ extern i16 gCurLoadedSpellFileId;
 #define gCurGeneral giCurGeneral // spelling fixes .bss order
 extern H1_ENUM_STORAGE(CombatSide, i32) gCurGeneral;
 // Area spells mark each stack once per cast: [side][army slot].
-extern H1_ENUM_ARRAY_ROWS(i8, gArmyEffected, CombatSide, COMBAT_SIDE_COUNT, ARMY_GROUP_SLOT_COUNT);
+extern H1_ENUM_ARRAY_ROWS(b8, gArmyEffected, CombatSide, COMBAT_SIDE_COUNT, ARMY_GROUP_SLOT_COUNT);
 extern H1_ENUM_ARRAY(char*, gDifficultyNames, GameDifficulty, DIFFICULTY_COUNT);
 extern H1_ENUM_STORAGE(MapDifficulty, i32) gMapDifficulty;
 extern H1_ENUM_STORAGE(MapSize, i32) gMapSize;

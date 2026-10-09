@@ -49,7 +49,8 @@ targets.
 
 A flag stored in an integer keeps the integer's width: `b8` and `b32`
 (`include/H1/Ints.h`) are the 8- and 32-bit storage of a genuine boolean
-(only 0/1, tested for truth, set from comparisons). The retail view is the
+(only 0/1, tested for truth, set from comparisons), and `bchar` the plain
+`char` one. The retail view is the
 plain integer, so codegen is that of the integer flag (C++ `bool` would
 normalize stores); the strict view is a wrapper that converts only to and
 from `bool`. A `0`/`1` stored to, passed as, returned as or compared with a
@@ -61,6 +62,28 @@ of one width converts to the other. A flag that only an `i16` (or a Win32
 
 A row in `config/constants.tsv` never keeps a proven site: retyping a
 destination makes its rows stale, and `--fix` spells the sites.
+
+`homm1 audit bool-fields` finds the destinations to retype. It parses every
+unit of both programs in the retail view and proves, over the whole program,
+which `i32`/`i8`/`char` members, globals, locals, parameters and function
+results only ever hold 0/1: every store, argument (or default) and `return` is
+a 0/1 literal, a comparison or logical value, a flag, or a source the same
+proof establishes, and no caller or body uses the value numerically. Storage
+written with a named enumerator, storage exposed through a pointer, virtual
+methods, operators, functions whose address is taken and parameters the
+definition leaves unnamed stay integers. A proven candidate whose 0/1 is not a
+truth value (an index into a two-entry table, a window-procedure result)
+keeps its integer through an `integer` row in `config/reviews/bool_exceptions.tsv`
+with the reason; the same file holds byte-proven truth values that are not
+0/1. `--check` fails while a candidate, a numeric 0/1 written to, passed to,
+returned from or compared with a flag, an unproven flag write or a stale
+exception row remains; `--all` lists the sites and the integers kept.
+
+```sh
+homm1 audit bool-fields --all           # candidates, then every kept integer
+homm1 audit bool-fields --check         # nonzero while cleanup remains
+homm1 audit bool-fields --tu SOURCE/CMB # partial report for matching units
+```
 
 ### VC4 booleans
 

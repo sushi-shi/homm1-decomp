@@ -57,7 +57,7 @@ _SUFFIX = re.compile(r"[uUlL]+$")
 _BOOLEAN_TYPE_SPELLINGS = {"BOOL"}
 #: H1/Ints.h's boolean storage (an 8- or 32-bit integer in the retail view, a
 #: bool-only wrapper in the strict view), written with true/false.
-_FLAG_TYPE_SPELLINGS = {"b8", "b32"}
+_FLAG_TYPE_SPELLINGS = {"b8", "b32", "bchar"}
 #: VC4 (MSVC 4.x) predates the bool keywords; spelling them is C2065. VC5
 #: introduced `bool`, `true` and `false`, so a VC6 target (Buka) keeps them.
 _CXX_BOOLEAN = re.compile(r"\b(?:false|true)\b")

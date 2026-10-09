@@ -267,7 +267,7 @@ void searchArray::PushPoint(
     u16 cost,
     u16 maximumCost,
     i8 occupied,
-    i8 hasAdjacentMonster,
+    b8 hasAdjacentMonster,
     i8 adjacentMonsterX,
     i8 adjacentMonsterY,
     i8 beyondTurnMobility,
