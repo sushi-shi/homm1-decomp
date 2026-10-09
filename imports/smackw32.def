@@ -1,0 +1,11 @@
+LIBRARY smackw32
+EXPORTS
+    SmackOpen @14 NONAME
+    SmackClose @18 NONAME
+    SmackDoFrame @19 NONAME
+    SmackSummary @20 NONAME
+    SmackNextFrame @21 NONAME
+    SmackToBuffer @23 NONAME
+    SmackToBufferRect @28 NONAME
+    SmackWait @32 NONAME
+    SmackSoundUseMSS @33 NONAME

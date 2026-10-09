@@ -1,0 +1,11 @@
+{
+  "name": "Russian",
+  "codepage": 1251,
+  "resource_language": "0x0419",
+  "system_locale": "ru_RU.UTF-8",
+  "glyphs": "cyrillic",
+  "keyboard": {
+    "keys":  "qwertyuiop[]asdfghjkl;'zxcvbnm,./QWERTYUIOP{}ASDFGHJKL:\"ZXCVBNM<>?",
+    "typed": "йцукенгшщзхъфывапролджэячсмитьбюёЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮЁ"
+  }
+}

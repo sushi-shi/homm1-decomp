@@ -1,0 +1,113 @@
+#ifndef HOMM1_SOURCE_SETUP_H
+#define HOMM1_SOURCE_SETUP_H
+
+#include <BASE/dialog.h>
+#include <BASE/message.h>
+
+struct tag_message;
+
+i16 BaseSetupHandler(struct tag_message& message);
+i16 SetupCampaignGameHandler(struct tag_message& message);
+i16 SetupBaudHandler(struct tag_message& message);
+i16 SetupComPortHandler(struct tag_message& message);
+i16 SetupHotSeatGameHandler(struct tag_message& message);
+i16 SetupModemGameHandler(struct tag_message& message);
+i16 SetupMultiPlayerGameHandler(struct tag_message& message);
+i16 SetupNetworkGameHandler(struct tag_message& message);
+i16 SetupGameHandler(struct tag_message& message);
+
+extern b32 gDoModemConfig;
+
+enum SetupDialogChoice {
+    DIALOG_CANCEL = DIALOG_BUTTON_1,
+    CHOICE_ONE = 1,
+    CHOICE_TWO = 2,
+    CHOICE_THREE = 3,
+    CHOICE_FOUR = 4,
+    CHOICE_ID_LAST = 1000
+};
+
+enum SetupCampaignHelp {
+    SETUP_CAMPAIGN_HELP_NONE = -1,
+    SETUP_CAMPAIGN_HELP_FIRST = 0,
+    SETUP_CAMPAIGN_HELP_IRONFIST = 0,
+    SETUP_CAMPAIGN_HELP_SLAYER = 1,
+    SETUP_CAMPAIGN_HELP_LAMANDA = 2,
+    SETUP_CAMPAIGN_HELP_ALAMAR = 3,
+    SETUP_CAMPAIGN_HELP_CANCEL = 4,
+    SETUP_CAMPAIGN_HELP_COUNT = 5
+};
+
+enum SetupBaudHelp {
+    SETUP_BAUD_HELP_NONE = -1,
+    SETUP_BAUD_HELP_FIRST = 0,
+    SETUP_BAUD_HELP_2400 = 0,
+    SETUP_BAUD_HELP_9600 = 1,
+    SETUP_BAUD_HELP_19200 = 2,
+    SETUP_BAUD_HELP_38400 = 3,
+    SETUP_BAUD_HELP_CANCEL = 4,
+    SETUP_BAUD_HELP_COUNT = 5
+};
+
+enum SetupComPortHelp {
+    SETUP_COM_PORT_HELP_NONE = -1,
+    SETUP_COM_PORT_HELP_FIRST = 0,
+    SETUP_COM_PORT_HELP_COM1 = 0,
+    SETUP_COM_PORT_HELP_COM2 = 1,
+    SETUP_COM_PORT_HELP_COM3 = 2,
+    SETUP_COM_PORT_HELP_COM4 = 3,
+    SETUP_COM_PORT_HELP_CANCEL = 4,
+    SETUP_COM_PORT_HELP_COUNT = 5
+};
+
+enum SetupHotSeatHelp {
+    SETUP_HOT_SEAT_HELP_NONE = -1,
+    SETUP_HOT_SEAT_HELP_FIRST = 0,
+    SETUP_HOT_SEAT_HELP_TWO_PLAYERS = 0,
+    SETUP_HOT_SEAT_HELP_THREE_PLAYERS = 1,
+    SETUP_HOT_SEAT_HELP_FOUR_PLAYERS = 2,
+    SETUP_HOT_SEAT_HELP_CANCEL = 3,
+    SETUP_HOT_SEAT_HELP_COUNT = 4
+};
+
+enum SetupModemHelp {
+    SETUP_MODEM_HELP_NONE = -1,
+    SETUP_MODEM_HELP_FIRST = 0,
+    SETUP_MODEM_HELP_HOST = 0,
+    SETUP_MODEM_HELP_GUEST = 1,
+    SETUP_MODEM_HELP_CONFIGURE = 2,
+    SETUP_MODEM_HELP_CANCEL = 3,
+    SETUP_MODEM_HELP_COUNT = 4
+};
+
+enum SetupMultiPlayerHelp {
+    SETUP_MULTIPLAYER_HELP_NONE = -1,
+    SETUP_MULTIPLAYER_HELP_FIRST = 0,
+    SETUP_MULTIPLAYER_HELP_HOT_SEAT = 0,
+    SETUP_MULTIPLAYER_HELP_NETWORK = 1,
+    SETUP_MULTIPLAYER_HELP_MODEM = 2,
+    SETUP_MULTIPLAYER_HELP_DIRECT_CONNECT = 3,
+    SETUP_MULTIPLAYER_HELP_CANCEL = 4,
+    SETUP_MULTIPLAYER_HELP_COUNT = 5
+};
+
+enum SetupNetworkHelp {
+    SETUP_NETWORK_HELP_NONE = -1,
+    SETUP_NETWORK_HELP_FIRST = 0,
+    SETUP_NETWORK_HELP_HOST = 0,
+    SETUP_NETWORK_HELP_GUEST = 1,
+    SETUP_NETWORK_HELP_CANCEL = 2,
+    SETUP_NETWORK_HELP_COUNT = 3
+};
+
+enum SetupGameHelp {
+    SETUP_GAME_HELP_NONE = -1,
+    SETUP_GAME_HELP_FIRST = 0,
+    SETUP_GAME_HELP_STANDARD = 0,
+    SETUP_GAME_HELP_CAMPAIGN = 1,
+    SETUP_GAME_HELP_MULTIPLAYER = 2,
+    SETUP_GAME_HELP_CANCEL = 3,
+    SETUP_GAME_HELP_COUNT = 4
+};
+
+#endif
