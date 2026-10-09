@@ -1,0 +1,38 @@
+#pragma code_page(65001)
+
+LANGUAGE 0x19, 0x1
+
+109 ICON "editor.ico"
+
+EDITOR DIALOG 22, 17, 144, 75
+STYLE 0x800000C0
+FONT 8, "System"
+BEGIN
+    ICON            "EDITOR", -1, 9, 23, 18, 20
+    CTEXT           "Редактор Героев", -1, 22, 5, 101, 8
+    CTEXT           "Версия 1.1", -1, 51, 32, 42, 8
+    CTEXT           "Copyright 1995-6, New World Computing", -1, 7, 47, 132, 8
+    DEFPUSHBUTTON   "ОК", 1, 53, 59, 32, 14, 0x20000
+END
+
+MNUDFLT MENU
+BEGIN
+    POPUP "&Файл"
+    BEGIN
+        MENUITEM "&Выйти", 40140
+    END
+    POPUP "&Экран"
+    BEGIN
+        MENUITEM "&640 x 480", 40005
+        MENUITEM "&800 x 600", 40006
+        MENUITEM "&1024 x 768", 40007
+        MENUITEM "1&280 x 1024", 40008
+        MENUITEM "&Полный экран (F4)", 40009
+    END
+    POPUP "&Помощь"
+    BEGIN
+        MENUITEM "&Темы помощи", 40052
+        MENUITEM SEPARATOR
+        MENUITEM "&О Героях Меча и Магии", 40053
+    END
+END

@@ -1,0 +1,26 @@
+#ifndef HOMM1_SOURCE_ARMYSIZENAMES_H
+#define HOMM1_SOURCE_ARMYSIZENAMES_H
+
+enum ArmySizeNameVariant {
+    ARMY_SIZE_NAME_TITLE = 0,
+    ARMY_SIZE_NAME_SENTENCE = 1
+};
+
+enum ArmySizeNameCategory {
+    ARMY_SIZE_FEW = 0,
+    ARMY_SIZE_SEVERAL = 1,
+    ARMY_SIZE_PACK = 2,
+    ARMY_SIZE_LOTS = 3,
+    ARMY_SIZE_HORDE = 4,
+    ARMY_SIZE_ZOUNDS = 5
+};
+
+enum ArmySizeLimit {
+    ARMY_FEW_LIMIT = 5,
+    ARMY_SEVERAL_LIMIT = 10,
+    ARMY_PACK_LIMIT = 20,
+    ARMY_LOTS_LIMIT = 50,
+    ARMY_HORDE_LIMIT = 100
+};
+
+#endif

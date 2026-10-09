@@ -1,0 +1,285 @@
+#pragma code_page(65001)
+
+LANGUAGE 0x19, 0x1
+
+109 ICON "heroes.ico"
+
+HEROES DIALOG 22, 17, 144, 75
+STYLE 0x800000C0
+FONT 8, "System"
+BEGIN
+    ICON            "HEROES", -1, 9, 23, 18, 20
+    CTEXT           "Герои Меча и Магии", -1, 22, 5, 101, 8
+    CTEXT           "Версия 1.1", -1, 51, 32, 42, 8
+    CTEXT           "Copyright 1995-6, New World Computing", -1, 7, 47, 132, 8
+    DEFPUSHBUTTON   "ОК", 1, 53, 59, 32, 14, 0x20000
+END
+
+MNUADV MENU
+BEGIN
+    POPUP "&Файл"
+    BEGIN
+        POPUP "&Новая игра"
+        BEGIN
+            MENUITEM "&Обычная игра", 40102
+            POPUP "&Кампания"
+            BEGIN
+                MENUITEM "Играть за лорда &Айронфиста", 40104
+                MENUITEM "Играть за вождя &Слэйера", 40105
+                MENUITEM "Играть за царицу &Ламанду", 40106
+                MENUITEM "Играть за колдуна &Аламара", 40107
+            END
+            POPUP "&Сетевая игра"
+            BEGIN
+                POPUP "&За одним компьютером"
+                BEGIN
+                    MENUITEM "&2 игрока", 40110
+                    MENUITEM "&3 игрока", 40111
+                    MENUITEM "&4 игрока", 40112
+                END
+                POPUP "&Сеть"
+                BEGIN
+                    MENUITEM "&Сервер", 40114
+                    MENUITEM "&Гость", 40115
+                END
+                POPUP "&Модем"
+                BEGIN
+                    MENUITEM "&Сервер (Звонки)", 40117
+                    MENUITEM "&Гость (Ответы)", 40118
+                END
+                POPUP "&Прямое соединение"
+                BEGIN
+                    MENUITEM "&Сервер", 40120
+                    MENUITEM "&Гость", 40121
+                END
+            END
+        END
+        POPUP "&Загрузить игру"
+        BEGIN
+            MENUITEM "&Обычная игра", 40123
+            MENUITEM "&Кампания", 40124
+            POPUP "&Сетевая игра"
+            BEGIN
+                POPUP "&За одной машиной"
+                BEGIN
+                    MENUITEM "&2 игрока", 40127
+                    MENUITEM "&3 игрока", 40128
+                    MENUITEM "&4 игрока", 40129
+                END
+                POPUP "&Сеть"
+                BEGIN
+                    MENUITEM "&Сервер", 40131
+                    MENUITEM "&Гость", 40132
+                END
+                POPUP "&Модем"
+                BEGIN
+                    MENUITEM "&Сервер (Звонки)", 40134
+                    MENUITEM "&Гость (Ответы)", 40135
+                END
+                POPUP "&Прямое соединение"
+                BEGIN
+                    MENUITEM "&Сервер", 40137
+                    MENUITEM "&Гость", 40138
+                END
+            END
+        END
+        MENUITEM "&Сохранить игру", 40139
+        MENUITEM SEPARATOR
+        MENUITEM "&Выйти", 40140
+    END
+    POPUP "&Панель управления"
+    BEGIN
+        POPUP "&Музыка"
+        BEGIN
+            MENUITEM "Выкл.", 40016
+            MENUITEM "Вкл. - 100%", 40017, CHECKED
+            MENUITEM "Вкл. - 90%", 40018
+            MENUITEM "Вкл. - 80%", 40019
+            MENUITEM "Вкл. - 70%", 40020
+            MENUITEM "Вкл. - 60%", 40021
+            MENUITEM "Вкл. - 50%", 40022
+            MENUITEM "Вкл. - 40%", 40023
+            MENUITEM "Вкл. - 30%", 40024
+            MENUITEM "Вкл. - 20%", 40025
+            MENUITEM "Вкл. - 10%", 40026
+        END
+        POPUP "&Звук"
+        BEGIN
+            MENUITEM "Выкл.", 40028
+            MENUITEM "Вкл. - 100%", 40029, CHECKED
+            MENUITEM "Вкл. - 90%", 40030
+            MENUITEM "Вкл. - 80%", 40031
+            MENUITEM "Вкл. - 70%", 40032
+            MENUITEM "Вкл. - 60%", 40033
+            MENUITEM "Вкл. - 50%", 40034
+            MENUITEM "Вкл. - 40%", 40035
+            MENUITEM "Вкл. - 30%", 40036
+            MENUITEM "Вкл. - 20%", 40037
+            MENUITEM "Вкл. - 10%", 40038
+        END
+        POPUP "Скорость"
+        BEGIN
+            MENUITEM "&Прыжками", 40040
+            MENUITEM "&Галопом", 40041
+            MENUITEM "&Рысью", 40042, CHECKED
+            MENUITEM "&Аллюром", 40043
+            MENUITEM "&Шагом", 40044
+        END
+        MENUITEM "&CD стерео", 40045, CHECKED
+        MENUITEM "Показывать &путь", 40046, CHECKED
+        MENUITEM "&Показывать движение врага", 40047, CHECKED
+    END
+    POPUP "&Стратегическая карта"
+    BEGIN
+        MENUITEM "Показать &мир", 40012
+        MENUITEM "Показать &загадку", 40013
+        MENUITEM "&Направить заклинание", 40014
+        MENUITEM "&Копать", 40015
+    END
+    POPUP "&Экран"
+    BEGIN
+        MENUITEM "&640 x 480", 40005
+        MENUITEM "&800 x 600", 40006
+        MENUITEM "&1024 x 768", 40007
+        MENUITEM "1&280 x 1024", 40008
+        MENUITEM "&Полный экран (F4)", 40009
+    END
+    POPUP "&Помощь"
+    BEGIN
+        MENUITEM "&Темы помощи", 40052
+        MENUITEM SEPARATOR
+        MENUITEM "&О Героях Меча и Магии", 40053
+    END
+END
+
+MNUDFLT MENU
+BEGIN
+    POPUP "&Файл"
+    BEGIN
+        POPUP "&Новая игра"
+        BEGIN
+            MENUITEM "&Обычная игра", 40102
+            POPUP "&Кампания"
+            BEGIN
+                MENUITEM "Играть за лорда &Айронфиста", 40104
+                MENUITEM "Играть за вождя &Слэйера", 40105
+                MENUITEM "Играть за царицу &Ламанду", 40106
+                MENUITEM "Играть за колдуна &Аламара", 40107
+            END
+            POPUP "&Сетевая игра"
+            BEGIN
+                POPUP "&За одной машиной"
+                BEGIN
+                    MENUITEM "&2 игрока", 40110
+                    MENUITEM "&3 игрока", 40111
+                    MENUITEM "&4 игрока", 40112
+                END
+                POPUP "&Сеть"
+                BEGIN
+                    MENUITEM "&Сервер", 40114
+                    MENUITEM "&Гость", 40115
+                END
+                POPUP "&Модем"
+                BEGIN
+                    MENUITEM "&Сервер (Звонки)", 40117
+                    MENUITEM "&Гость (Ответы)", 40118
+                END
+                POPUP "&Прямое соединение"
+                BEGIN
+                    MENUITEM "&Сервер", 40120
+                    MENUITEM "&Гость", 40121
+                END
+            END
+        END
+        POPUP "&Загрузить игру"
+        BEGIN
+            MENUITEM "&Обычная игра", 40123
+            MENUITEM "&Кампания", 40124
+            POPUP "&Сетевая игра"
+            BEGIN
+                POPUP "&За одной машиной"
+                BEGIN
+                    MENUITEM "&2 игрока", 40127
+                    MENUITEM "&3 игрока", 40128
+                    MENUITEM "&4 игрока", 40129
+                END
+                POPUP "&Сеть"
+                BEGIN
+                    MENUITEM "&Сервер", 40131
+                    MENUITEM "&Гость", 40132
+                END
+                POPUP "&Модем"
+                BEGIN
+                    MENUITEM "&Сервер (Звонки)", 40134
+                    MENUITEM "&Гость (Ответы)", 40135
+                END
+                POPUP "&Прямое соединение"
+                BEGIN
+                    MENUITEM "&Сервер", 40137
+                    MENUITEM "&Гость", 40138
+                END
+            END
+        END
+        MENUITEM "&Сохранить игру", 40139
+        MENUITEM SEPARATOR
+        MENUITEM "&Выйти", 40140
+    END
+    POPUP "&Экран"
+    BEGIN
+        MENUITEM "&640 x 480", 40005
+        MENUITEM "&800 x 600", 40006
+        MENUITEM "&1024 x 768", 40007
+        MENUITEM "1&280 x 1024", 40008
+        MENUITEM "&Полный экран (F4)", 40009
+    END
+    POPUP "&Помощь"
+    BEGIN
+        MENUITEM "&Темы помощи", 40052
+        MENUITEM SEPARATOR
+        MENUITEM "&О Героях Меча и Магии", 40053
+    END
+END
+
+MNUCMBT MENU
+BEGIN
+    POPUP "&Файл"
+    BEGIN
+        MENUITEM "&Выйти", 40140
+    END
+    POPUP "&Экран"
+    BEGIN
+        MENUITEM "&640 x 480", 40005
+        MENUITEM "&800 x 600", 40006
+        MENUITEM "&1024 x 768", 40007
+        MENUITEM "1&280 x 1024", 40008
+        MENUITEM "&Полный экран (F4)", 40009
+    END
+    POPUP "&Помощь"
+    BEGIN
+        MENUITEM "&Темы помощи", 40052
+        MENUITEM SEPARATOR
+        MENUITEM "&О героях Меча и Магии", 40053
+    END
+END
+
+MNUTOWN MENU
+BEGIN
+    POPUP "&Файл"
+    BEGIN
+        MENUITEM "&Выйти", 40140
+    END
+    POPUP "&Экран"
+    BEGIN
+        MENUITEM "&640 x 480", 40005
+        MENUITEM "&800 x 600", 40006
+        MENUITEM "&1024 x 768", 40007
+        MENUITEM "1&280 x 1024", 40008
+        MENUITEM "&Полный экран (F4)", 40009
+    END
+    POPUP "&Помощь"
+    BEGIN
+        MENUITEM "&Темы помощи", 40052
+        MENUITEM SEPARATOR
+        MENUITEM "&О Героях Меча и Магии", 40053
+    END
+END
