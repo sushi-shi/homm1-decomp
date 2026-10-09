@@ -40,9 +40,9 @@ public:
     void View(i32);
     i16 GetMorale(class hero* armyHero, class town* occupiedTown);
     void Dismiss(i8 slot);
-    i8 IsMember(i8 creatureType);
+    b8 IsMember(i8 creatureType);
     i8 IsHomogeneous(i8 alignmentMode);
-    i8 CanJoin(i8 creatureType);
+    b8 CanJoin(i8 creatureType);
     i16 GetNumArmies(void);
     i16 Add(i8 creatureType, i16 quantity, i8 slot);
     void Swap(i8 slot, class armyGroup* otherGroup, i8 otherSlot);

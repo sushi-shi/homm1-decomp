@@ -29,9 +29,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-i8 combatManager::ViewSpells(i32) {
+b8 combatManager::ViewSpells(i32) {
     m_selectedSpell =
-        gGame->ViewSpells(m_heroes[gCurGeneral], SPELL_TYPE_COMBAT, CombatSpecialHandler, 0);
+        gGame->ViewSpells(m_heroes[gCurGeneral], SPELL_TYPE_COMBAT, CombatSpecialHandler, false);
     if (m_selectedSpell != SPELL_NONE) {
         switch (m_selectedSpell) {
             case SPELL_CURE:
@@ -53,9 +53,9 @@ i8 combatManager::ViewSpells(i32) {
         }
         gMouseManager->SetPointer("cmbtmous.mse", 0);
         if (m_selectedSpell != SPELL_NONE)
-            return 1;
+            return true;
     }
-    return 0;
+    return false;
 }
 
 i16 CombatSpecialHandler(struct tag_message& message) {
@@ -164,19 +164,19 @@ i16 HandleCastSpell(struct tag_message& message) {
     return MESSAGE_DISPATCH_CONSUME;
 }
 
-i8 combatManager::ValidSpellTarget(i8 spell, i8 hex) {
+b8 combatManager::ValidSpellTarget(i8 spell, i8 hex) {
     i32 unused;
     army* victim = NULL;
     i16 destHex;
 
     if (!ValidHex(hex))
-        return 0;
+        return false;
     if (spell != SPELL_FIREBALL && spell != SPELL_METEOR_SHOWER
         && m_hexCells[hex].m_occupantSide != COMBAT_SIDE_NONE) {
         victim = &m_armies[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex];
         if (victim->m_spellEffect == SPELL_ANTI_MAGIC || victim->m_spellEffect == SPELL_DISPEL_MAGIC
             || victim->m_creatureType == CREATURE_DRAGON)
-            return 0;
+            return false;
     }
     switch (spell) {
         case SPELL_CURE:
@@ -186,7 +186,7 @@ i8 combatManager::ValidSpellTarget(i8 spell, i8 hex) {
         case SPELL_PROTECTION:
         case SPELL_ANTI_MAGIC:
             if (m_hexCells[hex].m_occupantSide != m_currentSide)
-                return 0;
+                return false;
             break;
         case SPELL_TELEPORT:
             if (gInTeleportGetDest) {
@@ -195,10 +195,10 @@ i8 combatManager::ValidSpellTarget(i8 spell, i8 hex) {
                     || !m_armies[gCombatManager->m_hexCells[gNextActionGridIndex].m_occupantSide]
                                 [gCombatManager->m_hexCells[gNextActionGridIndex].m_occupantIndex]
                                     .CanFit(&destHex))
-                    return 0;
+                    return false;
             } else {
                 if (m_hexCells[hex].m_occupantSide != m_currentSide)
-                    return 0;
+                    return false;
             }
             break;
         case SPELL_LIGHTNING_BOLT:
@@ -208,22 +208,22 @@ i8 combatManager::ValidSpellTarget(i8 spell, i8 hex) {
         case SPELL_BERZERKER:
         case SPELL_PARALYZE:
             if (m_hexCells[hex].m_occupantSide != COMBAT_OPPOSING_SIDE(m_currentSide))
-                return 0;
+                return false;
             break;
         case SPELL_TURN_UNDEAD:
             if (m_hexCells[hex].m_occupantSide == COMBAT_SIDE_NONE)
-                return 0;
+                return false;
             if (victim->m_creatureType != CREATURE_GHOST)
-                return 0;
+                return false;
             break;
         case SPELL_FIREBALL:
         case SPELL_METEOR_SHOWER:
             if (hex == ARMY_HEX_INVALID || hex % COMBAT_GRID_COLUMNS == 0
                 || hex % COMBAT_GRID_COLUMNS == COMBAT_GRID_LAST_COLUMN)
-                return 0;
+                return false;
             break;
     }
-    return 1;
+    return true;
 }
 
 void combatManager::SpellMessage(i8 spell, i8 hex) {
@@ -296,7 +296,7 @@ void combatManager::CastSpell(
     } else
         target = NULL;
     if (!castByCreature)
-        m_heroCastSpell[m_currentSide] = 1;
+        m_heroCastSpell[m_currentSide] = true;
     switch (spell) {
         case SPELL_FIREBALL:
         case SPELL_TELEPORT:
@@ -411,7 +411,7 @@ void combatManager::CastSpell(
                 target->Stand(true);
             break;
         case SPELL_CURE:
-            CastMassSpell(m_currentSide, 1);
+            CastMassSpell(m_currentSide, true);
             break;
         case SPELL_RESURRECT:
             target->SpellEffect(COMBAT_EFFECT_RESURRECT, 0);
@@ -524,7 +524,7 @@ void combatManager::CastSpell(
             target->m_quantity = 0;
             break;
         case SPELL_DISPEL_MAGIC:
-            CastMassSpell(COMBAT_SIDE_ANY, 0);
+            CastMassSpell(COMBAT_SIDE_ANY, false);
             break;
         case SPELL_ANTI_MAGIC:
             target->CancelSpell();
@@ -580,7 +580,7 @@ void combatManager::DefaultSpell(i8 targetHex) {
     target->Stand(true);
 }
 
-void combatManager::CastMassSpell(i8 castSide, i8 cureOnly) {
+void combatManager::CastMassSpell(i8 castSide, b8 cureOnly) {
     i16 effectFile;
     i32 spare;
     i32 lastSide;
@@ -610,7 +610,7 @@ void combatManager::CastMassSpell(i8 castSide, i8 cureOnly) {
                 if (!cureOnly) {
                     if (m_armies[side][armyIndex].m_spellEffect != SPELL_NONE)
                         m_armies[side][armyIndex].m_animationSequence = ARMY_ANIMATION_EFFECT;
-                } else if (cureOnly == 1) {
+                } else if (cureOnly == true) {
                     if (m_armies[side][armyIndex].m_spellEffect == SPELL_SLOW
                         || m_armies[side][armyIndex].m_spellEffect == SPELL_BLIND
                         || m_armies[side][armyIndex].m_spellEffect == SPELL_CURSE
@@ -639,7 +639,7 @@ void combatManager::CastMassSpell(i8 castSide, i8 cureOnly) {
     DrawFrame(true);
 }
 
-void combatManager::CancelSideSpells(i8 side, i8 cureOnly) {
+void combatManager::CancelSideSpells(i8 side, b8 cureOnly) {
     army* target;
     i16 armyIndex;
 
@@ -649,7 +649,7 @@ void combatManager::CancelSideSpells(i8 side, i8 cureOnly) {
         target->m_animationFrame = 1;
         if (target->m_spellEffect != SPELL_ANTI_MAGIC && target->m_spellEffect != SPELL_DISPEL_MAGIC
             && target->m_creatureType != CREATURE_DRAGON) {
-            if (cureOnly == 1) {
+            if (cureOnly == true) {
                 switch (target->m_spellEffect) {
                     case SPELL_SLOW:
                     case SPELL_BLIND:
@@ -717,7 +717,7 @@ void combatManager::Fireball(i8 targetHex) {
                 && !gArmyEffected[m_hexCells[affectedHexes[i]].m_occupantSide]
                                  [m_hexCells[affectedHexes[i]].m_occupantIndex]) {
                 gArmyEffected[m_hexCells[affectedHexes[i]].m_occupantSide]
-                             [m_hexCells[affectedHexes[i]].m_occupantIndex] = 1;
+                             [m_hexCells[affectedHexes[i]].m_occupantIndex] = true;
                 if (target->m_powFrames == ARMY_POW_NONE) {
                     target->Damage(baseDamage);
                     anyAffected = true;
@@ -790,7 +790,7 @@ void combatManager::MeteorShower(i8 targetHex) {
                 && !gArmyEffected[m_hexCells[affectedHexes[i]].m_occupantSide]
                                  [m_hexCells[affectedHexes[i]].m_occupantIndex]) {
                 gArmyEffected[m_hexCells[affectedHexes[i]].m_occupantSide]
-                             [m_hexCells[affectedHexes[i]].m_occupantIndex] = 1;
+                             [m_hexCells[affectedHexes[i]].m_occupantIndex] = true;
                 if (target->m_powFrames == ARMY_POW_NONE) {
                     target->Damage(baseDamage);
                     anyAffected = true;

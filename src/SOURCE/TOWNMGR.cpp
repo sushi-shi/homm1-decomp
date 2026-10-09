@@ -185,7 +185,7 @@ i16 townManager::Open(i16 priority) {
         }
     }
     gTimers[TOWN_FRAME_TIMER_SLOT] = KBTickCount() + TOWN_REDRAW_INTERVAL;
-    gWindowManager->AddWindow(m_townWindow, WINDOW_Z_ORDER_BOTTOM, 1);
+    gWindowManager->AddWindow(m_townWindow, WINDOW_Z_ORDER_BOTTOM, true);
     crestFrame = gCurPlayerData->m_color;
     if (m_town->m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE) {
         crestFrame *= HERO_CLASS_COUNT;
@@ -203,7 +203,7 @@ i16 townManager::Open(i16 priority) {
         0,
         &m_town->m_army,
         TOWN_GARRISON_CREST_CONTROL,
-        1
+        true
     );
     if (m_garrisonStrip == NULL)
         MemError();
@@ -217,7 +217,7 @@ i16 townManager::Open(i16 priority) {
             0,
             &gGame->GetHero(m_town->m_occupyingHeroId)->m_army,
             TOWN_HERO_PORTRAIT_CONTROL,
-            1
+            true
         );
         if (m_heroStrip == NULL)
             MemError();
@@ -232,7 +232,7 @@ i16 townManager::Open(i16 priority) {
             TOWN_EMPTY_HERO_PORTRAIT_FRAME,
             NULL,
             -1,
-            1
+            true
         );
         if (m_heroStrip == NULL)
             MemError();
@@ -611,7 +611,7 @@ i16 townManager::Main(struct tag_message& message) {
                             );
                             if (m_coverWindow == NULL)
                                 MemError();
-                            gWindowManager->AddWindow(m_coverWindow, WINDOW_Z_ORDER_APPEND, 1);
+                            gWindowManager->AddWindow(m_coverWindow, WINDOW_Z_ORDER_APPEND, true);
                             m_buildingWindow = NULL;
                             switch (message.id) {
                                 case BUILDING_SLOT_CASTLE:
@@ -872,7 +872,7 @@ i16 townManager::Main(struct tag_message& message) {
                                         m_town,
                                         true,
                                         ARMY_FACING_RIGHT,
-                                        1,
+                                        true,
                                         viewHero,
                                         NULL,
                                         m_hoverStrip->m_army
@@ -960,7 +960,7 @@ void townManager::DoCommand(i8 command) {
                 m_castleDialogActive == true
                     || (m_hoverStrip == m_heroStrip && m_hoverStrip->m_army->GetNumArmies() == 1),
                 ARMY_FACING_RIGHT,
-                0,
+                false,
                 viewedHero,
                 NULL,
                 m_hoverStrip->m_army
@@ -1040,8 +1040,8 @@ void townManager::RedrawTownScreen(void) {
     tag_message message;
 
     DrawTown(true, true);
-    m_garrisonStrip->DrawIcons(1);
-    m_heroStrip->DrawIcons(1);
+    m_garrisonStrip->DrawIcons(true);
+    m_heroStrip->DrawIcons(true);
     SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, TOWN_STATUS_TEXT_CONTROL);
     message.text = m_statusText;
     m_townWindow->BroadcastMessage(message);
@@ -1167,7 +1167,7 @@ void townManager::DrawTown(b8 updateScreen, b32 advanceAnimation) {
 i16 townManager::BuyBuild(
     i16 building,
     b8 cannotBuy,
-    i8 quickView
+    b8 quickView
 ) {
     i32 entryWidth;
     i16 buildCosts[RESOURCE_COUNT];
@@ -1441,7 +1441,7 @@ i16 townManager::BuyBuild(
         msg.id = 0;
         panel->BroadcastMessage(msg);
         gMouseManager->ReallyHidePointer();
-        gWindowManager->AddWindow(panel, WINDOW_Z_ORDER_APPEND, 1);
+        gWindowManager->AddWindow(panel, WINDOW_Z_ORDER_APPEND, true);
         QuickViewWait();
         gWindowManager->RemoveWindow(panel);
         gMouseManager->ReallyShowPointer();
@@ -2066,7 +2066,7 @@ b8 townManager::RecruitHero(b8 quickView) {
     m_recruitSlot = RECRUIT_HERO_NONE;
     if (quickView) {
         gMouseManager->ReallyHidePointer();
-        gWindowManager->AddWindow(m_childWindow, WINDOW_Z_ORDER_APPEND, 1);
+        gWindowManager->AddWindow(m_childWindow, WINDOW_Z_ORDER_APPEND, true);
         QuickViewWait();
         gWindowManager->RemoveWindow(m_childWindow);
         gMouseManager->ReallyShowPointer();
@@ -2116,7 +2116,7 @@ b8 townManager::RecruitHero(b8 quickView) {
             0,
             &m_town->m_army,
             TOWN_GARRISON_CREST_CONTROL,
-            0
+            false
         );
         if (m_garrisonStrip == NULL)
             MemError();
@@ -2130,7 +2130,7 @@ b8 townManager::RecruitHero(b8 quickView) {
             0,
             &m_recruitHeroes[m_recruitSlot]->m_army,
             TOWN_HERO_PORTRAIT_CONTROL,
-            0
+            false
         );
         if (m_heroStrip == NULL)
             MemError();
@@ -2204,7 +2204,7 @@ void townManager::DoTavern(void) {
 i16 CastleHandler(struct tag_message& message) {
     i16 statusId = TOWN_CASTLE_STATUS_CONTROL;
     i32 result = 0;
-    i32 quickViewVal;
+    b32 quickViewVal;
     i32 objNum;
 
     if (message.type == MESSAGE_WIDGET) {

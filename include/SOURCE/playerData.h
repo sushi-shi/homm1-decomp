@@ -94,7 +94,7 @@ public:
     void Write(i32 file);
     void Read(i32 file);
     i8 NextHero(i32);
-    i8 HasMobileHero(void);
+    b8 HasMobileHero(void);
     i32 BuildingsOwned(
         i32 townType,
         i32 buildingIndex,

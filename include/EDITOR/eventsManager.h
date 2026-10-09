@@ -169,7 +169,7 @@ i16 HeroWindowHandler(tag_message& message);
 b32 ClearOptionsDialog(void);
 void UpdateClearWindow(void);
 i16 ClearWindowHandler(tag_message& message);
-i32 MapDetailsDialog(b32 randomMap);
+b32 MapDetailsDialog(b32 randomMap);
 void UpdateMapDetailsWindow(void);
 i16 MapDetailsWindowHandler(tag_message& message);
 b32 NewMapDialog(void);

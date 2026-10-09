@@ -109,7 +109,7 @@ union RemotePayload {
     char data[REMOTE_MESSAGE_SIZE - REMOTE_MESSAGE_HEADER_SIZE];
     struct {
         i32 saveSize;
-        i32 playerExited;
+        b32 playerExited;
     };
     struct {
         i16 index;
@@ -171,7 +171,7 @@ void RemoteCleanup(void);
 void UnloadRemoteDriver(i16 networkDriver);
 i32 FileSize(char* filename);
 void WriteModemPacket(char* buffer, i32 length);
-char ReadPacket(void);
+bchar ReadPacket(void);
 void calc_crc(u16* crc, u8* data, i32 length);
 i32 EncodePacket(RemoteMessage* data, i8 source, i8 destination, i32 length);
 b32 DecodePacket(RemoteMessage* data, i32 source);
@@ -240,8 +240,8 @@ extern i32 gDirectConnectStage;
 void GUIModemCommand(char* message, char* command);
 void ModemCommand(char* command);
 void ModemSetup(void);
-i32 Dial(void);
-i32 Wait(void);
+b32 Dial(void);
+b32 Wait(void);
 void Connect(void);
 i8 GUIModemResponse(char* message, char* response);
 i32 write_buffer(char* buffer, i32 length);

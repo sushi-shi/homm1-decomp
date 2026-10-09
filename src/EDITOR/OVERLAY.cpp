@@ -142,7 +142,7 @@ void overlayManager::Close(void) {
 
 i16 overlayManager::Main(tag_message& message) {
     b32 finished;
-    i32 objectPlaced;
+    b32 objectPlaced;
     i32 helpItem;
     i8 previousCategory;
     i16 cellX;
@@ -722,7 +722,7 @@ i16 overlayManager::PickOverlay(i16 category) {
         LOGICAL_SCREEN_HEIGHT,
         WINDOW_FLAG_SAVE_BACKGROUND
     );
-    gWindowManager->AddWindow(screenWindow, WINDOW_Z_ORDER_APPEND, 1);
+    gWindowManager->AddWindow(screenWindow, WINDOW_Z_ORDER_APPEND, true);
     gEditManager->m_zoomedOut = EDIT_ZOOM_OUT;
     LoadCategory(category);
     gInputManager->Flush();

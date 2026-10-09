@@ -17,6 +17,7 @@ typedef unsigned __int64 u64;
 #define HOMM1_BOOL_DEFINED
 typedef i8 b8;
 typedef i32 b32;
+typedef char bchar;
 #endif
 
 #include <string>

@@ -35,7 +35,7 @@ i16 searchArray::FindNearestObject(
     gCurTempMobility = SEARCH_NEAREST_OBJECT_MOBILITY;
     m_specialTargetX = SEARCH_INVALID_COORDINATE;
     Clear();
-    PushPoint(startX, startY, direction, 0, maximumCost, 0, 0, 0, 0, 0, 0, 0);
+    PushPoint(startX, startY, direction, 0, maximumCost, 0, false, 0, 0, 0, 0, 0);
     while (m_queueCount > 0) {
         node = m_queue[--m_queueCount];
         if (maximumCost > 0 && node.distance > maximumCost)
@@ -65,7 +65,7 @@ i16 searchArray::FindNearestObject(
                     node.distance + cost,
                     maximumCost,
                     0,
-                    0,
+                    false,
                     0,
                     0,
                     node.beyondTurnMobility,
@@ -152,7 +152,7 @@ void searchArray::SeedPosition(
     static u8 s_directionOccupied[MAP_DIRECTION_COUNT];
     static b32 s_directionBlocked;
     static mapCell* s_targetCell;
-    static i8 s_hasAdjacentMonster;
+    static b8 s_hasAdjacentMonster;
     static i32 s_triggerType;
     static i32 s_adjacentX;
     static i32 s_adjacentY;
@@ -198,7 +198,7 @@ void searchArray::SeedPosition(
             return;
     }
     if (!continueSeed)
-        PushPoint(seedX, seedY, seedDirection, 0, maximumCost, 0, 0, 0, 0, 0, 0, 0);
+        PushPoint(seedX, seedY, seedDirection, 0, maximumCost, 0, false, 0, 0, 0, 0, 0);
     s_currentHero = gGame->GetHero(gCurPlayerData->m_currentHero);
     while (m_queueCount > 0) {
         --m_queueCount;
@@ -212,11 +212,11 @@ void searchArray::SeedPosition(
         if (s_currentNode.distance > maximumCost && maximumCost > 0)
             goto point_complete;
         if (s_currentNode.hasAdjacentMonster) {
-            s_hasAdjacentMonster = 1;
+            s_hasAdjacentMonster = true;
             s_adjacentMonsterX = s_currentNode.adjacentMonsterX;
             s_adjacentMonsterY = s_currentNode.adjacentMonsterY;
         } else
-            s_hasAdjacentMonster = 0;
+            s_hasAdjacentMonster = false;
         if (s_currentNode.occupied) {
             s_triggerType = MAP_TRIGGER_OBJECT(
                 gAdvManager->GetCell(s_currentNode.x, s_currentNode.y)->m_triggerType
@@ -225,7 +225,7 @@ void searchArray::SeedPosition(
                 || s_triggerType == MAP_OBJECT_HERO || s_triggerType == MAP_OBJECT_SHIP) {
                 if (!findAdjacentMonster || s_currentNode.hasAdjacentMonster)
                     goto point_complete;
-                s_hasAdjacentMonster = 1;
+                s_hasAdjacentMonster = true;
                 s_adjacentMonsterX = s_currentNode.x;
                 s_adjacentMonsterY = s_currentNode.y;
                 if (s_triggerType == MAP_OBJECT_HERO
@@ -276,7 +276,7 @@ void searchArray::SeedPosition(
                                SEARCH_INVALID_COORDINATE,
                                SEARCH_INVALID_COORDINATE
                            ))
-                    s_hasAdjacentMonster = 1;
+                    s_hasAdjacentMonster = true;
             }
         }
         TestPossibleDirections(
@@ -412,7 +412,7 @@ void searchArray::SeedPosition(
                                      & SEARCH_DIAGONAL_COST_MASK],
                                 maximumCost,
                                 1,
-                                0,
+                                false,
                                 SEARCH_INVALID_COORDINATE,
                                 SEARCH_INVALID_COORDINATE,
                                 0,

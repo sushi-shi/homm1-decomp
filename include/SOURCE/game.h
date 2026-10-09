@@ -290,7 +290,7 @@ public:
     i16 m_viewSpell;
     i16 m_viewSpellsTop;
     i16 (*m_viewSpellsCallback)(struct tag_message&);
-    i8 m_viewSpellsReadOnly;
+    b8 m_viewSpellsReadOnly;
     b8 m_noMapHeroes;
     hero* GetHero(i8 id) {
         return &m_heroRecs[id];
@@ -305,15 +305,15 @@ public:
         return &m_castleRecs[m_players[player].m_townIds[index]];
     }
     void Overview(void);
-    i8 SetupCampaignGame(void);
-    i8 SetupBaud(void);
-    i8 SetupComPort(void);
-    i8 SetupHotSeatGame(void);
-    i8 SetupNetworkGame(void);
-    i8 SetupModemGame(void);
-    i8 SetupMultiPlayerGame(void);
-    i8 SetupGame(b8 newGame);
-    i8 PickLoadGame(void);
+    b8 SetupCampaignGame(void);
+    b8 SetupBaud(void);
+    b8 SetupComPort(void);
+    b8 SetupHotSeatGame(void);
+    b8 SetupNetworkGame(void);
+    b8 SetupModemGame(void);
+    b8 SetupMultiPlayerGame(void);
+    b8 SetupGame(b8 newGame);
+    b8 PickLoadGame(void);
     void ShowCampaignInfo(i32 scenario, b32 viewOnly, i32);
     void InitEntireCampaign(i32 side);
     void InitCampaignMap(i32 scenario, i32);
@@ -339,7 +339,7 @@ public:
         class hero* spellHero,
         i8 spellType,
         i16 (*callback)(struct tag_message&),
-        i8 readOnly
+        b8 readOnly
     );
     void SetupSpellRange(i16 spellType);
     void UpdateSpellWidgets(void);
@@ -351,7 +351,7 @@ public:
         class town* castle,
         b8 disableDismiss,
         i8 facing,
-        i8 quickView,
+        b8 quickView,
         class hero* theHero,
         class army* theArmy,
         class armyGroup* theGroup
@@ -398,10 +398,10 @@ public:
         return CellHasRecord(index / MAP_CELL_GRID_SIZE, index % MAP_CELL_GRID_SIZE);
     }
     void ProcessMapExtra(void);
-    i8 SetupTowns(void);
+    b8 SetupTowns(void);
     void ProcessOnMapHeroes(void);
     void CheckHeroConsistency(void);
-    i32 TransmitSaveGame(i32 remotePlayer, i32 playerExited);
+    b32 TransmitSaveGame(i32 remotePlayer, b32 playerExited);
     b32 ReceiveSaveGame(i32 dataSize, i32 remotePlayer);
     void DoNewTurn(void);
     i32 GetBoatsBuilt(void);
@@ -411,7 +411,7 @@ public:
     void ShowMoraleInfo(class hero* heroPointer, i32 dialogType);
     void ShowLuckInfo(class hero* heroPointer, i32 dialogType);
     static void GetMap(void);
-    i8 NewGame(void);
+    b8 NewGame(void);
     void UpdateNewGameWindow(void);
     void ShowScenInfo(void);
     void RandomizePlayerCrests(void);

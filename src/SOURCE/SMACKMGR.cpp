@@ -340,7 +340,7 @@ void CloseSmackers() {
     ShutdownSmackSound();
 }
 
-i32 PlaySmacker(i32 smackNumber) {
+b32 PlaySmacker(i32 smackNumber) {
     i8 savedPalette[PALETTE_DATA_SIZE];
     i32 savedColorCycling;
     gInSmacker = true;

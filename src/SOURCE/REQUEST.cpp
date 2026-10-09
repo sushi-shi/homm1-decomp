@@ -28,13 +28,13 @@
 #include <stdio.h>
 #include <string.h>
 
-i32 ShowThisMap(char* fileName) {
+b32 ShowThisMap(char* fileName) {
     // Names are copied into fields sized for 8.3 names (gMapName, the
     // extension); a longer name is not listed.
     char* extension = FindLastToken(fileName, '.');
     if (strlen(fileName) > FILE_REQUESTER_LISTED_NAME_LIMIT
         || (extension && strlen(extension) >= FILE_REQUESTER_EXTENSION_SIZE))
-        return 0;
+        return false;
 #ifdef HOMM1_EDITOR
     if (strnicmp(fileName, "AES3", FILE_REQUESTER_SHIPPED_MAP_PREFIX_LENGTH)
         && strnicmp(fileName, "BEM2", FILE_REQUESTER_SHIPPED_MAP_PREFIX_LENGTH)
@@ -59,8 +59,8 @@ i32 ShowThisMap(char* fileName) {
         && strnicmp(fileName, "THS5", FILE_REQUESTER_SHIPPED_MAP_PREFIX_LENGTH)
         && strnicmp(fileName, "UHS6", FILE_REQUESTER_SHIPPED_MAP_PREFIX_LENGTH))
 #endif
-        return 1;
-    return 0;
+        return true;
+    return false;
 }
 
 fileRequester::fileRequester(
@@ -308,9 +308,9 @@ i16 fileRequester::Open(i16 priority) {
     Update(false);
 #ifndef HOMM1_EDITOR
     if (gShowMapInfo)
-        gWindowManager->AddWindow(gReqExtraWindow, WINDOW_Z_ORDER_APPEND, 1);
+        gWindowManager->AddWindow(gReqExtraWindow, WINDOW_Z_ORDER_APPEND, true);
 #endif
-    gWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, 1);
+    gWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, true);
     SetOK(enableOk);
     UpdateMapInfo();
     m_messageMask = BASE_MANAGER_ACCEPT_EXECUTIVE;

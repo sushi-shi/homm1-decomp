@@ -1225,8 +1225,8 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
             break;
     }
     UpdateRadar(true, false);
-    UpdateHeroLocators(true, 1);
-    UpdateTownLocators(true, 1);
+    UpdateHeroLocators(true, true);
+    UpdateTownLocators(true, true);
     UpdBottomView(true, true, true);
     if (removeObj) {
         EraseObj(cell, x, y);
@@ -1319,8 +1319,8 @@ void advManager::TownEvent(class mapCell* cell, i32 x, i32 y) {
     } else {
         gGame->ClaimTown(eventTown->m_id, gCurPlayer);
         UpdateRadar(true, false);
-        UpdateHeroLocators(true, 1);
-        UpdateTownLocators(true, 1);
+        UpdateHeroLocators(true, true);
+        UpdateTownLocators(true, true);
         eventTown->m_occupyingHeroId = gCurPlayerData->CurrentHero();
         eventTown->View();
     }
@@ -1969,7 +1969,7 @@ void advManager::HeroLoses(class hero* lostHero) {
     lostHero->Deallocate();
     FizzleCenter(EVENT_FIZZLE_KILL);
     UpdateRadar(true, false);
-    UpdateHeroLocators(true, 1);
+    UpdateHeroLocators(true, true);
 }
 
 void advManager::DoWhirlpool(class hero* eventHero) {
@@ -2050,7 +2050,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
     b8 removeEvent;
     hero* opponent;
     i32 fightOutcome;
-    i32 battleResult;
+    b32 battleResult;
     i8 eventType;
     i8 teleX;
     i32 worthFighting;
@@ -2060,7 +2060,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
     i32 eventResource;
     b8 priorShowIt;
     boatRecord* boat;
-    i32 success;
+    b32 success;
     b8 guardMonster;
     float theirLosses;
     float ourLosses;
@@ -2409,7 +2409,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                     eventHero,
                     &opponent->m_army,
                     opponent,
-                    0,
+                    false,
                     0,
                     ourLosses,
                     theirLosses
@@ -2420,7 +2420,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                         eventHero,
                         &heroTown->m_army,
                         NULL,
-                        1,
+                        true,
                         heroTown->m_id,
                         ourLosses,
                         theirLosses
@@ -2577,7 +2577,7 @@ void advManager::ComputerMonsterInteract(
     i32 purchaseCount;
     i32 purchaseValue;
     i32 replacementSlot;
-    i32 won;
+    b32 won;
     i32 monsterCount;
 
     if (cell->m_objectMetadata & MONSTER_WILLING_FLAG
@@ -2908,7 +2908,7 @@ void advManager::SendHeroTownData(
     b8 combatSurrender
 ) {
     RemoteMessage* reply;
-    i32 result;
+    b32 result;
     union {
         combatRemoteData* combat;
         combatRemoteHeroFragment* heroFragment;
@@ -2998,7 +2998,7 @@ void advManager::ReceiveHeroTownData(
     b8* combatSurrender
 ) {
     b8 hasTownOn;
-    i32 confirmSent;
+    b32 confirmSent;
     i32 lastReceiveTick;
     i8 firstOwner;
     i8 secondOwner;
