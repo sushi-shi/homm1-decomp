@@ -143,7 +143,7 @@ void overlayManager::Close(void) {
 
 i16 overlayManager::Main(tag_message& message) {
     b32 finished;
-    i32 objectPlaced;
+    b32 objectPlaced;
     i32 helpItem;
     i8 previousCategory;
     i16 cellX;
@@ -470,7 +470,7 @@ b32 PlaceOverlay(overlayType* type, i16 x, i16 y) {
          || i == MAP_FILE_OBJECT_RANDOM_CASTLE || i == MAP_FILE_OBJECT_HERO)
         && gEditManager->m_extraCount >= MAP_EXTRA_RECORD_CAPACITY) {
         ShowStatusWarning(localization::Tr("editor.overlay.place.unsuitable"));
-        return 0;
+        return false;
     }
     gNextObjectId++;
     for (piece = 0; piece < OVERLAY_FOOTPRINT_CELLS; piece++) {
@@ -731,7 +731,7 @@ i16 overlayManager::PickOverlay(i16 category) {
         LOGICAL_SCREEN_HEIGHT,
         WINDOW_FLAG_SAVE_BACKGROUND
     );
-    gWindowManager->AddWindow(screenWindow, WINDOW_Z_ORDER_APPEND, 1);
+    gWindowManager->AddWindow(screenWindow, WINDOW_Z_ORDER_APPEND, true);
     gEditManager->m_zoomedOut = EDIT_ZOOM_OUT;
     LoadCategory(category);
     gInputManager->Flush();

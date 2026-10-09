@@ -97,19 +97,19 @@ public:
     }
     hero(void);
     void GetArmyStrengths(u32* const);
-    i8 HasArtifact(i8 artifact);
+    b8 HasArtifact(i8 artifact);
     i16 CalcMobility(void);
-    i8 HasSpell(i8 spell);
+    b8 HasSpell(i8 spell);
     i16 GetNumSpells(i8 type);
     void UseSpell(i8 spell);
     i32 AddSpell(i8 spell, i8 charges, b32 checkOnly);
     void HeroScreenUpdate(void);
     void UpdateArmies(void);
     void RedrawHeroScreen(void);
-    i8 HeroView(b8 viewOnly);
-    void ViewStat(i8 stat, i8 quickView);
-    void ViewArtifact(i8 artifact, i8 quickView);
-    i8 Dismiss(void);
+    b8 HeroView(b8 viewOnly);
+    void ViewStat(i8 stat, b8 quickView);
+    void ViewArtifact(i8 artifact, b8 quickView);
+    b8 Dismiss(void);
     void Deallocate(void);
     i32 GetExperience(i32 level);
     i32 GetLevel(i32 experienceValue);

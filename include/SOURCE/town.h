@@ -78,7 +78,7 @@ public:
     i8 m_mageGuildSpells[TOWN_MAGE_GUILD_SPELL_COUNT];
     u16 m_turnsOwned;
     town(void);
-    i8 HasGarrison(void);
+    b8 HasGarrison(void);
     i8 OccupyingHero(void) {
         return m_occupyingHeroId;
     }

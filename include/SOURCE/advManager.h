@@ -296,8 +296,8 @@ public:
     void UpdateRadar(b8 updateScreen, b32 partial);
     void QuickInfo(i16 cellX, i16 cellY);
     void UpdateHeroLocator(i32 locatorSlot, b8 drawWindow, b8 updateScreen);
-    void UpdateHeroLocators(b8 drawWindow, i8 updateScreen);
-    void UpdateTownLocators(b8 drawWindow, i8 updateScreen);
+    void UpdateHeroLocators(b8 drawWindow, b8 updateScreen);
+    void UpdateTownLocators(b8 drawWindow, b8 updateScreen);
     void UpdBottomView(b8 forceUpdate, b8 drawWindow, b8 updateScreen);
     void ClearBottomView(void);
     b8 UpdBottomViewEnemyTurn(void);
@@ -352,7 +352,7 @@ public:
     void EnableButtons(void);
     void SaveAdventureBorder(void);
     void DrawAdventureBorder(void);
-    i8 FindAdjacentMonster(
+    b8 FindAdjacentMonster(
         i32 originX,
         i32 originY,
         i32* monsterX,

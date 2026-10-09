@@ -132,7 +132,7 @@ void combatManager::SetupCombat(
         if (m_playerId[i] >= 0)
             m_humanPlayerSide[i] = gHumanPlayer[m_playerId[i]];
         else
-            m_humanPlayerSide[i] = 0;
+            m_humanPlayerSide[i] = false;
         m_heroes[i] = i == COMBAT_ATTACKER_SIDE ? attackerHero : defenderHero;
         m_heroClass[i] = m_heroes[i] ? m_heroes[i]->m_heroClass : COMBAT_HERO_CLASS_NONE;
         m_armyGroups[i] = i == COMBAT_ATTACKER_SIDE ? attackerGroup : defenderGroup;
@@ -141,7 +141,7 @@ void combatManager::SetupCombat(
             m_catapultAttackCount[i] = m_catapultAttacksRemaining[i] = 2;
         m_keepAttacksRemaining[i] = 1;
         m_visitingHeroPresent[i] = false;
-        m_heroCastSpell[i] = 0;
+        m_heroCastSpell[i] = false;
     }
     m_castleSide[COMBAT_ATTACKER_SIDE] = 0;
     if (defenderTown) {
@@ -190,8 +190,8 @@ i16 combatManager::Open(i16 priority) {
     sample = LoadPlaySample("PREBATTL.82M");
     gNextAction = ACTION_NONE;
     gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, NULL);
-    m_sideRetreated[COMBAT_DEFENDER_SIDE] = 0;
-    m_sideRetreated[COMBAT_ATTACKER_SIDE] = 0;
+    m_sideRetreated[COMBAT_DEFENDER_SIDE] = false;
+    m_sideRetreated[COMBAT_ATTACKER_SIDE] = false;
     m_combatResult = COMBAT_RESULT_PENDING;
     gIconClipOn = false;
     m_computeExtent = false;
@@ -202,7 +202,7 @@ i16 combatManager::Open(i16 priority) {
     m_combatWindow = new heroWindow(0, 0, "cmbtwin.bin");
     if (!m_combatWindow)
         MemError();
-    gWindowManager->AddWindow(m_combatWindow, WINDOW_Z_ORDER_APPEND, 1);
+    gWindowManager->AddWindow(m_combatWindow, WINDOW_Z_ORDER_APPEND, true);
     m_smallFont = gResourceManager->GetFont("smalfont.fnt");
     LoadIcons();
     LoadArmies();
@@ -212,8 +212,8 @@ i16 combatManager::Open(i16 priority) {
     GenerateMap();
     gRetreatWin = false;
     gCombatSurrender = false;
-    m_sideSurrendered[COMBAT_DEFENDER_SIDE] = 0;
-    m_sideSurrendered[COMBAT_ATTACKER_SIDE] = 0;
+    m_sideSurrendered[COMBAT_DEFENDER_SIDE] = false;
+    m_sideSurrendered[COMBAT_ATTACKER_SIDE] = false;
     m_selectorVisible = true;
     SetDrawRightToLeft(0);
     m_gridUpdateRow = 0;
@@ -498,7 +498,7 @@ char* combatManager::GetBackgroundName(void) {
     return gCombatBkgNames[COMBAT_BACKGROUND_GRASS_FOREST];
 }
 
-i8 combatManager::MoreTreesNear(void) {
+b8 combatManager::MoreTreesNear(void) {
     i32 yPos;
     i32 xPos;
     i16 originY;
@@ -540,8 +540,8 @@ i8 combatManager::MoreTreesNear(void) {
         }
     }
     if (treeCount > mountainCount)
-        return 1;
-    return 0;
+        return true;
+    return false;
 }
 
 void combatManager::LoadIcons(void) {
@@ -705,21 +705,21 @@ void combatManager::CheckApplyGoodMorale(i32 side, i32 index) {
     WaitSample(moraleSound);
 }
 
-i32 combatManager::CheckApplyBadMorale(i32 side, i32 index) {
+b32 combatManager::CheckApplyBadMorale(i32 side, i32 index) {
     armyGroup* group;
     army* currentArmy;
     class sample* moraleSound;
     i32 moraleLevel;
 
     if (side < COMBAT_SIDE_FIRST || index < 0)
-        return 0;
+        return false;
     group = m_armyGroups[side];
     currentArmy = &m_armies[side][index];
     moraleLevel = group->GetMorale(m_heroes[side], m_combatTowns[side]);
     if (moraleLevel >= 0 || SRandom(1, 12) > -moraleLevel)
-        return 0;
+        return false;
     if (!m_humanPlayerSide[side] && SRandom(1, 4) == 1)
-        return 0;
+        return false;
     moraleSound = LoadPlaySample("BADMRLE.82M");
     if (currentArmy->m_quantity <= 1)
         sprintf(
@@ -739,10 +739,10 @@ i32 combatManager::CheckApplyBadMorale(i32 side, i32 index) {
     currentArmy->Stand(true);
     currentArmy->m_stats.attributes |= MONSTER_FLAGS_TURN_SPENT;
     WaitSample(moraleSound);
-    return 1;
+    return true;
 }
 
-i8 combatManager::GetNextArmy(b32 checkMorale) {
+b8 combatManager::GetNextArmy(b32 checkMorale) {
     army* checkArmy;
     i8 speedLevelIndex;
     i32 sideIter;
@@ -777,7 +777,7 @@ i8 combatManager::GetNextArmy(b32 checkMorale) {
                 m_currentSide = stackSide;
                 m_currentArmyIndex = armyCounter;
                 GetControl();
-                return 1;
+                return true;
             }
         }
         if (speedLevelIndex) {
@@ -787,17 +787,17 @@ i8 combatManager::GetNextArmy(b32 checkMorale) {
         }
     }
     GetControl();
-    return 0;
+    return false;
 }
 
-i8 combatManager::IsWinner(i8 side) {
+b8 combatManager::IsWinner(i8 side) {
     b8 isWinner;
     i16 i;
 
     if (m_sideSurrendered[COMBAT_OPPOSING_SIDE(side)])
-        return 1;
+        return true;
     if (m_sideRetreated[COMBAT_OPPOSING_SIDE(side)])
-        return 1;
+        return true;
     COMBAT_SWITCH_SIDE(side);
     isWinner = true;
     for (i = 0; i < m_numArmies[side]; i++) {
@@ -1301,7 +1301,7 @@ void combatManager::ResetHitByCreature(void) {
     }
 }
 
-i32 ValidHex(i32 hex) {
+b32 ValidHex(i32 hex) {
     return hex >= 0 && hex <= COMBAT_HEX_COUNT - 1;
 }
 

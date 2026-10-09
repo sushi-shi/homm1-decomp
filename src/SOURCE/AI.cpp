@@ -19,13 +19,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-i32 combatManager::AICheckRetreat(void) {
+b32 combatManager::AICheckRetreat(void) {
     if (m_combatTowns[m_currentSide])
-        return 0;
+        return false;
     if (!m_heroes[m_currentSide])
-        return 0;
+        return false;
     if (!gGame->m_players[m_heroes[m_currentSide]->m_owner].m_townCount)
-        return 0;
+        return false;
 
     hero heroRec;
     armyGroup* thatArmy;
@@ -76,7 +76,7 @@ i32 combatManager::AICheckRetreat(void) {
     theForces[COMBAT_OPPOSING_SIDE(m_currentSide)] *= 1.1;
     realLoot = artifactTotals[m_currentSide];
     if (artifactTotals[m_currentSide] < COMBAT_AI_MIN_ARTIFACT_VALUE)
-        return 0;
+        return false;
     prob = 0.16f;
     if (realLoot > COMBAT_AI_HIGH_ARTIFACT_VALUE)
         prob = prob + 0.06;
@@ -108,9 +108,9 @@ i32 combatManager::AICheckRetreat(void) {
         / static_cast<double>(theForces[COMBAT_DEFENDER_SIDE] + theForces[COMBAT_ATTACKER_SIDE]);
     if (retreatRatio < prob) {
         gNextAction = ACTION_RETREAT;
-        return 1;
+        return true;
     }
-    return 0;
+    return false;
 }
 
 void combatManager::DoCompAI(i8 side) {
@@ -425,7 +425,7 @@ u32 combatManager::GetStrength(i8 side, i16 mask) {
     return totalStrength;
 }
 
-i8 combatManager::AttemptAttack(
+b8 combatManager::AttemptAttack(
     class army* currentArmy,
     i8 side,
     i16 mask
@@ -439,14 +439,14 @@ i8 combatManager::AttemptAttack(
         else
             targetArmy = GetBestArmy(side, mask);
         if (targetArmy == COMBAT_ARMY_INDEX_NONE)
-            return 0;
+            return false;
         currentArmy->m_targetSide = side;
         currentArmy->m_targetIndex = targetArmy;
         targetHex = m_armies[side][targetArmy].m_hex;
         currentArmy->m_moveTargetHex = targetHex;
         if (currentArmy->ValidPath(targetHex, ARMY_PATH_ANY_TARGET_HEX)) {
             SET_NEXT_COMBAT_MOVE(targetHex);
-            return 1;
+            return true;
         }
         if (m_armies[side][targetArmy].m_stats.attributes & MONSTER_FLAGS_WIDE) {
             if (m_armies[side][targetArmy].m_facing == ARMY_FACING_LEFT)
@@ -456,15 +456,15 @@ i8 combatManager::AttemptAttack(
             currentArmy->m_moveTargetHex = targetHex;
             if (currentArmy->ValidPath(targetHex, ARMY_PATH_ANY_TARGET_HEX)) {
                 SET_NEXT_COMBAT_MOVE(targetHex);
-                return 1;
+                return true;
             }
         }
         mask &= ~(1 << targetArmy);
     }
-    return 0;
+    return false;
 }
 
-i8 combatManager::AttemptAdjacentAttack(class army* currentArmy) {
+b8 combatManager::AttemptAdjacentAttack(class army* currentArmy) {
     i16 otherHex;
     i16 hex;
     i16 oneBit;
@@ -476,7 +476,7 @@ i8 combatManager::AttemptAdjacentAttack(class army* currentArmy) {
     openMaskValue =
         ~currentArmy->GetAttackMask(currentArmy->m_hex, ARMY_ATTACK_TARGET_ENEMY, ARMY_HEX_INVALID);
     if (!openMaskValue)
-        return 0;
+        return false;
     oneBit = 1;
     enemyMask = 0;
     for (direction = COMBAT_DIRECTION_NORTHEAST; direction < COMBAT_DIRECTION_COUNT; direction++) {
@@ -511,13 +511,13 @@ i8 combatManager::AttemptAdjacentAttack(class army* currentArmy) {
         victim = GetBestArmy(COMBAT_OPPOSING_SIDE(m_currentSide), enemyMask);
     if (victim != COMBAT_ARMY_INDEX_NONE) {
         SET_NEXT_COMBAT_MOVE(m_armies[COMBAT_OPPOSING_SIDE(m_currentSide)][victim].m_hex);
-        return 1;
+        return true;
     } else {
-        return 0;
+        return false;
     }
 }
 
-i8 combatManager::WalkTowardArmyFront(
+b8 combatManager::WalkTowardArmyFront(
     class army* currentArmy,
     i8 side,
     i16 mask
@@ -533,7 +533,7 @@ i8 combatManager::WalkTowardArmyFront(
     CLEAR_ARMY_TARGET(currentArmy);
     armyIndex = GetClosestArmy(currentArmy, side, mask);
     if (armyIndex == COMBAT_ARMY_INDEX_NONE)
-        return 0;
+        return false;
     frontDelta = 1;
     frontHex = m_armies[side][armyIndex].m_hex;
     if (m_armies[side][armyIndex].m_stats.attributes & MONSTER_FLAGS_WIDE)
@@ -561,12 +561,12 @@ i8 combatManager::WalkTowardArmyFront(
             pathNdxIndex--;
             left--;
         }
-        return 1;
+        return true;
     }
     return WalkTowardArmy(currentArmy, side, mask);
 }
 
-i8 combatManager::WalkTowardArmy(
+b8 combatManager::WalkTowardArmy(
     class army* currentArmy,
     i8 side,
     i16 mask
@@ -583,7 +583,7 @@ i8 combatManager::WalkTowardArmy(
 
     slot = GetClosestArmy(currentArmy, side, mask);
     if (slot == COMBAT_ARMY_INDEX_NONE)
-        return 0;
+        return false;
     targetPtr = &m_armies[side][slot];
     savedHex = targetPtr->m_hex;
     currentArmy->m_targetSide = side;
@@ -595,7 +595,7 @@ i8 combatManager::WalkTowardArmy(
     );
     if (attackMaskValue != COMBAT_ALL_DIRECTIONS_BLOCKED) {
         gNextAction = ACTION_SKIP_TURN;
-        return 1;
+        return true;
     }
     savedSpeedRequested = currentArmy->m_stats.speed;
     currentArmy->m_stats.speed = COMBAT_AI_UNLIMITED_PATH_SPEED;
@@ -636,7 +636,7 @@ i8 combatManager::WalkTowardArmy(
             pathNdx--;
             left--;
         }
-        return 1;
+        return true;
     }
-    return 0;
+    return false;
 }

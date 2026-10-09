@@ -109,7 +109,7 @@ RecordReader RemotePayloadReader(const RemoteMessage& message);
 
 struct RemoteSaveHeader {
     i32 saveSize;
-    i32 playerExited;
+    b32 playerExited;
 };
 
 struct RemotePlayerExit {

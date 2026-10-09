@@ -58,7 +58,7 @@ public:
         i16 widgetId,
         i16 value
     );
-    void AddWindow(class heroWindow* window, i16 zOrder, i8 updateScreen);
+    void AddWindow(class heroWindow* window, i16 zOrder, b8 updateScreen);
     void RemoveWindow(class heroWindow* window);
     i16 DoDialog(
         class heroWindow* window,

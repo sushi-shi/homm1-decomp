@@ -192,7 +192,7 @@ i16 heroWindowManager::BroadcastMessage(
     return Main(message);
 }
 
-void heroWindowManager::AddWindow(heroWindow* window, i16 zOrder, i8 updateScreen) {
+void heroWindowManager::AddWindow(heroWindow* window, i16 zOrder, b8 updateScreen) {
     heroWindow* currentWindow = m_windowListTail;
     if (window->m_winFlags & WINDOW_FLAG_FIXED_LAYER)
         zOrder = WINDOW_Z_ORDER_BOTTOM;
@@ -277,7 +277,7 @@ i16 heroWindowManager::DoDialog(
     gDialogNestCount++;
     m_lastHoverId = WINDOW_MANAGER_NO_HOVER_WIDGET;
     if (window != NULL)
-        AddWindow(window, WINDOW_Z_ORDER_APPEND, 1);
+        AddWindow(window, WINDOW_Z_ORDER_APPEND, true);
     if (fade)
         gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, gPalette);
     gInputManager->Flush();

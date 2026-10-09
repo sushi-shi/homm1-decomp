@@ -284,7 +284,7 @@ public:
     void ResetStrips(void);
     void Toggle(i8 building);
     void DrawTown(b8 updateScreen, b32 advanceAnimation);
-    i16 BuyBuild(i16 building, b8 cannotBuy, i8 quickView);
+    i16 BuyBuild(i16 building, b8 cannotBuy, b8 quickView);
     void BuildObj(i16 building);
     void SetupMage(class heroWindow* window);
     b8 RecruitHero(b8 quickView);

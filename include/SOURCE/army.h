@@ -96,7 +96,7 @@ public:
     i8 m_spellEndCondition;
     i8 m_spellRounds;
     army(void);
-    i32 IsAlive(void) {
+    b32 IsAlive(void) {
         return m_creatureType >= CREATURE_FIRST && m_quantity > 0;
     }
     void InitClean(void);

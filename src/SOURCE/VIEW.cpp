@@ -140,7 +140,7 @@ i8 combatManager::ViewGeneral(
     }
     if (quickView) {
         gMouseManager->ReallyHidePointer();
-        gWindowManager->AddWindow(wnd, WINDOW_Z_ORDER_APPEND, 1);
+        gWindowManager->AddWindow(wnd, WINDOW_Z_ORDER_APPEND, true);
         QuickViewWait();
         gWindowManager->RemoveWindow(wnd);
         gMouseManager->ReallyShowPointer();
@@ -236,7 +236,7 @@ i16 HandleViewGeneral(tag_message& message) {
     return MESSAGE_DISPATCH_CONSUME;
 }
 
-void combatManager::ViewArmy(army* viewedArmy, i32 side, i32 quickView) {
+void combatManager::ViewArmy(army* viewedArmy, i32 side, b32 quickView) {
     i16 windowX;
     i16 unusedViewOffsetY;
     i16 windowY;

@@ -27,7 +27,7 @@ enum CampaignScenarioRow {
 
 #pragma pack(push, 1)
 struct campaignScenario {
-    i8 kingOfTheHill;
+    b8 kingOfTheHill;
     i8 victoryTownX;
     i8 victoryTownY;
     char victoryTownName[0x10];

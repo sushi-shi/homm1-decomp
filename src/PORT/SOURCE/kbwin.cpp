@@ -481,7 +481,7 @@ void KBChangeMenu(KBMenu menu) {
     MenuRefresh();
 }
 
-void SetMenuStatus(i32 showMenu) {
+void SetMenuStatus(b32 showMenu) {
     if (CURRENT_GRAPHICS_CONFIG.fullScreen && showMenu)
         return;
     CURRENT_GRAPHICS_CONFIG.showMenu = showMenu;

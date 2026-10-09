@@ -103,16 +103,16 @@ processAction:
     return result;
 }
 
-i8 combatManager::ValidHexToStandOn(i32 hex) {
+b8 combatManager::ValidHexToStandOn(i32 hex) {
     if (hex == COMBAT_REAR_HEX_UNUSED)
-        return 1;
+        return true;
     if (hex != ARMY_HEX_INVALID && hex % COMBAT_GRID_COLUMNS != COMBAT_GRID_LAST_COLUMN
         && hex % COMBAT_GRID_COLUMNS != 0 && m_hexCells[hex].m_obstacleIndex == COMBAT_OBSTACLE_NONE
         && (m_hexCells[hex].m_occupantSide == COMBAT_SIDE_NONE
             || HEX_HAS_OCCUPANT(m_hexCells[hex], m_currentSide, m_currentArmyIndex)))
-        return 1;
+        return true;
     else
-        return 0;
+        return false;
 }
 
 void combatManager::SetCombatDirections(i32 targetHex) {
@@ -529,7 +529,7 @@ i32 combatManager::ProcessCombatMsg(struct tag_message& message) {
                     break;
                 case INPUT_SCAN_T:
                     gMouseManager->SetPointer(COMBAT_POINTER_DEFAULT);
-                    ViewArmy(&m_armies[m_currentSide][m_currentArmyIndex], m_currentSide, 0);
+                    ViewArmy(&m_armies[m_currentSide][m_currentArmyIndex], m_currentSide, false);
                     ResetMouse();
                     break;
                 case INPUT_SCAN_C:
@@ -582,7 +582,7 @@ void combatManager::ResetRound(void) {
     m_catapultAttacksRemaining[COMBAT_DEFENDER_SIDE] = m_catapultAttackCount[COMBAT_DEFENDER_SIDE];
     m_keepAttacksRemaining[COMBAT_ATTACKER_SIDE] = 1;
     m_keepAttacksRemaining[COMBAT_DEFENDER_SIDE] = 1;
-    m_heroCastSpell[COMBAT_ATTACKER_SIDE] = m_heroCastSpell[COMBAT_DEFENDER_SIDE] = 0;
+    m_heroCastSpell[COMBAT_ATTACKER_SIDE] = m_heroCastSpell[COMBAT_DEFENDER_SIDE] = false;
     for (side = COMBAT_SIDE_FIRST; side < COMBAT_SIDE_COUNT; side++) {
         for (armyIndex = 0; armyIndex < ARMY_GROUP_SLOT_COUNT; armyIndex++) {
             currentArmy = &m_armies[side][armyIndex];
@@ -601,7 +601,7 @@ void combatManager::ResetRound(void) {
     m_currentSpeed = CREATURE_SPEED_BLAZING;
 }
 
-i32 combatManager::CheckWin(struct tag_message* message) {
+b32 combatManager::CheckWin(struct tag_message* message) {
     i32 pos;
     b8 combatEnded;
     i32 unusedWinWordValue;
@@ -738,7 +738,7 @@ i8 combatManager::RightClick(i8 hex) {
                         ViewArmy(
                             &m_armies[side][m_hexCells[m_selectedHex].m_occupantIndex],
                             side,
-                            1
+                            true
                         );
                         ResetMouse();
                         return 0;
@@ -790,7 +790,7 @@ void combatManager::DoCommand(i8 command) {
             ViewArmy(
                 &m_armies[m_currentSide][m_hexCells[m_selectedHex].m_occupantIndex],
                 m_currentSide,
-                0
+                false
             );
             ResetMouse();
             break;
@@ -1299,7 +1299,7 @@ void combatManager::DoLoseWindow(void) {
     msg.text = gText;
     loseWindow->BroadcastMessage(msg);
     ShowDeadArmies(loseWindow);
-    gWindowManager->AddWindow(loseWindow, WINDOW_Z_ORDER_APPEND, 0);
+    gWindowManager->AddWindow(loseWindow, WINDOW_Z_ORDER_APPEND, false);
     BlitBitmap(scrollBitmap, scrollX, 0, 0xdf, 0x7d, gWindowManager->m_screen, 0xd0, 0x28);
     walkIcon->FillToBuffer(0x10e, 0x8c, walkFrame, 0, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
     gWindowManager->UpdateScreenRegion(0x9f, 2, 0x140, 0x1ca);
@@ -1447,7 +1447,7 @@ void combatManager::ResetMouse(void) {
 i16 combatManager::ProcessNextAction(struct tag_message& message) {
     CombatRemoteAction actionData;
     RecordWriter actionRecord;
-    i32 transmitResult;
+    b32 transmitResult;
     i32 remoteIndex;
     b8 doAdvance;
     army* actingArmy;
@@ -1507,13 +1507,13 @@ i16 combatManager::ProcessNextAction(struct tag_message& message) {
             doAdvance = true;
             break;
         case ACTION_RETREAT:
-            m_sideRetreated[m_currentSide] = 1;
+            m_sideRetreated[m_currentSide] = true;
             gRetreatWin = true;
             break;
         case ACTION_SURRENDER:
             gCombatSurrender = true;
             gRetreatWin = true;
-            m_sideSurrendered[m_currentSide] = 1;
+            m_sideSurrendered[m_currentSide] = true;
             gGame->m_players[m_playerId[m_currentSide]].m_resources[RESOURCE_GOLD] -=
                 gNextActionExtra;
             gGame->m_players[m_playerId[COMBAT_OPPOSING_SIDE(m_currentSide)]]

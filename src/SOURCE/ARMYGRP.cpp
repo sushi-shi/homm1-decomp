@@ -53,12 +53,12 @@ void armyGroup::Dismiss(i8 slot) {
     m_creatureCounts[slot] = 0;
 }
 
-i8 armyGroup::IsMember(i8 creatureType) {
+b8 armyGroup::IsMember(i8 creatureType) {
     for (i16 slot = 0; slot < ARMY_GROUP_SLOT_COUNT; ++slot) {
         if (m_creatureTypes[slot] == creatureType)
-            return 1;
+            return true;
     }
-    return 0;
+    return false;
 }
 
 i8 armyGroup::IsHomogeneous(i8 alignmentMode) {
@@ -99,12 +99,12 @@ i8 armyGroup::IsHomogeneous(i8 alignmentMode) {
     return ARMY_GROUP_ALIGNMENT_NO_MODIFIER;
 }
 
-i8 armyGroup::CanJoin(i8 creatureType) {
+b8 armyGroup::CanJoin(i8 creatureType) {
     if (IsMember(creatureType))
-        return 1;
+        return true;
     if (IsMember(CREATURE_NONE))
-        return 1;
-    return 0;
+        return true;
+    return false;
 }
 
 i16 armyGroup::GetNumArmies(void) {
