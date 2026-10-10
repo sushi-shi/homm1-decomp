@@ -6,6 +6,8 @@ the pinned Visual C++ 6.0 SP5 toolchain. Retail bytes are the authority. The
 reconstruction is complete: every function of both programs matches, and both
 link byte-identical to retail. Changes must keep it that way.
 
+**Target MAX, not CUR (standing rule).** The score goal is each function's MAX for its current source. A CUR dip on a function whose own source did not change (TU state, handle or register tie-breaks caused by edits elsewhere) is expected noise: do not chase it, do not block a push on it, and never add declarations or other source just to steer it back; name it in the commit message and move on. Only a source edit that lowers a function's own MAX needs a justification.
+
 ## Build and gates
 
 - Work inside `nix develop .#build`. Run `homm1 build` after any source,
