@@ -36,6 +36,8 @@ authority. The editor and other releases are secondary evidence.
   `docs/tooling-inheritance.md`; repeat `homm1 audit tooling`. A copied package
   or game-specific ledger does not establish command or behavioral parity.
 
+**Target MAX, not CUR (standing rule).** The score goal is each function's MAX for its current source. A CUR dip on a function whose own source did not change (TU state, handle or register tie-breaks caused by edits elsewhere) is expected noise: do not chase it, do not block a push on it, and never add declarations or other source just to steer it back; name it in the commit message and move on. Only a source edit that lowers a function's own MAX needs a justification.
+
 ## Matching workflow and skills
 
 Skills live in `.agents/skills/`; `.claude/skills` links there and `CLAUDE.md`
